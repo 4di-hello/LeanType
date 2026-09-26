@@ -340,7 +340,11 @@ class VoiceInputManager(
             val pfdForPlugin = audioPipeReadSide
             if (pfdForPlugin != null) {
                 audioPipeReadSide = null
-                pluginManager.startSession(config, pfdForPlugin, callback)
+                try {
+                    pluginManager.startSession(config, pfdForPlugin, callback)
+                } finally {
+                    closeQuietly(pfdForPlugin)
+                }
             } else {
                 throw IllegalStateException("Read-side pipe descriptor is null")
             }

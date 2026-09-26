@@ -118,19 +118,21 @@ object VoiceDownloadDispatcher {
             Log.i(TAG, "Download complete (${tempFile.length()} bytes). Dispatching import to voice plugin...")
 
             val pfd = ParcelFileDescriptor.open(tempFile, ParcelFileDescriptor.MODE_READ_ONLY)
-            val request = ModelImportRequest(
-                engineType = model.engineType,
-                language = model.language,
-                sha256 = null,
-                sizeBytes = tempFile.length(),
-                file = pfd
-            )
-
-            val imported = withTimeoutOrNull(15000L) {
-                pluginManager.bindAndImport(request)
-            } ?: false
-
-            try { tempFile.delete() } catch (_: Exception) {}
+            val imported = try {
+                val request = ModelImportRequest(
+                    engineType = model.engineType,
+                    language = model.language,
+                    sha256 = null,
+                    sizeBytes = tempFile.length(),
+                    file = pfd
+                )
+                withTimeoutOrNull(15000L) {
+                    pluginManager.bindAndImport(request)
+                } ?: false
+            } finally {
+                try { pfd.close() } catch (_: Exception) {}
+                try { tempFile.delete() } catch (_: Exception) {}
+            }
 
             withContext(Dispatchers.Main) {
                 downloadingModelId.value = null
