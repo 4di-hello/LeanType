@@ -18,12 +18,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -59,6 +61,7 @@ fun LoadHandwritingPluginPreference(
 ) {
     var showDialog by rememberSaveable { mutableStateOf(false) }
     var isDownloading by rememberSaveable { mutableStateOf(false) }
+    var downloadProgress by remember { mutableFloatStateOf(0f) }
     var remoteVersion by remember { mutableStateOf<String?>(null) }
     var updateAvailable by remember { mutableStateOf(false) }
     var isCheckingUpdate by remember { mutableStateOf(false) }
@@ -139,11 +142,16 @@ fun LoadHandwritingPluginPreference(
         }
 
         isDownloading = true
+        downloadProgress = 0f
         scope.launch(Dispatchers.IO) {
             try {
                 val tag = remoteVersion ?: "latest"
                 val tempFile = File(ctx.cacheDir, "temp_handwriting_plugin.apk")
-                val downloaded = HandwritingLoader.downloadPluginApk(ctx, tag, tempFile)
+                val downloaded = HandwritingLoader.downloadPluginApk(ctx, tag, tempFile) { prog ->
+                    scope.launch(Dispatchers.Main) {
+                        downloadProgress = prog
+                    }
+                }
                 if (!downloaded) {
                     throw IOException("Failed to download handwriting plugin APK")
                 }
@@ -153,6 +161,7 @@ fun LoadHandwritingPluginPreference(
 
                 withContext(Dispatchers.Main) {
                     isDownloading = false
+                    downloadProgress = 0f
                     if (success) {
                         FeedbackManager.message(ctx, "Handwriting plugin loaded. Restarting...")
                         onSuccess?.invoke()
@@ -190,19 +199,39 @@ fun LoadHandwritingPluginPreference(
             showCloseButton = !isDownloading,
             buttons = {
                 if (isDownloading) {
-                    Row(
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 16.dp),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
+                            .padding(top = 16.dp)
                     ) {
-                        CircularProgressIndicator(modifier = Modifier.size(28.dp))
-                        Spacer(modifier = Modifier.width(12.dp))
-                        Text(
-                            text = "Downloading...",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = if (downloadProgress > 0f) {
+                                    "Downloading... ${(downloadProgress * 100).toInt()}%"
+                                } else {
+                                    "Downloading..."
+                                },
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                        if (downloadProgress > 0f) {
+                            LinearProgressIndicator(
+                                progress = { downloadProgress },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 8.dp)
+                            )
+                        } else {
+                            LinearProgressIndicator(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 8.dp)
+                            )
+                        }
                     }
                 } else {
                     Column(

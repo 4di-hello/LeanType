@@ -105,4 +105,26 @@ object FileUtils {
         }
         out.flush()
     }
+
+    @Throws(IOException::class)
+    fun copyStreamWithProgress(
+        input: InputStream,
+        output: OutputStream,
+        totalBytes: Long,
+        bufferSize: Int = 32768,
+        onProgress: ((Float) -> Unit)? = null
+    ) {
+        val buffer = ByteArray(bufferSize)
+        var bytesRead: Int
+        var totalRead = 0L
+        while (input.read(buffer).also { bytesRead = it } != -1) {
+            output.write(buffer, 0, bytesRead)
+            totalRead += bytesRead
+            if (totalBytes > 0L) {
+                val progress = (totalRead.toFloat() / totalBytes.toFloat()).coerceIn(0f, 1f)
+                onProgress?.invoke(progress)
+            }
+        }
+        output.flush()
+    }
 }

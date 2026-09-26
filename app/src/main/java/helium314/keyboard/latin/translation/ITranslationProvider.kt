@@ -8,6 +8,7 @@ interface TranslationModelDownloadListener {
     fun onComplete(success: Boolean, errorMessage: String?) {
         onComplete(success)
     }
+    fun onProgress(progress: Float) {}
 }
 
 interface ITranslationProvider {

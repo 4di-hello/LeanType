@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -28,6 +29,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -70,6 +72,7 @@ fun LoadGestureLibPreference(
 ) {
     var showDialog by rememberSaveable { mutableStateOf(false) }
     var isDownloading by rememberSaveable { mutableStateOf(false) }
+    var downloadProgress by remember { mutableFloatStateOf(0f) }
     val ctx = LocalContext.current
     val prefs = ctx.protectedPrefs()
     val abi = Build.SUPPORTED_ABIS[0]
@@ -104,14 +107,18 @@ fun LoadGestureLibPreference(
 
     fun startDownload() {
         isDownloading = true
+        downloadProgress = 0f
         scope.launch {
-            GestureLibraryDownloader.downloadLibrary(ctx).fold(
+            GestureLibraryDownloader.downloadLibrary(ctx) { percent ->
+                downloadProgress = (percent / 100f).coerceIn(0f, 1f)
+            }.fold(
                 onSuccess = { downloadedFile ->
                     val checksum = ChecksumCalculator.checksum(downloadedFile) ?: ""
                     renameToLibFileAndRestart(downloadedFile, checksum)
                 },
                 onFailure = { error ->
                     isDownloading = false
+                    downloadProgress = 0f
                     val errorMsg = ctx.getString(R.string.load_gesture_library_download_failed, error.message ?: "Unknown error")
                     FeedbackManager.message(ctx, errorMsg)
                 }
@@ -166,19 +173,39 @@ fun LoadGestureLibPreference(
             showCloseButton = !isDownloading,
             buttons = {
                 if (isDownloading) {
-                    Row(
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 16.dp),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
+                            .padding(top = 16.dp)
                     ) {
-                        CircularProgressIndicator(modifier = Modifier.size(28.dp))
-                        Spacer(modifier = Modifier.width(12.dp))
-                        Text(
-                            text = stringResource(R.string.load_gesture_library_downloading),
-                            style = MaterialTheme.typography.bodyMedium
-                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = if (downloadProgress > 0f) {
+                                    "${stringResource(R.string.load_gesture_library_downloading)} ${(downloadProgress * 100).toInt()}%"
+                                } else {
+                                    stringResource(R.string.load_gesture_library_downloading)
+                                },
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                        if (downloadProgress > 0f) {
+                            LinearProgressIndicator(
+                                progress = { downloadProgress },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 8.dp)
+                            )
+                        } else {
+                            LinearProgressIndicator(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 8.dp)
+                            )
+                        }
                     }
                 } else {
                     Column(

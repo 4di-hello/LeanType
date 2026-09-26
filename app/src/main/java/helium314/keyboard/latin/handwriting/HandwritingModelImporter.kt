@@ -4,8 +4,10 @@ package helium314.keyboard.latin.handwriting
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import helium314.keyboard.latin.common.FileUtils
 import helium314.keyboard.latin.utils.locale
 import java.io.File
+import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.util.zip.ZipInputStream
@@ -357,6 +359,7 @@ object HandwritingModelImporter {
         var successCount = 0
         val total = urls.size
         for ((index, urlStr) in urls.withIndex()) {
+            val tempZip = File(context.cacheDir, "hw_dl_${System.currentTimeMillis()}_$index.zip")
             try {
                 val url = java.net.URL(urlStr)
                 val conn = url.openConnection() as java.net.HttpURLConnection
@@ -365,14 +368,26 @@ object HandwritingModelImporter {
                 conn.instanceFollowRedirects = true
                 if (conn.responseCode in 200..299) {
                     val filename = urlStr.substringAfterLast('/')
+                    val baseProgress = index.toFloat() / total
+                    val weight = 1f / total
+                    val contentLength = conn.contentLengthLong.takeIf { it > 0 } ?: conn.contentLength.toLong()
                     conn.inputStream.use { stream ->
-                        val ok = importForLanguageFromStream(context, languageTag, stream, filename)
+                        FileOutputStream(tempZip).use { fileOut ->
+                            FileUtils.copyStreamWithProgress(stream, fileOut, contentLength) { prog ->
+                                onProgress?.invoke(baseProgress + prog * weight)
+                            }
+                        }
+                    }
+                    FileInputStream(tempZip).use { fileIn ->
+                        val ok = importForLanguageFromStream(context, languageTag, fileIn, filename)
                         if (ok) successCount++
                     }
                 }
                 onProgress?.invoke((index + 1).toFloat() / total)
             } catch (e: Throwable) {
                 Log.e(TAG, "Error downloading model pack $urlStr for $languageTag", e)
+            } finally {
+                tempZip.delete()
             }
         }
         if (successCount > 0) {

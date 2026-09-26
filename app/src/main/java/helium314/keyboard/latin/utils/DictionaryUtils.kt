@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -23,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -36,6 +38,7 @@ import androidx.core.content.edit
 import android.os.IBinder
 import helium314.keyboard.compat.locale
 import helium314.keyboard.latin.R
+import helium314.keyboard.latin.common.FileUtils
 import helium314.keyboard.latin.common.Links
 import helium314.keyboard.latin.common.LocaleUtils
 import helium314.keyboard.latin.common.LocaleUtils.constructLocale
@@ -254,7 +257,14 @@ private fun hasAnythingOtherThanExtractedMainDictionary(context: Context, dir: F
 }
 
 // ponytail: Dynamic dictionary downloader using HTTP URL connection with User-Agent, redirects, and timeouts.
-fun downloadDictionary(context: Context, locale: Locale, type: String, linkUrl: String, onComplete: (Boolean) -> Unit) {
+fun downloadDictionary(
+    context: Context,
+    locale: Locale,
+    type: String,
+    linkUrl: String,
+    onProgress: ((Float) -> Unit)? = null,
+    onComplete: (Boolean) -> Unit
+) {
     val cacheDir = DictionaryInfoUtils.getCacheDirectoryForLocale(locale, context) ?: return onComplete(false)
     val targetFile = File(cacheDir, "${type}.dict")
     val tempFile = File(cacheDir, "${type}.dict.download")
@@ -290,11 +300,15 @@ fun downloadDictionary(context: Context, locale: Locale, type: String, linkUrl: 
             }
             
             if (status == java.net.HttpURLConnection.HTTP_OK) {
-                val expectedLength = conn.contentLengthLong
+                val expectedLength = conn.contentLengthLong.takeIf { it > 0 } ?: conn.contentLength.toLong()
                 val lastModified = conn.lastModified
                 conn.inputStream.use { input ->
                     tempFile.outputStream().use { output ->
-                        input.copyTo(output)
+                        FileUtils.copyStreamWithProgress(input, output, expectedLength) { progress ->
+                            CoroutineScope(Dispatchers.Main).launch {
+                                onProgress?.invoke(progress)
+                            }
+                        }
                     }
                 }
                 val downloadedLength = tempFile.length()
@@ -347,6 +361,7 @@ fun DownloadableDictionaryRow(locale: Locale, desc: String, link: String, refres
     val cacheDir = remember(dictLocale) { DictionaryInfoUtils.getCacheDirectoryForLocale(dictLocale, ctx) }
     val file = remember(cacheDir, type) { cacheDir?.let { File(it, "$type.dict") } }
     var downloading by remember { mutableStateOf(false) }
+    var downloadProgress by remember { mutableFloatStateOf(0f) }
     val downloadedLink = remember(link, refreshTrigger) { ctx.prefs().getString("pref_dict_download_link_${type}_${dictLocale}", "") ?: "" }
     val isInstalled = remember(file, downloadedLink, link, refreshTrigger) {
         file?.exists() == true && (downloadedLink == link || (downloadedLink.isEmpty() && !link.contains("experimental")))
@@ -409,12 +424,17 @@ fun DownloadableDictionaryRow(locale: Locale, desc: String, link: String, refres
                 fontWeight = FontWeight.Medium
             )
             val statusText = when {
-                downloading -> stringResource(R.string.downloading)
+                downloading -> if (downloadProgress > 0f) {
+                    "${stringResource(R.string.downloading)} ${(downloadProgress * 100).toInt()}%"
+                } else {
+                    stringResource(R.string.downloading)
+                }
                 hasUpgrade -> stringResource(R.string.dictionary_update_available)
                 isInstalled -> stringResource(R.string.installed)
                 else -> "Available in dictionary repository"
             }
             val statusColor = when {
+                downloading -> MaterialTheme.colorScheme.primary
                 hasUpgrade -> MaterialTheme.colorScheme.secondary
                 isInstalled -> MaterialTheme.colorScheme.primary
                 else -> MaterialTheme.colorScheme.onSurfaceVariant
@@ -424,6 +444,22 @@ fun DownloadableDictionaryRow(locale: Locale, desc: String, link: String, refres
                 style = MaterialTheme.typography.bodySmall,
                 color = statusColor
             )
+            if (downloading) {
+                if (downloadProgress > 0f) {
+                    LinearProgressIndicator(
+                        progress = { downloadProgress },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 4.dp)
+                    )
+                } else {
+                    LinearProgressIndicator(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 4.dp)
+                    )
+                }
+            }
         }
 
         if (downloading) {
@@ -446,7 +482,8 @@ fun DownloadableDictionaryRow(locale: Locale, desc: String, link: String, refres
                             android.widget.Toast.makeText(ctx, "Downloading in browser… import dictionary once finished", android.widget.Toast.LENGTH_LONG).show()
                         } else {
                             downloading = true
-                            downloadDictionary(ctx, dictLocale, type, link) { success ->
+                            downloadProgress = 0f
+                            downloadDictionary(ctx, dictLocale, type, link, onProgress = { downloadProgress = it }) { success ->
                                 downloading = false
                                 if (success) {
                                     ctx.prefs().edit().putString("pref_dict_download_link_${type}_${dictLocale}", link).apply()
@@ -502,7 +539,8 @@ fun DownloadableDictionaryRow(locale: Locale, desc: String, link: String, refres
                         android.widget.Toast.makeText(ctx, "Downloading in browser… import dictionary once finished", android.widget.Toast.LENGTH_LONG).show()
                     } else {
                         downloading = true
-                        downloadDictionary(ctx, dictLocale, type, link) { success ->
+                        downloadProgress = 0f
+                        downloadDictionary(ctx, dictLocale, type, link, onProgress = { downloadProgress = it }) { success ->
                             downloading = false
                             if (success) {
                                 ctx.prefs().edit().putString("pref_dict_download_link_${type}_${dictLocale}", link).apply()

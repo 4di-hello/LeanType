@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -74,6 +75,7 @@ fun HandwritingModelDownloadDialog(
     val isOffline = remember { BuildConfig.FLAVOR.contains("offline", ignoreCase = true) }
     val downloadedMap = remember { mutableStateMapOf<String, Boolean>() }
     val downloadingMap = remember { mutableStateMapOf<String, Boolean>() }
+    val downloadProgressMap = remember { mutableStateMapOf<String, Float>() }
     val statusMap = remember { mutableStateMapOf<String, HandwritingModelImporter.ModelComponentsStatus>() }
     var allLanguages by remember { mutableStateOf<List<HandwritingLanguageItem>>(emptyList()) }
     var isLoadingList by remember { mutableStateOf(true) }
@@ -337,103 +339,132 @@ fun HandwritingModelDownloadDialog(
                             val status = statusMap[item.code] ?: statusMap[canonicalCode] ?: HandwritingModelImporter.ModelComponentsStatus(hasRecospec = false, hasModel = false, hasFst = false)
                             val isDownloaded = status.isReady || downloadedMap[item.code] == true || downloadedMap[canonicalCode] == true
                             val isDownloading = downloadingMap[item.code] == true || downloadingMap[canonicalCode] == true
+                            val downloadProgress = downloadProgressMap[item.code] ?: downloadProgressMap[canonicalCode] ?: 0f
 
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 4.dp, horizontal = 2.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Column(modifier = Modifier.weight(1f).padding(end = 8.dp)) {
-                                    Text(
-                                        text = item.displayName,
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                    val statusText = when {
-                                        isDownloading -> "Downloading..."
-                                        status.isComplete -> "Ready (Full: Model + FST)"
-                                        status.isReady -> "Ready"
-                                        status.hasModel && !status.hasFst -> "Missing dictionary (FST)"
-                                        status.hasFst && !status.hasModel -> "Missing neural model"
-                                        else -> "Not downloaded"
+                            Column(modifier = Modifier.fillMaxWidth()) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 4.dp, horizontal = 2.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Column(modifier = Modifier.weight(1f).padding(end = 8.dp)) {
+                                        Text(
+                                            text = item.displayName,
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                        val statusText = when {
+                                            isDownloading -> if (downloadProgress > 0f) "Downloading... ${(downloadProgress * 100).toInt()}%" else "Downloading..."
+                                            status.isComplete -> "Ready (Full: Model + FST)"
+                                            status.isReady -> "Ready"
+                                            status.hasModel && !status.hasFst -> "Missing dictionary (FST)"
+                                            status.hasFst && !status.hasModel -> "Missing neural model"
+                                            else -> "Not downloaded"
+                                        }
+                                        Text(
+                                            text = statusText,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = if (isDownloading || isDownloaded) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
+                                        )
                                     }
-                                    Text(
-                                        text = statusText,
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = if (isDownloaded) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
-                                    )
-                                }
 
-                                if (isDownloading) {
-                                    Box(modifier = Modifier.size(32.dp), contentAlignment = Alignment.Center) {
-                                        CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
-                                    }
-                                } else if (isDownloaded) {
-                                    Button(
-                                        onClick = {
-                                            val code = item.code
-                                            val canonical = HandwritingModelImporter.canonicalTagKey(code)
-                                            scope.launch(Dispatchers.IO) {
-                                                HandwritingModelImporter.deleteModelForLanguage(context, code)
-                                                recognizer?.removeModel(code)
-                                                val newStatus = HandwritingModelImporter.getComponentsStatus(context, code)
-                                                val isReady = newStatus.isReady || try { recognizer?.isLanguageReady(code) == true } catch (_: Throwable) { false }
-                                                withContext(Dispatchers.Main) {
-                                                    statusMap[code] = newStatus
-                                                    statusMap[canonical] = newStatus
-                                                    downloadedMap[code] = isReady
-                                                    downloadedMap[canonical] = isReady
-                                                    Toast.makeText(context, "Model deleted", Toast.LENGTH_SHORT).show()
-                                                    onModelChanged?.invoke()
-                                                }
-                                            }
-                                        },
-                                        colors = ButtonDefaults.buttonColors(
-                                            containerColor = MaterialTheme.colorScheme.errorContainer,
-                                            contentColor = MaterialTheme.colorScheme.onErrorContainer
-                                        ),
-                                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp),
-                                        modifier = Modifier.height(28.dp)
-                                    ) {
-                                        Text("Delete", style = MaterialTheme.typography.labelSmall)
-                                    }
-                                } else {
-                                    Button(
-                                        onClick = {
-                                            if (isOffline) {
-                                                offlineDownloadItem = item
-                                            } else {
+                                    if (isDownloading) {
+                                        Box(modifier = Modifier.size(32.dp), contentAlignment = Alignment.Center) {
+                                            CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
+                                        }
+                                    } else if (isDownloaded) {
+                                        Button(
+                                            onClick = {
                                                 val code = item.code
                                                 val canonical = HandwritingModelImporter.canonicalTagKey(code)
-                                                downloadingMap[code] = true
-                                                downloadingMap[canonical] = true
                                                 scope.launch(Dispatchers.IO) {
-                                                    val ok = HandwritingModelImporter.downloadPacksForLanguage(context, code)
+                                                    HandwritingModelImporter.deleteModelForLanguage(context, code)
+                                                    recognizer?.removeModel(code)
                                                     val newStatus = HandwritingModelImporter.getComponentsStatus(context, code)
+                                                    val isReady = newStatus.isReady || try { recognizer?.isLanguageReady(code) == true } catch (_: Throwable) { false }
                                                     withContext(Dispatchers.Main) {
-                                                        downloadingMap[code] = false
-                                                        downloadingMap[canonical] = false
                                                         statusMap[code] = newStatus
                                                         statusMap[canonical] = newStatus
-                                                        downloadedMap[code] = newStatus.isReady
-                                                        downloadedMap[canonical] = newStatus.isReady
-                                                        if (ok && newStatus.isReady) {
-                                                            Toast.makeText(context, "Downloaded ${item.displayName}", Toast.LENGTH_SHORT).show()
-                                                            onModelChanged?.invoke()
-                                                        } else {
-                                                            Toast.makeText(context, "Download failed", Toast.LENGTH_SHORT).show()
+                                                        downloadedMap[code] = isReady
+                                                        downloadedMap[canonical] = isReady
+                                                        Toast.makeText(context, "Model deleted", Toast.LENGTH_SHORT).show()
+                                                        onModelChanged?.invoke()
+                                                    }
+                                                }
+                                            },
+                                            colors = ButtonDefaults.buttonColors(
+                                                containerColor = MaterialTheme.colorScheme.errorContainer,
+                                                contentColor = MaterialTheme.colorScheme.onErrorContainer
+                                            ),
+                                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp),
+                                            modifier = Modifier.height(28.dp)
+                                        ) {
+                                            Text("Delete", style = MaterialTheme.typography.labelSmall)
+                                        }
+                                    } else {
+                                        Button(
+                                            onClick = {
+                                                if (isOffline) {
+                                                    offlineDownloadItem = item
+                                                } else {
+                                                    val code = item.code
+                                                    val canonical = HandwritingModelImporter.canonicalTagKey(code)
+                                                    downloadingMap[code] = true
+                                                    downloadingMap[canonical] = true
+                                                    downloadProgressMap[code] = 0f
+                                                    downloadProgressMap[canonical] = 0f
+                                                    scope.launch(Dispatchers.IO) {
+                                                        val ok = HandwritingModelImporter.downloadPacksForLanguage(context, code) { prog ->
+                                                            scope.launch(Dispatchers.Main) {
+                                                                downloadProgressMap[code] = prog
+                                                                downloadProgressMap[canonical] = prog
+                                                            }
+                                                        }
+                                                        val newStatus = HandwritingModelImporter.getComponentsStatus(context, code)
+                                                        withContext(Dispatchers.Main) {
+                                                            downloadingMap[code] = false
+                                                            downloadingMap[canonical] = false
+                                                            downloadProgressMap.remove(code)
+                                                            downloadProgressMap.remove(canonical)
+                                                            statusMap[code] = newStatus
+                                                            statusMap[canonical] = newStatus
+                                                            downloadedMap[code] = newStatus.isReady
+                                                            downloadedMap[canonical] = newStatus.isReady
+                                                            if (ok && newStatus.isReady) {
+                                                                Toast.makeText(context, "Downloaded ${item.displayName}", Toast.LENGTH_SHORT).show()
+                                                                onModelChanged?.invoke()
+                                                            } else {
+                                                                Toast.makeText(context, "Download failed", Toast.LENGTH_SHORT).show()
+                                                            }
                                                         }
                                                     }
                                                 }
-                                            }
-                                        },
-                                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp),
-                                        modifier = Modifier.height(28.dp)
-                                    ) {
-                                        Text("Download", style = MaterialTheme.typography.labelSmall)
+                                            },
+                                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp),
+                                            modifier = Modifier.height(28.dp)
+                                        ) {
+                                            Text("Download", style = MaterialTheme.typography.labelSmall)
+                                        }
+                                    }
+                                }
+
+                                if (isDownloading) {
+                                    if (downloadProgress > 0f) {
+                                        LinearProgressIndicator(
+                                            progress = { downloadProgress },
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(horizontal = 2.dp, vertical = 2.dp)
+                                        )
+                                    } else {
+                                        LinearProgressIndicator(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(horizontal = 2.dp, vertical = 2.dp)
+                                        )
                                     }
                                 }
                             }

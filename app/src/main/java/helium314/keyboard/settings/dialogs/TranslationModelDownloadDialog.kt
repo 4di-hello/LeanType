@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -72,6 +73,7 @@ fun TranslationModelDownloadDialog(
     
     val downloadedMap = remember { mutableStateMapOf<String, Boolean>() }
     val downloadingMap = remember { mutableStateMapOf<String, Boolean>() }
+    val downloadProgressMap = remember { mutableStateMapOf<String, Float>() }
     var allLanguages by remember { mutableStateOf<List<TranslationLanguageItem>>(emptyList()) }
     var isLoadingList by remember { mutableStateOf(true) }
     var pendingImportUri by remember { mutableStateOf<Uri?>(null) }
@@ -265,98 +267,119 @@ fun TranslationModelDownloadDialog(
                             val isEnglish = item.code == "en"
                             val isDownloaded = isEnglish || downloadedMap[item.code] == true
                             val isDownloading = !isEnglish && downloadingMap[item.code] == true
+                            val downloadProgress = downloadProgressMap[item.code] ?: 0f
 
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 6.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Column(modifier = Modifier.weight(1f).padding(end = 8.dp)) {
-                                    Text(
-                                        text = item.displayName,
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        fontWeight = if (isDownloaded) FontWeight.Bold else FontWeight.Normal
-                                    )
-                                    Text(
-                                        text = if (isEnglish) "Built-in" else if (isDownloaded) "Downloaded (Offline ready)" else if (isDownloading) "Downloading…" else "Not downloaded",
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = if (isDownloaded)
-                                            MaterialTheme.colorScheme.primary
-                                        else
-                                            MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
+                            Column(modifier = Modifier.fillMaxWidth()) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 6.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Column(modifier = Modifier.weight(1f).padding(end = 8.dp)) {
+                                        Text(
+                                            text = item.displayName,
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            fontWeight = if (isDownloaded) FontWeight.Bold else FontWeight.Normal
+                                        )
+                                        Text(
+                                            text = if (isEnglish) "Built-in" else if (isDownloaded) "Downloaded (Offline ready)" else if (isDownloading) (if (downloadProgress > 0f) "Downloading... ${(downloadProgress * 100).toInt()}%" else "Downloading…") else "Not downloaded",
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = if (isDownloaded || isDownloading)
+                                                MaterialTheme.colorScheme.primary
+                                            else
+                                                MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+
+                                    if (isEnglish) {
+                                        Text(
+                                            text = "Active",
+                                            style = MaterialTheme.typography.labelMedium,
+                                            color = MaterialTheme.colorScheme.primary,
+                                            modifier = Modifier.padding(end = 8.dp)
+                                        )
+                                    } else if (isDownloading) {
+                                        Box(modifier = Modifier.size(32.dp), contentAlignment = Alignment.Center) {
+                                            CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
+                                        }
+                                    } else if (isDownloaded) {
+                                        Button(
+                                            onClick = {
+                                                scope.launch(Dispatchers.IO) {
+                                                    val deleted = (try {
+                                                        provider.deleteModel(item.code)
+                                                    } catch (_: Throwable) {
+                                                        false
+                                                    }) || TranslationModelImporter.deleteModel(context, item.code)
+                                                    withContext(Dispatchers.Main) {
+                                                        if (deleted) {
+                                                            downloadedMap[item.code] = false
+                                                            Toast.makeText(context, "${item.displayName} model removed", Toast.LENGTH_SHORT).show()
+                                                        } else {
+                                                            Toast.makeText(context, "Failed to remove model", Toast.LENGTH_SHORT).show()
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            colors = ButtonDefaults.buttonColors(
+                                                containerColor = MaterialTheme.colorScheme.errorContainer,
+                                                contentColor = MaterialTheme.colorScheme.onErrorContainer
+                                            ),
+                                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp),
+                                            modifier = Modifier.height(28.dp)
+                                        ) {
+                                            Text("Delete", style = MaterialTheme.typography.labelSmall)
+                                        }
+                                    } else {
+                                        Button(
+                                            onClick = {
+                                                if (isOffline) {
+                                                    val url = TranslationModelUrls.getDownloadUrl(item.code)
+                                                    if (url != null) {
+                                                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+                                                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                                        }
+                                                        context.startActivity(intent)
+                                                        Toast.makeText(context, "Downloading in browser… import .zip once finished", Toast.LENGTH_LONG).show()
+                                                    } else {
+                                                        Toast.makeText(context, "Download URL not available", Toast.LENGTH_SHORT).show()
+                                                    }
+                                                 } else {
+                                                    downloadModelWithFallback(
+                                                        provider = provider,
+                                                        item = item,
+                                                        context = context,
+                                                        scope = scope,
+                                                        downloadingMap = downloadingMap,
+                                                        downloadProgressMap = downloadProgressMap,
+                                                        downloadedMap = downloadedMap
+                                                    )
+                                                }
+                                            },
+                                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp),
+                                            modifier = Modifier.height(28.dp)
+                                        ) {
+                                            Text("Download", style = MaterialTheme.typography.labelSmall)
+                                        }
+                                    }
                                 }
 
-                                if (isEnglish) {
-                                    Text(
-                                        text = "Active",
-                                        style = MaterialTheme.typography.labelMedium,
-                                        color = MaterialTheme.colorScheme.primary,
-                                        modifier = Modifier.padding(end = 8.dp)
-                                    )
-                                } else if (isDownloading) {
-                                    Box(modifier = Modifier.size(32.dp), contentAlignment = Alignment.Center) {
-                                        CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
-                                    }
-                                } else if (isDownloaded) {
-                                    Button(
-                                        onClick = {
-                                            scope.launch(Dispatchers.IO) {
-                                                val deleted = (try {
-                                                    provider.deleteModel(item.code)
-                                                } catch (_: Throwable) {
-                                                    false
-                                                }) || TranslationModelImporter.deleteModel(context, item.code)
-                                                withContext(Dispatchers.Main) {
-                                                    if (deleted) {
-                                                        downloadedMap[item.code] = false
-                                                        Toast.makeText(context, "${item.displayName} model removed", Toast.LENGTH_SHORT).show()
-                                                    } else {
-                                                        Toast.makeText(context, "Failed to remove model", Toast.LENGTH_SHORT).show()
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        colors = ButtonDefaults.buttonColors(
-                                            containerColor = MaterialTheme.colorScheme.errorContainer,
-                                            contentColor = MaterialTheme.colorScheme.onErrorContainer
-                                        ),
-                                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp),
-                                        modifier = Modifier.height(28.dp)
-                                    ) {
-                                        Text("Delete", style = MaterialTheme.typography.labelSmall)
-                                    }
-                                } else {
-                                    Button(
-                                        onClick = {
-                                            if (isOffline) {
-                                                val url = TranslationModelUrls.getDownloadUrl(item.code)
-                                                if (url != null) {
-                                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
-                                                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                                    }
-                                                    context.startActivity(intent)
-                                                    Toast.makeText(context, "Downloading in browser… import .zip once finished", Toast.LENGTH_LONG).show()
-                                                } else {
-                                                    Toast.makeText(context, "Download URL not available", Toast.LENGTH_SHORT).show()
-                                                }
-                                             } else {
-                                                downloadModelWithFallback(
-                                                    provider = provider,
-                                                    item = item,
-                                                    context = context,
-                                                    scope = scope,
-                                                    downloadingMap = downloadingMap,
-                                                    downloadedMap = downloadedMap
-                                                )
-                                            }
-                                        },
-                                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp),
-                                        modifier = Modifier.height(28.dp)
-                                    ) {
-                                        Text("Download", style = MaterialTheme.typography.labelSmall)
+                                if (isDownloading) {
+                                    if (downloadProgress > 0f) {
+                                        LinearProgressIndicator(
+                                            progress = { downloadProgress },
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(horizontal = 2.dp, vertical = 2.dp)
+                                        )
+                                    } else {
+                                        LinearProgressIndicator(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(horizontal = 2.dp, vertical = 2.dp)
+                                        )
                                     }
                                 }
                             }
@@ -374,12 +397,15 @@ private fun downloadModelWithFallback(
     context: android.content.Context,
     scope: CoroutineScope,
     downloadingMap: MutableMap<String, Boolean>,
+    downloadProgressMap: MutableMap<String, Float>,
     downloadedMap: MutableMap<String, Boolean>
 ) {
     downloadingMap[item.code] = true
+    downloadProgressMap[item.code] = 0f
 
     fun tryFallbackToBrowser() {
         downloadingMap[item.code] = false
+        downloadProgressMap.remove(item.code)
         val url = TranslationModelUrls.getDownloadUrl(item.code)
         if (url != null) {
             try {
@@ -422,10 +448,17 @@ private fun downloadModelWithFallback(
                     provider.javaClass.classLoader ?: paramType.classLoader,
                     arrayOf(paramType)
                 ) { _, method, args ->
+                    if (method.name == "onProgress") {
+                        val prog = (args?.firstOrNull() as? Number)?.toFloat() ?: 0f
+                        scope.launch(Dispatchers.Main) {
+                            downloadProgressMap[item.code] = prog
+                        }
+                    }
                     if (method.name == "invoke" || method.name == "onComplete") {
                         val success = (args?.firstOrNull() as? Boolean) ?: false
                         scope.launch(Dispatchers.Main) {
                             downloadingMap[item.code] = false
+                            downloadProgressMap.remove(item.code)
                             if (success) {
                                 downloadedMap[item.code] = true
                                 Toast.makeText(context, "Downloaded ${item.displayName}", Toast.LENGTH_SHORT).show()
@@ -440,6 +473,7 @@ private fun downloadModelWithFallback(
                 val f: (Boolean) -> Unit = { success ->
                     scope.launch(Dispatchers.Main) {
                         downloadingMap[item.code] = false
+                        downloadProgressMap.remove(item.code)
                         if (success) {
                             downloadedMap[item.code] = true
                             Toast.makeText(context, "Downloaded ${item.displayName}", Toast.LENGTH_SHORT).show()
@@ -459,8 +493,15 @@ private fun downloadModelWithFallback(
     }
 
     val modernListener = object : TranslationModelDownloadListener {
+        override fun onProgress(progress: Float) {
+            scope.launch(Dispatchers.Main) {
+                downloadProgressMap[item.code] = progress
+            }
+        }
+
         override fun onComplete(success: Boolean, errorMessage: String?) {
             scope.launch(Dispatchers.Main) {
+                downloadProgressMap.remove(item.code)
                 if (success) {
                     downloadingMap[item.code] = false
                     downloadedMap[item.code] = true

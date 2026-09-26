@@ -24,6 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -77,6 +78,7 @@ fun SoundPackDownloadDialog(
     var remotePacks by remember { mutableStateOf<List<RemoteSoundPack>>(SoundPackUrls.FALLBACK_CATALOG) }
     var isLoadingRemote by remember { mutableStateOf(false) }
     val downloadingMap = remember { mutableStateMapOf<String, Boolean>() }
+    val downloadProgressMap = remember { mutableStateMapOf<String, Float>() }
 
     fun refreshCustomPacks() {
         customPacks = SoundPackImporter.getInstalledCustomPacks(context)
@@ -332,6 +334,7 @@ fun SoundPackDownloadDialog(
 
                             items(availableRemote, key = { it.id }) { rPack ->
                                 val isDownloading = downloadingMap[rPack.id] == true
+                                val downloadProgress = downloadProgressMap[rPack.id] ?: 0f
                                 Surface(
                                     shape = RoundedCornerShape(8.dp),
                                     color = MaterialTheme.colorScheme.surface,
@@ -339,75 +342,104 @@ fun SoundPackDownloadDialog(
                                         .fillMaxWidth()
                                         .padding(vertical = 4.dp)
                                 ) {
-                                    Row(
+                                    Column(
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                            .padding(horizontal = 8.dp, vertical = 8.dp),
-                                        verticalAlignment = Alignment.CenterVertically
+                                            .padding(horizontal = 8.dp, vertical = 8.dp)
                                     ) {
-                                        Column(modifier = Modifier.weight(1f).padding(end = 8.dp)) {
-                                            Text(
-                                                text = rPack.name,
-                                                style = MaterialTheme.typography.bodyMedium,
-                                                fontWeight = FontWeight.Bold
-                                            )
-                                            val details = buildString {
-                                                rPack.author?.let { append("$it • ") }
-                                                append("v${rPack.versionName} • ")
-                                                if (rPack.sizeBytes > 0) {
-                                                    val kb = rPack.sizeBytes / 1024
-                                                    if (kb >= 1024) append(String.format("%.1f MB", kb / 1024f))
-                                                    else append("$kb KB")
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Column(modifier = Modifier.weight(1f).padding(end = 8.dp)) {
+                                                Text(
+                                                    text = rPack.name,
+                                                    style = MaterialTheme.typography.bodyMedium,
+                                                    fontWeight = FontWeight.Bold
+                                                )
+                                                val details = buildString {
+                                                    rPack.author?.let { append("$it • ") }
+                                                    append("v${rPack.versionName} • ")
+                                                    if (rPack.sizeBytes > 0) {
+                                                        val kb = rPack.sizeBytes / 1024
+                                                        if (kb >= 1024) append(String.format("%.1f MB", kb / 1024f))
+                                                        else append("$kb KB")
+                                                    }
+                                                }
+                                                Text(
+                                                    text = if (isDownloading) {
+                                                        if (downloadProgress > 0f) "Downloading... ${(downloadProgress * 100).toInt()}%" else "Downloading..."
+                                                    } else details,
+                                                    style = MaterialTheme.typography.bodySmall,
+                                                    color = if (isDownloading) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                                                )
+                                                if (!isDownloading && !rPack.summary.isNullOrBlank()) {
+                                                    Text(
+                                                        text = rPack.summary,
+                                                        style = MaterialTheme.typography.bodySmall,
+                                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                    )
                                                 }
                                             }
-                                            Text(
-                                                text = details,
-                                                style = MaterialTheme.typography.bodySmall,
-                                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                                            )
-                                            if (!rPack.summary.isNullOrBlank()) {
-                                                Text(
-                                                    text = rPack.summary,
-                                                    style = MaterialTheme.typography.bodySmall,
-                                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                                )
+
+                                            if (isDownloading) {
+                                                Box(modifier = Modifier.size(32.dp), contentAlignment = Alignment.Center) {
+                                                    CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
+                                                }
+                                            } else {
+                                                Button(
+                                                    onClick = {
+                                                        if (isOffline) {
+                                                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(rPack.downloadUrl)).apply {
+                                                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                                            }
+                                                            context.startActivity(intent)
+                                                            Toast.makeText(context, "Downloading in browser… import .zip once finished", Toast.LENGTH_LONG).show()
+                                                        } else {
+                                                            downloadingMap[rPack.id] = true
+                                                            downloadProgressMap[rPack.id] = 0f
+                                                            scope.launch(Dispatchers.IO) {
+                                                                val ok = SoundPackImporter.downloadAndInstall(context, rPack) { prog ->
+                                                                    scope.launch(Dispatchers.Main) {
+                                                                        downloadProgressMap[rPack.id] = prog
+                                                                    }
+                                                                }
+                                                                withContext(Dispatchers.Main) {
+                                                                    downloadingMap[rPack.id] = false
+                                                                    downloadProgressMap.remove(rPack.id)
+                                                                    if (ok) {
+                                                                        refreshCustomPacks()
+                                                                        selectPack(rPack.id)
+                                                                        Toast.makeText(context, "Downloaded and activated ${rPack.name}", Toast.LENGTH_SHORT).show()
+                                                                    } else {
+                                                                        Toast.makeText(context, "Download failed for ${rPack.name}", Toast.LENGTH_SHORT).show()
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    },
+                                                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp),
+                                                    modifier = Modifier.height(28.dp)
+                                                ) {
+                                                    Text("Download", style = MaterialTheme.typography.labelSmall)
+                                                }
                                             }
                                         }
 
                                         if (isDownloading) {
-                                            Box(modifier = Modifier.size(32.dp), contentAlignment = Alignment.Center) {
-                                                CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
-                                            }
-                                        } else {
-                                            Button(
-                                                onClick = {
-                                                    if (isOffline) {
-                                                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(rPack.downloadUrl)).apply {
-                                                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                                        }
-                                                        context.startActivity(intent)
-                                                        Toast.makeText(context, "Downloading in browser… import .zip once finished", Toast.LENGTH_LONG).show()
-                                                    } else {
-                                                        downloadingMap[rPack.id] = true
-                                                        scope.launch(Dispatchers.IO) {
-                                                            val ok = SoundPackImporter.downloadAndInstall(context, rPack)
-                                                            withContext(Dispatchers.Main) {
-                                                                downloadingMap[rPack.id] = false
-                                                                if (ok) {
-                                                                    refreshCustomPacks()
-                                                                    selectPack(rPack.id)
-                                                                    Toast.makeText(context, "Downloaded and activated ${rPack.name}", Toast.LENGTH_SHORT).show()
-                                                                } else {
-                                                                    Toast.makeText(context, "Download failed for ${rPack.name}", Toast.LENGTH_SHORT).show()
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp),
-                                                modifier = Modifier.height(28.dp)
-                                            ) {
-                                                Text("Download", style = MaterialTheme.typography.labelSmall)
+                                            if (downloadProgress > 0f) {
+                                                LinearProgressIndicator(
+                                                    progress = { downloadProgress },
+                                                    modifier = Modifier
+                                                        .fillMaxWidth()
+                                                        .padding(top = 6.dp)
+                                                )
+                                            } else {
+                                                LinearProgressIndicator(
+                                                    modifier = Modifier
+                                                        .fillMaxWidth()
+                                                        .padding(top = 6.dp)
+                                                )
                                             }
                                         }
                                     }

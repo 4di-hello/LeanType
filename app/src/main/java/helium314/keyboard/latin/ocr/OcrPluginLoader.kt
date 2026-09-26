@@ -66,7 +66,7 @@ object OcrPluginLoader {
         }
     }
 
-    fun downloadPluginApk(context: Context, tag: String? = null, tempFile: File): Boolean {
+    fun downloadPluginApk(context: Context, tag: String? = null, tempFile: File, onProgress: ((Float) -> Unit)? = null): Boolean {
         val urlsToTry = listOf(
             getPluginDownloadUrl(tag),
             if (tag == null || tag == "latest") {
@@ -99,9 +99,10 @@ object OcrPluginLoader {
                 }
 
                 if (status == java.net.HttpURLConnection.HTTP_OK) {
+                    val totalBytes = redirectConn.contentLengthLong
                     redirectConn.inputStream.use { input ->
                         java.io.FileOutputStream(tempFile).use { output ->
-                            input.copyTo(output)
+                            helium314.keyboard.latin.common.FileUtils.copyStreamWithProgress(input, output, totalBytes, onProgress = onProgress)
                         }
                     }
                     redirectConn.disconnect()
