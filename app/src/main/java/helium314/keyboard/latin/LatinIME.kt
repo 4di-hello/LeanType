@@ -371,6 +371,10 @@ class LatinIME : InputMethodService(),
 
     override fun onDestroy() {
         if (sInstance === this) sInstance = null
+        if (isShowingOptionDialog()) {
+            optionsDialog?.dismiss()
+            optionsDialog = null
+        }
         voiceInputManager?.release(); voiceInputManager = null
         voicePluginManager?.release(); voicePluginManager = null
         handler.removeCallbacksAndMessages(null)

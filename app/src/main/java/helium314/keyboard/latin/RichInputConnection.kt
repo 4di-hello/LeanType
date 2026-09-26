@@ -248,8 +248,13 @@ class RichInputConnection(private val mParent: InputMethodService) : PrivateComm
 
         val et = mIC?.getExtractedText(ExtractedTextRequest(), 0) ?: return
 
-        mExpectedSelStart = et.selectionStart + et.startOffset
-        mExpectedSelEnd = et.selectionEnd + et.startOffset
+        if (et.selectionStart >= 0 && et.selectionEnd >= 0) {
+            mExpectedSelStart = et.selectionStart + et.startOffset
+            mExpectedSelEnd = et.selectionEnd + et.startOffset
+        } else {
+            mExpectedSelStart = INVALID_CURSOR_POSITION
+            mExpectedSelEnd = INVALID_CURSOR_POSITION
+        }
     }
 
     private fun checkBatchEdit() {

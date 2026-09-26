@@ -236,6 +236,7 @@ class AudioAndHapticFeedbackManager private constructor() {
     }
 
     fun onDestroy() {
+        mSupportedPrimitives.clear()
         mContext?.let { CustomSoundManager.getInstance(it).onDestroy() }
     }
 

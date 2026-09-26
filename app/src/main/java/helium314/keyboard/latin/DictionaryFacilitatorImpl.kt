@@ -44,6 +44,7 @@ import helium314.keyboard.latin.utils.DeviceProtectedUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.IOException
@@ -232,6 +233,9 @@ class DictionaryFacilitatorImpl : DictionaryFacilitator {
                     dictGroupToCleanup.closeDict(dictType)
                 }
             }
+            for (oldGroup in oldDictionaryGroups) {
+                oldGroup.cancelScope()
+            }
         }
 
         mValidSpellingWordWriteCache?.evictAll()
@@ -346,9 +350,7 @@ class DictionaryFacilitatorImpl : DictionaryFacilitator {
             refreshMainDictionaryReadinessState()
         }
         for (dictionaryGroup in dictionaryGroupsToClose) {
-            for (dictType in DictionaryFacilitator.ALL_DICTIONARY_TYPES) {
-                dictionaryGroup.closeDict(dictType)
-            }
+            dictionaryGroup.close()
         }
     }
 
@@ -1391,6 +1393,17 @@ private class DictionaryGroup(
             return mainDict != null
         }
         return subDicts.containsKey(dictType)
+    }
+
+    fun cancelScope() {
+        scope.cancel()
+    }
+
+    fun close() {
+        cancelScope()
+        for (dictType in DictionaryFacilitator.ALL_DICTIONARY_TYPES) {
+            closeDict(dictType)
+        }
     }
 
     fun closeDict(dictType: String) {
