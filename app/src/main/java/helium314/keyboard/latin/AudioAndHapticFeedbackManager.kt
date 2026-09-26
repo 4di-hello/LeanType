@@ -31,6 +31,7 @@ class AudioAndHapticFeedbackManager private constructor() {
     private var mContext: Context? = null
     private var mAudioManager: AudioManager? = null
     private var mVibrator: Vibrator? = null
+    private val mSupportedPrimitives = mutableMapOf<Int, Boolean>()
 
     private var mSettingsValues: SettingsValues? = null
     private var mSoundOn = false
@@ -136,14 +137,16 @@ class AudioAndHapticFeedbackManager private constructor() {
                 else -> VibrationEffect.Composition.PRIMITIVE_TICK
             }
 
-            val isSupported = try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    vibrator.areAllPrimitivesSupported(primitiveId)
-                } else {
-                    vibrator.arePrimitivesSupported(primitiveId).firstOrNull() == true
+            val isSupported = mSupportedPrimitives.getOrPut(primitiveId) {
+                try {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        vibrator.areAllPrimitivesSupported(primitiveId)
+                    } else {
+                        vibrator.arePrimitivesSupported(primitiveId).firstOrNull() == true
+                    }
+                } catch (e: Exception) {
+                    false
                 }
-            } catch (e: Exception) {
-                false
             }
 
             if (isSupported) {
