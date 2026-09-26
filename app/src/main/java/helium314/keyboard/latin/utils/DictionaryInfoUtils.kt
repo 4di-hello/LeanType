@@ -202,10 +202,9 @@ object DictionaryInfoUtils {
         val cacheDir = getCacheDirectoryForLocale(locale, context) ?: return null
         val targetFile = File(cacheDir, "${dictionaryFileName.substringBefore("_")}.dict")
         try {
-            FileUtils.copyStreamToNewFile(
-                context.assets.open(ASSETS_DICTIONARY_FOLDER + File.separator + dictionaryFileName),
-                targetFile
-            )
+            context.assets.open(ASSETS_DICTIONARY_FOLDER + File.separator + dictionaryFileName).use { input ->
+                FileUtils.copyStreamToNewFile(input, targetFile)
+            }
             val type = dictionaryFileName.substringBefore("_")
             context.prefs().edit().putBoolean("pref_extracted_asset_${type}_${locale.toLanguageTag()}", true).apply()
         } catch (e: IOException) {

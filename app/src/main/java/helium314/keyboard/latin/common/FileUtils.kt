@@ -59,8 +59,11 @@ object FileUtils {
         val wait = CountDownLatch(1)
         ExecutorUtils.getBackgroundExecutor(ExecutorUtils.KEYBOARD).execute {
             try {
-                val inputStream = context.contentResolver.openInputStream(uri)
-                copyStreamToNewFile(inputStream, outfile)
+                context.contentResolver.openInputStream(uri)?.use { inputStream ->
+                    copyStreamToNewFile(inputStream, outfile)
+                } ?: run {
+                    allOk[0] = false
+                }
             } catch (e: IOException) {
                 allOk[0] = false
             } finally {
@@ -88,9 +91,9 @@ object FileUtils {
         if (parentFile == null || (!parentFile.exists() && !parentFile.mkdirs())) {
             throw IOException("could not create parent folder")
         }
-        val out = FileOutputStream(outfile)
-        copyStreamToOtherStream(inputStream, out)
-        out.close()
+        FileOutputStream(outfile).use { out ->
+            copyStreamToOtherStream(inputStream, out)
+        }
     }
 
     @Throws(IOException::class)
