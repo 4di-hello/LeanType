@@ -27,7 +27,7 @@
 /*
  * Returns the JNI version on success, -1 on failure.
  */
-jint JNI_OnLoad(JavaVM *vm, void *reserved) {
+extern "C" JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
     JNIEnv *env = 0;
 
     if (vm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION_1_6) != JNI_OK) {
