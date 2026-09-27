@@ -27,7 +27,7 @@ import android.view.View
 import android.view.View.OnLongClickListener
 import android.view.ViewConfiguration
 import android.view.ViewGroup
-import android.view.animation.DecelerateInterpolator
+import android.view.animation.PathInterpolator
 import android.view.accessibility.AccessibilityEvent
 import android.widget.ImageButton
 import android.widget.LinearLayout
@@ -78,6 +78,8 @@ import helium314.keyboard.latin.utils.locale
 import helium314.keyboard.settings.SettingsWithoutKey
 
 import kotlin.math.min
+
+private val TOOLBAR_INTERPOLATOR = PathInterpolator(0.1f, 0.9f, 0.2f, 1.0f)
 
 @SuppressLint("InflateParams")
 class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int) :
@@ -392,14 +394,14 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
             if (nextToolbarVisible) {
                 toolbarContainer.isVisible = true
                 if (duration > 0L && isAttachedToWindow && !prevToolbarVisible) {
-                    toolbarContainer.alpha = 0f
-                    toolbarContainer.translationX = 14f * resources.displayMetrics.density * direction
+                    toolbarContainer.alpha = 0.25f
+                    toolbarContainer.translationX = 8f * resources.displayMetrics.density * direction
                     toolbarContainer.animate()?.cancel()
                     toolbarContainer.animate()
                         ?.alpha(1f)
                         ?.translationX(0f)
                         ?.setDuration(duration)
-                        ?.setInterpolator(DecelerateInterpolator(1.5f))
+                        ?.setInterpolator(TOOLBAR_INTERPOLATOR)
                         ?.start()
                 } else {
                     toolbarContainer.animate()?.cancel()
@@ -414,12 +416,12 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
             if (nextSuggestionsVisible) {
                 suggestionsStrip.isVisible = true
                 if (duration > 0L && isAttachedToWindow && !prevSuggestionsVisible) {
-                    suggestionsStrip.alpha = 0f
+                    suggestionsStrip.alpha = 0.25f
                     suggestionsStrip.animate()?.cancel()
                     suggestionsStrip.animate()
                         ?.alpha(1f)
                         ?.setDuration(duration)
-                        ?.setInterpolator(DecelerateInterpolator(1.5f))
+                        ?.setInterpolator(TOOLBAR_INTERPOLATOR)
                         ?.start()
                 } else {
                     suggestionsStrip.animate()?.cancel()
@@ -433,12 +435,12 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
             if (showPinned) {
                 pinnedKeys.isVisible = true
                 if (duration > 0L && isAttachedToWindow && !prevPinnedVisible) {
-                    pinnedKeys.alpha = 0f
+                    pinnedKeys.alpha = 0.25f
                     pinnedKeys.animate()?.cancel()
                     pinnedKeys.animate()
                         ?.alpha(1f)
                         ?.setDuration(duration)
-                        ?.setInterpolator(DecelerateInterpolator(1.5f))
+                        ?.setInterpolator(TOOLBAR_INTERPOLATOR)
                         ?.start()
                 } else {
                     pinnedKeys.animate()?.cancel()
@@ -463,7 +465,7 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
             toolbarExpandKey.animate()
                 ?.scaleX(targetScaleX)
                 ?.setDuration(duration)
-                ?.setInterpolator(DecelerateInterpolator(1.5f))
+                ?.setInterpolator(TOOLBAR_INTERPOLATOR)
                 ?.start()
         } else {
             toolbarExpandKey.animate()?.cancel()
@@ -566,16 +568,16 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
 
         val duration = Settings.getAnimationDuration(100)
         if (duration > 0L && suggestionsStrip.isAttachedToWindow) {
-            targetView.alpha = 0f
-            targetView.scaleX = 0.92f
-            targetView.scaleY = 0.92f
+            targetView.alpha = 0.3f
+            targetView.scaleX = 0.94f
+            targetView.scaleY = 0.94f
             targetView.animate()?.cancel()
             targetView.animate()
                 ?.alpha(1f)
                 ?.scaleX(1f)
                 ?.scaleY(1f)
                 ?.setDuration(duration)
-                ?.setInterpolator(DecelerateInterpolator(1.5f))
+                ?.setInterpolator(TOOLBAR_INTERPOLATOR)
                 ?.start()
         }
 
