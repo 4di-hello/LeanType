@@ -40,11 +40,13 @@ class OtpNotificationListenerService : NotificationListenerService() {
         }
     }
 
-    private fun isLikelySmsPackage(pkg: String): Boolean {
-        if (pkg == cachedAllowedPackage) return true
-        if (pkg == cachedDefaultSmsPackage) return true
-        if (pkg in SmsPackageProvider.KNOWN_SMS_PACKAGES) return true
-        return false
+    private fun isAllowedPackage(pkg: String): Boolean {
+        val allowed = cachedAllowedPackage
+        if (!allowed.isNullOrBlank()) {
+            return pkg == allowed
+        }
+        val defaultSms = cachedDefaultSmsPackage ?: SmsPackageProvider.getDefaultSmsPackage(this)
+        return (!defaultSms.isNullOrBlank() && pkg == defaultSms) || pkg in SmsPackageProvider.KNOWN_SMS_PACKAGES
     }
 
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
@@ -69,22 +71,11 @@ class OtpNotificationListenerService : NotificationListenerService() {
         val sbnNonNull = sbn ?: return
         val pkg = sbnNonNull.packageName ?: return
 
-        // 1. Instant in-memory fast-path: reject non-SMS packages in sub-microseconds without disk I/O
-        if (!isLikelySmsPackage(pkg)) return
+        // 1. Strict package filter: if user selected an SMS app, ONLY accept that one; otherwise check default/allowlist
+        if (!isAllowedPackage(pkg)) return
 
         // 2. In-memory check if feature is enabled
         if (!isAutoReadEnabled) return
-
-        // 3. Package filtering: check specific allowed package or fallback allowlist / default SMS app
-        val allowedPackage = cachedAllowedPackage
-        if (!allowedPackage.isNullOrBlank()) {
-            if (pkg != allowedPackage) return
-        } else {
-            val defaultSms = cachedDefaultSmsPackage ?: SmsPackageProvider.getDefaultSmsPackage(this)
-            val isKnown = pkg in SmsPackageProvider.KNOWN_SMS_PACKAGES
-            val isDefault = !defaultSms.isNullOrBlank() && pkg == defaultSms
-            if (!isKnown && !isDefault) return
-        }
 
         Log.d(TAG, "Processing notification from package: $pkg")
 
