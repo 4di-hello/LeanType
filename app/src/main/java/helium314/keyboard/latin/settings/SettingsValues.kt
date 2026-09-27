@@ -12,8 +12,10 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.text.InputType
 import android.view.inputmethod.EditorInfo
+import androidx.core.content.edit
 import androidx.core.util.TypedValueCompat
 import helium314.keyboard.compat.AppQuirksManager
+import kotlin.math.roundToInt
 import helium314.keyboard.compat.locale
 import helium314.keyboard.keyboard.KeyboardTheme
 import helium314.keyboard.keyboard.internal.keyboard_parser.POPUP_KEYS_NORMAL
@@ -78,7 +80,10 @@ open class SettingsValues(
     val mShowsHints: Boolean
     val mShowsPopupHints: Boolean
     val mShowTldPopupKeys: Boolean
-    val mPopupKeysVerticalOffset: Float
+    val mPopupKeysVerticalOffsetPercent: Float
+    val mPopupKeysVerticalOffsetFraction: Float
+    @Deprecated("Use mPopupKeysVerticalOffsetPercent or mPopupKeysVerticalOffsetFraction")
+    val mPopupKeysVerticalOffset: Float get() = mPopupKeysVerticalOffsetPercent
     val mAnimationSpeedScale: Float
     val mSpaceForLangChange: Boolean
     val mShowsEmojiKey: Boolean
@@ -263,7 +268,20 @@ open class SettingsValues(
         mShowsHints = prefs.getBoolean(Settings.PREF_SHOW_HINTS, Defaults.PREF_SHOW_HINTS)
         mShowsPopupHints = prefs.getBoolean(Settings.PREF_SHOW_POPUP_HINTS, Defaults.PREF_SHOW_POPUP_HINTS)
         mShowTldPopupKeys = prefs.getBoolean(Settings.PREF_SHOW_TLD_POPUP_KEYS, Defaults.PREF_SHOW_TLD_POPUP_KEYS)
-        mPopupKeysVerticalOffset = prefs.getFloat(Settings.PREF_POPUP_KEYS_VERTICAL_OFFSET, Defaults.PREF_POPUP_KEYS_VERTICAL_OFFSET)
+        mPopupKeysVerticalOffsetPercent = if (prefs.contains(Settings.PREF_POPUP_KEYS_VERTICAL_OFFSET_PERCENT)) {
+            prefs.getFloat(Settings.PREF_POPUP_KEYS_VERTICAL_OFFSET_PERCENT, Defaults.PREF_POPUP_KEYS_VERTICAL_OFFSET_PERCENT)
+        } else if (prefs.contains(Settings.PREF_POPUP_KEYS_VERTICAL_OFFSET)) {
+            val oldDp = prefs.getFloat(Settings.PREF_POPUP_KEYS_VERTICAL_OFFSET, Defaults.PREF_POPUP_KEYS_VERTICAL_OFFSET)
+            val migrated = (oldDp / 230f * 100f).roundToInt().toFloat().coerceIn(0f, 8f)
+            prefs.edit {
+                putFloat(Settings.PREF_POPUP_KEYS_VERTICAL_OFFSET_PERCENT, migrated)
+                remove(Settings.PREF_POPUP_KEYS_VERTICAL_OFFSET)
+            }
+            migrated
+        } else {
+            Defaults.PREF_POPUP_KEYS_VERTICAL_OFFSET_PERCENT
+        }
+        mPopupKeysVerticalOffsetFraction = mPopupKeysVerticalOffsetPercent / 100f
         mAnimationSpeedScale = prefs.getFloat(Settings.PREF_ANIMATION_SPEED_SCALE, Defaults.PREF_ANIMATION_SPEED_SCALE)
         mSpaceForLangChange = prefs.getBoolean(Settings.PREF_SPACE_TO_CHANGE_LANG, Defaults.PREF_SPACE_TO_CHANGE_LANG)
         mShowsEmojiKey = prefs.getBoolean(Settings.PREF_SHOW_EMOJI_KEY, Defaults.PREF_SHOW_EMOJI_KEY)

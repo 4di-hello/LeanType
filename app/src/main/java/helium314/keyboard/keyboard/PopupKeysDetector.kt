@@ -23,8 +23,9 @@ class PopupKeysDetector(private val mSlideAllowance: Float) : KeyDetector() {
         val touchX = getTouchX(x)
         val touchY = getTouchY(y)
 
-        val density = android.content.res.Resources.getSystem().displayMetrics.density
-        val extraDownwardAllowance = maxOf(0f, Settings.getValues().mPopupKeysVerticalOffset * density)
+        val keyboardHeight = keyboard.mId.mHeight.takeIf { it > 0 }
+            ?: (230 * android.content.res.Resources.getSystem().displayMetrics.density).toInt()
+        val extraDownwardAllowance = maxOf(0f, keyboardHeight * Settings.getValues().mPopupKeysVerticalOffsetFraction)
         val downwardAllowance = mSlideAllowance + extraDownwardAllowance
         val allowanceSquareDown = (downwardAllowance * downwardAllowance).toInt()
 

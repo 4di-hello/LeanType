@@ -82,7 +82,7 @@ fun AppearanceScreen(
         Settings.PREF_POPUP_KEYS_ORDER,
         Settings.PREF_SHOW_POPUP_HINTS,
         Settings.PREF_SHOW_TLD_POPUP_KEYS,
-        Settings.PREF_POPUP_KEYS_VERTICAL_OFFSET,
+        Settings.PREF_POPUP_KEYS_VERTICAL_OFFSET_PERCENT,
         Settings.PREF_ANIMATION_SPEED_SCALE,
         Settings.PREF_POPUP_ON,
         R.string.settings_category_miscellaneous,
@@ -305,17 +305,17 @@ fun createAppearanceSettings(context: Context) = listOf(
     Setting(context, Settings.PREF_SHOW_POPUP_HINTS, R.string.show_popup_hints, R.string.show_popup_hints_summary) {
         SwitchPreference(it, Defaults.PREF_SHOW_POPUP_HINTS) { KeyboardSwitcher.getInstance().setThemeNeedsReload() }
     },
-    Setting(context, Settings.PREF_POPUP_KEYS_VERTICAL_OFFSET, R.string.prefs_popup_keys_vertical_offset) { setting ->
+    Setting(context, Settings.PREF_POPUP_KEYS_VERTICAL_OFFSET_PERCENT, R.string.prefs_popup_keys_vertical_offset) { setting ->
         SliderPreference(
             name = setting.title,
             key = setting.key,
-            default = Defaults.PREF_POPUP_KEYS_VERTICAL_OFFSET,
-            range = 0f..10f,
+            default = Defaults.PREF_POPUP_KEYS_VERTICAL_OFFSET_PERCENT,
+            range = 0f..8f,
             stepSize = 1,
             description = { offset ->
-                val isDef = offset.toInt() == Defaults.PREF_POPUP_KEYS_VERTICAL_OFFSET.toInt()
-                if (isDef) "${offset.toInt()}dp (${stringResource(R.string.button_default)})"
-                else "${offset.toInt()}dp"
+                val isDef = offset.toInt() == Defaults.PREF_POPUP_KEYS_VERTICAL_OFFSET_PERCENT.toInt()
+                if (isDef) "${offset.toInt()}% (${stringResource(R.string.button_default)})"
+                else "${offset.toInt()}%"
             }
         ) { KeyboardSwitcher.getInstance().setThemeNeedsReload() }
     },

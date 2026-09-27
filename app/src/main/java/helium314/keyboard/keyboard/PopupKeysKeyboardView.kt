@@ -154,9 +154,10 @@ open class PopupKeysKeyboardView @JvmOverloads constructor(
     ) {
         mController = controller
         val container = getContainerView()
-        // The coordinates of panel's left-top corner in parentView's coordinate system.
-        // We need to consider background drawable paddings and user-configured vertical offset.
-        val verticalOffsetPx = (Settings.getValues().mPopupKeysVerticalOffset * resources.displayMetrics.density).toInt()
+        val keyboardHeight = (parentView as? KeyboardView)?.keyboard?.mOccupiedHeight
+            ?: parentView.measuredHeight.takeIf { it > 0 }
+            ?: (230 * resources.displayMetrics.density).toInt()
+        val verticalOffsetPx = (keyboardHeight * Settings.getValues().mPopupKeysVerticalOffsetFraction).toInt()
         val x = pointX - getDefaultCoordX() - container.paddingLeft - paddingLeft
         val y = pointY - container.measuredHeight + container.paddingBottom + paddingBottom - verticalOffsetPx
 

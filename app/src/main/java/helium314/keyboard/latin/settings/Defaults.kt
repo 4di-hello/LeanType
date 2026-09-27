@@ -194,7 +194,8 @@ object Defaults {
     const val PREF_POPUP_KEYS_LABELS_ORDER = POPUP_KEYS_LABEL_DEFAULT
     const val PREF_SHOW_POPUP_HINTS = false
     const val PREF_SHOW_TLD_POPUP_KEYS = true
-    const val PREF_POPUP_KEYS_VERTICAL_OFFSET = 8f
+    const val PREF_POPUP_KEYS_VERTICAL_OFFSET = 8f // Legacy dp default
+    const val PREF_POPUP_KEYS_VERTICAL_OFFSET_PERCENT = 4f
     const val PREF_ANIMATION_SPEED_SCALE = 1.0f
     const val PREF_MORE_POPUP_KEYS = "main"
     const val PREF_SPACE_TO_CHANGE_LANG = true
