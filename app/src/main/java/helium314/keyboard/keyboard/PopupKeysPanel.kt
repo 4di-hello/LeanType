@@ -8,10 +8,12 @@ package helium314.keyboard.keyboard
 
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AccelerateInterpolator
-import android.view.animation.OvershootInterpolator
+import android.view.animation.PathInterpolator
 import helium314.keyboard.keyboard.emoji.EmojiViewCallback
 import helium314.keyboard.latin.settings.Settings
+
+private val POPUP_ENTER_INTERPOLATOR = PathInterpolator(0.1f, 0.9f, 0.2f, 1.0f)
+private val POPUP_EXIT_INTERPOLATOR = PathInterpolator(0.3f, 0f, 0.8f, 0.15f)
 
 interface PopupKeysPanel {
     interface Controller {
@@ -152,15 +154,15 @@ interface PopupKeysPanel {
             containerView.scaleX = 1f
             containerView.scaleY = 1f
         } else {
-            containerView.alpha = 0f
-            containerView.scaleX = 0.75f
-            containerView.scaleY = 0.75f
+            containerView.alpha = 0.35f
+            containerView.scaleX = 0.84f
+            containerView.scaleY = 0.84f
             containerView.animate()
                 .alpha(1f)
                 .scaleX(1f)
                 .scaleY(1f)
                 .setDuration(enterDuration)
-                .setInterpolator(OvershootInterpolator(0.85f))
+                .setInterpolator(POPUP_ENTER_INTERPOLATOR)
                 .start()
         }
     }
@@ -183,10 +185,10 @@ interface PopupKeysPanel {
         } else {
             containerView.animate()
                 .alpha(0f)
-                .scaleX(0.8f)
-                .scaleY(0.8f)
+                .scaleX(0.92f)
+                .scaleY(0.92f)
                 .setDuration(exitDuration)
-                .setInterpolator(AccelerateInterpolator(1.5f))
+                .setInterpolator(POPUP_EXIT_INTERPOLATOR)
                 .withEndAction {
                     removeFromParent()
                     onEnd()
