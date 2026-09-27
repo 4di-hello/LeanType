@@ -20,7 +20,10 @@ object SmsPackageProvider {
         "org.fossify.messages",
         "com.simplemobiletools.smsmessenger",
         "com.moez.QKSMS",
-        "com.android.messaging"
+        "com.android.messaging",
+        "com.truecaller",
+        "com.mplus.pipeman",
+        "com.handcent.nextsms"
     )
 
     fun getDefaultSmsPackage(context: Context): String? {

@@ -1799,7 +1799,11 @@ class InputLogic(
         }
         val suggestedWords = holder.get(null, Constants.GET_SUGGESTED_WORDS_TIMEOUT.toLong())
         if (suggestedWords != null) {
-            if (!(suggestedWords.isPrediction && mLatinIME.tryShowClipboardSuggestion())) {
+            val isExternalVisible = mSuggestionStripViewAccessor.isExternalSuggestionVisible
+            if (isExternalVisible && !mWordComposer.isComposingWord()) {
+                return
+            }
+            if (!(suggestedWords.isPrediction && mLatinIME.tryShowExternalSuggestion())) {
                 mSuggestionStripViewAccessor.setSuggestions(suggestedWords)
             }
             if (!suggestedWords.isEmpty && settingsValues.isSuggestionsEnabledPerUserSettings()

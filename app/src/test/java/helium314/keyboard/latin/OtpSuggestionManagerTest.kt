@@ -22,6 +22,15 @@ class OtpSuggestionManagerTest {
         assertEquals("482910", OtpSuggestionManager.extractOtp("482910 is your Google verification code."))
         assertEquals("789101", OtpSuggestionManager.extractOtp("789101 is your OTP."))
         assertEquals("123456", OtpSuggestionManager.extractOtp("123456 is your security code."))
+        assertEquals("297053", OtpSuggestionManager.extractOtp("297053 is your One time password (OTP) to sign-in to your account on www.jio.com. Please enter the OTP to proceed. @www.jio.com #297053"))
+        assertEquals("864627", OtpSuggestionManager.extractOtp("864627 is your One time password (OTP) to sign-in to your account on www.jio.com.\nPlease enter the OTP to proceed.\n@www.jio.com #864627"))
+    }
+
+    @Test
+    fun testWebOtpAndHashtagPatterns() {
+        assertEquals("492810", OtpSuggestionManager.extractOtp("@example.com #492810"))
+        assertEquals("654321", OtpSuggestionManager.extractOtp("Verify your account with OTP. @login.site.com #654321"))
+        assertEquals("981245", OtpSuggestionManager.extractOtp("Your authentication passcode is #981245."))
     }
 
     @Test

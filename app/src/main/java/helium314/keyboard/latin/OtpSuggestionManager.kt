@@ -30,6 +30,9 @@ class OtpSuggestionManager(private val latinIME: LatinIME) {
 
     fun start() {
         activeInstance = this
+        if (latestOtp == null && latinIME.mSettings.current.mAutoReadOtp) {
+            OtpNotificationListenerService.instance?.checkActiveNotifications()
+        }
     }
 
     fun stop() {
@@ -46,6 +49,9 @@ class OtpSuggestionManager(private val latinIME: LatinIME) {
         otpSuggestionView = null
         if (parent == null) return null
         if (!latinIME.mSettings.current.mAutoReadOtp) return null
+        if (latestOtp == null) {
+            OtpNotificationListenerService.instance?.checkActiveNotifications()
+        }
         val otp = latestOtp ?: return null
         if (otp == dismissedOtp) return null
         if (System.currentTimeMillis() - latestOtpTimestamp > RECENT_OTP_MILLIS) return null
@@ -88,14 +94,16 @@ class OtpSuggestionManager(private val latinIME: LatinIME) {
 
     companion object {
         private const val TAG = "OtpSuggestionManager"
-        private const val RECENT_OTP_MILLIS = 120 * 1000L // 2 minutes
+        private const val RECENT_OTP_MILLIS = 10 * 60 * 1000L // 10 minutes
 
+        private val webOtpRegex = Regex("""(?:^|\s)@[\w.-]+\s+#(\d{4,8})\b""")
         private val keywordPrefixOtpRegex = Regex(
             """(?i)\b(?:is|otp|code|passcode|password|pin|verification|verify|2fa|auth)\b[\s:=-]+(\d{4,8})\b"""
         )
         private val reverseOtpRegex = Regex(
-            """(?i)\b(\d{4,8})\b[\s:=-]+(?:is\s+)?(?:[a-z]{1,15}\s+){0,2}(?:otp|code|passcode|password|pin|verification|verify|2fa|auth)\b"""
+            """(?i)\b(\d{4,8})\b[\s:=-]+(?:is\s+)?(?:[a-z0-9_-]{1,15}\s+){0,5}(?:otp|code|passcode|password|pin|verification|verify|2fa|auth)\b"""
         )
+        private val hashtagOtpRegex = Regex("""(?i)#(\d{4,8})\b""")
         private val codeRegex = Regex("""(?<![\.\d])\b\d{4,8}\b(?!\.\d)""")
         private val otpKeywordRegex = Regex(
             """otp|code|passcode|password|pin|verification|verify|one[- ]?time|2fa|auth""",
@@ -111,6 +119,7 @@ class OtpSuggestionManager(private val latinIME: LatinIME) {
          * Called by [OtpNotificationListenerService] when an OTP is detected from an SMS notification.
          */
         fun onOtpReceived(otp: String) {
+            Log.i(TAG, "onOtpReceived: otp=$otp")
             latestOtp = otp
             latestOtpTimestamp = System.currentTimeMillis()
             dismissedOtp = null
@@ -128,17 +137,29 @@ class OtpSuggestionManager(private val latinIME: LatinIME) {
         fun extractOtp(body: String): String? {
             if (body.isBlank()) return null
 
-            // 1. Check pattern where code immediately follows a keyword: "OTP: 123456", "code is 482910", "is 789012"
+            // 1. WebOTP standard format: "@domain.com #123456"
+            webOtpRegex.find(body)?.let { match ->
+                return match.groupValues[1]
+            }
+
+            // 2. Keyword prefix: "OTP: 123456", "code is 482910", "is 789012"
             keywordPrefixOtpRegex.find(body)?.let { match ->
                 return match.groupValues[1]
             }
 
-            // 2. Check reverse pattern: "123456 is your code", "789101 is your OTP"
+            // 3. Reverse pattern: "123456 is your code", "789101 is your OTP"
             reverseOtpRegex.find(body)?.let { match ->
                 return match.groupValues[1]
             }
 
-            // 3. Fallback: if message mentions an OTP keyword, find candidate numbers (excluding decimal amounts)
+            // 4. Hashtag format with OTP keyword: "#123456"
+            if (otpKeywordRegex.containsMatchIn(body)) {
+                hashtagOtpRegex.find(body)?.let { match ->
+                    return match.groupValues[1]
+                }
+            }
+
+            // 5. Fallback: if message mentions an OTP keyword, find candidate numbers (excluding decimal amounts)
             if (otpKeywordRegex.containsMatchIn(body)) {
                 val matches = codeRegex.findAll(body).map { it.value }.toList()
                 if (matches.isNotEmpty()) {
@@ -152,7 +173,7 @@ class OtpSuggestionManager(private val latinIME: LatinIME) {
                 }
             }
 
-            // 4. Single candidate number in the entire message
+            // 6. Single candidate number in the entire message
             val allGroups = codeRegex.findAll(body).map { it.value }.toList()
             if (allGroups.size == 1) {
                 return allGroups.first()

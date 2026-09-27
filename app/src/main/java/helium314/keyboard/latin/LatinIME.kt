@@ -751,7 +751,7 @@ class LatinIME : InputMethodService(),
             if ((currentSettingsValues.mAutoShowToolbar || currentSettingsValues.mAutoShowToolbarNoSuggestions) && suggestionStripView?.isExternalSuggestionVisible != true) {
                 suggestionStripView?.setToolbarVisibility(true)
             }
-            if (shouldRequestInitialPredictions(currentSettingsValues)) {
+            if (shouldRequestInitialPredictions(currentSettingsValues) && suggestionStripView?.isExternalSuggestionVisible != true) {
                 handler.postUpdateSuggestionStrip(SuggestedWords.INPUT_STYLE_RECORRECTION)
             }
         }
@@ -1428,16 +1428,21 @@ class LatinIME : InputMethodService(),
         if (clipboardView != null) {
             strip.setExternalSuggestionView(clipboardView, false)
             return true
-        } else {
-            strip.setExternalSuggestionView(null, false)
         }
         return false
     }
 
+    fun tryShowExternalSuggestion(): Boolean {
+        return tryShowOtpSuggestion() || tryShowMathSuggestion() || tryShowClipboardSuggestion()
+    }
+
+    override val isExternalSuggestionVisible: Boolean
+        get() = suggestionStripView?.isExternalSuggestionVisible == true
+
     override fun setNeutralSuggestionStrip() {
         if (keyboardSwitcher.isHandwritingShowing) return
         val currentSettings = settings.current
-        if (tryShowOtpSuggestion() || tryShowMathSuggestion() || tryShowClipboardSuggestion()) {
+        if (tryShowExternalSuggestion()) {
             if (currentSettings.mAutoHideToolbar) suggestionStripView?.setToolbarVisibility(false)
             return
         }

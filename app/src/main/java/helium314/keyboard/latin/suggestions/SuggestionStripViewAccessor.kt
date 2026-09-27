@@ -12,6 +12,7 @@ import helium314.keyboard.latin.SuggestedWords
  * An object that gives basic control of a suggestion strip and some info on it.
  */
 interface SuggestionStripViewAccessor {
+    val isExternalSuggestionVisible: Boolean
     fun setNeutralSuggestionStrip()
     fun setSuggestions(suggestedWords: SuggestedWords)
     fun showSuggestionStrip()
