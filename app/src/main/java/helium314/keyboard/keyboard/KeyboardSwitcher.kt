@@ -19,7 +19,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.view.animation.DecelerateInterpolator
+import android.view.animation.PathInterpolator
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodSubtype
 import android.widget.FrameLayout
@@ -59,6 +59,8 @@ import helium314.keyboard.latin.utils.ScriptUtils
 import helium314.keyboard.latin.utils.SubtypeUtilsAdditional
 import helium314.keyboard.latin.utils.ToolbarMode
 import helium314.keyboard.latin.utils.prefs
+
+private val VIEW_SWITCH_ENTER_INTERPOLATOR = PathInterpolator(0.05f, 0.7f, 0.1f, 1.0f)
 
 class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
 
@@ -338,7 +340,9 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         val visibility = if (isImeSuppressedByHardwareKeyboard(settingsValues, toggleState)) View.GONE else View.VISIBLE
         val stripVisibility = if (settingsValues.mToolbarMode == ToolbarMode.HIDDEN) View.GONE else View.VISIBLE
         mStripContainer?.visibility = stripVisibility
-        val wasSecondaryShowing = (mEmojiPalettesView?.visibility == View.VISIBLE) || (mClipboardHistoryView?.visibility == View.VISIBLE)
+        val wasSecondaryShowing = (mEmojiPalettesView?.visibility == View.VISIBLE)
+            || (mClipboardHistoryView?.visibility == View.VISIBLE)
+            || (mTouchpadView?.visibility == View.VISIBLE)
         PointerTracker.switchTo(mKeyboardView)
         if (PointerTracker.sPersistentTouchpadModeActive) {
             mKeyboardView?.visibility = if (visibility == View.VISIBLE) View.INVISIBLE else View.GONE
@@ -347,9 +351,9 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
             if (visibility == View.VISIBLE) {
                 val duration = Settings.getAnimationDuration(100)
                 if (duration > 0L && wasSecondaryShowing) {
-                    mKeyboardView?.alpha = 0f
+                    mKeyboardView?.alpha = 0.25f
                     mKeyboardView?.animate()?.cancel()
-                    mKeyboardView?.animate()?.alpha(1f)?.setDuration(duration)?.setInterpolator(DecelerateInterpolator(1.5f))?.start()
+                    mKeyboardView?.animate()?.alpha(1f)?.setDuration(duration)?.setInterpolator(VIEW_SWITCH_ENTER_INTERPOLATOR)?.start()
                 } else {
                     mKeyboardView?.alpha = 1f
                 }
@@ -434,14 +438,14 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
             it.visibility = View.VISIBLE
             val duration = Settings.getAnimationDuration(110)
             if (duration > 0L) {
-                it.alpha = 0f
-                it.translationY = 16f * it.resources.displayMetrics.density
+                it.alpha = 0.25f
+                it.translationY = 10f * it.resources.displayMetrics.density
                 it.animate()?.cancel()
                 it.animate()
                     ?.alpha(1f)
                     ?.translationY(0f)
                     ?.setDuration(duration)
-                    ?.setInterpolator(DecelerateInterpolator(1.5f))
+                    ?.setInterpolator(VIEW_SWITCH_ENTER_INTERPOLATOR)
                     ?.start()
             } else {
                 it.animate()?.cancel()
@@ -493,14 +497,14 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
             it.visibility = View.VISIBLE
             val duration = Settings.getAnimationDuration(110)
             if (duration > 0L) {
-                it.alpha = 0f
-                it.translationY = 16f * it.resources.displayMetrics.density
+                it.alpha = 0.25f
+                it.translationY = 10f * it.resources.displayMetrics.density
                 it.animate()?.cancel()
                 it.animate()
                     ?.alpha(1f)
                     ?.translationY(0f)
                     ?.setDuration(duration)
-                    ?.setInterpolator(DecelerateInterpolator(1.5f))
+                    ?.setInterpolator(VIEW_SWITCH_ENTER_INTERPOLATOR)
                     ?.start()
             } else {
                 it.animate()?.cancel()
@@ -825,15 +829,42 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         )
         touchpad.applyColors(Settings.getValues().mColors)
         touchpad.visibility = View.VISIBLE
+        val duration = Settings.getAnimationDuration(100)
+        if (duration > 0L) {
+            touchpad.alpha = 0.25f
+            touchpad.animate()?.cancel()
+            touchpad.animate()
+                ?.alpha(1f)
+                ?.setDuration(duration)
+                ?.setInterpolator(VIEW_SWITCH_ENTER_INTERPOLATOR)
+                ?.start()
+        } else {
+            touchpad.animate()?.cancel()
+            touchpad.alpha = 1f
+        }
         mMainKeyboardFrame?.visibility = View.VISIBLE
     }
 
     fun hideTouchpadView() {
         val touchpad = mTouchpadView ?: return
+        touchpad.animate()?.cancel()
         touchpad.visibility = View.GONE
-        mKeyboardView?.let {
-            it.visibility = View.VISIBLE
-            it.alpha = 1.0f
+        touchpad.alpha = 1f
+        mKeyboardView?.let { kbView ->
+            kbView.visibility = View.VISIBLE
+            val duration = Settings.getAnimationDuration(100)
+            if (duration > 0L) {
+                kbView.alpha = 0.25f
+                kbView.animate()?.cancel()
+                kbView.animate()
+                    ?.alpha(1f)
+                    ?.setDuration(duration)
+                    ?.setInterpolator(VIEW_SWITCH_ENTER_INTERPOLATOR)
+                    ?.start()
+            } else {
+                kbView.animate()?.cancel()
+                kbView.alpha = 1f
+            }
         }
         mStripContainer?.visibility = if (Settings.getValues().mToolbarMode == ToolbarMode.HIDDEN) View.GONE else View.VISIBLE
         mKeyboardViewWrapper?.let { wrapper ->
