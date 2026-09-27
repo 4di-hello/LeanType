@@ -891,8 +891,8 @@
     <!-- Title of the setting enabling long press on symbols key to switch to numpad -->
     <string name="prefs_long_press_symbol_for_numpad">Long press symbols key for numpad</string>
     <string name="prefs_popup_keys_vertical_offset">Long-press popup position</string>
-    <!-- Title of the setting for adjusting keyboard animation speed -->
-    <string name="pref_animation_speed_scale">Animation speed</string>
+    <!-- Title of the setting for adjusting keyboard animation scale -->
+    <string name="pref_animation_speed_scale">Animation scale</string>
     <!-- Description of the setting for adjusting keyboard animation speed -->
     <string name="pref_animation_speed_scale_summary">Controls the duration of popup animations and screen transitions</string>
     <!-- Label for disabling animation speed (instant) -->
