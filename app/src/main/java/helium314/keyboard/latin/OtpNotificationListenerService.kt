@@ -20,11 +20,10 @@ import helium314.keyboard.latin.utils.prefs
 class OtpNotificationListenerService : NotificationListenerService() {
 
     @Volatile private var isAutoReadEnabled = false
-    @Volatile private var cachedAllowedPackage: String? = null
     @Volatile private var cachedDefaultSmsPackage: String? = null
 
     private val prefChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-        if (key == Settings.PREF_AUTO_READ_OTP || key == Settings.PREF_OTP_ALLOWED_SMS_PACKAGE) {
+        if (key == Settings.PREF_AUTO_READ_OTP) {
             refreshCachedPreferences()
         }
     }
@@ -33,7 +32,6 @@ class OtpNotificationListenerService : NotificationListenerService() {
         try {
             val p = prefs()
             isAutoReadEnabled = p.getBoolean(Settings.PREF_AUTO_READ_OTP, false)
-            cachedAllowedPackage = p.getString(Settings.PREF_OTP_ALLOWED_SMS_PACKAGE, null)
             cachedDefaultSmsPackage = SmsPackageProvider.getDefaultSmsPackage(this)
         } catch (e: Exception) {
             Log.w(TAG, "Failed to refresh cached preferences", e)
@@ -41,12 +39,8 @@ class OtpNotificationListenerService : NotificationListenerService() {
     }
 
     private fun isAllowedPackage(pkg: String): Boolean {
-        val allowed = cachedAllowedPackage
-        if (!allowed.isNullOrBlank()) {
-            return pkg == allowed
-        }
         val defaultSms = cachedDefaultSmsPackage ?: SmsPackageProvider.getDefaultSmsPackage(this)
-        return (!defaultSms.isNullOrBlank() && pkg == defaultSms) || pkg in SmsPackageProvider.KNOWN_SMS_PACKAGES
+        return !defaultSms.isNullOrBlank() && pkg == defaultSms
     }
 
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
@@ -71,7 +65,7 @@ class OtpNotificationListenerService : NotificationListenerService() {
         val sbnNonNull = sbn ?: return
         val pkg = sbnNonNull.packageName ?: return
 
-        // 1. Strict package filter: if user selected an SMS app, ONLY accept that one; otherwise check default/allowlist
+        // 1. Strict package filter: only accept notifications from the device's default SMS app
         if (!isAllowedPackage(pkg)) return
 
         // 2. In-memory check if feature is enabled

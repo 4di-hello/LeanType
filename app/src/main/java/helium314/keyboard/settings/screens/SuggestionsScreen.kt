@@ -38,7 +38,6 @@ import helium314.keyboard.latin.permissions.PermissionsUtil
 import helium314.keyboard.latin.settings.Defaults
 import helium314.keyboard.latin.settings.Settings
 import helium314.keyboard.latin.utils.Log
-import helium314.keyboard.latin.utils.SmsPackageProvider
 import helium314.keyboard.latin.utils.ToolbarMode
 import helium314.keyboard.latin.utils.getActivity
 import helium314.keyboard.latin.utils.prefs
@@ -101,8 +100,6 @@ fun SuggestionsScreen(
             if (prefs.getBoolean(Settings.PREF_SUGGEST_SCREENSHOTS, Defaults.PREF_SUGGEST_SCREENSHOTS))
                 Settings.PREF_COMPRESS_SCREENSHOTS else null,
             Settings.PREF_AUTO_READ_OTP,
-            if (prefs.getBoolean(Settings.PREF_AUTO_READ_OTP, Defaults.PREF_AUTO_READ_OTP))
-                Settings.PREF_OTP_ALLOWED_SMS_PACKAGE else null,
             Settings.PREF_INLINE_MATH_CALCULATION,
             Settings.PREF_USE_APPS,
         )
@@ -308,13 +305,6 @@ fun createSuggestionsSettings(context: Context) = listOf(
             description = description,
             allowCheckedChange = { enable ->
                 if (enable) {
-                    val currentAllowed = activity.prefs().getString(Settings.PREF_OTP_ALLOWED_SMS_PACKAGE, null)
-                    if (currentAllowed.isNullOrBlank()) {
-                        val defaultSms = SmsPackageProvider.getDefaultSmsPackage(activity)
-                        if (!defaultSms.isNullOrBlank()) {
-                            activity.prefs().edit { putString(Settings.PREF_OTP_ALLOWED_SMS_PACKAGE, defaultSms) }
-                        }
-                    }
                     PermissionsUtil.updateNotificationListenerComponent(activity, true)
                     if (!PermissionsUtil.isNotificationListenerEnabled(activity)) {
                         pendingOtpEnable = true
@@ -330,31 +320,6 @@ fun createSuggestionsSettings(context: Context) = listOf(
                 PermissionsUtil.updateNotificationListenerComponent(activity, it)
                 activity.prefChanged()
             }
-        )
-    },
-    Setting(
-        key = Settings.PREF_OTP_ALLOWED_SMS_PACKAGE,
-        title = "Allowed SMS app",
-        description = "Select which SMS app's notifications are monitored for OTP codes."
-    ) { setting ->
-        val activity = LocalContext.current.getActivity() ?: return@Setting
-        val autoReadOtp = activity.prefs().getBoolean(Settings.PREF_AUTO_READ_OTP, Defaults.PREF_AUTO_READ_OTP)
-        if (!autoReadOtp) return@Setting
-
-        val candidates = remember { SmsPackageProvider.getCandidateSmsPackages(activity) }
-        val items = remember(candidates) {
-            val list = mutableListOf<Pair<String, String>>()
-            list.add("Any known SMS app (Fallback allowlist)" to "")
-            candidates.forEach { (pkg, label) ->
-                list.add(label to pkg)
-            }
-            list
-        }
-
-        ListPreference(
-            setting = setting,
-            items = items,
-            default = Defaults.PREF_OTP_ALLOWED_SMS_PACKAGE
         )
     },
     Setting(context, Settings.PREF_INLINE_MATH_CALCULATION,

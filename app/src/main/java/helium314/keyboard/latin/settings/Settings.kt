@@ -455,7 +455,6 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
         const val PREF_SUGGEST_SCREENSHOTS = "suggest_screenshots"
         const val PREF_COMPRESS_SCREENSHOTS = "compress_screenshots"
         const val PREF_AUTO_READ_OTP = "auto_read_otp"
-        const val PREF_OTP_ALLOWED_SMS_PACKAGE = "otp_allowed_sms_package"
         const val PREF_INLINE_MATH_CALCULATION = "pref_inline_calculator_suggestions"
         const val PREF_CLIPBOARD_HISTORY_RETENTION_TIME = "clipboard_history_retention_time"
         const val PREF_CLIPBOARD_HISTORY_PINNED_FIRST = "clipboard_history_pinned_first"
