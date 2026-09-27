@@ -8,8 +8,7 @@ package helium314.keyboard.keyboard.internal
 
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AccelerateInterpolator
-import android.view.animation.DecelerateInterpolator
+import android.view.animation.PathInterpolator
 import helium314.keyboard.keyboard.Key
 import helium314.keyboard.latin.common.ColorType
 import helium314.keyboard.latin.common.CoordinateUtils
@@ -17,6 +16,9 @@ import helium314.keyboard.latin.settings.Settings
 import helium314.keyboard.latin.utils.ViewLayoutUtils
 import java.util.ArrayDeque
 import java.util.HashMap
+
+private val PREVIEW_ENTER_INTERPOLATOR = PathInterpolator(0.1f, 0.9f, 0.2f, 1.0f)
+private val PREVIEW_EXIT_INTERPOLATOR = PathInterpolator(0.3f, 0f, 0.8f, 0.15f)
 
 class KeyPreviewChoreographer(private val mParams: KeyPreviewDrawParams) {
     private val mFreeKeyPreviewViews = ArrayDeque<KeyPreviewView>()
@@ -42,7 +44,7 @@ class KeyPreviewChoreographer(private val mParams: KeyPreviewDrawParams) {
 
     fun dismissKeyPreview(key: Key?) {
         if (key == null) return
-        val duration = Settings.getAnimationDuration(60)
+        val duration = Settings.getAnimationDuration(55)
         if (duration == 0L) {
             dismissKeyPreviewWithoutDelay(key)
             return
@@ -52,12 +54,12 @@ class KeyPreviewChoreographer(private val mParams: KeyPreviewDrawParams) {
         keyPreviewView.tag = null
         keyPreviewView.animate().cancel()
         keyPreviewView.animate()
-            .scaleX(0.85f)
-            .scaleY(0.85f)
-            .translationY(keyPreviewView.measuredHeight * 0.08f)
+            .scaleX(0.92f)
+            .scaleY(0.92f)
+            .translationY(keyPreviewView.measuredHeight * 0.04f)
             .alpha(0f)
             .setDuration(duration)
-            .setInterpolator(AccelerateInterpolator(1.5f))
+            .setInterpolator(PREVIEW_EXIT_INTERPOLATOR)
             .withEndAction {
                 keyPreviewView.visibility = View.INVISIBLE
                 keyPreviewView.scaleX = 1f
@@ -148,17 +150,17 @@ class KeyPreviewChoreographer(private val mParams: KeyPreviewDrawParams) {
             keyPreviewView.translationY = 0f
             keyPreviewView.alpha = 1f
         } else {
-            keyPreviewView.scaleX = 0.72f
-            keyPreviewView.scaleY = 0.72f
-            keyPreviewView.translationY = keyPreviewView.measuredHeight * 0.12f
-            keyPreviewView.alpha = 0f
+            keyPreviewView.scaleX = 0.84f
+            keyPreviewView.scaleY = 0.84f
+            keyPreviewView.translationY = keyPreviewView.measuredHeight * 0.06f
+            keyPreviewView.alpha = 0.4f
             keyPreviewView.animate()
                 .scaleX(1f)
                 .scaleY(1f)
                 .translationY(0f)
                 .alpha(1f)
                 .setDuration(duration)
-                .setInterpolator(DecelerateInterpolator(1.8f))
+                .setInterpolator(PREVIEW_ENTER_INTERPOLATOR)
                 .start()
         }
         mShowingKeyPreviewViews[key] = keyPreviewView
