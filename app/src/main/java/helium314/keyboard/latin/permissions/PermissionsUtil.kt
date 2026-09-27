@@ -11,6 +11,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
+import android.service.notification.NotificationListenerService
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import helium314.keyboard.latin.OtpNotificationListenerService
@@ -85,6 +86,43 @@ object PermissionsUtil {
             context.startActivity(generalIntent)
         } catch (e: Exception) {
             Log.e(TAG, "Could not open notification listener settings", e)
+        }
+    }
+
+    fun updateNotificationListenerComponent(context: Context, enabled: Boolean) {
+        val component = ComponentName(context, OtpNotificationListenerService::class.java)
+        val pm = context.packageManager
+        val targetState = if (enabled) {
+            PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+        } else {
+            PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+        }
+        try {
+            if (pm.getComponentEnabledSetting(component) != targetState) {
+                pm.setComponentEnabledSetting(component, targetState, PackageManager.DONT_KILL_APP)
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to update notification listener component state", e)
+        }
+
+        if (!enabled) {
+            OtpNotificationListenerService.instance?.let { service ->
+                try {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        service.requestUnbind()
+                    }
+                } catch (e: Exception) {
+                    Log.w(TAG, "Failed to unbind notification listener service", e)
+                }
+            }
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && isNotificationListenerEnabled(context)) {
+                try {
+                    NotificationListenerService.requestRebind(component)
+                } catch (e: Exception) {
+                    Log.w(TAG, "Failed to rebind notification listener service", e)
+                }
+            }
         }
     }
 }

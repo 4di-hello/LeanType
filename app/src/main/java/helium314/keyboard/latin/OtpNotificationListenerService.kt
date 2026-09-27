@@ -3,6 +3,7 @@
 package helium314.keyboard.latin
 
 import android.app.Notification
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
@@ -18,11 +19,41 @@ import helium314.keyboard.latin.utils.prefs
  */
 class OtpNotificationListenerService : NotificationListenerService() {
 
+    @Volatile private var isAutoReadEnabled = false
+    @Volatile private var cachedAllowedPackage: String? = null
+    @Volatile private var cachedDefaultSmsPackage: String? = null
+
+    private val prefChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+        if (key == Settings.PREF_AUTO_READ_OTP || key == Settings.PREF_OTP_ALLOWED_SMS_PACKAGE) {
+            refreshCachedPreferences()
+        }
+    }
+
+    private fun refreshCachedPreferences() {
+        try {
+            val p = prefs()
+            isAutoReadEnabled = p.getBoolean(Settings.PREF_AUTO_READ_OTP, false)
+            cachedAllowedPackage = p.getString(Settings.PREF_OTP_ALLOWED_SMS_PACKAGE, null)
+            cachedDefaultSmsPackage = SmsPackageProvider.getDefaultSmsPackage(this)
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to refresh cached preferences", e)
+        }
+    }
+
+    private fun isLikelySmsPackage(pkg: String): Boolean {
+        if (pkg == cachedAllowedPackage) return true
+        if (pkg == cachedDefaultSmsPackage) return true
+        if (pkg in SmsPackageProvider.KNOWN_SMS_PACKAGES) return true
+        return false
+    }
+
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
         processNotification(sbn)
     }
 
     fun checkActiveNotifications() {
+        refreshCachedPreferences()
+        if (!isAutoReadEnabled) return
         try {
             val notifications = activeNotifications ?: return
             Log.d(TAG, "checkActiveNotifications: scanning ${notifications.size} active notifications")
@@ -38,25 +69,18 @@ class OtpNotificationListenerService : NotificationListenerService() {
         val sbnNonNull = sbn ?: return
         val pkg = sbnNonNull.packageName ?: return
 
-        // 1. Check if feature is enabled
-        val autoReadEnabled = try {
-            prefs().getBoolean(Settings.PREF_AUTO_READ_OTP, false)
-        } catch (e: Exception) {
-            false
-        }
-        if (!autoReadEnabled) return
+        // 1. Instant in-memory fast-path: reject non-SMS packages in sub-microseconds without disk I/O
+        if (!isLikelySmsPackage(pkg)) return
 
-        // 2. Package filtering: check specific allowed package or fallback allowlist / default SMS app
-        val allowedPackage = try {
-            prefs().getString(Settings.PREF_OTP_ALLOWED_SMS_PACKAGE, null)
-        } catch (e: Exception) {
-            null
-        }
+        // 2. In-memory check if feature is enabled
+        if (!isAutoReadEnabled) return
 
+        // 3. Package filtering: check specific allowed package or fallback allowlist / default SMS app
+        val allowedPackage = cachedAllowedPackage
         if (!allowedPackage.isNullOrBlank()) {
             if (pkg != allowedPackage) return
         } else {
-            val defaultSms = SmsPackageProvider.getDefaultSmsPackage(this)
+            val defaultSms = cachedDefaultSmsPackage ?: SmsPackageProvider.getDefaultSmsPackage(this)
             val isKnown = pkg in SmsPackageProvider.KNOWN_SMS_PACKAGES
             val isDefault = !defaultSms.isNullOrBlank() && pkg == defaultSms
             if (!isKnown && !isDefault) return
@@ -64,7 +88,7 @@ class OtpNotificationListenerService : NotificationListenerService() {
 
         Log.d(TAG, "Processing notification from package: $pkg")
 
-        // 3. Extract notification text safely from all possible notification components
+        // 4. Extract notification text safely from all possible notification components
         val textPieces = mutableListOf<String>()
 
         sbnNonNull.notification?.tickerText?.let { textPieces.add(it.toString()) }
@@ -108,6 +132,12 @@ class OtpNotificationListenerService : NotificationListenerService() {
     override fun onListenerConnected() {
         super.onListenerConnected()
         instance = this
+        refreshCachedPreferences()
+        try {
+            prefs().registerOnSharedPreferenceChangeListener(prefChangeListener)
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to register prefChangeListener", e)
+        }
         Log.i(TAG, "Notification listener connected")
         try {
             prefs().edit().putBoolean(PREF_NLS_DISCONNECTED, false).apply()
@@ -122,6 +152,11 @@ class OtpNotificationListenerService : NotificationListenerService() {
         if (instance === this) {
             instance = null
         }
+        try {
+            prefs().unregisterOnSharedPreferenceChangeListener(prefChangeListener)
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to unregister prefChangeListener", e)
+        }
         Log.i(TAG, "Notification listener disconnected")
         try {
             prefs().edit().putBoolean(PREF_NLS_DISCONNECTED, true).apply()
@@ -134,6 +169,11 @@ class OtpNotificationListenerService : NotificationListenerService() {
         super.onDestroy()
         if (instance === this) {
             instance = null
+        }
+        try {
+            prefs().unregisterOnSharedPreferenceChangeListener(prefChangeListener)
+        } catch (e: Exception) {
+            // ignore
         }
     }
 

@@ -280,9 +280,11 @@ fun createSuggestionsSettings(context: Context) = listOf(
                     granted = currentGranted
                     if (pendingOtpEnable && currentGranted) {
                         activity.prefs().edit { putBoolean(Settings.PREF_AUTO_READ_OTP, true) }
+                        PermissionsUtil.updateNotificationListenerComponent(activity, true)
                         pendingOtpEnable = false
                     } else if (!currentGranted && activity.prefs().getBoolean(Settings.PREF_AUTO_READ_OTP, false)) {
                         activity.prefs().edit { putBoolean(Settings.PREF_AUTO_READ_OTP, false) }
+                        PermissionsUtil.updateNotificationListenerComponent(activity, false)
                     }
                     activity.prefChanged()
                 }
@@ -313,14 +315,19 @@ fun createSuggestionsSettings(context: Context) = listOf(
                             activity.prefs().edit { putString(Settings.PREF_OTP_ALLOWED_SMS_PACKAGE, defaultSms) }
                         }
                     }
+                    PermissionsUtil.updateNotificationListenerComponent(activity, true)
                     if (!PermissionsUtil.isNotificationListenerEnabled(activity)) {
                         pendingOtpEnable = true
                         PermissionsUtil.openNotificationListenerSettings(activity)
                         false
                     } else true
-                } else true
+                } else {
+                    PermissionsUtil.updateNotificationListenerComponent(activity, false)
+                    true
+                }
             },
             onCheckedChange = {
+                PermissionsUtil.updateNotificationListenerComponent(activity, it)
                 activity.prefChanged()
             }
         )

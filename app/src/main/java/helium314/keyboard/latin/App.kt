@@ -9,9 +9,11 @@ import helium314.keyboard.keyboard.emoji.SupportedEmojis
 import helium314.keyboard.latin.define.DebugFlags
 import helium314.keyboard.latin.settings.Defaults
 import helium314.keyboard.latin.settings.Settings
+import helium314.keyboard.latin.permissions.PermissionsUtil
 import helium314.keyboard.latin.utils.LayoutUtilsCustom
 import helium314.keyboard.latin.utils.Log
 import helium314.keyboard.latin.utils.SubtypeSettings
+import helium314.keyboard.latin.utils.prefs
 
 import helium314.keyboard.latin.work.PluginWorkerFactory
 
@@ -47,6 +49,7 @@ class App : Application(), Configuration.Provider {
         Defaults.initDynamicDefaults(this)
         LayoutUtilsCustom.removeMissingLayouts(this) // only after version upgrade
         SupportedEmojis.load(this)
+        PermissionsUtil.updateNotificationListenerComponent(this, prefs().getBoolean(Settings.PREF_AUTO_READ_OTP, false))
 
         val packageInfo = packageManager.getPackageInfo(packageName, 0)
         @Suppress("DEPRECATION")
