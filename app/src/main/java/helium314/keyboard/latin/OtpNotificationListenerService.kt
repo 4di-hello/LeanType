@@ -3,6 +3,7 @@
 package helium314.keyboard.latin
 
 import android.app.Notification
+import android.os.Bundle
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import helium314.keyboard.latin.settings.Settings
@@ -28,7 +29,7 @@ class OtpNotificationListenerService : NotificationListenerService() {
         }
         if (!autoReadEnabled) return
 
-        // 2. Package filtering: check specific allowed package or fallback allowlist
+        // 2. Package filtering: check specific allowed package or fallback allowlist / default SMS app
         val allowedPackage = try {
             prefs().getString(Settings.PREF_OTP_ALLOWED_SMS_PACKAGE, null)
         } catch (e: Exception) {
@@ -38,19 +39,36 @@ class OtpNotificationListenerService : NotificationListenerService() {
         if (!allowedPackage.isNullOrBlank()) {
             if (pkg != allowedPackage) return
         } else {
-            if (pkg !in SmsPackageProvider.KNOWN_SMS_PACKAGES) return
+            val defaultSms = SmsPackageProvider.getDefaultSmsPackage(this)
+            val isKnown = pkg in SmsPackageProvider.KNOWN_SMS_PACKAGES
+            val isDefault = !defaultSms.isNullOrBlank() && pkg == defaultSms
+            if (!isKnown && !isDefault) return
         }
 
-        // 3. Extract notification text safely
+        // 3. Extract notification text safely from all possible notification components
         val extras = sbnNonNull.notification?.extras ?: return
-        val textLines = extras.getCharSequenceArray(Notification.EXTRA_TEXT_LINES)?.joinToString(" ")
-        val text = extras.getCharSequence(Notification.EXTRA_TEXT)?.toString()
-            ?: extras.getCharSequence(Notification.EXTRA_BIG_TEXT)?.toString()
-            ?: textLines
-            ?: return
+        val textPieces = mutableListOf<String>()
 
-        val otp = OtpSuggestionManager.extractOtp(text) ?: return
-        Log.i(TAG, "OTP detected from notification")
+        extras.getCharSequence(Notification.EXTRA_TITLE)?.let { textPieces.add(it.toString()) }
+        extras.getCharSequence(Notification.EXTRA_TEXT)?.let { textPieces.add(it.toString()) }
+        extras.getCharSequence(Notification.EXTRA_BIG_TEXT)?.let { textPieces.add(it.toString()) }
+        extras.getCharSequence(Notification.EXTRA_SUB_TEXT)?.let { textPieces.add(it.toString()) }
+        extras.getCharSequenceArray(Notification.EXTRA_TEXT_LINES)?.forEach { textPieces.add(it.toString()) }
+
+        val messages = extras.getParcelableArray(Notification.EXTRA_MESSAGES)
+        if (messages != null) {
+            for (msg in messages) {
+                if (msg is Bundle) {
+                    msg.getCharSequence("text")?.let { textPieces.add(it.toString()) }
+                }
+            }
+        }
+
+        if (textPieces.isEmpty()) return
+        val fullText = textPieces.joinToString("\n")
+
+        val otp = OtpSuggestionManager.extractOtp(fullText) ?: return
+        Log.i(TAG, "OTP detected from notification: $otp")
         OtpSuggestionManager.onOtpReceived(otp)
     }
 

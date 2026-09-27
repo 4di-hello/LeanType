@@ -743,10 +743,12 @@ class LatinIME : InputMethodService(),
             }
         }
         
+        otpSuggestionManager.start()
+
         if (!handler.hasPendingResumeSuggestions()) {
             handler.cancelUpdateSuggestionStrip()
             setNeutralSuggestionStrip()
-            if ((currentSettingsValues.mAutoShowToolbar || currentSettingsValues.mAutoShowToolbarNoSuggestions) && !tryShowClipboardSuggestion()) {
+            if ((currentSettingsValues.mAutoShowToolbar || currentSettingsValues.mAutoShowToolbarNoSuggestions) && suggestionStripView?.isExternalSuggestionVisible != true) {
                 suggestionStripView?.setToolbarVisibility(true)
             }
             if (shouldRequestInitialPredictions(currentSettingsValues)) {
@@ -780,8 +782,6 @@ class LatinIME : InputMethodService(),
         
         if (isInputViewShown) setNavigationBarColor()
         if (TRACE) Debug.startMethodTracing("/data/trace/latinime")
-        
-        otpSuggestionManager.start()
     }
 
     override fun onWindowShown() {

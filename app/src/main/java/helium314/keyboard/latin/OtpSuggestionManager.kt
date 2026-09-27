@@ -27,7 +27,6 @@ class OtpSuggestionManager(private val latinIME: LatinIME) {
 
     private val mainHandler = Handler(Looper.getMainLooper())
     private var otpSuggestionView: View? = null
-    private var dontShowCurrentSuggestion = false
 
     fun start() {
         activeInstance = this
@@ -47,8 +46,8 @@ class OtpSuggestionManager(private val latinIME: LatinIME) {
         otpSuggestionView = null
         if (parent == null) return null
         if (!latinIME.mSettings.current.mAutoReadOtp) return null
-        if (dontShowCurrentSuggestion) return null
         val otp = latestOtp ?: return null
+        if (otp == dismissedOtp) return null
         if (System.currentTimeMillis() - latestOtpTimestamp > RECENT_OTP_MILLIS) return null
 
         val binding = OtpSuggestionBinding.inflate(LayoutInflater.from(latinIME), parent, false)
@@ -58,7 +57,7 @@ class OtpSuggestionManager(private val latinIME: LatinIME) {
         val icon = latinIME.mKeyboardSwitcher.keyboard?.mIconsSet?.getIconDrawable(ToolbarKey.NUMPAD.name.lowercase())
         textView.setCompoundDrawablesRelativeWithIntrinsicBounds(icon, null, null, null)
         textView.setOnClickListener {
-            dontShowCurrentSuggestion = true
+            dismissedOtp = otp
             latinIME.onTextInput(otp)
             AudioAndHapticFeedbackManager.getInstance().performHapticAndAudioFeedback(KeyCode.NOT_SPECIFIED, it, HapticEvent.KEY_PRESS)
             binding.root.isGone = true
@@ -78,7 +77,7 @@ class OtpSuggestionManager(private val latinIME: LatinIME) {
     }
 
     private fun removeOtpSuggestion() {
-        dontShowCurrentSuggestion = true
+        dismissedOtp = latestOtp
         val view = otpSuggestionView ?: return
         if (view.parent != null && !view.isGone) {
             latinIME.setNeutralSuggestionStrip()
@@ -89,15 +88,23 @@ class OtpSuggestionManager(private val latinIME: LatinIME) {
 
     companion object {
         private const val TAG = "OtpSuggestionManager"
-        private const val RECENT_OTP_MILLIS = 60 * 1000L // OTP chip is offered for 60s after arrival
-        private val codeRegex = Regex("\\b\\d{4,8}\\b")
+        private const val RECENT_OTP_MILLIS = 120 * 1000L // 2 minutes
+
+        private val keywordPrefixOtpRegex = Regex(
+            """(?i)\b(?:is|otp|code|passcode|password|pin|verification|verify|2fa|auth)\b[\s:=-]+(\d{4,8})\b"""
+        )
+        private val reverseOtpRegex = Regex(
+            """(?i)\b(\d{4,8})\b[\s:=-]+(?:is\s+)?(?:[a-z]{1,15}\s+){0,2}(?:otp|code|passcode|password|pin|verification|verify|2fa|auth)\b"""
+        )
+        private val codeRegex = Regex("""(?<![\.\d])\b\d{4,8}\b(?!\.\d)""")
         private val otpKeywordRegex = Regex(
-            "otp|code|passcode|password|pin|verification|verify|one[- ]?time|2fa|auth",
+            """otp|code|passcode|password|pin|verification|verify|one[- ]?time|2fa|auth""",
             RegexOption.IGNORE_CASE
         )
 
         @Volatile private var latestOtp: String? = null
         @Volatile private var latestOtpTimestamp: Long = 0L
+        @Volatile private var dismissedOtp: String? = null
         @Volatile private var activeInstance: OtpSuggestionManager? = null
 
         /**
@@ -106,8 +113,8 @@ class OtpSuggestionManager(private val latinIME: LatinIME) {
         fun onOtpReceived(otp: String) {
             latestOtp = otp
             latestOtpTimestamp = System.currentTimeMillis()
+            dismissedOtp = null
             val instance = activeInstance ?: return
-            instance.dontShowCurrentSuggestion = false
             instance.mainHandler.post {
                 if (instance.latinIME.isInputViewShown) {
                     instance.latinIME.setNeutralSuggestionStrip()
@@ -116,15 +123,42 @@ class OtpSuggestionManager(private val latinIME: LatinIME) {
         }
 
         /**
-         * Extract an OTP from notification or SMS body text. Keyword-gated to limit false positives:
-         * a 4-8 digit group is only treated as a code when the message mentions a code-like keyword,
-         * or when it is the single such group in the message.
+         * Extract an OTP from notification or SMS body text.
          */
         fun extractOtp(body: String): String? {
             if (body.isBlank()) return null
-            val groups = codeRegex.findAll(body).map { it.value }.toList()
-            if (groups.isEmpty()) return null
-            return if (otpKeywordRegex.containsMatchIn(body) || groups.size == 1) groups.first() else null
+
+            // 1. Check pattern where code immediately follows a keyword: "OTP: 123456", "code is 482910", "is 789012"
+            keywordPrefixOtpRegex.find(body)?.let { match ->
+                return match.groupValues[1]
+            }
+
+            // 2. Check reverse pattern: "123456 is your code", "789101 is your OTP"
+            reverseOtpRegex.find(body)?.let { match ->
+                return match.groupValues[1]
+            }
+
+            // 3. Fallback: if message mentions an OTP keyword, find candidate numbers (excluding decimal amounts)
+            if (otpKeywordRegex.containsMatchIn(body)) {
+                val matches = codeRegex.findAll(body).map { it.value }.toList()
+                if (matches.isNotEmpty()) {
+                    // Filter out likely 4-digit years (2020..2035) if multiple candidates exist
+                    val filtered = if (matches.size > 1) {
+                        matches.filterNot { it.length == 4 && it.toIntOrNull() in 2020..2035 }
+                    } else matches
+                    if (filtered.isNotEmpty()) {
+                        return filtered.last() // The OTP is almost always at the end after the context/metadata
+                    }
+                }
+            }
+
+            // 4. Single candidate number in the entire message
+            val allGroups = codeRegex.findAll(body).map { it.value }.toList()
+            if (allGroups.size == 1) {
+                return allGroups.first()
+            }
+
+            return null
         }
     }
 }

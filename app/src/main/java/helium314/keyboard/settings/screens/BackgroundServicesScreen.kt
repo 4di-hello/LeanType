@@ -49,9 +49,6 @@ fun BackgroundServicesScreen(
     var clipboardEnabled by remember {
         mutableStateOf(prefs.getBoolean(Settings.PREF_ENABLE_CLIPBOARD_LISTENER, Defaults.PREF_ENABLE_CLIPBOARD_LISTENER))
     }
-    var smsOtpEnabled by remember {
-        mutableStateOf(prefs.getBoolean(Settings.PREF_AUTO_READ_OTP, Defaults.PREF_AUTO_READ_OTP))
-    }
     var appSyncEnabled by remember {
         mutableStateOf(prefs.getBoolean(Settings.PREF_USE_APPS, Defaults.PREF_USE_APPS))
     }
@@ -111,24 +108,7 @@ fun BackgroundServicesScreen(
                 }
             )
 
-            // 3. SMS OTP Receiver
-            CompactServiceCard(
-                title = "SMS OTP Reader",
-                description = "Reads SMS notifications to suggest OTP passcodes.",
-                status = if (smsOtpEnabled) "READY" else "DISABLED",
-                enabled = smsOtpEnabled,
-                onToggle = { enabled ->
-                    smsOtpEnabled = enabled
-                    prefs.edit().putBoolean(Settings.PREF_AUTO_READ_OTP, enabled).apply()
-                },
-                onStopClicked = {
-                    smsOtpEnabled = false
-                    prefs.edit().putBoolean(Settings.PREF_AUTO_READ_OTP, false).apply()
-                    Toast.makeText(context, "SMS OTP Reader stopped", Toast.LENGTH_SHORT).show()
-                }
-            )
-
-            // 4. App Name Launcher Sync
+            // 3. App Name Launcher Sync
             CompactServiceCard(
                 title = "App Launcher Sync",
                 description = "Monitors app installs for app name suggestions.",
@@ -234,23 +214,6 @@ fun createBackgroundServicesSettings(context: android.content.Context): List<hel
             name = setting.title,
             key = setting.key,
             default = Defaults.PREF_ENABLE_CLIPBOARD_LISTENER,
-            description = setting.description,
-            onCheckedChange = {
-                enabled = it
-                context.prefs().edit().putBoolean(setting.key, it).apply()
-            }
-        )
-    },
-    helium314.keyboard.settings.Setting(
-        key = Settings.PREF_AUTO_READ_OTP,
-        title = "SMS OTP Reader",
-        description = "Reads SMS to suggest OTP passcodes."
-    ) { setting ->
-        var enabled by remember { mutableStateOf(context.prefs().getBoolean(setting.key, Defaults.PREF_AUTO_READ_OTP)) }
-        helium314.keyboard.settings.preferences.SwitchPreference(
-            name = setting.title,
-            key = setting.key,
-            default = Defaults.PREF_AUTO_READ_OTP,
             description = setting.description,
             onCheckedChange = {
                 enabled = it

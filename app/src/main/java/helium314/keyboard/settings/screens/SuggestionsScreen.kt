@@ -268,7 +268,7 @@ fun createSuggestionsSettings(context: Context) = listOf(
     Setting(context, Settings.PREF_AUTO_READ_OTP,
         R.string.auto_read_otp, R.string.auto_read_otp_summary
     ) { setting ->
-        val activity = LocalContext.current.getActivity() ?: return@Setting
+        val activity = LocalContext.current.getActivity() as? SettingsActivity ?: return@Setting
         var granted by remember { mutableStateOf(PermissionsUtil.isNotificationListenerEnabled(activity)) }
         var pendingOtpEnable by rememberSaveable { mutableStateOf(false) }
 
@@ -281,7 +281,10 @@ fun createSuggestionsSettings(context: Context) = listOf(
                     if (pendingOtpEnable && currentGranted) {
                         activity.prefs().edit { putBoolean(Settings.PREF_AUTO_READ_OTP, true) }
                         pendingOtpEnable = false
+                    } else if (!currentGranted && activity.prefs().getBoolean(Settings.PREF_AUTO_READ_OTP, false)) {
+                        activity.prefs().edit { putBoolean(Settings.PREF_AUTO_READ_OTP, false) }
                     }
+                    activity.prefChanged()
                 }
             }
             lifecycleOwner.lifecycle.addObserver(observer)
@@ -290,9 +293,19 @@ fun createSuggestionsSettings(context: Context) = listOf(
             }
         }
 
-        SwitchPreference(setting, Defaults.PREF_AUTO_READ_OTP,
-            allowCheckedChange = {
-                if (it) {
+        val description = if (!granted && activity.prefs().getBoolean(Settings.PREF_AUTO_READ_OTP, false)) {
+            "${setting.description}\n\n⚠ Notification access required. Tap to grant permission."
+        } else {
+            setting.description
+        }
+
+        SwitchPreference(
+            name = setting.title,
+            key = setting.key,
+            default = Defaults.PREF_AUTO_READ_OTP,
+            description = description,
+            allowCheckedChange = { enable ->
+                if (enable) {
                     val currentAllowed = activity.prefs().getString(Settings.PREF_OTP_ALLOWED_SMS_PACKAGE, null)
                     if (currentAllowed.isNullOrBlank()) {
                         val defaultSms = SmsPackageProvider.getDefaultSmsPackage(activity)
@@ -300,16 +313,15 @@ fun createSuggestionsSettings(context: Context) = listOf(
                             activity.prefs().edit { putString(Settings.PREF_OTP_ALLOWED_SMS_PACKAGE, defaultSms) }
                         }
                     }
-                    if (!granted) {
+                    if (!PermissionsUtil.isNotificationListenerEnabled(activity)) {
                         pendingOtpEnable = true
-                        try {
-                            activity.startActivity(Intent(android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
-                        } catch (e: Exception) {
-                            Log.w("SuggestionsScreen", "Could not launch notification listener settings", e)
-                        }
+                        PermissionsUtil.openNotificationListenerSettings(activity)
                         false
                     } else true
                 } else true
+            },
+            onCheckedChange = {
+                activity.prefChanged()
             }
         )
     },
