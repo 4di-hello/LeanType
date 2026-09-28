@@ -201,12 +201,101 @@ Draw letters, words, or symbols directly on a handwriting recognition canvas usi
 
 ## 7. Dedicated Text Editing Panel
 
-A Gboard-style precision editing panel designed for frictionless text manipulation:
-- **DPAD Arrow Keys**: Move cursor character-by-character or line-by-line.
-- **Selection Mode (Shift + DPAD)**: Highlight text with precision.
-- **Quick Selection**: 1-tap **Select Word** and **Select All**.
+A precision editing panel designed for frictionless text manipulation and directional selection:
+- **DPAD Arrow Keys**: Move cursor character-by-character or line-by-line (`←`, `→`, `↑`, `↓`).
+- **Persistent Selection Mode (`Select`)**: Tap `Select` to lock selection mode on. While active, any directional arrow expands or contracts text selection.
+- **Directional Jump Selection**: Tap `Select`, then tap Jump to Start (`|<`) or Jump to End (`>|`) to instantly highlight all text from the current cursor position all the way to the start or end of the document.
+- **Quick Selection**: 1-tap **Select Word** (`code: -34`) and **Select All** (`code: -35`).
 - **Clipboard Actions**: Direct Cut, Copy, and Paste buttons within the panel.
-- **Line Navigation**: Jump directly to Start of Line or End of Line.
+- **Navigation Shortcuts**: Jump directly to start or end of document (`code: -25` / `-26`) or line (`code: -27` / `-28`).
+
+### Prebuilt Layout Variants
+LeanType includes 3 prebuilt text editing layouts (switchable in **Settings -> Languages -> Secondary layouts -> Text editing layout**):
+1. **Standard** (`editing`): Full grid with Undo/Redo, Word/All selection, Cut/Copy/Paste, DPAD arrows, and line jumps.
+2. **Classic** (`editing_classic`): Vintage layout with extended navigation keys and symbol shortcuts.
+3. **Gboard** (`editing_gboard`): Gboard-style D-Pad cluster with centered `Select` toggle, `Select all`, `Copy`, `Paste`, Jump to Start (`|<`), Jump to End (`>|`), and Backspace.
+
+---
+
+### Custom Editing Layout Scripting Guide
+
+You can create and import your own text editing layout JSON files in **Settings -> Languages -> Secondary layouts -> Text editing layout -> Load from file** (or paste directly in the layout editor).
+
+#### JSON Structure
+An editing layout is defined as a 2D JSON array representing rows of keys:
+
+```json
+[
+  [ /* Row 1 Keys */ ],
+  [ /* Row 2 Keys */ ],
+  [ /* Row 3 Keys */ ],
+  [ /* Row 4 Keys */ ]
+]
+```
+
+#### Key Object Properties
+| Property | Type | Description |
+| :--- | :--- | :--- |
+| `code` | Integer | Action or character keycode (e.g. `-21` for Left Arrow). Required for functional keys. |
+| `label` | String | Visible text or glyph on the key cap. |
+| `width` | Float | Relative width fraction. **The sum of all key widths in each row must equal `1.0`** (e.g. 4 keys of `0.25`). |
+| `type` | String | Optional styling tag. Use `"function"` for action button styling, or `"placeholder"` for blank spacer gaps. |
+
+#### Important Layout Scripting Rules
+1. **Escape Pipe Delimiters (`|`)**: The pipe character `|` is a reserved delimiter in LeanType's key specification parser (used to separate labels and keycodes). In key labels, always escape it with a backslash (`"\\|<"` and `">\\|"`) or use Unicode arrows (`⇤` and `⇥`). Bare unescaped pipes will cause parser validation errors.
+2. **Flat Structure**: Avoid complex nested popup objects in custom editing layouts. Keep key definitions flat with `code`, `label`, `width`, and optional `type`.
+3. **No Empty Rows**: Every row must contain at least one key or spacer; rows cannot be left empty.
+4. **Spacers**: To create empty visual gaps without placing interactive buttons, use `{ "type": "placeholder", "width": 0.25 }`.
+
+#### Supported Editing Keycodes Reference
+| Keycode | Constant Name | Description |
+| :---: | :--- | :--- |
+| **`-21`** | `ARROW_LEFT` | Moves cursor left. In selection mode, expands/contracts selection left. |
+| **`-22`** | `ARROW_RIGHT` | Moves cursor right. In selection mode, expands/contracts selection right. |
+| **`-23`** | `ARROW_UP` | Moves cursor up one line. |
+| **`-24`** | `ARROW_DOWN` | Moves cursor down one line. |
+| **`-25`** | `MOVE_START_OF_PAGE` | Jumps to start of document. In selection mode, highlights to start (`|<`). |
+| **`-26`** | `MOVE_END_OF_PAGE` | Jumps to end of document. In selection mode, highlights to end (`>|`). |
+| **`-27`** | `MOVE_START_OF_LINE` | Jumps to start of the current line (`⇱`). |
+| **`-28`** | `MOVE_END_OF_LINE` | Jumps to end of the current line (`⇲`). |
+| **`-31`** | `CLIPBOARD_COPY` | Copies the currently selected text. |
+| **`-32`** | `CLIPBOARD_CUT` | Cuts the currently selected text. |
+| **`-33`** | `CLIPBOARD_PASTE` | Pastes text from the clipboard. |
+| **`-34`** | `CLIPBOARD_SELECT_WORD` | Selects the word currently under the cursor. |
+| **`-35`** | `CLIPBOARD_SELECT_ALL` | Selects all text in the current input field. |
+| **`-306`** | `TOGGLE_SELECTION_MODE` | Toggles persistent selection mode (`Select`). |
+| **`-131`** | `UNDO` | Triggers undo (`Ctrl+Z`). |
+| **`-132`** | `REDO` | Triggers redo (`Ctrl+Shift+Z`). |
+| **`-7`** | `DELETE` | Backspace deletion key. |
+
+#### Complete Gboard Layout Example (`editing_gboard.json`)
+```json
+[
+  [
+    { "type": "placeholder",                                    "width": 0.25 },
+    { "code": -23,  "label": "↑",                               "width": 0.25 },
+    { "type": "placeholder",                                    "width": 0.25 },
+    { "code": -35,  "label": "Select all", "type": "function", "width": 0.25 }
+  ],
+  [
+    { "code": -21,  "label": "←",                               "width": 0.25 },
+    { "code": -306, "label": "Select",     "type": "function", "width": 0.25 },
+    { "code": -22,  "label": "→",                               "width": 0.25 },
+    { "code": -31,  "label": "Copy",       "type": "function", "width": 0.25 }
+  ],
+  [
+    { "type": "placeholder",                                    "width": 0.25 },
+    { "code": -24,  "label": "↓",                               "width": 0.25 },
+    { "type": "placeholder",                                    "width": 0.25 },
+    { "code": -33,  "label": "Paste",      "type": "function", "width": 0.25 }
+  ],
+  [
+    { "code": -25,  "label": "\\|<",                            "width": 0.375 },
+    { "code": -26,  "label": ">\\|",                            "width": 0.375 },
+    { "code": -7,   "label": "delete",     "type": "function", "width": 0.25 }
+  ]
+]
+```
 
 ---
 
