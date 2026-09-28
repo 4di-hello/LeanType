@@ -70,6 +70,8 @@ object Defaults {
     const val PREF_KEY_BORDER_RADIUS_FUNCTIONAL = 25f
     const val PREF_KEY_BORDER_RADIUS_ACTION = 25f
     val PREF_THEME_DAY_NIGHT = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+    const val PREF_BACKGROUND_BLUR_AMOUNT = 0
+    const val PREF_USE_SYSTEM_WALLPAPER = false
     const val PREF_CUSTOM_ICON_NAMES = ""
     const val PREF_TOOLBAR_CUSTOM_KEY_CODES = ""
     const val PREF_AUTO_CAP = true

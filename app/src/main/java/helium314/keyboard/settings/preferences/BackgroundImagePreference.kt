@@ -105,7 +105,7 @@ fun BackgroundImagePref(setting: Setting, isLandscape: Boolean) {
             neutralButtonText = stringResource(R.string.delete),
             onNeutral = {
                 getFile().delete()
-                Settings.clearCachedBackgroundImages()
+                Settings.clearCachedBackgroundImages(ctx)
                 KeyboardSwitcher.getInstance().setThemeNeedsReload()
                 showSelectionDialog = false
             }
@@ -126,6 +126,6 @@ private fun setBackgroundImage(ctx: Context, uri: Uri, isNight: Boolean, isLands
         return false
     }
     bm.recycle()
-    Settings.clearCachedBackgroundImages()
+    Settings.clearCachedBackgroundImages(ctx)
     return true
 }

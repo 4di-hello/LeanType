@@ -33,6 +33,7 @@ import helium314.keyboard.settings.preferences.SwitchPreference
 import helium314.keyboard.settings.Theme
 import helium314.keyboard.settings.dialogs.ColorThemePickerDialog
 import helium314.keyboard.settings.dialogs.CustomizeIconsDialog
+import helium314.keyboard.settings.dialogs.InfoDialog
 import helium314.keyboard.settings.initPreview
 import helium314.keyboard.settings.preferences.BackgroundImagePref
 import helium314.keyboard.settings.preferences.CustomFontPreference
@@ -43,6 +44,7 @@ import helium314.keyboard.settings.preferences.TextInputPreference
 import helium314.keyboard.settings.previewDark
 import androidx.core.content.edit
 import helium314.keyboard.latin.settings.Settings
+import helium314.keyboard.latin.utils.WallpaperFetcher
 import java.util.Locale
 
 @Composable
@@ -75,6 +77,8 @@ fun AppearanceScreen(
         Settings.PREF_NAVBAR_COLOR,
         SettingsWithoutKey.BACKGROUND_IMAGE,
         SettingsWithoutKey.BACKGROUND_IMAGE_LANDSCAPE,
+        Settings.PREF_BACKGROUND_BLUR_AMOUNT,
+        Settings.PREF_USE_SYSTEM_WALLPAPER,
         R.string.settings_category_key_appearance,
         Settings.PREF_SHOW_HINTS,
         if (prefs.getBoolean(Settings.PREF_SHOW_HINTS, Defaults.PREF_SHOW_HINTS))
@@ -277,6 +281,51 @@ fun createAppearanceSettings(context: Context) = listOf(
         R.string.customize_background_image_landscape, R.string.summary_customize_background_image_landscape)
     {
         BackgroundImagePref(it, true)
+    },
+    Setting(context, Settings.PREF_BACKGROUND_BLUR_AMOUNT, R.string.background_blur, R.string.background_blur_summary) { setting ->
+        SliderPreference(
+            name = setting.title,
+            key = setting.key,
+            default = Defaults.PREF_BACKGROUND_BLUR_AMOUNT,
+            range = 0f..10f,
+            stepSize = 1,
+            description = { amount ->
+                if (amount == 0) stringResource(R.string.blur_off)
+                else stringResource(R.string.blur_radius, amount)
+            }
+        ) {
+            Settings.clearCachedBackgroundImages(context)
+            KeyboardSwitcher.getInstance().setThemeNeedsReload()
+        }
+    },
+    Setting(context, Settings.PREF_USE_SYSTEM_WALLPAPER, R.string.use_system_wallpaper, R.string.use_system_wallpaper_summary) { setting ->
+        var showRestrictedDialog by rememberSaveable { mutableStateOf(false) }
+        SwitchPreference(
+            setting = setting,
+            default = Defaults.PREF_USE_SYSTEM_WALLPAPER,
+            allowCheckedChange = { enable ->
+                if (enable) {
+                    val wp = WallpaperFetcher.getSystemWallpaper(context)
+                    if (wp == null) {
+                        showRestrictedDialog = true
+                        false
+                    } else {
+                        true
+                    }
+                } else {
+                    true
+                }
+            }
+        ) {
+            Settings.clearCachedBackgroundImages(context)
+            KeyboardSwitcher.getInstance().setThemeNeedsReload()
+        }
+        if (showRestrictedDialog) {
+            InfoDialog(
+                message = stringResource(R.string.system_wallpaper_restricted),
+                onDismissRequest = { showRestrictedDialog = false }
+            )
+        }
     },
     Setting(context, Settings.PREF_ENABLE_SPLIT_KEYBOARD, R.string.enable_split_keyboard) {
         SwitchPreference(it, Defaults.PREF_ENABLE_SPLIT_KEYBOARD) { KeyboardSwitcher.getInstance().reloadKeyboard() }

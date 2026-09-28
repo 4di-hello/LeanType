@@ -16,8 +16,11 @@ import android.content.SharedPreferences
 import android.content.pm.ApplicationInfo
 import android.content.res.Configuration
 import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.view.ContextThemeWrapper
 import android.view.inputmethod.EditorInfo
 import androidx.annotation.StringRes
@@ -32,6 +35,8 @@ import helium314.keyboard.latin.common.StringUtils
 import helium314.keyboard.latin.utils.BitmapUtils
 import helium314.keyboard.latin.utils.CenterCropDrawable
 import helium314.keyboard.latin.utils.DeviceProtectedUtils
+import helium314.keyboard.latin.utils.FastBlurEngine
+import helium314.keyboard.latin.utils.WallpaperFetcher
 import helium314.keyboard.latin.utils.prefs
 import helium314.keyboard.latin.utils.LayoutType
 import helium314.keyboard.latin.utils.Log
@@ -287,6 +292,8 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
         const val PREF_KEY_BORDER_RADIUS_FUNCTIONAL = "key_border_radius_functional"
         const val PREF_KEY_BORDER_RADIUS_ACTION = "key_border_radius_action"
         const val PREF_THEME_DAY_NIGHT = "theme_auto_day_night"
+        const val PREF_BACKGROUND_BLUR_AMOUNT = "background_blur_amount"
+        const val PREF_USE_SYSTEM_WALLPAPER = "use_system_wallpaper"
         const val PREF_USER_COLORS_PREFIX = "user_colors_"
         const val PREF_USER_ALL_COLORS_PREFIX = "user_all_colors_"
         const val PREF_USER_MORE_COLORS_PREFIX = "user_more_colors_"
@@ -718,14 +725,66 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
             val index = (if (night) 1 else 0) + (if (landscape) 2 else 0)
             if (sCachedBackgroundImages[index] != null) return sCachedBackgroundImages[index]
 
+            val prefs = context.prefs()
             var image = getCustomBackgroundFile(context, night, landscape)
             if (!image.isFile && landscape) {
                 image = getCustomBackgroundFile(context, night, false)
             }
+            if (!image.isFile && prefs.getBoolean(PREF_USE_SYSTEM_WALLPAPER, Defaults.PREF_USE_SYSTEM_WALLPAPER)) {
+                var sysImage = getSystemWallpaperFile(context, landscape)
+                if (!sysImage.isFile && landscape) {
+                    sysImage = getSystemWallpaperFile(context, false)
+                }
+                if (!sysImage.isFile) {
+                    val wp = WallpaperFetcher.getSystemWallpaper(context)
+                    if (wp != null) {
+                        try {
+                            sysImage.outputStream().use { out ->
+                                wp.compress(Bitmap.CompressFormat.PNG, 100, out)
+                            }
+                        } catch (e: Exception) {
+                            Log.w("Settings", "Failed to cache system wallpaper: ${e.message}")
+                        }
+                    }
+                }
+                if (sysImage.isFile) {
+                    image = sysImage
+                }
+            }
             if (!image.isFile) return null
+
+            val blurAmount = prefs.getInt(PREF_BACKGROUND_BLUR_AMOUNT, Defaults.PREF_BACKGROUND_BLUR_AMOUNT)
             return try {
-                val bm = BitmapUtils.decodeSampledBitmap(image, 2048, true) ?: return null
-                sCachedBackgroundImages[index] = CenterCropDrawable(bm)
+                if (blurAmount <= 0) {
+                    val bm = BitmapUtils.decodeSampledBitmap(image, 2048, true) ?: return null
+                    sCachedBackgroundImages[index] = CenterCropDrawable(bm)
+                } else {
+                    val blurFile = getCustomBackgroundBlurFile(context, night, landscape, blurAmount)
+                    val blurredBm = if (blurFile.isFile) {
+                        BitmapFactory.decodeFile(blurFile.absolutePath)
+                    } else {
+                        val rawBm = BitmapUtils.decodeSampledBitmap(image, 1024, true)
+                        if (rawBm != null) {
+                            val gen = FastBlurEngine.generateBlurredThumbnail(rawBm, radius = blurAmount)
+                            try {
+                                blurFile.outputStream().use { out ->
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                                        gen.compress(Bitmap.CompressFormat.WEBP_LOSSY, 85, out)
+                                    } else {
+                                        @Suppress("DEPRECATION")
+                                        gen.compress(Bitmap.CompressFormat.WEBP, 85, out)
+                                    }
+                                }
+                            } catch (e: Exception) {
+                                Log.w("Settings", "Failed to cache blurred wallpaper: ${e.message}")
+                            }
+                            if (rawBm != gen) rawBm.recycle()
+                            gen
+                        } else null
+                    } ?: return null
+                    val scrimColor = if (night) 0x66000000.toInt() else 0x40FFFFFF.toInt()
+                    sCachedBackgroundImages[index] = CenterCropDrawable(blurredBm, scrimColor)
+                }
                 sCachedBackgroundImages[index]
             } catch (e: Exception) {
                 null
@@ -739,8 +798,39 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
             )
         }
 
-        fun clearCachedBackgroundImages() {
+        fun getCustomBackgroundBlurFile(context: Context, night: Boolean, landscape: Boolean, blurAmount: Int): File {
+            return File(
+                DeviceProtectedUtils.getFilesDir(context),
+                "custom_background_blur" + (if (landscape) "_landscape" else "") + (if (night) "_night" else "") + "_$blurAmount.webp"
+            )
+        }
+
+        fun getSystemWallpaperFile(context: Context, landscape: Boolean): File {
+            return File(
+                DeviceProtectedUtils.getFilesDir(context),
+                "system_wallpaper" + (if (landscape) "_landscape" else "") + ".png"
+            )
+        }
+
+        fun hasCustomBackgroundImage(context: Context): Boolean {
+            val dir = DeviceProtectedUtils.getFilesDir(context)
+            return File(dir, "custom_background_image").isFile ||
+                    File(dir, "custom_background_image_night").isFile ||
+                    File(dir, "custom_background_image_landscape").isFile ||
+                    File(dir, "custom_background_image_landscape_night").isFile
+        }
+
+        fun clearCachedBackgroundImages(context: Context? = null) {
             sCachedBackgroundImages.fill(null)
+            val ctx = context ?: sInstance.mContext
+            if (ctx != null) {
+                try {
+                    val dir = DeviceProtectedUtils.getFilesDir(ctx)
+                    dir.listFiles { _, name -> name.startsWith("custom_background_blur") }?.forEach { it.delete() }
+                } catch (e: Exception) {
+                    Log.w("Settings", "Failed to clear blur cache: ${e.message}")
+                }
+            }
         }
 
         fun getDayNightContext(context: Context, wantNight: Boolean): Context {

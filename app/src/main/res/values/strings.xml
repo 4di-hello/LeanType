@@ -1075,6 +1075,13 @@ language, hence "No language". -->
     <string name="customize_background_image_landscape">Set background image (landscape)</string>
     <!-- Description for customize_background_image_landscape -->
     <string name="summary_customize_background_image_landscape">If not set, portrait image will be used</string>
+    <string name="background_blur">Background blur</string>
+    <string name="background_blur_summary">Apply a blur effect to the background image or wallpaper</string>
+    <string name="use_system_wallpaper">Use system wallpaper</string>
+    <string name="use_system_wallpaper_summary">Use current home screen wallpaper as background</string>
+    <string name="system_wallpaper_restricted">Access to system wallpaper is restricted on this Android version. Please select your wallpaper image manually using \"Set background image\".</string>
+    <string name="blur_off">Off</string>
+    <string name="blur_radius">Blur: %d</string>
     <!-- Title for customizing currencies -->
     <string name="customize_currencies">Customize currencies</string>
     <!-- Info for customizing currencies -->

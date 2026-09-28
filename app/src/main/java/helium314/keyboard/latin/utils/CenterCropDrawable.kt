@@ -4,14 +4,19 @@ package helium314.keyboard.latin.utils
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.ColorFilter
 import android.graphics.Paint
 import android.graphics.PixelFormat
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 
-class CenterCropDrawable(private val bitmap: Bitmap) : Drawable() {
+class CenterCropDrawable(
+    private val bitmap: Bitmap,
+    private val scrimColor: Int = Color.TRANSPARENT
+) : Drawable() {
     private val paint = Paint(Paint.FILTER_BITMAP_FLAG or Paint.ANTI_ALIAS_FLAG)
+    private val scrimPaint = Paint()
 
     override fun draw(canvas: Canvas) {
         val bounds = bounds
@@ -42,6 +47,11 @@ class CenterCropDrawable(private val bitmap: Bitmap) : Drawable() {
         canvas.scale(scale, scale)
         canvas.drawBitmap(bitmap, 0f, 0f, paint)
         canvas.restore()
+
+        if ((scrimColor ushr 24) > 0) {
+            scrimPaint.color = scrimColor
+            canvas.drawRect(bounds, scrimPaint)
+        }
     }
 
     override fun setAlpha(alpha: Int) {
@@ -56,7 +66,7 @@ class CenterCropDrawable(private val bitmap: Bitmap) : Drawable() {
 
     @Deprecated("Deprecated in Java")
     override fun getOpacity(): Int {
-        return if (bitmap.hasAlpha() || paint.alpha < 255) {
+        return if (bitmap.hasAlpha() || paint.alpha < 255 || (scrimColor ushr 24) < 255) {
             PixelFormat.TRANSLUCENT
         } else {
             PixelFormat.OPAQUE
