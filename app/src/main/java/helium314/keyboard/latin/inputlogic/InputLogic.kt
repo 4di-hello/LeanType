@@ -409,6 +409,11 @@ class InputLogic(
             && processedEvent.keyCode != KeyCode.SYMBOL_ALPHA
             && processedEvent.keyCode != KeyCode.ALPHA
             && processedEvent.keyCode != KeyCode.SYMBOL
+            && processedEvent.keyCode != KeyCode.CUSTOM1
+            && processedEvent.keyCode != KeyCode.CUSTOM2
+            && processedEvent.keyCode != KeyCode.CUSTOM3
+            && processedEvent.keyCode != KeyCode.CUSTOM4
+            && processedEvent.keyCode != KeyCode.CUSTOM5
         ) {
             mLastComposedWord.deactivate()
         }
@@ -841,7 +846,9 @@ class InputLogic(
             }
             KeyCode.VOICE_INPUT, KeyCode.EMOJI, KeyCode.TOGGLE_ONE_HANDED_MODE, KeyCode.SWITCH_ONE_HANDED_MODE,
             KeyCode.TOGGLE_FLOATING_KEYBOARD, KeyCode.HANDWRITING, KeyCode.CLEAR_HANDWRITING, KeyCode.CLIPBOARD_SEARCH,
-            KeyCode.TOGGLE_TOUCHPAD_MODE, KeyCode.TOGGLE_TEXT_EDIT_MODE, KeyCode.TOGGLE_SELECTION_MODE, KeyCode.SWITCH_TO_USER_IME -> {
+            KeyCode.TOGGLE_TOUCHPAD_MODE, KeyCode.TOGGLE_TEXT_EDIT_MODE, KeyCode.TOGGLE_SELECTION_MODE, KeyCode.SWITCH_TO_USER_IME,
+            KeyCode.CUSTOM1, KeyCode.CUSTOM2, KeyCode.CUSTOM3, KeyCode.CUSTOM4, KeyCode.CUSTOM5,
+            KeyCode.OCR, KeyCode.TOGGLE_INCOGNITO_MODE, KeyCode.TOGGLE_AUTOCORRECT, KeyCode.NOT_SPECIFIED -> {
                 // Handled elsewhere
             }
             KeyCode.CAPS_LOCK -> {

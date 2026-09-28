@@ -1238,6 +1238,22 @@ class InputLogicTest {
         assertEquals("Hi bob,your order pizza is ready for takeout.", getText())
     }
 
+    @Test fun customLayoutFunctionalKeysDoNotCrash() {
+        reset()
+        chainInput("hello")
+        functionalKeyPress(KeyCode.CUSTOM1)
+        functionalKeyPress(KeyCode.CUSTOM2)
+        functionalKeyPress(KeyCode.CUSTOM3)
+        functionalKeyPress(KeyCode.CUSTOM4)
+        functionalKeyPress(KeyCode.CUSTOM5)
+        functionalKeyPress(KeyCode.OCR)
+        functionalKeyPress(KeyCode.TOGGLE_INCOGNITO_MODE)
+        functionalKeyPress(KeyCode.TOGGLE_AUTOCORRECT)
+        functionalKeyPress(KeyCode.NOT_SPECIFIED)
+        assertEquals("hello", text)
+        assertEquals("hello", composingText)
+    }
+
 
 
     // ------- helper functions ---------
