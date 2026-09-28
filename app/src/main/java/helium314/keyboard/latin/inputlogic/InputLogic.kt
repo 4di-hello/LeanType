@@ -782,15 +782,16 @@ class InputLogic(
                     StatsUtils.onWordCommitUserTyped(mWordComposer.getTypedWord(), mWordComposer.isBatchMode())
                     resetComposingState(true)
                 }
-                val selectionEnd1 = mConnection.expectedSelectionEnd
-                val selectionStart1 = mConnection.expectedSelectionStart
-                sendDownUpKeyEventWithMetaState(
-                    KeyEvent.KEYCODE_MOVE_HOME,
-                    KeyEvent.META_CTRL_ON or event.metaState
-                )
-                if (mConnection.expectedSelectionStart == selectionStart1 && mConnection.expectedSelectionEnd == selectionEnd1) {
-                    val newEnd = if ((event.metaState and KeyEvent.META_SHIFT_MASK) != 0) selectionEnd1 else 0
-                    mConnection.setSelection(0, newEnd)
+                val isSelecting = (event.metaState and KeyEvent.META_SHIFT_MASK) != 0
+                if (isSelecting) {
+                    val anchor = mConnection.expectedSelectionEnd
+                    mConnection.setSelection(0, anchor)
+                } else {
+                    sendDownUpKeyEventWithMetaState(
+                        KeyEvent.KEYCODE_MOVE_HOME,
+                        KeyEvent.META_CTRL_ON or event.metaState
+                    )
+                    mConnection.setSelection(0, 0)
                 }
             }
             KeyCode.MOVE_END_OF_PAGE -> {
@@ -799,19 +800,18 @@ class InputLogic(
                     StatsUtils.onWordCommitUserTyped(mWordComposer.getTypedWord(), mWordComposer.isBatchMode())
                     resetComposingState(true)
                 }
-                val selectionStart2 = mConnection.expectedSelectionStart
-                val selectionEnd2 = mConnection.expectedSelectionEnd
-                sendDownUpKeyEventWithMetaState(
-                    KeyEvent.KEYCODE_MOVE_END,
-                    KeyEvent.META_CTRL_ON or event.metaState
-                )
-                if (mConnection.expectedSelectionStart == selectionStart2 && mConnection.expectedSelectionEnd == selectionEnd2) {
-                    try {
-                        val newStart = if ((event.metaState and KeyEvent.META_SHIFT_MASK) != 0) selectionStart2 else Int.MAX_VALUE
-                        mConnection.setSelection(newStart, Int.MAX_VALUE)
-                    } catch (e: Exception) {
-                        Log.i(TAG, "error when trying to move cursor to last position: $e")
-                    }
+                val isSelecting = (event.metaState and KeyEvent.META_SHIFT_MASK) != 0
+                val after = mConnection.getTextAfterCursor(1000000, 0)
+                val textEnd = mConnection.expectedSelectionEnd + (after?.length ?: 0)
+                if (isSelecting) {
+                    val anchor = mConnection.expectedSelectionStart
+                    mConnection.setSelection(anchor, textEnd)
+                } else {
+                    sendDownUpKeyEventWithMetaState(
+                        KeyEvent.KEYCODE_MOVE_END,
+                        KeyEvent.META_CTRL_ON or event.metaState
+                    )
+                    mConnection.setSelection(textEnd, textEnd)
                 }
             }
             KeyCode.UNDO -> sendDownUpKeyEventWithMetaState(KeyEvent.KEYCODE_Z, KeyEvent.META_CTRL_ON)
