@@ -1569,6 +1569,9 @@ New dictionary:
     <string name="toolbar_swipe_down_dismiss">Swipe down to close</string>
     <!-- Description of the setting for swiping down on toolbar to dismiss keyboard -->
     <string name="toolbar_swipe_down_dismiss_summary">Swipe down on toolbar to hide keyboard</string>
+    <string name="toolbar_swipe_up_gesture">Toolbar swipe up gesture</string>
+    <string name="toolbar_swipe_down_gesture">Toolbar swipe down gesture</string>
+    <string name="toolbar_swipe_more_suggestions_entry">More suggestions</string>
     <!-- Title of the setting to auto hide pinned keys when toolbar is expanded -->
     <string name="auto_hide_pinned_keys">Auto hide pinned keys</string>
     <!-- Description of the setting to auto hide pinned keys when toolbar is expanded -->

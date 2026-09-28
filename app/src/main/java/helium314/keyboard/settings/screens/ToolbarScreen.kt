@@ -88,7 +88,8 @@ fun ToolbarScreen(
         if (toolbarMode == ToolbarMode.EXPANDABLE) Settings.PREF_REMEMBER_TOOLBAR_STATE else null,
         if (toolbarMode != ToolbarMode.HIDDEN) Settings.PREF_SHOW_ONLY_TOOLBAR_WITH_HARDWARE_KEYBOARD else null,
         if (toolbarMode != ToolbarMode.HIDDEN) Settings.PREF_VARIABLE_TOOLBAR_DIRECTION else null,
-        Settings.PREF_TOOLBAR_SWIPE_DOWN_DISMISS,
+        Settings.PREF_TOOLBAR_SWIPE_UP_GESTURE,
+        Settings.PREF_TOOLBAR_SWIPE_DOWN_GESTURE,
     )
     SearchSettingsScreen(
         onClickBack = onClickBack,
@@ -205,10 +206,36 @@ fun createToolbarSettings(context: Context): List<Setting> {
         {
             SwitchPreference(it, Defaults.PREF_REMEMBER_TOOLBAR_STATE)
         },
-        Setting(context, Settings.PREF_TOOLBAR_SWIPE_DOWN_DISMISS,
-            R.string.toolbar_swipe_down_dismiss, R.string.toolbar_swipe_down_dismiss_summary)
-        {
-            SwitchPreference(it, Defaults.PREF_TOOLBAR_SWIPE_DOWN_DISMISS)
+        Setting(context, Settings.PREF_TOOLBAR_SWIPE_UP_GESTURE, R.string.toolbar_swipe_up_gesture) {
+            val items = listOf(
+                stringResource(R.string.space_swipe_move_cursor_entry) to "move_cursor",
+                stringResource(R.string.switch_language) to "switch_language",
+                stringResource(R.string.space_swipe_toggle_numpad_entry) to "toggle_numpad",
+                stringResource(R.string.space_swipe_hide_keyboard_entry) to "hide_keyboard",
+                stringResource(R.string.space_swipe_touchpad_mode_entry) to "touchpad_mode",
+                stringResource(R.string.toolbar_swipe_more_suggestions_entry) to "more_suggestions",
+                stringResource(R.string.action_none) to "none",
+            )
+            ListPreference(it, items, Defaults.PREF_TOOLBAR_SWIPE_UP_GESTURE)
+        },
+        Setting(context, Settings.PREF_TOOLBAR_SWIPE_DOWN_GESTURE, R.string.toolbar_swipe_down_gesture) {
+            val items = listOf(
+                stringResource(R.string.space_swipe_move_cursor_entry) to "move_cursor",
+                stringResource(R.string.switch_language) to "switch_language",
+                stringResource(R.string.space_swipe_toggle_numpad_entry) to "toggle_numpad",
+                stringResource(R.string.space_swipe_hide_keyboard_entry) to "hide_keyboard",
+                stringResource(R.string.space_swipe_touchpad_mode_entry) to "touchpad_mode",
+                stringResource(R.string.toolbar_swipe_more_suggestions_entry) to "more_suggestions",
+                stringResource(R.string.action_none) to "none",
+            )
+            val prefs = LocalContext.current.prefs()
+            val defaultVal = if (!prefs.contains(Settings.PREF_TOOLBAR_SWIPE_DOWN_GESTURE)
+                && prefs.getBoolean(Settings.PREF_TOOLBAR_SWIPE_DOWN_DISMISS, Defaults.PREF_TOOLBAR_SWIPE_DOWN_DISMISS)) {
+                "hide_keyboard"
+            } else {
+                Defaults.PREF_TOOLBAR_SWIPE_DOWN_GESTURE
+            }
+            ListPreference(it, items, defaultVal)
         },
         Setting(context, Settings.PREF_SHOW_ONLY_TOOLBAR_WITH_HARDWARE_KEYBOARD,
             R.string.toolbar_only_with_hw_keyboard, R.string.toolbar_only_with_hw_keyboard_summary)

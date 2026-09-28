@@ -241,6 +241,8 @@ object Defaults {
     const val PREF_AUTO_HIDE_TOOLBAR = true
     const val PREF_AUTO_SHOW_TOOLBAR_NO_SUGGESTIONS = false
     const val PREF_TOOLBAR_SWIPE_DOWN_DISMISS = false
+    const val PREF_TOOLBAR_SWIPE_UP_GESTURE = "none"
+    const val PREF_TOOLBAR_SWIPE_DOWN_GESTURE = "none"
     const val PREF_AUTO_HIDE_PINNED_KEYS = true
     const val PREF_REMEMBER_TOOLBAR_STATE = false
     const val PREF_TOOLBAR_EXPANDED = false

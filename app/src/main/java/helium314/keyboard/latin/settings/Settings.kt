@@ -481,6 +481,8 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
         const val PREF_AUTO_HIDE_TOOLBAR = "auto_hide_toolbar"
         const val PREF_AUTO_SHOW_TOOLBAR_NO_SUGGESTIONS = "auto_show_toolbar_no_suggestions"
         const val PREF_TOOLBAR_SWIPE_DOWN_DISMISS = "toolbar_swipe_down_dismiss"
+        const val PREF_TOOLBAR_SWIPE_UP_GESTURE = "toolbar_swipe_up_gesture"
+        const val PREF_TOOLBAR_SWIPE_DOWN_GESTURE = "toolbar_swipe_down_gesture"
         const val PREF_AUTO_HIDE_PINNED_KEYS = "auto_hide_pinned_keys"
         const val PREF_REMEMBER_TOOLBAR_STATE = "remember_toolbar_state"
         const val PREF_TOOLBAR_EXPANDED = "toolbar_expanded"
@@ -602,6 +604,35 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
                 "toggle_numpad" -> KeyboardActionListener.SWIPE_TOGGLE_NUMPAD
                 "hide_keyboard" -> KeyboardActionListener.SWIPE_HIDE_KEYBOARD
                 "touchpad_mode" -> KeyboardActionListener.SWIPE_TOUCHPAD_MODE
+                else -> KeyboardActionListener.SWIPE_NO_ACTION
+            }
+        }
+
+        fun readToolbarSwipeUp(prefs: SharedPreferences): Int {
+            return when (prefs.getString(PREF_TOOLBAR_SWIPE_UP_GESTURE, Defaults.PREF_TOOLBAR_SWIPE_UP_GESTURE)) {
+                "move_cursor" -> KeyboardActionListener.SWIPE_MOVE_CURSOR
+                "switch_language" -> KeyboardActionListener.SWIPE_SWITCH_LANGUAGE
+                "toggle_numpad" -> KeyboardActionListener.SWIPE_TOGGLE_NUMPAD
+                "hide_keyboard" -> KeyboardActionListener.SWIPE_HIDE_KEYBOARD
+                "touchpad_mode" -> KeyboardActionListener.SWIPE_TOUCHPAD_MODE
+                "more_suggestions" -> KeyboardActionListener.SWIPE_MORE_SUGGESTIONS
+                else -> KeyboardActionListener.SWIPE_NO_ACTION
+            }
+        }
+
+        fun readToolbarSwipeDown(prefs: SharedPreferences): Int {
+            if (!prefs.contains(PREF_TOOLBAR_SWIPE_DOWN_GESTURE) && prefs.contains(PREF_TOOLBAR_SWIPE_DOWN_DISMISS)) {
+                if (prefs.getBoolean(PREF_TOOLBAR_SWIPE_DOWN_DISMISS, Defaults.PREF_TOOLBAR_SWIPE_DOWN_DISMISS)) {
+                    return KeyboardActionListener.SWIPE_HIDE_KEYBOARD
+                }
+            }
+            return when (prefs.getString(PREF_TOOLBAR_SWIPE_DOWN_GESTURE, Defaults.PREF_TOOLBAR_SWIPE_DOWN_GESTURE)) {
+                "move_cursor" -> KeyboardActionListener.SWIPE_MOVE_CURSOR
+                "switch_language" -> KeyboardActionListener.SWIPE_SWITCH_LANGUAGE
+                "toggle_numpad" -> KeyboardActionListener.SWIPE_TOGGLE_NUMPAD
+                "hide_keyboard" -> KeyboardActionListener.SWIPE_HIDE_KEYBOARD
+                "touchpad_mode" -> KeyboardActionListener.SWIPE_TOUCHPAD_MODE
+                "more_suggestions" -> KeyboardActionListener.SWIPE_MORE_SUGGESTIONS
                 else -> KeyboardActionListener.SWIPE_NO_ACTION
             }
         }

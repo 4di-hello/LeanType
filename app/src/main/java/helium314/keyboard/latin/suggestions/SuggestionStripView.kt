@@ -39,6 +39,7 @@ import androidx.core.view.isVisible
 import com.leanbitlab.leantype.voice.VoiceConstants
 import helium314.keyboard.compat.isDeviceLocked
 import helium314.keyboard.event.HapticEvent
+import helium314.keyboard.keyboard.KeyboardActionListener
 import helium314.keyboard.keyboard.KeyboardSwitcher
 import helium314.keyboard.keyboard.internal.KeyboardIconsSet
 import helium314.keyboard.keyboard.internal.keyboard_parser.floris.KeyCode
@@ -333,9 +334,9 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
         gestureDetector = GestureDetector(context, slidingListener)
     }
 
-    private var swipeDownStartY = 0f
-    private var swipeDownStartX = 0f
-    private var isSwipeDownTriggered = false
+    private var swipeStartY = 0f
+    private var swipeStartX = 0f
+    private var isSwipeTriggered = false
     private var swipeVelocityTracker: VelocityTracker? = null
 
     // public stuff
@@ -846,12 +847,17 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-        if (Settings.getValues().mToolbarSwipeDownDismiss) {
+        if (isShowingMoreSuggestionPanel) {
+            return super.dispatchTouchEvent(ev)
+        }
+        val swipeUpAction = Settings.getValues().mToolbarSwipeUp
+        val swipeDownAction = Settings.getValues().mToolbarSwipeDown
+        if (swipeUpAction != KeyboardActionListener.SWIPE_NO_ACTION || swipeDownAction != KeyboardActionListener.SWIPE_NO_ACTION) {
             when (ev.actionMasked) {
                 MotionEvent.ACTION_DOWN -> {
-                    swipeDownStartY = ev.rawY
-                    swipeDownStartX = ev.rawX
-                    isSwipeDownTriggered = false
+                    swipeStartY = ev.rawY
+                    swipeStartX = ev.rawX
+                    isSwipeTriggered = false
                     swipeVelocityTracker?.recycle()
                     swipeVelocityTracker = VelocityTracker.obtain().apply {
                         addMovement(ev)
@@ -859,9 +865,9 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
                 }
                 MotionEvent.ACTION_MOVE -> {
                     swipeVelocityTracker?.addMovement(ev)
-                    if (!isSwipeDownTriggered) {
-                        val dy = ev.rawY - swipeDownStartY
-                        val dx = Math.abs(ev.rawX - swipeDownStartX)
+                    if (!isSwipeTriggered) {
+                        val dy = ev.rawY - swipeStartY
+                        val dx = Math.abs(ev.rawX - swipeStartX)
                         val touchSlop = ViewConfiguration.get(context).scaledTouchSlop
                         val minDistance = Math.max(touchSlop * 2, 20.dpToPx(resources))
 
@@ -873,9 +879,21 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
                         val isFlingDown = vy > minFlingVelocity && vy > vx * 1.2f && dy > touchSlop
                         val isDragDown = dy > minDistance && dy > dx * 1.2f
 
-                        if (isFlingDown || isDragDown) {
-                            isSwipeDownTriggered = true
-                            listener.onCodeInput(KeyCode.IME_HIDE_UI, Constants.SUGGESTION_STRIP_COORDINATE, Constants.SUGGESTION_STRIP_COORDINATE, false)
+                        val isFlingUp = vy < -minFlingVelocity && -vy > vx * 1.2f && -dy > touchSlop
+                        val isDragUp = -dy > minDistance && -dy > dx * 1.2f
+
+                        if (swipeDownAction != KeyboardActionListener.SWIPE_NO_ACTION && (isFlingDown || isDragDown)) {
+                            isSwipeTriggered = true
+                            executeToolbarSwipeAction(swipeDownAction, isUp = false)
+                            val cancelEvent = MotionEvent.obtain(ev).apply {
+                                action = MotionEvent.ACTION_CANCEL
+                            }
+                            super.dispatchTouchEvent(cancelEvent)
+                            cancelEvent.recycle()
+                            return true
+                        } else if (swipeUpAction != KeyboardActionListener.SWIPE_NO_ACTION && (isFlingUp || isDragUp)) {
+                            isSwipeTriggered = true
+                            executeToolbarSwipeAction(swipeUpAction, isUp = true)
                             val cancelEvent = MotionEvent.obtain(ev).apply {
                                 action = MotionEvent.ACTION_CANCEL
                             }
@@ -888,14 +906,39 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                     swipeVelocityTracker?.recycle()
                     swipeVelocityTracker = null
-                    if (isSwipeDownTriggered) {
-                        isSwipeDownTriggered = false
+                    if (isSwipeTriggered) {
+                        isSwipeTriggered = false
                         return true
                     }
                 }
             }
         }
         return super.dispatchTouchEvent(ev)
+    }
+
+    private fun executeToolbarSwipeAction(action: Int, isUp: Boolean) {
+        AudioAndHapticFeedbackManager.getInstance().performHapticAndAudioFeedback(KeyCode.NOT_SPECIFIED, this, HapticEvent.KEY_PRESS)
+        when (action) {
+            KeyboardActionListener.SWIPE_HIDE_KEYBOARD -> {
+                listener.onCodeInput(KeyCode.IME_HIDE_UI, Constants.SUGGESTION_STRIP_COORDINATE, Constants.SUGGESTION_STRIP_COORDINATE, false)
+            }
+            KeyboardActionListener.SWIPE_SWITCH_LANGUAGE -> {
+                listener.onCodeInput(KeyCode.LANGUAGE_SWITCH, Constants.SUGGESTION_STRIP_COORDINATE, Constants.SUGGESTION_STRIP_COORDINATE, false)
+            }
+            KeyboardActionListener.SWIPE_TOGGLE_NUMPAD -> {
+                listener.onCodeInput(KeyCode.NUMPAD, Constants.SUGGESTION_STRIP_COORDINATE, Constants.SUGGESTION_STRIP_COORDINATE, false)
+            }
+            KeyboardActionListener.SWIPE_TOUCHPAD_MODE -> {
+                listener.onCodeInput(KeyCode.TOGGLE_TOUCHPAD_MODE, Constants.SUGGESTION_STRIP_COORDINATE, Constants.SUGGESTION_STRIP_COORDINATE, false)
+            }
+            KeyboardActionListener.SWIPE_MOVE_CURSOR -> {
+                val code = if (isUp) KeyCode.ARROW_UP else KeyCode.ARROW_DOWN
+                listener.onCodeInput(code, Constants.SUGGESTION_STRIP_COORDINATE, Constants.SUGGESTION_STRIP_COORDINATE, false)
+            }
+            KeyboardActionListener.SWIPE_MORE_SUGGESTIONS -> {
+                showMoreSuggestions()
+            }
+        }
     }
 
     override fun onInterceptTouchEvent(motionEvent: MotionEvent): Boolean {
