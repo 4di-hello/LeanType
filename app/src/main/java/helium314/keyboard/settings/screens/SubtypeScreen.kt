@@ -312,8 +312,13 @@ fun SubtypeScreen(
                 ) {
                     Column(Modifier.padding(vertical = 4.dp, horizontal = 8.dp)) {
                         PreferenceCategory(stringResource(R.string.settings_screen_secondary_layouts))
+                        val customCount = prefs.getInt("custom_layouts_count", 0)
                         LayoutType.entries.forEach { type ->
                             if (type == LayoutType.MAIN) return@forEach
+                            if (type.name.startsWith("CUSTOM")) {
+                                val index = type.name.removePrefix("CUSTOM").toIntOrNull() ?: 0
+                                if (index > customCount && currentSubtype.layoutName(type) == null) return@forEach
+                            }
                             WithSmallTitle(stringResource(type.displayNameId)) {
                                 val explicitLayout = currentSubtype.layoutName(type)
                                 val layout = explicitLayout ?: Settings.readDefaultLayoutName(type, prefs)

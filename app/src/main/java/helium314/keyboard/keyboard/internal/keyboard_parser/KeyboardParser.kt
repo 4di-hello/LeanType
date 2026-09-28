@@ -324,16 +324,30 @@ class KeyboardParser(private val params: KeyboardParams, private val context: Co
     }
 
     private fun addSymbolPopupKeys(baseKeys: MutableList<MutableList<KeyData>>) {
-        val layout = LayoutParser.parseLayout(LayoutType.SYMBOLS, params, context)
-        layout.forEachIndexed { i, row ->
-            val baseRow = baseKeys.getOrNull(i) ?: return@forEachIndexed
-            row.forEachIndexed { j, key ->
-                val baseKey = baseRow.getOrNull(j) ?: return@forEachIndexed
+        val symbolsLayout = LayoutParser.parseLayout(LayoutType.SYMBOLS, params, context)
+        val moreSymbolsLayout = LayoutParser.parseLayout(LayoutType.MORE_SYMBOLS, params, context)
+        val nonSymbolLabels = setOf(KeyLabel.SHIFT, KeyLabel.DELETE, KeyLabel.ACTION, KeyLabel.SYMBOL_ALPHA, KeyLabel.ALPHA, KeyLabel.NUMPAD, KeyLabel.LANGUAGE_SWITCH)
+        baseKeys.forEachIndexed { i, baseRow ->
+            val symbolsRow = symbolsLayout.getOrNull(i)
+            val moreSymbolsRow = moreSymbolsLayout.getOrNull(i)
+            baseRow.forEachIndexed { j, baseKey ->
                 if (baseKey.code == Constants.CODE_SPACE || baseKey.label == KeyLabel.SPACE || baseKey.label == " ") return@forEachIndexed
-                if (baseKey.label in listOf(KeyLabel.SHIFT, KeyLabel.DELETE, KeyLabel.ACTION, KeyLabel.SYMBOL_ALPHA, KeyLabel.ALPHA, KeyLabel.NUMPAD, KeyLabel.LANGUAGE_SWITCH)) return@forEachIndexed
+                if (baseKey.label in nonSymbolLabels) return@forEachIndexed
                 val symbols = mutableListOf<String>()
-                key.label.takeIf { it.isNotEmpty() }?.let { symbols.add(it) }
-                key.popup.getPopupKeyLabels(params)?.let { symbols.addAll(it) }
+                val symbolKey = symbolsRow?.getOrNull(j)
+                if (symbolKey != null && symbolKey.code != Constants.CODE_SPACE && symbolKey.label != KeyLabel.SPACE && symbolKey.label != " " && symbolKey.label !in nonSymbolLabels) {
+                    symbolKey.label.takeIf { it.isNotEmpty() }?.let { symbols.add(it) }
+                    symbolKey.popup.getPopupKeyLabels(params)?.let { symbols.addAll(it) }
+                }
+                val moreSymbolKey = moreSymbolsRow?.getOrNull(j)
+                if (moreSymbolKey != null && moreSymbolKey.code != Constants.CODE_SPACE && moreSymbolKey.label != KeyLabel.SPACE && moreSymbolKey.label != " " && moreSymbolKey.label !in nonSymbolLabels) {
+                    moreSymbolKey.label.takeIf { it.isNotEmpty() && it !in symbols }?.let { symbols.add(it) }
+                    moreSymbolKey.popup.getPopupKeyLabels(params)?.let { morePopups ->
+                        morePopups.filterNot { it.startsWith("!") && it.endsWith("!") }.forEach {
+                            if (it !in symbols) symbols.add(it)
+                        }
+                    }
+                }
                 if (symbols.isNotEmpty()) baseKey.popup.symbols = symbols
             }
         }

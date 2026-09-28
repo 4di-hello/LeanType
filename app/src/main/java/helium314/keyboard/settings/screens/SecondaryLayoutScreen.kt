@@ -17,6 +17,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import helium314.keyboard.keyboard.KeyboardLayoutSet
+import helium314.keyboard.keyboard.KeyboardSwitcher
 import helium314.keyboard.latin.R
 import helium314.keyboard.latin.settings.Settings
 import helium314.keyboard.latin.utils.LayoutType
@@ -106,6 +108,8 @@ fun createLayoutSettings(context: Context): List<Setting> {
                                     edit.remove(Settings.PREF_LAYOUT_PREFIX + "CUSTOM$count")
                                     edit.putInt("custom_layouts_count", count - 1)
                                     edit.apply()
+                                    KeyboardLayoutSet.clearKeyboardCache()
+                                    KeyboardSwitcher.getInstance().setThemeNeedsReload()
                                     // Trigger recomposition
                                     (ctx.getActivity() as? SettingsActivity)?.let {
                                         it.prefChanged.value = it.prefChanged.value + 1
@@ -143,6 +147,8 @@ fun createLayoutSettings(context: Context): List<Setting> {
                     val count = prefs.getInt("custom_layouts_count", 0)
                     if (count < 5) {
                         prefs.edit().putInt("custom_layouts_count", count + 1).apply()
+                        KeyboardLayoutSet.clearKeyboardCache()
+                        KeyboardSwitcher.getInstance().setThemeNeedsReload()
                         // Trigger preference update so settings screen recomposes
                         (ctx.getActivity() as? SettingsActivity)?.let {
                             it.prefChanged.value = it.prefChanged.value + 1

@@ -23,7 +23,11 @@ enum class LayoutType {
             return map
         }
 
-        val LayoutType.folder get() = "layouts${File.separator}${name.lowercase()}"
+        val LayoutType.folder get() = if (name.startsWith("CUSTOM")) {
+            "layouts${File.separator}custom"
+        } else {
+            "layouts${File.separator}${name.lowercase()}"
+        }
 
         val LayoutType.displayNameId get() = when (this) {
             MAIN -> R.string.subtype_no_language

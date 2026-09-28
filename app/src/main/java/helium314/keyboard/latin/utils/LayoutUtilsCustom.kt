@@ -104,7 +104,22 @@ object LayoutUtilsCustom {
 
     fun getLayoutFiles(layoutType: LayoutType, context: Context, locale: Locale? = null): List<File> {
         val layouts = customLayoutMap.getOrPut(layoutType) {
-            File(DeviceProtectedUtils.getFilesDir(context), layoutType.folder).listFiles()?.toList() ?: emptyList()
+            val dir = File(DeviceProtectedUtils.getFilesDir(context), layoutType.folder)
+            if (layoutType.name.startsWith("CUSTOM")) {
+                for (i in 1..5) {
+                    val legacyDir = File(DeviceProtectedUtils.getFilesDir(context), "layouts${File.separator}custom$i")
+                    if (legacyDir.exists() && legacyDir.isDirectory) {
+                        dir.mkdirs()
+                        legacyDir.listFiles()?.forEach { legacyFile ->
+                            val target = File(dir, legacyFile.name)
+                            if (!target.exists()) legacyFile.renameTo(target)
+                            else legacyFile.delete()
+                        }
+                        legacyDir.delete()
+                    }
+                }
+            }
+            dir.listFiles()?.toList() ?: emptyList()
         }
         if (layoutType != LayoutType.MAIN || locale == null)
             return layouts
@@ -120,7 +135,13 @@ object LayoutUtilsCustom {
     fun deleteLayout(layoutName: String, layoutType: LayoutType, context: Context) {
         getLayoutFile(layoutName, layoutType, context).delete()
         onLayoutFileChanged()
-        SubtypeSettings.onRenameLayout(layoutType, layoutName, null, context)
+        if (layoutType.name.startsWith("CUSTOM")) {
+            LayoutType.entries.filter { it.name.startsWith("CUSTOM") }.forEach {
+                SubtypeSettings.onRenameLayout(it, layoutName, null, context)
+            }
+        } else {
+            SubtypeSettings.onRenameLayout(layoutType, layoutName, null, context)
+        }
         KeyboardSwitcher.getInstance().setThemeNeedsReload()
     }
 

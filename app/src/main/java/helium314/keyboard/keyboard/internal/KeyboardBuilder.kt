@@ -103,8 +103,7 @@ open class KeyboardBuilder<KP : KeyboardParams>(protected val mContext: Context,
     }
 
     open fun build(): Keyboard {
-        if (!mParams.isHexagonal && mParams.mId.mIsSplitLayout
-                && mParams.mId.mElementId in KeyboardId.ELEMENT_ALPHABET..KeyboardId.ELEMENT_SYMBOLS_SHIFTED) {
+        if (!mParams.isHexagonal && mParams.mId.mIsSplitLayout && mParams.mId.isAlphaOrSymbolKeyboard) {
             addSplit()
         }
         addKeysToParams()

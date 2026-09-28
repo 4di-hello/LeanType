@@ -20,6 +20,9 @@ import helium314.keyboard.keyboard.internal.keyboard_parser.addLocaleKeyTextsToP
 import helium314.keyboard.keyboard.internal.keyboard_parser.floris.KeyCode
 import helium314.keyboard.latin.LatinIME
 import helium314.keyboard.latin.RichInputMethodSubtype
+import helium314.keyboard.latin.common.Constants
+import helium314.keyboard.latin.utils.LayoutType
+import helium314.keyboard.latin.utils.LayoutType.Companion.toExtraValue
 import helium314.keyboard.latin.utils.LayoutUtilsCustom
 import helium314.keyboard.latin.utils.POPUP_KEYS_LAYOUT
 import helium314.keyboard.latin.utils.SubtypeUtilsAdditional
@@ -603,6 +606,62 @@ f""", // no newline at the end
         val periodKey = allKeys.first { it.mLabel == "." }
         assertEquals("!", periodKey.mPopupKeys?.first()?.mLabel)
         assertEquals("!", periodKey.mHintLabel)
+    }
+
+    @Test fun turkishLayoutWithMoreSymbolsPopupKeys() {
+        val subtype = SubtypeUtilsAdditional.createEmojiCapableAdditionalSubtype(Locale("tr"), "turkish", true)
+        val (_, keys) = buildKeyboard(EditorInfo(), subtype, KeyboardId.ELEMENT_ALPHABET)
+        val allKeys = keys.flatten()
+
+        // 'q' has '1' as number hint on top row, and has '%' from symbols, and '~' from more_symbols in its popup keys
+        val qKey = allKeys.first { it.mLabel == "q" }
+        assertEquals("1", qKey.mHintLabel)
+        val qPopupLabels = qKey.mPopupKeys?.mapNotNull { it.mLabel } ?: emptyList()
+        assertTrue(qPopupLabels.contains("%"))
+        assertTrue(qPopupLabels.contains("~"))
+    }
+
+    @Test fun turkishLayoutCustomMoreSymbolsAffectsButtons() {
+        val customName = LayoutUtilsCustom.getLayoutName("custom_more_tr", LayoutType.MORE_SYMBOLS)
+        // 12 keys in row 0 (with '[' on 11th and ']' on 12th), 11 keys in row 1, 9 keys in row 2 (with '<' on 8th and '>' on 9th)
+        val row0 = "q\nw\ne\nr\nt\ny\nu\ni\no\np\n[\n]\n\n"
+        val row1 = "a\ns\nd\nf\ng\nh\nj\nk\nl\n;\n'\n\n"
+        val row2 = "z\nx\nc\nv\nb\nn\nm\n<\n>\n"
+        LayoutUtilsCustom.getLayoutFile(customName + "txt", LayoutType.MORE_SYMBOLS, latinIME).writeText(row0 + row1 + row2)
+        LayoutUtilsCustom.onLayoutFileChanged()
+
+        val layouts = LayoutType.getLayoutMap(null).apply {
+            put(LayoutType.MAIN, "turkish")
+            put(LayoutType.MORE_SYMBOLS, customName)
+        }
+        val subtype = RichInputMethodSubtype.get(SubtypeUtilsAdditional.createAdditionalSubtype(
+            Locale("tr"), "${Constants.Subtype.ExtraValue.KEYBOARD_LAYOUT_SET}=${layouts.toExtraValue()}", true, true
+        ))
+
+        val (_, keys) = buildKeyboard(EditorInfo(), subtype.rawSubtype, KeyboardId.ELEMENT_ALPHABET)
+        val allKeys = keys.flatten()
+
+        val gKey = allKeys.first { it.mLabel == "ğ" }
+        val uKey = allKeys.first { it.mLabel == "ü" }
+        val oKey = allKeys.first { it.mLabel == "ö" }
+        val cKey = allKeys.first { it.mLabel == "ç" }
+
+        assertEquals("[", gKey.mHintLabel)
+        assertEquals("]", uKey.mHintLabel)
+        assertEquals("<", oKey.mHintLabel)
+        assertEquals(">", cKey.mHintLabel)
+
+        assertTrue(gKey.mPopupKeys?.any { it.mLabel == "[" } == true)
+        assertTrue(uKey.mPopupKeys?.any { it.mLabel == "]" } == true)
+        assertTrue(oKey.mPopupKeys?.any { it.mLabel == "<" } == true)
+        assertTrue(cKey.mPopupKeys?.any { it.mLabel == ">" } == true)
+    }
+
+    @Test fun customLayoutBuildsSuccessfully() {
+        val subtype = SubtypeUtilsAdditional.createEmojiCapableAdditionalSubtype(Locale.ENGLISH, "qwerty", true)
+        val (kb, keys) = buildKeyboard(EditorInfo(), subtype, KeyboardId.ELEMENT_CUSTOM1)
+        assertEquals(KeyboardId.ELEMENT_CUSTOM1, kb.mId.mElementId)
+        assertTrue(keys.isNotEmpty())
     }
 
     private fun buildKeyboard(editorInfo: EditorInfo, subtype: InputMethodSubtype, elementId: Int): Pair<Keyboard, List<List<KeyParams>>> {
