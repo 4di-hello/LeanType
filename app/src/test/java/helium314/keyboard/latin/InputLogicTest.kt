@@ -1055,6 +1055,85 @@ class InputLogicTest {
         assertEquals("", text)
     }
 
+    @Test fun `held backspace accelerated transition deletes remainder from text before cursor`() {
+        reset()
+        setText("hello ")
+        chainInput("abcdefghijklmnopqrstuvwxy") // 25 characters composed after "hello "
+        assertEquals("abcdefghijklmnopqrstuvwxy", composingText)
+        assertEquals("hello abcdefghijklmnopqrstuvwxy", text)
+
+        for (i in 1..20) {
+            functionalKeyPress(KeyCode.DELETE, isKeyRepeat = true)
+        }
+        assertEquals("abcde", composingText)
+
+        // 21st deletion: deletes 2 chars ("de")
+        functionalKeyPress(KeyCode.DELETE, isKeyRepeat = true)
+        assertEquals("abc", composingText)
+
+        // 22nd deletion: deletes 2 chars ("bc")
+        functionalKeyPress(KeyCode.DELETE, isKeyRepeat = true)
+        assertEquals("a", composingText)
+
+        // 23rd deletion: deletes "a" (1 char in composer) + 1 char from "hello " (the trailing space)
+        functionalKeyPress(KeyCode.DELETE, isKeyRepeat = true)
+        assertEquals("", composingText)
+        assertEquals("hello", text)
+    }
+
+    @Test fun `held backspace progressively ramps deletion speed in non-composing text`() {
+        reset()
+        val totalChars = 120
+        setText("x".repeat(totalChars) + " ")
+        assertEquals("", composingText)
+        assertEquals(totalChars + 1, text.length)
+
+        // First 20 deletions delete 1 char each (deleteCount 1..20)
+        for (i in 1..20) {
+            functionalKeyPress(KeyCode.DELETE, isKeyRepeat = true)
+        }
+        assertEquals(totalChars + 1 - 20, text.length) // 101 remaining
+
+        // Repeats 21..29 delete 2 chars each (deleteCount 21..29, 9 repeats = 18 chars)
+        for (i in 21..29) {
+            functionalKeyPress(KeyCode.DELETE, isKeyRepeat = true)
+        }
+        assertEquals(101 - 18, text.length) // 83 remaining
+
+        // 30th deletion: ramp to 3 chars per repeat (deleteCount 30)
+        functionalKeyPress(KeyCode.DELETE, isKeyRepeat = true)
+        assertEquals(83 - 3, text.length) // 80 remaining
+
+        // Repeats 31..39 delete 3 chars each (9 repeats = 27 chars)
+        for (i in 31..39) {
+            functionalKeyPress(KeyCode.DELETE, isKeyRepeat = true)
+        }
+        assertEquals(80 - 27, text.length) // 53 remaining
+
+        // 40th deletion: ramp to 4 chars per repeat (deleteCount 40)
+        functionalKeyPress(KeyCode.DELETE, isKeyRepeat = true)
+        assertEquals(53 - 4, text.length) // 49 remaining
+
+        // Repeats 41..49 delete 4 chars each (9 repeats = 36 chars)
+        for (i in 41..49) {
+            functionalKeyPress(KeyCode.DELETE, isKeyRepeat = true)
+        }
+        assertEquals(49 - 36, text.length) // 13 remaining
+
+        // 50th deletion: ramp to 5 chars per repeat (deleteCount 50, capped at 4 extra)
+        functionalKeyPress(KeyCode.DELETE, isKeyRepeat = true)
+        assertEquals(13 - 5, text.length) // 8 remaining
+
+        // 51st deletion: 5 chars per repeat
+        functionalKeyPress(KeyCode.DELETE, isKeyRepeat = true)
+        assertEquals(8 - 5, text.length) // 3 remaining
+
+        // 52nd deletion: only 3 chars left, deletes remaining text
+        functionalKeyPress(KeyCode.DELETE, isKeyRepeat = true)
+        assertEquals(0, text.length)
+        assertEquals("", text)
+    }
+
     @Test fun `key repeat backspace does not restart intermediate composing words`() {
         reset()
         setText("first second ")

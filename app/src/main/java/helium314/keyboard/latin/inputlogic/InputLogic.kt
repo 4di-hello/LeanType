@@ -1306,6 +1306,11 @@ class InputLogic(
         inputTransaction.requireShiftUpdate(InputTransaction.SHIFT_UPDATE_NOW)
     }
 
+    private fun getBackspaceExtraDeletes(deleteCount: Int): Int {
+        if (deleteCount <= Constants.DELETE_ACCELERATE_AT) return 0
+        return (1 + (deleteCount - Constants.DELETE_ACCELERATE_AT) / 10).coerceAtMost(4)
+    }
+
     private fun handleBackspaceEvent(event: Event, inputTransaction: InputTransaction) {
         val currentKeyboardScript = inputTransaction.settingsValues.mCurrentKeyboardScript
         mSpaceState = SpaceState.NONE
@@ -1384,9 +1389,13 @@ class InputLogic(
             } else {
                 mWordComposer.applyProcessedEvent(event)
                 deletedCodePoints++
-                if (mDeleteCount > Constants.DELETE_ACCELERATE_AT && mWordComposer.isComposingWord()) {
-                    mWordComposer.applyProcessedEvent(event)
-                    deletedCodePoints++
+                val extraDeletes = getBackspaceExtraDeletes(mDeleteCount)
+                if (extraDeletes > 0 && mWordComposer.isComposingWord()) {
+                    repeat(extraDeletes) {
+                        if (!mWordComposer.isComposingWord()) return@repeat
+                        mWordComposer.applyProcessedEvent(event)
+                        deletedCodePoints++
+                    }
                 }
                 StatsUtils.onBackspacePressed(deletedCodePoints)
             }
@@ -1417,10 +1426,13 @@ class InputLogic(
                 } else {
                     mConnection.finishComposingText()
                     mConnection.deleteTextBeforeCursor(initialLength)
-                    if (deletedCodePoints < 2 && mDeleteCount > Constants.DELETE_ACCELERATE_AT) {
+                    val extraDeletes = getBackspaceExtraDeletes(mDeleteCount)
+                    if (deletedCodePoints < (1 + extraDeletes) && extraDeletes > 0) {
                         unlearnWordBeingDeleted(inputTransaction.settingsValues)
-                        val codePointBeforeCursor = mConnection.codePointBeforeCursor
-                        if (codePointBeforeCursor != Constants.NOT_A_CODE) {
+                        val remainingExtra = (1 + extraDeletes) - deletedCodePoints
+                        repeat(remainingExtra) {
+                            val codePointBeforeCursor = mConnection.codePointBeforeCursor
+                            if (codePointBeforeCursor == Constants.NOT_A_CODE) return@repeat
                             val isEmoji = codePointBeforeCursor > 0xFE00 || StringUtils.mightBeEmoji(codePointBeforeCursor)
                             val lengthToDeleteAgain = if (isEmoji) {
                                 mConnection.charCountToDeleteBeforeCursor
@@ -1486,10 +1498,13 @@ class InputLogic(
                 ) {
                     sendDownUpKeyEvent(KeyEvent.KEYCODE_DEL)
                     var totalDeletedLength = 1
-                    if (mDeleteCount > Constants.DELETE_ACCELERATE_AT) {
+                    val extraDeletes = getBackspaceExtraDeletes(mDeleteCount)
+                    if (extraDeletes > 0) {
                         hasUnlearnedWordBeingDeleted = hasUnlearnedWordBeingDeleted or unlearnWordBeingDeleted(inputTransaction.settingsValues)
-                        sendDownUpKeyEvent(KeyEvent.KEYCODE_DEL)
-                        totalDeletedLength++
+                        repeat(extraDeletes) {
+                            sendDownUpKeyEvent(KeyEvent.KEYCODE_DEL)
+                            totalDeletedLength++
+                        }
                     }
                     StatsUtils.onBackspacePressed(totalDeletedLength)
                 } else {
@@ -1515,10 +1530,12 @@ class InputLogic(
                         mConnection.deleteTextBeforeCursor(lengthToDelete)
                     }
                     var totalDeletedLength = lengthToDelete
-                    if (mDeleteCount > Constants.DELETE_ACCELERATE_AT) {
+                    val extraDeletes = getBackspaceExtraDeletes(mDeleteCount)
+                    if (extraDeletes > 0) {
                         hasUnlearnedWordBeingDeleted = hasUnlearnedWordBeingDeleted or unlearnWordBeingDeleted(inputTransaction.settingsValues)
-                        val codePointBeforeCursorToDeleteAgain = mConnection.codePointBeforeCursor
-                        if (codePointBeforeCursorToDeleteAgain != Constants.NOT_A_CODE) {
+                        repeat(extraDeletes) {
+                            val codePointBeforeCursorToDeleteAgain = mConnection.codePointBeforeCursor
+                            if (codePointBeforeCursorToDeleteAgain == Constants.NOT_A_CODE) return@repeat
                             val isEmojiAgain = codePointBeforeCursorToDeleteAgain > 0xFE00 || StringUtils.mightBeEmoji(codePointBeforeCursorToDeleteAgain)
                             val lengthToDeleteAgain = if (isEmojiAgain) {
                                 mConnection.charCountToDeleteBeforeCursor
