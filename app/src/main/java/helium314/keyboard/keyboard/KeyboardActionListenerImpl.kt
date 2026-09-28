@@ -384,7 +384,7 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
 
     override fun onVerticalSpaceSwipe(steps: Int, action: Int): Boolean = when (action) {
         KeyboardActionListener.SWIPE_MOVE_CURSOR -> onMoveCursorVertically(steps)
-        KeyboardActionListener.SWIPE_SWITCH_LANGUAGE -> onLanguageSlide(steps)
+        KeyboardActionListener.SWIPE_SWITCH_LANGUAGE -> onLanguageSlide(steps, isVertical = true)
         KeyboardActionListener.SWIPE_TOGGLE_NUMPAD -> toggleNumpad(false, false)
         KeyboardActionListener.SWIPE_HIDE_KEYBOARD -> {
             latinIME.requestHideSelf(0)
@@ -461,8 +461,9 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
         mConsumedPhysicalKeys.clear()
     }
 
-    private fun onLanguageSlide(steps: Int): Boolean {
-        if (abs(steps) < settings.current.mLanguageSwipeDistance) return false
+    private fun onLanguageSlide(steps: Int, isVertical: Boolean = false): Boolean {
+        val minDistance = if (isVertical) 1 else settings.current.mLanguageSwipeDistance
+        if (abs(steps) < minDistance) return false
         val subtypes = SubtypeSettings.getEnabledSubtypes(true)
         if (subtypes.size <= 1) { // only allow if we have more than one subtype
             return false

@@ -721,10 +721,11 @@ class PointerTracker private constructor(
         }
     }
 
-    private fun oneShotSwipe(swipeSetting: Int): Boolean = when (swipeSetting) {
+    private fun oneShotSwipe(swipeSetting: Int, isVertical: Boolean = false): Boolean = when (swipeSetting) {
         KeyboardActionListener.SWIPE_NO_ACTION,
         KeyboardActionListener.SWIPE_TOGGLE_NUMPAD,
         KeyboardActionListener.SWIPE_HIDE_KEYBOARD -> true
+        KeyboardActionListener.SWIPE_SWITCH_LANGUAGE -> isVertical
         else -> false
     }
 
@@ -800,7 +801,7 @@ class PointerTracker private constructor(
                     getTimerProxy().cancelKeyTimersOf(this)
                     mInVerticalSwipe = true
                     mVerticalSwipeAction = action
-                } else if (oneShotSwipe(mVerticalSwipeAction)) {
+                } else if (oneShotSwipe(mVerticalSwipeAction, isVertical = true)) {
                     return
                 }
                 if (sListener.onVerticalSpaceSwipe(stepsY, mVerticalSwipeAction)) {
