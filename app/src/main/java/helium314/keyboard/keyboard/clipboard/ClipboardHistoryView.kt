@@ -709,7 +709,7 @@ class ClipboardHistoryView @JvmOverloads constructor(
         }
         return keyboardActionListener.onHorizontalSpaceSwipe(steps)
     }
-    override fun onVerticalSpaceSwipe(steps: Int): Boolean { return keyboardActionListener.onVerticalSpaceSwipe(steps) }
+    override fun onVerticalSpaceSwipe(steps: Int, action: Int): Boolean { return keyboardActionListener.onVerticalSpaceSwipe(steps, action) }
     override fun onEndSpaceSwipe() { keyboardActionListener.onEndSpaceSwipe() }
     override fun toggleNumpad(w: Boolean, f: Boolean): Boolean { return keyboardActionListener.toggleNumpad(w, f) }
     override fun onMoveDeletePointer(steps: Int) {

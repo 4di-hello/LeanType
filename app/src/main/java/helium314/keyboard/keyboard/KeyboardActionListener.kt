@@ -90,7 +90,7 @@ interface KeyboardActionListener {
      */
     fun onHorizontalSpaceSwipe(steps: Int): Boolean
 
-    fun onVerticalSpaceSwipe(steps: Int): Boolean
+    fun onVerticalSpaceSwipe(steps: Int, action: Int): Boolean
 
     fun onEndSpaceSwipe()
 
@@ -160,7 +160,7 @@ interface KeyboardActionListener {
             return false
         }
 
-        override fun onVerticalSpaceSwipe(steps: Int): Boolean {
+        override fun onVerticalSpaceSwipe(steps: Int, action: Int): Boolean {
             return false
         }
 

@@ -1515,8 +1515,10 @@ New dictionary:
     <string name="label_bin" tools:keep="@string/label_bin">Bin</string>
     <!-- Title of the setting for horizontal spacebar swipe gesture -->
     <string name="show_horizontal_space_swipe">Horizontal spacebar swipe gesture</string>
-    <!-- Title of the setting for vertical spacebar swipe gesture -->
-    <string name="show_vertical_space_swipe">Vertical spacebar swipe gesture</string>
+    <!-- Title of the setting for vertical up spacebar swipe gesture -->
+    <string name="show_vertical_space_swipe">Vertical up spacebar swipe gesture</string>
+    <!-- Title of the setting for vertical down spacebar swipe gesture -->
+    <string name="show_vertical_down_space_swipe">Vertical down spacebar swipe gesture</string>
     <!-- Option for no action when (currently only used for swiping the spacebar) -->
     <string name="action_none">None</string>
     <!-- Option to move the cursor when swiping the spacebar -->

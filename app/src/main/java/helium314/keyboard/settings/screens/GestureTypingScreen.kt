@@ -67,6 +67,7 @@ fun GestureTypingScreen(
         add(R.string.settings_category_gestures_advanced)
         add(Settings.PREF_SPACE_HORIZONTAL_SWIPE)
         add(Settings.PREF_SPACE_VERTICAL_SWIPE)
+        add(Settings.PREF_SPACE_VERTICAL_DOWN_SWIPE)
         add(Settings.PREF_DELETE_SWIPE)
 
         add(R.string.settings_category_touchpad)
@@ -159,6 +160,17 @@ fun createGestureTypingSettings(context: Context) = listOf(
             stringResource(R.string.action_none) to "none",
         )
         ListPreference(it, items, Defaults.PREF_SPACE_VERTICAL_SWIPE)
+    },
+    Setting(context, Settings.PREF_SPACE_VERTICAL_DOWN_SWIPE, R.string.show_vertical_down_space_swipe) {
+        val items = listOf(
+            stringResource(R.string.space_swipe_move_cursor_entry) to "move_cursor",
+            stringResource(R.string.switch_language) to "switch_language",
+            stringResource(R.string.space_swipe_toggle_numpad_entry) to "toggle_numpad",
+            stringResource(R.string.space_swipe_hide_keyboard_entry) to "hide_keyboard",
+            stringResource(R.string.space_swipe_touchpad_mode_entry) to "touchpad_mode",
+            stringResource(R.string.action_none) to "none",
+        )
+        ListPreference(it, items, Defaults.PREF_SPACE_VERTICAL_DOWN_SWIPE)
     },
     Setting(context, Settings.PREF_TOUCHPAD_SENSITIVITY, R.string.touchpad_sensitivity) {
         SliderPreference(

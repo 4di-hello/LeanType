@@ -421,7 +421,7 @@ class HandwritingView @JvmOverloads constructor(
     override fun onFinishSlidingInput() { keyboardActionListener?.onFinishSlidingInput() }
     override fun onCustomRequest(requestCode: Int): Boolean { return keyboardActionListener?.onCustomRequest(requestCode) ?: false }
     override fun onHorizontalSpaceSwipe(steps: Int): Boolean { return keyboardActionListener?.onHorizontalSpaceSwipe(steps) ?: false }
-    override fun onVerticalSpaceSwipe(steps: Int): Boolean { return keyboardActionListener?.onVerticalSpaceSwipe(steps) ?: false }
+    override fun onVerticalSpaceSwipe(steps: Int, action: Int): Boolean { return keyboardActionListener?.onVerticalSpaceSwipe(steps, action) ?: false }
     override fun onEndSpaceSwipe() { keyboardActionListener?.onEndSpaceSwipe() }
     override fun toggleNumpad(w: Boolean, f: Boolean): Boolean { return keyboardActionListener?.toggleNumpad(w, f) ?: false }
     override fun onMoveDeletePointer(steps: Int) { keyboardActionListener?.onMoveDeletePointer(steps) }

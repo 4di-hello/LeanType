@@ -615,7 +615,7 @@ class EmojiPalettesView @JvmOverloads constructor(
                 return true
             }
 
-            override fun onVerticalSpaceSwipe(s: Int): Boolean = false
+            override fun onVerticalSpaceSwipe(s: Int, action: Int): Boolean = false
             override fun onEndSpaceSwipe() {}
             override fun toggleNumpad(w: Boolean, f: Boolean): Boolean = false
 

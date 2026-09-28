@@ -93,6 +93,7 @@ open class SettingsValues(
     val mBlockPotentiallyOffensive: Boolean
     val mSpaceSwipeHorizontal: Int
     val mSpaceSwipeVertical: Int
+    val mSpaceSwipeVerticalDown: Int
     val mLanguageSwipeDistance: Int
     val mTouchpadSensitivity: Int
     val mTouchpadFullscreen: Boolean
@@ -392,6 +393,7 @@ open class SettingsValues(
         mKeyboardHeightScale = Settings.readHeightScale(prefs, isLandscape, mScreenProfile)
         mSpaceSwipeHorizontal = Settings.readHorizontalSpaceSwipe(prefs)
         mSpaceSwipeVertical = Settings.readVerticalSpaceSwipe(prefs)
+        mSpaceSwipeVerticalDown = Settings.readVerticalDownSpaceSwipe(prefs)
         mLanguageSwipeDistance = prefs.getInt(Settings.PREF_LANGUAGE_SWIPE_DISTANCE, Defaults.PREF_LANGUAGE_SWIPE_DISTANCE)
         mTouchpadSensitivity = prefs.getInt(Settings.PREF_TOUCHPAD_SENSITIVITY, Defaults.PREF_TOUCHPAD_SENSITIVITY)
         mTouchpadFullscreen = prefs.getBoolean(Settings.PREF_TOUCHPAD_FULLSCREEN, Defaults.PREF_TOUCHPAD_FULLSCREEN)

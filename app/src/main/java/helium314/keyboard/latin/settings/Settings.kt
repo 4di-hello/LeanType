@@ -353,6 +353,7 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
         const val PREF_EMOJI_SKIN_TONE = "emoji_skin_tone"
         const val PREF_SPACE_HORIZONTAL_SWIPE = "horizontal_space_swipe"
         const val PREF_SPACE_VERTICAL_SWIPE = "vertical_space_swipe"
+        const val PREF_SPACE_VERTICAL_DOWN_SWIPE = "vertical_down_space_swipe"
         const val PREF_DELETE_SWIPE = "delete_swipe"
         const val PREF_AUTOSPACE_AFTER_PUNCTUATION = "autospace_after_punctuation"
         const val PREF_AUTOSPACE_AFTER_EMOJI = "autospace_after_emoji"
@@ -585,6 +586,17 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
 
         fun readVerticalSpaceSwipe(prefs: SharedPreferences): Int {
             return when (prefs.getString(PREF_SPACE_VERTICAL_SWIPE, Defaults.PREF_SPACE_VERTICAL_SWIPE)) {
+                "move_cursor" -> KeyboardActionListener.SWIPE_MOVE_CURSOR
+                "switch_language" -> KeyboardActionListener.SWIPE_SWITCH_LANGUAGE
+                "toggle_numpad" -> KeyboardActionListener.SWIPE_TOGGLE_NUMPAD
+                "hide_keyboard" -> KeyboardActionListener.SWIPE_HIDE_KEYBOARD
+                "touchpad_mode" -> KeyboardActionListener.SWIPE_TOUCHPAD_MODE
+                else -> KeyboardActionListener.SWIPE_NO_ACTION
+            }
+        }
+
+        fun readVerticalDownSpaceSwipe(prefs: SharedPreferences): Int {
+            return when (prefs.getString(PREF_SPACE_VERTICAL_DOWN_SWIPE, Defaults.PREF_SPACE_VERTICAL_DOWN_SWIPE)) {
                 "move_cursor" -> KeyboardActionListener.SWIPE_MOVE_CURSOR
                 "switch_language" -> KeyboardActionListener.SWIPE_SWITCH_LANGUAGE
                 "toggle_numpad" -> KeyboardActionListener.SWIPE_TOGGLE_NUMPAD

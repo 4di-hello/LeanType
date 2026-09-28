@@ -91,6 +91,7 @@ class PointerTracker private constructor(
     private var mStartTime = 0L
     private var mInHorizontalSwipe = false
     private var mInVerticalSwipe = false
+    private var mVerticalSwipeAction = KeyboardActionListener.SWIPE_NO_ACTION
 
     // true if keyboard layout has been changed.
     private var mKeyboardLayoutHasBeenChanged = false
@@ -570,7 +571,8 @@ class PointerTracker private constructor(
         val sv = Settings.getValues()
         return when (code) {
             Constants.CODE_SPACE -> sv.mSpaceSwipeHorizontal != KeyboardActionListener.SWIPE_NO_ACTION ||
-                    sv.mSpaceSwipeVertical != KeyboardActionListener.SWIPE_NO_ACTION
+                    sv.mSpaceSwipeVertical != KeyboardActionListener.SWIPE_NO_ACTION ||
+                    sv.mSpaceSwipeVerticalDown != KeyboardActionListener.SWIPE_NO_ACTION
             KeyCode.DELETE -> sv.mDeleteSwipeEnabled
             else -> false
         }
@@ -791,12 +793,17 @@ class PointerTracker private constructor(
             val stepsY = dY / sVerticalPointerStep
             if (stepsY != 0 && abs(dX) < abs(dY) && !mInHorizontalSwipe) {
                 if (!mInVerticalSwipe) {
+                    val action = if (stepsY < 0) sv.mSpaceSwipeVertical else sv.mSpaceSwipeVerticalDown
+                    if (action == KeyboardActionListener.SWIPE_NO_ACTION) {
+                        return
+                    }
                     getTimerProxy().cancelKeyTimersOf(this)
                     mInVerticalSwipe = true
-                } else if (oneShotSwipe(sv.mSpaceSwipeVertical)) {
+                    mVerticalSwipeAction = action
+                } else if (oneShotSwipe(mVerticalSwipeAction)) {
                     return
                 }
-                if (sListener.onVerticalSpaceSwipe(stepsY)) {
+                if (sListener.onVerticalSpaceSwipe(stepsY, mVerticalSwipeAction)) {
                     mStartY += stepsY * sVerticalPointerStep
                 }
                 return
@@ -938,6 +945,7 @@ class PointerTracker private constructor(
             if (mInHorizontalSwipe || mInVerticalSwipe || wasTouchpad) {
                 mInHorizontalSwipe = false
                 mInVerticalSwipe = false
+                mVerticalSwipeAction = KeyboardActionListener.SWIPE_NO_ACTION
                 sListener.onEndSpaceSwipe()
                 return
             }
@@ -1040,6 +1048,9 @@ class PointerTracker private constructor(
     }
 
     private fun onCancelEventInternal() {
+        mInHorizontalSwipe = false
+        mInVerticalSwipe = false
+        mVerticalSwipeAction = KeyboardActionListener.SWIPE_NO_ACTION
         getTimerProxy().cancelKeyTimersOf(this)
         setReleasedKeyGraphics(mCurrentKey, true)
         resetKeySelectionByDraggingFinger()
