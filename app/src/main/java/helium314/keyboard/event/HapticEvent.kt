@@ -23,7 +23,7 @@ enum class HapticEvent(val feedbackConstant: Int, val allowCustomDuration: Boole
 //        },
 //        ?
 //    ),
-    GESTURE_MOVE(HapticFeedbackConstants.CLOCK_TICK, false),
+    GESTURE_MOVE(HapticFeedbackConstants.KEYBOARD_TAP, false),
 //    GESTURE_END(
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
 //            HapticFeedbackConstants.GESTURE_END

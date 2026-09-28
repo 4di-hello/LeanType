@@ -118,10 +118,18 @@ class AudioAndHapticFeedbackManager private constructor() {
         if (settings.mKeypressVibrationAmplitude == 0) return
 
         val vibrator = mVibrator
+        val isGesture = hapticEvent == HapticEvent.GESTURE_MOVE
 
-        // 1. Legacy fallback: If user explicitly configured a custom duration (ms), use one-shot
-        if (hapticEvent.allowCustomDuration && settings.mKeypressVibrationDuration >= 0) {
-            vibrate(settings.mKeypressVibrationDuration.toLong(), settings.mKeypressVibrationAmplitude)
+        // 1. Custom duration fallback: If user explicitly configured duration (ms), use one-shot.
+        // Gestures respect custom duration, clamped to 12ms to prevent continuous rumbling while scrubbing.
+        val allowDuration = hapticEvent.allowCustomDuration || isGesture
+        if (allowDuration && settings.mKeypressVibrationDuration >= 0) {
+            val duration = if (isGesture) {
+                settings.mKeypressVibrationDuration.toLong().coerceAtMost(12L)
+            } else {
+                settings.mKeypressVibrationDuration.toLong()
+            }
+            vibrate(duration, settings.mKeypressVibrationAmplitude)
             return
         }
 
@@ -129,11 +137,6 @@ class AudioAndHapticFeedbackManager private constructor() {
         if (vibrator != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val primitiveId = when (hapticEvent) {
                 HapticEvent.KEY_LONG_PRESS -> VibrationEffect.Composition.PRIMITIVE_CLICK
-                HapticEvent.GESTURE_MOVE -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    VibrationEffect.Composition.PRIMITIVE_LOW_TICK
-                } else {
-                    VibrationEffect.Composition.PRIMITIVE_TICK
-                }
                 else -> VibrationEffect.Composition.PRIMITIVE_TICK
             }
 
@@ -157,15 +160,8 @@ class AudioAndHapticFeedbackManager private constructor() {
                         1.0f
                     }
 
-                    // Soften GESTURE_MOVE tick on API 30 fallback so cursor glide does not feel harsh
-                    val finalScale = if (hapticEvent == HapticEvent.GESTURE_MOVE && Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-                        userScale * 0.5f
-                    } else {
-                        userScale
-                    }
-
                     val effect = VibrationEffect.startComposition()
-                        .addPrimitive(primitiveId, finalScale)
+                        .addPrimitive(primitiveId, userScale)
                         .compose()
 
                     vibrateWithAttributes(vibrator, effect)
@@ -192,8 +188,13 @@ class AudioAndHapticFeedbackManager private constructor() {
         }
 
         // 4. Default system view fallback (Legacy API < 29 or total HAL fallback)
+        val feedbackConstant = if (isGesture) {
+            HapticFeedbackConstants.KEYBOARD_TAP
+        } else {
+            hapticEvent.feedbackConstant
+        }
         viewToPerformHapticFeedbackOn?.performHapticFeedback(
-            hapticEvent.feedbackConstant,
+            feedbackConstant,
             HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
         )
     }
