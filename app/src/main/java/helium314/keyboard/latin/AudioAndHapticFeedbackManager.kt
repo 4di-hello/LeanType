@@ -132,16 +132,16 @@ class AudioAndHapticFeedbackManager private constructor() {
         }
 
         // 1. Custom duration fallback: If user explicitly configured duration (ms), use one-shot.
-        // Gestures respect custom duration, clamped to 8ms and softened amplitude to avoid rumbling while scrubbing.
+        // Gestures respect custom duration, clamped to 6ms and softened amplitude to avoid rumbling while scrubbing.
         val allowDuration = hapticEvent.allowCustomDuration || isGesture
         if (allowDuration && settings.mKeypressVibrationDuration >= 0) {
             val duration = if (isGesture) {
-                settings.mKeypressVibrationDuration.toLong().coerceAtMost(8L)
+                settings.mKeypressVibrationDuration.toLong().coerceAtMost(6L)
             } else {
                 settings.mKeypressVibrationDuration.toLong()
             }
             val amplitude = if (isGesture && settings.mKeypressVibrationAmplitude > 0) {
-                (settings.mKeypressVibrationAmplitude * 0.6f).toInt().coerceIn(1, 255)
+                (settings.mKeypressVibrationAmplitude * 0.4f).toInt().coerceIn(1, 255)
             } else {
                 settings.mKeypressVibrationAmplitude
             }
@@ -174,9 +174,9 @@ class AudioAndHapticFeedbackManager private constructor() {
                     }
                     val userScale = if (isGesture) {
                         if (primitiveId == VibrationEffect.Composition.PRIMITIVE_TICK) {
-                            (baseScale * 0.55f).coerceIn(0.01f, 1.0f)
+                            (baseScale * 0.35f).coerceIn(0.01f, 1.0f)
                         } else {
-                            (baseScale * 0.85f).coerceIn(0.01f, 1.0f)
+                            (baseScale * 0.5f).coerceIn(0.01f, 1.0f)
                         }
                     } else {
                         baseScale
@@ -285,7 +285,7 @@ class AudioAndHapticFeedbackManager private constructor() {
     }
 
     companion object {
-        private const val MIN_GESTURE_HAPTIC_INTERVAL_MS = 32L
+        private const val MIN_GESTURE_HAPTIC_INTERVAL_MS = 40L
         private val sInstance = AudioAndHapticFeedbackManager()
 
         fun getInstance(): AudioAndHapticFeedbackManager = sInstance

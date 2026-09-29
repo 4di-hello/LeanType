@@ -53,6 +53,7 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
 
     // space swipe state
     private var isSpaceSwipeActive = false
+    private var cursorMoveStepCount = 0
 
     override fun onPressKey(primaryCode: Int, repeatCount: Int, isSinglePointer: Boolean, hapticEvent: HapticEvent) {
         metaOnPressKey(primaryCode)
@@ -405,6 +406,7 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
     override fun onEndSpaceSwipe(){
         initialSubtype = null
         subtypeSwitchCount = 0
+        cursorMoveStepCount = 0
         if (isSpaceSwipeActive || latinIME.isCursorGestureActive) {
             isSpaceSwipeActive = false
             latinIME.isCursorGestureActive = false
@@ -420,6 +422,7 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
     private var deleteSwipeInitialEnd = -1
     private var deleteSwipeWordBoundaries = emptyList<Int>()
     private var deleteSwipeWordIndex = 0
+    private var deleteSwipeStepCount = 0
 
     override fun onMoveDeletePointer(steps: Int) {
         if (settings.current.mDeleteSwipeWordByWord) {
@@ -436,7 +439,10 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
         val oldStart = connection.expectedSelectionStart
         val start = (oldStart + actualSteps).coerceAtMost(end)
         if (start != oldStart) {
-            performHapticFeedback(HapticEvent.GESTURE_MOVE)
+            deleteSwipeStepCount++
+            if (deleteSwipeStepCount % 2 != 0) {
+                performHapticFeedback(HapticEvent.GESTURE_MOVE)
+            }
             connection.setSelection(start, end)
         }
     }
@@ -450,6 +456,7 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
             val baseStart = connection.expectedSelectionStart
             deleteSwipeWordBoundaries = getWordBoundariesBackwards(textBefore, baseStart)
             deleteSwipeWordIndex = 0
+            deleteSwipeStepCount = 0
         }
 
         if (deleteSwipeWordBoundaries.isEmpty()) return
@@ -460,7 +467,10 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
         if (newIndex != oldIndex) {
             deleteSwipeWordIndex = newIndex
             val newStart = deleteSwipeWordBoundaries[newIndex]
-            performHapticFeedback(HapticEvent.GESTURE_MOVE)
+            deleteSwipeStepCount++
+            if (deleteSwipeStepCount % 2 != 0) {
+                performHapticFeedback(HapticEvent.GESTURE_MOVE)
+            }
             connection.setSelection(newStart, deleteSwipeInitialEnd)
         }
     }
@@ -488,6 +498,7 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
         deleteSwipeInitialEnd = -1
         deleteSwipeWordBoundaries = emptyList()
         deleteSwipeWordIndex = 0
+        deleteSwipeStepCount = 0
         if (!connection.hasSelection()) return
         inputLogic.finishInput()
         onCodeInput(KeyCode.DELETE, Constants.NOT_A_COORDINATE, Constants.NOT_A_COORDINATE, false)
@@ -503,6 +514,7 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
         deleteSwipeInitialEnd = -1
         deleteSwipeWordBoundaries = emptyList()
         deleteSwipeWordIndex = 0
+        deleteSwipeStepCount = 0
     }
 
     private fun onLanguageSlide(steps: Int, isVertical: Boolean = false): Boolean {
@@ -538,15 +550,18 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
         if (steps == 0) return false
         if (!isSpaceSwipeActive) {
             isSpaceSwipeActive = true
+            cursorMoveStepCount = 0
             latinIME.isCursorGestureActive = true
             latinIME.mHandler.cancelResumeSuggestions()
             inputLogic.finishInput()
         }
+        cursorMoveStepCount++
+        val shouldHaptic = cursorMoveStepCount % 2 != 0
         val code = if (steps < 0) {
-            gestureMoveBackHaptics()
+            if (shouldHaptic) gestureMoveBackHaptics()
             KeyCode.ARROW_UP
         } else {
-            gestureMoveForwardHaptics()
+            if (shouldHaptic) gestureMoveForwardHaptics()
             KeyCode.ARROW_DOWN
         }
         repeat(abs(steps)) {
@@ -563,16 +578,19 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
 
         if (!isSpaceSwipeActive) {
             isSpaceSwipeActive = true
+            cursorMoveStepCount = 0
             latinIME.isCursorGestureActive = true
             latinIME.mHandler.cancelResumeSuggestions()
             inputLogic.finishInput()
         }
 
+        cursorMoveStepCount++
+        val shouldHaptic = cursorMoveStepCount % 2 != 0
         val code = if (steps < 0) {
-            gestureMoveBackHaptics()
+            if (shouldHaptic) gestureMoveBackHaptics()
             if (rtl) KeyCode.ARROW_RIGHT else KeyCode.ARROW_LEFT
         } else {
-            gestureMoveForwardHaptics(true)
+            if (shouldHaptic) gestureMoveForwardHaptics(true)
             if (rtl) KeyCode.ARROW_LEFT else KeyCode.ARROW_RIGHT
         }
         repeat(abs(steps)) {
