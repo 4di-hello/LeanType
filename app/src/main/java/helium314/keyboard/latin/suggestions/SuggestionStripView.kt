@@ -869,7 +869,8 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
                         val dy = ev.rawY - swipeStartY
                         val dx = Math.abs(ev.rawX - swipeStartX)
                         val touchSlop = ViewConfiguration.get(context).scaledTouchSlop
-                        val minDistance = Math.max(touchSlop * 2, 20.dpToPx(resources))
+                        val verticalThreshold = Settings.getValues().mVerticalSwipeThreshold.dpToPx(resources)
+                        val minDistance = Math.max(touchSlop * 2, verticalThreshold)
 
                         swipeVelocityTracker?.computeCurrentVelocity(1000)
                         val vy = swipeVelocityTracker?.yVelocity ?: 0f

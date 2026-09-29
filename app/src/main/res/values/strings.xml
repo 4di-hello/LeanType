@@ -1592,6 +1592,10 @@ New dictionary:
     <string name="toolbar_swipe_up_gesture">Toolbar swipe up gesture</string>
     <string name="toolbar_swipe_down_gesture">Toolbar swipe down gesture</string>
     <string name="toolbar_swipe_more_suggestions_entry">More suggestions</string>
+    <!-- Title of the setting for vertical swipe gesture distance threshold -->
+    <string name="vertical_swipe_threshold">Vertical swipe threshold</string>
+    <!-- Description of the setting for vertical swipe gesture distance threshold -->
+    <string name="vertical_swipe_threshold_summary">Distance required to trigger vertical swipe gestures on spacebar and toolbar</string>
     <!-- Title of the setting to auto hide pinned keys when toolbar is expanded -->
     <string name="auto_hide_pinned_keys">Auto hide pinned keys</string>
     <!-- Description of the setting to auto hide pinned keys when toolbar is expanded -->

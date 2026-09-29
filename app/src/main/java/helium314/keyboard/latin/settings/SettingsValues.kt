@@ -95,6 +95,7 @@ open class SettingsValues(
     val mSpaceSwipeHorizontal: Int
     val mSpaceSwipeVertical: Int
     val mSpaceSwipeVerticalDown: Int
+    val mVerticalSwipeThreshold: Int
     val mLanguageSwipeDistance: Int
     val mTouchpadSensitivity: Int
     val mTouchpadFullscreen: Boolean
@@ -398,6 +399,7 @@ open class SettingsValues(
         mSpaceSwipeHorizontal = Settings.readHorizontalSpaceSwipe(prefs)
         mSpaceSwipeVertical = Settings.readVerticalSpaceSwipe(prefs)
         mSpaceSwipeVerticalDown = Settings.readVerticalDownSpaceSwipe(prefs)
+        mVerticalSwipeThreshold = prefs.getInt(Settings.PREF_VERTICAL_SWIPE_THRESHOLD, Defaults.PREF_VERTICAL_SWIPE_THRESHOLD)
         mLanguageSwipeDistance = prefs.getInt(Settings.PREF_LANGUAGE_SWIPE_DISTANCE, Defaults.PREF_LANGUAGE_SWIPE_DISTANCE)
         mTouchpadSensitivity = prefs.getInt(Settings.PREF_TOUCHPAD_SENSITIVITY, Defaults.PREF_TOUCHPAD_SENSITIVITY)
         mTouchpadFullscreen = prefs.getBoolean(Settings.PREF_TOUCHPAD_FULLSCREEN, Defaults.PREF_TOUCHPAD_FULLSCREEN)

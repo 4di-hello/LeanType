@@ -70,6 +70,7 @@ fun GestureTypingScreen(
         add(Settings.PREF_SPACE_VERTICAL_DOWN_SWIPE)
         add(Settings.PREF_TOOLBAR_SWIPE_UP_GESTURE)
         add(Settings.PREF_TOOLBAR_SWIPE_DOWN_GESTURE)
+        add(Settings.PREF_VERTICAL_SWIPE_THRESHOLD)
         add(Settings.PREF_DELETE_SWIPE)
 
         add(R.string.settings_category_touchpad)
@@ -204,6 +205,22 @@ fun createGestureTypingSettings(context: Context) = listOf(
             Defaults.PREF_TOOLBAR_SWIPE_DOWN_GESTURE
         }
         ListPreference(it, items, defaultVal)
+    },
+    Setting(context, Settings.PREF_VERTICAL_SWIPE_THRESHOLD, R.string.vertical_swipe_threshold, R.string.vertical_swipe_threshold_summary) {
+        SliderPreference(
+            name = it.title,
+            key = it.key,
+            default = Defaults.PREF_VERTICAL_SWIPE_THRESHOLD,
+            range = 10f..60f,
+            stepSize = 1,
+            description = { value ->
+                if (value.toInt() == Defaults.PREF_VERTICAL_SWIPE_THRESHOLD) {
+                    "${value.toInt()} dp (${stringResource(R.string.button_default)})"
+                } else {
+                    "${value.toInt()} dp"
+                }
+            }
+        )
     },
     Setting(context, Settings.PREF_TOUCHPAD_SENSITIVITY, R.string.touchpad_sensitivity) {
         SliderPreference(

@@ -37,6 +37,7 @@ import java.util.Locale
 import java.util.WeakHashMap
 import kotlin.math.abs
 import kotlin.math.hypot
+import kotlin.math.max
 import kotlin.math.sqrt
 
 class PointerTracker private constructor(
@@ -791,7 +792,8 @@ class PointerTracker private constructor(
             }
 
             // Vertical movement
-            val stepsY = dY / sVerticalPointerStep
+            val verticalPointerStep = max(1, sv.mVerticalSwipeThreshold.dpToPx(Resources.getSystem()))
+            val stepsY = dY / verticalPointerStep
             if (stepsY != 0 && abs(dX) < abs(dY) && !mInHorizontalSwipe) {
                 if (!mInVerticalSwipe) {
                     val action = if (stepsY < 0) sv.mSpaceSwipeVertical else sv.mSpaceSwipeVerticalDown
@@ -805,7 +807,7 @@ class PointerTracker private constructor(
                     return
                 }
                 if (sListener.onVerticalSpaceSwipe(stepsY, mVerticalSwipeAction)) {
-                    mStartY += stepsY * sVerticalPointerStep
+                    mStartY += stepsY * verticalPointerStep
                 }
                 return
             }
@@ -1210,7 +1212,6 @@ class PointerTracker private constructor(
         private var sParams: PointerTrackerParams? = null
         private val sPointerStep = 10.dpToPx(Resources.getSystem())
         private val sWordDeletePointerStep = 24.dpToPx(Resources.getSystem())
-        private val sVerticalPointerStep = 24.dpToPx(Resources.getSystem())
         private var sGestureStrokeRecognitionParams: GestureStrokeRecognitionParams? = null
         private var sGestureStrokeDrawingParams: GestureStrokeDrawingParams? = null
 
