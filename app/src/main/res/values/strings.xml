@@ -1070,7 +1070,7 @@ language, hence "No language". -->
     <!-- Name for bottom row layout with action key in clipboard view -->
     <string name="layout_clip_bottom_row_with_action" tools:keep="@string/layout_clip_bottom_row_with_action">Clipboard bottom row with action key</string>
     <!-- Names for text editing panel layouts -->
-    <string name="layout_editing" tools:keep="@string/layout_editing">Text editing</string>
+    <string name="layout_editing" tools:keep="@string/layout_editing">Text editing (standard)</string>
     <string name="layout_editing_classic" tools:keep="@string/layout_editing_classic">Text editing (classic)</string>
     <string name="layout_editing_gboard" tools:keep="@string/layout_editing_gboard">Text editing (Gboard)</string>
     <!-- Title for customizing background image -->

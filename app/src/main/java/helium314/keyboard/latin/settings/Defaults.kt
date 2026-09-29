@@ -39,7 +39,7 @@ object Defaults {
         LayoutType.EMOJI_BOTTOM -> "emoji_bottom_row"
         LayoutType.CLIPBOARD_BOTTOM -> "clip_bottom_row"
         LayoutType.HANDWRITING_BOTTOM -> "handwriting_bottom_row"
-        LayoutType.EDITING -> "editing"
+        LayoutType.EDITING -> "editing_gboard"
         LayoutType.CUSTOM1 -> "symbols"
         LayoutType.CUSTOM2 -> "symbols"
         LayoutType.CUSTOM3 -> "symbols"

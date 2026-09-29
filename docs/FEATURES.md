@@ -211,9 +211,9 @@ A precision editing panel designed for frictionless text manipulation and direct
 
 ### Prebuilt Layout Variants
 LeanType includes 3 prebuilt text editing layouts (switchable in **Settings -> Languages -> Secondary layouts -> Text editing layout**):
-1. **Standard** (`editing`): Full grid with Undo/Redo, Word/All selection, Cut/Copy/Paste, DPAD arrows, and line jumps.
-2. **Classic** (`editing_classic`): Vintage layout with extended navigation keys and symbol shortcuts.
-3. **Gboard** (`editing_gboard`): Gboard-style D-Pad cluster with centered `Select` toggle, `Select all`, `Copy`, `Paste`, Jump to Start (`|<`), Jump to End (`>|`), and Backspace.
+1. **Gboard (Default)** (`editing_gboard`): Modern D-Pad cluster with centered `Select` toggle, `✕` (Close / exit), `Cut`, `Copy`, `Paste`, `Undo`, `Redo`, `Select all`, Jump to Start (`|<`), Jump to End (`>|`), and Backspace.
+2. **Standard** (`editing`): Full grid with Undo/Redo, Word/All selection, Cut/Copy/Paste, DPAD arrows, and line jumps.
+3. **Classic** (`editing_classic`): Vintage layout with extended navigation keys and symbol shortcuts.
 
 ---
 
@@ -250,6 +250,7 @@ An editing layout is defined as a 2D JSON array representing rows of keys:
 #### Supported Editing Keycodes Reference
 | Keycode | Constant Name | Description |
 | :---: | :--- | :--- |
+| **`-201`** | `ALPHA` | Closes text editing mode and returns to normal keyboard (`✕`). |
 | **`-21`** | `ARROW_LEFT` | Moves cursor left. In selection mode, expands/contracts selection left. |
 | **`-22`** | `ARROW_RIGHT` | Moves cursor right. In selection mode, expands/contracts selection right. |
 | **`-23`** | `ARROW_UP` | Moves cursor up one line. |
@@ -272,9 +273,9 @@ An editing layout is defined as a 2D JSON array representing rows of keys:
 ```json
 [
   [
-    { "type": "placeholder",                                    "width": 0.25 },
+    { "code": -201, "label": "✕",          "type": "function", "width": 0.25 },
     { "code": -23,  "label": "↑",                               "width": 0.25 },
-    { "type": "placeholder",                                    "width": 0.25 },
+    { "code": -32,  "label": "Cut",        "type": "function", "width": 0.25 },
     { "code": -35,  "label": "Select all", "type": "function", "width": 0.25 }
   ],
   [
@@ -284,9 +285,9 @@ An editing layout is defined as a 2D JSON array representing rows of keys:
     { "code": -31,  "label": "Copy",       "type": "function", "width": 0.25 }
   ],
   [
-    { "type": "placeholder",                                    "width": 0.25 },
+    { "code": -131, "label": "Undo",       "type": "function", "width": 0.25 },
     { "code": -24,  "label": "↓",                               "width": 0.25 },
-    { "type": "placeholder",                                    "width": 0.25 },
+    { "code": -132, "label": "Redo",       "type": "function", "width": 0.25 },
     { "code": -33,  "label": "Paste",      "type": "function", "width": 0.25 }
   ],
   [

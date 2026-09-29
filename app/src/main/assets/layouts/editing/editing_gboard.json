@@ -1,8 +1,8 @@
 [
   [
-    { "type": "placeholder", "width": 0.25 },
+    { "code": -201, "label": "✕", "type": "function", "width": 0.25 },
     { "code": -23, "label": "↑", "width": 0.25 },
-    { "type": "placeholder", "width": 0.25 },
+    { "code": -32, "label": "Cut", "type": "function", "width": 0.25 },
     { "code": -35, "label": "Select all", "type": "function", "width": 0.25 }
   ],
   [
@@ -12,9 +12,9 @@
     { "code": -31, "label": "Copy", "type": "function", "width": 0.25 }
   ],
   [
-    { "type": "placeholder", "width": 0.25 },
+    { "code": -131, "label": "Undo", "type": "function", "width": 0.25 },
     { "code": -24, "label": "↓", "width": 0.25 },
-    { "type": "placeholder", "width": 0.25 },
+    { "code": -132, "label": "Redo", "type": "function", "width": 0.25 },
     { "code": -33, "label": "Paste", "type": "function", "width": 0.25 }
   ],
   [
