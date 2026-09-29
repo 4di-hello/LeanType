@@ -87,6 +87,40 @@ object HandwritingModelImporter {
         return result
     }
 
+    fun migrateLegacyModels(context: Context) {
+        try {
+            // 1. Delete redundant duplicate models under filesDir (ML Kit exclusively uses noBackupFilesDir)
+            val filesModelsDir = File(context.filesDir, "com.google.mlkit.models")
+            if (filesModelsDir.exists()) {
+                filesModelsDir.deleteRecursively()
+                Log.i(TAG, "Removed redundant handwriting models from filesDir")
+            }
+
+            val noBackupDir = context.noBackupFilesDir ?: return
+            val modelsDir = File(noBackupDir, "com.google.mlkit.models")
+            if (!modelsDir.exists() || !modelsDir.isDirectory) return
+
+            // 2. Consolidate non-canonical alias folders (e.g. en_US, en_us, en-us -> en-US)
+            val langDirs = modelsDir.listFiles()?.filter { it.isDirectory } ?: emptyList()
+            for (dir in langDirs) {
+                val name = dir.name
+                val canonical = formatBcp47(name)
+                if (canonical != name) {
+                    val targetDir = File(modelsDir, canonical)
+                    val targetHasFiles = targetDir.exists() && targetDir.walkTopDown().any { it.isFile }
+                    if (targetHasFiles) {
+                        dir.deleteRecursively()
+                    } else {
+                        if (targetDir.exists()) targetDir.deleteRecursively()
+                        dir.renameTo(targetDir)
+                    }
+                }
+            }
+        } catch (e: Throwable) {
+            Log.w(TAG, "Error cleaning up handwriting model storage bloat", e)
+        }
+    }
+
     fun deleteModelForLanguage(context: Context, languageTag: String): Boolean {
         val baseDirs = listOfNotNull(context.noBackupFilesDir, context.filesDir).distinct()
         val canonical = canonicalTagKey(languageTag)
@@ -315,30 +349,16 @@ object HandwritingModelImporter {
             val extractedFiles = tempExtractDir.listFiles()?.filter { it.length() > 0 } ?: emptyList()
             if (extractedFiles.isEmpty()) return false
 
-            val baseDirs = listOfNotNull(context.noBackupFilesDir, context.filesDir).distinct()
-            val bcp47 = formatBcp47(normalizedTag)
-            val baseLang = normalizedTag.substringBefore('-').substringBefore('_')
-            val targetTags = listOf(
-                languageTag,
-                normalizedTag,
-                bcp47,
-                languageTag.lowercase(),
-                languageTag.uppercase(),
-                languageTag.replace('-', '_'),
-                bcp47.replace('-', '_'),
-                baseLang
-            ).filter { it.isNotBlank() }.distinct()
-            for (bDir in baseDirs) {
-                for (tTag in targetTags) {
-                    val targetDir = File(bDir, "com.google.mlkit.models/$tTag/DIGITAL_INK/0")
-                    targetDir.mkdirs()
-                    for (file in extractedFiles) {
-                        val targetFile = File(targetDir, file.name)
-                        file.copyTo(targetFile, overwrite = true)
-                    }
-                }
+            val baseDir = context.noBackupFilesDir ?: context.filesDir
+            val canonicalTag = formatBcp47(normalizedTag)
+            val targetDir = File(baseDir, "com.google.mlkit.models/$canonicalTag/DIGITAL_INK/0")
+            targetDir.mkdirs()
+            for (file in extractedFiles) {
+                val targetFile = File(targetDir, file.name)
+                file.copyTo(targetFile, overwrite = true)
             }
-            Log.i(TAG, "Successfully imported handwriting model files for $languageTag (files: ${extractedFiles.map { it.name }} -> $targetTags)")
+            Log.i(TAG, "Successfully imported handwriting model files for $languageTag (files: ${extractedFiles.map { it.name }} -> $canonicalTag)")
+            migrateLegacyModels(context)
             true
         } catch (e: Throwable) {
             Log.e(TAG, "Failed to import handwriting model for $languageTag", e)

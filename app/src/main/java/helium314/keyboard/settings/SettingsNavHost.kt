@@ -212,6 +212,9 @@ fun SettingsNavHost(
         composable(SettingsDestination.AppQuirks) {
             helium314.keyboard.settings.screens.AppQuirksScreen(onClickBack = ::goBack)
         }
+        composable(SettingsDestination.Storage) {
+            helium314.keyboard.settings.screens.StorageScreen(onClickBack = ::goBack)
+        }
     }
     if (target.value != SettingsDestination.Settings/* && target.value != navController.currentBackStackEntry?.destination?.route*/)
         navController.navigate(route = target.value)
@@ -219,6 +222,7 @@ fun SettingsNavHost(
 
 object SettingsDestination {
     const val Settings = "settings"
+    const val Storage = "storage"
     const val Updates = "updates"
     const val About = "about"
     const val TextCorrection = "text_correction"

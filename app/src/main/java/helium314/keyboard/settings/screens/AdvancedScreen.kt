@@ -91,6 +91,7 @@ fun AdvancedSettingsScreen(
         Settings.PREF_CUSTOM_CURRENCY_KEY,
         Settings.PREF_TIMESTAMP_FORMAT,
         SettingsWithoutKey.BACKGROUND_SERVICES,
+        SettingsWithoutKey.STORAGE_MANAGEMENT,
         SettingsWithoutKey.BACKUP_RESTORE,
         if (BuildConfig.DEBUG || prefs.getBoolean(DebugSettings.PREF_SHOW_DEBUG_SETTINGS, Defaults.PREF_SHOW_DEBUG_SETTINGS))
             SettingsWithoutKey.DEBUG_SETTINGS else null,
@@ -181,6 +182,13 @@ fun createAdvancedSettings(context: Context) = listOfNotNull(
             name = "Background Services & Processes",
             description = "Manage active background services, memory locks, and observers",
             onClick = { SettingsDestination.navigateTo(SettingsDestination.BackgroundServices) }
+        ) { NextScreenIcon() }
+    },
+    Setting(context, SettingsWithoutKey.STORAGE_MANAGEMENT, R.string.settings_screen_advanced) {
+        Preference(
+            name = "Storage & Cache",
+            description = "Manage installed plugins, offline models, dictionaries, and temporary cache",
+            onClick = { SettingsDestination.navigateTo(SettingsDestination.Storage) }
         ) { NextScreenIcon() }
     },
     Setting(context, Settings.PREF_TIMESTAMP_FORMAT, R.string.timestamp_format_title) { setting ->

@@ -252,6 +252,7 @@ class LatinIME : InputMethodService(),
         StatsUtils.onCreate(settings.current, richImm)
         ExecutorUtils.getBackgroundExecutor(ExecutorUtils.KEYBOARD).execute {
             TranslationModelImporter.migrateLegacyModels(this)
+            helium314.keyboard.latin.handwriting.HandwritingModelImporter.migrateLegacyModels(this)
         }
     }
 

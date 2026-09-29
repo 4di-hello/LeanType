@@ -81,6 +81,7 @@ open class SettingsActivity : ComponentActivity(), SharedPreferences.OnSharedPre
         ExecutorUtils.getBackgroundExecutor(ExecutorUtils.KEYBOARD).execute {
             cleanUnusedMainDicts(this)
             TranslationModelImporter.migrateLegacyModels(this)
+            helium314.keyboard.latin.handwriting.HandwritingModelImporter.migrateLegacyModels(this)
         }
         crashReportFiles.value = findCrashReports(!BuildConfig.DEBUG && !DebugFlags.DEBUG_ENABLED)
         val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager

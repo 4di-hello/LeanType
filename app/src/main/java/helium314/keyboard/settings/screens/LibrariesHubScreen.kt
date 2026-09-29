@@ -187,6 +187,27 @@ fun LibrariesHubScreen(
                     }
                 }
 
+                // Section 2: Storage & Maintenance
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer
+                    )
+                ) {
+                    Column {
+                        PreferenceCategory("Storage & Maintenance")
+
+                        Preference(
+                            name = "Storage & Cache",
+                            description = "Inspect and delete plugins, offline models, dictionaries, and cache",
+                            onClick = { helium314.keyboard.settings.SettingsDestination.navigateTo(helium314.keyboard.settings.SettingsDestination.Storage) },
+                            icon = R.drawable.ic_settings_advanced
+                        ) { NextScreenIcon() }
+                    }
+                }
+
                 // Section 3: Documentation
                 Card(
                     modifier = Modifier
