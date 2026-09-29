@@ -11,11 +11,8 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import helium314.keyboard.keyboard.KeyboardLayoutSet
-import helium314.keyboard.latin.settings.Settings
 import helium314.keyboard.latin.utils.Log
-import helium314.keyboard.latin.utils.prefs
 import helium314.keyboard.settings.SettingsActivity
 
 /**
@@ -29,11 +26,10 @@ class SystemBroadcastReceiver : BroadcastReceiver() {
         when (intent.action) {
             Intent.ACTION_MY_PACKAGE_REPLACED -> {
                 Log.i(TAG, "Package has been replaced: " + context.packageName)
-                toggleAppIcon(context)
+                ensureLauncherActivityEnabled(context)
             }
             Intent.ACTION_BOOT_COMPLETED -> {
                 Log.i(TAG, "Boot has been completed")
-                toggleAppIcon(context)
             }
             Intent.ACTION_LOCALE_CHANGED -> {
                 Log.i(TAG, "System locale changed")
@@ -45,21 +41,20 @@ class SystemBroadcastReceiver : BroadcastReceiver() {
     companion object {
         private val TAG = SystemBroadcastReceiver::class.simpleName
 
-        fun toggleAppIcon(context: Context) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                return // can't change visibility in Android 10 and above
+        private fun ensureLauncherActivityEnabled(context: Context) {
+            try {
+                val component = ComponentName(context, SettingsActivity::class.java)
+                val state = context.packageManager.getComponentEnabledSetting(component)
+                if (state == PackageManager.COMPONENT_ENABLED_STATE_DISABLED) {
+                    context.packageManager.setComponentEnabledSetting(
+                        component,
+                        PackageManager.COMPONENT_ENABLED_STATE_DEFAULT,
+                        PackageManager.DONT_KILL_APP
+                    )
+                }
+            } catch (e: Exception) {
+                Log.w(TAG, "Failed to restore launcher activity state", e)
             }
-            val prefs = context.prefs()
-            val state = if (Settings.readShowSetupWizardIcon(prefs, context)) {
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED
-            } else {
-                PackageManager.COMPONENT_ENABLED_STATE_DISABLED
-            }
-            context.packageManager.setComponentEnabledSetting(
-                ComponentName(context, SettingsActivity::class.java),
-                state,
-                PackageManager.DONT_KILL_APP
-            )
         }
     }
 }

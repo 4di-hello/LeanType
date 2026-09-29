@@ -34,7 +34,6 @@ import helium314.keyboard.keyboard.KeyboardSwitcher
 import helium314.keyboard.keyboard.emoji.SupportedEmojis
 import helium314.keyboard.latin.BuildConfig
 import helium314.keyboard.latin.R
-import helium314.keyboard.latin.SystemBroadcastReceiver
 import helium314.keyboard.latin.common.splitOnWhitespace
 import helium314.keyboard.latin.settings.DebugSettings
 import helium314.keyboard.latin.settings.Defaults
@@ -89,7 +88,6 @@ fun AdvancedSettingsScreen(
         Settings.PREF_PHYSICAL_KEYBOARD_LAYOUT,
         Settings.PREF_ENABLE_EMOJI_ALT_PHYSICAL_KEY,
         Settings.PREF_PHYSICAL_KEYBOARD_SUGGESTION_SHORTCUTS,
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) Settings.PREF_SHOW_SETUP_WIZARD_ICON else null,
         Settings.PREF_CUSTOM_CURRENCY_KEY,
         Settings.PREF_TIMESTAMP_FORMAT,
         SettingsWithoutKey.BACKGROUND_SERVICES,
@@ -154,10 +152,6 @@ fun createAdvancedSettings(context: Context) = listOfNotNull(
             stringResource(R.string.physical_keyboard_shortcut_number) to "number",
         )
         ListPreference(setting, items, Defaults.PREF_PHYSICAL_KEYBOARD_SUGGESTION_SHORTCUTS)
-    },
-    Setting(context, Settings.PREF_SHOW_SETUP_WIZARD_ICON, R.string.show_setup_wizard_icon, R.string.show_setup_wizard_icon_summary) {
-        val ctx = LocalContext.current
-        SwitchPreference(it, Defaults.PREF_SHOW_SETUP_WIZARD_ICON) { SystemBroadcastReceiver.toggleAppIcon(ctx) }
     },
     Setting(context, Settings.PREF_CUSTOM_CURRENCY_KEY, R.string.customize_currencies) { setting ->
         var showDialog by rememberSaveable { mutableStateOf(false) }
