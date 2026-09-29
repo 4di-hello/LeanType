@@ -77,6 +77,7 @@ fun SuggestionsScreen(
             if (suggestionsEnabled) Settings.PREF_ALWAYS_SHOW_SUGGESTIONS else null,
             if (suggestionsEnabled && prefs.getBoolean(Settings.PREF_ALWAYS_SHOW_SUGGESTIONS, Defaults.PREF_ALWAYS_SHOW_SUGGESTIONS))
                 Settings.PREF_ALWAYS_SHOW_SUGGESTIONS_EXCEPT_WEB_TEXT else null,
+            if (suggestionsEnabled) Settings.PREF_SUGGESTIONS_COUNT_IN_STRIP else null,
             if (suggestionsEnabled) Settings.PREF_CENTER_SUGGESTION_TEXT_TO_ENTER else null,
             Settings.PREF_SUGGEST_PUNCTUATION,
 
@@ -127,6 +128,27 @@ fun createSuggestionsSettings(context: Context) = listOf(
         R.string.prefs_always_show_suggestions_except_web_text, R.string.prefs_always_show_suggestions_except_web_text_summary
     ) {
         SwitchPreference(it, Defaults.PREF_ALWAYS_SHOW_SUGGESTIONS_EXCEPT_WEB_TEXT)
+    },
+    Setting(context, Settings.PREF_SUGGESTIONS_COUNT_IN_STRIP,
+        R.string.suggestions_count_in_strip, R.string.suggestions_count_in_strip_summary
+    ) { setting ->
+        SliderPreference(
+            name = setting.title,
+            key = setting.key,
+            default = Defaults.PREF_SUGGESTIONS_COUNT_IN_STRIP,
+            range = 2f..6f,
+            stepSize = 1,
+            onConfirmed = {
+                KeyboardSwitcher.getInstance().setThemeNeedsReload()
+            },
+            description = { value ->
+                if (value.toInt() == Defaults.PREF_SUGGESTIONS_COUNT_IN_STRIP) {
+                    "${value.toInt()} (${stringResource(R.string.button_default)})"
+                } else {
+                    "${value.toInt()}"
+                }
+            }
+        )
     },
     Setting(context, Settings.PREF_KEY_USE_PERSONALIZED_DICTS,
         R.string.use_personalized_dicts, R.string.use_personalized_dicts_summary

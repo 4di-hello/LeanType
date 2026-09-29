@@ -149,6 +149,7 @@ object Defaults {
     const val PREF_FIRST_WORD_PREDICTIONS = true
     const val PREF_SUGGEST_PUNCTUATION = false
     const val PREF_SUGGEST_CLIPBOARD_CONTENT = true
+    const val PREF_SUGGESTIONS_COUNT_IN_STRIP = 3
     const val PREF_SUGGEST_SCREENSHOTS = false
     const val PREF_COMPRESS_SCREENSHOTS = true
     const val PREF_AUTO_READ_OTP = false

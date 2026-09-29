@@ -91,6 +91,7 @@ open class SettingsValues(
     val mVarToolbarDirection: Boolean
     val mUsePersonalizedDicts: Boolean
     val mUseDoubleSpacePeriod: Boolean
+    val mSuggestionsCountInStrip: Int
     val mBlockPotentiallyOffensive: Boolean
     val mSpaceSwipeHorizontal: Int
     val mSpaceSwipeVertical: Int
@@ -389,6 +390,7 @@ open class SettingsValues(
 
         val suggestionsEnabled = prefs.getBoolean(Settings.PREF_SHOW_SUGGESTIONS, Defaults.PREF_SHOW_SUGGESTIONS)
         mSuggestionsEnabledPerUserSettings = suggestionsEnabled && (mInputAttributes.mShouldShowSuggestions || mOverrideShowingSuggestions) && !mSuggestionStripHiddenPerUserSettings
+        mSuggestionsCountInStrip = prefs.getInt(Settings.PREF_SUGGESTIONS_COUNT_IN_STRIP, Defaults.PREF_SUGGESTIONS_COUNT_IN_STRIP)
         mSecondaryStripVisible = mToolbarMode != ToolbarMode.HIDDEN || !mToolbarHidingGlobal
         mIncognitoModeEnabled = if (AppQuirksManager.isNonIncognitoApp(mInputAttributes.mTargetApplicationPackageName)) {
             mInputAttributes.mIsPasswordField

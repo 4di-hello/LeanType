@@ -62,7 +62,8 @@ class MoreSuggestionsView @JvmOverloads constructor(
     private val moreSuggestionsBuilder by lazy { MoreSuggestions.Builder(context, this) }
 
     lateinit var gestureDetector: GestureDetector
-    private var isInModalMode = false
+    internal var isInModalMode = false
+        private set
 
     // Working variables for onInterceptTouchEvent(MotionEvent) and onTouchEvent(MotionEvent).
     private var needsToTransformTouchEventToHoverEvent = false
@@ -91,7 +92,7 @@ class MoreSuggestionsView @JvmOverloads constructor(
         updateKeyDrawParams(keyHeight)
     }
 
-    private fun setModalMode() {
+    internal fun setModalMode() {
         isInModalMode = true
         // Set vertical correction to zero (Reset popup keys keyboard sliding allowance R.dimen.config_popup_keys_keyboard_slide_allowance).
         mKeyDetector.setKeyboard(keyboard, -paddingLeft.toFloat(), -paddingTop.toFloat())
@@ -119,7 +120,8 @@ class MoreSuggestionsView @JvmOverloads constructor(
 
     internal fun show(
         suggestedWords: SuggestedWords, fromIndex: Int, container: View,
-        layoutHelper: SuggestionStripLayoutHelper, parentView: View
+        layoutHelper: SuggestionStripLayoutHelper, parentView: View,
+        modal: Boolean = false
     ): Boolean {
         val maxWidth = parentView.width - container.paddingLeft - container.paddingRight
         val parentKeyboard = mainKeyboardView.keyboard ?: return false
@@ -136,6 +138,9 @@ class MoreSuggestionsView @JvmOverloads constructor(
         showPopupKeysPanel(parentView, moreSuggestionsController, pointX, pointY, moreSuggestionsListener)
         originX = lastX
         originY = lastY
+        if (modal) {
+            setModalMode()
+        }
         return true
     }
 
@@ -168,8 +173,8 @@ class MoreSuggestionsView @JvmOverloads constructor(
     }
 
     fun touchEvent(motionEvent: MotionEvent) {
-        if (!isShowingInParent) {
-            return // Ignore any touch event while more suggestions panel hasn't been shown.
+        if (!isShowingInParent || isInModalMode) {
+            return // Ignore any touch event while more suggestions panel hasn't been shown or is in modal mode.
         }
         // In the sliding input mode. MotionEvent should be forwarded to MoreSuggestionsView.
         val index = motionEvent.actionIndex

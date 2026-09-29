@@ -386,6 +386,7 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
         const val PREF_FIRST_WORD_PREDICTIONS = "first_word_prediction"
         const val PREF_SUGGEST_PUNCTUATION = "suggest_punctuation"
         const val PREF_SUGGEST_CLIPBOARD_CONTENT = "suggest_clipboard_content"
+        const val PREF_SUGGESTIONS_COUNT_IN_STRIP = "suggestions_count_in_strip"
         const val PREF_GESTURE_INPUT = "gesture_input"
         const val PREF_GESTURE_METHOD = "gesture_method"
         const val PREF_VIBRATION_DURATION_SETTINGS = "vibration_duration_settings"

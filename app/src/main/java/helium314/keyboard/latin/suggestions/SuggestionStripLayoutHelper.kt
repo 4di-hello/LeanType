@@ -137,14 +137,16 @@ internal class SuggestionStripLayoutHelper(
     }
 
     fun setSuggestionsCountInStrip(count: Int) {
-        mSuggestionsCountInStrip = count
-        if (count > 3) {
-            mCenterSuggestionWeight = 0.20f
+        mSuggestionsCountInStrip = count.coerceAtLeast(1)
+        if (mSuggestionsCountInStrip > 3) {
+            mCenterSuggestionWeight = 1.0f / mSuggestionsCountInStrip
+        } else if (mSuggestionsCountInStrip == 2) {
+            mCenterSuggestionWeight = 0.5f
         } else {
             mCenterSuggestionWeight = mOriginalCenterSuggestionWeight
         }
         mCenterPositionInStrip = mSuggestionsCountInStrip / 2
-        mTypedWordPositionWhenAutocorrect = mCenterPositionInStrip - 1
+        mTypedWordPositionWhenAutocorrect = (mCenterPositionInStrip - 1).coerceAtLeast(0)
     }
 
     val maxMoreSuggestionsRow: Int
@@ -237,6 +239,7 @@ internal class SuggestionStripLayoutHelper(
     }
 
     private fun getSuggestionWeight(positionInStrip: Int): Float {
+        if (mSuggestionsCountInStrip <= 1) return 1.0f
         if (positionInStrip == mCenterPositionInStrip) {
             return mCenterSuggestionWeight
         }

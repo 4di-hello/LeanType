@@ -803,6 +803,7 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
             || key == Settings.PREF_TOOLBAR_KEYS_ALIGNMENT
             || key == Settings.PREF_CLIPBOARD_KEYS_ALIGNMENT
             || key == Settings.PREF_SPLIT_TOOLBAR
+            || key == Settings.PREF_SUGGESTIONS_COUNT_IN_STRIP
             || key == Settings.PREF_SHOW_DOWNLOAD_BUTTON_IN_TOOLBAR
             || key == Settings.PREF_CUSTOM_ICON_NAMES
             || key == Settings.PREF_ICON_STYLE
@@ -847,6 +848,14 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        if (isSwipeTriggered) {
+            if (ev.actionMasked == MotionEvent.ACTION_UP || ev.actionMasked == MotionEvent.ACTION_CANCEL) {
+                isSwipeTriggered = false
+                swipeVelocityTracker?.recycle()
+                swipeVelocityTracker = null
+            }
+            return true
+        }
         if (isShowingMoreSuggestionPanel) {
             return super.dispatchTouchEvent(ev)
         }
@@ -885,21 +894,21 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
 
                         if (swipeDownAction != KeyboardActionListener.SWIPE_NO_ACTION && (isFlingDown || isDragDown)) {
                             isSwipeTriggered = true
-                            executeToolbarSwipeAction(swipeDownAction, isUp = false)
                             val cancelEvent = MotionEvent.obtain(ev).apply {
                                 action = MotionEvent.ACTION_CANCEL
                             }
                             super.dispatchTouchEvent(cancelEvent)
                             cancelEvent.recycle()
+                            executeToolbarSwipeAction(swipeDownAction, isUp = false)
                             return true
                         } else if (swipeUpAction != KeyboardActionListener.SWIPE_NO_ACTION && (isFlingUp || isDragUp)) {
                             isSwipeTriggered = true
-                            executeToolbarSwipeAction(swipeUpAction, isUp = true)
                             val cancelEvent = MotionEvent.obtain(ev).apply {
                                 action = MotionEvent.ACTION_CANCEL
                             }
                             super.dispatchTouchEvent(cancelEvent)
                             cancelEvent.recycle()
+                            executeToolbarSwipeAction(swipeUpAction, isUp = true)
                             return true
                         }
                     }
@@ -937,7 +946,7 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
                 listener.onCodeInput(code, Constants.SUGGESTION_STRIP_COORDINATE, Constants.SUGGESTION_STRIP_COORDINATE, false)
             }
             KeyboardActionListener.SWIPE_MORE_SUGGESTIONS -> {
-                showMoreSuggestions()
+                showMoreSuggestions(modal = true)
             }
         }
     }
@@ -963,11 +972,20 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(motionEvent: MotionEvent): Boolean {
+        if (isShowingMoreSuggestionPanel && moreSuggestionsView.isInModalMode) {
+            if (motionEvent.actionMasked == MotionEvent.ACTION_DOWN) {
+                dismissMoreSuggestionsPanel()
+                return true
+            }
+        }
         moreSuggestionsView.touchEvent(motionEvent)
         return true
     }
 
     override fun onClick(view: View) {
+        if (isShowingMoreSuggestionPanel) {
+            dismissMoreSuggestionsPanel()
+        }
         disarmDeleteMode()
         AudioAndHapticFeedbackManager.getInstance().performHapticAndAudioFeedback(KeyCode.NOT_SPECIFIED, this, HapticEvent.KEY_PRESS)
         val tag = view.tag
@@ -1070,12 +1088,12 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
         return showMoreSuggestions()
     }
 
-    private fun showMoreSuggestions(): Boolean {
+    private fun showMoreSuggestions(modal: Boolean = false): Boolean {
         if (suggestedWords.size() <= startIndexOfMoreSuggestions) {
             return false
         }
         if (!moreSuggestionsView.show(
-                suggestedWords, startIndexOfMoreSuggestions, moreSuggestionsContainer, layoutHelper, this
+                suggestedWords, startIndexOfMoreSuggestions, moreSuggestionsContainer, layoutHelper, this, modal
         ))
             return false
         for (i in 0..<startIndexOfMoreSuggestions) {
@@ -1325,14 +1343,17 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
             toolbar.visibility = if (isEmojiView) GONE else VISIBLE
 
             updateVoiceKey() // Re-apply voice logic to pinned keys
-            layoutHelper.setSuggestionsCountInStrip(5)
+            val count = Settings.getValues().mSuggestionsCountInStrip
+            val splitCount = Math.max(5, count)
+            layoutHelper.setSuggestionsCountInStrip(splitCount)
             applyToolbarKeyLayoutParams(true)
             toolbarContainer.post { applyToolbarKeyLayoutParams(true) }
         } else {
             toolbarExpandKey.isVisible = toolbarIsExpandable
             // Don't manage visibility here - let setToolbarVisibility handle it
             // This prevents conflicts with auto-hide pinned keys logic
-            layoutHelper.setSuggestionsCountInStrip(3)
+            val count = Settings.getValues().mSuggestionsCountInStrip
+            layoutHelper.setSuggestionsCountInStrip(count)
         }
         
         // ponytail: show/hide dictionary download button if dictionary is missing
