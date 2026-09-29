@@ -12,6 +12,7 @@ import helium314.keyboard.keyboard.internal.KeyboardBuilder
 import helium314.keyboard.keyboard.internal.KeyboardParams
 import helium314.keyboard.keyboard.internal.PopupKeySpec
 import helium314.keyboard.latin.R
+import helium314.keyboard.latin.common.Constants
 import helium314.keyboard.latin.common.StringUtils
 import helium314.keyboard.latin.utils.TypefaceUtils
 import kotlin.math.max
@@ -238,8 +239,9 @@ class PopupKeysKeyboard(params: PopupKeysKeyboardParams) : Keyboard(params) {
 
         init {
             keyboard?.mId?.let { mParams.mId = it }
-            if (keyboard?.mPopupKeysTemplate != null) {
-                readAttributes(keyboard.mPopupKeysTemplate)
+            val template = keyboard?.mPopupKeysTemplate ?: 0
+            if (template != 0) {
+                readAttributes(template)
             }
             // Force zero padding for popups to prevent inheriting main keyboard's scaled padding.
             mParams.mTopPadding = 0
@@ -252,18 +254,31 @@ class PopupKeysKeyboard(params: PopupKeysKeyboardParams) : Keyboard(params) {
             mParams.mVerticalGap = (keyboard?.mVerticalGap ?: 0) / 2
             // This PopupKeysKeyboard is invoked from the parent key.
 
-            val minKeyWidth = maxOf(mParams.mAbsolutePopupKeyWidth, mParentKey.drawWidth)
+            val popupKeys = mParentKey.popupKeys ?: emptyArray()
+            val basePopupKeyWidth = when {
+                mParams.mAbsolutePopupKeyWidth > 0 -> mParams.mAbsolutePopupKeyWidth
+                (keyboard?.mMostCommonKeyWidth ?: 0) > 0 -> keyboard!!.mMostCommonKeyWidth
+                (keyboard?.mId?.mWidth ?: 0) > 0 -> keyboard!!.mId.mWidth / 10
+                else -> mParentKey.height
+            }
+            val isWideKey = mParentKey.code == Constants.CODE_SPACE ||
+                mParentKey.backgroundType == Key.BACKGROUND_TYPE_SPACEBAR ||
+                mParentKey.drawWidth > (keyboard?.mMostCommonKeyHeight ?: mParentKey.height) * 1.4f
+            val minKeyWidth = if (isWideKey || popupKeys.size > 1) {
+                basePopupKeyWidth
+            } else {
+                maxOf(basePopupKeyWidth, mParentKey.drawWidth)
+            }
             val padding = context.resources.getDimension(
                 R.dimen.config_popup_keys_keyboard_key_horizontal_padding
             ) + (if (mParentKey.hasLabelsInPopupKeys()) minKeyWidth * LABEL_PADDING_RATIO else 0.0f)
             val keyWidth = getMaxKeyWidth(mParentKey, minKeyWidth, padding, paintToMeasure)
-            val rowHeight = keyboard?.mMostCommonKeyHeight ?: mParentKey.height
+            val rowHeight = keyboard?.mMostCommonKeyHeight?.takeIf { it > 0 } ?: mParentKey.height
             val dividerWidth = if (mParentKey.needsDividersInPopupKeys()) {
                 (keyWidth * DIVIDER_RATIO).toInt()
             } else {
                 0
             }
-            val popupKeys = mParentKey.popupKeys ?: emptyArray()
             val defaultColumns = mParentKey.popupKeysColumnNumber
             val keyboardWidth = keyboard?.mId?.mWidth ?: 0
             val spaceForKeys = if (keyWidth > 0) keyboardWidth / keyWidth else 0
