@@ -1315,7 +1315,17 @@ class InputLogic(
 
     private fun getBackspaceExtraDeletes(deleteCount: Int): Int {
         if (deleteCount <= Constants.DELETE_ACCELERATE_AT) return 0
-        return (1 + (deleteCount - Constants.DELETE_ACCELERATE_AT) / 10).coerceAtMost(4)
+        val count = deleteCount - Constants.DELETE_ACCELERATE_AT
+        return when {
+            count < 10 -> 1
+            count < 20 -> 2
+            count < 30 -> 3
+            count < 40 -> 4
+            count < 50 -> 6
+            count < 60 -> 9
+            count < 70 -> 13
+            else -> (13 + (count - 70) / 2).coerceAtMost(20)
+        }
     }
 
     private fun handleBackspaceEvent(event: Event, inputTransaction: InputTransaction) {
@@ -1437,22 +1447,30 @@ class InputLogic(
                     if (deletedCodePoints < (1 + extraDeletes) && extraDeletes > 0) {
                         unlearnWordBeingDeleted(inputTransaction.settingsValues)
                         val remainingExtra = (1 + extraDeletes) - deletedCodePoints
-                        repeat(remainingExtra) {
-                            val codePointBeforeCursor = mConnection.codePointBeforeCursor
-                            if (codePointBeforeCursor == Constants.NOT_A_CODE) return@repeat
-                            val isEmoji = codePointBeforeCursor > 0xFE00 || StringUtils.mightBeEmoji(codePointBeforeCursor)
-                            val lengthToDeleteAgain = if (isEmoji) {
-                                mConnection.charCountToDeleteBeforeCursor
-                            } else {
-                                1
-                            }
-                            val isWeb = InputTypeUtils.isWebEditor(getCurrentInputEditorInfo())
-                            if (isWeb && !isEmoji) {
+                        val isWeb = InputTypeUtils.isWebEditor(getCurrentInputEditorInfo())
+                        if (isWeb) {
+                            repeat(remainingExtra) {
                                 sendDownUpKeyEvent(KeyEvent.KEYCODE_DEL)
-                            } else {
-                                mConnection.deleteTextBeforeCursor(lengthToDeleteAgain)
+                                StatsUtils.onBackspacePressed(1)
                             }
-                            StatsUtils.onBackspacePressed(lengthToDeleteAgain)
+                        } else {
+                            mConnection.beginBatchEdit()
+                            try {
+                                repeat(remainingExtra) {
+                                    val codePointBeforeCursor = mConnection.codePointBeforeCursor
+                                    if (codePointBeforeCursor == Constants.NOT_A_CODE) return@repeat
+                                    val isEmoji = codePointBeforeCursor > 0xFE00 || StringUtils.mightBeEmoji(codePointBeforeCursor)
+                                    val lengthToDeleteAgain = if (isEmoji) {
+                                        mConnection.charCountToDeleteBeforeCursor
+                                    } else {
+                                        1
+                                    }
+                                    mConnection.deleteTextBeforeCursor(lengthToDeleteAgain)
+                                    StatsUtils.onBackspacePressed(lengthToDeleteAgain)
+                                }
+                            } finally {
+                                mConnection.endBatchEdit()
+                            }
                         }
                     }
                 }
@@ -1540,21 +1558,29 @@ class InputLogic(
                     val extraDeletes = getBackspaceExtraDeletes(mDeleteCount)
                     if (extraDeletes > 0) {
                         hasUnlearnedWordBeingDeleted = hasUnlearnedWordBeingDeleted or unlearnWordBeingDeleted(inputTransaction.settingsValues)
-                        repeat(extraDeletes) {
-                            val codePointBeforeCursorToDeleteAgain = mConnection.codePointBeforeCursor
-                            if (codePointBeforeCursorToDeleteAgain == Constants.NOT_A_CODE) return@repeat
-                            val isEmojiAgain = codePointBeforeCursorToDeleteAgain > 0xFE00 || StringUtils.mightBeEmoji(codePointBeforeCursorToDeleteAgain)
-                            val lengthToDeleteAgain = if (isEmojiAgain) {
-                                mConnection.charCountToDeleteBeforeCursor
-                            } else {
-                                1
-                            }
-                            if (isWeb && !isEmojiAgain) {
+                        if (isWeb) {
+                            repeat(extraDeletes) {
                                 sendDownUpKeyEvent(KeyEvent.KEYCODE_DEL)
-                            } else {
-                                mConnection.deleteTextBeforeCursor(lengthToDeleteAgain)
+                                totalDeletedLength++
                             }
-                            totalDeletedLength += lengthToDeleteAgain
+                        } else {
+                            mConnection.beginBatchEdit()
+                            try {
+                                repeat(extraDeletes) {
+                                    val codePointBeforeCursorToDeleteAgain = mConnection.codePointBeforeCursor
+                                    if (codePointBeforeCursorToDeleteAgain == Constants.NOT_A_CODE) return@repeat
+                                    val isEmojiAgain = codePointBeforeCursorToDeleteAgain > 0xFE00 || StringUtils.mightBeEmoji(codePointBeforeCursorToDeleteAgain)
+                                    val lengthToDeleteAgain = if (isEmojiAgain) {
+                                        mConnection.charCountToDeleteBeforeCursor
+                                    } else {
+                                        1
+                                    }
+                                    mConnection.deleteTextBeforeCursor(lengthToDeleteAgain)
+                                    totalDeletedLength += lengthToDeleteAgain
+                                }
+                            } finally {
+                                mConnection.endBatchEdit()
+                            }
                         }
                     }
                     StatsUtils.onBackspacePressed(totalDeletedLength)
