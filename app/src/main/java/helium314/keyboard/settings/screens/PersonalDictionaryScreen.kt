@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -30,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
@@ -39,10 +41,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import helium314.keyboard.latin.R
 import helium314.keyboard.latin.common.LocaleUtils.localizedDisplayName
+import helium314.keyboard.latin.settings.Settings
+import helium314.keyboard.latin.utils.prefs
 import helium314.keyboard.settings.DropDownField
 import helium314.keyboard.settings.SearchScreen
-import helium314.keyboard.settings.dialogs.ThreeButtonAlertDialog
 import helium314.keyboard.settings.dialogs.ConfirmationDialog
+import helium314.keyboard.settings.dialogs.ListPickerDialog
+import helium314.keyboard.settings.dialogs.ThreeButtonAlertDialog
 import java.util.Locale
 
 @Composable
@@ -51,10 +56,16 @@ fun PersonalDictionaryScreen(
     locale: Locale?
 ) {
     val ctx = LocalContext.current
+    val prefs = remember { ctx.prefs() }
+    var sortOrder by remember {
+        val saved = prefs.getString(Settings.PREF_USER_DICT_SORT_ORDER, null)
+        mutableStateOf(UserDictSortOrder.entries.firstOrNull { it.name == saved } ?: UserDictSortOrder.ALPHABETICAL)
+    }
     var refreshTrigger by remember { mutableStateOf(0) }
-    val words = remember(refreshTrigger, locale) { getAll(locale, ctx) }
+    val words = remember(refreshTrigger, locale, sortOrder) { getAll(locale, ctx, sortOrder) }
     var selectedWord: Word? by remember { mutableStateOf(null) }
     var showClearAllDialog by remember { mutableStateOf(false) }
+    var showSortDialog by remember { mutableStateOf(false) }
 
     Box(Modifier.fillMaxSize()) {
         SearchScreen(
@@ -70,8 +81,40 @@ fun PersonalDictionaryScreen(
                 }
             },
             menu = listOf(
+                stringResource(R.string.user_dict_sort_title) to { showSortDialog = true },
                 stringResource(R.string.clear_all) to { showClearAllDialog = true }
             ),
+            headerContent = {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp, vertical = 6.dp),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .clickable { showSortDialog = true }
+                            .padding(vertical = 4.dp, horizontal = 6.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Text(
+                            text = "${stringResource(R.string.user_dict_sort_title)}: ${sortOrder.displayName()}",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Icon(
+                            painter = painterResource(R.drawable.ic_arrow_left),
+                            contentDescription = stringResource(R.string.user_dict_sort_title),
+                            modifier = Modifier
+                                .size(14.dp)
+                                .rotate(-90f),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+            },
             filteredItems = { term ->
                 // we could maybe to this using a query and getting items by position
                 // requires adjusting the SearchScreen, likely not worth the effort
@@ -110,6 +153,19 @@ fun PersonalDictionaryScreen(
             icon = { Icon(painter = painterResource(R.drawable.ic_edit), stringResource(R.string.user_dict_add_word_button)) },
             modifier = Modifier.align(Alignment.BottomEnd).padding(all = 12.dp)
                 .then(Modifier.safeDrawingPadding())
+        )
+    }
+    if (showSortDialog) {
+        ListPickerDialog(
+            onDismissRequest = { showSortDialog = false },
+            items = UserDictSortOrder.entries,
+            selectedItem = sortOrder,
+            onItemSelected = {
+                sortOrder = it
+                prefs.edit().putString(Settings.PREF_USER_DICT_SORT_ORDER, it.name).apply()
+            },
+            title = { Text(stringResource(R.string.user_dict_sort_title)) },
+            getItemName = { it.displayName() }
         )
     }
     val currentSelectedWord = selectedWord
@@ -312,12 +368,31 @@ private fun getSpecificallySortedLocales(firstLocale: Locale?): List<Locale?> {
 fun Locale?.getLocaleDisplayNameForUserDictSettings(context: Context) =
     this?.localizedDisplayName(context.resources) ?: context.resources.getString(R.string.user_dict_settings_all_languages)
 
+enum class UserDictSortOrder {
+    ALPHABETICAL,
+    LAST_ADDED,
+    OLDEST;
+
+    fun getSortOrderSql(): String = when (this) {
+        ALPHABETICAL -> "UPPER(" + UserDictionary.Words.WORD + ") ASC"
+        LAST_ADDED -> "${UserDictionary.Words._ID} DESC"
+        OLDEST -> "${UserDictionary.Words._ID} ASC"
+    }
+
+    @Composable
+    fun displayName(): String = when (this) {
+        ALPHABETICAL -> stringResource(R.string.user_dict_sort_alphabetical)
+        LAST_ADDED -> stringResource(R.string.user_dict_sort_last_added)
+        OLDEST -> stringResource(R.string.user_dict_sort_oldest)
+    }
+}
+
 // weight is frequency but different name towards user
 private data class Word(val word: String, val shortcut: String?, val weight: Int?)
 
 // getting all words instead of reading directly cursor, because filteredItems expects a list
-private fun getAll(locale: Locale?, context: Context): List<Word> {
-    val cursor = createCursor(locale, context) ?: return emptyList()
+private fun getAll(locale: Locale?, context: Context, sortOrder: UserDictSortOrder): List<Word> {
+    val cursor = createCursor(locale, context, sortOrder.getSortOrderSql()) ?: return emptyList()
 
     if (!cursor.moveToFirst()) return emptyList()
     val result = mutableListOf<Word>()
@@ -332,7 +407,7 @@ private fun getAll(locale: Locale?, context: Context): List<Word> {
     return result.distinct()
 }
 
-private fun createCursor(locale: Locale?, context: Context): Cursor? {
+private fun createCursor(locale: Locale?, context: Context, sortOrderSql: String): Cursor? {
     // locale can be any of:
     // - An actual locale, for use of Locale#toString()
     // - The emptyLocale. This means we want a cursor returning words valid for all locales.
@@ -353,14 +428,12 @@ private fun createCursor(locale: Locale?, context: Context): Cursor? {
     }
 
     return context.contentResolver.query(
-        UserDictionary.Words.CONTENT_URI, QUERY_PROJECTION, select, selectArgs, SORT_ORDER
+        UserDictionary.Words.CONTENT_URI, QUERY_PROJECTION, select, selectArgs, sortOrderSql
     )
 }
 
 private val QUERY_PROJECTION =
     arrayOf(UserDictionary.Words._ID, UserDictionary.Words.WORD, UserDictionary.Words.SHORTCUT, UserDictionary.Words.FREQUENCY)
-// Case-insensitive sort
-private const val SORT_ORDER = "UPPER(" + UserDictionary.Words.WORD + ")"
 
 // Either the locale is empty (means the word is applicable to all locales)
 // or the word equals our current locale

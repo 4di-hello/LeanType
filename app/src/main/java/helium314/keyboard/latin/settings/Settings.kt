@@ -472,6 +472,7 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
 
         const val PREF_ADD_TO_PERSONAL_DICTIONARY = "add_to_personal_dictionary"
         const val PREF_ADD_TO_PERSONAL_DICT_THRESHOLD = "add_to_personal_dict_threshold"
+        const val PREF_USER_DICT_SORT_ORDER = "user_dict_sort_order"
         const val PREF_NAVBAR_COLOR = "navbar_color"
         const val PREF_NARROW_KEY_GAPS = "narrow_key_gaps"
         const val PREF_NARROW_KEY_GAPS_LEVEL = "narrow_key_gaps_level"
@@ -535,7 +536,8 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
             PREF_LAST_SHOWN_EMOJI_CATEGORY_ID,
             PREF_EMOJI_RECENT_KEYS,
             PREF_DONT_SHOW_MISSING_DICTIONARY_DIALOG,
-            PREF_SELECTED_SUBTYPE
+            PREF_SELECTED_SUBTYPE,
+            PREF_USER_DICT_SORT_ORDER
         )
 
         fun getInstance(): Settings = sInstance
