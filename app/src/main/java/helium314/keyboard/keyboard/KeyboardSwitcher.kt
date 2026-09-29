@@ -883,6 +883,7 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
     }
 
     fun hideTextEditView() {
+        KeyboardActionListenerImpl.sPersistentSelectionModeActive = false
         setAlphabetKeyboard()
     }
 

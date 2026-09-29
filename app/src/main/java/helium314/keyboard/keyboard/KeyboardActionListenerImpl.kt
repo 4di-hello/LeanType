@@ -200,7 +200,16 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
         }
         when (primaryCode) {
             KeyCode.TOGGLE_SELECTION_MODE -> {
-                sPersistentSelectionModeActive = !sPersistentSelectionModeActive
+                if (sPersistentSelectionModeActive || connection.hasSelection()) {
+                    val hadSelection = connection.hasSelection()
+                    val selEnd = maxOf(connection.expectedSelectionStart, connection.expectedSelectionEnd)
+                    sPersistentSelectionModeActive = false
+                    if (hadSelection && selEnd >= 0) {
+                        connection.setSelection(selEnd, selEnd)
+                    }
+                } else {
+                    sPersistentSelectionModeActive = true
+                }
                 keyboardSwitcher.mainKeyboardView?.invalidateAllKeys()
                 keyboardSwitcher.suggestionStripView?.updateToolbarButtonsActivatedState()
                 return
@@ -263,9 +272,13 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
             }
             KeyCode.FORWARD_DELETE -> {
                 val connection = inputLogic.connection
+                val hadSelection = connection.hasSelection()
                 val eventTime = android.os.SystemClock.uptimeMillis()
                 connection.sendKeyEvent(KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_FORWARD_DEL, 0, 0))
                 connection.sendKeyEvent(KeyEvent(eventTime, eventTime, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_FORWARD_DEL, 0, 0))
+                if (hadSelection) {
+                    deactivateSelectionMode()
+                }
                 return
             }
             KeyCode.SHIFT -> {
@@ -812,6 +825,14 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
     companion object {
         var sPersistentTextEditModeActive = false
         var sPersistentSelectionModeActive = false
+
+        fun deactivateSelectionMode() {
+            if (sPersistentSelectionModeActive) {
+                sPersistentSelectionModeActive = false
+                KeyboardSwitcher.getInstance().mainKeyboardView?.invalidateAllKeys()
+                KeyboardSwitcher.getInstance().suggestionStripView?.updateToolbarButtonsActivatedState()
+            }
+        }
         private enum class MetaPressState {
             UNSET, // default state, not active
             SET, // enabled without onPressKey (e.g. in popup)

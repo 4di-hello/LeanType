@@ -20,6 +20,7 @@ import android.view.inputmethod.EditorInfo
 import helium314.keyboard.event.Event
 import helium314.keyboard.event.InputTransaction
 import helium314.keyboard.keyboard.Keyboard
+import helium314.keyboard.keyboard.KeyboardActionListenerImpl
 import helium314.keyboard.keyboard.KeyboardId
 import helium314.keyboard.keyboard.KeyboardLayoutSet
 import helium314.keyboard.keyboard.KeyboardSwitcher
@@ -727,7 +728,10 @@ class InputLogic(
                     handleClipboardPaste()
                 }
             }
-            KeyCode.CLIPBOARD_PASTE -> handleClipboardPaste()
+            KeyCode.CLIPBOARD_PASTE -> {
+                handleClipboardPaste()
+                KeyboardActionListenerImpl.deactivateSelectionMode()
+            }
             KeyCode.SHIFT_ENTER -> {
                 val tmpEvent = Event.createSoftwareKeypressEvent(
                     Constants.CODE_ENTER, keyCode, 0, event.x, event.y, event.isKeyRepeat
@@ -741,11 +745,18 @@ class InputLogic(
                 inputTransaction.settingsValues.mSpacingAndPunctuations, currentKeyboardScript
             )
             KeyCode.CLIPBOARD_COPY -> {
+                val hadSelection = mConnection.hasSelection()
+                val selEnd = maxOf(mConnection.expectedSelectionStart, mConnection.expectedSelectionEnd)
                 mConnection.copyText(true)
+                if (hadSelection && selEnd >= 0) {
+                    mConnection.setSelection(selEnd, selEnd)
+                }
+                KeyboardActionListenerImpl.deactivateSelectionMode()
                 mLatinIME.mHandler.post { mLatinIME.tryShowClipboardSuggestion() }
             }
             KeyCode.CLIPBOARD_COPY_ALL -> {
                 mConnection.copyText(false)
+                KeyboardActionListenerImpl.deactivateSelectionMode()
                 mLatinIME.mHandler.post { mLatinIME.tryShowClipboardSuggestion() }
             }
             KeyCode.CLIPBOARD_CLEAR_HISTORY -> mLatinIME.clipboardHistoryManager.clearHistory()
@@ -758,6 +769,7 @@ class InputLogic(
                     handleBackspaceEvent(backspaceEvent, inputTransaction)
                     inputTransaction.setDidAffectContents()
                 }
+                KeyboardActionListenerImpl.deactivateSelectionMode()
             }
             KeyCode.WORD_LEFT -> {
                 if (mWordComposer.isComposingWord()) {
@@ -1348,6 +1360,7 @@ class InputLogic(
             ) {
                 restartSuggestionsOnWordTouchedByCursor(inputTransaction.settingsValues)
             }
+            KeyboardActionListenerImpl.deactivateSelectionMode()
             inputTransaction.requireShiftUpdate(InputTransaction.SHIFT_UPDATE_LATER)
             return
         }
