@@ -9,6 +9,7 @@ package helium314.keyboard.latin
 import android.content.Context
 import android.media.AudioManager
 import android.os.Build
+import android.os.SystemClock
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.view.HapticFeedbackConstants
@@ -32,6 +33,7 @@ class AudioAndHapticFeedbackManager private constructor() {
     private var mAudioManager: AudioManager? = null
     private var mVibrator: Vibrator? = null
     private val mSupportedPrimitives = mutableMapOf<Int, Boolean>()
+    private var mLastGestureVibrationTime = 0L
 
     private var mSettingsValues: SettingsValues? = null
     private var mSoundOn = false
@@ -120,16 +122,30 @@ class AudioAndHapticFeedbackManager private constructor() {
         val vibrator = mVibrator
         val isGesture = hapticEvent == HapticEvent.GESTURE_MOVE
 
+        // Pacing check for gesture scrub events to prevent overlapping motor commands and chatter
+        if (isGesture) {
+            val now = SystemClock.uptimeMillis()
+            if (now - mLastGestureVibrationTime < MIN_GESTURE_HAPTIC_INTERVAL_MS) {
+                return
+            }
+            mLastGestureVibrationTime = now
+        }
+
         // 1. Custom duration fallback: If user explicitly configured duration (ms), use one-shot.
-        // Gestures respect custom duration, clamped to 12ms to prevent continuous rumbling while scrubbing.
+        // Gestures respect custom duration, clamped to 8ms and softened amplitude to avoid rumbling while scrubbing.
         val allowDuration = hapticEvent.allowCustomDuration || isGesture
         if (allowDuration && settings.mKeypressVibrationDuration >= 0) {
             val duration = if (isGesture) {
-                settings.mKeypressVibrationDuration.toLong().coerceAtMost(12L)
+                settings.mKeypressVibrationDuration.toLong().coerceAtMost(8L)
             } else {
                 settings.mKeypressVibrationDuration.toLong()
             }
-            vibrate(duration, settings.mKeypressVibrationAmplitude)
+            val amplitude = if (isGesture && settings.mKeypressVibrationAmplitude > 0) {
+                (settings.mKeypressVibrationAmplitude * 0.6f).toInt().coerceIn(1, 255)
+            } else {
+                settings.mKeypressVibrationAmplitude
+            }
+            vibrate(duration, amplitude)
             return
         }
 
@@ -137,27 +153,33 @@ class AudioAndHapticFeedbackManager private constructor() {
         if (vibrator != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val primitiveId = when (hapticEvent) {
                 HapticEvent.KEY_LONG_PRESS -> VibrationEffect.Composition.PRIMITIVE_CLICK
+                HapticEvent.GESTURE_MOVE -> {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && isPrimitiveSupported(vibrator, VibrationEffect.Composition.PRIMITIVE_LOW_TICK)) {
+                        VibrationEffect.Composition.PRIMITIVE_LOW_TICK
+                    } else {
+                        VibrationEffect.Composition.PRIMITIVE_TICK
+                    }
+                }
                 else -> VibrationEffect.Composition.PRIMITIVE_TICK
             }
 
-            val isSupported = mSupportedPrimitives.getOrPut(primitiveId) {
-                try {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        vibrator.areAllPrimitivesSupported(primitiveId)
-                    } else {
-                        vibrator.arePrimitivesSupported(primitiveId).firstOrNull() == true
-                    }
-                } catch (e: Exception) {
-                    false
-                }
-            }
+            val isSupported = isPrimitiveSupported(vibrator, primitiveId)
 
             if (isSupported) {
                 try {
-                    val userScale = if (settings.mKeypressVibrationAmplitude > 0) {
+                    val baseScale = if (settings.mKeypressVibrationAmplitude > 0) {
                         (settings.mKeypressVibrationAmplitude / 100f).coerceIn(0.01f, 1.0f)
                     } else {
                         1.0f
+                    }
+                    val userScale = if (isGesture) {
+                        if (primitiveId == VibrationEffect.Composition.PRIMITIVE_TICK) {
+                            (baseScale * 0.55f).coerceIn(0.01f, 1.0f)
+                        } else {
+                            (baseScale * 0.85f).coerceIn(0.01f, 1.0f)
+                        }
+                    } else {
+                        baseScale
                     }
 
                     val effect = VibrationEffect.startComposition()
@@ -189,7 +211,13 @@ class AudioAndHapticFeedbackManager private constructor() {
 
         // 4. Default system view fallback (Legacy API < 29 or total HAL fallback)
         val feedbackConstant = if (isGesture) {
-            HapticFeedbackConstants.KEYBOARD_TAP
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                HapticFeedbackConstants.SEGMENT_TICK
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+                HapticFeedbackConstants.TEXT_HANDLE_MOVE
+            } else {
+                HapticFeedbackConstants.KEYBOARD_TAP
+            }
         } else {
             hapticEvent.feedbackConstant
         }
@@ -197,6 +225,21 @@ class AudioAndHapticFeedbackManager private constructor() {
             feedbackConstant,
             HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
         )
+    }
+
+    private fun isPrimitiveSupported(vibrator: Vibrator, primitiveId: Int): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) return false
+        return mSupportedPrimitives.getOrPut(primitiveId) {
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    vibrator.areAllPrimitivesSupported(primitiveId)
+                } else {
+                    vibrator.arePrimitivesSupported(primitiveId).firstOrNull() == true
+                }
+            } catch (e: Exception) {
+                false
+            }
+        }
     }
 
     private fun vibrateWithAttributes(vibrator: Vibrator, effect: VibrationEffect) {
@@ -242,6 +285,7 @@ class AudioAndHapticFeedbackManager private constructor() {
     }
 
     companion object {
+        private const val MIN_GESTURE_HAPTIC_INTERVAL_MS = 32L
         private val sInstance = AudioAndHapticFeedbackManager()
 
         fun getInstance(): AudioAndHapticFeedbackManager = sInstance
