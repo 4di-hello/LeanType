@@ -362,6 +362,7 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
         const val PREF_SPACE_VERTICAL_SWIPE = "vertical_space_swipe"
         const val PREF_SPACE_VERTICAL_DOWN_SWIPE = "vertical_down_space_swipe"
         const val PREF_DELETE_SWIPE = "delete_swipe"
+        const val PREF_DELETE_SWIPE_WORD_BY_WORD = "delete_swipe_word_by_word"
         const val PREF_AUTOSPACE_AFTER_PUNCTUATION = "autospace_after_punctuation"
         const val PREF_AUTOSPACE_AFTER_EMOJI = "autospace_after_emoji"
         const val PREF_AUTOSPACE_AFTER_SUGGESTION = "autospace_after_suggestion"

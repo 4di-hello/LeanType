@@ -220,6 +220,14 @@ fun createGestureTypingSettings(context: Context) = listOf(
     Setting(context, Settings.PREF_DELETE_SWIPE, R.string.delete_swipe, R.string.delete_swipe_summary) {
         SwitchPreference(it, Defaults.PREF_DELETE_SWIPE)
     },
+    Setting(context, Settings.PREF_DELETE_SWIPE_WORD_BY_WORD, R.string.delete_swipe_word_by_word, R.string.delete_swipe_word_by_word_summary) {
+        val prefs = LocalContext.current.prefs()
+        SwitchPreference(
+            it,
+            Defaults.PREF_DELETE_SWIPE_WORD_BY_WORD,
+            enabled = prefs.getBoolean(Settings.PREF_DELETE_SWIPE, Defaults.PREF_DELETE_SWIPE)
+        )
+    },
 )
 
 @Preview

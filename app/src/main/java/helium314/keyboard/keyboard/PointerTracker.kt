@@ -824,13 +824,14 @@ class PointerTracker private constructor(
                 }
             }
         } else if (code == KeyCode.DELETE) {
-            val steps = (x - mStartX) / sPointerStep
+            val stepSize = if (sv.mDeleteSwipeWordByWord) sWordDeletePointerStep else sPointerStep
+            val steps = (x - mStartX) / stepSize
             if (steps != 0) {
                 if (!mInHorizontalSwipe) {
                     getTimerProxy().cancelKeyTimersOf(this)
                     mInHorizontalSwipe = true
                 }
-                mStartX += steps * sPointerStep
+                mStartX += steps * stepSize
                 sListener.onMoveDeletePointer(steps)
             }
         }
@@ -1208,6 +1209,7 @@ class PointerTracker private constructor(
 
         private var sParams: PointerTrackerParams? = null
         private val sPointerStep = 10.dpToPx(Resources.getSystem())
+        private val sWordDeletePointerStep = 24.dpToPx(Resources.getSystem())
         private val sVerticalPointerStep = 24.dpToPx(Resources.getSystem())
         private var sGestureStrokeRecognitionParams: GestureStrokeRecognitionParams? = null
         private var sGestureStrokeDrawingParams: GestureStrokeDrawingParams? = null

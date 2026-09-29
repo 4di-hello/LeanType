@@ -417,14 +417,52 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
         return true
     }
 
+    private var deleteSwipeInitialEnd = -1
+    private var deleteSwipeWordBoundaries = emptyList<Int>()
+    private var deleteSwipeWordIndex = 0
+
     override fun onMoveDeletePointer(steps: Int) {
+        if (settings.current.mDeleteSwipeWordByWord) {
+            onMoveDeletePointerWords(steps)
+        } else {
+            onMoveDeletePointerChars(steps)
+        }
+    }
+
+    private fun onMoveDeletePointerChars(steps: Int) {
         inputLogic.finishInput()
         val end = connection.expectedSelectionEnd
         val actualSteps = actualSteps(steps)
-        val start = connection.expectedSelectionStart + actualSteps
-        if (start > end) return
-        gestureMoveBackHaptics()
-        connection.setSelection(start, end)
+        val oldStart = connection.expectedSelectionStart
+        val start = (oldStart + actualSteps).coerceAtMost(end)
+        if (start != oldStart) {
+            performHapticFeedback(HapticEvent.GESTURE_MOVE)
+            connection.setSelection(start, end)
+        }
+    }
+
+    private fun onMoveDeletePointerWords(steps: Int) {
+        inputLogic.finishInput()
+        val currentEnd = connection.expectedSelectionEnd
+        if (deleteSwipeInitialEnd == -1 || deleteSwipeInitialEnd != currentEnd) {
+            deleteSwipeInitialEnd = currentEnd
+            val textBefore = connection.getTextBeforeCursor(1000, 0)?.toString() ?: ""
+            val baseStart = connection.expectedSelectionStart
+            deleteSwipeWordBoundaries = getWordBoundariesBackwards(textBefore, baseStart)
+            deleteSwipeWordIndex = 0
+        }
+
+        if (deleteSwipeWordBoundaries.isEmpty()) return
+
+        val oldIndex = deleteSwipeWordIndex
+        // Negative steps move left (select more words), positive steps move right (deselect words)
+        val newIndex = (deleteSwipeWordIndex - steps).coerceIn(0, deleteSwipeWordBoundaries.size - 1)
+        if (newIndex != oldIndex) {
+            deleteSwipeWordIndex = newIndex
+            val newStart = deleteSwipeWordBoundaries[newIndex]
+            performHapticFeedback(HapticEvent.GESTURE_MOVE)
+            connection.setSelection(newStart, deleteSwipeInitialEnd)
+        }
     }
 
     private fun actualSteps(steps: Int): Int {
@@ -447,6 +485,9 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
     }
 
     override fun onUpWithDeletePointerActive() {
+        deleteSwipeInitialEnd = -1
+        deleteSwipeWordBoundaries = emptyList()
+        deleteSwipeWordIndex = 0
         if (!connection.hasSelection()) return
         inputLogic.finishInput()
         onCodeInput(KeyCode.DELETE, Constants.NOT_A_COORDINATE, Constants.NOT_A_COORDINATE, false)
@@ -459,6 +500,9 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
     override fun resetMetaState() {
         metaState = 0
         mConsumedPhysicalKeys.clear()
+        deleteSwipeInitialEnd = -1
+        deleteSwipeWordBoundaries = emptyList()
+        deleteSwipeWordIndex = 0
     }
 
     private fun onLanguageSlide(steps: Int, isVertical: Boolean = false): Boolean {
@@ -774,5 +818,64 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
         }
 
         private fun Int.isMetaLock() = this == KeyCode.CTRL_LOCK || this == KeyCode.ALT_LOCK || this == KeyCode.FN_LOCK || this == KeyCode.META_LOCK
+
+        internal fun getWordBoundariesBackwards(text: String, endOffset: Int): List<Int> {
+            val boundaries = mutableListOf<Int>()
+            var i = text.length
+            val offset = endOffset - text.length
+            boundaries.add(endOffset)
+
+            while (i > 0) {
+                // 1. Skip trailing whitespace
+                while (i > 0) {
+                    val cp = Character.codePointBefore(text, i)
+                    if (Character.isWhitespace(cp)) {
+                        i -= Character.charCount(cp)
+                    } else {
+                        break
+                    }
+                }
+                if (i == 0) break
+
+                // 2. Skip attached punctuation
+                var skippedPunctuation = false
+                while (i > 0) {
+                    val cp = Character.codePointBefore(text, i)
+                    if (!Character.isLetterOrDigit(cp) && !Character.isWhitespace(cp)) {
+                        i -= Character.charCount(cp)
+                        skippedPunctuation = true
+                    } else {
+                        break
+                    }
+                }
+
+                // 3. Skip word characters
+                var skippedWord = false
+                while (i > 0) {
+                    val cp = Character.codePointBefore(text, i)
+                    if (Character.isLetterOrDigit(cp)) {
+                        i -= Character.charCount(cp)
+                        skippedWord = true
+                    } else {
+                        break
+                    }
+                }
+
+                // 4. Consume preceding whitespace if a word or punctuation was skipped
+                if (skippedWord || skippedPunctuation) {
+                    while (i > 0) {
+                        val cp = Character.codePointBefore(text, i)
+                        if (Character.isWhitespace(cp)) {
+                            i -= Character.charCount(cp)
+                        } else {
+                            break
+                        }
+                    }
+                }
+
+                boundaries.add((offset + i).coerceAtLeast(0))
+            }
+            return boundaries
+        }
     }
 }
