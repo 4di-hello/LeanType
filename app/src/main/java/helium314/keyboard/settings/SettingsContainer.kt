@@ -200,7 +200,6 @@ object SettingsWithoutKey {
     const val BACKGROUND_SERVICES = "background_services"
     const val CLOUD_AI_MAX_TOKENS = "cloud_ai_max_tokens"
     const val APP_QUIRKS = "app_quirks"
-    const val STORAGE_MANAGEMENT = "storage_management"
 
     // Screen Navigation Keys for Settings Search:
     const val SCREEN_NAV_SECONDARY_LAYOUTS = "screen_nav_secondary_layouts"
