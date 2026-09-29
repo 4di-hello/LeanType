@@ -11,7 +11,6 @@ import helium314.keyboard.latin.settings.Settings
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -43,7 +42,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -113,9 +111,9 @@ fun WelcomeWizard(
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurface,
             )
-            if (JniUtils.sHaveNativeGestureLib && step == 0) {
+            if (step == 0) {
                 Text(
-                    stringResource(R.string.setup_welcome_additional_description),
+                    "Your private, customizable keyboard",
                     style = MaterialTheme.typography.bodyLarge,
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -655,28 +653,80 @@ fun WelcomeWizard(
 @Composable
 fun Step0(onClick: () -> Unit) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(
-            painterResource(R.drawable.setup_welcome_image), 
-            contentDescription = null,
-            contentScale = ContentScale.Fit,
-            modifier = Modifier.padding(bottom = 32.dp).fillMaxWidth().weight(1f)
-        )
-        
-        Spacer(Modifier.height(16.dp))
-        
-        androidx.compose.material3.Button(
-            onClick = onClick,
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp, vertical = 16.dp)
+        androidx.compose.material3.ElevatedCard(
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text(
-                stringResource(R.string.setup_start_action),
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(vertical = 8.dp)
-            )
+            Column(
+                modifier = Modifier.padding(24.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Text(
+                    text = "Welcome to a better typing experience",
+                    style = MaterialTheme.typography.titleLarge
+                )
+                Text(
+                    text = "LeanType is designed from the ground up for privacy, speed, and deep customization.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                androidx.compose.material3.HorizontalDivider(
+                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+                )
+
+                WelcomeFeatureItem(
+                    title = "100% Private & Secure",
+                    description = "Zero telemetry, network tracking, or cloud logging. Your typing stays on your device."
+                )
+
+                WelcomeFeatureItem(
+                    title = "Deeply Customizable",
+                    description = "Tailor layouts, keyboard themes, sizes, gestures, and multilingual typing to your preferences."
+                )
+
+                WelcomeFeatureItem(
+                    title = "Smart Productivity",
+                    description = "Fast word suggestions, clipboard manager, voice input, and rich editing shortcuts."
+                )
+
+                Spacer(Modifier.height(8.dp))
+
+                androidx.compose.material3.Button(
+                    onClick = onClick,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        stringResource(R.string.setup_start_action),
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(vertical = 4.dp)
+                    )
+                }
+            }
         }
+    }
+}
+
+@Composable
+private fun WelcomeFeatureItem(
+    title: String,
+    description: String
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.primary
+        )
+        Text(
+            text = description,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
 }
 
