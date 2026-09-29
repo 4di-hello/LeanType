@@ -104,6 +104,7 @@ import helium314.keyboard.latin.utils.StatsUtilsManager
 import helium314.keyboard.latin.utils.SubtypeLocaleUtils
 import helium314.keyboard.latin.utils.SubtypeSettings
 import helium314.keyboard.latin.utils.SubtypeState
+import helium314.keyboard.latin.translation.TranslationModelImporter
 import helium314.keyboard.latin.utils.ToolbarMode
 import helium314.keyboard.latin.voice.VoiceInputManager
 import helium314.keyboard.latin.voice.VoicePluginManager
@@ -249,6 +250,9 @@ class LatinIME : InputMethodService(),
         ContextCompat.registerReceiver(this, restartAfterDeviceUnlockReceiver, restartAfterUnlockFilter, ContextCompat.RECEIVER_NOT_EXPORTED)
 
         StatsUtils.onCreate(settings.current, richImm)
+        ExecutorUtils.getBackgroundExecutor(ExecutorUtils.KEYBOARD).execute {
+            TranslationModelImporter.migrateLegacyModels(this)
+        }
     }
 
     private fun loadSettings() {

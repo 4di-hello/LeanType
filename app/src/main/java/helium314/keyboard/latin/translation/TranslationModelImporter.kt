@@ -73,92 +73,74 @@ object TranslationModelImporter {
 
     fun migrateLegacyModels(context: Context) {
         try {
-            val baseDirs = listOfNotNull(context.noBackupFilesDir, context.filesDir).distinct()
+            // 1. Delete redundant duplicate models under filesDir (ML Kit exclusively uses noBackupFilesDir)
+            val filesModelsDir = File(context.filesDir, "com.google.mlkit.translate.models")
+            if (filesModelsDir.exists()) {
+                filesModelsDir.deleteRecursively()
+                Log.i(TAG, "Removed redundant translation models from filesDir")
+            }
 
-            // 1. Gather all directories containing model files across both baseDirs
-            val foundModelNames = mutableSetOf<String>()
-            for (baseDir in baseDirs) {
-                val modelsDir = File(baseDir, "com.google.mlkit.translate.models")
-                if (!modelsDir.exists() || !modelsDir.isDirectory) continue
-                modelsDir.listFiles()?.forEach { modelDir ->
-                    if (modelDir.isDirectory && modelDir.name != "0") {
-                        val hasRootFiles = modelDir.listFiles()?.any { it.isFile && it.length() > 0 } == true
-                        val zeroDir = File(modelDir, "0")
-                        val hasZeroFiles = zeroDir.exists() && zeroDir.isDirectory &&
-                            zeroDir.listFiles()?.any { it.isFile && it.length() > 0 } == true
-                        if (hasRootFiles || hasZeroFiles) {
-                            foundModelNames.add(modelDir.name)
-                        }
+            val noBackupDir = context.noBackupFilesDir ?: return
+            val modelsDir = File(noBackupDir, "com.google.mlkit.translate.models")
+            if (!modelsDir.exists() || !modelsDir.isDirectory) return
+
+            // 2. Remove corrupted self-referential / non-pair directories
+            File(modelsDir, "en_en").deleteRecursively()
+            File(modelsDir, "en").deleteRecursively()
+
+            // 3. Consolidate non-canonical alias folders (e.g. es_en, es -> en_es)
+            val subDirs = modelsDir.listFiles()?.filter { it.isDirectory && it.name != "0" } ?: emptyList()
+            for (dir in subDirs) {
+                val name = dir.name
+                val canonical = TranslationModelUrls.getModelName(name)
+                    ?: if (name.contains("_")) {
+                        val parts = name.split("_")
+                        if (parts.size == 2) {
+                            TranslationModelUrls.getModelName(parts[0])
+                                ?: TranslationModelUrls.getModelName(parts[1])
+                                ?: "${parts[1]}_${parts[0]}"
+                        } else null
+                    } else null
+
+                if (canonical != null && canonical != name) {
+                    val targetDir = File(modelsDir, canonical)
+                    val targetHasFiles = targetDir.exists() && targetDir.walkTopDown().any { it.isFile }
+                    if (targetHasFiles) {
+                        // Canonical directory already contains the model; delete the duplicate alias
+                        dir.deleteRecursively()
+                    } else {
+                        // Target doesn't exist or is empty; remove empty target if needed and rename alias to canonical
+                        if (targetDir.exists()) targetDir.deleteRecursively()
+                        dir.renameTo(targetDir)
                     }
                 }
             }
 
-            // 2. Synchronize all aliases and directories
-            for (modelName in foundModelNames) {
-                val aliases = mutableSetOf(modelName)
-                if (modelName.contains("_")) {
-                    val parts = modelName.split("_")
-                    if (parts.size == 2) {
-                        aliases.add("${parts[1]}_${parts[0]}")
-                        aliases.add(parts[0])
-                        aliases.add(parts[1])
-                    }
-                } else {
-                    val mapped = TranslationModelUrls.getModelName(modelName)
-                    if (mapped != null) {
-                        aliases.add(mapped)
-                        val parts = mapped.split("_")
-                        if (parts.size == 2) aliases.add("${parts[1]}_${parts[0]}")
-                    }
-                    aliases.add("${modelName}_en")
-                    aliases.add("en_${modelName}")
+            // 4. In canonical model directories, eliminate duplicate root files that also exist in 0/
+            // and ensure all model files reside in 0/
+            modelsDir.listFiles()?.filter { it.isDirectory }?.forEach { modelDir ->
+                val zeroDir = File(modelDir, "0")
+                if (!zeroDir.exists()) {
+                    zeroDir.mkdirs()
                 }
-
-                var sourceDir: File? = null
-                for (baseDir in baseDirs) {
-                    val dir = File(baseDir, "com.google.mlkit.translate.models/$modelName")
-                    if (dir.exists() && (dir.listFiles()?.any { it.isFile } == true || File(dir, "0").listFiles()?.any { it.isFile } == true)) {
-                        sourceDir = dir
-                        break
-                    }
-                }
-                if (sourceDir == null) continue
-
-                val sourceFiles = (sourceDir.listFiles()?.filter { it.isFile } ?: emptyList()) +
-                    (File(sourceDir, "0").listFiles()?.filter { it.isFile } ?: emptyList())
-                val distinctFiles = sourceFiles.distinctBy { it.name }
-
-                for (baseDir in baseDirs) {
-                    for (alias in aliases) {
-                        val aliasDir = File(baseDir, "com.google.mlkit.translate.models/$alias")
-                        val aliasZero = File(aliasDir, "0")
-                        if (!aliasDir.exists()) aliasDir.mkdirs()
-                        if (!aliasZero.exists()) aliasZero.mkdirs()
-
-                        for (srcFile in distinctFiles) {
-                            val destRoot = File(aliasDir, srcFile.name)
-                            val destZero = File(aliasZero, srcFile.name)
-                            syncModelFile(srcFile, destRoot)
-                            syncModelFile(srcFile, destZero)
-                        }
+                val rootFiles = modelDir.listFiles()?.filter { it.isFile } ?: emptyList()
+                for (rFile in rootFiles) {
+                    val zFile = File(zeroDir, rFile.name)
+                    if (zFile.exists()) {
+                        rFile.delete()
+                    } else {
+                        rFile.renameTo(zFile)
                     }
                 }
             }
+
+            val summary = modelsDir.listFiles()?.filter { it.isDirectory }?.joinToString(", ") { dir ->
+                val sizeMb = dir.walkTopDown().filter { it.isFile }.sumOf { it.length() } / (1024 * 1024)
+                "${dir.name}: ${sizeMb}MB"
+            } ?: "none"
+            Log.i(TAG, "Storage cleanup complete. Remaining models in noBackup: $summary")
         } catch (e: Throwable) {
-            Log.w(TAG, "Error synchronizing translation model folders", e)
-        }
-    }
-
-    private fun syncModelFile(src: File, dest: File) {
-        if (!dest.exists() || dest.length() != src.length()) {
-            try {
-                if (dest.exists()) dest.delete()
-                android.system.Os.link(src.absolutePath, dest.absolutePath)
-            } catch (_: Throwable) {
-                try {
-                    src.copyTo(dest, overwrite = true)
-                } catch (_: Throwable) {}
-            }
+            Log.w(TAG, "Error cleaning up translation model storage bloat", e)
         }
     }
 
@@ -253,14 +235,11 @@ object TranslationModelImporter {
                         val entryName = entry.name
                         val relPath = if (entryName.contains("/")) entryName.substringAfterLast("/") else entryName
                         if (relPath.isNotEmpty() && !entry.isDirectory) {
-                            val outFile = File(targetDir, relPath)
                             val outFileZero = File(targetDirZero, relPath)
-                            outFile.parentFile?.mkdirs()
                             outFileZero.parentFile?.mkdirs()
-                            FileOutputStream(outFile).use { out ->
+                            FileOutputStream(outFileZero).use { out ->
                                 zipIn.copyTo(out)
                             }
-                            outFile.copyTo(outFileZero, overwrite = true)
                             extractedAny = true
                         }
                         zipIn.closeEntry()
@@ -273,9 +252,7 @@ object TranslationModelImporter {
 
             if (!extractedAny) {
                 val filename = if (filenameHint.isNotBlank()) filenameHint.substringAfterLast("/") else "model"
-                val outFile = File(targetDir, filename)
                 val outFileZero = File(targetDirZero, filename)
-                tempZip.copyTo(outFile, overwrite = true)
                 tempZip.copyTo(outFileZero, overwrite = true)
             }
 
@@ -343,21 +320,18 @@ object TranslationModelImporter {
                     val entryName = entry.name
                     val relPath = if (entryName.contains("/")) entryName.substringAfterLast("/") else entryName
                     if (relPath.isNotEmpty() && !entry.isDirectory) {
-                        val outFile = File(targetDir, relPath)
                         val outFileZero = File(targetDirZero, relPath)
-                        outFile.parentFile?.mkdirs()
                         outFileZero.parentFile?.mkdirs()
-                        FileOutputStream(outFile).use { out ->
+                        FileOutputStream(outFileZero).use { out ->
                             zipIn.copyTo(out)
                         }
-                        outFile.copyTo(outFileZero, overwrite = true)
                     }
                     zipIn.closeEntry()
                     entry = zipIn.nextEntry
                 }
             }
 
-            Log.i(TAG, "Successfully imported translation model $modelName into $targetDir and $targetDirZero")
+            Log.i(TAG, "Successfully imported translation model $modelName into $targetDirZero")
             migrateLegacyModels(context)
             TranslationLoader.unloadPlugin()
             modelName

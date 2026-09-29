@@ -40,6 +40,7 @@ import helium314.keyboard.latin.settings.Defaults
 import helium314.keyboard.latin.utils.DeviceProtectedUtils
 import helium314.keyboard.latin.utils.ExecutorUtils
 import helium314.keyboard.latin.utils.UncachedInputMethodManagerUtils
+import helium314.keyboard.latin.translation.TranslationModelImporter
 import helium314.keyboard.latin.utils.cleanUnusedMainDicts
 import helium314.keyboard.latin.utils.prefs
 import helium314.keyboard.settings.dialogs.ConfirmationDialog
@@ -77,7 +78,10 @@ open class SettingsActivity : ComponentActivity(), SharedPreferences.OnSharedPre
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Settings.getInstance().loadSettings(this)
-        ExecutorUtils.getBackgroundExecutor(ExecutorUtils.KEYBOARD).execute { cleanUnusedMainDicts(this) }
+        ExecutorUtils.getBackgroundExecutor(ExecutorUtils.KEYBOARD).execute {
+            cleanUnusedMainDicts(this)
+            TranslationModelImporter.migrateLegacyModels(this)
+        }
         crashReportFiles.value = findCrashReports(!BuildConfig.DEBUG && !DebugFlags.DEBUG_ENABLED)
         val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
 
