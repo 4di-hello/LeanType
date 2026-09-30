@@ -74,7 +74,6 @@ import helium314.keyboard.latin.utils.removeFirst
 import helium314.keyboard.latin.utils.removePinnedKey
 import helium314.keyboard.latin.utils.setToolbarButtonsActivatedStateOnPrefChange
 import helium314.keyboard.latin.utils.isMainDictionaryMissing
-import helium314.keyboard.latin.utils.showMissingDictionaryComposeDialog
 import helium314.keyboard.latin.utils.SubtypeSettings
 import helium314.keyboard.latin.utils.locale
 import helium314.keyboard.settings.SettingsWithoutKey
@@ -140,7 +139,6 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
     private val toolbarExpandKey = findViewById<ImageButton>(R.id.suggestions_strip_toolbar_key)
     private var toolbarRow: LinearLayout? = null
     private var dictDownloadButton: ImageButton? = null
-    private var missingDictBanner: TextView? = null
     private val toolbarArrowIcon = KeyboardIconsSet.instance.getNewDrawable(KeyboardIconsSet.NAME_TOOLBAR_KEY, context)
     private val defaultToolbarBackground: Drawable = toolbarExpandKey.background
     private val enabledToolKeyBackground = GradientDrawable()
@@ -508,8 +506,6 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
             context, suggestedWords, suggestionsStrip, this
         )
         updateKeys()
-        val currentLocale = SubtypeSettings.getSelectedSubtype(context.prefs()).locale()
-        showMissingDictionaryBannerIfIdle(currentLocale)
         // Update toolbar visibility state
         val settingsValues = Settings.getValues()
         if (settingsValues.mToolbarMode == ToolbarMode.EXPANDABLE && !settingsValues.mSplitToolbar) {
@@ -1359,27 +1355,30 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
             val count = Settings.getValues().mSuggestionsCountInStrip
             layoutHelper.setSuggestionsCountInStrip(count)
         }
-        
         // ponytail: show/hide dictionary download button if dictionary is missing
         val currentLocale = SubtypeSettings.getSelectedSubtype(context.prefs()).locale()
         val showDownloadButton = Settings.getValues().mShowDownloadButtonInToolbar
         if (showDownloadButton && isMainDictionaryMissing(context, currentLocale) && !hideToolbarKeys) {
             val onClickAction = View.OnClickListener {
-                val token = windowToken ?: return@OnClickListener
-                showMissingDictionaryComposeDialog(context, currentLocale, token) {
-                    if (!isMainDictionaryMissing(context, currentLocale)) {
-                        dictDownloadButton?.isVisible = false
-                        missingDictBanner?.let { banner ->
-                            if (banner.parent is ViewGroup) {
-                                (banner.parent as ViewGroup).removeView(banner)
-                            }
+                val builder = android.app.AlertDialog.Builder(context)
+                    .setTitle(context.getString(R.string.download_dictionary_for_language, currentLocale.displayName))
+                    .setMessage(context.getString(R.string.download_dictionary_prompt_description))
+                    .setPositiveButton(R.string.download) { _, _ ->
+                        val intent = android.content.Intent().apply {
+                            setClass(context, helium314.keyboard.settings.SettingsActivity2::class.java)
+                            putExtra("screen", "dictionaries")
+                            putExtra("from_ime", true)
+                            setFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+                                    or android.content.Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
+                                    or android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         }
-                        updateKeys()
+                        context.startActivity(intent)
                     }
-                }
+                    .setNegativeButton(android.R.string.cancel, null)
+                showDialogForIme(builder)
             }
             val onLongClickAction = View.OnLongClickListener {
-                android.widget.Toast.makeText(context, context.getString(R.string.download_dictionary_prompt_description), android.widget.Toast.LENGTH_SHORT).show()
+                android.widget.Toast.makeText(context, context.getString(R.string.download_dictionary_for_language, currentLocale.displayName), android.widget.Toast.LENGTH_SHORT).show()
                 true
             }
             if (dictDownloadButton == null) {
@@ -1418,76 +1417,8 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
         } else {
             dictDownloadButton?.isVisible = false
         }
-        showMissingDictionaryBannerIfIdle(currentLocale)
 
         isExternalSuggestionVisible = false
-    }
-
-    private fun showMissingDictionaryBannerIfIdle(currentLocale: Locale) {
-        val showDownloadButton = Settings.getValues().mShowDownloadButtonInToolbar
-        if (!showDownloadButton || !isMainDictionaryMissing(context, currentLocale) || toolbarContainer.isVisible || isExternalSuggestionVisible) {
-            missingDictBanner?.let { banner ->
-                if (banner.parent is ViewGroup) {
-                    (banner.parent as ViewGroup).removeView(banner)
-                }
-            }
-            return
-        }
-        if (suggestedWords.getWordCountToShow() > 0) {
-            missingDictBanner?.let { banner ->
-                if (banner.parent is ViewGroup) {
-                    (banner.parent as ViewGroup).removeView(banner)
-                }
-            }
-            return
-        }
-        if (missingDictBanner == null) {
-            missingDictBanner = TextView(context, null, R.attr.suggestionWordStyle).apply {
-                gravity = android.view.Gravity.CENTER
-                val icon = androidx.core.content.ContextCompat.getDrawable(context, R.drawable.ic_dictionary_download)?.mutate()
-                val iconSize = 18.dpToPx(resources)
-                icon?.setBounds(0, 0, iconSize, iconSize)
-                setCompoundDrawablesRelative(icon, null, null, null)
-                compoundDrawablePadding = 6.dpToPx(resources)
-                val hPadding = 12.dpToPx(resources)
-                setPadding(hPadding, 0, hPadding, 0)
-                setBackgroundResource(R.drawable.toolbar_key_background)
-                setOnClickListener {
-                    val token = windowToken ?: return@setOnClickListener
-                    showMissingDictionaryComposeDialog(context, currentLocale, token) {
-                        if (!isMainDictionaryMissing(context, currentLocale)) {
-                            dictDownloadButton?.isVisible = false
-                            if (parent is ViewGroup) {
-                                (parent as ViewGroup).removeView(this)
-                            }
-                            updateKeys()
-                        }
-                    }
-                }
-                setOnLongClickListener {
-                    android.widget.Toast.makeText(context, context.getString(R.string.download_dictionary_prompt_description), android.widget.Toast.LENGTH_SHORT).show()
-                    true
-                }
-            }
-        }
-        missingDictBanner?.let { banner ->
-            banner.text = context.getString(R.string.download_dictionary_for_language, currentLocale.displayName)
-            val colors = Settings.getValues().mColors
-            banner.setTextColor(colors.get(ColorType.SUGGESTION_AUTO_CORRECT))
-            banner.compoundDrawablesRelative[0]?.let { d ->
-                colors.setColor(d, ColorType.SUGGESTION_AUTO_CORRECT)
-            }
-            banner.background?.let { bg -> colors.setColor(bg, ColorType.TOOL_BAR_EXPAND_KEY_BACKGROUND) }
-            val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT).apply {
-                gravity = android.view.Gravity.CENTER
-                val marginV = 4.dpToPx(resources)
-                setMargins(0, marginV, 0, marginV)
-            }
-            banner.layoutParams = lp
-            if (banner.parent == null) {
-                suggestionsStrip.addView(banner)
-            }
-        }
     }
 
     private fun setupKey(view: ImageButton, colors: Colors) {
