@@ -11,6 +11,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
+import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.text.Editable
 import android.text.TextUtils
@@ -1033,7 +1034,9 @@ class EmojiPalettesView @JvmOverloads constructor(
             false
         }
 
-        val padH = (14 * density).toInt()
+        val chipHeight = (30 * density).toInt()
+        val marginH = (4 * density).toInt()
+        val padH = (15 * density).toInt()
         val currentGroup = mEmojiCategory.getCurrentEmoticonGroup()
 
         // Reuse existing child views if the strip is already populated with matching count
@@ -1042,9 +1045,10 @@ class EmojiPalettesView @JvmOverloads constructor(
             groups.forEachIndexed { index, group ->
                 val tab = TextView(context).apply {
                     text = EmojiCategory.getEmoticonGroupDisplayName(context, group.name)
-                    setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
+                    setTextSize(TypedValue.COMPLEX_UNIT_SP, 13.5f)
                     maxLines = 1
                     gravity = android.view.Gravity.CENTER
+                    includeFontPadding = false
                     setPadding(padH, 0, padH, 0)
                     setOnClickListener { v ->
                         mEmojiCategory.setCurrentEmoticonGroup(index)
@@ -1052,22 +1056,30 @@ class EmojiPalettesView @JvmOverloads constructor(
                         recyclerView.adapter?.notifyDataSetChanged()
                         recyclerView.scrollToPosition(0)
                         mEmojiCategoryPageIndicatorView?.setCategoryPageId(mEmojiCategory.getCurrentCategoryPageCount(), 0, 0f)
-                        scroll.smoothScrollTo((v.left - padH).coerceAtLeast(0), 0)
+                        val targetScrollX = (v.left - marginH - (6 * density).toInt()).coerceAtLeast(0)
+                        scroll.smoothScrollTo(targetScrollX, 0)
                     }
                 }
-                strip.addView(tab, LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT))
+                val chipLp = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, chipHeight).apply {
+                    marginStart = marginH
+                    marginEnd = marginH
+                    gravity = android.view.Gravity.CENTER_VERTICAL
+                }
+                strip.addView(tab, chipLp)
             }
         } else {
             groups.forEachIndexed { index, group ->
                 (strip.getChildAt(index) as? TextView)?.apply {
                     text = EmojiCategory.getEmoticonGroupDisplayName(context, group.name)
+                    setPadding(padH, 0, padH, 0)
                     setOnClickListener { v ->
                         mEmojiCategory.setCurrentEmoticonGroup(index)
                         styleEmoticonGroupTabs(strip)
                         recyclerView.adapter?.notifyDataSetChanged()
                         recyclerView.scrollToPosition(0)
                         mEmojiCategoryPageIndicatorView?.setCategoryPageId(mEmojiCategory.getCurrentCategoryPageCount(), 0, 0f)
-                        scroll.smoothScrollTo((v.left - padH).coerceAtLeast(0), 0)
+                        val targetScrollX = (v.left - marginH - (6 * density).toInt()).coerceAtLeast(0)
+                        scroll.smoothScrollTo(targetScrollX, 0)
                     }
                 }
             }
@@ -1078,7 +1090,8 @@ class EmojiPalettesView @JvmOverloads constructor(
         scroll.post {
             val selectedTab = strip.getChildAt(currentGroup)
             if (selectedTab != null) {
-                scroll.scrollTo((selectedTab.left - padH).coerceAtLeast(0), 0)
+                val targetScrollX = (selectedTab.left - marginH - (6 * density).toInt()).coerceAtLeast(0)
+                scroll.scrollTo(targetScrollX, 0)
             }
         }
     }
@@ -1089,11 +1102,13 @@ class EmojiPalettesView @JvmOverloads constructor(
             val tab = strip.getChildAt(i) as? TextView ?: continue
             if (i == current) {
                 tab.setTextColor(mColors.get(ColorType.EMOJI_CATEGORY_SELECTED))
-                tab.setBackgroundResource(R.drawable.toolbar_key_background)
+                tab.setTypeface(null, Typeface.BOLD)
+                tab.setBackgroundResource(R.drawable.emoticon_group_tab_background)
                 mColors.setColor(tab.background, ColorType.TOOL_BAR_EXPAND_KEY_BACKGROUND)
             } else {
                 tab.setTextColor(mColors.get(ColorType.EMOJI_CATEGORY))
-                tab.background = null
+                tab.setTypeface(null, Typeface.NORMAL)
+                tab.setBackgroundResource(R.drawable.emoticon_group_tab_unselected)
             }
         }
     }
