@@ -68,16 +68,17 @@ ${Log.getLog(100).joinToString("\n")}
     }
 
     private fun writeCrashReportToFile(text: String) {
+        val date = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.US).format(Calendar.getInstance().time)
         try {
-            val dir = appContext.getExternalFilesDir(null)
-            val date = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.US).format(Calendar.getInstance().time)
+            // Use internal private storage - reliable on all Android versions and user profiles,
+            // no external storage permissions or IStorageManager.mkdirs() required.
+            val dir = appContext.filesDir
             val crashReportFile = File(dir, "crash_report_$date.txt")
             crashReportFile.appendText(text)
         } catch (_: Exception) {
-            // can't write in external files dir, maybe device just booted and is still locked
-            // in this case there shouldn't be any sensitive data and we can put crash logs in unprotected files dir
+            // filesDir unavailable (device locked before Direct Boot unlock);
+            // fall back to device-protected storage which is always accessible.
             val dir = DeviceProtectedUtils.getFilesDir(appContext) ?: return
-            val date = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.US).format(Calendar.getInstance().time)
             val crashReportFile = File(dir, "crash_report_unprotected_$date.txt")
             crashReportFile.appendText(text)
         }

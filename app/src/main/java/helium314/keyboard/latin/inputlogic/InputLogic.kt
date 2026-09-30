@@ -2740,7 +2740,9 @@ class InputLogic(
         val afterStr = after?.toString() ?: ""
         val fullText = beforeStr + afterStr
 
-        Log.d(TAG, "tryJumpToNextPlaceholder: beforeStr=[$beforeStr] afterStr=[$afterStr]")
+        if (DebugFlags.DEBUG_ENABLED) {
+            Log.d(TAG, "tryJumpToNextPlaceholder: beforeStr=[$beforeStr] afterStr=[$afterStr]")
+        }
 
         val pattern = java.util.regex.Pattern.compile("%cursor(\\d+)%")
         val matcher = pattern.matcher(fullText)
@@ -2752,7 +2754,9 @@ class InputLogic(
         while (matcher.find()) {
             try {
                 val num = matcher.group(1)?.toInt() ?: continue
-                Log.d(TAG, "tryJumpToNextPlaceholder: found %cursor$num% at [${matcher.start()},${matcher.end()})")
+                if (DebugFlags.DEBUG_ENABLED) {
+                    Log.d(TAG, "tryJumpToNextPlaceholder: found %cursor$num% at [${matcher.start()},${matcher.end()})")
+                }
                 if (num < lowestNum) {
                     lowestNum = num
                     bestStart = matcher.start()
@@ -2775,14 +2779,18 @@ class InputLogic(
             val currentSelectionEnd = mConnection.expectedSelectionEnd
             val targetStart = currentSelectionEnd - cursorPositionInFull + bestStart
             val targetEnd = currentSelectionEnd - cursorPositionInFull + bestEnd
-            Log.d(TAG, "tryJumpToNextPlaceholder: jumping to [$targetStart,$targetEnd) currentSelEnd=$currentSelectionEnd")
+            if (DebugFlags.DEBUG_ENABLED) {
+                Log.d(TAG, "tryJumpToNextPlaceholder: jumping to [$targetStart,$targetEnd) currentSelEnd=$currentSelectionEnd")
+            }
             mConnection.beginBatchEdit()
             mConnection.setSelection(targetStart, targetEnd)
             mConnection.commitText("", 1)
             mConnection.endBatchEdit()
             return true
         }
-        Log.d(TAG, "tryJumpToNextPlaceholder: no placeholder found")
+        if (DebugFlags.DEBUG_ENABLED) {
+            Log.d(TAG, "tryJumpToNextPlaceholder: no placeholder found")
+        }
         return false
     }
 

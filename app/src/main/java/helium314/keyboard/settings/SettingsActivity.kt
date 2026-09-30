@@ -233,9 +233,10 @@ open class SettingsActivity : ComponentActivity(), SharedPreferences.OnSharedPre
         if (onlyUnprotected)
             return unprotected.filter { it.name.startsWith("crash_report") }
 
-        val dir = runCatching { getExternalFilesDir(null) }.getOrNull()
-        val allFiles = dir?.listFiles()?.toList().orEmpty() + unprotected
-        return allFiles.filter { it.name.startsWith("crash_report") }
+        // Use internal filesDir - same reliability as getExternalFilesDir but without
+        // triggering IStorageManager.mkdirs() failures on restricted or early-boot devices.
+        val internalFiles = filesDir?.listFiles()?.toList().orEmpty()
+        return (internalFiles + unprotected).filter { it.name.startsWith("crash_report") }
     }
 
     private fun saveCrashReports(uri: Uri) {

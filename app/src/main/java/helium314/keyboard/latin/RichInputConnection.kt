@@ -91,6 +91,12 @@ class RichInputConnection(private val mParent: InputMethodService) : PrivateComm
     }
 
     fun onFinishInput() {
+        // Close any active batch edit on the underlying InputConnection before releasing
+        // the reference - prevents leaving the IC in a dangling open-batch state if a
+        // lifecycle interruption occurred mid-keystroke.
+        if (mNestLevel > 0 && isConnected()) {
+            mIC?.endBatchEdit()
+        }
         mIsActive = false
         mIC = null
         mNestLevel = 0
