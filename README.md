@@ -34,12 +34,15 @@
 
 <table>
   <tr>
-    <td><img src="docs/images/1.png" width="180" alt="Keyboard Main View"/></td>
-    <td><img src="docs/images/2.png" width="180" alt="AI Proofreading"/></td>
-    <td><img src="docs/images/3.png" width="180" alt="Clipboard Search"/></td>
-    <td><img src="docs/images/4.png" width="180" alt="Text Editing Panel"/></td>
-    <td><img src="docs/images/5.png" width="180" alt="Settings Screen"/></td>
-    <td><img src="docs/images/6.png" width="180" alt="Floating Keyboard"/></td>
+    <td><img src="docs/images/1.png" width="180" alt="Plugins & Capabilities"/></td>
+    <td><img src="docs/images/2.png" width="180" alt="LeanType Settings"/></td>
+    <td><img src="docs/images/3.png" width="180" alt="Voice Input Settings"/></td>
+    <td><img src="docs/images/4.png" width="180" alt="Text Recognition Settings"/></td>
+    <td><img src="docs/images/5.png" width="180" alt="Translation Settings"/></td>
+    <td><img src="docs/images/6.png" width="180" alt="AI Integration"/></td>
+    <td><img src="docs/images/7.png" width="180" alt="Appearance & Theme"/></td>
+    <td><img src="docs/images/8.png" width="180" alt="Gesture Typing"/></td>
+    <td><img src="docs/images/9.png" width="180" alt="Suggestions & Correction"/></td>
   </tr>
 </table>
 
