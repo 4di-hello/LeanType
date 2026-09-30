@@ -70,6 +70,7 @@ import helium314.keyboard.latin.utils.DeviceProtectedUtils
 import helium314.keyboard.latin.utils.DictionaryInfoUtils
 import helium314.keyboard.latin.utils.ExecutorUtils
 import helium314.keyboard.latin.utils.ResourceUtils
+import helium314.keyboard.latin.utils.getPlatformDialogThemeContext
 import helium314.keyboard.settings.SettingsActivity
 import java.io.File
 import java.io.FileOutputStream
@@ -329,7 +330,7 @@ class EmojiPalettesView @JvmOverloads constructor(
 
         if (categoryId == EmojiCategory.ID_RECENTS) {
             iconView.setOnLongClickListener {
-                val dialog = AlertDialog.Builder(context)
+                val dialog = AlertDialog.Builder(getPlatformDialogThemeContext(context))
                     .setTitle(R.string.clear_emoji_history_title)
                     .setMessage(R.string.clear_emoji_history_message)
                     .setPositiveButton(android.R.string.ok) { _, _ ->

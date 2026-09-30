@@ -76,6 +76,7 @@ import helium314.keyboard.latin.utils.removePinnedKey
 import helium314.keyboard.latin.utils.setToolbarButtonsActivatedStateOnPrefChange
 import helium314.keyboard.latin.utils.isMainDictionaryMissing
 import helium314.keyboard.latin.utils.SubtypeSettings
+import helium314.keyboard.latin.utils.getPlatformDialogThemeContext
 import helium314.keyboard.latin.utils.locale
 import helium314.keyboard.settings.SettingsWithoutKey
 
@@ -1421,7 +1422,7 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
             isFocusable = false
 
             setOnClickListener {
-                val builder = android.app.AlertDialog.Builder(context)
+                val builder = android.app.AlertDialog.Builder(getPlatformDialogThemeContext(context))
                     .setTitle(context.getString(R.string.download_dictionary_for_language, currentLocale.displayName))
                     .setMessage(context.getString(R.string.download_dictionary_prompt_description))
                     .setPositiveButton(R.string.download) { _, _ ->
