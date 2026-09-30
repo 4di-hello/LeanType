@@ -1555,6 +1555,11 @@ New dictionary:
     <string name="space_swipe_touchpad_mode_entry">Touchpad mode</string>
     <string name="touchpad_sensitivity">Touchpad sensitivity</string>
     <string name="force_auto_caps_title">Force auto-capitalization</string>
+    <string name="force_auto_caps">@string/force_auto_caps_title</string>
+    <string name="caps_control_on">On</string>
+    <string name="caps_control_off">Off</string>
+    <string name="caps_control_paused_auto_cap">Saved on; requires Auto-capitalization</string>
+    <string name="caps_control_no_uppercase">Saved on; this language has no uppercase letters</string>
     <string name="force_auto_caps_summary">Force sentence capitalization on all text fields except passwords</string>
     <!-- Title of the setting for variable toolbar direction -->
     <string name="var_toolbar_direction">Variable toolbar direction</string>

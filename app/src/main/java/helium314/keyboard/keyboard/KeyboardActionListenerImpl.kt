@@ -237,6 +237,16 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
                 return
             }
             KeyCode.TOGGLE_AUTOCORRECT -> return settings.toggleAutoCorrect()
+            KeyCode.TOGGLE_AUTO_CAP, KeyCode.TOGGLE_FORCE_AUTO_CAPS -> {
+                if (primaryCode == KeyCode.TOGGLE_AUTO_CAP) settings.toggleAutoCapitalization()
+                else settings.toggleForceAutoCapitalization()
+                // An automatic shift refresh must not consume an explicit one-shot Shift.
+                if (keyboardSwitcher.keyboard?.mId?.isAlphabetShiftedManually != true) {
+                    keyboardSwitcher.requestUpdatingShiftState(latinIME.currentAutoCapsState, latinIME.currentRecapitalizeState)
+                }
+                keyboardSwitcher.suggestionStripView?.updateToolbarButtonsActivatedState()
+                return
+            }
             KeyCode.TOGGLE_INCOGNITO_MODE -> {
                 settings.toggleAlwaysIncognitoMode()
                 // Invalidate keyboard to update spacebar incognito icon immediately

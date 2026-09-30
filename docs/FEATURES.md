@@ -645,6 +645,25 @@ LeanType provides an extensible keycode architecture that allows customizing key
 > [!TIP]
 > All negative keycodes listed below are actively recognized and validated by `KeyCode.checkAndConvertCode()`. Positive integer codes correspond to standard Unicode codepoints (or ASCII values like `10` for Enter, `32` for Space, `9` for Tab).
 
+### Capitalization controls
+
+**Auto-capitalization** (`{"label":"auto_cap"}`, fixed code `-10079`) and
+**Force auto-capitalization** (`{"label":"force_auto_caps"}`, fixed code `-10080`)
+toggle the existing saved Text correction settings. Enable these optional controls
+in the toolbar, pin them, or use them in custom JSON keys and popups. New entries
+start disabled; existing toolbar order and custom keycodes are preserved.
+Keywords follow customized toolbar codes; an explicit numeric `code` keeps the
+fixed action. The force keyword is plural: `force_auto_caps`.
+
+These settings request sentence capitalization, not manual Shift or Caps Lock.
+Toggling preserves manual Shift/Caps Lock, selection, and the current composing
+word. Highlights reflect effective enablement, not whether the next character
+will be uppercase. Turning Auto-capitalization off also suppresses Force
+auto-capitalization without clearing its saved choice. Languages without
+uppercase letters suppress both effects. Accessibility state descriptions
+distinguish off, on, and saved-on-but-inactive states. Existing field-capitalization
+and correction rules are unchanged.
+
 ---
 
 ### 1. ✏️ Text Editing & Deletion
@@ -752,6 +771,8 @@ LeanType provides an extensible keycode architecture that allows customizing key
 | **`-233`** | `VOICE_INPUT` | Initiates voice typing (Whisper on-device or system voice IME). |
 | **`-244`** | `TOGGLE_INCOGNITO_MODE`| Toggles incognito private mode (disables dictionary learning). |
 | **`-245`** | `TOGGLE_AUTOCORRECT` | Instantly toggles auto-correction on or off. |
+| **`-10079`** | `TOGGLE_AUTO_CAP` | Toggles the saved Auto-capitalization setting. |
+| **`-10080`** | `TOGGLE_FORCE_AUTO_CAPS` | Toggles the saved Force auto-capitalization setting. |
 | **`-301`** | `SETTINGS` | Opens LeanType Settings. |
 | **`-10043`** | `TIMESTAMP` | Inserts the current localized date and time stamp at cursor. |
 | **`-10051`** | `INLINE_EMOJI_SEARCH_DONE` | Confirms and closes inline emoji search. |
@@ -828,6 +849,5 @@ LeanType provides an extensible keycode architecture that allows customizing key
 | **`12288`** | `CJK_SPACE` | CJK Fullwidth Ideographic Space (`\u3000`). |
 | **`-902`** | `MULTIPLE_CODE_POINTS` | Special container key producing multi-character text sequences. |
 | **`-10008`** | `NOT_SPECIFIED` | Structural dummy spacer key (disables key interaction, renders blank). |
-
 
 

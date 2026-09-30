@@ -131,6 +131,18 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
         prefs.edit().putBoolean(PREF_AUTO_CORRECTION, !oldValue).apply()
     }
 
+    fun toggleAutoCapitalization() {
+        val prefs = mPrefs ?: return
+        val oldValue = prefs.getBoolean(PREF_AUTO_CAP, Defaults.PREF_AUTO_CAP)
+        prefs.edit().putBoolean(PREF_AUTO_CAP, !oldValue).apply()
+    }
+
+    fun toggleForceAutoCapitalization() {
+        val prefs = mPrefs ?: return
+        val oldValue = prefs.getBoolean(PREF_FORCE_AUTO_CAPS, Defaults.PREF_FORCE_AUTO_CAPS)
+        prefs.edit().putBoolean(PREF_FORCE_AUTO_CAPS, !oldValue).apply()
+    }
+
     fun toggleAlwaysIncognitoMode() {
         val prefs = mPrefs ?: return
         val oldValue = prefs.getBoolean(PREF_ALWAYS_INCOGNITO_MODE, Defaults.PREF_ALWAYS_INCOGNITO_MODE)

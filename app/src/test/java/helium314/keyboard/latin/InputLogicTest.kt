@@ -6,15 +6,27 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.text.InputType
+import android.text.TextUtils
 import android.view.KeyEvent
 import android.view.inputmethod.*
 import androidx.core.content.edit
+import androidx.core.view.ViewCompat
 import org.junit.Ignore
 import helium314.keyboard.ShadowInputMethodManager2
 import helium314.keyboard.ShadowLocaleManagerCompat
+import helium314.keyboard.ShadowProximityInfo
+import helium314.keyboard.compat.AppQuirk
+import helium314.keyboard.compat.AppQuirksManager
 import helium314.keyboard.event.Event
 import helium314.keyboard.keyboard.KeyboardSwitcher
+import helium314.keyboard.keyboard.Keyboard
+import helium314.keyboard.keyboard.KeyboardId
+import helium314.keyboard.keyboard.KeyboardLayoutSet
+import helium314.keyboard.keyboard.KeyboardTheme
 import helium314.keyboard.keyboard.MainKeyboardView
+import helium314.keyboard.keyboard.internal.KeyboardIconsSet
+import helium314.keyboard.keyboard.internal.KeyboardParams
+import helium314.keyboard.keyboard.internal.KeyboardState
 import helium314.keyboard.keyboard.internal.keyboard_parser.floris.KeyCode
 import helium314.keyboard.latin.ShadowFacilitator2.Companion.addedWords
 import helium314.keyboard.latin.ShadowFacilitator2.Companion.lastAddedWord
@@ -22,20 +34,31 @@ import helium314.keyboard.latin.ShadowFacilitator2.Companion.lastNgramContext
 import helium314.keyboard.latin.ShadowFacilitator2.Companion.ngramContexts
 import helium314.keyboard.latin.SuggestedWords.SuggestedWordInfo
 import helium314.keyboard.latin.common.Constants
+import helium314.keyboard.latin.common.Constants.Separators
 import helium314.keyboard.latin.common.LocaleUtils.constructLocale
 import helium314.keyboard.latin.common.StringUtils
 import helium314.keyboard.latin.dictionary.Dictionary
 import helium314.keyboard.latin.inputlogic.InputLogic
 import helium314.keyboard.latin.inputlogic.SpaceState
 import helium314.keyboard.latin.settings.Settings
+import helium314.keyboard.latin.suggestions.SuggestionStripView
 import helium314.keyboard.latin.utils.ScriptUtils
 import helium314.keyboard.latin.utils.SubtypeSettings
+import helium314.keyboard.latin.utils.ToolbarKey
+import helium314.keyboard.latin.utils.createToolbarKey
+import helium314.keyboard.latin.utils.getEnabledToolbarKeys
+import helium314.keyboard.latin.utils.getPinnedToolbarKeys
+import helium314.keyboard.latin.utils.getEnabledClipboardToolbarKeys
+import helium314.keyboard.latin.utils.setToolbarButtonActivatedState
+import helium314.keyboard.latin.utils.upgradeToolbarPrefs
 import helium314.keyboard.latin.utils.getTimestampFormatter
 import helium314.keyboard.latin.utils.prefs
 import org.junit.runner.RunWith
 import org.mockito.Mockito
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
+import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.Implementation
 import org.robolectric.annotation.Implements
@@ -46,6 +69,9 @@ import kotlin.streams.asSequence
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 @RunWith(RobolectricTestRunner::class)
 @Config(shadows = [
@@ -72,6 +98,9 @@ class InputLogicTest {
 
     @BeforeTest
     fun setUp() {
+        shadowOf(RuntimeEnvironment.getApplication()).grantPermissions(
+            "${BuildConfig.APPLICATION_ID}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+        )
         latinIME = Robolectric.setupService(LatinIME::class.java)
         // start logging only after latinIME is created, avoids showing the stack traces if library is not found
         ShadowLog.setupLogging()
@@ -87,6 +116,247 @@ class InputLogicTest {
         assertEquals("c", composingText)
         latinIME.mHandler.onFinishInput()
         assertEquals("", composingText)
+    }
+
+    @Test @Config(sdk = [32, 35])
+    fun capsActionsToggleOnlyExistingPreferencesAndRefreshAutoShift() {
+        reset()
+        val state = Mockito.mock(KeyboardState::class.java)
+        val stateField = KeyboardSwitcher::class.java.getDeclaredField("mState").apply { isAccessible = true }
+        val originalState = stateField.get(latinIME.keyboardSwitcher)
+        stateField.set(latinIME.keyboardSwitcher, state)
+        try {
+            for ((code, pref, initial) in listOf(
+                Triple(-10079, Settings.PREF_AUTO_CAP, true),
+                Triple(-10080, Settings.PREF_FORCE_AUTO_CAPS, false)
+            )) {
+                val before = latinIME.prefs().all.toMap()
+                repeat(2) { pass ->
+                    Mockito.clearInvocations(state)
+                    latinIME.keyboardActionListener.onCodeInput(code, 0, 0, false)
+                    val enabled = if (pass == 0) !initial else initial
+                    assertEquals(before + (pref to enabled), latinIME.prefs().all)
+                    assertEquals(if (pref == Settings.PREF_AUTO_CAP) enabled else true, settingsValues.mAutoCap)
+                    assertEquals(if (pref == Settings.PREF_FORCE_AUTO_CAPS) enabled else false, settingsValues.mForceAutoCaps)
+                    val caps = if (settingsValues.mAutoCap) TextUtils.CAP_MODE_SENTENCES else 0
+                    assertEquals(caps, inputLogic.getCurrentAutoCapsState(settingsValues))
+                    Mockito.verify(state).onUpdateShiftState(caps, null)
+                    assertEquals("", text)
+                }
+            }
+        } finally {
+            stateField.set(latinIME.keyboardSwitcher, originalState)
+        }
+    }
+
+    @Test @Config(sdk = [32, 35], shadows = [ShadowProximityInfo::class])
+    fun capsActionsPreserveManualShiftAndCapsLock() {
+        reset()
+        val switcher = latinIME.keyboardSwitcher
+        val stateField = KeyboardSwitcher::class.java.getDeclaredField("mState").apply { isAccessible = true }
+        val viewField = KeyboardSwitcher::class.java.getDeclaredField("mKeyboardView").apply { isAccessible = true }
+        val originalState = stateField.get(switcher)
+        val originalView = viewField.get(switcher)
+        val state = Mockito.mock(KeyboardState::class.java)
+        val view = Mockito.mock(MainKeyboardView::class.java)
+        stateField.set(switcher, state)
+        viewField.set(switcher, view)
+        try {
+            for (element in listOf(
+                KeyboardId.ELEMENT_ALPHABET_MANUAL_SHIFTED,
+                KeyboardId.ELEMENT_ALPHABET_SHIFT_LOCKED,
+                KeyboardId.ELEMENT_ALPHABET_SHIFT_LOCK_SHIFTED
+            )) {
+                val keyboard = Keyboard(KeyboardParams().apply {
+                    mId = KeyboardLayoutSet.getFakeKeyboardId(element)
+                    GRID_WIDTH = 1
+                    GRID_HEIGHT = 1
+                })
+                Mockito.`when`(view.keyboard).thenReturn(keyboard)
+                for (code in listOf(-10079, -10080)) {
+                    val before = latinIME.prefs().all.toMap()
+                    latinIME.keyboardActionListener.onCodeInput(code, 0, 0, false)
+                    assertTrue(before != latinIME.prefs().all)
+                    assertEquals(keyboard, switcher.keyboard)
+                }
+            }
+            Mockito.verifyNoInteractions(state)
+        } finally {
+            stateField.set(switcher, originalState)
+            viewField.set(switcher, originalView)
+        }
+    }
+
+    @Test @Config(sdk = [32, 35])
+    fun capsActionsKeepCompositionSelectionAndPendingCorrectionUntouched() {
+        reset()
+        setText("keep ")
+        typeNoAssert("raw")
+        val correction = SuggestedWordInfo("RAW", "", 0, 0, Mockito.mock(Dictionary::class.java), 0, 0)
+        composer.setAutoCorrection(correction)
+        val before = Triple(text, cursor, composingText)
+        val wordsBefore = addedWords.toList()
+        for (code in listOf(-10079, -10080)) {
+            latinIME.keyboardActionListener.onCodeInput(code, 0, 0, false)
+            assertEquals(before, Triple(text, cursor, composingText))
+            assertEquals(correction, composer.getAutoCorrectionOrNull())
+            assertEquals(wordsBefore, addedWords)
+            checkConnectionConsistency()
+        }
+        setText("keep selected text")
+        setCursorPosition(5, 13)
+        for (code in listOf(-10079, -10080)) {
+            latinIME.keyboardActionListener.onCodeInput(code, 0, 0, false)
+            assertEquals("keep selected text", text)
+            assertEquals(5 to 13, selectionStart to selectionEnd)
+            assertEquals("selected", selectedText)
+            checkConnectionConsistency()
+        }
+    }
+
+    @Test @Config(sdk = [32, 35])
+    fun capsActionsStoreChoicesWithoutChangingAppAutocorrectOverrides() {
+        reset()
+        val packageName = "test.caps.controls"
+        val editorInfo = EditorInfo().apply {
+            inputType = currentInputType
+            this.packageName = packageName
+        }
+        editorInfoOverride = editorInfo
+        AppQuirksManager.saveQuirk(AppQuirk(packageName, autoCorrectionMode = AppQuirksManager.AUTOCORRECT_FORCE_ENABLE))
+        try {
+            latinIME.onStartInputInternal(editorInfo, false)
+            latinIME.onStartInputViewInternal(editorInfo, false)
+            assertTrue(settingsValues.mAutoCorrectEnabled)
+            val before = latinIME.prefs().all.toMap()
+            latinIME.keyboardActionListener.onCodeInput(-10079, 0, 0, false)
+            latinIME.keyboardActionListener.onCodeInput(-10080, 0, 0, false)
+            assertEquals(before + mapOf(Settings.PREF_AUTO_CAP to false, Settings.PREF_FORCE_AUTO_CAPS to true), latinIME.prefs().all)
+            assertFalse(settingsValues.mAutoCap)
+            assertTrue(settingsValues.mForceAutoCaps)
+            assertTrue(settingsValues.mAutoCorrectEnabled)
+            assertEquals(0, inputLogic.getCurrentAutoCapsState(settingsValues))
+        } finally {
+            AppQuirksManager.removeQuirk(packageName)
+            editorInfoOverride = null
+        }
+    }
+
+    @Test @Config(sdk = [32, 35])
+    fun capsToolbarAndPinnedControlsShareEffectiveStateAndDispatch() {
+        reset()
+        val auto = ToolbarKey.valueOf("AUTO_CAP")
+        val force = ToolbarKey.valueOf("FORCE_AUTO_CAPS")
+        val strip = SuggestionStripView(latinIME, null)
+        val keyboardView = MainKeyboardView(latinIME, null).apply { id = R.id.keyboard_view }
+        strip.setListener(latinIME, keyboardView)
+        val imeStripField = LatinIME::class.java.getDeclaredField("suggestionStripView").apply { isAccessible = true }
+        val switcherStripField = KeyboardSwitcher::class.java.getDeclaredField("mSuggestionStripView").apply { isAccessible = true }
+        val originalImeStrip = imeStripField.get(latinIME)
+        val originalSwitcherStrip = switcherStripField.get(latinIME.keyboardSwitcher)
+        imeStripField.set(latinIME, strip)
+        switcherStripField.set(latinIME.keyboardSwitcher, strip)
+        try {
+            val toolbar = strip.findViewById<android.view.ViewGroup>(R.id.toolbar)
+            val pinned = strip.findViewById<android.view.ViewGroup>(R.id.pinned_keys)
+            toolbar.removeAllViews()
+            pinned.removeAllViews()
+            val mainAuto = createToolbarKey(latinIME, auto)
+            val pinnedAuto = createToolbarKey(latinIME, auto)
+            val mainForce = createToolbarKey(latinIME, force)
+            val pinnedForce = createToolbarKey(latinIME, force)
+            listOf(mainAuto, mainForce).forEach { toolbar.addView(it); it.setOnClickListener(strip) }
+            listOf(pinnedAuto, pinnedForce).forEach { pinned.addView(it); it.setOnClickListener(strip) }
+            assertEquals("Auto-capitalization", mainAuto.contentDescription)
+            assertEquals("Force auto-capitalization", mainForce.contentDescription)
+            assertTrue(mainAuto.isActivated)
+            assertFalse(mainForce.isActivated)
+            assertEquals("On", ViewCompat.getStateDescription(mainAuto))
+            assertEquals("Off", ViewCompat.getStateDescription(mainForce))
+            mainForce.performClick()
+            assertTrue(mainForce.isActivated)
+            assertTrue(pinnedForce.isActivated)
+            pinnedAuto.performClick()
+            assertFalse(mainAuto.isActivated)
+            assertFalse(pinnedAuto.isActivated)
+            assertFalse(mainForce.isActivated)
+            assertFalse(pinnedForce.isActivated)
+            assertTrue(latinIME.prefs().getBoolean(Settings.PREF_FORCE_AUTO_CAPS, false))
+            assertEquals("Saved on; requires Auto-capitalization", ViewCompat.getStateDescription(mainForce))
+            assertEquals(ViewCompat.getStateDescription(mainForce), ViewCompat.getStateDescription(pinnedForce))
+            mainAuto.performClick()
+            assertTrue(mainAuto.isActivated)
+            assertTrue(pinnedAuto.isActivated)
+            assertTrue(mainForce.isActivated)
+            assertTrue(pinnedForce.isActivated)
+            assertEquals("On", ViewCompat.getStateDescription(pinnedForce))
+        } finally {
+            imeStripField.set(latinIME, originalImeStrip)
+            switcherStripField.set(latinIME.keyboardSwitcher, originalSwitcherStrip)
+        }
+    }
+
+    @Test @Config(sdk = [32, 35])
+    fun capsControlsHaveIconsInEveryStyleAndRespectUncasedLocales() {
+        reset()
+        val keys = listOf(ToolbarKey.valueOf("AUTO_CAP"), ToolbarKey.valueOf("FORCE_AUTO_CAPS"))
+        for (style in listOf(KeyboardTheme.STYLE_HOLO, KeyboardTheme.STYLE_MATERIAL, KeyboardTheme.STYLE_ROUNDED)) {
+            latinIME.prefs().edit { putString(Settings.PREF_ICON_STYLE, style) }
+            KeyboardIconsSet.instance.loadIcons(latinIME)
+            keys.forEach { assertNotNull(createToolbarKey(latinIME, it).drawable) }
+        }
+        latinIME.prefs().edit { putBoolean(Settings.PREF_FORCE_AUTO_CAPS, true) }
+        latinIME.settings.loadSettings(latinIME, Locale.KOREAN, settingsValues.mInputAttributes, ScriptUtils.SCRIPT_LATIN)
+        assertFalse(settingsValues.mAutoCap)
+        keys.forEach {
+            val button = createToolbarKey(latinIME, it)
+            assertFalse(button.isActivated)
+            assertEquals("Saved on; this language has no uppercase letters", ViewCompat.getStateDescription(button))
+        }
+        assertTrue(latinIME.prefs().getBoolean(Settings.PREF_AUTO_CAP, true))
+        assertTrue(latinIME.prefs().getBoolean(Settings.PREF_FORCE_AUTO_CAPS, false))
+    }
+
+    @Test @Config(sdk = [32, 35])
+    fun capsControlsUpgradeWithoutChangingToolbarOrderOrEnablingNewItems() {
+        reset()
+        val keys = listOf(ToolbarKey.valueOf("AUTO_CAP"), ToolbarKey.valueOf("FORCE_AUTO_CAPS"))
+        assertTrue(keys.none { it in getEnabledToolbarKeys(latinIME.prefs()) || it in getPinnedToolbarKeys(latinIME.prefs()) })
+        val enabled = listOf(ToolbarKey.PASTE, ToolbarKey.AUTOCORRECT)
+        val oldKeys = enabled + ToolbarKey.entries.filter { it !in keys && it !in enabled }
+        val original = oldKeys.joinToString(Separators.ENTRY) { it.name + Separators.KV + (it in enabled) }
+        val prefs = listOf(Settings.PREF_TOOLBAR_KEYS, Settings.PREF_PINNED_TOOLBAR_KEYS, Settings.PREF_CLIPBOARD_TOOLBAR_KEYS)
+        latinIME.prefs().edit { prefs.forEach { putString(it, original) } }
+        upgradeToolbarPrefs(latinIME.prefs())
+        assertEquals(enabled, getEnabledToolbarKeys(latinIME.prefs()))
+        assertEquals(enabled, getPinnedToolbarKeys(latinIME.prefs()))
+        assertEquals(enabled, getEnabledClipboardToolbarKeys(latinIME.prefs()))
+        for (pref in prefs) {
+            val updated = latinIME.prefs().getString(pref, "")!!
+            assertTrue(updated.startsWith(original))
+            keys.forEach { assertTrue(updated.contains(it.name + Separators.KV + false)) }
+        }
+    }
+
+    @Test @Config(sdk = [32, 35])
+    fun capsControlHighlightUsesEffectiveEnabledColors() {
+        reset()
+        latinIME.prefs().edit { putBoolean(Settings.PREF_FORCE_AUTO_CAPS, true) }
+        val values = settingsValues
+        val colorsField = values.javaClass.getDeclaredField("mColors").apply { isAccessible = true }
+        val originalColors = colorsField.get(values)
+        val colors = Mockito.mock(helium314.keyboard.latin.common.Colors::class.java)
+        val buttons = listOf("AUTO_CAP", "FORCE_AUTO_CAPS").map { createToolbarKey(latinIME, ToolbarKey.valueOf(it)) }
+        colorsField.set(values, colors)
+        try {
+            for (button in buttons) {
+                setToolbarButtonActivatedState(button)
+                Mockito.verify(colors).setColor(button.background, helium314.keyboard.latin.common.ColorType.TOOL_BAR_KEY_ENABLED_BACKGROUND)
+                Mockito.clearInvocations(colors)
+            }
+        } finally {
+            colorsField.set(values, originalColors)
+        }
     }
 
     @Test fun `english space-separated typing keeps composing word`() {
@@ -1265,6 +1535,7 @@ class InputLogicTest {
         text = ""
         batchEdit = 0
         currentInputType = InputType.TYPE_CLASS_TEXT
+        editorInfoOverride = null
         lastAddedWord = ""
         lastNgramContext = ""
         addedWords.clear()
@@ -1506,6 +1777,7 @@ class InputLogicTest {
 }
 
 private var currentInputType = InputType.TYPE_CLASS_TEXT
+private var editorInfoOverride: EditorInfo? = null
 private var currentScript = ScriptUtils.SCRIPT_LATIN
 private val messages = mutableListOf<Message>() // for latinIME / ShadowInputMethodService
 private val delayedMessages = mutableListOf<Message>() // for latinIME / ShadowInputMethodService
@@ -1705,7 +1977,7 @@ private val ic = object : InputConnection {
 @Implements(InputMethodService::class)
 class ShadowInputMethodService {
     @Implementation
-    fun getCurrentInputEditorInfo() = EditorInfo().apply {
+    fun getCurrentInputEditorInfo() = editorInfoOverride ?: EditorInfo().apply {
         inputType = currentInputType
         // anything else?
     }
