@@ -125,7 +125,7 @@ fun getDictionaryLocales(context: Context): MutableSet<Locale> {
 fun MissingDictionaryDialog(onDismissRequest: () -> Unit, locale: Locale, inline: Boolean = false) {
     val context = LocalContext.current
     val prefs = context.prefs()
-    if (prefs.getBoolean(Settings.PREF_DONT_SHOW_MISSING_DICTIONARY_DIALOG, Defaults.PREF_DONT_SHOW_MISSING_DICTIONARY_DIALOG)) {
+    if (!inline && prefs.getBoolean(Settings.PREF_DONT_SHOW_MISSING_DICTIONARY_DIALOG, Defaults.PREF_DONT_SHOW_MISSING_DICTIONARY_DIALOG)) {
         onDismissRequest()
         return
     }
@@ -143,12 +143,17 @@ fun MissingDictionaryDialog(onDismissRequest: () -> Unit, locale: Locale, inline
 
     var refreshTrigger by remember { mutableStateOf(0) }
 
+    val dialogTitle: @Composable () -> Unit = {
+        Text(stringResource(R.string.download_dictionary_for_language, locale.displayName))
+    }
+
     if (inline) {
         ConfirmationDialogContent(
             onDismissRequest = onDismissRequest,
             cancelButtonText = stringResource(R.string.dialog_close),
-            onConfirmed = { prefs.edit { putBoolean(Settings.PREF_DONT_SHOW_MISSING_DICTIONARY_DIALOG, true) } },
-            confirmButtonText = stringResource(R.string.no_dictionary_dont_show_again_button),
+            onConfirmed = {},
+            confirmButtonText = null,
+            title = dialogTitle,
             content = {
                 androidx.compose.foundation.layout.Column {
                     Text(annotatedString)
@@ -165,8 +170,9 @@ fun MissingDictionaryDialog(onDismissRequest: () -> Unit, locale: Locale, inline
         ConfirmationDialog(
             onDismissRequest = onDismissRequest,
             cancelButtonText = stringResource(R.string.dialog_close),
-            onConfirmed = { prefs.edit { putBoolean(Settings.PREF_DONT_SHOW_MISSING_DICTIONARY_DIALOG, true) } },
-            confirmButtonText = stringResource(R.string.no_dictionary_dont_show_again_button),
+            onConfirmed = {},
+            confirmButtonText = null,
+            title = dialogTitle,
             content = {
                 androidx.compose.foundation.layout.Column {
                     Text(annotatedString)
@@ -619,33 +625,44 @@ private class ServiceLifecycleOwner : LifecycleOwner, SavedStateRegistryOwner, V
 
 // ponytail: bridge compose dialog to legacy view
 fun showMissingDictionaryComposeDialog(context: Context, locale: Locale, windowToken: IBinder, onDismiss: () -> Unit) {
-    val dialog = android.app.Dialog(getPlatformDialogThemeContext(context))
-    val lifecycleOwner = ServiceLifecycleOwner()
-    val composeView = androidx.compose.ui.platform.ComposeView(context).apply {
-        setViewTreeLifecycleOwner(lifecycleOwner)
-        setViewTreeSavedStateRegistryOwner(lifecycleOwner)
-        setViewTreeViewModelStoreOwner(lifecycleOwner)
-        setContent {
-            Theme {
-                MissingDictionaryDialog(
-                    onDismissRequest = {
-                        dialog.dismiss()
-                        onDismiss()
-                    },
-                    locale = locale,
-                    inline = true
-                )
+    try {
+        val dialog = android.app.Dialog(getPlatformDialogThemeContext(context))
+        val lifecycleOwner = ServiceLifecycleOwner()
+        var dismissed = false
+        val dismissAction = {
+            if (!dismissed) {
+                dismissed = true
+                onDismiss()
             }
         }
+        val composeView = androidx.compose.ui.platform.ComposeView(context).apply {
+            setViewTreeLifecycleOwner(lifecycleOwner)
+            setViewTreeSavedStateRegistryOwner(lifecycleOwner)
+            setViewTreeViewModelStoreOwner(lifecycleOwner)
+            setContent {
+                Theme {
+                    MissingDictionaryDialog(
+                        onDismissRequest = {
+                            dialog.dismiss()
+                        },
+                        locale = locale,
+                        inline = true
+                    )
+                }
+            }
+        }
+        dialog.setOnDismissListener {
+            dismissAction()
+            lifecycleOwner.destroy()
+        }
+        dialog.setContentView(composeView)
+        val window = dialog.window
+        val layoutParams = window?.attributes
+        layoutParams?.token = windowToken
+        layoutParams?.type = android.view.WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG
+        window?.attributes = layoutParams
+        dialog.show()
+    } catch (e: Exception) {
+        android.util.Log.e("DictionaryUtils", "Failed to show missing dictionary compose dialog", e)
     }
-    dialog.setOnDismissListener {
-        lifecycleOwner.destroy()
-    }
-    dialog.setContentView(composeView)
-    val window = dialog.window
-    val layoutParams = window?.attributes
-    layoutParams?.token = windowToken
-    layoutParams?.type = android.view.WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG
-    window?.attributes = layoutParams
-    dialog.show()
 }
