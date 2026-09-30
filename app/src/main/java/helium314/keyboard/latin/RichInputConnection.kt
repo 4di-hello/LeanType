@@ -150,6 +150,8 @@ class RichInputConnection(private val mParent: InputMethodService) : PrivateComm
     fun endBatchEdit() {
         if (mNestLevel <= 0) {
             Log.e(TAG, "Batch edit not in progress!")
+            mNestLevel = 0
+            return
         }
 
         if (--mNestLevel == 0 && isConnected()) {

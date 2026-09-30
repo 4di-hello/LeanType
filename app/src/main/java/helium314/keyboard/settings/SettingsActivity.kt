@@ -233,7 +233,7 @@ open class SettingsActivity : ComponentActivity(), SharedPreferences.OnSharedPre
         if (onlyUnprotected)
             return unprotected.filter { it.name.startsWith("crash_report") }
 
-        val dir = getExternalFilesDir(null)
+        val dir = runCatching { getExternalFilesDir(null) }.getOrNull()
         val allFiles = dir?.listFiles()?.toList().orEmpty() + unprotected
         return allFiles.filter { it.name.startsWith("crash_report") }
     }

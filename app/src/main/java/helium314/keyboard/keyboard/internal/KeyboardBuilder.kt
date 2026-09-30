@@ -131,8 +131,6 @@ open class KeyboardBuilder<KP : KeyboardParams>(protected val mContext: Context,
                     xPos += hexSplitShift
                 }
                 it.setAbsoluteDimensions(xPos, currentY)
-                if (DebugFlags.DEBUG_ENABLED)
-                    Log.d(TAG, "setting size and position for ${it.mLabel ?: it.mIconName}, ${it.mCode}: x ${xPos.toInt()}, w ${it.mAbsoluteWidth.toInt()}")
                 currentX += it.mAbsoluteWidth
             }
             currentY += row.first().mAbsoluteHeight * yPitchFactor
