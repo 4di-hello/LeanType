@@ -1,0 +1,52 @@
+LeanType est un clavier Android open source, rapide, respectueux de la vie privée et hautement personnalisable, bâti sur les fondations d'AOSP et HeliBoard. Conçu pour une frappe fluide, une ergonomie soignée et une productivité modulaire, LeanType vous offre un contrôle absolu sans aucune collecte de données.
+
+<b>🛡️ Confidentialité et Priorité Hors-Ligne:</b>
+<ul>
+  <li><b>100% Open Source:</b> Aucune télémétrie, aucune publicité et aucun traçage en arrière-plan.</li>
+  <li><b>Protection des Données:</b> Vos frappes et vos données restent strictement sur votre appareil.</li>
+  <li><b>Zéro Autorisation Sensible:</b> Fonctionne sans accès aux contacts, à la localisation ou aux droits intrusifs.</li>
+</ul>
+
+<b>⌨️ Ergonomie et Frappe Fluide:</b>
+<ul>
+  <li><b>Saisie Gestuelle:</b> Glissez sur les lettres avec fluidité grâce à une sensibilité personnalisable.</li>
+  <li><b>Support Multilingue:</b> Frappe multilingue avec correction automatique, suggestions et import de dictionnaires Gboard.</li>
+  <li><b>Curseur Trackpad et Édition:</b> Glissez sur la barre d'espace ou utilisez le panneau DPAD dédié pour déplacer le curseur et sélectionner du texte.</li>
+  <li><b>Clavier Flottant:</b> Fenêtre flottante native, déplaçable et redimensionnable sans autorisation de superposition.</li>
+  <li><b>Modes Une Main et Séparé:</b> Dispositions pensées pour smartphones, pliables et tablettes.</li>
+  <li><b>Claviers Physiques:</b> Sélection de candidats et correction automatique pour claviers Bluetooth et USB.</li>
+</ul>
+
+<b>🎨 Personnalisation et Sons de Touches:</b>
+<ul>
+  <li><b>Material You et Thèmes:</b> Couleurs dynamiques du système, thèmes clair/sombre et fond d'écran flouté personnalisable.</li>
+  <li><b>Ergonomie des Touches:</b> Rayon des coins réglable indépendamment pour les touches normales, fonctions et actions.</li>
+  <li><b>Retour Audio Tactile:</b> Moteur sonore intégré avec Cherry MX, machine à écrire, écran CRT rétro et packs audio personnalisés.</li>
+</ul>
+
+<b>⚡ Presse-papiers et Productivité:</b>
+<ul>
+  <li><b>Gestionnaire de Presse-papiers:</b> Recherche en direct, édition directe dans la barre d'outils, épingles et annulation en 5 secondes.</li>
+  <li><b>Calcul Mathématique Intégré:</b> Tapez vos calculs (ex. 25*4= ou 150-20%=) pour obtenir la réponse dans la barre de suggestions.</li>
+  <li><b>Expansion de Texte:</b> Raccourcis personnalisés avec variables dynamiques (date, heure, presse-papiers).</li>
+  <li><b>Suggestions de Captures:</b> Partagez et extrayez le texte des captures d'écran récentes en 1 toucher.</li>
+  <li><b>Sauvegarde Modulaire:</b> Exportez et restaurez vos dispositions, thèmes, dictionnaires et historiques à la carte.</li>
+</ul>
+
+<b>🧩 Modules et Saisie Avancée:</b>
+<ul>
+  <li><b>Saisie Vocale:</b> Reconnaissance vocale locale et précise alimentée par les modèles Whisper.</li>
+  <li><b>Reconnaissance Manuscrite:</b> Dessinez caractères et symboles directement sur la zone d'écriture.</li>
+  <li><b>OCR Caméra et Captures:</b> Numérisez le texte de documents ou de captures avec le viseur intégré.</li>
+  <li><b>Traduction Intégrée:</b> Traduisez instantanément via des modèles hors-ligne ou des services en ligne.</li>
+</ul>
+
+<b>🤖 Outils d'IA (Entièrement Optionnels):</b>
+<ul>
+  <li><b>Relecture à la Demande:</b> Corrigez la grammaire, adaptez le ton ou reformulez vos phrases selon vos besoins.</li>
+  <li><b>Fournisseurs au Choix:</b> Utilisez Google Gemini, Groq, OpenAI ou vos modèles locaux (Ollama, LM Studio, LocalAI).</li>
+  <li><b>Touches IA Personnalisées:</b> Attribuez des invites et des instructions sur mesure aux touches de la barre.</li>
+  <li><b>100% à l'Initiative de l'Utilisateur:</b> La connexion réseau n'est utilisée que si vous renseignez une clé API et déclenchez l'action.</li>
+</ul>
+
+Conçu avec ❤️ par LeanBitLab.

@@ -1,0 +1,52 @@
+LeanType es un teclado de código abierto para Android, rápido, seguro y altamente personalizable, basado en las bases de AOSP y HeliBoard. Diseñado para una escritura fluida, ergonomía avanzada y productividad modular, LeanType te brinda control total sobre tu experiencia de escritura sin recopilación de datos.
+
+<b>🛡️ Privacidad y Modo Offline:</b>
+<ul>
+  <li><b>100% Código Abierto:</b> Sin telemetría, sin anuncios y sin rastreo en segundo plano.</li>
+  <li><b>Máxima Privacidad:</b> Tus pulsaciones y datos permanecen exclusivamente en tu dispositivo.</li>
+  <li><b>Cero Permisos Invasivos:</b> Funciona sin acceso a contactos, ubicación ni permisos sensibles.</li>
+</ul>
+
+<b>⌨️ Ergonomía y Escritura Fluida:</b>
+<ul>
+  <li><b>Escritura Gestual:</b> Deslizamiento suave con sensibilidad y previsualización ajustables.</li>
+  <li><b>Soporte Multilingüe:</b> Escritura en varios idiomas con autocorrección, sugerencias e importación de diccionarios de Gboard.</li>
+  <li><b>Cursor Trackpad y Edición:</b> Desliza sobre la barra espaciadora o usa el panel DPAD dedicado para control y selección de texto precisos.</li>
+  <li><b>Teclado Flotante:</b> Ventana flotante nativa, arrastrable y redimensionable para multitarea cómoda sin permisos de superposición.</li>
+  <li><b>Modo a Una Mano y Dividido:</b> Diseños optimizados para móviles, plegables y tabletas.</li>
+  <li><b>Teclados Físicos:</b> Selección de palabras y autocorrección completa para teclados Bluetooth y USB.</li>
+</ul>
+
+<b>🎨 Personalización y Paquetes de Sonido:</b>
+<ul>
+  <li><b>Material You y Temas:</b> Colores dinámicos del sistema, modo claro/oscuro y fondos personalizados con desenfoque.</li>
+  <li><b>Ergonomía de Teclas:</b> Radio de esquinas independiente para teclas normales, de función y acción, además de espaciado regulable.</li>
+  <li><b>Audio Táctil:</b> Motor de sonido de baja latencia con Cherry MX, máquina de escribir, retro CRT y soporte para paquetes personalizados.</li>
+</ul>
+
+<b>⚡ Portapapeles y Productividad:</b>
+<ul>
+  <li><b>Gestor de Portapapeles:</b> Búsqueda en tiempo real, edición directa en la barra, elementos fijados y deshacer borrado en 5 segundos.</li>
+  <li><b>Calculadora Matemática:</b> Escribe operaciones directamente (ej. 25*4= o 150-20%=) para ver el resultado en la barra de sugerencias.</li>
+  <li><b>Expansor de Texto:</b> Atajos personalizados con variables dinámicas como fecha, hora y texto del portapapeles.</li>
+  <li><b>Sugerencias de Capturas:</b> Comparte o extrae texto al instante de capturas de pantalla recientes con 1 toque.</li>
+  <li><b>Copia de Seguridad Modular:</b> Exporta e importa selectivamente diseños, temas, diccionarios e historial.</li>
+</ul>
+
+<b>🧩 Entradas Modulares y Complementos:</b>
+<ul>
+  <li><b>Dictado por Voz:</b> Reconocimiento de voz local y preciso impulsado por modelos Whisper.</li>
+  <li><b>Escritura a Mano:</b> Dibuja letras y símbolos directamente sobre el lienzo del teclado.</li>
+  <li><b>OCR de Cámara y Capturas:</b> Extrae texto de documentos físicos o imágenes con el visor integrado.</li>
+  <li><b>Traducción en Teclado:</b> Traduce al instante mediante modelos sin conexión o servicios en la nube.</li>
+</ul>
+
+<b>🤖 Herramientas de IA (Completamente Opcionales):</b>
+<ul>
+  <li><b>Corrección Bajo Demanda:</b> Corrige gramática, cambia el tono o reescribe frases cuando lo necesites.</li>
+  <li><b>Proveedores Flexibles:</b> Conéctate a Google Gemini, Groq, OpenAI o servidores locales (Ollama, LM Studio, LocalAI).</li>
+  <li><b>Teclas de IA Personalizadas:</b> Asigna botones con instrucciones y prompts personalizados.</li>
+  <li><b>Uso 100% Voluntario:</b> El acceso a internet solo se activa si configuras tu clave API y realizas una petición directa.</li>
+</ul>
+
+Creado con ❤️ por LeanBitLab.

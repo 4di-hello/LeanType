@@ -1,0 +1,52 @@
+LeanType è una tastiera open source per Android veloce, rispettosa della privacy e altamente personalizzabile, basata sui progetti AOSP e HeliBoard. Progettata per una digitazione fluida, grande ergonomia e produttività modulare, offre il pieno controllo senza alcuna raccolta dati.
+
+<b>🛡️ Privacy e Funzionamento Offline:</b>
+<ul>
+  <li><b>100% Open Source:</b> Nessuna telemetria, nessuna pubblicità e nessun tracciamento in background.</li>
+  <li><b>Massima Privacy:</b> I tasti digitati e i dati rimangono interamente sul dispositivo.</li>
+  <li><b>Zero Permessi Sensibili:</b> Non richiede permessi invasivi, contatti o geolocalizzazione.</li>
+</ul>
+
+<b>⌨️ Ergonomia e Digitazione Fluida:</b>
+<ul>
+  <li><b>Scrittura a Scorrimento:</b> Digitazione a scorrimento fluida con sensibilità e anteprima regolabili.</li>
+  <li><b>Supporto Multilingue:</b> Digitazione multilingue con correzione automatica, suggerimenti e importazione dizionari Gboard.</li>
+  <li><b>Cursore Trackpad ed Editor:</b> Scorri sulla barra spaziatrice o usa il pannello DPAD dedicato per spostare il cursore e selezionare testo.</li>
+  <li><b>Tastiera Fluttuante:</b> Finestra mobile e ridimensionabile nativa per un multitasking comodo senza permessi di overlay.</li>
+  <li><b>Modalità a Una Mano e Divisa:</b> Layout ottimizzati per smartphone, pieghevoli e tablet.</li>
+  <li><b>Tastiere Esterne:</b> Supporto completo a scorciatoie e correzione per tastiere Bluetooth e USB.</li>
+</ul>
+
+<b>🎨 Personalizzazione e Suoni dei Tasti:</b>
+<ul>
+  <li><b>Material You e Temi:</b> Colori dinamici di sistema, temi chiaro/scuro e sfondi personalizzati con sfocatura.</li>
+  <li><b>Ergonomia dei Tasti:</b> Controllo indipendente dei raggi degli angoli dei tasti e spaziatura regolabile.</li>
+  <li><b>Feedback Audio Tattile:</b> Motore sonoro a bassa latenza con Cherry MX, macchina da scrivere, CRT retrò e pacchetti personalizzati.</li>
+</ul>
+
+<b>⚡ Appunti e Produttività:</b>
+<ul>
+  <li><b>Gestore Appunti Avanzato:</b> Ricerca in tempo reale, modifica nella barra degli strumenti, appunti fissati e annulla cancellazione.</li>
+  <li><b>Calcolatrice Integrata:</b> Scrivi espressioni matematiche (es. 25*4= o 150-20%=) per vedere il risultato nei suggerimenti.</li>
+  <li><b>Espansione Testo:</b> Scorciatoie rapide con variabili dinamiche come data, ora e contenuto degli appunti.</li>
+  <li><b>Suggerimenti Screenshot:</b> Condividi ed estrai testo dagli screenshot recenti con un semplice tocco.</li>
+  <li><b>Backup Modulare:</b> Esporta e ripristina selettivamente layout, temi, dizionari e cronologia.</li>
+</ul>
+
+<b>🧩 Plugin e Input Modulari:</b>
+<ul>
+  <li><b>Digitazione Vocale:</b> Riconoscimento vocale offline di precisione con modelli Whisper.</li>
+  <li><b>Scrittura a Mano:</b> Disegna caratteri e simboli direttamente sull'area di scrittura.</li>
+  <li><b>OCR da Fotocamera e Screenshot:</b> Estrai testo da fogli fisici o immagini con il mirino incorporato.</li>
+  <li><b>Traduzione nella Tastiera:</b> Traduci istantaneamente tramite modelli offline o servizi cloud.</li>
+</ul>
+
+<b>🤖 Strumenti di IA (Completamente Facoltativi):</b>
+<ul>
+  <li><b>Revisione su Richiesta:</b> Correggi grammatica, modifica il registro linguistico o riscrivi testo quando vuoi.</li>
+  <li><b>Fornitori Flessibili:</b> Compatibile con Google Gemini, Groq, OpenAI e modelli locali (Ollama, LM Studio, LocalAI).</li>
+  <li><b>Tasti IA Personalizzati:</b> Assegna prompt e comandi personalizzati ai pulsanti della barra.</li>
+  <li><b>Solo su Azione Esplicita:</b> La connessione a internet viene usata unicamente se inserisci la tua chiave API e premi il pulsante.</li>
+</ul>
+
+Realizzato con ❤️ da LeanBitLab.

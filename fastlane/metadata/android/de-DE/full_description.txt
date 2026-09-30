@@ -1,0 +1,52 @@
+LeanType ist eine schnelle, datenschutzfreundliche und hochgradig anpassbare Open-Source-Tastatur für Android, basierend auf den soliden Grundlagen von AOSP und HeliBoard. Entwickelt für flüssiges Tippen, beste Ergonomie und modulare Produktivität, gibt Ihnen LeanType die volle Kontrolle über Ihre Tastatur ohne jegliche Datenerfassung.
+
+<b>🛡️ Datenschutz & Offline First:</b>
+<ul>
+  <li><b>100% Open Source:</b> Keine Telemetrie, keine Werbung und kein Tracking im Hintergrund.</li>
+  <li><b>Strikte Datensicherheit:</b> Ihre Tastaturanschläge und Daten verbleiben vollständig auf Ihrem Gerät.</li>
+  <li><b>Keine sensiblen Berechtigungen:</b> Funktioniert ohne Kontakte, Standort oder invasive Rechte.</li>
+</ul>
+
+<b>⌨️ Ergonomie & Flüssiges Tippen:</b>
+<ul>
+  <li><b>Gesten-Tippen:</b> Flüssiges Wischen mit anpassbarer Empfindlichkeit und Vorschau.</li>
+  <li><b>Mehrsprachigkeit:</b> Mehrsprachiges Tippen mit Autokorrektur, Vorschlägen und Gboard-Wörterbuchimport.</li>
+  <li><b>Trackpad-Cursor & Textbearbeitung:</b> Wischen Sie über die Leertaste oder nutzen Sie das DPAD-Textbearbeitungsfeld für präzise Cursorsteuerung und Auswahl.</li>
+  <li><b>Schwebende Tastatur:</b> Natives, verschiebbares und in der Größe veränderbares Fenster für müheloses Multitasking ohne Overlay-Rechte.</li>
+  <li><b>Einhand- & geteilter Modus:</b> Optimiert für Smartphones, Foldables und Tablets.</li>
+  <li><b>Physische Tastaturen:</b> Vollständige Wortauswahl und Autokorrektur für externe Bluetooth- und USB-Tastaturen.</li>
+</ul>
+
+<b>🎨 Anpassung & Sound-Pakete:</b>
+<ul>
+  <li><b>Material You & Themes:</b> Dynamische Systemfarben, Dunkel-/Hell-Modi und eigene Hintergrundbilder mit Unschärfe.</li>
+  <li><b>Tasten-Ergonomie:</b> Unabhängige Eckenrundung für normale, Funktions- und Aktionstasten sowie anpassbare Tastenabstände.</li>
+  <li><b>Taktiles Audio-Feedback:</b> Eigene Sound-Engine mit Cherry MX, Schreibmaschine, Retro-CRT, Samt und Unterstützung für benutzerdefinierte Soundpakete.</li>
+</ul>
+
+<b>⚡ Zwischenablage & Produktivität:</b>
+<ul>
+  <li><b>Smarter Zwischenablage-Manager:</b> Verlaufssuche, Direktbearbeitung in der Leiste, Anpinnen und 5-Sekunden-Rückgängig bei Löschung.</li>
+  <li><b>Integrierter Mathe-Rechner:</b> Rechnungen direkt eingeben (z. B. 25*4= oder 150-20%=) für sofortige Ergebnisse in der Vorschlagsleiste.</li>
+  <li><b>Textbausteine / Schnelltext:</b> Dynamische Variablen wie Datum, Uhrzeit und Zwischenablageinhalt.</li>
+  <li><b>Screenshot-Vorschläge:</b> Sofortiges Teilen und Textextraktion mit einem Fingertipp für neu aufgenommene Screenshots.</li>
+  <li><b>Modulare Sicherung:</b> Layouts, Themes, Wörterbücher und Zwischenablage selektiv exportieren und importieren.</li>
+</ul>
+
+<b>🧩 Modulare Eingaben & Plugins:</b>
+<ul>
+  <li><b>Spracheingabe:</b> Präzise On-Device Spracherkennung mit Whisper-Modellen.</li>
+  <li><b>Handschrifterkennung:</b> Zeichnen Sie Zeichen und Symbole direkt auf der Eingabefläche.</li>
+  <li><b>Kamera- & Screenshot-OCR:</b> Extrahieren Sie Text aus gedruckten Dokumenten oder Screenshots über den internen Kamerasucher.</li>
+  <li><b>In-Keyboard-Übersetzung:</b> Sofortige Übersetzung über Offline-Modelle oder Cloud-Dienste.</li>
+</ul>
+
+<b>🤖 Smarte KI-Werkzeuge (Vollständig Optional):</b>
+<ul>
+  <li><b>Korrekturlesen auf Abruf:</b> Grammatik korrigieren, Ton anpassen oder Texte umformulieren, wann immer Sie möchten.</li>
+  <li><b>Flexible Anbieter:</b> Verbindung zu Google Gemini, Groq, OpenAI oder lokalen LLMs (Ollama, LM Studio, LocalAI).</li>
+  <li><b>Eigene KI-Tasten:</b> Belegen Sie Leistentasten mit eigenen Prompts und Befehlen.</li>
+  <li><b>Strikte Opt-in-Nutzung:</b> Netzwerkzugriff erfolgt nur bei hinterlegtem API-Schlüssel und expliziter Benutzeraktion.</li>
+</ul>
+
+Mit ❤️ von LeanBitLab entwickelt.

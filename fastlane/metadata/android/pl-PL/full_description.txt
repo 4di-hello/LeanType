@@ -1,0 +1,52 @@
+LeanType to szybka, bezpieczna i wysoce konfigurowalna klawiatura open source dla Androida, oparta na sprawdzonych fundamentach AOSP i HeliBoard. Zaprojektowana z myślą o płynnym pisaniu, ergonomii i modułowej produktywności, zapewnia pełną kontrolę bez gromadzenia danych.
+
+<b>🛡️ Prywatność i praca offline:</b>
+<ul>
+  <li><b>100% Open Source:</b> Brak telemetrii, brak reklam i brak śledzenia w tle.</li>
+  <li><b>Ochrona prywatności:</b> Wprowadzany tekst i dane pozostają wyłącznie na Twoim urządzeniu.</li>
+  <li><b>Brak inwazyjnych uprawnień:</b> Działa bez dostępu do kontaktów czy lokalizacji.</li>
+</ul>
+
+<b>⌨️ Ergonomia i płynne pisanie:</b>
+<ul>
+  <li><b>Pisanie gestami:</b> Płynne pisanie przez przeciąganie palcem z regulacją czułości.</li>
+  <li><b>Obsługa wielu języków:</b> Autokorekta, podpowiedzi oraz import słowników z Gboard.</li>
+  <li><b>Gładzik i edycja tekstu:</b> Przesuwaj kursor spacją i precyzyjnie zaznaczaj tekst panelem DPAD.</li>
+  <li><b>Pływająca klawiatura:</b> Natywne, przesuwane okno o regulowanym rozmiarze ułatwiające wielozadaniowość.</li>
+  <li><b>Tryb jednoręczny i dzielony:</b> Zoptymalizowany dla telefonów, składanych ekranów i tabletów.</li>
+  <li><b>Klawiatury fizyczne:</b> Pełne podpowiedzi i autokorekta dla zewnętrznych klawiatur Bluetooth i USB.</li>
+</ul>
+
+<b>🎨 Personalizacja i dźwięki klawiszy:</b>
+<ul>
+  <li><b>Material You i motywy:</b> Dynamiczne kolory systemu, motyw ciemny/jasny i tapety z efektem rozmycia.</li>
+  <li><b>Kształt klawiszy:</b> Niezależne zaokrąglenie rogów klawiszy oraz regulowane odstępy.</li>
+  <li><b>Realistyczne dźwięki:</b> Silnik audio z Cherry MX, maszyną do pisania, retro CRT i własnymi paczkami dźwięków.</li>
+</ul>
+
+<b>⚡ Schowek i narzędzia:</b>
+<ul>
+  <li><b>Menedżer schowka:</b> Wyszukiwanie, edycja bezpośrednio na pasku, przypinanie i 5-sekundowe cofanie usunięcia.</li>
+  <li><b>Kalkulator w linii:</b> Wpisuj równania (np. 25*4= lub 150-20%=), aby natychmiast zobaczyć wynik na pasku podpowiedzi.</li>
+  <li><b>Skróty tekstowe:</b> Skróty ze zmiennymi daty, godziny i zawartości schowka.</li>
+  <li><b>Sugestie zrzutów ekranu:</b> Kopiuj lub wyodrębniaj tekst z ostatnich zrzutów jednym dotknięciem.</li>
+  <li><b>Modułowa kopia zapasowa:</b> Wybiórczy eksport i import układów, motywów oraz słowników.</li>
+</ul>
+
+<b>🧩 Wprowadzanie modułowe i wtyczki:</b>
+<ul>
+  <li><b>Pisanie głosowe:</b> Precyzyjne lokalne rozpoznawanie mowy oparte na modelach Whisper.</li>
+  <li><b>Pismo odręczne:</b> Rysuj znaki i litery bezpośrednio na polu wprowadzania.</li>
+  <li><b>OCR z aparatu i zrzutów:</b> Wyodrębniaj tekst z dokumentów i obrazów za pomocą wbudowanego wizjera.</li>
+  <li><b>Tłumaczenie w klawiaturze:</b> Tłumacz natychmiast przy użyciu modeli offline lub usług w chmurze.</li>
+</ul>
+
+<b>🤖 Narzędzia AI (W pełni opcjonalne):</b>
+<ul>
+  <li><b>Korekta na żądanie:</b> Poprawiaj gramatykę, styl lub parafrazuj tekst wtedy, gdy tego potrzebujesz.</li>
+  <li><b>Dowolny dostawca:</b> Połącz z Google Gemini, Groq, OpenAI lub lokalnymi modelami (Ollama, LM Studio).</li>
+  <li><b>Własne klawisze AI:</b> Twórz przyciski z własnymi instrukcjami promptów na pasku narzędzi.</li>
+  <li><b>Tylko na Twoje polecenie:</b> Połączenie internetowe jest nawiązywane tylko po podaniu klucza API i naciśnięciu przycisku.</li>
+</ul>
+
+Stworzone z ❤️ przez LeanBitLab.

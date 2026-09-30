@@ -1,0 +1,52 @@
+LeanType é um teclado de código aberto para Android, rápido, focado em privacidade e altamente personalizável, construído com base no AOSP e no HeliBoard. Criado para uma digitação suave, ergonomia de ponta e produtividade modular, dá a você controle total sem nenhuma coleta de dados.
+
+<b>🛡️ Privacidade e Funcionamento Offline:</b>
+<ul>
+  <li><b>100% Código Aberto:</b> Sem telemetria, sem anúncios e sem rastreamento em segundo plano.</li>
+  <li><b>Privacidade Absoluta:</b> O que você digita e seus dados ficam restritos exclusivamente ao seu aparelho.</li>
+  <li><b>Zero Permissões Invasivas:</b> Opera sem acesso a contatos, localização ou permissões sensíveis.</li>
+</ul>
+
+<b>⌨️ Ergonomia e Digitação Fluida:</b>
+<ul>
+  <li><b>Digitação por Gestos:</b> Deslize suave com sensibilidade configurável e visualização de rastro.</li>
+  <li><b>Suporte Multilíngue:</b> Digitação em múltiplos idiomas com autocorreção, sugestões e importação de dicionários do Gboard.</li>
+  <li><b>Cursor Trackpad e Edição:</b> Deslize na barra de espaço ou use o painel direcional DPAD para controle milimétrico e seleção de texto.</li>
+  <li><b>Teclado Flutuante:</b> Janela nativa arrastável e redimensionável para multitarefa sem exigir permissão de sobreposição.</li>
+  <li><b>Modo com Uma Mão e Dividido:</b> Layouts ergonômicos para smartphones, dobráveis e tablets.</li>
+  <li><b>Teclados Físicos:</b> Correção automática e atalhos completos para teclados externos Bluetooth e USB.</li>
+</ul>
+
+<b>🎨 Personalização Completa e Sons:</b>
+<ul>
+  <li><b>Material You e Temas:</b> Cores dinâmicas do sistema, temas claro/escuro e papel de parede com desfoque.</li>
+  <li><b>Ergonomia das Teclas:</b> Controle independente de arredondamento das bordas das teclas e espaçamento ajustável.</li>
+  <li><b>Áudio Tátil dos Tastes:</b> Motor de som de resposta instantânea com Cherry MX, máquina de escrever, CRT retrô e suporte a pacotes customizados.</li>
+</ul>
+
+<b>⚡ Área de Transferência e Produtividade:</b>
+<ul>
+  <li><b>Gerenciador de Área de Transferência:</b> Pesquisa instantânea, edição na barra de ferramentas, fixação e desfazer exclusão em 5 segundos.</li>
+  <li><b>Calculadora Integrada:</b> Digite operações diretamente (ex: 25*4= ou 150-20%=) e veja o resultado na barra de sugestões.</li>
+  <li><b>Expansor de Texto:</b> Atalhos com variáveis automáticas de data, hora e texto copiado.</li>
+  <li><b>Sugestões de Captura de Tela:</b> Compartilhe ou extraia texto de capturas de tela recentes com um toque.</li>
+  <li><b>Backup Modular:</b> Exporte e restaure separadamente layouts, temas, dicionários e histórico.</li>
+</ul>
+
+<b>🧩 Módulos e Entradas Avançadas:</b>
+<ul>
+  <li><b>Digitação por Voz:</b> Reconhecimento de fala local e preciso utilizando modelos Whisper.</li>
+  <li><b>Reconhecimento de Escrita à Mão:</b> Desenhe letras e caracteres diretamente na tela.</li>
+  <li><b>OCR por Câmera e Imagens:</b> Extraia textos de documentos físicos ou capturas usando o visor embutido.</li>
+  <li><b>Tradução no Teclado:</b> Traduza instantaneamente com modelos offline ou servidores em nuvem.</li>
+</ul>
+
+<b>🤖 Recursos de IA (Totalmente Opcionais):</b>
+<ul>
+  <li><b>Revisão Sob Demanda:</b> Corrija gramática, ajuste o tom ou reformule frases quando desejar.</li>
+  <li><b>Provedores Variados:</b> Compatível com Google Gemini, Groq, OpenAI ou servidores locais (Ollama, LM Studio, LocalAI).</li>
+  <li><b>Teclas de IA Personalizadas:</b> Adicione botões com comandos e instruções próprios na barra.</li>
+  <li><b>Uso 100% Voluntário:</b> O acesso à internet só acontece se você fornecer sua chave API e solicitar explicitamente.</li>
+</ul>
+
+Desenvolvido com ❤️ pela LeanBitLab.

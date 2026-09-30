@@ -1,0 +1,52 @@
+LeanType is een snel, privacyvriendelijk en zeer aanpasbaar open-source toetsenbord voor Android, gebouwd op het solide fundament van AOSP en HeliBoard. Ontworpen voor soepel typen, optimale ergonomie en modulaire productiviteit, geeft LeanType u de volledige controle zonder enige gegevensverzameling.
+
+<b>🛡️ Privacy en Offline Eerst:</b>
+<ul>
+  <li><b>100% Open Source:</b> Geen telemetrie, geen advertenties en geen tracking op de achtergrond.</li>
+  <li><b>Strikte Gegevensbescherming:</b> Uw toetsaanslagen en gegevens blijven altijd lokaal op uw toestel.</li>
+  <li><b>Geen Gevoelige Machtigingen:</b> Werkt zonder contacten, locatie of opdringerige rechten.</li>
+</ul>
+
+<b>⌨️ Ergonomie en Vloeiend Typen:</b>
+<ul>
+  <li><b>Vegen / Gesture Typing:</b> Soepel veegtypen met instelbare gevoeligheid en spoorweergave.</li>
+  <li><b>Meertalige Ondersteuning:</b> Typen in meerdere talen met autocorrectie, suggesties en import van Gboard-woordenboeken.</li>
+  <li><b>Trackpad-cursor en Tekstbewerking:</b> Veeg over de spatiebalk of gebruik het speciale DPAD-paneel voor nauwkeurige cursorbeweging en selectie.</li>
+  <li><b>Zwevend Toetsenbord:</b> Verplaatsbaar en schaalbaar venster voor multitasking zonder speciale systeemrechten.</li>
+  <li><b>Eenhandige en Gesplitste Modus:</b> Geoptimaliseerde indelingen voor telefoons, foldables en tablets.</li>
+  <li><b>Fysieke Toetsenborden:</b> Volledige woordsuggesties en correctie voor externe Bluetooth- en USB-toetsenborden.</li>
+</ul>
+
+<b>🎨 Uitgebreide Aanpassing en Toetsgeluiden:</b>
+<ul>
+  <li><b>Material You en Thema's:</b> Dynamische systeemkleuren, donkere/lichte thema's en achtergrondafbeeldingen met vervaging.</li>
+  <li><b>Toetsergonomie:</b> Onafhankelijke hoekafronding voor normale toetsen, functietoetsen en actietoetsen.</li>
+  <li><b>Hoorbare Feedback:</b> Toetsgeluiden met lage vertraging waaronder Cherry MX, typemachine, retro CRT en aangepaste geluidspakketten.</li>
+</ul>
+
+<b>⚡ Klembord en Productiviteit:</b>
+<ul>
+  <li><b>Slim Klembordbeheer:</b> Direct zoeken, bewerken op de werkbalk, vastpinnen en 5 seconden hersteltijd bij verwijderen.</li>
+  <li><b>Directe Berekeningen:</b> Typ vergelijkingen (zoals 25*4= of 150-20%=) voor directe uitkomsten in de suggestiebalk.</li>
+  <li><b>Tekstfragmenten:</b> Handige sneltoetsen met dynamische variabelen voor datum, tijd en klembordtekst.</li>
+  <li><b>Screenshot-suggesties:</b> Deel of extraheer direct tekst uit recente schermafbeeldingen met één tik.</li>
+  <li><b>Modulaire Back-up:</b> Exporteer en importeer selectief indelingen, thema's, woordenboeken en geschiedenis.</li>
+</ul>
+
+<b>🧩 Modulaire Invoer en Plug-ins:</b>
+<ul>
+  <li><b>Spraakgestuurd Typen:</b> Nauwkeurige lokale spraakherkenning aangedreven door Whisper-modellen.</li>
+  <li><b>Handschriftherkenning:</b> Teken letters en symbolen direct op het invoeroppervlak.</li>
+  <li><b>Camera- en Screenshot-OCR:</b> Scan direct tekst uit documenten of afbeeldingen met de interne zoeker.</li>
+  <li><b>Ingebouwde Vertaling:</b> Vertaal direct via offline taalmodellen of clouddiensten.</li>
+</ul>
+
+<b>🤖 Slimme AI-Tools (Volledig Optioneel):</b>
+<ul>
+  <li><b>Tekstcontrole op Aanvraag:</b> Verbeter grammatica, pas de toon aan of herformuleer zinnen wanneer u dat wilt.</li>
+  <li><b>Flexibele Providers:</b> Koppel met Google Gemini, Groq, OpenAI of lokale modellen (Ollama, LM Studio).</li>
+  <li><b>Aangepaste AI-Toetsen:</b> Wijs eigen prompts en instructies toe aan werkbalkknoppen.</li>
+  <li><b>Volledige Controle:</b> Er is alleen netwerkverkeer als u een eigen API-sleutel instelt en actief op een knop tikt.</li>
+</ul>
+
+Gemaakt met ❤️ door LeanBitLab.

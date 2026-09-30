@@ -1,0 +1,52 @@
+LeanType, AOSP ve HeliBoard temelleri üzerine inşa edilmiş; hızlı, gizlilik odaklı ve son derece özelleştirilebilir açık kaynaklı bir Android klavyesidir. Akıcı yazım, ergonomik tasarım ve modüler üretkenlik için geliştirilen LeanType, veri toplamaksızın tam denetim sunar.
+
+<b>🛡️ Gizlilik ve Çevrimdışı Önceliği:</b>
+<ul>
+  <li><b>%100 Açık Kaynak:</b> Telemetri, reklam veya arka plan takibi kesinlikle yoktur.</li>
+  <li><b>Tam Veri Gizliliği:</b> Tuş vuruşlarınız ve verileriniz sadece cihazınızda kalır.</li>
+  <li><b>Sıfır İstilacı İzin:</b> Kişiler veya konum gibi hassas izinlere ihtiyaç duymaz.</li>
+</ul>
+
+<b>⌨️ Ergonomi ve Akıcı Yazım:</b>
+<ul>
+  <li><b>Kaydırarak Yazma:</b> Ayarlanabilir hassasiyet ile akıcı jestle yazma desteği.</li>
+  <li><b>Çok Dilli Yazım:</b> Otomatik düzeltme, tahminler ve Gboard sözlüklerini içe aktarma.</li>
+  <li><b>İmleç Kontrolü ve Düzenleme:</b> Boşluk tuşu üzerinden imleci kaydırın veya DPAD paneliyle hassas metin seçimi yapın.</li>
+  <li><b>Kayan Klavye:</b> Ekran kaplama izni gerektirmeyen, taşınabilir ve boyutlandırılabilir yüzen klavye.</li>
+  <li><b>Tek El ve Ayrık Mod:</b> Telefonlar, katlanabilir cihazlar ve tabletler için optimize edilmiş düzenler.</li>
+  <li><b>Fiziksel Klavye Desteği:</b> Harici Bluetooth ve USB klavyelerde kelime tahminleri ve otomatik tamamlama.</li>
+</ul>
+
+<b>🎨 Derin Özelleştirme ve Tuş Sesleri:</b>
+<ul>
+  <li><b>Material You ve Temalar:</b> Dinamik sistem renkleri, açık/koyu mod ve bulanık duvar kağıdı arka planı.</li>
+  <li><b>Tuş Ergonomisi:</b> Tuş köşesi yuvarlaklıkları ve boşlukları için bağımsız ayarlar.</li>
+  <li><b>Dokunsal Tuş Sesleri:</b> Cherry MX, daktilo, retro CRT gibi düşük gecikmeli ses paketleri.</li>
+</ul>
+
+<b>⚡ Pano ve Üretkenlik:</b>
+<ul>
+  <li><b>Gelişmiş Pano Yöneticisi:</b> Canlı arama, araç çubuğunda düzenleme, sabitleme ve 5 saniyelik silme geri alma.</li>
+  <li><b>Satır İçi Matematik Hesabı:</b> Denklemleri doğrudan yazın (örn. 25*4= veya 150-20%=) ve sonucu öneri şeridinde görün.</li>
+  <li><b>Metin Genişletici:</b> Tarih, saat ve pano içeriğini ekleyen pratik kısayollar.</li>
+  <li><b>Ekran Görüntüsü Önerileri:</b> Çekilen ekran görüntülerinden tek dokunuşla metin ayıklayın veya paylaşın.</li>
+  <li><b>Modüler Yedekleme:</b> Düzenleri, temaları ve sözlükleri seçerek yedekleyin veya geri yükleyin.</li>
+</ul>
+
+<b>🧩 Modüler Giriş ve Eklentiler:</b>
+<ul>
+  <li><b>Sesle Yazma:</b> Whisper modelleriyle desteklenen, internet gerektirmeyen hassas ses tanıma.</li>
+  <li><b>El Yazısı Tanıma:</b> Karakterleri ve sembolleri doğrudan klavye alanına çizin.</li>
+  <li><b>Kamera ve Ekran OCR:</b> Dahili vizör ile basılı belgelerden doğrudan metin tarayın.</li>
+  <li><b>Dahili Çeviri:</b> Çevrimdışı modellerle veya bulut üzerinden anında çeviri yapın.</li>
+</ul>
+
+<b>🤖 Akıllı Yapay Zeka Araçları (Tamamen İsteğe Bağlı):</b>
+<ul>
+  <li><b>İsteğe Bağlı Düzeltme:</b> İhtiyaç duyduğunuzda dilbilgisini düzeltin veya metni yeniden ifade edin.</li>
+  <li><b>Esnek Sağlayıcılar:</b> Google Gemini, Groq, OpenAI veya yerel LLM modellerine (Ollama, LM Studio) bağlanın.</li>
+  <li><b>Özel AI Tuşları:</b> Araç çubuğuna özel komutlar içeren tuşlar tanımlayın.</li>
+  <li><b>Kesin Kullanıcı Kontrolü:</b> Ağ bağlantısı yalnızca bir API anahtarı girildiğinde ve bir işlem başlatıldığında kullanılır.</li>
+</ul>
+
+LeanBitLab tarafından ❤️ ile geliştirildi.
