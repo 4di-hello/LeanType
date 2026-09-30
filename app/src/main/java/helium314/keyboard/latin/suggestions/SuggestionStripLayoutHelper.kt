@@ -41,6 +41,7 @@ import helium314.keyboard.latin.common.isEmoji
 import helium314.keyboard.latin.settings.Settings
 import helium314.keyboard.latin.utils.ResourceUtils
 import helium314.keyboard.latin.utils.ViewLayoutUtils
+import helium314.keyboard.latin.utils.dpToPx
 
 internal class SuggestionStripLayoutHelper(
     context: Context,
@@ -249,11 +250,11 @@ internal class SuggestionStripLayoutHelper(
     private fun setupWordViewsAndReturnStartIndexOfMoreSuggestions(
         suggestedWords: SuggestedWords, maxSuggestionInStrip: Int
     ): Int {
-        for (positionInStrip in 0 until maxSuggestionInStrip) {
+        for (positionInStrip in mWordViews.indices) {
             val wordView = mWordViews[positionInStrip]
             wordView.text = null
             wordView.tag = null
-            if (SuggestionStripView.DEBUG_SUGGESTIONS) {
+            if (SuggestionStripView.DEBUG_SUGGESTIONS && positionInStrip < mDebugInfoViews.size) {
                 mDebugInfoViews[positionInStrip].text = null
             }
         }
@@ -321,7 +322,8 @@ internal class SuggestionStripLayoutHelper(
         context: Context,
         suggestedWords: SuggestedWords,
         stripView: ViewGroup,
-        placerView: ViewGroup
+        placerView: ViewGroup,
+        promptView: View? = null
     ): Int {
         if (suggestedWords.isPunctuationSuggestions) {
             return layoutPunctuationsAndReturnStartIndexOfMoreSuggestions(
@@ -330,11 +332,80 @@ internal class SuggestionStripLayoutHelper(
         }
 
         val wordCountToShow = suggestedWords.getWordCountToShow()
+
+        if (promptView != null && wordCountToShow == 0) {
+            val lp = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            ).apply {
+                gravity = Gravity.CENTER
+                val marginV = 5.dpToPx(context.resources)
+                setMargins(0, marginV, 0, marginV)
+            }
+            promptView.layoutParams = lp
+            stripView.addView(promptView)
+            return 0
+        }
+
+        val maxSuggestions = if (promptView != null) maxOf(1, mSuggestionsCountInStrip - 1) else mSuggestionsCountInStrip
         val startIndexOfMoreSuggestions = setupWordViewsAndReturnStartIndexOfMoreSuggestions(
-            suggestedWords, mSuggestionsCountInStrip
+            suggestedWords, maxSuggestions
         )
         val centerWordView = mWordViews[mCenterPositionInStrip]
         val stripWidth = stripView.width
+
+        if (promptView != null) {
+            val promptLp = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            ).apply {
+                gravity = Gravity.CENTER_VERTICAL
+                val marginV = 5.dpToPx(context.resources)
+                val marginH = 4.dpToPx(context.resources)
+                setMargins(marginH, marginV, marginH, marginV)
+            }
+            promptView.layoutParams = promptLp
+
+            if (wordCountToShow <= 1) {
+                mMoreSuggestionsAvailable = false
+                val availableWidth = (stripWidth - mPadding - mDividerWidth) / 2
+                layoutWord(context, mCenterPositionInStrip, availableWidth)
+                stripView.addView(centerWordView)
+                setLayoutWeight(centerWordView, 1.0f, ViewGroup.LayoutParams.MATCH_PARENT)
+                val divider = mDividerViews[0]
+                addDivider(stripView, divider)
+                stripView.addView(promptView)
+                if (SuggestionStripView.DEBUG_SUGGESTIONS) {
+                    layoutDebugInfo(mCenterPositionInStrip, placerView, stripWidth)
+                }
+                val lastIndex = centerWordView.tag as? Int
+                return (lastIndex ?: 0) + 1
+            } else {
+                val countInStrip = minOf(wordCountToShow, maxSuggestions)
+                mMoreSuggestionsAvailable = wordCountToShow > countInStrip
+                var x = 0
+                val availableWordWidth = (stripWidth - mPadding - (mDividerWidth * countInStrip)) / (countInStrip + 1)
+                for (positionInStrip in 0 until countInStrip) {
+                    if (positionInStrip != 0) {
+                        val divider = mDividerViews[positionInStrip]
+                        addDivider(stripView, divider)
+                        x += divider.measuredWidth
+                    }
+                    val wordView = layoutWord(context, positionInStrip, availableWordWidth)
+                    stripView.addView(wordView)
+                    setLayoutWeight(wordView, 1.0f, ViewGroup.LayoutParams.MATCH_PARENT)
+                    x += wordView.measuredWidth
+
+                    if (SuggestionStripView.DEBUG_SUGGESTIONS) {
+                        layoutDebugInfo(positionInStrip, placerView, stripView.x.toInt() + x)
+                    }
+                }
+                val divider = mDividerViews[countInStrip]
+                addDivider(stripView, divider)
+                stripView.addView(promptView)
+                return startIndexOfMoreSuggestions
+            }
+        }
 
         val centerWidth = getSuggestionWidth(mCenterPositionInStrip, stripWidth)
         if (wordCountToShow == 1 || getTextScaleX(centerWordView.text, centerWidth, centerWordView.paint) < MIN_TEXT_XSCALE) {

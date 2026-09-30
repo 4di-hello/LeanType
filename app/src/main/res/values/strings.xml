@@ -595,6 +595,7 @@
     <string name="download_failed">Download failed</string>
     <string name="download_dictionary_for_language">Download %1$s dictionary</string>
     <string name="download_dictionary_prompt_description">Tap to download dictionary for word suggestions and gesture typing</string>
+    <string name="download_dictionary_chip">Download dict</string>
     <string name="installed">Installed</string>
     <string name="voice" tools:keep="@string/voice">Voice input</string>
     <string name="voice_input_title">Voice Input</string>
