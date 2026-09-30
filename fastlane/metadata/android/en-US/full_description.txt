@@ -1,29 +1,52 @@
-LeanType is a privacy-conscious, customizable open-source Android keyboard. Based on the robust foundations of AOSP and HeliBoard.
-LeanType (Standard) offers a hybrid experience: a private, secure offline core for everyday typing, with powerful AI capabilities available whenever you choose to enable them.
+LeanType is a fast, privacy-focused, and highly customizable open-source keyboard for Android, built on the solid foundations of AOSP and HeliBoard. Designed for smooth typing, rich ergonomics, and modular productivity, LeanType gives you complete control over your keyboard experience with zero data tracking.
 
-Key Features:
+<b>🛡️ Privacy & Offline First:</b>
 <ul>
-  <li><b>AI Proofreading & Translation:</b> Instantly fix grammar, rewrite text, or translate sentences using powerful AI. Choose between Gemini, Groq, or OpenAI-compatible backends.</li>
-  <li><b>Floating Keyboard:</b> Detach the keyboard into a draggable window for seamless multitasking and improved accessibility.</li>
-  <li><b>Clipboard Power-tools:</b> Search your clipboard history directly, enjoy visual previews, and undo accidental clip deletions.</li>
-  <li><b>Screenshot Suggestions:</b> Instantly paste recently taken screenshots directly from your keyboard suggestions.</li>
-  <li><b>Custom AI Keys:</b> Program up to 10 customizable toolbar keys with distinct AI behaviors (e.g., #editor, #proofread, #toneshift) to quickly transform your text on demand.</li>
-  <li><b>Touchpad Mode:</b> Swipe up on the spacebar to control your screen cursor like a trackpad.</li>
-  <li><b>Split Toolbar & Suggestions:</b> Dual-layer interface allowing simultaneous access to suggestions and utility keys.</li>
+  <li><b>100% Open Source:</b> No telemetry, no ads, and no background tracking.</li>
+  <li><b>Strict Data Privacy:</b> Your keystrokes and data remain entirely on your device.</li>
+  <li><b>Zero Sensitive Permissions:</b> Operates without contacts, location, or intrusive permissions.</li>
 </ul>
 
-Standard Features:
+<b>⌨️ Ergonomics & Fluid Typing:</b>
 <ul>
-  <li>Multilingual typing with auto-correction</li>
-  <li>Import dictionaries from Gboard/Google</li>
-  <li>Fully customizable themes (Colors, backgrounds, Day/Night integration, Material You dynamic colors)</li>
-  <li>Customizable special layouts (NumPads, Symbol layouts)</li>
-  <li>Glide typing support (Requires external library)</li>
-  <li>One-handed mode and Split keyboard</li>
-  <li>Backup & restore for all your settings and learned words</li>
+  <li><b>Gesture Typing:</b> Smooth swipe typing with adjustable sensitivity and preview.</li>
+  <li><b>Multilingual Support:</b> Multi-language typing with auto-correction, suggestions, and Gboard dictionary import.</li>
+  <li><b>Trackpad Cursor & Text Editing:</b> Swipe across the spacebar or use the dedicated DPAD text editing panel for precision cursor movement and selection.</li>
+  <li><b>Floating Keyboard:</b> Native, draggable, and resizable floating window for comfortable multitasking without overlay permissions.</li>
+  <li><b>One-Handed & Split Modes:</b> Optimized layouts for phones, foldables, and tablets.</li>
+  <li><b>Hardware Keyboard Support:</b> Full candidate selection and auto-correction for external Bluetooth/USB keyboards.</li>
 </ul>
 
-Privacy Policy:
-We believe your keyboard shouldn't spy on you. LeanType is fully open-source and respects your data. While this version includes Internet permission to support AI features, network access is only ever used if you explicitly provide an API key and actively trigger an AI request. Your keystrokes are never logged or sent anywhere without your direct action.
+<b>🎨 Deep Customization & Sound Packs:</b>
+<ul>
+  <li><b>Material You & Themes:</b> Dynamic system color matching, dark/light themes, and custom background wallpaper with blur.</li>
+  <li><b>Key Ergonomics:</b> Independent corner radius controls for normal, function, and action keys, plus adjustable key gaps and padding scales.</li>
+  <li><b>Tactile Key Audio:</b> Built-in low-latency sound engine featuring Cherry MX, Vintage Typewriter, Retro CRT, Soft Velvet, and custom sound pack import.</li>
+</ul>
+
+<b>⚡ Clipboard & Productivity:</b>
+<ul>
+  <li><b>Smart Clipboard Manager:</b> Search clips in real-time, edit text directly in the toolbar, pin favorites, and 5-second undo for deletions.</li>
+  <li><b>Inline Math Solver:</b> Type equations directly (e.g., 25*4= or 150-20%=) for instant calculation in the suggestion strip.</li>
+  <li><b>Dynamic Text Expander:</b> Expand text shortcuts with dynamic variables like date, time, and clipboard content.</li>
+  <li><b>Screenshot Suggestions:</b> Instant 1-tap sharing and text extraction for recently captured screenshots.</li>
+  <li><b>Modular Backup & Restore:</b> Selectively export and import your layouts, themes, dictionaries, and clipboard history.</li>
+</ul>
+
+<b>🧩 Modular Input & Plugins:</b>
+<ul>
+  <li><b>Voice Typing:</b> Accurate on-device speech-to-text powered by Whisper models.</li>
+  <li><b>Handwriting Recognition:</b> Draw characters and symbols directly on an in-keyboard canvas.</li>
+  <li><b>Camera & Screenshot OCR:</b> Extract text from real-world documents or screenshots with an in-keyboard viewfinder.</li>
+  <li><b>In-Keyboard Translation:</b> Translate text instantly via offline models or cloud translation.</li>
+</ul>
+
+<b>🤖 Smart AI Tools (Completely Optional):</b>
+<ul>
+  <li><b>On-Demand Proofreading:</b> Fix grammar, adjust tone, or rephrase text when you choose to use it.</li>
+  <li><b>Flexible Providers:</b> Connect to Google Gemini, Groq, OpenAI, or self-hosted local LLMs (Ollama, LM Studio, LocalAI).</li>
+  <li><b>Custom AI Keys:</b> Program quick toolbar buttons with custom prompt instructions.</li>
+  <li><b>Fully Opt-in:</b> Network access is only used if you provide an API key and explicitly trigger an AI request.</li>
+</ul>
 
 Built with ❤️ by LeanBitLab.
