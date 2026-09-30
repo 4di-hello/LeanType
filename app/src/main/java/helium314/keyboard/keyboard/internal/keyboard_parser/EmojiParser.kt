@@ -78,7 +78,10 @@ class EmojiParser(private val params: KeyboardParams, private val context: Conte
 
 
 
+        val isEmoticons = params.mId.mElementId == KeyboardId.ELEMENT_EMOJI_CATEGORY10
         lines.forEach { line ->
+            // lines starting with "#" are group headers in EMOTICONS.txt (see EmojiCategory.getEmoticonGroups)
+            if (isEmoticons && line.startsWith("#")) return@forEach
             val keyParams = parseEmojiKeyNew(line) ?: return@forEach
             keyParams.xPos = currentX
             keyParams.yPos = currentY

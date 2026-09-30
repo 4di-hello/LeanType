@@ -1781,4 +1781,21 @@ New dictionary:
     <string name="app_quirks_autocorrect_disable">Always Disabled</string>
     <string name="app_quirks_badge_autocorrect_on">Auto-Correct ON</string>
     <string name="app_quirks_badge_autocorrect_off">Auto-Correct OFF</string>
+
+    <!-- Emoticon sub-category names -->
+    <string name="emoticon_group_classic">Classic</string>
+    <string name="emoticon_group_smiling">Smiling</string>
+    <string name="emoticon_group_love">Love</string>
+    <string name="emoticon_group_hugging">Hugging</string>
+    <string name="emoticon_group_cheering">Cheering</string>
+    <string name="emoticon_group_flexing">Flexing</string>
+    <string name="emoticon_group_animals">Animals</string>
+    <string name="emoticon_group_surprise">Surprise</string>
+    <string name="emoticon_group_worried">Worried</string>
+    <string name="emoticon_group_crying">Crying</string>
+    <string name="emoticon_group_look_of_disapproval">Look of disapproval</string>
+    <string name="emoticon_group_pointing">Pointing</string>
+    <string name="emoticon_group_dancing">Dancing</string>
+    <string name="emoticon_group_shruggie">Shruggie</string>
+    <string name="emoticon_group_table_flip">Table flip</string>
 </resources>

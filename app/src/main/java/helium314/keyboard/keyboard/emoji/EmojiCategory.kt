@@ -41,6 +41,59 @@ class EmojiCategory(
     private var mCurrentCategoryId = ID_UNSPECIFIED
     private var mCurrentCategoryPageId = 0
 
+    /** a named group of emoticons, read from the "# name" header lines in assets/emoji/EMOTICONS.txt */
+    class EmoticonGroup(val name: String, val items: Set<String>)
+
+    // empty if the file has no headers, then emoticons are shown as one list like before
+    private val mEmoticonGroups: List<EmoticonGroup> by lazy { loadEmoticonGroups() }
+    private var mCurrentEmoticonGroup = mPrefs.getInt(PREF_LAST_SHOWN_EMOTICON_GROUP, 0)
+
+    private fun loadEmoticonGroups(): List<EmoticonGroup> = runCatching {
+        val result = ArrayList<EmoticonGroup>()
+        var name: String? = null
+        var items = LinkedHashSet<String>()
+        mContext.assets.open("emoji/EMOTICONS.txt").reader().use { it.readLines() }.forEach { line ->
+            if (line.startsWith("#")) {
+                name?.let { result.add(EmoticonGroup(it, items)) }
+                name = line.removePrefix("#").trim()
+                items = LinkedHashSet()
+            } else if (name != null && line.isNotEmpty()) {
+                items.add(line)
+            }
+        }
+        name?.let { result.add(EmoticonGroup(it, items)) }
+        result.filter { it.items.isNotEmpty() }
+    }.getOrElse {
+        Log.w(TAG, "could not read emoticon groups: ${it.message}")
+        emptyList()
+    }
+
+    fun getEmoticonGroups(): List<EmoticonGroup> = mEmoticonGroups
+
+    fun getCurrentEmoticonGroup(): Int = mCurrentEmoticonGroup.coerceIn(0, (mEmoticonGroups.size - 1).coerceAtLeast(0))
+
+    fun setCurrentEmoticonGroup(index: Int) {
+        if (index == getCurrentEmoticonGroup() || index !in mEmoticonGroups.indices) return
+        mCurrentEmoticonGroup = index
+        mPrefs.edit().putInt(PREF_LAST_SHOWN_EMOTICON_GROUP, index).apply()
+        synchronized(mCategoryKeyboardMap) {
+            // drop cached pages of the emoticons category, they depend on the selected group
+            mCategoryKeyboardMap.keys.removeAll { (it shr Integer.SIZE).toInt() == ID_EMOTICONS }
+        }
+        for (props in mShownCategories) {
+            if (props.mCategoryId == ID_EMOTICONS) props.mPageCount = -1
+        }
+        setCurrentCategoryPageId(0)
+    }
+
+    /** keys of the category, for emoticons only those of the selected group */
+    private fun getCategoryKeys(categoryId: Int): List<Key> {
+        val keys = mLayoutSet.getKeyboard(sCategoryElementId[categoryId]).sortedKeys
+        if (categoryId != ID_EMOTICONS || mEmoticonGroups.isEmpty()) return keys
+        val items = mEmoticonGroups[getCurrentEmoticonGroup()].items
+        return keys.filter { (it.outputText ?: it.label) in items }
+    }
+
     init {
         for (i in sCategoryName.indices) {
             mCategoryNameToIdMap[sCategoryName[i]] = i
@@ -153,8 +206,7 @@ class EmojiCategory(
     fun getRecentTabId(): Int = getTabIdFromCategoryId(ID_RECENTS)
 
     private fun computeCategoryPageCount(categoryId: Int): Int {
-        val keyboard = mLayoutSet.getKeyboard(sCategoryElementId[categoryId])
-        return (keyboard.sortedKeys.size - 1) / computeMaxKeyCountPerPage(categoryId) + 1
+        return (getCategoryKeys(categoryId).size - 1) / computeMaxKeyCountPerPage(categoryId) + 1
     }
 
     fun getKeyboardFromAdapterPosition(categoryId: Int, position: Int): DynamicGridKeyboard? {
@@ -182,9 +234,8 @@ class EmojiCategory(
                 return kbd
             }
 
-            val keyboard = mLayoutSet.getKeyboard(sCategoryElementId[categoryId])
             val keyCountPerPage = computeMaxKeyCountPerPage(categoryId)
-            val sortedKeysPages = sortKeysGrouped(keyboard.sortedKeys, keyCountPerPage)
+            val sortedKeysPages = sortKeysGrouped(getCategoryKeys(categoryId), keyCountPerPage)
             for (pageId in sortedKeysPages.indices) {
                 val tempKeyboard = DynamicGridKeyboard(
                     mPrefs,
@@ -223,6 +274,29 @@ class EmojiCategory(
 
     companion object {
         private const val TAG = "EmojiCategory"
+        private const val PREF_LAST_SHOWN_EMOTICON_GROUP = "last_shown_emoticon_group"
+
+        fun getEmoticonGroupDisplayName(context: Context, rawName: String): String {
+            val resId = when (rawName.lowercase().replace(" ", "_")) {
+                "classic" -> R.string.emoticon_group_classic
+                "smiling" -> R.string.emoticon_group_smiling
+                "love" -> R.string.emoticon_group_love
+                "hugging" -> R.string.emoticon_group_hugging
+                "cheering" -> R.string.emoticon_group_cheering
+                "flexing" -> R.string.emoticon_group_flexing
+                "animals" -> R.string.emoticon_group_animals
+                "surprise" -> R.string.emoticon_group_surprise
+                "worried" -> R.string.emoticon_group_worried
+                "crying" -> R.string.emoticon_group_crying
+                "look_of_disapproval" -> R.string.emoticon_group_look_of_disapproval
+                "pointing" -> R.string.emoticon_group_pointing
+                "dancing" -> R.string.emoticon_group_dancing
+                "shruggie" -> R.string.emoticon_group_shruggie
+                "table_flip" -> R.string.emoticon_group_table_flip
+                else -> 0
+            }
+            return if (resId != 0) context.getString(resId) else rawName
+        }
 
         const val ID_UNSPECIFIED = -1
         const val ID_RECENTS = 0
