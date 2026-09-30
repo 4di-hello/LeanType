@@ -64,12 +64,13 @@ import java.net.URL
 
 private val currentChangelogItems = listOf(
     "• Input Desync & Duplication Fix: Resolved text duplication during word replacement and backspace desync thrashing in RichInputConnection",
-    "• Backup & Restore Freeze Elimination: Removed blocking main-thread latches during backup and restore to prevent UI freezes and ANRs",
-    "• Mode Switch Touch Protection: Fixed PointerTracker layout transitions to eliminate accidental space and 'x' clicks when switching ?123 and ABC",
-    "• Hexagonal Honeycomb Layout: Native Typewise and hex QWERTY layouts with axial hit detection, twin spacebars, and custom vector rendering",
-    "• Landscape Hex Ergonomic Split: Positioned hex keys at screen edges with a central gap in landscape mode, maintaining comfortable key sizing and thumb reachability",
-    "• Popup Key Vertical Offset: Added an adjustable popup position slider (0–10 dp) in Appearance settings with refined preview animations",
-    "• Engine & Locale Polish: Decoupled startup settings listeners, fixed voice status NPE, synchronized emoji dictionary reloads, and preserved Catalan dictionaries"
+    "• Hexagonal Honeycomb Layout Engine: Native Typewise and hex QWERTY layouts with axial hit detection, dual spacebars, and landscape ergonomic split",
+    "• Missing Dictionary Prompt: Integrated idle strip banner and in-keyboard download dialog directly in suggestion strip",
+    "• Storage & Cache Management: Dedicated management screen under Plugins & Capabilities with category breakdown and selective purging",
+    "• System Wallpaper & Blurred Background: Support for live wallpaper background with StackBlur engine and adjustable blur slider",
+    "• Emoticon Sub-Categories: Added localized emoticon category tabs (Happy, Sad, Love, Animals, Actions) with touch isolation",
+    "• Gesture & Deletion Engine: Word-by-word backspace delete swipe, progressive backspace acceleration, and smoothed haptics",
+    "• Backup & Mode Switch Hardening: Eliminated UI freezes during backup/restore and prevented accidental touches on ?123/ABC layout switch"
 )
 
 @Composable
