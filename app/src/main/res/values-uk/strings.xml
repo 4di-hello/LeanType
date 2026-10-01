@@ -1052,6 +1052,56 @@
     <string name="app_quirks_autocorrect_disable">Завжди вимкнено</string>
     <string name="app_quirks_badge_autocorrect_on">Автовиправлення УВІМК.</string>
     <string name="app_quirks_badge_autocorrect_off">Автовиправлення ВИМК.</string>
+<string name="suggestions_count_in_strip">Кількість підказок</string>
+    <string name="suggestions_count_in_strip_summary">Скільки слів-підказок показувати одночасно на панелі підказок</string>
+    <string name="prefs_physical_keyboard_layout">Розкладка фізичної клавіатури</string>
+    <string name="prefs_physical_keyboard_layout_summary">Вибір розкладки для зовнішніх апаратних клавіатур (напр., ЙЦУКЕН, QWERTY, Dvorak)</string>
+    <string name="physical_keyboard_layout_match_soft">Як на екранній клавіатурі (Авто)</string>
+    <string name="physical_keyboard_layout_system_default">Системна за замовчуванням</string>
+    <string name="delete_swipe_word_by_word">Видалення по словах</string>
+    <string name="delete_swipe_word_by_word_summary">Виділення та видалення цілих слів під час свайпу ліворуч від клавіші видалення</string>
+    <string name="download_dictionary_for_language">Завантажити словник: %1$s</string>
+    <string name="download_dictionary_prompt_description">Торкніться, щоб завантажити словник для підказок слів і введення розчерком</string>
+    <string name="download_dictionary_chip">Завантажити словник</string>
+    <string name="pref_animation_speed_scale">Швидкість анімації</string>
+    <string name="pref_animation_speed_scale_summary">Керує тривалістю анімацій спливаючих вікон і переходів між екранами</string>
+    <string name="animation_speed_off">Вимк. (Миттєво)</string>
+    <string name="layout_editing">Редагування тексту (стандарт)</string>
+    <string name="layout_editing_classic">Редагування тексту (класика)</string>
+    <string name="layout_editing_gboard">Редагування тексту (Gboard)</string>
+    <string name="background_blur">Розмиття фону</string>
+    <string name="background_blur_summary">Застосувати ефект розмиття до фонового зображення або шпалер</string>
+    <string name="use_system_wallpaper">Використовувати системні шпалери</string>
+    <string name="use_system_wallpaper_summary">Використовувати поточні шпалери головного екрана як фон клавіатури</string>
+    <string name="system_wallpaper_restricted">Доступ до системних шпалер обмежено на цій версії Android. Будь ласка, виберіть зображення вручну через \"Вибрати зображення фону\".</string>
+    <string name="blur_off">Вимк.</string>
+    <string name="blur_radius">Розмиття: %d</string>
+    <string name="user_dict_sort_title">Сортувати за</string>
+    <string name="user_dict_sort_alphabetical">За алфавітом</string>
+    <string name="user_dict_sort_last_added">Спочатку нові</string>
+    <string name="user_dict_sort_oldest">Спочатку старі</string>
+    <string name="show_vertical_down_space_swipe">Жест свайпу вниз по пробілу</string>
+    <string name="toolbar_swipe_up_gesture">Жест свайпу вгору по панелі інструментів</string>
+    <string name="toolbar_swipe_down_gesture">Жест свайпу вниз по панелі інструментів</string>
+    <string name="toolbar_swipe_more_suggestions_entry">Більше підказок</string>
+    <string name="vertical_swipe_threshold">Поріг вертикального свайпу</string>
+    <string name="vertical_swipe_threshold_summary">Відстань, необхідна для спрацьовування вертикальних жестів на пробілі та панелі інструментів</string>
+    <string name="emoticon_group_classic">Класичні</string>
+    <string name="emoticon_group_smiling">Посмішка</string>
+    <string name="emoticon_group_love">Любов</string>
+    <string name="emoticon_group_hugging">Обійми</string>
+    <string name="emoticon_group_cheering">Радість</string>
+    <string name="emoticon_group_flexing">Сила</string>
+    <string name="emoticon_group_animals">Тварини</string>
+    <string name="emoticon_group_surprise">Здивування</string>
+    <string name="emoticon_group_worried">Стурбованість</string>
+    <string name="emoticon_group_crying">Сльози</string>
+    <string name="emoticon_group_look_of_disapproval">Несхвалення</string>
+    <string name="emoticon_group_pointing">Вказування</string>
+    <string name="emoticon_group_dancing">Танці</string>
+    <string name="emoticon_group_shruggie">Знизування плечима</string>
+    <string name="emoticon_group_table_flip">Перекидання столу</string>
 </resources>
+
 
 
