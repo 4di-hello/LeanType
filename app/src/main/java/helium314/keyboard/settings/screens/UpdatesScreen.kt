@@ -63,14 +63,11 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 private val currentChangelogItems = listOf(
-    "• Input Desync & Duplication Fix: Resolved text duplication during word replacement and backspace desync thrashing in RichInputConnection",
-    "• Hexagonal Honeycomb Layout Engine: Native Typewise and hex QWERTY layouts with axial hit detection, dual spacebars, and landscape ergonomic split",
-    "• Missing Dictionary Prompt: Integrated idle strip banner and in-keyboard download dialog directly in suggestion strip",
-    "• Storage & Cache Management: Dedicated management screen under Plugins & Capabilities with category breakdown and selective purging",
-    "• System Wallpaper & Blurred Background: Support for live wallpaper background with StackBlur engine and adjustable blur slider",
-    "• Emoticon Sub-Categories: Added localized emoticon category tabs (Happy, Sad, Love, Animals, Actions) with touch isolation",
-    "• Gesture & Deletion Engine: Word-by-word backspace delete swipe, progressive backspace acceleration, and smoothed haptics",
-    "• Backup & Mode Switch Hardening: Eliminated UI freezes during backup/restore and prevented accidental touches on ?123/ABC layout switch"
+    "• Android 12 Crash Fix: Resolved NoSuchMethodError crash loop on Android 12 when tapping keys or suggestions",
+    "• Haptic Intensity Slider: Restored vibration amplitude scaling when adjusting the haptic feedback slider",
+    "• Auto-Capitalization Controls: Added toolbar toggles and JSON layout actions for auto-caps and force auto-caps",
+    "• Crash Log Hardening: Hardened internal crash report generation and dialog detection in release builds",
+    "• Complete Translations: 100% translation coverage across 25 languages for all new settings and features"
 )
 
 @Composable

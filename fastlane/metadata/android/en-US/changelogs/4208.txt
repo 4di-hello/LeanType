@@ -1,0 +1,5 @@
+- Fixed fatal NoSuchMethodError crash loop on Android 12 when tapping keys or suggestions.
+- Restored vibration intensity scaling when adjusting the haptic feedback slider.
+- Added toolbar toggles and JSON layout actions for auto-capitalization and force auto-caps.
+- Hardened internal crash reporting in release builds and settings dialog.
+- Completed 100% translations for all new features across 25 languages.
