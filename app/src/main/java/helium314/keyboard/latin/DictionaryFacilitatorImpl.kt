@@ -846,7 +846,8 @@ class DictionaryFacilitatorImpl : DictionaryFacilitator {
             }
 
             // Level 2: Fill remaining slots with user history/personal frequent words
-            if (suggestions.size < 5) {
+            val neededHistorySlots = 5 - suggestions.size
+            if (neededHistorySlots > 0) {
                 val historyDict = dictGroup.getSubDict(Dictionary.TYPE_USER_HISTORY)
                 val topHistoryWords = try {
                     historyDict?.getAllWordsWithFrequency()
@@ -855,26 +856,27 @@ class DictionaryFacilitatorImpl : DictionaryFacilitator {
                 }
                 if (!topHistoryWords.isNullOrEmpty() && historyDict != null) {
                     val existingWords = suggestions.map { it.mWord }.toSet()
-                    val sortedHistory = topHistoryWords.entries
-                        .filter { !isBlacklisted(it.key) && it.key.length > 1 && !existingWords.contains(it.key) }
-                        .sortedByDescending { it.value }
-                        .take(5)
                     var historyFallbackScore = 85
-                    for (entry in sortedHistory) {
-                        if (suggestions.size >= 5) break
-                        suggestions.add(
-                            SuggestedWordInfo(
-                                entry.key,
-                                "",
-                                historyFallbackScore,
-                                SuggestedWordInfo.KIND_PREDICTION,
-                                historyDict,
-                                SuggestedWordInfo.NOT_AN_INDEX,
-                                SuggestedWordInfo.NOT_A_CONFIDENCE
+                    topHistoryWords.entries
+                        .asSequence()
+                        .filter { it.key.length > 1 && !existingWords.contains(it.key) }
+                        .sortedByDescending { it.value }
+                        .filter { !isBlacklisted(it.key) }
+                        .take(neededHistorySlots)
+                        .forEach { entry ->
+                            suggestions.add(
+                                SuggestedWordInfo(
+                                    entry.key,
+                                    "",
+                                    historyFallbackScore,
+                                    SuggestedWordInfo.KIND_PREDICTION,
+                                    historyDict,
+                                    SuggestedWordInfo.NOT_AN_INDEX,
+                                    SuggestedWordInfo.NOT_A_CONFIDENCE
+                                )
                             )
-                        )
-                        historyFallbackScore -= 2
-                    }
+                            historyFallbackScore -= 2
+                        }
                 }
             }
         }
@@ -962,7 +964,8 @@ class DictionaryFacilitatorImpl : DictionaryFacilitator {
         return dictionariesToCheck.any { dictionaryGroup.getDict(it)?.isValidWord(word) == true }
     }
 
-    override fun isBlacklisted(word: String): Boolean = dictionaryGroups.any { it.isBlacklisted(word) }
+    override fun isBlacklisted(word: String): Boolean =
+        if (word.isBlank()) false else dictionaryGroups.any { it.isBlacklisted(word) }
 
     override fun removeWord(word: String) {
         sessionWordBoost?.removeWord(word)
@@ -1226,20 +1229,45 @@ private class DictionaryGroup(
     }
 
     @Volatile
+    private var compiledExactBlacklist: Set<String> = emptySet()
+
+    @Volatile
     private var compiledBlacklistPatterns: List<Regex> = emptyList()
+
+    private fun isRegexPattern(pattern: String): Boolean {
+        return pattern.contains(".*")
+            || pattern.contains(".+")
+            || pattern.startsWith("^")
+            || pattern.endsWith("$")
+            || pattern.contains("[")
+            || pattern.contains("(")
+            || pattern.contains("\\")
+            || pattern.contains("|")
+            || pattern.contains("{")
+    }
 
     private fun rebuildCompiledPatterns() {
         rebuildCompiledPatterns(blacklist)
     }
 
     private fun rebuildCompiledPatterns(patterns: Collection<String>) {
-        compiledBlacklistPatterns = patterns.map { pattern ->
-            try {
-                Regex(pattern)
-            } catch (e: Exception) {
-                Regex(Regex.escape(pattern))
+        val cleanPatterns = patterns.map { it.trim().lowercase(locale) }.filter { it.isNotEmpty() }
+        val exactSet = HashSet<String>(cleanPatterns.size)
+        val regexList = ArrayList<Regex>()
+
+        for (pattern in cleanPatterns) {
+            exactSet.add(pattern)
+            if (isRegexPattern(pattern)) {
+                try {
+                    regexList.add(Regex(pattern))
+                } catch (e: Exception) {
+                    // Not a valid regex; exactSet already matches it literally.
+                }
             }
         }
+
+        compiledExactBlacklist = exactSet
+        compiledBlacklistPatterns = regexList
     }
 
     private val blacklist = hashSetOf<String>().apply {
@@ -1250,13 +1278,21 @@ private class DictionaryGroup(
                 try {
                     val loadedWords = mutableSetOf<String>()
                     if (file.isFile) {
-                        loadedWords.addAll(file.readLines().map { it.lowercase(locale) })
+                        loadedWords.addAll(
+                            file.readLines()
+                                .map { it.trim().lowercase(locale) }
+                                .filter { it.isNotEmpty() }
+                        )
                     }
                     val langTag = locale.toLanguageTag()
                     if (locale.language.isNotEmpty() && locale.language != langTag) {
                         val baseFile = File(file.parentFile, "${locale.language}.txt")
                         if (baseFile.isFile) {
-                            loadedWords.addAll(baseFile.readLines().map { it.lowercase(locale) })
+                            loadedWords.addAll(
+                                baseFile.readLines()
+                                    .map { it.trim().lowercase(locale) }
+                                    .filter { it.isNotEmpty() }
+                            )
                         }
                     }
                     addAll(loadedWords)
@@ -1269,19 +1305,35 @@ private class DictionaryGroup(
     }
 
     fun isBlacklisted(word: String): Boolean {
-        val userDict = getSubDict(Dictionary.TYPE_USER)
+        if (word.isBlank()) return false
         val lowercased = word.lowercase(locale)
+        val userDict = getSubDict(Dictionary.TYPE_USER)
         if (userDict != null && (userDict.isInDictionary(word) || userDict.isInDictionary(lowercased))) {
             return false
         }
+        val exactWords = compiledExactBlacklist
+        if (exactWords.contains(lowercased) || exactWords.contains(word)) {
+            return true
+        }
         val patterns = compiledBlacklistPatterns
-        return patterns.any { it.matches(lowercased) }
+        if (patterns.isEmpty() || lowercased.length > 64) {
+            return false
+        }
+        return patterns.any { pattern ->
+            try {
+                pattern.matches(lowercased)
+            } catch (e: Exception) {
+                false
+            }
+        }
     }
 
     fun addToBlacklist(word: String) {
-        val lowercase = word.lowercase(locale)
+        val trimmed = word.trim()
+        if (trimmed.isEmpty()) return
+        val lowercase = trimmed.lowercase(locale)
         synchronized(blacklistLock) {
-            if (!blacklist.add(lowercase) || blacklistFile == null) return
+            if (!blacklist.add(lowercase)) return
             rebuildCompiledPatterns()
         }
         val file = blacklistFile ?: return
@@ -1304,9 +1356,11 @@ private class DictionaryGroup(
     }
 
     fun removeFromBlacklist(word: String) {
-        val lowercase = word.lowercase(locale)
+        val trimmed = word.trim()
+        if (trimmed.isEmpty()) return
+        val lowercase = trimmed.lowercase(locale)
         synchronized(blacklistLock) {
-            if (!blacklist.remove(lowercase) || blacklistFile == null) return
+            if (!blacklist.remove(lowercase)) return
             rebuildCompiledPatterns()
         }
         val file = blacklistFile ?: return
@@ -1321,7 +1375,9 @@ private class DictionaryGroup(
                     for (f in files) {
                         if (f.isFile) {
                             val lines = f.readLines()
-                            val newLines = lines.filterNot { it.lowercase(locale) == lowercase }
+                            val newLines = lines
+                                .map { it.trim() }
+                                .filter { it.isNotEmpty() && it.lowercase(locale) != lowercase }
                             if (newLines.size != lines.size) {
                                 f.writeText(newLines.joinToString("\n") + if (newLines.isEmpty()) "" else "\n")
                             }
@@ -1349,13 +1405,21 @@ private class DictionaryGroup(
                     blacklist.clear()
                     val loadedWords = mutableSetOf<String>()
                     if (file.isFile) {
-                        loadedWords.addAll(file.readLines().map { it.lowercase(locale) })
+                        loadedWords.addAll(
+                            file.readLines()
+                                .map { it.trim().lowercase(locale) }
+                                .filter { it.isNotEmpty() }
+                        )
                     }
                     val langTag = locale.toLanguageTag()
                     if (locale.language.isNotEmpty() && locale.language != langTag) {
                         val baseFile = File(file.parentFile, "${locale.language}.txt")
                         if (baseFile.isFile) {
-                            loadedWords.addAll(baseFile.readLines().map { it.lowercase(locale) })
+                            loadedWords.addAll(
+                                baseFile.readLines()
+                                    .map { it.trim().lowercase(locale) }
+                                    .filter { it.isNotEmpty() }
+                            )
                         }
                     }
                     blacklist.addAll(loadedWords)
