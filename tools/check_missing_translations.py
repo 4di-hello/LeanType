@@ -120,6 +120,7 @@ LANG_NAMES: Dict[str, str] = {
 
 # The target languages recently mass translated in v4.2.7
 RECENT_MASS_TRANSLATED = [
+    "values-ar",
     "values-lt",
     "values-ro",
     "values-in",
