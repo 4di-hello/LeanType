@@ -68,16 +68,19 @@ class AudioAndHapticFeedbackManager private constructor() {
         val vibrator = mVibrator ?: return
         if (milliseconds <= 0) return
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val safeAmplitude = if (amplitudePercent < 0) {
-                VibrationEffect.DEFAULT_AMPLITUDE
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val safeAmplitude = if (amplitudePercent < 0) {
+                    VibrationEffect.DEFAULT_AMPLITUDE
+                } else {
+                    (amplitudePercent * 255 / 100).coerceIn(1, 255)
+                }
+                val effect = VibrationEffect.createOneShot(milliseconds, safeAmplitude)
+                vibrateWithAttributes(vibrator, effect)
             } else {
-                (amplitudePercent * 255 / 100).coerceIn(1, 255)
+                vibrator.vibrate(milliseconds)
             }
-            val effect = VibrationEffect.createOneShot(milliseconds, safeAmplitude)
-            vibrateWithAttributes(vibrator, effect)
-        } else {
-            vibrator.vibrate(milliseconds)
+        } catch (_: Throwable) {
         }
     }
 
@@ -131,14 +134,17 @@ class AudioAndHapticFeedbackManager private constructor() {
             mLastGestureVibrationTime = now
         }
 
-        // 1. Custom duration fallback: If user explicitly configured duration (ms), use one-shot.
-        // Gestures respect custom duration, clamped to 6ms and softened amplitude to avoid rumbling while scrubbing.
+        // 1. Custom duration / amplitude override: If user explicitly configured duration (ms) or amplitude (%),
+        // use one-shot vibration so the intensity slider directly controls tactile amplitude.
+        // Gestures respect custom settings, clamped to 6ms and softened amplitude to avoid rumbling while scrubbing.
         val allowDuration = hapticEvent.allowCustomDuration || isGesture
-        if (allowDuration && settings.mKeypressVibrationDuration >= 0) {
+        val hasCustomDuration = settings.mKeypressVibrationDuration >= 0
+        val hasCustomAmplitude = settings.mKeypressVibrationAmplitude >= 0
+        if (allowDuration && (hasCustomDuration || hasCustomAmplitude)) {
             val duration = if (isGesture) {
-                settings.mKeypressVibrationDuration.toLong().coerceAtMost(6L)
+                if (hasCustomDuration) settings.mKeypressVibrationDuration.toLong().coerceAtMost(6L) else 5L
             } else {
-                settings.mKeypressVibrationDuration.toLong()
+                if (hasCustomDuration) settings.mKeypressVibrationDuration.toLong() else 15L
             }
             val amplitude = if (isGesture && settings.mKeypressVibrationAmplitude > 0) {
                 (settings.mKeypressVibrationAmplitude * 0.4f).toInt().coerceIn(1, 255)
@@ -149,7 +155,7 @@ class AudioAndHapticFeedbackManager private constructor() {
             return
         }
 
-        // 2. Modern Primitive Haptics (API 30+) with amplitude scaling
+        // 2. Modern Primitive Haptics (API 30+) for System Default tactile feedback
         if (vibrator != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val primitiveId = when (hapticEvent) {
                 HapticEvent.KEY_LONG_PRESS -> VibrationEffect.Composition.PRIMITIVE_CLICK
@@ -188,7 +194,7 @@ class AudioAndHapticFeedbackManager private constructor() {
 
                     vibrateWithAttributes(vibrator, effect)
                     return
-                } catch (e: Exception) {
+                } catch (_: Throwable) {
                     // Fall through to predefined effects if composition fails on OEM driver
                 }
             }
@@ -204,7 +210,7 @@ class AudioAndHapticFeedbackManager private constructor() {
                 val effect = VibrationEffect.createPredefined(effectId)
                 vibrateWithAttributes(vibrator, effect)
                 return
-            } catch (e: Exception) {
+            } catch (_: Throwable) {
                 // Fall through to system view haptics if effect is unsupported
             }
         }
@@ -221,10 +227,13 @@ class AudioAndHapticFeedbackManager private constructor() {
         } else {
             hapticEvent.feedbackConstant
         }
-        viewToPerformHapticFeedbackOn?.performHapticFeedback(
-            feedbackConstant,
-            HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
-        )
+        try {
+            viewToPerformHapticFeedbackOn?.performHapticFeedback(
+                feedbackConstant,
+                HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
+            )
+        } catch (_: Throwable) {
+        }
     }
 
     private fun isPrimitiveSupported(vibrator: Vibrator, primitiveId: Int): Boolean {
@@ -236,24 +245,31 @@ class AudioAndHapticFeedbackManager private constructor() {
                 } else {
                     vibrator.arePrimitivesSupported(primitiveId).firstOrNull() == true
                 }
-            } catch (e: Exception) {
+            } catch (_: Throwable) {
                 false
             }
         }
     }
 
     private fun vibrateWithAttributes(vibrator: Vibrator, effect: VibrationEffect) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val attributes = android.os.VibrationAttributes.createForUsage(android.os.VibrationAttributes.USAGE_TOUCH)
-            vibrator.vibrate(effect, attributes)
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val attributes = android.media.AudioAttributes.Builder()
-                .setContentType(android.media.AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .setUsage(android.media.AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
-                .build()
-            vibrator.vibrate(effect, attributes)
-        } else {
-            vibrator.vibrate(effect)
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                val attributes = android.os.VibrationAttributes.createForUsage(android.os.VibrationAttributes.USAGE_TOUCH)
+                vibrator.vibrate(effect, attributes)
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val attributes = android.media.AudioAttributes.Builder()
+                    .setContentType(android.media.AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setUsage(android.media.AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                    .build()
+                vibrator.vibrate(effect, attributes)
+            } else {
+                vibrator.vibrate(effect)
+            }
+        } catch (_: Throwable) {
+            try {
+                vibrator.vibrate(effect)
+            } catch (_: Throwable) {
+            }
         }
     }
 
