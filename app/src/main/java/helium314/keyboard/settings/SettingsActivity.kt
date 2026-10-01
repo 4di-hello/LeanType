@@ -83,7 +83,7 @@ open class SettingsActivity : ComponentActivity(), SharedPreferences.OnSharedPre
             TranslationModelImporter.migrateLegacyModels(this)
             helium314.keyboard.latin.handwriting.HandwritingModelImporter.migrateLegacyModels(this)
         }
-        crashReportFiles.value = findCrashReports(!BuildConfig.DEBUG && !DebugFlags.DEBUG_ENABLED)
+        crashReportFiles.value = findCrashReports(false)
         val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
 
         settingsContainer = SettingsContainer(this)

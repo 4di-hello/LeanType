@@ -75,7 +75,7 @@ ${Log.getLog(100).joinToString("\n")}
             val dir = appContext.filesDir
             val crashReportFile = File(dir, "crash_report_$date.txt")
             crashReportFile.appendText(text)
-        } catch (_: Exception) {
+        } catch (_: Throwable) {
             // filesDir unavailable (device locked before Direct Boot unlock);
             // fall back to device-protected storage which is always accessible.
             val dir = DeviceProtectedUtils.getFilesDir(appContext) ?: return
