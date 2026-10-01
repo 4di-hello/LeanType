@@ -7,6 +7,7 @@ As an open-source, community-funded project, we operate on a very limited budget
 ---
 
 ### 🐛 Fixed
+- **Punctuation & Backspace Input Freeze**: Resolved a severe UI freeze / ANR when typing punctuation (such as colons `:`) or backspacing by optimizing dictionary blacklist evaluation with instant O(1) hash lookups and lazy candidate scoring.
 - **Android 12 Crash Loop on Keypress**: Resolved a fatal `NoSuchMethodError` crash loop on Android 12 (API 31/32) caused by `VibrationAttributes.createForUsage` (introduced in API 33), restoring smooth typing on affected devices.
 - **Vibration Intensity Slider**: Restored vibration amplitude scaling when custom intensity is set, resolving an issue where the haptic slider only operated at full intensity or off on certain devices.
 - **Crash Log Reporting in Release Builds**: Hardened crash report generation to use reliable internal storage and exposed internal crash reports in settings dialogs across release builds.

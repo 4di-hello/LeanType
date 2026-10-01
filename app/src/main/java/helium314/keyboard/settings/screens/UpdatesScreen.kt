@@ -63,6 +63,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 private val currentChangelogItems = listOf(
+    "• Input Freeze Fix: Resolved UI freeze / ANR when typing punctuation or backspacing via O(1) blacklist lookups",
     "• Android 12 Crash Fix: Resolved NoSuchMethodError crash loop on Android 12 when tapping keys or suggestions",
     "• Haptic Intensity Slider: Restored vibration amplitude scaling when adjusting the haptic feedback slider",
     "• Auto-Capitalization Controls: Added toolbar toggles and JSON layout actions for auto-caps and force auto-caps",

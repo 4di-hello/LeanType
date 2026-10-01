@@ -1,3 +1,4 @@
+- Fixed input freeze / ANR on punctuation and backspace via O(1) blacklist lookups.
 - Fixed fatal NoSuchMethodError crash loop on Android 12 when tapping keys or suggestions.
 - Restored vibration intensity scaling when adjusting the haptic feedback slider.
 - Added toolbar toggles and JSON layout actions for auto-capitalization and force auto-caps.
