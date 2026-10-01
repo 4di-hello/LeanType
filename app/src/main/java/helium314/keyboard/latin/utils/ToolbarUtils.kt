@@ -14,6 +14,7 @@ import android.os.Handler
 import android.os.Looper
 import android.annotation.SuppressLint
 import androidx.core.view.forEach
+import androidx.core.view.ViewCompat
 import helium314.keyboard.keyboard.internal.KeyboardIconsSet
 import helium314.keyboard.keyboard.internal.keyboard_parser.floris.KeyCode
 import helium314.keyboard.latin.BuildConfig
@@ -179,6 +180,8 @@ class TagDrawable(private val text: String) : Drawable() {
 fun setToolbarButtonsActivatedStateOnPrefChange(buttonsGroup: ViewGroup, key: String?) {
     // settings need to be updated when buttons change
     if (key != Settings.PREF_AUTO_CORRECTION
+        && key != Settings.PREF_AUTO_CAP
+        && key != Settings.PREF_FORCE_AUTO_CAPS
         && key != Settings.PREF_ALWAYS_INCOGNITO_MODE
         && key?.startsWith(Settings.PREF_ONE_HANDED_MODE_PREFIX) == false)
         return
@@ -202,12 +205,26 @@ fun setToolbarButtonActivatedState(button: ImageButton) {
         ONE_HANDED -> Settings.getValues().mOneHandedModeEnabled
         SPLIT -> Settings.getValues().mIsSplitKeyboardEnabled
         AUTOCORRECT -> Settings.getValues().mAutoCorrectionEnabledPerUserSettings
+        AUTO_CAP -> Settings.getValues().mAutoCap
+        FORCE_AUTO_CAPS -> Settings.getValues().mAutoCap && Settings.getValues().mForceAutoCaps
         SELECT_MODE -> helium314.keyboard.keyboard.KeyboardActionListenerImpl.sPersistentSelectionModeActive
         else -> true
     }
     button.isActivated = activated
+    if (button.tag == AUTO_CAP || button.tag == FORCE_AUTO_CAPS) {
+        val prefs = button.context.prefs()
+        val saved = if (button.tag == AUTO_CAP) prefs.getBoolean(Settings.PREF_AUTO_CAP, Defaults.PREF_AUTO_CAP)
+            else prefs.getBoolean(Settings.PREF_FORCE_AUTO_CAPS, Defaults.PREF_FORCE_AUTO_CAPS)
+        val state = when {
+            !saved -> R.string.caps_control_off
+            activated -> R.string.caps_control_on
+            !prefs.getBoolean(Settings.PREF_AUTO_CAP, Defaults.PREF_AUTO_CAP) -> R.string.caps_control_paused_auto_cap
+            else -> R.string.caps_control_no_uppercase
+        }
+        ViewCompat.setStateDescription(button, button.context.getString(state))
+    }
     val colors = Settings.getValues().mColors
-    if (activated && button.tag in listOf(INCOGNITO, ONE_HANDED, SPLIT, AUTOCORRECT, SELECT_MODE)) {
+    if (activated && button.tag in listOf(INCOGNITO, ONE_HANDED, SPLIT, AUTOCORRECT, AUTO_CAP, FORCE_AUTO_CAPS, SELECT_MODE)) {
         colors.setColor(button.background, ColorType.TOOL_BAR_KEY_ENABLED_BACKGROUND)
         if (button.drawable != null) {
             button.clearColorFilter()
@@ -243,6 +260,8 @@ fun getCodeForToolbarKey(key: ToolbarKey) = Settings.getInstance().getCustomTool
     TOUCHPAD -> KeyCode.TOGGLE_TOUCHPAD_MODE
     TEXT_EDIT -> KeyCode.TOGGLE_TEXT_EDIT_MODE
     AUTOCORRECT -> KeyCode.TOGGLE_AUTOCORRECT
+    AUTO_CAP -> KeyCode.TOGGLE_AUTO_CAP
+    FORCE_AUTO_CAPS -> KeyCode.TOGGLE_FORCE_AUTO_CAPS
     CLEAR_CLIPBOARD -> KeyCode.CLIPBOARD_CLEAR_HISTORY
     CLOSE_HISTORY -> KeyCode.ALPHA
     EMOJI -> KeyCode.EMOJI
@@ -299,7 +318,7 @@ fun getCodeForToolbarKeyLongClick(key: ToolbarKey) = Settings.getInstance().getC
 // names need to be aligned with resources strings (using lowercase of key.name)
 enum class ToolbarKey {
     VOICE, CLIPBOARD, CLIPBOARD_SEARCH, NUMPAD, HANDWRITING, UNDO, REDO, SETTINGS, SELECT_ALL, SELECT_WORD, COPY, CUT, PASTE, ONE_HANDED, SPLIT, FLOATING,
-    INCOGNITO, TOUCHPAD, TEXT_EDIT, AUTOCORRECT, CLEAR_CLIPBOARD, CLOSE_HISTORY, EMOJI, LEFT, RIGHT, UP, DOWN, WORD_LEFT, WORD_RIGHT,
+    INCOGNITO, TOUCHPAD, TEXT_EDIT, AUTOCORRECT, AUTO_CAP, FORCE_AUTO_CAPS, CLEAR_CLIPBOARD, CLOSE_HISTORY, EMOJI, LEFT, RIGHT, UP, DOWN, WORD_LEFT, WORD_RIGHT,
     PAGE_UP, PAGE_DOWN, FULL_LEFT, FULL_RIGHT, PAGE_START, PAGE_END, PROOFREAD, TRANSLATE, OCR, SELECT_MODE,
     CUSTOM_AI_1, CUSTOM_AI_2, CUSTOM_AI_3, CUSTOM_AI_4, CUSTOM_AI_5,
     CUSTOM_AI_6, CUSTOM_AI_7, CUSTOM_AI_8, CUSTOM_AI_9, CUSTOM_AI_10

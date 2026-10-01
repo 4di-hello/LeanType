@@ -3,6 +3,7 @@ package helium314.keyboard
 
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodSubtype
+import androidx.core.content.edit
 import com.android.inputmethod.keyboard.ProximityInfo
 import helium314.keyboard.keyboard.Key
 import helium314.keyboard.keyboard.Key.KeyParams
@@ -19,16 +20,22 @@ import helium314.keyboard.keyboard.internal.keyboard_parser.POPUP_KEYS_NORMAL
 import helium314.keyboard.keyboard.internal.keyboard_parser.addLocaleKeyTextsToParams
 import helium314.keyboard.keyboard.internal.keyboard_parser.floris.KeyCode
 import helium314.keyboard.latin.LatinIME
+import helium314.keyboard.latin.BuildConfig
 import helium314.keyboard.latin.RichInputMethodSubtype
 import helium314.keyboard.latin.common.Constants
+import helium314.keyboard.latin.settings.Settings
 import helium314.keyboard.latin.utils.LayoutType
 import helium314.keyboard.latin.utils.LayoutType.Companion.toExtraValue
 import helium314.keyboard.latin.utils.LayoutUtilsCustom
 import helium314.keyboard.latin.utils.POPUP_KEYS_LAYOUT
 import helium314.keyboard.latin.utils.SubtypeUtilsAdditional
+import helium314.keyboard.latin.utils.clearCustomToolbarKeyCodes
+import helium314.keyboard.latin.utils.prefs
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
+import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.Implementation
 import org.robolectric.annotation.Implements
@@ -51,6 +58,9 @@ class ParserTest {
     private lateinit var params: KeyboardParams
 
     @BeforeTest fun setUp() {
+        shadowOf(RuntimeEnvironment.getApplication()).grantPermissions(
+            "${BuildConfig.APPLICATION_ID}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+        )
         latinIME = Robolectric.setupService(LatinIME::class.java)
         ShadowLog.setupLogging()
         ShadowLog.stream = System.out
@@ -152,6 +162,50 @@ f""", // no newline at the end
         assertIsExpected("""[[{ "$": "auto_text_key" "label": "a" }]]""", Expected('a'.code, "a"))
         assertIsExpected("""[[{ "$": "text_key" "label": "a" }]]""", Expected('a'.code, "a"))
         assertIsExpected("""[[{ "label": "a" }]]""", Expected('a'.code, "a"))
+    }
+
+    @Test @Config(sdk = [32, 35])
+    fun capsControlsHaveKeywordNumericAndPopupActions() {
+        for ((label, code) in listOf("auto_cap" to -10079, "force_auto_caps" to -10080)) {
+            assertEquals(1, KeyCode::class.java.fields.count {
+                it.type == Int::class.javaPrimitiveType && it.getInt(null) == code
+            }, "$label must have a unique keycode")
+            assertIsExpected("""[[{"label":"$label"}]]""", Expected(code, icon = label))
+            assertIsExpected("""[[{"label":"caps","code":$code}]]""", Expected(code, "caps"))
+            assertIsExpected("""[[{"label":"x","popup":{"main":{"label":"$label"}}}]]""",
+                Expected('x'.code, "x", popups = listOf(null to code)))
+            val keyword = LayoutParser.parseJsonString("""[[{"label":"$label"}]]""")
+                .single().single().compute(params)!!.toKeyParams(params)
+            assertEquals(null, keyword.outputText)
+            val popup = LayoutParser.parseJsonString("""[[{"label":"x","popup":{"main":{"label":"$label"}}}]]""")
+                .single().single().compute(params)!!.toKeyParams(params).mPopupKeys!!.single()
+            assertEquals(label, popup.mIconName)
+            assertEquals(null, popup.mOutputText)
+        }
+        assertIsExpected("""[[{"label":"force_auto_cap"}]]""",
+            Expected(KeyCode.MULTIPLE_CODE_POINTS, "force_auto_cap", text = "force_auto_cap"))
+    }
+
+    @Test @Config(sdk = [32, 35])
+    fun capsControlKeywordsRespectToolbarRemapsButNumericCodesStayFixed() {
+        val prefs = latinIME.prefs()
+        val original = prefs.getString(Settings.PREF_TOOLBAR_CUSTOM_KEY_CODES, null)
+        try {
+            prefs.edit { putString(Settings.PREF_TOOLBAR_CUSTOM_KEY_CODES, "AUTO_CAP,-7,null;FORCE_AUTO_CAPS,-8,null") }
+            clearCustomToolbarKeyCodes()
+            for ((label, code, remapped) in listOf(
+                Triple("auto_cap", -10079, KeyCode.DELETE),
+                Triple("force_auto_caps", -10080, KeyCode.DELETE_WORD)
+            )) {
+                assertIsExpected("""[[{"label":"$label"}]]""", Expected(remapped, icon = label))
+                assertIsExpected("""[[{"label":"caps","code":$code}]]""", Expected(code, "caps"))
+                assertIsExpected("""[[{"label":"x","popup":{"main":{"label":"$label"}}}]]""",
+                    Expected('x'.code, "x", popups = listOf(null to remapped)))
+            }
+        } finally {
+            prefs.edit { putString(Settings.PREF_TOOLBAR_CUSTOM_KEY_CODES, original) }
+            clearCustomToolbarKeyCodes()
+        }
     }
 
     @Test fun labelAndExplicitCode() {
