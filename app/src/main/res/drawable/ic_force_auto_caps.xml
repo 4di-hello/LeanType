@@ -1,10 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    SPDX-FileCopyrightText: Material Design Authors / Google LLC
+    SPDX-License-Identifier: Apache-2.0
+-->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"
     android:viewportWidth="24"
     android:viewportHeight="24">
+    <!-- Capital 'A' matching Material Design typography -->
     <path
-        android:fillColor="#000000"
+        android:fillColor="#FFF"
         android:fillType="evenOdd"
-        android:pathData="M2,20L7,6h2l5,14h-2.3l-1.1,-3.5H5.4L4.3,20zM6.1,14.5h3.8L8,9zM18,3h4l-3,6h4l-7,10 1,-8h-3z" />
+        android:pathData="M2.5,19h2.1l1.1,-3.5h4.6l1.1,3.5h2.1L9,5H7L2.5,19z M8,8.2l1.6,4.5H6.4L8,8.2z" />
+    <!-- Force lightning bolt badge -->
+    <path
+        android:fillColor="#FFF"
+        android:pathData="M18.5,4L15,11.5h3.5L16.5,19.5L22.5,10h-3.8L21.5,4H18.5z" />
 </vector>
