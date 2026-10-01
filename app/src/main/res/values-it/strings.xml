@@ -1220,6 +1220,11 @@
     <string name="emoticon_group_dancing">Ballando</string>
     <string name="emoticon_group_shruggie">Spallucce</string>
     <string name="emoticon_group_table_flip">Tavolo ribaltato</string>
+
+    <string name="caps_control_on">Attivo</string>
+    <string name="caps_control_off">Disattivo</string>
+    <string name="caps_control_paused_auto_cap">Salvato come attivo; richiede maiuscole automatiche</string>
+    <string name="caps_control_no_uppercase">Salvato come attivo; questa lingua non ha lettere maiuscole</string>
 </resources>
 
 

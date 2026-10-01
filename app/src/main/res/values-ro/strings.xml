@@ -1135,6 +1135,11 @@
     <string name="emoticon_group_dancing">Dans</string>
     <string name="emoticon_group_shruggie">Ridicând din umeri</string>
     <string name="emoticon_group_table_flip">Răsturnare masă</string>
+
+    <string name="caps_control_on">Activat</string>
+    <string name="caps_control_off">Dezactivat</string>
+    <string name="caps_control_paused_auto_cap">Salvat ca activat; necesită scriere automată cu majuscule</string>
+    <string name="caps_control_no_uppercase">Salvat ca activat; această limbă nu are litere mari</string>
 </resources>
 
 

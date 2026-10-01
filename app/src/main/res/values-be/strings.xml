@@ -1133,6 +1133,11 @@
     <string name="emoticon_group_dancing">Танцы</string>
     <string name="emoticon_group_shruggie">Здзіўленае пацісканне плячыма</string>
     <string name="emoticon_group_table_flip">Перакульванне стала</string>
+
+    <string name="caps_control_on">Укл.</string>
+    <string name="caps_control_off">Выкл.</string>
+    <string name="caps_control_paused_auto_cap">Захавана ўключаным; патрабуецца аўтаматычная вялікая літара</string>
+    <string name="caps_control_no_uppercase">Захавана ўключаным; у гэтай мове няма вялікіх літар</string>
 </resources>
 
 

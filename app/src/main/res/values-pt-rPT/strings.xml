@@ -1144,6 +1144,11 @@
     <string name="emoticon_group_dancing">Dançando</string>
     <string name="emoticon_group_shruggie">Dar de ombros</string>
     <string name="emoticon_group_table_flip">Virar mesa</string>
+
+    <string name="caps_control_on">Ativado</string>
+    <string name="caps_control_off">Desativado</string>
+    <string name="caps_control_paused_auto_cap">Guardado como ativado; requer letras maiúsculas automáticas</string>
+    <string name="caps_control_no_uppercase">Guardado como ativado; este idioma não tem letras maiúsculas</string>
 </resources>
 
 

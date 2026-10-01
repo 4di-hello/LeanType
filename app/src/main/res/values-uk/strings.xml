@@ -1101,6 +1101,11 @@
     <string name="emoticon_group_dancing">Танці</string>
     <string name="emoticon_group_shruggie">Знизування плечима</string>
     <string name="emoticon_group_table_flip">Перекидання столу</string>
+
+    <string name="caps_control_on">Увімк.</string>
+    <string name="caps_control_off">Вимк.</string>
+    <string name="caps_control_paused_auto_cap">Збережено увімкненим; потрібна автоматична велика літера</string>
+    <string name="caps_control_no_uppercase">Збережено увімкненим; у цій мові немає великих літер</string>
 </resources>
 
 

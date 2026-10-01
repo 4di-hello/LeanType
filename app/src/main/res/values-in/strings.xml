@@ -1105,5 +1105,10 @@
     <string name="emoticon_group_dancing">Menari</string>
     <string name="emoticon_group_shruggie">Mengangkat bahu</string>
     <string name="emoticon_group_table_flip">Membalik meja</string>
+
+    <string name="caps_control_on">Aktif</string>
+    <string name="caps_control_off">Mati</string>
+    <string name="caps_control_paused_auto_cap">Disimpan aktif; memerlukan kapitalisasi otomatis</string>
+    <string name="caps_control_no_uppercase">Disimpan aktif; bahasa ini tidak memiliki huruf besar</string>
 </resources>
 

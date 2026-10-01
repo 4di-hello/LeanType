@@ -1121,6 +1121,11 @@
     <string name="emoticon_group_dancing">Ples</string>
     <string name="emoticon_group_shruggie">Slijeganje ramenima</string>
     <string name="emoticon_group_table_flip">Prevrnuti stol</string>
+
+    <string name="caps_control_on">Uključeno</string>
+    <string name="caps_control_off">Isključeno</string>
+    <string name="caps_control_paused_auto_cap">Spremljeno kao uključeno; zahtijeva automatsko veliko početno slovo</string>
+    <string name="caps_control_no_uppercase">Spremljeno kao uključeno; ovaj jezik nema velika slova</string>
 </resources>
 
 

@@ -1183,6 +1183,11 @@
     <string name="emoticon_group_dancing">Taniec</string>
     <string name="emoticon_group_shruggie">Wzruszenie ramionami</string>
     <string name="emoticon_group_table_flip">Przewrócenie stołu</string>
+
+    <string name="caps_control_on">Wł.</string>
+    <string name="caps_control_off">Wył.</string>
+    <string name="caps_control_paused_auto_cap">Zapisano jako włączone; wymaga automatycznych wielkich liter</string>
+    <string name="caps_control_no_uppercase">Zapisano jako włączone; ten język nie ma wielkich liter</string>
 </resources>
 
 

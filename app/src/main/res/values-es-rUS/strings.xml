@@ -1173,6 +1173,11 @@
     <string name="emoticon_group_dancing">Bailando</string>
     <string name="emoticon_group_shruggie">Encogimiento de hombros</string>
     <string name="emoticon_group_table_flip">Voltear mesa</string>
+
+    <string name="caps_control_on">Activado</string>
+    <string name="caps_control_off">Desactivado</string>
+    <string name="caps_control_paused_auto_cap">Guardado como activado; requiere mayúsculas automáticas</string>
+    <string name="caps_control_no_uppercase">Guardado como activado; este idioma no tiene letras mayúsculas</string>
 </resources>
 
 

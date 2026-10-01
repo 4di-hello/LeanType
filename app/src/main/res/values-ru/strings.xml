@@ -1213,6 +1213,11 @@
     <string name="emoticon_group_dancing">Танцы</string>
     <string name="emoticon_group_shruggie">Пожимание плечами</string>
     <string name="emoticon_group_table_flip">Переворот стола</string>
+
+    <string name="caps_control_on">Вкл.</string>
+    <string name="caps_control_off">Откл.</string>
+    <string name="caps_control_paused_auto_cap">Сохранено включенным; требуется автоматическая расстановка заглавных букв</string>
+    <string name="caps_control_no_uppercase">Сохранено включенным; в этом языке нет заглавных букв</string>
 </resources>
 
 

@@ -1206,6 +1206,11 @@
     <string name="emoticon_group_dancing">Χορός</string>
     <string name="emoticon_group_shruggie">Ανασήκωμα ώμων</string>
     <string name="emoticon_group_table_flip">Ανατροπή τραπεζιού</string>
+
+    <string name="caps_control_on">Ενεργό</string>
+    <string name="caps_control_off">Ανενεργό</string>
+    <string name="caps_control_paused_auto_cap">Αποθηκεύτηκε ως ενεργό; απαιτείται αυτόματη χρήση κεφαλαίων</string>
+    <string name="caps_control_no_uppercase">Αποθηκεύτηκε ως ενεργό; αυτή η γλώσσα δεν διαθέτει κεφαλαία γράμματα</string>
 </resources>
 
 

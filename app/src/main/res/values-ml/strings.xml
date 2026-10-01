@@ -1206,5 +1206,10 @@
     <string name="emoticon_group_dancing">നൃത്തം</string>
     <string name="emoticon_group_shruggie">തോൾ കുലുക്കൽ</string>
     <string name="emoticon_group_table_flip">മേശ മറിച്ചിടൽ</string>
+
+    <string name="caps_control_on">ഓൺ</string>
+    <string name="caps_control_off">ഓഫ്</string>
+    <string name="caps_control_paused_auto_cap">ഓൺ ആയി സംരക്ഷിച്ചു; സ്വയം വലിയക്ഷരമാക്കൽ ആവശ്യമാണ്</string>
+    <string name="caps_control_no_uppercase">ഓൺ ആയി സംരക്ഷിച്ചു; ഈ ഭാഷയിൽ വലിയക്ഷരങ്ങൾ ഇല്ല</string>
 </resources>
 

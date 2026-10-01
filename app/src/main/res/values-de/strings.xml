@@ -1166,6 +1166,11 @@
     <string name="emoticon_group_dancing">Tanzend</string>
     <string name="emoticon_group_shruggie">Achselzucken</string>
     <string name="emoticon_group_table_flip">Tisch umwerfen</string>
+
+    <string name="caps_control_on">Ein</string>
+    <string name="caps_control_off">Aus</string>
+    <string name="caps_control_paused_auto_cap">Als aktiviert gespeichert; erfordert automatische Groß-/Kleinschreibung</string>
+    <string name="caps_control_no_uppercase">Als aktiviert gespeichert; diese Sprache hat keine Großbuchstaben</string>
 </resources>
 
 

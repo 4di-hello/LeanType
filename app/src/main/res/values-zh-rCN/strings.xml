@@ -1147,5 +1147,10 @@
     <string name="emoticon_group_dancing">跳舞</string>
     <string name="emoticon_group_shruggie">耸肩</string>
     <string name="emoticon_group_table_flip">掀桌</string>
+
+    <string name="caps_control_on">开启</string>
+    <string name="caps_control_off">关闭</string>
+    <string name="caps_control_paused_auto_cap">已保存开启；需要启用自动大写</string>
+    <string name="caps_control_no_uppercase">已保存开启；此语言没有大写字母</string>
 </resources>
 

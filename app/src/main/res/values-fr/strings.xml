@@ -1218,6 +1218,11 @@ Nouveau dictionnaire:
     <string name="emoticon_group_dancing">Dansant</string>
     <string name="emoticon_group_shruggie">Haussement d\'épaules</string>
     <string name="emoticon_group_table_flip">Table renversée</string>
+
+    <string name="caps_control_on">Activé</string>
+    <string name="caps_control_off">Désactivé</string>
+    <string name="caps_control_paused_auto_cap">Enregistré activé ; nécessite les majuscules automatiques</string>
+    <string name="caps_control_no_uppercase">Enregistré activé ; cette langue n\'a pas de majuscules</string>
 </resources>
 
 

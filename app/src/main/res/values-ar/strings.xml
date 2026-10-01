@@ -1220,6 +1220,11 @@
     <string name="emoticon_group_dancing">رقص</string>
     <string name="emoticon_group_shruggie">هز الكتفين</string>
     <string name="emoticon_group_table_flip">قلب الطاولة</string>
+
+    <string name="caps_control_on">مفعل</string>
+    <string name="caps_control_off">معطل</string>
+    <string name="caps_control_paused_auto_cap">محفوظ كمفعل؛ يتطلب أحرف كبيرة تلقائيًا</string>
+    <string name="caps_control_no_uppercase">محفوظ كمفعل؛ هذه اللغة لا تحتوي على أحرف كبيرة</string>
 </resources>
 
 

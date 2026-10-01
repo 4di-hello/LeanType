@@ -1181,6 +1181,11 @@
     <string name="emoticon_group_dancing">Танци</string>
     <string name="emoticon_group_shruggie">Свиване на рамене</string>
     <string name="emoticon_group_table_flip">Обръщане на маса</string>
+
+    <string name="caps_control_on">Вкл.</string>
+    <string name="caps_control_off">Изкл.</string>
+    <string name="caps_control_paused_auto_cap">Запазено като включено; изисква авт. главни букви</string>
+    <string name="caps_control_no_uppercase">Запазено като включено; този език няма главни букви</string>
 </resources>
 
 

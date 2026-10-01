@@ -457,5 +457,10 @@
     <string name="emoticon_group_dancing">नृत्य</string>
     <string name="emoticon_group_shruggie">कंधे उचकाना</string>
     <string name="emoticon_group_table_flip">मेज पलटना</string>
+
+    <string name="caps_control_on">चालू</string>
+    <string name="caps_control_off">बंद</string>
+    <string name="caps_control_paused_auto_cap">चालू के रूप में सहेजा गया; स्वतः बड़े अक्षर की आवश्यकता है</string>
+    <string name="caps_control_no_uppercase">चालू के रूप में सहेजा गया; इस भाषा में बड़े अक्षर नहीं होते हैं</string>
 </resources>
 

@@ -1136,5 +1136,10 @@ Uyarı: Harici kod yüklemek güvenlik riski oluşturabilir. Yalnızca güvendi�
     <string name="emoticon_group_dancing">Dans</string>
     <string name="emoticon_group_shruggie">Omuz silkme</string>
     <string name="emoticon_group_table_flip">Masa devirme</string>
+
+    <string name="caps_control_on">Açık</string>
+    <string name="caps_control_off">Kapalı</string>
+    <string name="caps_control_paused_auto_cap">Açık olarak kaydedildi; otomatik büyük harf gerektirir</string>
+    <string name="caps_control_no_uppercase">Açık olarak kaydedildi; bu dilde büyük harf bulunmuyor</string>
 </resources>
 

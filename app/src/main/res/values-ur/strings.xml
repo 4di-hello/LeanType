@@ -1206,5 +1206,10 @@
     <string name="emoticon_group_dancing">رقص</string>
     <string name="emoticon_group_shruggie">کندھے اچکانا</string>
     <string name="emoticon_group_table_flip">میز الٹنا</string>
+
+    <string name="caps_control_on">آن</string>
+    <string name="caps_control_off">آف</string>
+    <string name="caps_control_paused_auto_cap">آن کے طور پر محفوظ؛ بڑے حروف کی خودکار تبدیلی درکار ہے</string>
+    <string name="caps_control_no_uppercase">آن کے طور پر محفوظ؛ اس زبان میں بڑے حروف نہیں ہیں</string>
 </resources>
 

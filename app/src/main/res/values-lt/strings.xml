@@ -1136,6 +1136,11 @@
     <string name="emoticon_group_dancing">Šokiai</string>
     <string name="emoticon_group_shruggie">Gūžčiojimas pečiais</string>
     <string name="emoticon_group_table_flip">Stalo apvertimas</string>
+
+    <string name="caps_control_on">Įjungta</string>
+    <string name="caps_control_off">Išjungta</string>
+    <string name="caps_control_paused_auto_cap">Išsaugota kaip įjungta; reikalauja automatinio didžiųjų raidžių rašymo</string>
+    <string name="caps_control_no_uppercase">Išsaugota kaip įjungta; šioje kalboje nėra didžiųjų raidžių</string>
 </resources>
 
 

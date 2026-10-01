@@ -1135,6 +1135,11 @@
     <string name="emoticon_group_dancing">Tantsiv</string>
     <string name="emoticon_group_shruggie">Õlakehitus</string>
     <string name="emoticon_group_table_flip">Laua ümberpööramine</string>
+
+    <string name="caps_control_on">Sisse lülitatud</string>
+    <string name="caps_control_off">Välja lülitatud</string>
+    <string name="caps_control_paused_auto_cap">Salvestatud sisselülitatuna; vajab automaatset suurtähtede kasutamist</string>
+    <string name="caps_control_no_uppercase">Salvestatud sisselülitatuna; sellel keelel puuduvad suurtähed</string>
 </resources>
 
 

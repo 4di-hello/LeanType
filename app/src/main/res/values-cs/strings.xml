@@ -1146,6 +1146,11 @@
     <string name="emoticon_group_dancing">Tanec</string>
     <string name="emoticon_group_shruggie">Pokrčení rameny</string>
     <string name="emoticon_group_table_flip">Převrácení stolu</string>
+
+    <string name="caps_control_on">Zapnuto</string>
+    <string name="caps_control_off">Vypnuto</string>
+    <string name="caps_control_paused_auto_cap">Uloženo jako zapnuté; vyžaduje velká písmena automaticky</string>
+    <string name="caps_control_no_uppercase">Uloženo jako zapnuté; tento jazyk nemá velká písmena</string>
 </resources>
 
 

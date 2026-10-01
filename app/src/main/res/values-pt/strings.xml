@@ -1166,6 +1166,11 @@
     <string name="emoticon_group_dancing">Dançando</string>
     <string name="emoticon_group_shruggie">Dar de ombros</string>
     <string name="emoticon_group_table_flip">Virar mesa</string>
+
+    <string name="caps_control_on">Ativado</string>
+    <string name="caps_control_off">Desativado</string>
+    <string name="caps_control_paused_auto_cap">Salvo como ativado; requer capitalização automática</string>
+    <string name="caps_control_no_uppercase">Salvo como ativado; este idioma não tem letras maiúsculas</string>
 </resources>
 
 

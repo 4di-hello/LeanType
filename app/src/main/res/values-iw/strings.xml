@@ -1148,6 +1148,11 @@
     <string name="emoticon_group_dancing">רוקד</string>
     <string name="emoticon_group_shruggie">משיכת כתפיים</string>
     <string name="emoticon_group_table_flip">הפיכת שולחן</string>
+
+    <string name="caps_control_on">פועל</string>
+    <string name="caps_control_off">כבוי</string>
+    <string name="caps_control_paused_auto_cap">נשמר כפועל; דורש אותיות רישיות אוטומטיות</string>
+    <string name="caps_control_no_uppercase">נשמר כפועל; בשפה זו אין אותיות רישיות</string>
 </resources>
 
 

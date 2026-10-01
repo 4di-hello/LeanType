@@ -1144,6 +1144,11 @@
     <string name="emoticon_group_dancing">Táncoló</string>
     <string name="emoticon_group_shruggie">Vállvonogatás</string>
     <string name="emoticon_group_table_flip">Asztalborítás</string>
+
+    <string name="caps_control_on">Be</string>
+    <string name="caps_control_off">Ki</string>
+    <string name="caps_control_paused_auto_cap">Bekapcsolva mentve; automatikus nagy kezdőbetűt igényel</string>
+    <string name="caps_control_no_uppercase">Bekapcsolva mentve; ebben a nyelvben nincsenek nagybetűk</string>
 </resources>
 
 

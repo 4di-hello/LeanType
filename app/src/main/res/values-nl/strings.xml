@@ -1188,6 +1188,11 @@
     <string name="emoticon_group_dancing">Dansend</string>
     <string name="emoticon_group_shruggie">Schouderophalen</string>
     <string name="emoticon_group_table_flip">Tafel omgooien</string>
+
+    <string name="caps_control_on">Aan</string>
+    <string name="caps_control_off">Uit</string>
+    <string name="caps_control_paused_auto_cap">Opgeslagen als ingeschakeld; vereist automatische hoofdletters</string>
+    <string name="caps_control_no_uppercase">Opgeslagen als ingeschakeld; deze taal heeft geen hoofdletters</string>
 </resources>
 
 
