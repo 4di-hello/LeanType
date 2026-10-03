@@ -53,7 +53,27 @@ class VoiceInputManager(
 
     interface VoiceInputListener {
         fun onStateChanged(state: VoiceState)
-        fun onError(message: String)
+        fun onError(message: String, canRetry: Boolean = false)
+    }
+
+    data class CachedVoiceAudio(
+        val wavBytes: ByteArray,
+        val languageTag: String,
+        val timestamp: Long = System.currentTimeMillis()
+    )
+
+    var lastFailedOnlineAudio: CachedVoiceAudio? = null
+        private set
+
+    fun clearFailedAudio() {
+        lastFailedOnlineAudio = null
+    }
+
+    private fun isNetworkAvailable(): Boolean {
+        val cm = ims.getSystemService(Context.CONNECTIVITY_SERVICE) as? android.net.ConnectivityManager ?: return false
+        val activeNet = cm.activeNetwork ?: return false
+        val caps = cm.getNetworkCapabilities(activeNet) ?: return false
+        return caps.hasCapability(android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
     private var state = VoiceState.IDLE
@@ -191,6 +211,9 @@ class VoiceInputManager(
     }
 
     private fun startOnlineVoice() {
+        if (!isNetworkAvailable()) {
+            Toast.makeText(ims, R.string.voice_no_internet_warning, Toast.LENGTH_SHORT).show()
+        }
         val sessionId = UUID.randomUUID().toString()
         activeSessionId = sessionId
         needsCapitalStart = true
@@ -569,7 +592,6 @@ class VoiceInputManager(
         val pcmBytes = synchronized(onlineAudioBuffer) {
             onlineAudioBuffer.toByteArray().also { onlineAudioBuffer.reset() }
         }
-        val sessionId = activeSessionId
 
         if (pcmBytes.size < 3200) { // Less than 100ms of audio
             Log.i(TAG, "Online voice audio too short (${pcmBytes.size} bytes), skipping")
@@ -593,7 +615,15 @@ class VoiceInputManager(
             else -> prefLang
         }
 
+        transcribeOnlineWav(wavBytes, languageTag, retryCount = 0)
+    }
+
+    private fun transcribeOnlineWav(wavBytes: ByteArray, languageTag: String, retryCount: Int) {
+        val sessionId = activeSessionId ?: UUID.randomUUID().toString().also { activeSessionId = it }
         val service = ProofreadService(ims)
+        val cachedAudio = CachedVoiceAudio(wavBytes, languageTag)
+        val autoRetryEnabled = ims.prefs().getBoolean(VoiceConstants.PREF_VOICE_AUTO_RETRY, true)
+
         onlineTranscriptionJob?.cancel()
         onlineTranscriptionJob = coroutineScope.launch(Dispatchers.IO) {
             val result = try {
@@ -609,20 +639,39 @@ class VoiceInputManager(
                 if (activeSessionId == sessionId) {
                     result.onSuccess { transcribedText ->
                         Log.i(TAG, "Online transcription success: '$transcribedText'")
+                        lastFailedOnlineAudio = null
                         syncRecognizedText(transcribedText, isFinal = true)
                         lastPartialText = null
                         cleanupSession()
                         updateState(VoiceState.IDLE)
                     }.onFailure { ex ->
                         val err = ex.message ?: "Transcription failed"
-                        Log.e(TAG, "Online transcription error: $err", ex)
-                        notifyError(err)
-                        cleanupSession()
-                        updateState(VoiceState.ERROR)
+                        Log.e(TAG, "Online transcription error (retryCount=$retryCount): $err", ex)
+                        if (autoRetryEnabled && retryCount < 1) {
+                            Log.i(TAG, "Auto-retrying online transcription in 1500ms...")
+                            mainHandler.postDelayed({
+                                if (state == VoiceState.PROCESSING_FINAL) {
+                                    transcribeOnlineWav(wavBytes, languageTag, retryCount + 1)
+                                }
+                            }, 1500L)
+                        } else {
+                            lastFailedOnlineAudio = cachedAudio
+                            notifyError(err, canRetry = true)
+                            cleanupSession()
+                            updateState(VoiceState.ERROR)
+                        }
                     }
                 }
             }
         }
+    }
+
+    fun retryLastFailedOnlineVoice() {
+        val cached = lastFailedOnlineAudio ?: return
+        Log.i(TAG, "Retrying last failed online voice audio")
+        updateState(VoiceState.PROCESSING_FINAL)
+        activeSessionId = UUID.randomUUID().toString()
+        transcribeOnlineWav(cached.wavBytes, cached.languageTag, retryCount = 0)
     }
 
     fun cancelVoice() {
@@ -847,9 +896,9 @@ class VoiceInputManager(
         }
     }
 
-    private fun notifyError(message: String) {
+    private fun notifyError(message: String, canRetry: Boolean = false) {
         mainHandler.post {
-            listener?.onError(message)
+            listener?.onError(message, canRetry)
         }
     }
 

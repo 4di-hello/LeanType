@@ -97,6 +97,7 @@ object VoiceConstants {
     const val PREF_VOICE_CUSTOM_PROMPT = "voice_custom_prompt"
     const val PREF_VOICE_MIC_SENSITIVITY = "voice_mic_sensitivity"
     const val PREF_VOICE_MAX_DURATION_SECONDS = "voice_max_duration_seconds"
+    const val PREF_VOICE_AUTO_RETRY = "pref_voice_auto_retry"
     const val PREF_USE_DEBUG_VOICE_STUB = "use_debug_voice_stub"
     const val VOICE_PLUGIN_PACKAGE = "com.leanbitlab.leantype.voice.offline"
 }

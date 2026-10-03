@@ -430,6 +430,20 @@ fun VoiceSettingsScreen(
         }
     }
 
+    val autoRetrySetting = remember {
+        Setting(
+            key = VoiceConstants.PREF_VOICE_AUTO_RETRY,
+            title = context.getString(R.string.pref_voice_auto_retry_title),
+            description = context.getString(R.string.pref_voice_auto_retry_summary)
+        ) {
+            SwitchPreference(
+                setting = it,
+                default = true,
+                icon = R.drawable.ic_redo_rounded
+            )
+        }
+    }
+
     val cpuThreadsSetting = remember {
         Setting(
             key = VoiceConstants.PREF_VOICE_CPU_THREADS,
@@ -610,6 +624,7 @@ fun VoiceSettingsScreen(
                                 icon = R.drawable.ic_proofread,
                                 onClick = onClickAIIntegration
                             )
+                            autoRetrySetting.Preference()
                         }
 
                         if (isThirdPartyVoiceEnabled) {

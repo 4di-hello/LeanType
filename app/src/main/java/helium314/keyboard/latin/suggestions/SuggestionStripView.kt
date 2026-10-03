@@ -786,6 +786,103 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
         updateSplitToolbarState()
     }
 
+    fun showVoiceErrorWithRetry(
+        message: String,
+        onRetry: Runnable,
+        onDismiss: Runnable
+    ) {
+        clear()
+        isExternalSuggestionVisible = true
+        isVoiceActive = true
+
+        val colors = Settings.getValues().mColors
+        val textColor = colors.get(ColorType.KEY_TEXT)
+        val accentColor = colors.get(ColorType.GESTURE_TRAIL)
+
+        val container = LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            layoutParams = LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+            setPadding(8.dpToPx(resources), 0, 4.dpToPx(resources), 0)
+        }
+
+        // Warning Icon
+        val warningIconView = android.widget.ImageView(context).apply {
+            val icon = ContextCompat.getDrawable(context, R.drawable.ic_close)?.mutate()
+            setImageDrawable(icon)
+            scaleType = android.widget.ImageView.ScaleType.CENTER_INSIDE
+            val pad = 6.dpToPx(resources)
+            setPadding(pad, pad, pad, pad)
+            colors.setColor(this, ColorType.REMOVE_SUGGESTION_ICON)
+            layoutParams = LinearLayout.LayoutParams(36.dpToPx(resources), LayoutParams.MATCH_PARENT)
+        }
+        container.addView(warningIconView)
+
+        // Error message text
+        val textView = TextView(context).apply {
+            text = message
+            setTextColor(textColor)
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
+            gravity = Gravity.CENTER_VERTICAL
+            maxLines = 1
+            ellipsize = TextUtils.TruncateAt.END
+            layoutParams = LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 1f).apply {
+                marginStart = 4.dpToPx(resources)
+                marginEnd = 6.dpToPx(resources)
+            }
+        }
+        container.addView(textView)
+
+        // Retry Button
+        val retryButton = TextView(context).apply {
+            text = context.getString(R.string.voice_retry_button)
+            setTextColor(if (accentColor != 0) accentColor else textColor)
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
+            typeface = android.graphics.Typeface.DEFAULT_BOLD
+            gravity = Gravity.CENTER
+            val padH = 12.dpToPx(resources)
+            val padV = 6.dpToPx(resources)
+            setPadding(padH, padV, padH, padV)
+            val bg = GradientDrawable().apply {
+                shape = GradientDrawable.RECTANGLE
+                cornerRadius = 14.dpToPx(resources).toFloat()
+                setColor(colors.get(ColorType.TOOL_BAR_EXPAND_KEY_BACKGROUND))
+            }
+            background = bg
+            isClickable = true
+            setOnClickListener {
+                AudioAndHapticFeedbackManager.getInstance().performHapticAndAudioFeedback(KeyCode.NOT_SPECIFIED, this@SuggestionStripView, HapticEvent.KEY_PRESS)
+                onRetry.run()
+            }
+        }
+        container.addView(retryButton)
+
+        // Close / Dismiss Button
+        val closeButton = ImageButton(context, null, R.attr.suggestionWordStyle).apply {
+            val closeIcon = ContextCompat.getDrawable(context, R.drawable.ic_close)?.mutate()
+            setImageDrawable(closeIcon)
+            setBackgroundResource(R.drawable.toolbar_key_background)
+            background?.let { colors.setColor(it, ColorType.TOOL_BAR_EXPAND_KEY_BACKGROUND) }
+            colors.setColor(this, ColorType.TOOL_BAR_KEY)
+            scaleType = android.widget.ImageView.ScaleType.CENTER_INSIDE
+            val pad = 9.dpToPx(resources)
+            setPadding(pad, pad, pad, pad)
+            layoutParams = LinearLayout.LayoutParams(40.dpToPx(resources), LayoutParams.MATCH_PARENT)
+            contentDescription = context.getString(R.string.voice_action_cancel)
+            setOnClickListener {
+                AudioAndHapticFeedbackManager.getInstance().performHapticAndAudioFeedback(KeyCode.NOT_SPECIFIED, this@SuggestionStripView, HapticEvent.KEY_PRESS)
+                onDismiss.run()
+            }
+        }
+        container.addView(closeButton)
+
+        suggestionsStrip.addView(container)
+        pinnedKeys.isVisible = false
+        suggestionsStrip.isVisible = true
+        toolbarContainer.isVisible = false
+        updateSplitToolbarState()
+    }
+
     fun hideVoiceStatus() {
         if (!isVoiceActive) return
         isVoiceActive = false
