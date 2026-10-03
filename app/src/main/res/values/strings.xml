@@ -1352,6 +1352,10 @@ New dictionary:
     <string name="select_color_accent">Accent</string>
     <!-- Selection: gesture color. -->
     <string name="select_color_gesture">Gesture input</string>
+    <!-- Selection: toolbar background color. -->
+    <string name="select_color_strip_background">Toolbar background</string>
+    <!-- Selection: toolbar keys / icons color. -->
+    <string name="select_color_toolbar_key">Toolbar icons</string>
     <!-- Message displayed when clicking "load" button in color theme picker. "%s" will be replaced by discussion_section_link -->
     <string name="get_colors_message">"You can find and share colors in the %s."</string>
     <!-- Message displayed when clicking add button for layouts. "%s" will be replaced by discussion_section_link -->

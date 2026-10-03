@@ -428,6 +428,8 @@ class DefaultColors (
     private val spaceBarText: Int = keyHintText,
     private val gesture: Int = accent,
     private var keyboardBackground: Drawable? = null,
+    private val stripBackgroundOverride: Int? = null,
+    private val toolbarKeyOverride: Int? = null,
 ) : Colors {
     private val navBar: Int
     /** brightened or darkened variant of [background], to be used if exact background color would be
@@ -442,6 +444,8 @@ class DefaultColors (
     private val keyTextFilter: ColorFilter
     private val suggestionTextFilter = colorFilter(suggestionText)
     private val accentColorFilter = colorFilter(accent)
+    private val effectiveToolbarKeyColor = toolbarKeyOverride ?: suggestionText
+    private val toolbarKeyFilter = if (toolbarKeyOverride != null) colorFilter(toolbarKeyOverride) else suggestionTextFilter
 
     /** color filter for the white action key icons in material theme, switches to gray if necessary for contrast */
     private val actionKeyIconColorFilter: ColorFilter?
@@ -454,9 +458,9 @@ class DefaultColors (
     private val adjustedBackgroundStateList: ColorStateList
     private val stripBackgroundList: ColorStateList
     private val toolbarKeyStateList = activatedStateList(
-        suggestionText,
-        if (isBrightColor(suggestionText)) darken(darken(suggestionText))
-        else brighten(brighten(suggestionText))
+        effectiveToolbarKeyColor,
+        if (isBrightColor(effectiveToolbarKeyColor)) darken(darken(effectiveToolbarKeyColor))
+        else brighten(brighten(effectiveToolbarKeyColor))
     )
     private var backgroundSetupDone = false
 
@@ -473,12 +477,12 @@ class DefaultColors (
         val stripBackground: Int
         val pressedStripElementBackground: Int
         if (keyboardBackground != null || themeStyle == STYLE_HOLO) {
-            stripBackground = Color.TRANSPARENT
-            pressedStripElementBackground = if (isDarkColor(background)) 0x22ffffff // assume background is similar to the background color
+            stripBackground = stripBackgroundOverride ?: Color.TRANSPARENT
+            pressedStripElementBackground = if (isDarkColor(stripBackgroundOverride ?: background)) 0x22ffffff // assume background is similar to the background color
                 else 0x11000000
         } else {
-            stripBackground = background
-            pressedStripElementBackground = adjustedBackground
+            stripBackground = stripBackgroundOverride ?: background
+            pressedStripElementBackground = stripBackgroundOverride?.let { brightenOrDarken(it, true) } ?: adjustedBackground
         }
         stripBackgroundList = pressedStateList(pressedStripElementBackground, stripBackground)
 
@@ -536,9 +540,10 @@ class DefaultColors (
         MORE_SUGGESTIONS_WORD_BACKGROUND, MAIN_BACKGROUND -> background
         KEY_BACKGROUND -> keyBackground
         ACTION_KEY_POPUP_KEYS_BACKGROUND -> if (themeStyle == STYLE_HOLO) adjustedBackground else accent
-        STRIP_BACKGROUND -> background
+        STRIP_BACKGROUND -> stripBackgroundOverride ?: background
         NAVIGATION_BAR -> navBar
-        SUGGESTION_AUTO_CORRECT, EMOJI_CATEGORY, TOOL_BAR_KEY, TOOL_BAR_EXPAND_KEY, ONE_HANDED_MODE_BUTTON -> suggestionText
+        SUGGESTION_AUTO_CORRECT, EMOJI_CATEGORY, TOOL_BAR_EXPAND_KEY, ONE_HANDED_MODE_BUTTON -> suggestionText
+        TOOL_BAR_KEY -> toolbarKeyOverride ?: suggestionText
         MORE_SUGGESTIONS_HINT, SUGGESTED_WORD, SUGGESTION_TYPED_WORD, SUGGESTION_VALID_WORD -> adjustedSuggestionText
         ACTION_KEY_ICON -> Color.WHITE
         EDIT_MODE_DELETE_BACKGROUND -> androidx.core.graphics.ColorUtils.blendARGB(accent, functionalKey, 0.4f)
@@ -602,7 +607,8 @@ class DefaultColors (
     private fun getColorFilter(color: ColorType): ColorFilter? = when (color) {
         EMOJI_CATEGORY_SELECTED, CLIPBOARD_PIN, SHIFT_KEY_ICON -> accentColorFilter
         KEY_TEXT, KEY_ICON -> keyTextFilter
-        REMOVE_SUGGESTION_ICON, EMOJI_CATEGORY, ONE_HANDED_MODE_BUTTON, TOOL_BAR_KEY, TOOL_BAR_EXPAND_KEY -> suggestionTextFilter
+        REMOVE_SUGGESTION_ICON, EMOJI_CATEGORY, ONE_HANDED_MODE_BUTTON, TOOL_BAR_EXPAND_KEY -> suggestionTextFilter
+        TOOL_BAR_KEY -> toolbarKeyFilter
         KEY_PREVIEW_BACKGROUND -> adjustedBackgroundFilter
         ACTION_KEY_ICON -> actionKeyIconColorFilter
         else -> colorFilter(get(color)) // create color filter (not great for performance, so the frequently used filters should be stored)

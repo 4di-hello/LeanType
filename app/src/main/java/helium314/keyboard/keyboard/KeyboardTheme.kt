@@ -117,6 +117,8 @@ private constructor(val themeId: Int, val mStyleId: Int) {
         const val COLOR_SPACEBAR = "spacebar"
         const val COLOR_SPACEBAR_TEXT = "spacebar_text"
         const val COLOR_BACKGROUND = "background"
+        const val COLOR_STRIP_BACKGROUND = "strip_background"
+        const val COLOR_TOOLBAR_KEY = "toolbar_key"
 
         fun getKeyboardTheme(context: Context): KeyboardTheme {
             val prefs = context.prefs()
@@ -392,6 +394,8 @@ private constructor(val themeId: Int, val mStyleId: Int) {
                 determineUserColor(colorSettings, context, COLOR_SPACEBAR_TEXT, isNight),
                 determineUserColor(colorSettings, context, COLOR_GESTURE, isNight),
                 backgroundImage,
+                stripBackgroundOverride = colorSettings.firstOrNull { it.name == COLOR_STRIP_BACKGROUND && it.auto != true }?.color,
+                toolbarKeyOverride = colorSettings.firstOrNull { it.name == COLOR_TOOLBAR_KEY && it.auto != true }?.color,
             )
         }
 
@@ -555,6 +559,8 @@ private constructor(val themeId: Int, val mStyleId: Int) {
                     Settings.getDayNightContext(context, isNight),
                     R.color.keyboard_background
                 )
+                COLOR_STRIP_BACKGROUND -> return determineUserColor(colors, context, COLOR_BACKGROUND, isNight)
+                COLOR_TOOLBAR_KEY -> return determineUserColor(colors, context, COLOR_SUGGESTION_TEXT, isNight)
                 else -> return ContextCompat.getColor(Settings.getDayNightContext(context, isNight), R.color.keyboard_background)
             }
         }
