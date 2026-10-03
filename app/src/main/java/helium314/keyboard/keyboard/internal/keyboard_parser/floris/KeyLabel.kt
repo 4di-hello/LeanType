@@ -19,6 +19,8 @@ object KeyLabel {
     const val LANGUAGE_SWITCH = "language_switch"
     const val ACTION = "action"
     const val DELETE = "delete"
+    const val FORWARD_DELETE = "forward_delete"
+    const val DELETE_FORWARD = "delete_forward"
     const val SHIFT = "shift"
     const val NUMPAD = "numpad"
     const val SYMBOL = "symbol"
@@ -61,6 +63,7 @@ object KeyLabel {
         "currency_slot_6" -> CURRENCY5
         "enter" -> ACTION
         "half_space" -> ZWNJ
+        "delete_forward" -> FORWARD_DELETE
         else -> this
     }
 
@@ -98,6 +101,7 @@ object KeyLabel {
             SPACE -> getSpaceLabel(params)
             ACTION -> "${getActionKeyLabel(params)}|${getActionKeyCode(params)}"
             DELETE -> "!icon/delete_key|!code/key_delete"
+            FORWARD_DELETE, DELETE_FORWARD -> "!icon/delete_key|!code/key_forward_delete"
             SHIFT -> "${getShiftLabel(params)}|!code/key_shift"
             COM -> params.mLocaleKeyboardInfos.tlds.first()
             LANGUAGE_SWITCH -> "!icon/language_switch_key|!code/key_language_switch"
@@ -123,6 +127,8 @@ object KeyLabel {
         }
         val code = when (label) { // maybe a bit lazy to not assemble the entire string above
             "clear_handwriting" -> KeyCode.CLEAR_HANDWRITING
+            DELETE       -> KeyCode.DELETE
+            FORWARD_DELETE, DELETE_FORWARD -> KeyCode.FORWARD_DELETE
             SYMBOL_ALPHA -> KeyCode.SYMBOL_ALPHA
             SYMBOL       -> KeyCode.SYMBOL
             ALPHA        -> KeyCode.ALPHA

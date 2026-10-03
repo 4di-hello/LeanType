@@ -281,13 +281,20 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
                 return
             }
             KeyCode.FORWARD_DELETE -> {
+                if (inputLogic.isComposingWord) {
+                    inputLogic.finishInput()
+                }
                 val connection = inputLogic.connection
                 val hadSelection = connection.hasSelection()
-                val eventTime = android.os.SystemClock.uptimeMillis()
-                connection.sendKeyEvent(KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_FORWARD_DEL, 0, 0))
-                connection.sendKeyEvent(KeyEvent(eventTime, eventTime, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_FORWARD_DEL, 0, 0))
                 if (hadSelection) {
+                    connection.commitText("", 1)
                     deactivateSelectionMode()
+                } else if (connection.hasTextAfterCursor()) {
+                    connection.deleteSurroundingText(0, 1)
+                } else {
+                    val eventTime = android.os.SystemClock.uptimeMillis()
+                    connection.sendKeyEvent(KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_FORWARD_DEL, 0, 0))
+                    connection.sendKeyEvent(KeyEvent(eventTime, eventTime, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_FORWARD_DEL, 0, 0))
                 }
                 return
             }
@@ -323,10 +330,19 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
                 return
             }
             KeyCode.FORWARD_DELETE_WORD -> {
+                if (inputLogic.isComposingWord) {
+                    inputLogic.finishInput()
+                }
                 val connection = inputLogic.connection
-                val eventTime = android.os.SystemClock.uptimeMillis()
-                connection.sendKeyEvent(KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_FORWARD_DEL, 0, KeyEvent.META_CTRL_ON))
-                connection.sendKeyEvent(KeyEvent(eventTime, eventTime, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_FORWARD_DEL, 0, KeyEvent.META_CTRL_ON))
+                val hadSelection = connection.hasSelection()
+                if (hadSelection) {
+                    connection.commitText("", 1)
+                    deactivateSelectionMode()
+                } else {
+                    val eventTime = android.os.SystemClock.uptimeMillis()
+                    connection.sendKeyEvent(KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_FORWARD_DEL, 0, KeyEvent.META_CTRL_ON))
+                    connection.sendKeyEvent(KeyEvent(eventTime, eventTime, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_FORWARD_DEL, 0, KeyEvent.META_CTRL_ON))
+                }
                 return
             }
             KeyCode.CLIPBOARD_COPY_ALL -> {

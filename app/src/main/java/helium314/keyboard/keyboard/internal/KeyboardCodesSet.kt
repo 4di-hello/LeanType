@@ -18,7 +18,7 @@ object KeyboardCodesSet {
     private val ID_TO_NAME = arrayOf(
         "key_tab", "key_enter", "key_space", "key_shift", "key_capslock",
         "key_switch_alpha_symbol", "key_switch_alpha", "key_switch_symbol",
-        "key_output_text", "key_delete", "key_settings", "key_voice_input",
+        "key_output_text", "key_delete", "key_forward_delete", "key_settings", "key_voice_input",
         "key_action_next", "key_action_previous", "key_shift_enter",
         "key_language_switch", "key_emoji", "key_unspecified", "key_clipboard",
         "key_toggle_onehanded", "key_start_onehanded", "key_stop_onehanded", "key_switch_onehanded"
@@ -27,7 +27,7 @@ object KeyboardCodesSet {
     private val DEFAULT = intArrayOf(
         Constants.CODE_TAB, Constants.CODE_ENTER, Constants.CODE_SPACE,
         KeyCode.SHIFT, KeyCode.CAPS_LOCK, KeyCode.SYMBOL_ALPHA, KeyCode.ALPHA,
-        KeyCode.SYMBOL, KeyCode.MULTIPLE_CODE_POINTS, KeyCode.DELETE,
+        KeyCode.SYMBOL, KeyCode.MULTIPLE_CODE_POINTS, KeyCode.DELETE, KeyCode.FORWARD_DELETE,
         KeyCode.SETTINGS, KeyCode.VOICE_INPUT, KeyCode.ACTION_NEXT,
         KeyCode.ACTION_PREVIOUS, KeyCode.SHIFT_ENTER, KeyCode.LANGUAGE_SWITCH,
         KeyCode.EMOJI, KeyCode.NOT_SPECIFIED, KeyCode.CLIPBOARD,

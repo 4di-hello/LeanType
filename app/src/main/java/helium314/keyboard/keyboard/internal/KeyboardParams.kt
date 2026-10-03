@@ -22,6 +22,7 @@ import java.util.Locale
 import java.util.TreeSet
 
 open class KeyboardParams {
+    var mContext: Context? = null
     lateinit var mId: KeyboardId
     var mThemeId: Int = 0
     val isHexagonal: Boolean

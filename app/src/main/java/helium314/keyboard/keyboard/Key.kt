@@ -837,7 +837,8 @@ open class Key : Comparable<Key> {
                 actionFlags = actionFlags or ACTION_FLAGS_NO_KEY_PREVIEW
             }
             when (mCode) {
-                KeyCode.DELETE, KeyCode.ARROW_LEFT, KeyCode.ARROW_RIGHT, KeyCode.ARROW_UP, KeyCode.ARROW_DOWN,
+                KeyCode.DELETE, KeyCode.FORWARD_DELETE, KeyCode.FORWARD_DELETE_WORD,
+                KeyCode.ARROW_LEFT, KeyCode.ARROW_RIGHT, KeyCode.ARROW_UP, KeyCode.ARROW_DOWN,
                 KeyCode.WORD_LEFT, KeyCode.WORD_RIGHT, KeyCode.PAGE_UP, KeyCode.PAGE_DOWN -> {
                     if (mPopupKeys == null) {
                         actionFlags = actionFlags or ACTION_FLAGS_IS_REPEATABLE

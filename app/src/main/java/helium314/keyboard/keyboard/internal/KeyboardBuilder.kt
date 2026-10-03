@@ -37,6 +37,7 @@ open class KeyboardBuilder<KP : KeyboardParams>(protected val mContext: Context,
     private lateinit var keysInRows: ArrayList<ArrayList<KeyParams>>
 
     init {
+        mParams.mContext = mContext
         val res = mContext.resources
         mResources = res
         mParams.GRID_WIDTH = res.getInteger(R.integer.config_keyboard_grid_width)
