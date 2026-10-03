@@ -336,6 +336,7 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
         const val PREF_AUTOCORRECT_SHORTCUTS = "autocorrect_shortcuts"
         const val PREF_BACKSPACE_REVERTS_AUTOCORRECT = "backspace_reverts_autocorrect"
         const val PREF_CENTER_SUGGESTION_TEXT_TO_ENTER = "center_suggestion_text_to_enter"
+        const val PREF_CENTER_TYPED_WORD = "center_typed_word"
         const val PREF_SHOW_SUGGESTIONS = "show_suggestions"
         const val PREF_ALWAYS_SHOW_SUGGESTIONS = "always_show_suggestions"
         const val PREF_ALWAYS_SHOW_SUGGESTIONS_EXCEPT_WEB_TEXT = "always_show_suggestions_except_web_text"

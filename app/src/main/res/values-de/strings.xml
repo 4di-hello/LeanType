@@ -292,6 +292,8 @@
     <string name="center_suggestion_text_to_enter_summary">Bei Eingabe eines Leerzeichens oder eines Punktes wird der mittlere Vorschlag gewählt</string>
     <string name="close_history" tools:keep="@string/close_history">Zwischenablage-Verlauf schließen</string>
     <string name="center_suggestion_text_to_enter">Immer mittleren Vorschlag verwenden</string>
+    <string name="center_typed_word">Eingegebenes Wort immer in der Mitte anzeigen</string>
+    <string name="center_typed_word_summary">Das getippte Wort bleibt in der Mitte, die Autokorrektur steht daneben</string>
     <string name="clipboard_toolbar_keys">Tasten der Symbolleiste für die Zwischenablage auswählen</string>
     <string name="subtype_generic_extended">%s (Erweitert)</string>
     <string name="pinned_toolbar_keys">Angeheftete Tasten der Symbolleiste auswählen</string>

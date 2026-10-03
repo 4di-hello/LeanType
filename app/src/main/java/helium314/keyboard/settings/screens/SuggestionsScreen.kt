@@ -79,6 +79,7 @@ fun SuggestionsScreen(
                 Settings.PREF_ALWAYS_SHOW_SUGGESTIONS_EXCEPT_WEB_TEXT else null,
             if (suggestionsEnabled) Settings.PREF_SUGGESTIONS_COUNT_IN_STRIP else null,
             if (suggestionsEnabled) Settings.PREF_CENTER_SUGGESTION_TEXT_TO_ENTER else null,
+            if (suggestionsEnabled) Settings.PREF_CENTER_TYPED_WORD else null,
             Settings.PREF_SUGGEST_PUNCTUATION,
 
             // Prediction & learning
@@ -249,6 +250,11 @@ fun createSuggestionsSettings(context: Context) = listOf(
         R.string.center_suggestion_text_to_enter, R.string.center_suggestion_text_to_enter_summary
     ) {
         SwitchPreference(it, Defaults.PREF_CENTER_SUGGESTION_TEXT_TO_ENTER)
+    },
+    Setting(context, Settings.PREF_CENTER_TYPED_WORD,
+        R.string.center_typed_word, R.string.center_typed_word_summary
+    ) {
+        SwitchPreference(it, Defaults.PREF_CENTER_TYPED_WORD)
     },
     Setting(context, Settings.PREF_SUGGEST_CLIPBOARD_CONTENT,
         R.string.suggest_clipboard_content, R.string.suggest_clipboard_content_summary
