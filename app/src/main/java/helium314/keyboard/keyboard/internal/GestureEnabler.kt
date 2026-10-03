@@ -46,4 +46,6 @@ class GestureEnabler {
     }
 
     fun shouldHandleGesture(): Boolean = mShouldHandleGesture
+    fun isMainDictionaryAvailable(): Boolean = mMainDictionaryAvailable
+    fun isGestureHandlingEnabledByUser(): Boolean = mGestureHandlingEnabledByUser
 }

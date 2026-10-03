@@ -709,6 +709,11 @@ class PointerTracker private constructor(
             }
             setReleasedKeyGraphics(oldKey, true)
         }
+        if (sGestureEnabler.isGestureHandlingEnabledByUser() && !sGestureEnabler.isMainDictionaryAvailable()) {
+            if (mKeyboard?.mId?.isAlphabetKeyboard == true && (oldKey.code > 0 || key.code > 0)) {
+                checkAndWarnMissingDictionaryForGesture()
+            }
+        }
     }
 
     private fun dragFingerOutFromOldKey(oldKey: Key, x: Int, y: Int) {
@@ -837,6 +842,14 @@ class PointerTracker private constructor(
                 sListener.onMoveDeletePointer(steps)
             }
         }
+    }
+
+    private fun checkAndWarnMissingDictionaryForGesture() {
+        val now = SystemClock.uptimeMillis()
+        if (now - sLastMissingDictToastTime < MISSING_DICT_TOAST_INTERVAL_MS) return
+        sLastMissingDictToastTime = now
+        val context = (sDrawingProxy as? android.view.View)?.context ?: return
+        android.widget.Toast.makeText(context, R.string.glide_typing_no_dict_warning_toast, android.widget.Toast.LENGTH_LONG).show()
     }
 
     private fun onMoveEventInternal(x: Int, y: Int, eventTime: Long) {
@@ -1235,6 +1248,9 @@ class PointerTracker private constructor(
         private var sLastTouchpadSensitivityUpdateTime = 0L
         private const val TOUCHPAD_SENSITIVITY_UPDATE_INTERVAL_MS = 100
         private const val TOUCHPAD_ACCELERATION_FACTOR = 300.0f
+
+        private var sLastMissingDictToastTime = 0L
+        private const val MISSING_DICT_TOAST_INTERVAL_MS = 25_000L
 
         fun setTouchpadModeActive(active: Boolean) {
             sTouchpadModeActive = active

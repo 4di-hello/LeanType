@@ -275,6 +275,10 @@
     <string name="gesture_input">Enable gesture typing</string>
     <!-- Description for "gesture_input" option. The user can input a word by tracing the letters of a word without releasing the finger from the screen.-->
     <string name="gesture_input_summary">Input a word by sliding through the letters</string>
+    <string name="glide_typing_no_dict_warning_title">Dictionary required for glide typing</string>
+    <string name="glide_typing_no_dict_warning_summary">Glide typing cannot recognize words without a dictionary installed. Please download or import a dictionary for your language.</string>
+    <string name="glide_typing_no_dict_warning_toast">Glide typing requires a dictionary. Please download one in Dictionary settings.</string>
+    <string name="download_dictionaries_button">Download dictionary</string>
     <!-- Option to enable gesture trail preview. The user can see a trail of the gesture during gesture input.-->
     <string name="gesture_preview_trail">Show gesture trail</string>
     <!-- Option to enable gesture floating text preview. The user can see a suggested word floating above the keyboard during a gesture input.-->

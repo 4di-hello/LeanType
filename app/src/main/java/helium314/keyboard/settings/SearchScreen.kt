@@ -60,6 +60,7 @@ fun SearchSettingsScreen(
     onClickBack: () -> Unit,
     title: String,
     settings: List<Any?>,
+    headerContent: (@Composable () -> Unit)? = null,
     content: @Composable (ColumnScope.() -> Unit)? = null // overrides settings if not null
 ) {
     val context = androidx.compose.ui.platform.LocalContext.current
@@ -74,6 +75,7 @@ fun SearchSettingsScreen(
                 fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
             )
         },
+        headerContent = headerContent,
         content = {
             if (content != null) content()
             else {
@@ -108,6 +110,11 @@ fun SearchSettingsScreen(
                             .fillMaxSize(),
                         contentPadding = androidx.compose.foundation.layout.PaddingValues(vertical = 8.dp)
                     ) {
+                        if (headerContent != null) {
+                            item {
+                                headerContent()
+                            }
+                        }
                         items(groups, key = { (titleRes, keys) -> "${titleRes}_${keys.hashCode()}" }) { (titleRes, keys) ->
                             androidx.compose.material3.Card(
                                 modifier = Modifier
