@@ -1345,8 +1345,8 @@ class InputLogic(
         mSpaceState = SpaceState.NONE
         mDeleteCount++
 
-        val selection = mConnection.getSelectedText(0)
-        val hasSelection = !selection.isNullOrEmpty() || mConnection.hasSelection()
+        val selection = if (event.isKeyRepeat) null else mConnection.getSelectedText(0)
+        val hasSelection = !selection.isNullOrEmpty() || (!event.isKeyRepeat && mConnection.hasSelection())
         if (hasSelection) {
             val numCharsDeleted = if (!selection.isNullOrEmpty()) selection.length else (mConnection.expectedSelectionEnd - mConnection.expectedSelectionStart)
             if (!selection.isNullOrEmpty()) {
@@ -1526,8 +1526,26 @@ class InputLogic(
             }
 
             var hasUnlearnedWordBeingDeleted = false
-            val fallbackSel = mConnection.getSelectedText(0)
-            if (!TextUtils.isEmpty(fallbackSel) || mConnection.hasSelection()) {
+            val isWeb = InputTypeUtils.isWebEditor(getCurrentInputEditorInfo())
+            if (isWeb) {
+                val fallbackSel = if (event.isKeyRepeat) null else mConnection.getSelectedText(0)
+                if (!TextUtils.isEmpty(fallbackSel) || (!event.isKeyRepeat && mConnection.hasSelection())) {
+                    mWordComposer.reset()
+                    sendDownUpKeyEvent(KeyEvent.KEYCODE_DEL)
+                    return
+                }
+                val extraDeletes = getBackspaceExtraDeletes(mDeleteCount)
+                val totalDeletes = 1 + extraDeletes
+                repeat(totalDeletes) {
+                    sendDownUpKeyEvent(KeyEvent.KEYCODE_DEL)
+                }
+                StatsUtils.onBackspacePressed(totalDeletes)
+                mSuggestionStripViewAccessor.setNeutralSuggestionStrip()
+                return
+            }
+
+            val fallbackSel = if (event.isKeyRepeat) null else mConnection.getSelectedText(0)
+            if (!TextUtils.isEmpty(fallbackSel) || (!event.isKeyRepeat && mConnection.hasSelection())) {
                 mWordComposer.reset()
                 sendDownUpKeyEvent(KeyEvent.KEYCODE_DEL)
             } else {
@@ -1538,7 +1556,9 @@ class InputLogic(
                     var totalDeletedLength = 1
                     val extraDeletes = getBackspaceExtraDeletes(mDeleteCount)
                     if (extraDeletes > 0) {
-                        hasUnlearnedWordBeingDeleted = hasUnlearnedWordBeingDeleted or unlearnWordBeingDeleted(inputTransaction.settingsValues)
+                        if (!event.isKeyRepeat && mDeleteCount <= 1) {
+                            hasUnlearnedWordBeingDeleted = hasUnlearnedWordBeingDeleted or unlearnWordBeingDeleted(inputTransaction.settingsValues)
+                        }
                         repeat(extraDeletes) {
                             sendDownUpKeyEvent(KeyEvent.KEYCODE_DEL)
                             totalDeletedLength++
@@ -1546,14 +1566,9 @@ class InputLogic(
                     }
                     StatsUtils.onBackspacePressed(totalDeletedLength)
                 } else {
-                    val isWeb = InputTypeUtils.isWebEditor(getCurrentInputEditorInfo())
                     val codePointBeforeCursor = mConnection.codePointBeforeCursor
                     if (codePointBeforeCursor == Constants.NOT_A_CODE) {
-                        if (isWeb) {
-                            sendDownUpKeyEvent(KeyEvent.KEYCODE_DEL)
-                        } else {
-                            mConnection.deleteTextBeforeCursor(1)
-                        }
+                        mConnection.deleteTextBeforeCursor(1)
                         return
                     }
                     val isEmoji = codePointBeforeCursor > 0xFE00 || StringUtils.mightBeEmoji(codePointBeforeCursor)
@@ -1562,44 +1577,35 @@ class InputLogic(
                     } else {
                         1
                     }
-                    if (isWeb && !isEmoji) {
-                        sendDownUpKeyEvent(KeyEvent.KEYCODE_DEL)
-                    } else {
-                        mConnection.deleteTextBeforeCursor(lengthToDelete)
-                    }
+                    mConnection.deleteTextBeforeCursor(lengthToDelete)
                     var totalDeletedLength = lengthToDelete
                     val extraDeletes = getBackspaceExtraDeletes(mDeleteCount)
                     if (extraDeletes > 0) {
-                        hasUnlearnedWordBeingDeleted = hasUnlearnedWordBeingDeleted or unlearnWordBeingDeleted(inputTransaction.settingsValues)
-                        if (isWeb) {
+                        if (!event.isKeyRepeat && mDeleteCount <= 1) {
+                            hasUnlearnedWordBeingDeleted = hasUnlearnedWordBeingDeleted or unlearnWordBeingDeleted(inputTransaction.settingsValues)
+                        }
+                        mConnection.beginBatchEdit()
+                        try {
                             repeat(extraDeletes) {
-                                sendDownUpKeyEvent(KeyEvent.KEYCODE_DEL)
-                                totalDeletedLength++
-                            }
-                        } else {
-                            mConnection.beginBatchEdit()
-                            try {
-                                repeat(extraDeletes) {
-                                    val codePointBeforeCursorToDeleteAgain = mConnection.codePointBeforeCursor
-                                    if (codePointBeforeCursorToDeleteAgain == Constants.NOT_A_CODE) return@repeat
-                                    val isEmojiAgain = codePointBeforeCursorToDeleteAgain > 0xFE00 || StringUtils.mightBeEmoji(codePointBeforeCursorToDeleteAgain)
-                                    val lengthToDeleteAgain = if (isEmojiAgain) {
-                                        mConnection.charCountToDeleteBeforeCursor
-                                    } else {
-                                        1
-                                    }
-                                    mConnection.deleteTextBeforeCursor(lengthToDeleteAgain)
-                                    totalDeletedLength += lengthToDeleteAgain
+                                val codePointBeforeCursorToDeleteAgain = mConnection.codePointBeforeCursor
+                                if (codePointBeforeCursorToDeleteAgain == Constants.NOT_A_CODE) return@repeat
+                                val isEmojiAgain = codePointBeforeCursorToDeleteAgain > 0xFE00 || StringUtils.mightBeEmoji(codePointBeforeCursorToDeleteAgain)
+                                val lengthToDeleteAgain = if (isEmojiAgain) {
+                                    mConnection.charCountToDeleteBeforeCursor
+                                } else {
+                                    1
                                 }
-                            } finally {
-                                mConnection.endBatchEdit()
+                                mConnection.deleteTextBeforeCursor(lengthToDeleteAgain)
+                                totalDeletedLength += lengthToDeleteAgain
                             }
+                        } finally {
+                            mConnection.endBatchEdit()
                         }
                     }
                     StatsUtils.onBackspacePressed(totalDeletedLength)
                 }
             }
-            if (!hasUnlearnedWordBeingDeleted) {
+            if (!hasUnlearnedWordBeingDeleted && !event.isKeyRepeat && mDeleteCount <= 1) {
                 unlearnWordBeingDeleted(inputTransaction.settingsValues)
             }
             if (mConnection.hasSlowInputConnection() || event.isKeyRepeat || mDeleteCount > Constants.DELETE_ACCELERATE_AT) {

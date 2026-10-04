@@ -119,7 +119,7 @@ fun AppQuirksScreen(
 
             // Include configured packages or defaults that might not have launcher intents
             val extraPackages = AppQuirksManager.getAllUserQuirks().keys +
-                    "com.google.android.apps.nexuslauncher"
+                    listOf("com.google.android.apps.nexuslauncher", "md.obsidian")
             for (pkg in extraPackages) {
                 if (visited.add(pkg)) {
                     try {

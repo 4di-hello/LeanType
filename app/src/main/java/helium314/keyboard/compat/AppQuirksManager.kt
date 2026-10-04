@@ -37,16 +37,19 @@ object AppQuirksManager {
         }
     }
 
-    /**
-     * Built-in default quirks for known application quirks.
-     */
     fun defaultQuirk(packageName: String): AppQuirk? {
-        return when (packageName) {
+        return when {
             // Google decided to set inputType multiline and imeOptions no_enter_action
             // on their search bar in Pixel launcher, and keyboards ignore the flag to perform search.
-            "com.google.android.apps.nexuslauncher" -> AppQuirk(
+            packageName == "com.google.android.apps.nexuslauncher" -> AppQuirk(
                 packageName = packageName,
                 stripNoEnterAction = true
+            )
+            // Obsidian uses a Chromium WebView editor where synchronous cursor IPC causes backspace lag;
+            // treat it as a web editor for direct, non-blocking input and deletion.
+            packageName == "md.obsidian" || packageName.startsWith("md.obsidian.") -> AppQuirk(
+                packageName = packageName,
+                forceWebEditor = true
             )
             else -> null
         }
