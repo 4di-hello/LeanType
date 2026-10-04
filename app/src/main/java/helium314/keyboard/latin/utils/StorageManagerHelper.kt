@@ -3,6 +3,7 @@ package helium314.keyboard.latin.utils
 
 import android.content.Context
 import android.text.format.Formatter
+import helium314.keyboard.latin.R
 import helium314.keyboard.latin.ai.OfflineAiLoader
 import helium314.keyboard.latin.common.LocaleUtils.constructLocale
 import helium314.keyboard.latin.handwriting.HandwritingLoader
@@ -74,8 +75,8 @@ object StorageManagerHelper {
             plugins.add(
                 StorageItem(
                     id = "plugin_translation",
-                    name = "Translation Plugin",
-                    description = "Dynamic runtime for offline ML Kit translation",
+                    name = context.getString(R.string.storage_item_plugin_translation_name),
+                    description = context.getString(R.string.storage_item_plugin_translation_desc),
                     sizeBytes = size,
                     type = StorageItemType.PLUGIN,
                     onDelete = { TranslationLoader.removePlugin(context) }
@@ -91,8 +92,8 @@ object StorageManagerHelper {
             plugins.add(
                 StorageItem(
                     id = "plugin_handwriting",
-                    name = "Handwriting Plugin",
-                    description = "Digital Ink recognition engine",
+                    name = context.getString(R.string.storage_item_plugin_handwriting_name),
+                    description = context.getString(R.string.storage_item_plugin_handwriting_desc),
                     sizeBytes = size,
                     type = StorageItemType.PLUGIN,
                     onDelete = { HandwritingLoader.removePlugin(context) }
@@ -108,8 +109,8 @@ object StorageManagerHelper {
             plugins.add(
                 StorageItem(
                     id = "plugin_ocr",
-                    name = "Text Recognition (OCR) Plugin",
-                    description = "Camera and image OCR recognition engine",
+                    name = context.getString(R.string.storage_item_plugin_ocr_name),
+                    description = context.getString(R.string.storage_item_plugin_ocr_desc),
                     sizeBytes = size,
                     type = StorageItemType.PLUGIN,
                     onDelete = { OcrPluginLoader.removePlugin(context) }
@@ -125,8 +126,8 @@ object StorageManagerHelper {
             plugins.add(
                 StorageItem(
                     id = "plugin_offline_ai",
-                    name = "Offline AI Plugin",
-                    description = "On-device LLM proofreading engine",
+                    name = context.getString(R.string.storage_item_plugin_offline_ai_name),
+                    description = context.getString(R.string.storage_item_plugin_offline_ai_desc),
                     sizeBytes = size,
                     type = StorageItemType.PLUGIN,
                     onDelete = { OfflineAiLoader.removePlugin(context) }
@@ -152,7 +153,7 @@ object StorageManagerHelper {
                         StorageItem(
                             id = "trans_model_$pair",
                             name = "$langName ($pair)",
-                            description = "Offline translation model files",
+                            description = context.getString(R.string.storage_item_trans_model_desc),
                             sizeBytes = size,
                             type = StorageItemType.TRANSLATION_MODEL,
                             onDelete = {
@@ -179,7 +180,7 @@ object StorageManagerHelper {
                         StorageItem(
                             id = "hw_model_$tag",
                             name = "$langName ($tag)",
-                            description = "Digital Ink recognition model",
+                            description = context.getString(R.string.storage_item_hw_model_desc),
                             sizeBytes = size,
                             type = StorageItemType.HANDWRITING_MODEL,
                             onDelete = {
@@ -205,7 +206,7 @@ object StorageManagerHelper {
                             StorageItem(
                                 id = "dict_${dir.name}",
                                 name = "$name (${dir.name})",
-                                description = "Cached wordlist dictionary",
+                                description = context.getString(R.string.storage_item_dict_desc),
                                 sizeBytes = size,
                                 type = StorageItemType.DICTIONARY,
                                 onDelete = { dir.deleteRecursively() }
@@ -223,8 +224,8 @@ object StorageManagerHelper {
             cacheItems.add(
                 StorageItem(
                     id = "cache_app_dir",
-                    name = "Temporary Cache",
-                    description = "Model download staging, temporary extracts, and crash logs",
+                    name = context.getString(R.string.storage_item_temporary_cache_name),
+                    description = context.getString(R.string.storage_item_temporary_cache_desc),
                     sizeBytes = cacheDirSize,
                     type = StorageItemType.CACHE,
                     onDelete = { clearDirectory(cacheDir) }
@@ -238,8 +239,8 @@ object StorageManagerHelper {
             cacheItems.add(
                 StorageItem(
                     id = "cache_code_dir",
-                    name = "Code Cache",
-                    description = "Optimized dex code and compilation caches",
+                    name = context.getString(R.string.storage_item_code_cache_name),
+                    description = context.getString(R.string.storage_item_code_cache_desc),
                     sizeBytes = codeCacheSize,
                     type = StorageItemType.CACHE,
                     onDelete = { clearDirectory(codeCacheDir) }

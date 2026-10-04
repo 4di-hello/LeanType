@@ -98,7 +98,7 @@ fun LoadGestureLibPreference(
         showDialog = false
         if (restartOnSuccess) {
             scope.launch {
-                FeedbackManager.message(ctx, "Gesture library loaded. Restarting...")
+                FeedbackManager.message(ctx, R.string.gesture_lib_loaded_restarting)
                 delay(3000)
                 Runtime.getRuntime().exit(0)
             }
@@ -232,7 +232,7 @@ fun LoadGestureLibPreference(
                                         }
                                         try {
                                             ctx.startActivity(intent)
-                                            android.widget.Toast.makeText(ctx, "Opening browser to download library… use 'Load from file' after download", android.widget.Toast.LENGTH_LONG).show()
+                                            android.widget.Toast.makeText(ctx, ctx.getString(R.string.gesture_lib_open_browser_toast), android.widget.Toast.LENGTH_LONG).show()
                                         } catch (_: Exception) {}
                                     },
                                     modifier = Modifier.fillMaxWidth()
@@ -266,7 +266,7 @@ fun LoadGestureLibPreference(
                                     showDialog = false
                                     if (restartOnSuccess) {
                                         scope.launch {
-                                            FeedbackManager.message(ctx, "Gesture library removed. Restarting...")
+                                            FeedbackManager.message(ctx, R.string.gesture_lib_removed_restarting)
                                             delay(3000)
                                             Runtime.getRuntime().exit(0)
                                         }

@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import com.leanbitlab.leantype.voice.ModelImportRequest
+import helium314.keyboard.latin.R
 import helium314.keyboard.latin.utils.Log
 import helium314.keyboard.latin.utils.prefs
 import kotlinx.coroutines.Dispatchers
@@ -44,7 +45,7 @@ object VoiceDownloadDispatcher {
     ) = withContext(Dispatchers.IO) {
         if (!pluginManager.isPluginInstalled()) {
             withContext(Dispatchers.Main) {
-                onError("Voice plugin is not installed. Please install the Voice Plugin first.")
+                onError(context.getString(R.string.voice_plugin_not_installed))
             }
             return@withContext
         }
@@ -139,13 +140,13 @@ object VoiceDownloadDispatcher {
                 downloadProgress.floatValue = 0f
                 if (imported) {
                     context.prefs().edit().putString("installed_model_${model.engineType}", model.id).apply()
-                    Toast.makeText(context, "${model.displayName} model installed successfully!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.voice_model_installed_success, model.displayName), Toast.LENGTH_SHORT).show()
                     onSuccess()
                 } else {
                     val msg = if (!pluginManager.isPluginInstalled()) {
-                        "Voice plugin is not installed. Please install the Voice Plugin first."
+                        context.getString(R.string.voice_plugin_not_installed)
                     } else {
-                        "Failed to import model into voice plugin. Please ensure the Voice Plugin is updated."
+                        context.getString(R.string.voice_plugin_import_failed)
                     }
                     onError(msg)
                 }
@@ -156,7 +157,7 @@ object VoiceDownloadDispatcher {
             withContext(Dispatchers.Main) {
                 downloadingModelId.value = null
                 downloadProgress.floatValue = 0f
-                onError(e.localizedMessage ?: "Download failed")
+                onError(e.localizedMessage ?: context.getString(R.string.download_failed))
             }
         }
     }
@@ -167,7 +168,7 @@ object VoiceDownloadDispatcher {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
             context.startActivity(intent)
-            Toast.makeText(context, "Opening browser for ${model.displayName}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.voice_opening_browser_for, model.displayName), Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
             Log.e(TAG, "Failed to launch browser", e)
         }

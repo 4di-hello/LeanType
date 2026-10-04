@@ -108,7 +108,7 @@ fun LoadOfflineAiPluginPreference(
     val launcher = filePicker { uri ->
         val success = OfflineAiLoader.loadPlugin(ctx, uri)
         if (success) {
-            FeedbackManager.message(ctx, "Offline AI plugin loaded. Restarting...")
+            FeedbackManager.message(ctx, R.string.offline_ai_plugin_loaded_restarting)
             onSuccess?.invoke()
             showDialog = false
             if (restartOnSuccess) {
@@ -131,9 +131,9 @@ fun LoadOfflineAiPluginPreference(
             }
             try {
                 ctx.startActivity(intent)
-                Toast.makeText(ctx, "Opening GitHub releases in browser… download the APK and use 'Load from file'", Toast.LENGTH_LONG).show()
+                Toast.makeText(ctx, ctx.getString(R.string.offline_ai_plugin_open_browser_toast), Toast.LENGTH_LONG).show()
             } catch (e: Exception) {
-                Toast.makeText(ctx, "Failed to open browser: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(ctx, ctx.getString(R.string.open_browser_failed_format, e.localizedMessage ?: ""), Toast.LENGTH_SHORT).show()
             }
             return
         }
@@ -162,7 +162,7 @@ fun LoadOfflineAiPluginPreference(
                     isDownloading = false
                     downloadProgress = 0f
                     if (success) {
-                        FeedbackManager.message(ctx, "Offline AI plugin loaded. Restarting...")
+                        FeedbackManager.message(ctx, R.string.offline_ai_plugin_loaded_restarting)
                         onSuccess?.invoke()
                         showDialog = false
                         if (restartOnSuccess) {
@@ -178,7 +178,7 @@ fun LoadOfflineAiPluginPreference(
             } catch (e: Exception) {
                 withContext<Unit>(Dispatchers.Main) {
                     isDownloading = false
-                    Toast.makeText(ctx, "Download failed: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(ctx, ctx.getString(R.string.plugin_download_failed_format, e.localizedMessage ?: ""), Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -210,9 +210,9 @@ fun LoadOfflineAiPluginPreference(
                         ) {
                             Text(
                                 text = if (downloadProgress > 0f) {
-                                    "Downloading... ${(downloadProgress * 100).toInt()}%"
+                                    stringResource(R.string.downloading) + " ${(downloadProgress * 100).toInt()}%"
                                 } else {
-                                    "Downloading..."
+                                    stringResource(R.string.downloading)
                                 },
                                 style = MaterialTheme.typography.bodyMedium
                             )
@@ -244,7 +244,7 @@ fun LoadOfflineAiPluginPreference(
                                 onClick = { startDownload() },
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                Text(if (updateAvailable) "Update" else if (hasInternet) "Download" else "Download in Browser")
+                                Text(if (updateAvailable) stringResource(R.string.updates_badge_update) else if (hasInternet) stringResource(R.string.button_download) else stringResource(R.string.button_download_in_browser))
                             }
                         }
                         if (!hasPlugin) {
@@ -260,14 +260,14 @@ fun LoadOfflineAiPluginPreference(
                                 },
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                Text("Load from file")
+                                Text(stringResource(R.string.button_load_from_file))
                             }
                         }
                         if (hasPlugin) {
                             Button(
                                 onClick = {
                                     OfflineAiLoader.removePlugin(ctx)
-                                    FeedbackManager.message(ctx, "Offline AI plugin removed. Restarting...")
+                                    FeedbackManager.message(ctx, R.string.offline_ai_plugin_removed_restarting)
                                     onSuccess?.invoke()
                                     showDialog = false
                                     if (restartOnSuccess) {
@@ -291,10 +291,10 @@ fun LoadOfflineAiPluginPreference(
             }
         ) {
             val message = when {
-                hasPlugin && updateAvailable -> "An update is available for the Offline AI plugin!\nLocal version: $localVersion\nLatest version: $remoteVersion\n\nDo you want to update?"
-                hasPlugin -> "Offline AI plugin is active (version $localVersion).\n\nEnables on-device GGUF / llama.cpp inference for proofreading and rewriting."
-                remoteVersion != null -> "Download the latest Offline AI plugin (version $remoteVersion) from GitHub, or load an APK from local storage."
-                else -> "Download the Offline AI plugin from GitHub, or load an APK from local storage to enable local GGUF proofreading."
+                hasPlugin && updateAvailable -> stringResource(R.string.offline_ai_plugin_update_available_dialog, localVersion.orEmpty(), remoteVersion ?: "")
+                hasPlugin -> stringResource(R.string.offline_ai_plugin_active_desc, localVersion.orEmpty())
+                remoteVersion != null -> stringResource(R.string.offline_ai_plugin_download_dialog_version_msg, remoteVersion ?: "")
+                else -> stringResource(R.string.offline_ai_plugin_download_dialog_msg)
             }
             Text(message)
         }

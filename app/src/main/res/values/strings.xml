@@ -2079,4 +2079,98 @@ New dictionary:
     <string name="button_download">Download</string>
     <string name="button_load_from_file">Load from file</string>
     <string name="button_delete">Delete</string>
+
+    <!-- Plugins Dialogs and Actions -->
+    <string name="handwriting_plugin_update_available_dialog">An update is available for the handwriting plugin!\nLocal version: %1$s\nLatest version: %2$s\n\nDo you want to download and update?</string>
+    <string name="handwriting_plugin_active_warning">Handwriting plugin is active (version %s).\n\nWarning: loading external code can be a security risk. Only use a plugin from a source you trust.</string>
+    <string name="handwriting_plugin_download_dialog_version_msg">Download the latest handwriting plugin (version %s) from GitHub, or load an APK from local storage.\n\nWarning: loading external code can be a security risk. Only use a plugin from a source you trust.</string>
+    <string name="handwriting_plugin_download_dialog_msg">Download the handwriting plugin from GitHub, or load an APK from local storage.\n\nWarning: loading external code can be a security risk. Only use a plugin from a source you trust.</string>
+    <string name="handwriting_plugin_loaded_restarting">Handwriting plugin loaded. Restarting...</string>
+    <string name="handwriting_plugin_removed_restarting">Handwriting plugin removed. Restarting...</string>
+    <string name="handwriting_plugin_open_browser_toast">Opening GitHub releases in browser… download the APK and use \'Load from file\'</string>
+
+    <string name="ocr_plugin_update_available_dialog">An update is available for the OCR plugin!\nLocal version: %1$s\nLatest version: %2$s\n\nDo you want to download and update?</string>
+    <string name="ocr_plugin_active_warning">OCR plugin is active (version %s).\n\nWarning: loading external code can be a security risk. Only use a plugin from a source you trust.</string>
+    <string name="ocr_plugin_download_dialog_version_msg">Download the latest OCR plugin (version %s) from GitHub, or load an APK from local storage.\n\nWarning: loading external code can be a security risk. Only use a plugin from a source you trust.</string>
+    <string name="ocr_plugin_download_dialog_msg">Download the OCR plugin from GitHub, or load an APK from local storage.\n\nWarning: loading external code can be a security risk. Only use a plugin from a source you trust.</string>
+    <string name="ocr_plugin_button_update_version">Update to %s</string>
+    <string name="ocr_plugin_button_download_version">Download plugin (%s)</string>
+    <string name="ocr_plugin_button_download">Download plugin</string>
+    <string name="ocr_plugin_button_load_storage">Load APK from storage</string>
+    <string name="ocr_plugin_removed_restarting">OCR plugin removed. Restarting...</string>
+    <string name="ocr_plugin_open_browser_toast">Opening GitHub releases in browser… download the APK and use \'Load APK from storage\'</string>
+    <string name="ocr_plugin_downloading">Downloading plugin...</string>
+    <string name="ocr_plugin_active_status">Active</string>
+    <string name="ocr_plugin_active_version_status">Active v%s</string>
+
+    <string name="offline_ai_plugin_update_available_dialog">An update is available for the Offline AI plugin!\nLocal version: %1$s\nLatest version: %2$s\n\nDo you want to update?</string>
+    <string name="offline_ai_plugin_active_desc">Offline AI plugin is active (version %s).\n\nEnables on-device GGUF / llama.cpp inference for proofreading and rewriting.</string>
+    <string name="offline_ai_plugin_download_dialog_version_msg">Download the latest Offline AI plugin (version %s) from GitHub, or load an APK from local storage.</string>
+    <string name="offline_ai_plugin_download_dialog_msg">Download the Offline AI plugin from GitHub, or load an APK from local storage to enable local GGUF proofreading.</string>
+    <string name="offline_ai_plugin_loaded_restarting">Offline AI plugin loaded. Restarting...</string>
+    <string name="offline_ai_plugin_removed_restarting">Offline AI plugin removed. Restarting...</string>
+    <string name="offline_ai_plugin_open_browser_toast">Opening GitHub releases in browser… download the APK and use \'Load from file\'</string>
+
+    <string name="gesture_lib_loaded_restarting">Gesture library loaded. Restarting...</string>
+    <string name="gesture_lib_removed_restarting">Gesture library removed. Restarting...</string>
+    <string name="gesture_lib_open_browser_toast">Opening browser to download library… use \'Load from file\' after download</string>
+
+    <string name="button_download_in_browser">Download in Browser</string>
+    <string name="plugin_download_failed_format">Download failed: %s</string>
+    <string name="open_browser_failed_format">Failed to open browser: %s</string>
+
+    <!-- Storage and Cache Items -->
+    <string name="storage_item_temporary_cache_name">Temporary Cache</string>
+    <string name="storage_item_temporary_cache_desc">Model download staging, temporary extracts, and crash logs</string>
+    <string name="storage_item_code_cache_name">Code Cache</string>
+    <string name="storage_item_code_cache_desc">Optimized dex code and compilation caches</string>
+    <string name="storage_item_plugin_translation_name">Translation Plugin</string>
+    <string name="storage_item_plugin_translation_desc">Dynamic runtime for offline ML Kit translation</string>
+    <string name="storage_item_plugin_handwriting_name">Handwriting Plugin</string>
+    <string name="storage_item_plugin_handwriting_desc">Digital Ink recognition engine</string>
+    <string name="storage_item_plugin_ocr_name">Text Recognition (OCR) Plugin</string>
+    <string name="storage_item_plugin_ocr_desc">Camera and image OCR recognition engine</string>
+    <string name="storage_item_plugin_offline_ai_name">Offline AI Plugin</string>
+    <string name="storage_item_plugin_offline_ai_desc">On-device LLM proofreading engine</string>
+    <string name="storage_item_trans_model_desc">Offline translation model files</string>
+    <string name="storage_item_hw_model_desc">Digital Ink recognition model</string>
+    <string name="storage_item_dict_desc">Cached wordlist dictionary</string>
+    <string name="storage_type_plugin">plugin</string>
+    <string name="storage_type_translation_model">translation model</string>
+    <string name="storage_type_handwriting_model">handwriting model</string>
+    <string name="storage_type_dictionary">dictionary</string>
+    <string name="storage_type_cache">cache item</string>
+
+    <!-- Voice Model Dialog -->
+    <string name="voice_plugin_not_installed">Voice plugin is not installed. Please install the Voice Plugin first.</string>
+    <string name="voice_model_installed_success">%s model installed successfully!</string>
+    <string name="voice_plugin_import_failed">Failed to import model into voice plugin. Please ensure the Voice Plugin is updated.</string>
+    <string name="voice_opening_browser_for">Opening browser for %s</string>
+    <string name="voice_whisper_models_title">Whisper Models</string>
+    <string name="voice_custom_model_title">Custom GGML Model</string>
+    <string name="voice_loaded_external_model">Loaded External Model</string>
+    <string name="voice_imported_and_ready">Imported &amp; Ready</string>
+    <string name="voice_load_external_bin">Load external .bin file</string>
+    <string name="voice_custom_model_removed">Custom model removed</string>
+    <string name="voice_model_replace">Replace</string>
+    <string name="voice_model_removed">%s model removed</string>
+    <string name="voice_model_name_format">%s Model</string>
+    <string name="voice_model_downloaded_format">Downloaded (%s)</string>
+    <string name="button_import">Import</string>
+
+    <!-- Sound Pack Dialog -->
+    <string name="sound_pack_browser_note">Download in browser, then import .zip</string>
+    <string name="sound_pack_app_note">Download in app or import .zip</string>
+    <string name="sound_pack_import_zip">Import .zip</string>
+    <string name="search_sound_pack_placeholder">Search sound pack…</string>
+    <string name="sound_pack_default_system_desc">Default system keypress click sound</string>
+    <string name="sound_pack_installed_title">Installed Sound Packs</string>
+    <string name="sound_pack_available_title">Available Sound Packs</string>
+    <string name="sound_pack_imported_success">Sound pack imported successfully</string>
+    <string name="sound_pack_import_failed">Failed to import sound pack (must contain valid audio files or pack.json)</string>
+    <string name="sound_pack_downloaded_activated">Downloaded and activated %s</string>
+    <string name="sound_pack_download_failed">Download failed for %s</string>
+    <string name="sound_pack_deleted_format">Deleted %s</string>
+    <string name="sound_pack_downloading_in_browser_toast">Downloading in browser… import .zip once finished</string>
+    <string name="sound_pack_preview">Preview</string>
 </resources>

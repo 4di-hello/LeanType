@@ -108,9 +108,9 @@ fun SoundPackDownloadDialog(
                         prefs.edit().putString(Settings.PREF_KEYPRESS_SOUND_STYLE, importedId).apply()
                         CustomSoundManager.getInstance(context).setSoundPack(importedId)
                         CustomSoundManager.getInstance(context).previewSound(importedId)
-                        Toast.makeText(context, "Sound pack imported successfully", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getString(R.string.sound_pack_imported_success), Toast.LENGTH_SHORT).show()
                     } else {
-                        Toast.makeText(context, "Failed to import sound pack (must contain valid audio files or pack.json)", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, context.getString(R.string.sound_pack_import_failed), Toast.LENGTH_LONG).show()
                     }
                 }
             }
@@ -141,7 +141,7 @@ fun SoundPackDownloadDialog(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = if (isOffline) "Download in browser, then import .zip" else "Download in app or import .zip",
+                        text = if (isOffline) stringResource(R.string.sound_pack_browser_note) else stringResource(R.string.sound_pack_app_note),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.weight(1f).padding(end = 8.dp)
@@ -151,14 +151,14 @@ fun SoundPackDownloadDialog(
                         contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp),
                         modifier = Modifier.height(32.dp)
                     ) {
-                        Text("Import .zip", style = MaterialTheme.typography.labelMedium)
+                        Text(stringResource(R.string.sound_pack_import_zip), style = MaterialTheme.typography.labelMedium)
                     }
                 }
 
                 OutlinedTextField(
                     value = searchQuery,
                     onValueChange = { searchQuery = it },
-                    placeholder = { Text("Search sound pack…") },
+                    placeholder = { Text(stringResource(R.string.search_sound_pack_placeholder)) },
                     singleLine = true,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -205,7 +205,7 @@ fun SoundPackDownloadDialog(
                                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                                             )
                                             Text(
-                                                text = "Default system keypress click sound",
+                                                text = stringResource(R.string.sound_pack_default_system_desc),
                                                 style = MaterialTheme.typography.bodySmall,
                                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                                             )
@@ -216,7 +216,7 @@ fun SoundPackDownloadDialog(
                                         ) {
                                             Icon(
                                                 painter = painterResource(R.drawable.ic_play_arrow),
-                                                contentDescription = "Preview",
+                                                contentDescription = stringResource(R.string.sound_pack_preview),
                                                 tint = MaterialTheme.colorScheme.primary,
                                                 modifier = Modifier.size(20.dp)
                                             )
@@ -234,7 +234,7 @@ fun SoundPackDownloadDialog(
                         if (filteredCustom.isNotEmpty()) {
                             item {
                                 Text(
-                                    text = "Installed Sound Packs",
+                                    text = stringResource(R.string.sound_pack_installed_title),
                                     style = MaterialTheme.typography.titleSmall,
                                     color = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.padding(top = 12.dp, bottom = 4.dp, start = 4.dp)
@@ -287,7 +287,7 @@ fun SoundPackDownloadDialog(
                                             ) {
                                                 Icon(
                                                     painter = painterResource(R.drawable.ic_play_arrow),
-                                                    contentDescription = "Preview",
+                                                    contentDescription = stringResource(R.string.sound_pack_preview),
                                                     tint = MaterialTheme.colorScheme.primary,
                                                     modifier = Modifier.size(20.dp)
                                                 )
@@ -299,7 +299,7 @@ fun SoundPackDownloadDialog(
                                                     if (currentSelectedStyle == pack.id) {
                                                         selectPack(SoundPackUrls.SYSTEM_DEFAULT_ID)
                                                     }
-                                                    Toast.makeText(context, "Deleted ${pack.displayName}", Toast.LENGTH_SHORT).show()
+                                                    Toast.makeText(context, context.getString(R.string.sound_pack_deleted_format, pack.displayName), Toast.LENGTH_SHORT).show()
                                                 },
                                                 colors = ButtonDefaults.buttonColors(
                                                     containerColor = MaterialTheme.colorScheme.errorContainer,
@@ -308,7 +308,7 @@ fun SoundPackDownloadDialog(
                                                 contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
                                                 modifier = Modifier.height(28.dp)
                                             ) {
-                                                Text("Delete", style = MaterialTheme.typography.labelSmall)
+                                                Text(stringResource(R.string.button_delete), style = MaterialTheme.typography.labelSmall)
                                             }
                                         }
                                     }
@@ -325,7 +325,7 @@ fun SoundPackDownloadDialog(
                         if (availableRemote.isNotEmpty()) {
                             item {
                                 Text(
-                                    text = "Available Sound Packs",
+                                    text = stringResource(R.string.sound_pack_available_title),
                                     style = MaterialTheme.typography.titleSmall,
                                     color = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.padding(top = 12.dp, bottom = 4.dp, start = 4.dp)
@@ -368,7 +368,7 @@ fun SoundPackDownloadDialog(
                                                 }
                                                 Text(
                                                     text = if (isDownloading) {
-                                                        if (downloadProgress > 0f) "Downloading... ${(downloadProgress * 100).toInt()}%" else "Downloading..."
+                                                        if (downloadProgress > 0f) "${stringResource(R.string.downloading)} ${(downloadProgress * 100).toInt()}%" else stringResource(R.string.downloading)
                                                     } else details,
                                                     style = MaterialTheme.typography.bodySmall,
                                                     color = if (isDownloading) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
@@ -394,7 +394,7 @@ fun SoundPackDownloadDialog(
                                                                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                                             }
                                                             context.startActivity(intent)
-                                                            Toast.makeText(context, "Downloading in browser… import .zip once finished", Toast.LENGTH_LONG).show()
+                                                            Toast.makeText(context, context.getString(R.string.sound_pack_downloading_in_browser_toast), Toast.LENGTH_LONG).show()
                                                         } else {
                                                             downloadingMap[rPack.id] = true
                                                             downloadProgressMap[rPack.id] = 0f
@@ -410,9 +410,9 @@ fun SoundPackDownloadDialog(
                                                                     if (ok) {
                                                                         refreshCustomPacks()
                                                                         selectPack(rPack.id)
-                                                                        Toast.makeText(context, "Downloaded and activated ${rPack.name}", Toast.LENGTH_SHORT).show()
+                                                                        Toast.makeText(context, context.getString(R.string.sound_pack_downloaded_activated, rPack.name), Toast.LENGTH_SHORT).show()
                                                                     } else {
-                                                                        Toast.makeText(context, "Download failed for ${rPack.name}", Toast.LENGTH_SHORT).show()
+                                                                        Toast.makeText(context, context.getString(R.string.sound_pack_download_failed, rPack.name), Toast.LENGTH_SHORT).show()
                                                                     }
                                                                 }
                                                             }
@@ -421,7 +421,7 @@ fun SoundPackDownloadDialog(
                                                     contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp),
                                                     modifier = Modifier.height(28.dp)
                                                 ) {
-                                                    Text("Download", style = MaterialTheme.typography.labelSmall)
+                                                    Text(stringResource(R.string.button_download), style = MaterialTheme.typography.labelSmall)
                                                 }
                                             }
                                         }

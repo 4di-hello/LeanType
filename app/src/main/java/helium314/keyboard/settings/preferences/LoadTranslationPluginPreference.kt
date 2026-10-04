@@ -116,7 +116,7 @@ fun LoadTranslationPluginPreference(
         val success = TranslationLoader.importPlugin(ctx, uri)
         showDialog = false
         if (success) {
-            FeedbackManager.message(ctx, "Translation plugin loaded. Restarting...")
+            FeedbackManager.message(ctx, R.string.translation_plugin_loaded_restarting)
             onSuccess?.invoke()
             if (restartOnSuccess) {
                 scope.launch {
@@ -138,9 +138,9 @@ fun LoadTranslationPluginPreference(
             }
             try {
                 ctx.startActivity(intent)
-                Toast.makeText(ctx, "Opening GitHub releases in browser… download the APK and use 'Load from file'", Toast.LENGTH_LONG).show()
+                Toast.makeText(ctx, ctx.getString(R.string.translation_plugin_open_browser_toast), Toast.LENGTH_LONG).show()
             } catch (e: Exception) {
-                Toast.makeText(ctx, "Failed to open browser: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(ctx, ctx.getString(R.string.open_browser_failed_format, e.localizedMessage ?: ""), Toast.LENGTH_SHORT).show()
             }
             return
         }
@@ -183,7 +183,7 @@ fun LoadTranslationPluginPreference(
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     isDownloading = false
-                    Toast.makeText(ctx, "Download failed: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(ctx, ctx.getString(R.string.plugin_download_failed_format, e.localizedMessage ?: ""), Toast.LENGTH_LONG).show()
                 }
             }
         }

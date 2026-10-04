@@ -23,10 +23,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.leanbitlab.leantype.voice.ModelState
 import com.leanbitlab.leantype.voice.VoiceConstants
+import helium314.keyboard.latin.R
 import helium314.keyboard.latin.utils.prefs
 import helium314.keyboard.latin.voice.VoiceDownloadDispatcher
 import helium314.keyboard.latin.voice.VoiceModelItem
@@ -64,7 +66,7 @@ fun VoiceModelDownloadDialog(
         confirmButtonText = null,
         cancelButtonText = null,
         scrollContent = true,
-        title = { Text("Whisper Models") },
+        title = { Text(stringResource(R.string.voice_whisper_models_title)) },
         content = {
             Column(
                 modifier = Modifier
@@ -98,7 +100,7 @@ fun VoiceModelDownloadDialog(
                         onDelete = {
                             prefs.edit().remove("installed_model_${VoiceConstants.ENGINE_WHISPER}").apply()
                             pluginManager.deleteModel(VoiceConstants.ENGINE_WHISPER)
-                            Toast.makeText(context, "${model.displayName} model removed", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, context.getString(R.string.voice_model_removed, model.displayName), Toast.LENGTH_SHORT).show()
                             onRefresh()
                         }
                     )
@@ -121,14 +123,14 @@ fun VoiceModelDownloadDialog(
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = if (isCustomWhisperInstalled && installedWhisperId == null)
-                                "Loaded External Model"
+                                stringResource(R.string.voice_loaded_external_model)
                             else
-                                "Custom GGML Model",
+                                stringResource(R.string.voice_custom_model_title),
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Medium
                         )
                         Text(
-                            text = if (isCustomWhisperInstalled) "Imported & Ready" else "Load external .bin file",
+                            text = if (isCustomWhisperInstalled) stringResource(R.string.voice_imported_and_ready) else stringResource(R.string.voice_load_external_bin),
                             style = MaterialTheme.typography.bodySmall,
                             color = if (isCustomWhisperInstalled)
                                 MaterialTheme.colorScheme.primary
@@ -142,7 +144,7 @@ fun VoiceModelDownloadDialog(
                             onClick = {
                                 prefs.edit().remove("installed_model_${VoiceConstants.ENGINE_WHISPER}").apply()
                                 pluginManager.deleteModel(VoiceConstants.ENGINE_WHISPER)
-                                Toast.makeText(context, "Custom model removed", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, context.getString(R.string.voice_custom_model_removed), Toast.LENGTH_SHORT).show()
                                 onRefresh()
                             },
                             enabled = activeDownloadingId == null,
@@ -152,7 +154,7 @@ fun VoiceModelDownloadDialog(
                             ),
                             modifier = Modifier.height(36.dp)
                         ) {
-                            Text("Delete")
+                            Text(stringResource(R.string.button_delete))
                         }
                     } else {
                         OutlinedButton(
@@ -160,7 +162,7 @@ fun VoiceModelDownloadDialog(
                             enabled = activeDownloadingId == null,
                             modifier = Modifier.height(36.dp)
                         ) {
-                            Text("Import")
+                            Text(stringResource(R.string.button_import))
                         }
                     }
                 }
@@ -196,15 +198,15 @@ private fun ModelDownloadRow(
                     .padding(end = 8.dp)
             ) {
                 Text(
-                    text = "${model.displayName} Model",
+                    text = stringResource(R.string.voice_model_name_format, model.displayName),
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Medium
                 )
                 Text(
                     text = if (isThisModelDownloading) {
-                        "Downloading... ${(downloadProgress * 100).toInt()}% (${model.sizeMb})"
+                        "${stringResource(R.string.downloading)} ${(downloadProgress * 100).toInt()}% (${model.sizeMb})"
                     } else if (isThisModelInstalled) {
-                        "Downloaded (${model.sizeMb})"
+                        stringResource(R.string.voice_model_downloaded_format, model.sizeMb)
                     } else {
                         "${model.language} • ${model.sizeMb}"
                     },
@@ -233,7 +235,7 @@ private fun ModelDownloadRow(
                     ),
                     modifier = Modifier.height(36.dp)
                 ) {
-                    Text("Delete")
+                    Text(stringResource(R.string.button_delete))
                 }
             } else {
                 OutlinedButton(
@@ -241,7 +243,7 @@ private fun ModelDownloadRow(
                     enabled = !isAnyModelDownloading,
                     modifier = Modifier.height(36.dp)
                 ) {
-                    Text(if (isAnyModelInstalledForEngine) "Replace" else "Download")
+                    Text(if (isAnyModelInstalledForEngine) stringResource(R.string.voice_model_replace) else stringResource(R.string.button_download))
                 }
             }
         }

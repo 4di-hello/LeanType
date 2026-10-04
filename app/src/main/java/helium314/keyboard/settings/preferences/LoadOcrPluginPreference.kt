@@ -132,9 +132,9 @@ fun LoadOcrPluginPreference(
             }
             try {
                 ctx.startActivity(intent)
-                android.widget.Toast.makeText(ctx, "Opening GitHub releases in browser… download the APK and use 'Load APK from storage'", android.widget.Toast.LENGTH_LONG).show()
+                android.widget.Toast.makeText(ctx, ctx.getString(R.string.ocr_plugin_open_browser_toast), android.widget.Toast.LENGTH_LONG).show()
             } catch (e: Exception) {
-                android.widget.Toast.makeText(ctx, "Failed to open browser: ${e.localizedMessage}", android.widget.Toast.LENGTH_SHORT).show()
+                android.widget.Toast.makeText(ctx, ctx.getString(R.string.open_browser_failed_format, e.localizedMessage ?: ""), android.widget.Toast.LENGTH_SHORT).show()
             }
             return
         }
@@ -177,8 +177,8 @@ fun LoadOcrPluginPreference(
     }
 
     val effectiveSummary = when {
-        isDownloading -> "Downloading plugin..."
-        hasPlugin -> if (localVersion != null) "Active v$localVersion" else "Active"
+        isDownloading -> stringResource(R.string.ocr_plugin_downloading)
+        hasPlugin -> if (localVersion != null) stringResource(R.string.ocr_plugin_active_version_status, localVersion) else stringResource(R.string.ocr_plugin_active_status)
         else -> summary
     }
 
@@ -208,9 +208,9 @@ fun LoadOcrPluginPreference(
                         ) {
                             Text(
                                 text = if (downloadProgress > 0f) {
-                                    "Downloading... ${(downloadProgress * 100).toInt()}%"
+                                    stringResource(R.string.downloading) + " ${(downloadProgress * 100).toInt()}%"
                                 } else {
-                                    "Downloading..."
+                                    stringResource(R.string.downloading)
                                 },
                                 style = MaterialTheme.typography.bodyMedium
                             )
@@ -243,9 +243,9 @@ fun LoadOcrPluginPreference(
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 val buttonText = when {
-                                    updateAvailable -> "Update to $remoteVersion"
-                                    remoteVersion != null -> "Download plugin ($remoteVersion)"
-                                    else -> "Download plugin"
+                                    updateAvailable -> stringResource(R.string.ocr_plugin_button_update_version, remoteVersion ?: "")
+                                    remoteVersion != null -> stringResource(R.string.ocr_plugin_button_download_version, remoteVersion ?: "")
+                                    else -> stringResource(R.string.ocr_plugin_button_download)
                                 }
                                 Text(buttonText)
                             }
@@ -263,14 +263,14 @@ fun LoadOcrPluginPreference(
                             },
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text("Load APK from storage")
+                            Text(stringResource(R.string.ocr_plugin_button_load_storage))
                         }
 
                         if (hasPlugin) {
                             Button(
                                 onClick = {
                                     OcrPluginLoader.removePlugin(ctx)
-                                    FeedbackManager.message(ctx, "OCR plugin removed. Restarting...")
+                                    FeedbackManager.message(ctx, R.string.ocr_plugin_removed_restarting)
                                     onSuccess?.invoke()
                                     showDialog = false
                                     if (restartOnSuccess) {
@@ -294,10 +294,10 @@ fun LoadOcrPluginPreference(
             }
         ) {
             val message = when {
-                hasPlugin && updateAvailable -> "An update is available for the OCR plugin!\nLocal version: $localVersion\nLatest version: $remoteVersion\n\nDo you want to download and update?"
-                hasPlugin -> "OCR plugin is active (version $localVersion).\n\nWarning: loading external code can be a security risk. Only use a plugin from a source you trust."
-                remoteVersion != null -> "Download the latest OCR plugin (version $remoteVersion) from GitHub, or load an APK from local storage.\n\nWarning: loading external code can be a security risk. Only use a plugin from a source you trust."
-                else -> "Download the OCR plugin from GitHub, or load an APK from local storage.\n\nWarning: loading external code can be a security risk. Only use a plugin from a source you trust."
+                hasPlugin && updateAvailable -> stringResource(R.string.ocr_plugin_update_available_dialog, localVersion.orEmpty(), remoteVersion ?: "")
+                hasPlugin -> stringResource(R.string.ocr_plugin_active_warning, localVersion.orEmpty())
+                remoteVersion != null -> stringResource(R.string.ocr_plugin_download_dialog_version_msg, remoteVersion ?: "")
+                else -> stringResource(R.string.ocr_plugin_download_dialog_msg)
             }
             Text(message, style = MaterialTheme.typography.bodyMedium)
         }

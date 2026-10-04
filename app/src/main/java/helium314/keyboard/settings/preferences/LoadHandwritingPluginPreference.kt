@@ -112,7 +112,7 @@ fun LoadHandwritingPluginPreference(
         val success = HandwritingLoader.importPlugin(ctx, uri)
         showDialog = false
         if (success) {
-            FeedbackManager.message(ctx, "Handwriting plugin loaded. Restarting...")
+            FeedbackManager.message(ctx, R.string.handwriting_plugin_loaded_restarting)
             onSuccess?.invoke()
             if (restartOnSuccess) {
                 scope.launch {
@@ -134,9 +134,9 @@ fun LoadHandwritingPluginPreference(
             }
             try {
                 ctx.startActivity(intent)
-                Toast.makeText(ctx, "Opening GitHub releases in browser… download the APK and use 'Load from file'", Toast.LENGTH_LONG).show()
+                Toast.makeText(ctx, ctx.getString(R.string.handwriting_plugin_open_browser_toast), Toast.LENGTH_LONG).show()
             } catch (e: Exception) {
-                Toast.makeText(ctx, "Failed to open browser: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(ctx, ctx.getString(R.string.open_browser_failed_format, e.localizedMessage ?: ""), Toast.LENGTH_SHORT).show()
             }
             return
         }
@@ -163,7 +163,7 @@ fun LoadHandwritingPluginPreference(
                     isDownloading = false
                     downloadProgress = 0f
                     if (success) {
-                        FeedbackManager.message(ctx, "Handwriting plugin loaded. Restarting...")
+                        FeedbackManager.message(ctx, R.string.handwriting_plugin_loaded_restarting)
                         onSuccess?.invoke()
                         showDialog = false
                         if (restartOnSuccess) {
@@ -179,7 +179,7 @@ fun LoadHandwritingPluginPreference(
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     isDownloading = false
-                    Toast.makeText(ctx, "Download failed: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(ctx, ctx.getString(R.string.plugin_download_failed_format, e.localizedMessage ?: ""), Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -211,9 +211,9 @@ fun LoadHandwritingPluginPreference(
                         ) {
                             Text(
                                 text = if (downloadProgress > 0f) {
-                                    "Downloading... ${(downloadProgress * 100).toInt()}%"
+                                    stringResource(R.string.downloading) + " ${(downloadProgress * 100).toInt()}%"
                                 } else {
-                                    "Downloading..."
+                                    stringResource(R.string.downloading)
                                 },
                                 style = MaterialTheme.typography.bodyMedium
                             )
@@ -245,7 +245,7 @@ fun LoadHandwritingPluginPreference(
                                 onClick = { startDownload() },
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                Text(if (updateAvailable) "Update" else "Download")
+                                Text(if (updateAvailable) stringResource(R.string.updates_badge_update) else stringResource(R.string.button_download))
                             }
                         }
                         if (!hasPlugin) {
@@ -261,14 +261,14 @@ fun LoadHandwritingPluginPreference(
                                 },
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                Text("Load from file")
+                                Text(stringResource(R.string.button_load_from_file))
                             }
                         }
                         if (hasPlugin) {
                             Button(
                                 onClick = {
                                     HandwritingLoader.removePlugin(ctx)
-                                    FeedbackManager.message(ctx, "Handwriting plugin removed. Restarting...")
+                                    FeedbackManager.message(ctx, R.string.handwriting_plugin_removed_restarting)
                                     onSuccess?.invoke()
                                     showDialog = false
                                     if (restartOnSuccess) {
@@ -292,10 +292,10 @@ fun LoadHandwritingPluginPreference(
             }
         ) {
             val message = when {
-                hasPlugin && updateAvailable -> "An update is available for the handwriting plugin!\nLocal version: $localVersion\nLatest version: $remoteVersion\n\nDo you want to download and update?"
-                hasPlugin -> "Handwriting plugin is active (version $localVersion).\n\nWarning: loading external code can be a security risk. Only use a plugin from a source you trust."
-                remoteVersion != null -> "Download the latest handwriting plugin (version $remoteVersion) from GitHub, or load an APK from local storage.\n\nWarning: loading external code can be a security risk. Only use a plugin from a source you trust."
-                else -> "Download the handwriting plugin from GitHub, or load an APK from local storage.\n\nWarning: loading external code can be a security risk. Only use a plugin from a source you trust."
+                hasPlugin && updateAvailable -> stringResource(R.string.handwriting_plugin_update_available_dialog, localVersion.orEmpty(), remoteVersion ?: "")
+                hasPlugin -> stringResource(R.string.handwriting_plugin_active_warning, localVersion.orEmpty())
+                remoteVersion != null -> stringResource(R.string.handwriting_plugin_download_dialog_version_msg, remoteVersion ?: "")
+                else -> stringResource(R.string.handwriting_plugin_download_dialog_msg)
             }
             Text(message)
         }

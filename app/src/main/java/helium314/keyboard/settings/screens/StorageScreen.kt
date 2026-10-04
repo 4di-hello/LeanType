@@ -208,11 +208,11 @@ fun StorageScreen(
     val targetItem = itemToDelete
     if (targetItem != null) {
         val typeLabel = when (targetItem.type) {
-            StorageItemType.PLUGIN -> "plugin"
-            StorageItemType.TRANSLATION_MODEL -> "translation model"
-            StorageItemType.HANDWRITING_MODEL -> "handwriting model"
-            StorageItemType.DICTIONARY -> "dictionary"
-            StorageItemType.CACHE -> "cache item"
+            StorageItemType.PLUGIN -> stringResource(R.string.storage_type_plugin)
+            StorageItemType.TRANSLATION_MODEL -> stringResource(R.string.storage_type_translation_model)
+            StorageItemType.HANDWRITING_MODEL -> stringResource(R.string.storage_type_handwriting_model)
+            StorageItemType.DICTIONARY -> stringResource(R.string.storage_type_dictionary)
+            StorageItemType.CACHE -> stringResource(R.string.storage_type_cache)
         }
         ConfirmationDialog(
             onDismissRequest = { itemToDelete = null },
