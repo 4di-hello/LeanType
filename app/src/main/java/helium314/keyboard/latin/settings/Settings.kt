@@ -524,6 +524,7 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
         const val PREF_CLIPBOARD_TOOLBAR_KEYS = "clipboard_toolbar_keys"
         const val PREF_ABC_AFTER_EMOJI = "abc_after_emoji"
         const val PREF_ABC_AFTER_CLIP = "abc_after_clip"
+        const val PREF_ABC_AFTER_CLIP_ENTER = "abc_after_clip_enter"
         const val PREF_ABC_AFTER_SYMBOL_SPACE = "abc_after_symbol_space"
         const val PREF_ABC_AFTER_NUMPAD_SPACE = "abc_after_numpad_space"
         const val PREF_REMOVE_REDUNDANT_POPUPS = "remove_redundant_popups"
