@@ -1456,6 +1456,123 @@
     <string name="button_download">ڈاؤن لوڈ کریں</string>
     <string name="button_load_from_file">فائل سے لوڈ کریں</string>
     <string name="button_delete">حذف کریں</string>
+<string name="handwriting_plugin_update_available_dialog">ہینڈ رائٹنگ پلگ اِن کے لیے اپ ڈیٹ دستیاب ہے!
+مقامی ورژن: %1$s
+تازہ ترین ورژن: %2$s
+
+کیا آپ ڈاؤن لوڈ اور اپ ڈیٹ کرنا چاہتے ہیں؟</string>
+    <string name="handwriting_plugin_active_warning">ہینڈ رائٹنگ پلگ اِن فعال ہے (ورژن %s)۔
+
+انتباہ: بیرونی کوڈ لوڈ کرنا سیکیورٹی رسک ہو سکتا ہے۔ صرف قابل اعتماد ذرائع کے پلگ اِنز استعمال کریں۔</string>
+    <string name="handwriting_plugin_download_dialog_version_msg">تازہ ترین ہینڈ رائٹنگ پلگ اِن (ورژن %s) GitHub سے ڈاؤن لوڈ کریں، یا مقامی اسٹوریج سے APK لوڈ کریں۔
+
+انتباہ: بیرونی کوڈ لوڈ کرنا سیکیورٹی رسک ہو سکتا ہے۔ صرف قابل اعتماد ذرائع کے پلگ اِنز استعمال کریں۔</string>
+    <string name="handwriting_plugin_download_dialog_msg">GitHub سے ہینڈ رائٹنگ پلگ اِن ڈاؤن لوڈ کریں، یا مقامی اسٹوریج سے APK لوڈ کریں۔
+
+انتباہ: بیرونی کوڈ لوڈ کرنا سیکیورٹی رسک ہو سکتا ہے۔ صرف قابل اعتماد ذرائع کے پلگ اِنز استعمال کریں۔</string>
+    <string name="handwriting_plugin_loaded_restarting">ہینڈ رائٹنگ پلگ اِن لوڈ ہو گیا۔ دوبارہ شروع ہو رہا ہے...</string>
+    <string name="handwriting_plugin_removed_restarting">ہینڈ رائٹنگ پلگ اِن ہٹا دیا گیا۔ دوبارہ شروع ہو رہا ہے...</string>
+    <string name="handwriting_plugin_open_browser_toast">براؤزر میں GitHub ریلیزز کھول رہا ہے… APK ڈاؤن لوڈ کریں اور \'فائل سے لوڈ کریں\' استعمال کریں</string>
+    <string name="ocr_plugin_update_available_dialog">OCR پلگ اِن کے لیے اپ ڈیٹ دستیاب ہے!
+مقامی ورژن: %1$s
+تازہ ترین ورژن: %2$s
+
+کیا آپ ڈاؤن لوڈ اور اپ ڈیٹ کرنا چاہتے ہیں؟</string>
+    <string name="ocr_plugin_active_warning">OCR پلگ اِن فعال ہے (ورژن %s)۔
+
+انتباہ: بیرونی کوڈ لوڈ کرنا سیکیورٹی رسک ہو سکتا ہے۔ صرف قابل اعتماد ذرائع کے پلگ اِنز استعمال کریں۔</string>
+    <string name="ocr_plugin_download_dialog_version_msg">تازہ ترین OCR پلگ اِن (ورژن %s) GitHub سے ڈاؤن لوڈ کریں، یا مقامی اسٹوریج سے APK لوڈ کریں۔
+
+انتباہ: بیرونی کوڈ لوڈ کرنا سیکیورٹی رسک ہو سکتا ہے۔ صرف قابل اعتماد ذرائع کے پلگ اِنز استعمال کریں۔</string>
+    <string name="ocr_plugin_download_dialog_msg">GitHub سے OCR پلگ اِن ڈاؤن لوڈ کریں، یا مقامی اسٹوریج سے APK لوڈ کریں۔
+
+انتباہ: بیرونی کوڈ لوڈ کرنا سیکیورٹی رسک ہو سکتا ہے۔ صرف قابل اعتماد ذرائع کے پلگ اِنز استعمال کریں۔</string>
+    <string name="ocr_plugin_button_update_version">%s پر اپ ڈیٹ کریں</string>
+    <string name="ocr_plugin_button_download_version">پلگ اِن ڈاؤن لوڈ کریں (%s)</string>
+    <string name="ocr_plugin_button_download">پلگ اِن ڈاؤن لوڈ کریں</string>
+    <string name="ocr_plugin_button_load_storage">اسٹوریج سے APK لوڈ کریں</string>
+    <string name="ocr_plugin_removed_restarting">OCR پلگ اِن ہٹا دیا گیا۔ دوبارہ شروع ہو رہا ہے...</string>
+    <string name="ocr_plugin_open_browser_toast">براؤزر میں GitHub ریلیزز کھول رہا ہے… APK ڈاؤن لوڈ کریں اور \'اسٹوریج سے APK لوڈ کریں\' استعمال کریں</string>
+    <string name="ocr_plugin_downloading">پلگ اِن ڈاؤن لوڈ ہو رہا ہے...</string>
+    <string name="ocr_plugin_active_status">فعال</string>
+    <string name="ocr_plugin_active_version_status">فعال v%s</string>
+    <string name="offline_ai_plugin_update_available_dialog">آف لائن AI پلگ اِن کے لیے اپ ڈیٹ دستیاب ہے!
+مقامی ورژن: %1$s
+تازہ ترین ورژن: %2$s
+
+کیا آپ اپ ڈیٹ کرنا چاہتے ہیں؟</string>
+    <string name="offline_ai_plugin_active_desc">آف لائن AI پلگ اِن فعال ہے (ورژن %s)۔
+
+پروف ریڈنگ اور دوبارہ تحریر کے لیے ڈیوائس پر لوکل GGUF / llama.cpp انفرنس کی اجازت دیتا ہے۔</string>
+    <string name="offline_ai_plugin_download_dialog_version_msg">تازہ ترین آف لائن AI پلگ اِن (ورژن %s) GitHub سے ڈاؤن لوڈ کریں، یا مقامی اسٹوریج سے APK لوڈ کریں۔</string>
+    <string name="offline_ai_plugin_download_dialog_msg">GitHub سے آف لائن AI پلگ اِن ڈاؤن لوڈ کریں، یا مقامی GGUF پروف ریڈنگ کو فعال کرنے کے لیے اسٹوریج سے APK لوڈ کریں۔</string>
+    <string name="offline_ai_plugin_loaded_restarting">آف لائن AI پلگ اِن لوڈ ہو گیا۔ دوبارہ شروع ہو رہا ہے...</string>
+    <string name="offline_ai_plugin_removed_restarting">آف لائن AI پلگ اِن ہٹا دیا گیا۔ دوبارہ شروع ہو رہا ہے...</string>
+    <string name="offline_ai_plugin_open_browser_toast">براؤزر میں GitHub ریلیزز کھول رہا ہے… APK ڈاؤن لوڈ کریں اور \'فائل سے لوڈ کریں\' استعمال کریں</string>
+    <string name="gesture_lib_loaded_restarting">اشاروں کی لائبریری لوڈ ہو گئی۔ دوبارہ شروع ہو رہا ہے...</string>
+    <string name="gesture_lib_removed_restarting">اشاروں کی لائبریری ہٹا دی گئی۔ دوبارہ شروع ہو رہا ہے...</string>
+    <string name="gesture_lib_open_browser_toast">لائبریری ڈاؤن لوڈ کرنے کے لیے براؤزر کھول رہا ہے… ڈاؤن لوڈ کے بعد \'فائل سے لوڈ کریں\' استعمال کریں</string>
+    <string name="button_download_in_browser">براؤزر میں ڈاؤن لوڈ کریں</string>
+    <string name="plugin_download_failed_format">ڈاؤن لوڈ ناکام رہا: %s</string>
+    <string name="open_browser_failed_format">براؤزر کھولنے میں ناکامی: %s</string>
+    <string name="storage_item_temporary_cache_name">عارضی کیشے</string>
+    <string name="storage_item_temporary_cache_desc">ماڈل ڈاؤن لوڈ کی تیاری، عارضی فائلیں اور کریش لاگز</string>
+    <string name="storage_item_code_cache_name">کوڈ کیشے</string>
+    <string name="storage_item_code_cache_desc">بہتر بنایا گیا dex کوڈ اور کمپلیشن کیشے</string>
+    <string name="storage_item_plugin_translation_name">ترجمہ پلگ اِن</string>
+    <string name="storage_item_plugin_translation_desc">ML Kit آف لائن ترجمے کے لیے متحرک رن ٹائم</string>
+    <string name="storage_item_plugin_handwriting_name">ہینڈ رائٹنگ پلگ اِن</string>
+    <string name="storage_item_plugin_handwriting_desc">Digital Ink شناختی انجن</string>
+    <string name="storage_item_plugin_ocr_name">ٹیکسٹ کی شناخت (OCR) پلگ اِن</string>
+    <string name="storage_item_plugin_ocr_desc">کیمرہ اور تصاویر کے لیے OCR ٹیکسٹ شناختی انجن</string>
+    <string name="storage_item_plugin_offline_ai_name">آف لائن AI پلگ اِن</string>
+    <string name="storage_item_plugin_offline_ai_desc">ڈیوائس پر LLM کے ذریعے پروف ریڈنگ انجن</string>
+    <string name="storage_item_trans_model_desc">آف لائن ترجمہ ماڈل فائلیں</string>
+    <string name="storage_item_hw_model_desc">Digital Ink شناختی ماڈل</string>
+    <string name="storage_item_dict_desc">کیش شدہ الفاظ کی فہرست کی لغت</string>
+    <string name="storage_type_plugin">پلگ اِن</string>
+    <string name="storage_type_translation_model">ترجمہ ماڈل</string>
+    <string name="storage_type_handwriting_model">ہینڈ رائٹنگ ماڈل</string>
+    <string name="storage_type_dictionary">لغت</string>
+    <string name="storage_type_cache">کیشے آئٹم</string>
+    <string name="voice_plugin_not_installed">وائس پلگ اِن انسٹال نہیں ہے۔ براہ کرم پہلے وائس پلگ اِن انسٹال کریں۔</string>
+    <string name="voice_model_installed_success">ماڈل %s کامیابی سے انسٹال ہو گیا!</string>
+    <string name="voice_plugin_import_failed">وائس پلگ اِن میں ماڈل درآمد کرنے میں ناکامی۔ یقینی بنائیں کہ وائس پلگ اِن اپ ڈیٹ ہے۔</string>
+    <string name="voice_opening_browser_for">%s کے لیے براؤزر کھول رہا ہے</string>
+    <string name="voice_whisper_models_title">Whisper ماڈلز</string>
+    <string name="voice_custom_model_title">اپنی مرضی کا GGML ماڈل</string>
+    <string name="voice_loaded_external_model">بیرونی ماڈل لوڈ ہو گیا</string>
+    <string name="voice_imported_and_ready">درآمد شدہ اور تیار</string>
+    <string name="voice_load_external_bin">بیرونی .bin فائل لوڈ کریں</string>
+    <string name="voice_custom_model_removed">اپنی مرضی کا ماڈل ہٹا دیا گیا</string>
+    <string name="voice_model_replace">تبدیل کریں</string>
+    <string name="voice_model_removed">ماڈل %s ہٹا دیا گیا</string>
+    <string name="voice_model_name_format">%s ماڈل</string>
+    <string name="voice_model_downloaded_format">ڈاؤن لوڈ شدہ (%s)</string>
+    <string name="button_import">درآمد کریں</string>
+    <string name="sound_pack_browser_note">براؤزر میں ڈاؤن لوڈ کریں، پھر .zip درآمد کریں</string>
+    <string name="sound_pack_app_note">ایپ میں ڈاؤن لوڈ کریں یا .zip درآمد کریں</string>
+    <string name="sound_pack_import_zip">.zip درآمد کریں</string>
+    <string name="search_sound_pack_placeholder">صوتی پیک تلاش کریں…</string>
+    <string name="sound_pack_default_system_desc">سسٹم کی پہلے سے طے شدہ کی کلک آواز</string>
+    <string name="sound_pack_installed_title">انسٹال شدہ صوتی پیک</string>
+    <string name="sound_pack_available_title">دستیاب صوتی پیک</string>
+    <string name="sound_pack_imported_success">صوتی پیک کامیابی سے درآمد ہو گیا</string>
+    <string name="sound_pack_import_failed">صوتی پیک درآمد کرنے میں ناکامی (درست آڈیو فائلیں یا pack.json ہونا ضروری ہے)</string>
+    <string name="sound_pack_delete_title">صوتی پیک حذف کریں</string>
+    <string name="sound_pack_delete_message">کیا آپ صوتی پیک \'%s\' حذف کرنا چاہتے ہیں؟</string>
+    <string name="sound_pack_status_active">فعال</string>
+    <string name="sound_pack_size_mb_format">%.1f MB</string>
+    <string name="sound_pack_download_dialog_title">صوتی پیک</string>
+    <string name="sound_pack_download_dialog_desc">کمیونٹی کی کیز صوتی پیک ڈاؤن لوڈ کریں یا اپنے ذاتی .zip پیک درآمد کریں۔</string>
+    <string name="sound_pack_delete_button">حذف کریں</string>
+<string name="sound_pack_downloaded_activated">%s ڈاؤن لوڈ اور فعال کر دیا گیا</string>
+    <string name="sound_pack_download_failed">%s ڈاؤن لوڈ کرنے میں ناکامی</string>
+    <string name="sound_pack_deleted_format">%s حذف کر دیا گیا</string>
+    <string name="sound_pack_downloading_in_browser_toast">براؤزر میں ڈاؤن لوڈ ہو رہا ہے… مکمل ہونے پر .zip درآمد کریں</string>
+    <string name="sound_pack_preview">پیش نظارہ</string>
 </resources>
+
+
 
 

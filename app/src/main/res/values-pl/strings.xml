@@ -1442,7 +1442,124 @@ Ostrzeżenie: ładowanie zewnętrznego kodu może stanowić zagrożenie bezpiecz
     <string name="button_download">Pobierz</string>
     <string name="button_load_from_file">Załaduj z pliku</string>
     <string name="button_delete">Usuń</string>
+<string name="handwriting_plugin_update_available_dialog">Dostępna jest aktualizacja wtyczki pisma odręcznego!
+Wersja lokalna: %1$s
+Najnowsza wersja: %2$s
+
+Czy chcesz pobrać i zaktualizować?</string>
+    <string name="handwriting_plugin_active_warning">Wtyczka pisma odręcznego jest aktywna (wersja %s).
+
+Ostrzeżenie: ładowanie zewnętrznego kodu może stanowić zagrożenie bezpieczeństwa. Używaj wyłącznie wtyczek z zaufanych źródeł.</string>
+    <string name="handwriting_plugin_download_dialog_version_msg">Pobierz najnowszą wtyczkę pisma odręcznego (%s) z GitHub lub załaduj plik APK z pamięci lokalnej.
+
+Ostrzeżenie: ładowanie zewnętrznego kodu może stanowić zagrożenie bezpieczeństwa. Używaj wyłącznie wtyczek z zaufanych źródeł.</string>
+    <string name="handwriting_plugin_download_dialog_msg">Pobierz wtyczkę pisma odręcznego z GitHub lub załaduj plik APK z pamięci lokalnej.
+
+Ostrzeżenie: ładowanie zewnętrznego kodu może stanowić zagrożenie bezpieczeństwa. Używaj wyłącznie wtyczek z zaufanych źródeł.</string>
+    <string name="handwriting_plugin_loaded_restarting">Wtyczka pisma odręcznego została załadowana. Ponowne uruchamianie...</string>
+    <string name="handwriting_plugin_removed_restarting">Wtyczka pisma odręcznego została usunięta. Ponowne uruchamianie...</string>
+    <string name="handwriting_plugin_open_browser_toast">Otwieranie wydań GitHub w przeglądarce… pobierz plik APK i użyj \'Załaduj z pliku\'</string>
+    <string name="ocr_plugin_update_available_dialog">Dostępna jest aktualizacja wtyczki OCR!
+Wersja lokalna: %1$s
+Najnowsza wersja: %2$s
+
+Czy chcesz pobrać i zaktualizować?</string>
+    <string name="ocr_plugin_active_warning">Wtyczka OCR jest aktywna (wersja %s).
+
+Ostrzeżenie: ładowanie zewnętrznego kodu może stanowić zagrożenie bezpieczeństwa. Używaj wyłącznie wtyczek z zaufanych źródeł.</string>
+    <string name="ocr_plugin_download_dialog_version_msg">Pobierz najnowszą wtyczkę OCR (%s) z GitHub lub załaduj plik APK z pamięci lokalnej.
+
+Ostrzeżenie: ładowanie zewnętrznego kodu może stanowić zagrożenie bezpieczeństwa. Używaj wyłącznie wtyczek z zaufanych źródeł.</string>
+    <string name="ocr_plugin_download_dialog_msg">Pobierz wtyczkę OCR z GitHub lub załaduj plik APK z pamięci lokalnej.
+
+Ostrzeżenie: ładowanie zewnętrznego kodu może stanowić zagrożenie bezpieczeństwa. Używaj wyłącznie wtyczek z zaufanych źródeł.</string>
+    <string name="ocr_plugin_button_update_version">Aktualizuj do %s</string>
+    <string name="ocr_plugin_button_download_version">Pobierz wtyczkę (%s)</string>
+    <string name="ocr_plugin_button_download">Pobierz wtyczkę</string>
+    <string name="ocr_plugin_button_load_storage">Załaduj APK z pamięci</string>
+    <string name="ocr_plugin_removed_restarting">Wtyczka OCR została usunięta. Ponowne uruchamianie...</string>
+    <string name="ocr_plugin_open_browser_toast">Otwieranie wydań GitHub w przeglądarce… pobierz plik APK i użyj \'Załaduj APK z pamięci\'</string>
+    <string name="ocr_plugin_downloading">Pobieranie wtyczki...</string>
+    <string name="ocr_plugin_active_status">Aktywna</string>
+    <string name="ocr_plugin_active_version_status">Aktywna v%s</string>
+    <string name="offline_ai_plugin_update_available_dialog">Dostępna jest aktualizacja wtyczki offline AI!
+Wersja lokalna: %1$s
+Najnowsza wersja: %2$s
+
+Czy chcesz zaktualizować?</string>
+    <string name="offline_ai_plugin_active_desc">Wtyczka offline AI jest aktywna (wersja %s).
+
+Umożliwia lokalne wnioskowanie GGUF / llama.cpp na urządzeniu w celu korekty i redagowania tekstu.</string>
+    <string name="offline_ai_plugin_download_dialog_version_msg">Pobierz najnowszą wtyczkę offline AI (%s) z GitHub lub załaduj plik APK z pamięci lokalnej.</string>
+    <string name="offline_ai_plugin_download_dialog_msg">Pobierz wtyczkę offline AI z GitHub lub załaduj plik APK z pamięci lokalnej, aby włączyć lokalną korektę tekstu GGUF.</string>
+    <string name="offline_ai_plugin_loaded_restarting">Wtyczka offline AI została załadowana. Ponowne uruchamianie...</string>
+    <string name="offline_ai_plugin_removed_restarting">Wtyczka offline AI została usunięta. Ponowne uruchamianie...</string>
+    <string name="offline_ai_plugin_open_browser_toast">Otwieranie wydań GitHub w przeglądarce… pobierz plik APK i użyj \'Załaduj z pliku\'</string>
+    <string name="gesture_lib_loaded_restarting">Biblioteka gestów została załadowana. Ponowne uruchamianie...</string>
+    <string name="gesture_lib_removed_restarting">Biblioteka gestów została usunięta. Ponowne uruchamianie...</string>
+    <string name="gesture_lib_open_browser_toast">Otwieranie przeglądarki w celu pobrania biblioteki… po pobraniu użyj \'Załaduj z pliku\'</string>
+    <string name="button_download_in_browser">Pobierz w przeglądarce</string>
+    <string name="plugin_download_failed_format">Nie udało się pobrać: %s</string>
+    <string name="open_browser_failed_format">Nie udało się otworzyć przeglądarki: %s</string>
+    <string name="storage_item_temporary_cache_name">Tymczasowa pamięć podręczna</string>
+    <string name="storage_item_temporary_cache_desc">Przygotowywanie pobierania modeli, tymczasowe rozpakowywanie i dzienniki awarii</string>
+    <string name="storage_item_code_cache_name">Pamięć podręczna kodu</string>
+    <string name="storage_item_code_cache_desc">Zoptymalizowany kod dex i pamięci podręczne kompilacji</string>
+    <string name="storage_item_plugin_translation_name">Wtyczka tłumaczenia</string>
+    <string name="storage_item_plugin_translation_desc">Środowisko uruchomieniowe do tłumaczenia offline z ML Kit</string>
+    <string name="storage_item_plugin_handwriting_name">Wtyczka pisma odręcznego</string>
+    <string name="storage_item_plugin_handwriting_desc">Silnik rozpoznawania Digital Ink</string>
+    <string name="storage_item_plugin_ocr_name">Wtyczka rozpoznawania tekstu (OCR)</string>
+    <string name="storage_item_plugin_ocr_desc">Silnik rozpoznawania tekstu OCR dla aparatu i obrazów</string>
+    <string name="storage_item_plugin_offline_ai_name">Wtyczka offline AI</string>
+    <string name="storage_item_plugin_offline_ai_desc">Lokalny silnik korekty tekstu z modelem LLM</string>
+    <string name="storage_item_trans_model_desc">Pliki modeli tłumaczenia offline</string>
+    <string name="storage_item_hw_model_desc">Model rozpoznawania Digital Ink</string>
+    <string name="storage_item_dict_desc">Zapisany w pamięci podręcznej słownik listy słów</string>
+    <string name="storage_type_plugin">wtyczka</string>
+    <string name="storage_type_translation_model">model tłumaczenia</string>
+    <string name="storage_type_handwriting_model">model pisma odręcznego</string>
+    <string name="storage_type_dictionary">słownik</string>
+    <string name="storage_type_cache">element pamięci podręcznej</string>
+    <string name="voice_plugin_not_installed">Wtyczka głosowa nie jest zainstalowana. Najpierw zainstaluj wtyczkę głosową.</string>
+    <string name="voice_model_installed_success">Model %s został pomyślnie zainstalowany!</string>
+    <string name="voice_plugin_import_failed">Nie udało się zaimportować modelu do wtyczki głosowej. Upewnij się, że wtyczka głosowa jest zaktualizowana.</string>
+    <string name="voice_opening_browser_for">Otwieranie przeglądarki dla %s</string>
+    <string name="voice_whisper_models_title">Modele Whisper</string>
+    <string name="voice_custom_model_title">Własny model GGML</string>
+    <string name="voice_loaded_external_model">Załadowano model zewnętrzny</string>
+    <string name="voice_imported_and_ready">Zaimportowano i gotowe</string>
+    <string name="voice_load_external_bin">Załaduj zewnętrzny plik .bin</string>
+    <string name="voice_custom_model_removed">Usunięto własny model</string>
+    <string name="voice_model_replace">Zamień</string>
+    <string name="voice_model_removed">Usunięто model %s</string>
+    <string name="voice_model_name_format">Model %s</string>
+    <string name="voice_model_downloaded_format">Pobrano (%s)</string>
+    <string name="button_import">Importuj</string>
+    <string name="sound_pack_browser_note">Pobierz w przeglądarce, a następnie zaimportuj .zip</string>
+    <string name="sound_pack_app_note">Pobierz w aplikacji lub zaimportuj .zip</string>
+    <string name="sound_pack_import_zip">Importuj .zip</string>
+    <string name="search_sound_pack_placeholder">Szukaj pakietu dźwiękowego…</string>
+    <string name="sound_pack_default_system_desc">Domyślny dźwięk kliknięcia klawisza systemu</string>
+    <string name="sound_pack_installed_title">Zainstalowane pakiety dźwiękowe</string>
+    <string name="sound_pack_available_title">Dostępne pakiety dźwiękowe</string>
+    <string name="sound_pack_imported_success">Pakiet dźwiękowy został pomyślnie zaimportowany</string>
+    <string name="sound_pack_import_failed">Nie udało się zaimportować pakietu dźwiękowego (musi zawierać prawidłowe pliki audio lub pack.json)</string>
+    <string name="sound_pack_delete_title">Usuń pakiet dźwiękowy</string>
+    <string name="sound_pack_delete_message">Czy usunąć pakiet dźwiękowy „%s”?</string>
+    <string name="sound_pack_status_active">Aktywny</string>
+    <string name="sound_pack_size_mb_format">%.1f MB</string>
+    <string name="sound_pack_download_dialog_title">Pakiety dźwiękowe</string>
+    <string name="sound_pack_download_dialog_desc">Pobieraj pakiety dźwięków klawiszy od społeczności lub importuj własne pakiety .zip.</string>
+    <string name="sound_pack_delete_button">Usuń</string>
+<string name="sound_pack_downloaded_activated">Pobrano i aktywowano %s</string>
+    <string name="sound_pack_download_failed">Nie udało się pobrać %s</string>
+    <string name="sound_pack_deleted_format">Usunięto %s</string>
+    <string name="sound_pack_downloading_in_browser_toast">Pobieranie w przeglądarce… zaimportuj plik .zip po zakończeniu</string>
+    <string name="sound_pack_preview">Odsłuchaj</string>
 </resources>
+
+
 
 
 

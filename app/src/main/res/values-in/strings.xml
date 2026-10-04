@@ -1355,6 +1355,123 @@
     <string name="button_download">Unduh</string>
     <string name="button_load_from_file">Muat dari berkas</string>
     <string name="button_delete">Hapus</string>
+<string name="handwriting_plugin_update_available_dialog">Pembaruan tersedia untuk plugin tulisan tangan!
+Versi lokal: %1$s
+Versi terbaru: %2$s
+
+Apakah Anda ingin mengunduh dan memperbarui?</string>
+    <string name="handwriting_plugin_active_warning">Plugin tulisan tangan aktif (versi %s).
+
+Peringatan: memuat kode eksternal dapat berisiko terhadap keamanan. Gunakan hanya plugin dari sumber tepercaya.</string>
+    <string name="handwriting_plugin_download_dialog_version_msg">Unduh plugin tulisan tangan terbaru (versi %s) dari GitHub, atau muat APK dari penyimpanan lokal.
+
+Peringatan: memuat kode eksternal dapat berisiko terhadap keamanan. Gunakan hanya plugin dari sumber tepercaya.</string>
+    <string name="handwriting_plugin_download_dialog_msg">Unduh plugin tulisan tangan dari GitHub, atau muat APK dari penyimpanan lokal.
+
+Peringatan: memuat kode eksternal dapat berisiko terhadap keamanan. Gunakan hanya plugin dari sumber tepercaya.</string>
+    <string name="handwriting_plugin_loaded_restarting">Plugin tulisan tangan dimuat. Memulai ulang...</string>
+    <string name="handwriting_plugin_removed_restarting">Plugin tulisan tangan dihapus. Memulai ulang...</string>
+    <string name="handwriting_plugin_open_browser_toast">Membuka rilis GitHub di browser… unduh APK lalu gunakan \'Muat dari file\'</string>
+    <string name="ocr_plugin_update_available_dialog">Pembaruan tersedia untuk plugin OCR!
+Versi lokal: %1$s
+Versi terbaru: %2$s
+
+Apakah Anda ingin mengunduh dan memperbarui?</string>
+    <string name="ocr_plugin_active_warning">Plugin OCR aktif (versi %s).
+
+Peringatan: memuat kode eksternal dapat berisiko terhadap keamanan. Gunakan hanya plugin dari sumber tepercaya.</string>
+    <string name="ocr_plugin_download_dialog_version_msg">Unduh plugin OCR terbaru (versi %s) dari GitHub, atau muat APK dari penyimpanan lokal.
+
+Peringatan: memuat kode eksternal dapat berisiko terhadap keamanan. Gunakan hanya plugin dari sumber tepercaya.</string>
+    <string name="ocr_plugin_download_dialog_msg">Unduh plugin OCR dari GitHub, atau muat APK dari penyimpanan lokal.
+
+Peringatan: memuat kode eksternal dapat berisiko terhadap keamanan. Gunakan hanya plugin dari sumber tepercaya.</string>
+    <string name="ocr_plugin_button_update_version">Perbarui ke %s</string>
+    <string name="ocr_plugin_button_download_version">Unduh plugin (%s)</string>
+    <string name="ocr_plugin_button_download">Unduh plugin</string>
+    <string name="ocr_plugin_button_load_storage">Muat APK dari penyimpanan</string>
+    <string name="ocr_plugin_removed_restarting">Plugin OCR dihapus. Memulai ulang...</string>
+    <string name="ocr_plugin_open_browser_toast">Membuka rilis GitHub di browser… unduh APK lalu gunakan \'Muat APK dari penyimpanan\'</string>
+    <string name="ocr_plugin_downloading">Mengunduh plugin...</string>
+    <string name="ocr_plugin_active_status">Aktif</string>
+    <string name="ocr_plugin_active_version_status">Aktif v%s</string>
+    <string name="offline_ai_plugin_update_available_dialog">Pembaruan tersedia untuk plugin AI offline!
+Versi lokal: %1$s
+Versi terbaru: %2$s
+
+Apakah Anda ingin memperbarui?</string>
+    <string name="offline_ai_plugin_active_desc">Plugin AI offline aktif (versi %s).
+
+Memungkinkan inferensi GGUF / llama.cpp di perangkat untuk koreksi teks dan penulisan ulang.</string>
+    <string name="offline_ai_plugin_download_dialog_version_msg">Unduh plugin AI offline terbaru (versi %s) dari GitHub, atau muat APK dari penyimpanan lokal.</string>
+    <string name="offline_ai_plugin_download_dialog_msg">Unduh plugin AI offline dari GitHub, atau muat APK dari penyimpanan lokal untuk mengaktifkan koreksi GGUF lokal.</string>
+    <string name="offline_ai_plugin_loaded_restarting">Plugin AI offline dimuat. Memulai ulang...</string>
+    <string name="offline_ai_plugin_removed_restarting">Plugin AI offline dihapus. Memulai ulang...</string>
+    <string name="offline_ai_plugin_open_browser_toast">Membuka rilis GitHub di browser… unduh APK lalu gunakan \'Muat dari file\'</string>
+    <string name="gesture_lib_loaded_restarting">Pustaka gestur dimuat. Memulai ulang...</string>
+    <string name="gesture_lib_removed_restarting">Pustaka gestur dihapus. Memulai ulang...</string>
+    <string name="gesture_lib_open_browser_toast">Membuka browser untuk mengunduh pustaka… gunakan \'Muat dari file\' setelah mengunduh</string>
+    <string name="button_download_in_browser">Unduh di browser</string>
+    <string name="plugin_download_failed_format">Gagal mengunduh: %s</string>
+    <string name="open_browser_failed_format">Gagal membuka browser: %s</string>
+    <string name="storage_item_temporary_cache_name">Cache sementara</string>
+    <string name="storage_item_temporary_cache_desc">Persiapan unduhan model, ekstraksi sementara, dan log kerusakan</string>
+    <string name="storage_item_code_cache_name">Cache kode</string>
+    <string name="storage_item_code_cache_desc">Kode dex yang dioptimalkan dan cache kompilasi</string>
+    <string name="storage_item_plugin_translation_name">Plugin penerjemahan</string>
+    <string name="storage_item_plugin_translation_desc">Runtime dinamis untuk penerjemahan offline ML Kit</string>
+    <string name="storage_item_plugin_handwriting_name">Plugin tulisan tangan</string>
+    <string name="storage_item_plugin_handwriting_desc">Mesin pengenalan Digital Ink</string>
+    <string name="storage_item_plugin_ocr_name">Plugin pengenalan teks (OCR)</string>
+    <string name="storage_item_plugin_ocr_desc">Mesin pengenalan teks OCR untuk kamera dan gambar</string>
+    <string name="storage_item_plugin_offline_ai_name">Plugin AI offline</string>
+    <string name="storage_item_plugin_offline_ai_desc">Mesin koreksi teks dengan LLM di perangkat</string>
+    <string name="storage_item_trans_model_desc">File model penerjemahan offline</string>
+    <string name="storage_item_hw_model_desc">Model pengenalan Digital Ink</string>
+    <string name="storage_item_dict_desc">Kamus daftar kata yang di-cache</string>
+    <string name="storage_type_plugin">plugin</string>
+    <string name="storage_type_translation_model">model penerjemahan</string>
+    <string name="storage_type_handwriting_model">model tulisan tangan</string>
+    <string name="storage_type_dictionary">kamus</string>
+    <string name="storage_type_cache">item cache</string>
+    <string name="voice_plugin_not_installed">Plugin suara belum terpasang. Harap pasang plugin suara terlebih dahulu.</string>
+    <string name="voice_model_installed_success">Model %s berhasil dipasang!</string>
+    <string name="voice_plugin_import_failed">Gagal mengimpor model ke plugin suara. Pastikan plugin suara diperbarui.</string>
+    <string name="voice_opening_browser_for">Membuka browser untuk %s</string>
+    <string name="voice_whisper_models_title">Model Whisper</string>
+    <string name="voice_custom_model_title">Model GGML kustom</string>
+    <string name="voice_loaded_external_model">Model eksternal dimuat</string>
+    <string name="voice_imported_and_ready">Diimpor dan siap</string>
+    <string name="voice_load_external_bin">Muat file .bin eksternal</string>
+    <string name="voice_custom_model_removed">Model kustom dihapus</string>
+    <string name="voice_model_replace">Ganti</string>
+    <string name="voice_model_removed">Model %s dihapus</string>
+    <string name="voice_model_name_format">Model %s</string>
+    <string name="voice_model_downloaded_format">Diunduh (%s)</string>
+    <string name="button_import">Impor</string>
+    <string name="sound_pack_browser_note">Unduh di browser, lalu impor file .zip</string>
+    <string name="sound_pack_app_note">Unduh di aplikasi atau impor file .zip</string>
+    <string name="sound_pack_import_zip">Impor .zip</string>
+    <string name="search_sound_pack_placeholder">Cari paket suara…</string>
+    <string name="sound_pack_default_system_desc">Suara ketukan tombol default sistem</string>
+    <string name="sound_pack_installed_title">Paket suara terpasang</string>
+    <string name="sound_pack_available_title">Paket suara tersedia</string>
+    <string name="sound_pack_imported_success">Paket suara berhasil diimpor</string>
+    <string name="sound_pack_import_failed">Gagal mengimpor paket suara (harus berisi file audio yang valid atau pack.json)</string>
+    <string name="sound_pack_delete_title">Hapus paket suara</string>
+    <string name="sound_pack_delete_message">Hapus paket suara \'%s\'?</string>
+    <string name="sound_pack_status_active">Aktif</string>
+    <string name="sound_pack_size_mb_format">%.1f MB</string>
+    <string name="sound_pack_download_dialog_title">Paket suara</string>
+    <string name="sound_pack_download_dialog_desc">Unduh paket suara tombol dari komunitas atau impor paket .zip Anda sendiri.</string>
+    <string name="sound_pack_delete_button">Hapus</string>
+<string name="sound_pack_downloaded_activated">%s diunduh &amp; diaktifkan</string>
+    <string name="sound_pack_download_failed">Gagal mengunduh %s</string>
+    <string name="sound_pack_deleted_format">%s dihapus</string>
+    <string name="sound_pack_downloading_in_browser_toast">Mengunduh di browser… impor .zip setelah selesai</string>
+    <string name="sound_pack_preview">Pratinjau</string>
 </resources>
+
+
 
 

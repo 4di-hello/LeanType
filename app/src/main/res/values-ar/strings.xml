@@ -1470,7 +1470,124 @@
     <string name="button_download">تنزيل</string>
     <string name="button_load_from_file">تحميل من ملف</string>
     <string name="button_delete">حذف</string>
+<string name="handwriting_plugin_update_available_dialog">يتوفر تحديث لملحق الكتابة اليدوية!
+الإصدار المحلي: %1$s
+أحدث إصدار: %2$s
+
+هل ترغب في التنزيل والتحديث؟</string>
+    <string name="handwriting_plugin_active_warning">ملحق الكتابة اليدوية مفعّل (الإصدار %s).
+
+تحذير: قد يؤدي تحميل تعليمات برمجية خارجية إلى مخاطر أمنية. استخدم فقط الملحقات من مصادر موثوقة.</string>
+    <string name="handwriting_plugin_download_dialog_version_msg">قم بتنزيل أحدث ملحق للكتابة اليدوية (الإصدار %s) من GitHub، أو قم بتحميل APK من التخزين المحلي.
+
+تحذير: قد يؤدي تحميل تعليمات برمجية خارجية إلى مخاطر أمنية. استخدم فقط الملحقات من مصادر موثوقة.</string>
+    <string name="handwriting_plugin_download_dialog_msg">قم بتنزيل ملحق الكتابة اليدوية من GitHub، أو قم بتحميل APK من التخزين المحلي.
+
+تحذير: قد يؤدي تحميل تعليمات برمجية خارجية إلى مخاطر أمنية. استخدم فقط الملحقات من مصادر موثوقة.</string>
+    <string name="handwriting_plugin_loaded_restarting">تم تحميل ملحق الكتابة اليدوية. جارٍ إعادة التشغيل...</string>
+    <string name="handwriting_plugin_removed_restarting">تمت إزالة ملحق الكتابة اليدوية. جارٍ إعادة التشغيل...</string>
+    <string name="handwriting_plugin_open_browser_toast">جارٍ فتح إصدارات GitHub في المتصفح… قم بتنزيل APK واستخدم \'تحميل من ملف\'</string>
+    <string name="ocr_plugin_update_available_dialog">يتوفر تحديث لملحق OCR!
+الإصدار المحلي: %1$s
+أحدث إصدار: %2$s
+
+هل ترغب في التنزيل والتحديث؟</string>
+    <string name="ocr_plugin_active_warning">ملحق OCR مفعّل (الإصدار %s).
+
+تحذير: قد يؤدي تحميل تعليمات برمجية خارجية إلى مخاطر أمنية. استخدم فقط الملحقات من مصادر موثوقة.</string>
+    <string name="ocr_plugin_download_dialog_version_msg">قم بتنزيل أحدث ملحق OCR (الإصدار %s) من GitHub، أو قم بتحميل APK من التخزين المحلي.
+
+تحذير: قد يؤدي تحميل تعليمات برمجية خارجية إلى مخاطر أمنية. استخدم فقط الملحقات من مصادر موثوقة.</string>
+    <string name="ocr_plugin_download_dialog_msg">قم بتنزيل ملحق OCR من GitHub، أو قم بتحميل APK من التخزين المحلي.
+
+تحذير: قد يؤدي تحميل تعليمات برمجية خارجية إلى مخاطر أمنية. استخدم فقط الملحقات من مصادر موثوقة.</string>
+    <string name="ocr_plugin_button_update_version">تحديث إلى %s</string>
+    <string name="ocr_plugin_button_download_version">تنزيل الملحق (%s)</string>
+    <string name="ocr_plugin_button_download">تنزيل الملحق</string>
+    <string name="ocr_plugin_button_load_storage">تحميل APK من التخزين</string>
+    <string name="ocr_plugin_removed_restarting">تمت إزالة ملحق OCR. جارٍ إعادة التشغيل...</string>
+    <string name="ocr_plugin_open_browser_toast">جارٍ فتح إصدارات GitHub في المتصفح… قم بتنزيل APK واستخدم \'تحميل APK من التخزين\'</string>
+    <string name="ocr_plugin_downloading">جارٍ تنزيل الملحق...</string>
+    <string name="ocr_plugin_active_status">نشط</string>
+    <string name="ocr_plugin_active_version_status">نشط v%s</string>
+    <string name="offline_ai_plugin_update_available_dialog">يتوفر تحديث لملحق AI دون اتصال!
+الإصدار المحلي: %1$s
+أحدث إصدار: %2$s
+
+هل ترغب في التحديث؟</string>
+    <string name="offline_ai_plugin_active_desc">ملحق AI دون اتصال مفعّل (الإصدار %s).
+
+يتيح استنتاج GGUF / llama.cpp محلياً على الجهاز للتدقيق وإعادة الصياغة.</string>
+    <string name="offline_ai_plugin_download_dialog_version_msg">قم بتنزيل أحدث ملحق AI دون اتصال (الإصدار %s) من GitHub، أو قم بتحميل APK من التخزين المحلي.</string>
+    <string name="offline_ai_plugin_download_dialog_msg">قم بتنزيل ملحق AI دون اتصال من GitHub، أو قم بتحميل APK من التخزين لتمكين التدقيق اللغوي المحلي عبر GGUF.</string>
+    <string name="offline_ai_plugin_loaded_restarting">تم تحميل ملحق AI دون اتصال. جارٍ إعادة التشغيل...</string>
+    <string name="offline_ai_plugin_removed_restarting">تمت إزالة ملحق AI دون اتصال. جارٍ إعادة التشغيل...</string>
+    <string name="offline_ai_plugin_open_browser_toast">جارٍ فتح إصدارات GitHub في المتصفح… قم بتنزيل APK واستخدم \'تحميل من ملف\'</string>
+    <string name="gesture_lib_loaded_restarting">تم تحميل مكتبة الإيماءات. جارٍ إعادة التشغيل...</string>
+    <string name="gesture_lib_removed_restarting">تمت إزالة مكتبة الإيماءات. جارٍ إعادة التشغيل...</string>
+    <string name="gesture_lib_open_browser_toast">جارٍ فتح المتصفح لتنزيل المكتبة… استخدم \'تحميل من ملف\' بعد التنزيل</string>
+    <string name="button_download_in_browser">تنزيل في المتصفح</string>
+    <string name="plugin_download_failed_format">فشل التنزيل: %s</string>
+    <string name="open_browser_failed_format">فشل فتح المتصفح: %s</string>
+    <string name="storage_item_temporary_cache_name">ذاكرة التخزين المؤقت المؤقتة</string>
+    <string name="storage_item_temporary_cache_desc">إعداد تنزيل النماذج والاستخراجات المؤقتة وسجلات الأعطال</string>
+    <string name="storage_item_code_cache_name">ذاكرة التخزين المؤقت للتعليمات البرمجية</string>
+    <string name="storage_item_code_cache_desc">رموز dex المحسّنة وذاكرات التجميع المؤقتة</string>
+    <string name="storage_item_plugin_translation_name">ملحق الترجمة</string>
+    <string name="storage_item_plugin_translation_desc">بيئة تشغيل ديناميكية للترجمة دون اتصال عبر ML Kit</string>
+    <string name="storage_item_plugin_handwriting_name">ملحق الكتابة اليدوية</string>
+    <string name="storage_item_plugin_handwriting_desc">محرك التعرف على الكتابة Digital Ink</string>
+    <string name="storage_item_plugin_ocr_name">ملحق التعرف الضوئي على الحروف (OCR)</string>
+    <string name="storage_item_plugin_ocr_desc">محرك التعرف على النصوص OCR للكاميرا والصور</string>
+    <string name="storage_item_plugin_offline_ai_name">ملحق AI دون اتصال</string>
+    <string name="storage_item_plugin_offline_ai_desc">محرك تدقيق النصوص باستخدام LLM على الجهاز</string>
+    <string name="storage_item_trans_model_desc">ملفات نماذج الترجمة دون اتصال</string>
+    <string name="storage_item_hw_model_desc">نموذج التعرف Digital Ink</string>
+    <string name="storage_item_dict_desc">قاموس قائمة الكلمات المخزن مؤقتاً</string>
+    <string name="storage_type_plugin">ملحق</string>
+    <string name="storage_type_translation_model">نموذج ترجمة</string>
+    <string name="storage_type_handwriting_model">نموذج كتابة يدوية</string>
+    <string name="storage_type_dictionary">قاموس</string>
+    <string name="storage_type_cache">عنصر تخزين مؤقت</string>
+    <string name="voice_plugin_not_installed">الملحق الصوتي غير مثبت. يُرجى تثبيت الملحق الصوتي أولاً.</string>
+    <string name="voice_model_installed_success">تم تثبيت النموذج %s بنجاح!</string>
+    <string name="voice_plugin_import_failed">فشل استيراد النموذج إلى الملحق الصوتي. تأكد من تحديث الملحق الصوتي.</string>
+    <string name="voice_opening_browser_for">جارٍ فتح المتصفح لـ %s</string>
+    <string name="voice_whisper_models_title">نماذج Whisper</string>
+    <string name="voice_custom_model_title">نموذج GGML مخصص</string>
+    <string name="voice_loaded_external_model">تم تحميل نموذج خارجي</string>
+    <string name="voice_imported_and_ready">تم الاستيراد وهو جاهز</string>
+    <string name="voice_load_external_bin">تحميل ملف .bin خارجي</string>
+    <string name="voice_custom_model_removed">تمت إزالة النموذج المخصص</string>
+    <string name="voice_model_replace">استبدال</string>
+    <string name="voice_model_removed">تمت إزالة النموذج %s</string>
+    <string name="voice_model_name_format">نموذج %s</string>
+    <string name="voice_model_downloaded_format">تم التنزيل (%s)</string>
+    <string name="button_import">استيراد</string>
+    <string name="sound_pack_browser_note">قم بالتنزيل في المتصفح ثم استيراد .zip</string>
+    <string name="sound_pack_app_note">قم بالتنزيل في التطبيق أو استيراد .zip</string>
+    <string name="sound_pack_import_zip">استيراد .zip</string>
+    <string name="search_sound_pack_placeholder">البحث عن حزمة أصوات…</string>
+    <string name="sound_pack_default_system_desc">صوت النقر الافتراضي للمفاتيح في النظام</string>
+    <string name="sound_pack_installed_title">حزم الأصوات المثبتة</string>
+    <string name="sound_pack_available_title">حزم الأصوات المتاحة</string>
+    <string name="sound_pack_imported_success">تم استيراد حزمة الأصوات بنجاح</string>
+    <string name="sound_pack_import_failed">فشل استيراد حزمة الأصوات (يجب أن تحتوي على ملفات صوتية صالحة أو pack.json)</string>
+    <string name="sound_pack_delete_title">حذف حزمة الأصوات</string>
+    <string name="sound_pack_delete_message">هل تريد حذف حزمة الأصوات \'%s\'؟</string>
+    <string name="sound_pack_status_active">نشط</string>
+    <string name="sound_pack_size_mb_format">%.1f ميغابايت</string>
+    <string name="sound_pack_download_dialog_title">حزم الأصوات</string>
+    <string name="sound_pack_download_dialog_desc">قم بتنزيل حزم أصوات المفاتيح من المجتمع أو استيراد حزم .zip الخاصة بك.</string>
+    <string name="sound_pack_delete_button">حذف</string>
+<string name="sound_pack_downloaded_activated">تم تنزيل %s وتفعيله</string>
+    <string name="sound_pack_download_failed">فشل تنزيل %s</string>
+    <string name="sound_pack_deleted_format">تم حذف %s</string>
+    <string name="sound_pack_downloading_in_browser_toast">جارٍ التنزيل في المتصفح… استورد .zip فور الانتهاء</string>
+    <string name="sound_pack_preview">معاينة</string>
 </resources>
+
+
 
 
 

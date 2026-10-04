@@ -1395,6 +1395,123 @@ Uyarı: harici kod yüklemek bir güvenlik riski olabilir. Yalnızca güvendiği
     <string name="button_download">İndir</string>
     <string name="button_load_from_file">Dosyadan yükle</string>
     <string name="button_delete">Sil</string>
+<string name="handwriting_plugin_update_available_dialog">El yazısı eklentisi için güncelleme mevcut!
+Yerel sürüm: %1$s
+En son sürüm: %2$s
+
+İndirip güncellemek istiyor musunuz?</string>
+    <string name="handwriting_plugin_active_warning">El yazısı eklentisi etkin (sürüm %s).
+
+Uyarı: harici kod yüklemek güvenlik riski oluşturabilir. Yalnızca güvenilir kaynaklardan eklentiler kullanın.</string>
+    <string name="handwriting_plugin_download_dialog_version_msg">En son el yazısı eklentisini (%s sürümü) GitHub\'dan indirin veya yerel depolamadan bir APK yükleyin.
+
+Uyarı: harici kod yüklemek güvenlik riski oluşturabilir. Yalnızca güvenilir kaynaklardan eklentiler kullanın.</string>
+    <string name="handwriting_plugin_download_dialog_msg">El yazısı eklentisini GitHub\'dan indirin veya yerel depolamadan bir APK yükleyin.
+
+Uyarı: harici kod yüklemek güvenlik riski oluşturabilir. Yalnızca güvenilir kaynaklardan eklentiler kullanın.</string>
+    <string name="handwriting_plugin_loaded_restarting">El yazısı eklentisi yüklendi. Yeniden başlatılıyor...</string>
+    <string name="handwriting_plugin_removed_restarting">El yazısı eklentisi kaldırıldı. Yeniden başlatılıyor...</string>
+    <string name="handwriting_plugin_open_browser_toast">Tarayıcıda GitHub sürümleri açılıyor… APK\'yı indirin ve \'Dosyadan yükle\'yi kullanın</string>
+    <string name="ocr_plugin_update_available_dialog">OCR eklentisi için güncelleme mevcut!
+Yerel sürüm: %1$s
+En son sürüm: %2$s
+
+İndirip güncellemek istiyor musunuz?</string>
+    <string name="ocr_plugin_active_warning">OCR eklentisi etkin (sürüm %s).
+
+Uyarı: harici kod yüklemek güvenlik riski oluşturabilir. Yalnızca güvenilir kaynaklardan eklentiler kullanın.</string>
+    <string name="ocr_plugin_download_dialog_version_msg">En son OCR eklentisini (%s sürümü) GitHub\'dan indirin veya yerel depolamadan bir APK yükleyin.
+
+Uyarı: harici kod yüklemek güvenlik riski oluşturabilir. Yalnızca güvenilir kaynaklardan eklentiler kullanın.</string>
+    <string name="ocr_plugin_download_dialog_msg">OCR eklentisini GitHub\'dan indirin veya yerel depolamadan bir APK yükleyin.
+
+Uyarı: harici kod yüklemek güvenlik riski oluşturabilir. Yalnızca güvenilir kaynaklardan eklentiler kullanın.</string>
+    <string name="ocr_plugin_button_update_version">%s sürümüne güncelle</string>
+    <string name="ocr_plugin_button_download_version">Eklentiyi indir (%s)</string>
+    <string name="ocr_plugin_button_download">Eklentiyi indir</string>
+    <string name="ocr_plugin_button_load_storage">Depolamadan APK yükle</string>
+    <string name="ocr_plugin_removed_restarting">OCR eklentisi kaldırıldı. Yeniden başlatılıyor...</string>
+    <string name="ocr_plugin_open_browser_toast">Tarayıcıda GitHub sürümleri açılıyor… APK\'yı indirin ve \'Depolamadan APK yükle\'yi kullanın</string>
+    <string name="ocr_plugin_downloading">Eklenti indiriliyor...</string>
+    <string name="ocr_plugin_active_status">Etkin</string>
+    <string name="ocr_plugin_active_version_status">Etkin v%s</string>
+    <string name="offline_ai_plugin_update_available_dialog">Çevrimdışı AI eklentisi için güncelleme mevcut!
+Yerel sürüm: %1$s
+En son sürüm: %2$s
+
+Güncellemek istiyor musunuz?</string>
+    <string name="offline_ai_plugin_active_desc">Çevrimdışı AI eklentisi etkin (sürüm %s).
+
+Metin düzeltme ve yeniden yazma için cihaz üzerinde GGUF / llama.cpp çıkarımı sağlar.</string>
+    <string name="offline_ai_plugin_download_dialog_version_msg">En son çevrimdışı AI eklentisini (%s sürümü) GitHub\'dan indirin veya yerel depolamadan bir APK yükleyin.</string>
+    <string name="offline_ai_plugin_download_dialog_msg">Çevrimdışı AI eklentisini GitHub\'dan indirin veya yerel GGUF düzeltmesini etkinleştirmek için depolamadan bir APK yükleyin.</string>
+    <string name="offline_ai_plugin_loaded_restarting">Çevrimdışı AI eklentisi yüklendi. Yeniden başlatılıyor...</string>
+    <string name="offline_ai_plugin_removed_restarting">Çevrimdışı AI eklentisi kaldırıldı. Yeniden başlatılıyor...</string>
+    <string name="offline_ai_plugin_open_browser_toast">Tarayıcıda GitHub sürümleri açılıyor… APK\'yı indirin ve \'Dosyadan yükle\'yi kullanın</string>
+    <string name="gesture_lib_loaded_restarting">Hareket kütüphanesi yüklendi. Yeniden başlatılıyor...</string>
+    <string name="gesture_lib_removed_restarting">Hareket kütüphanesi kaldırıldı. Yeniden başlatılıyor...</string>
+    <string name="gesture_lib_open_browser_toast">Kütüphaneyi indirmek için tarayıcı açılıyor… indirdikten sonra \'Dosyadan yükle\'yi kullanın</string>
+    <string name="button_download_in_browser">Tarayıcıda indir</string>
+    <string name="plugin_download_failed_format">İndirme başarısız: %s</string>
+    <string name="open_browser_failed_format">Tarayıcı açılamadı: %s</string>
+    <string name="storage_item_temporary_cache_name">Geçici önbellek</string>
+    <string name="storage_item_temporary_cache_desc">Model indirme hazırlıkları, geçici çıkarmalar ve kilitlenme günlükleri</string>
+    <string name="storage_item_code_cache_name">Kod önbelleği</string>
+    <string name="storage_item_code_cache_desc">Optimize edilmiş dex kodu ve derleme önbellekleri</string>
+    <string name="storage_item_plugin_translation_name">Çeviri eklentisi</string>
+    <string name="storage_item_plugin_translation_desc">ML Kit çevrimdışı çevirisi için dinamik çalışma zamanı</string>
+    <string name="storage_item_plugin_handwriting_name">El yazısı eklentisi</string>
+    <string name="storage_item_plugin_handwriting_desc">Digital Ink tanıma motoru</string>
+    <string name="storage_item_plugin_ocr_name">Metin tanıma (OCR) eklentisi</string>
+    <string name="storage_item_plugin_ocr_desc">Kamera ve görüntüler için OCR metin tanıma motoru</string>
+    <string name="storage_item_plugin_offline_ai_name">Çevrimdışı AI eklentisi</string>
+    <string name="storage_item_plugin_offline_ai_desc">Cihaz içi LLM metin düzeltme motoru</string>
+    <string name="storage_item_trans_model_desc">Çevrimdışı çeviri model dosyaları</string>
+    <string name="storage_item_hw_model_desc">Digital Ink tanıma modeli</string>
+    <string name="storage_item_dict_desc">Önbelleğe alınmış kelime listesi sözlüğü</string>
+    <string name="storage_type_plugin">eklenti</string>
+    <string name="storage_type_translation_model">çeviri modeli</string>
+    <string name="storage_type_handwriting_model">el yazısı modeli</string>
+    <string name="storage_type_dictionary">sözlük</string>
+    <string name="storage_type_cache">önbellek öğesi</string>
+    <string name="voice_plugin_not_installed">Ses eklentisi yüklü değil. Lütfen önce ses eklentisini yükleyin.</string>
+    <string name="voice_model_installed_success">%s modeli başarıyla yüklendi!</string>
+    <string name="voice_plugin_import_failed">Model ses eklentisine aktarılamadı. Lütfen ses eklentisinin güncel olduğundan emin olun.</string>
+    <string name="voice_opening_browser_for">%s için tarayıcı açılıyor</string>
+    <string name="voice_whisper_models_title">Whisper modelleri</string>
+    <string name="voice_custom_model_title">Özel GGML modeli</string>
+    <string name="voice_loaded_external_model">Harici model yüklendi</string>
+    <string name="voice_imported_and_ready">İçe aktarıldı ve hazır</string>
+    <string name="voice_load_external_bin">Harici .bin dosyası yükle</string>
+    <string name="voice_custom_model_removed">Özel model kaldırıldı</string>
+    <string name="voice_model_replace">Değiştir</string>
+    <string name="voice_model_removed">%s modeli kaldırıldı</string>
+    <string name="voice_model_name_format">%s Modeli</string>
+    <string name="voice_model_downloaded_format">İndirildi (%s)</string>
+    <string name="button_import">İçe aktar</string>
+    <string name="sound_pack_browser_note">Tarayıcıda indirin, ardından .zip dosyasını içe aktarın</string>
+    <string name="sound_pack_app_note">Uygulamada indirin veya .zip dosyasını içe aktarın</string>
+    <string name="sound_pack_import_zip">.zip içe aktar</string>
+    <string name="search_sound_pack_placeholder">Ses paketi ara…</string>
+    <string name="sound_pack_default_system_desc">Varsayılan sistem tuş tıklama sesi</string>
+    <string name="sound_pack_installed_title">Yüklü ses paketleri</string>
+    <string name="sound_pack_available_title">Kullanılabilir ses paketleri</string>
+    <string name="sound_pack_imported_success">Ses paketi başarıyla içe aktarıldı</string>
+    <string name="sound_pack_import_failed">Ses paketi içe aktarılamadı (geçerli ses dosyaları veya pack.json içermelidir)</string>
+    <string name="sound_pack_delete_title">Ses paketini sil</string>
+    <string name="sound_pack_delete_message">\'%s\' ses paketi silinsin mi?</string>
+    <string name="sound_pack_status_active">Etkin</string>
+    <string name="sound_pack_size_mb_format">%.1f MB</string>
+    <string name="sound_pack_download_dialog_title">Ses paketleri</string>
+    <string name="sound_pack_download_dialog_desc">Topluluk tuş ses paketlerini indirin veya kendi .zip paketlerinizi içe aktarın.</string>
+    <string name="sound_pack_delete_button">Sil</string>
+<string name="sound_pack_downloaded_activated">%s indirildi ve etkinleştirildi</string>
+    <string name="sound_pack_download_failed">%s indirilemedi</string>
+    <string name="sound_pack_deleted_format">%s silindi</string>
+    <string name="sound_pack_downloading_in_browser_toast">Tarayıcıda indiriliyor… bittiğinde .zip dosyasını içe aktarın</string>
+    <string name="sound_pack_preview">Önizleme</string>
 </resources>
+
+
 
 

@@ -1380,7 +1380,124 @@ Upozorenje: učitavanje vanjskog koda može biti sigurnosni rizik. Koristite sam
     <string name="button_download">Preuzmi</string>
     <string name="button_load_from_file">Učitaj iz datoteke</string>
     <string name="button_delete">Izbriši</string>
+<string name="handwriting_plugin_update_available_dialog">Dostupno je ažuriranje za dodatak za rukopis!
+Lokalna verzija: %1$s
+Najnovija verzija: %2$s
+
+Želite li preuzeti i ažurirati?</string>
+    <string name="handwriting_plugin_active_warning">Dodatak za rukopis je aktivan (verzija %s).
+
+Upozorenje: učitavanje vanjskog koda može biti sigurnosni rizik. Koristite samo dodatke iz pouzdanih izvora.</string>
+    <string name="handwriting_plugin_download_dialog_version_msg">Preuzmite najnoviji dodatak za rukopis (%s) s GitHuba ili učitajte APK iz lokalne pohrane.
+
+Upozorenje: učitavanje vanjskog koda može biti sigurnosni rizik. Koristite samo dodatke iz pouzdanih izvora.</string>
+    <string name="handwriting_plugin_download_dialog_msg">Preuzmite dodatak za rukopis s GitHuba ili učitajte APK iz lokalne pohrane.
+
+Upozorenje: učitavanje vanjskog koda može biti sigurnosni rizik. Koristite samo dodatke iz pouzdanih izvora.</string>
+    <string name="handwriting_plugin_loaded_restarting">Dodatak za rukopis je učitan. Ponovno pokretanje...</string>
+    <string name="handwriting_plugin_removed_restarting">Dodatak za rukopis je uklonjen. Ponovno pokretanje...</string>
+    <string name="handwriting_plugin_open_browser_toast">Otvaranje GitHub izdanja u pregledniku… preuzmite APK i upotrijebite \'Učitaj iz datoteke\'</string>
+    <string name="ocr_plugin_update_available_dialog">Dostupno je ažuriranje za OCR dodatak!
+Lokalna verzija: %1$s
+Najnovija verzija: %2$s
+
+Želite li preuzeti i ažurirati?</string>
+    <string name="ocr_plugin_active_warning">OCR dodatak je aktivan (verzija %s).
+
+Upozorenje: učitavanje vanjskog koda može biti sigurnosni rizik. Koristite samo dodatke iz pouzdanih izvora.</string>
+    <string name="ocr_plugin_download_dialog_version_msg">Preuzmite najnoviji OCR dodatak (%s) s GitHuba ili učitajte APK iz lokalne pohrane.
+
+Upozorenje: učitavanje vanjskog koda može biti sigurnosni rizik. Koristite samo dodatke iz pouzdanih izvora.</string>
+    <string name="ocr_plugin_download_dialog_msg">Preuzmite OCR dodatak s GitHuba ili učitajte APK iz lokalne pohrane.
+
+Upozorenje: učitavanje vanjskog koda može biti sigurnosni rizik. Koristite samo dodatke iz pouzdanih izvora.</string>
+    <string name="ocr_plugin_button_update_version">Ažuriraj na %s</string>
+    <string name="ocr_plugin_button_download_version">Preuzmi dodatak (%s)</string>
+    <string name="ocr_plugin_button_download">Preuzmi dodatak</string>
+    <string name="ocr_plugin_button_load_storage">Učitaj APK iz pohrane</string>
+    <string name="ocr_plugin_removed_restarting">OCR dodatak je uklonjen. Ponovno pokretanje...</string>
+    <string name="ocr_plugin_open_browser_toast">Otvaranje GitHub izdanja u pregledniku… preuzmite APK i upotrijebite \'Učitaj APK iz pohrane\'</string>
+    <string name="ocr_plugin_downloading">Preuzimanje dodatka...</string>
+    <string name="ocr_plugin_active_status">Aktivan</string>
+    <string name="ocr_plugin_active_version_status">Aktivan v%s</string>
+    <string name="offline_ai_plugin_update_available_dialog">Dostupno je ažuriranje za offline AI dodatak!
+Lokalna verzija: %1$s
+Najnovija verzija: %2$s
+
+Želite li ažurirati?</string>
+    <string name="offline_ai_plugin_active_desc">Offline AI dodatak je aktivan (verzija %s).
+
+Omogućuje lokalno GGUF / llama.cpp zaključivanje na uređaju za lekturu i prepisivanje.</string>
+    <string name="offline_ai_plugin_download_dialog_version_msg">Preuzmite najnoviji offline AI dodatak (%s) s GitHuba ili učitajte APK iz lokalne pohrane.</string>
+    <string name="offline_ai_plugin_download_dialog_msg">Preuzmite offline AI dodatak s GitHuba ili učitajte APK iz lokalne pohrane za omogućavanje lokalne GGUF lekture.</string>
+    <string name="offline_ai_plugin_loaded_restarting">Offline AI dodatak je učitan. Ponovno pokretanje...</string>
+    <string name="offline_ai_plugin_removed_restarting">Offline AI dodatak je uklonjen. Ponovno pokretanje...</string>
+    <string name="offline_ai_plugin_open_browser_toast">Otvaranje GitHub izdanja u pregledniku… preuzmite APK i upotrijebite \'Učitaj iz datoteke\'</string>
+    <string name="gesture_lib_loaded_restarting">Biblioteka gesti je učitana. Ponovno pokretanje...</string>
+    <string name="gesture_lib_removed_restarting">Biblioteka gesti je uklonjena. Ponovno pokretanje...</string>
+    <string name="gesture_lib_open_browser_toast">Otvaranje preglednika za preuzimanje biblioteke… upotrijebite \'Učitaj iz datoteke\' nakon preuzimanja</string>
+    <string name="button_download_in_browser">Preuzmi u pregledniku</string>
+    <string name="plugin_download_failed_format">Preuzimanje nije uspjelo: %s</string>
+    <string name="open_browser_failed_format">Otvaranje preglednika nije uspjelo: %s</string>
+    <string name="storage_item_temporary_cache_name">Privremena predmemorija</string>
+    <string name="storage_item_temporary_cache_desc">Priprema preuzimanja modela, privremena raspakiravanja i zapisnici rušenja</string>
+    <string name="storage_item_code_cache_name">Predmemorija koda</string>
+    <string name="storage_item_code_cache_desc">Optimizirani dex kod i predmemorije kompilacije</string>
+    <string name="storage_item_plugin_translation_name">Dodatak za prevođenje</string>
+    <string name="storage_item_plugin_translation_desc">Dinamičko okruženje za offline prevođenje uz ML Kit</string>
+    <string name="storage_item_plugin_handwriting_name">Dodatak za rukopis</string>
+    <string name="storage_item_plugin_handwriting_desc">Pogon za prepoznavanje Digital Ink</string>
+    <string name="storage_item_plugin_ocr_name">Dodatak za prepoznavanje teksta (OCR)</string>
+    <string name="storage_item_plugin_ocr_desc">OCR pogon za prepoznavanje teksta za kameru i slike</string>
+    <string name="storage_item_plugin_offline_ai_name">Offline AI dodatak</string>
+    <string name="storage_item_plugin_offline_ai_desc">Pogon za lekturu teksta s LLM-om na uređaju</string>
+    <string name="storage_item_trans_model_desc">Datoteke modela za offline prevođenje</string>
+    <string name="storage_item_hw_model_desc">Model prepoznavanja Digital Ink</string>
+    <string name="storage_item_dict_desc">Predmemorirani rječnik popisa riječi</string>
+    <string name="storage_type_plugin">dodatak</string>
+    <string name="storage_type_translation_model">model prevođenja</string>
+    <string name="storage_type_handwriting_model">model rukopisa</string>
+    <string name="storage_type_dictionary">rječnik</string>
+    <string name="storage_type_cache">stavka predmemorije</string>
+    <string name="voice_plugin_not_installed">Glasovni dodatak nije instaliran. Prvo instalirajte glasovni dodatak.</string>
+    <string name="voice_model_installed_success">Model %s uspješno je instaliran!</string>
+    <string name="voice_plugin_import_failed">Uvoz modela u glasovni dodatak nije uspio. Provjerite je li glasovni dodatak ažuriran.</string>
+    <string name="voice_opening_browser_for">Otvaranje preglednika za %s</string>
+    <string name="voice_whisper_models_title">Whisper modeli</string>
+    <string name="voice_custom_model_title">Prilagođeni GGML model</string>
+    <string name="voice_loaded_external_model">Učitan vanjski model</string>
+    <string name="voice_imported_and_ready">Uvezeno i spremno</string>
+    <string name="voice_load_external_bin">Učitaj vanjsku .bin datoteku</string>
+    <string name="voice_custom_model_removed">Prilagođeni model uklonjen</string>
+    <string name="voice_model_replace">Zamijeni</string>
+    <string name="voice_model_removed">Model %s uklonjen</string>
+    <string name="voice_model_name_format">Model %s</string>
+    <string name="voice_model_downloaded_format">Preuzeto (%s)</string>
+    <string name="button_import">Uvoz</string>
+    <string name="sound_pack_browser_note">Preuzmite u pregledniku, a zatim uvezite .zip</string>
+    <string name="sound_pack_app_note">Preuzmite u aplikaciji ili uvezite .zip</string>
+    <string name="sound_pack_import_zip">Uvezi .zip</string>
+    <string name="search_sound_pack_placeholder">Traži zvučni paket…</string>
+    <string name="sound_pack_default_system_desc">Zadani zvuk klika tipke sustava</string>
+    <string name="sound_pack_installed_title">Instalirani zvučni paketi</string>
+    <string name="sound_pack_available_title">Dostupni zvučni paketi</string>
+    <string name="sound_pack_imported_success">Zvučni paket uspješno uvezen</string>
+    <string name="sound_pack_import_failed">Uvoz zvučnog paketa nije uspio (mora sadržavati valjane audio datoteke ili pack.json)</string>
+    <string name="sound_pack_delete_title">Izbriši zvučni paket</string>
+    <string name="sound_pack_delete_message">Izbrisati zvučni paket „%s“?</string>
+    <string name="sound_pack_status_active">Aktivan</string>
+    <string name="sound_pack_size_mb_format">%.1f MB</string>
+    <string name="sound_pack_download_dialog_title">Zvučni paketi</string>
+    <string name="sound_pack_download_dialog_desc">Preuzmite zvučne pakete tipki od zajednice ili uvezite vlastite .zip pakete.</string>
+    <string name="sound_pack_delete_button">Izbriši</string>
+<string name="sound_pack_downloaded_activated">%s preuzet i aktiviran</string>
+    <string name="sound_pack_download_failed">Preuzimanje %s nije uspjelo</string>
+    <string name="sound_pack_deleted_format">%s izbrisan</string>
+    <string name="sound_pack_downloading_in_browser_toast">Preuzimanje u pregledniku… uvezite .zip po završetku</string>
+    <string name="sound_pack_preview">Pregled</string>
 </resources>
+
+
 
 
 

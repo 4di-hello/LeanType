@@ -1440,7 +1440,124 @@
     <string name="button_download">Изтегляне</string>
     <string name="button_load_from_file">Зареждане от файл</string>
     <string name="button_delete">Изтриване</string>
+<string name="handwriting_plugin_update_available_dialog">Налична е актуализация за приставката за ръкописен текст!
+Локална версия: %1$s
+Последна версия: %2$s
+
+Искате ли да изтеглите и актуализирате?</string>
+    <string name="handwriting_plugin_active_warning">Приставката за ръкописен текст е активна (версия %s).
+
+Предупреждение: зареждането на външен код може да бъде риск за сигурността. Използвайте само приставки от надеждни източници.</string>
+    <string name="handwriting_plugin_download_dialog_version_msg">Изтеглете най-новата приставка за ръкописен текст (%s) от GitHub или заредете APK от локалното хранилище.
+
+Предупреждение: зареждането на външен код може да бъде риск за сигурността. Използвайте само приставки от надеждни източници.</string>
+    <string name="handwriting_plugin_download_dialog_msg">Изтеглете приставката за ръкописен текст от GitHub или заредете APK от локалното хранилище.
+
+Предупреждение: зареждането на външен код може да бъде риск за сигурността. Използвайте само приставки от надеждни източници.</string>
+    <string name="handwriting_plugin_loaded_restarting">Приставката за ръкописен текст е заредена. Рестартиране...</string>
+    <string name="handwriting_plugin_removed_restarting">Приставката за ръкописен текст е премахната. Рестартиране...</string>
+    <string name="handwriting_plugin_open_browser_toast">Отваряне на изданията в GitHub в браузъра… изтеглете APK и използвайте \'Зареждане от файл\'</string>
+    <string name="ocr_plugin_update_available_dialog">Налична е актуализация за приставката OCR!
+Локална версия: %1$s
+Последна версия: %2$s
+
+Искате ли да изтеглите и актуализирате?</string>
+    <string name="ocr_plugin_active_warning">Приставката OCR е активна (версия %s).
+
+Предупреждение: зареждането на външен код може да бъде риск за сигурността. Използвайте само приставки от надеждни източници.</string>
+    <string name="ocr_plugin_download_dialog_version_msg">Изтеглете най-новата приставка OCR (%s) от GitHub или заредете APK от локалното хранилище.
+
+Предупреждение: зареждането на външен код може да бъде риск за сигурността. Използвайте само приставки от надеждни източници.</string>
+    <string name="ocr_plugin_download_dialog_msg">Изтеглете приставката OCR от GitHub или заредете APK от локалното хранилище.
+
+Предупреждение: зареждането на външен код може да бъде риск за сигурността. Използвайте само приставки от надеждни източници.</string>
+    <string name="ocr_plugin_button_update_version">Актуализиране до %s</string>
+    <string name="ocr_plugin_button_download_version">Изтегляне на приставка (%s)</string>
+    <string name="ocr_plugin_button_download">Изтегляне на приставка</string>
+    <string name="ocr_plugin_button_load_storage">Зареждане на APK от хранилището</string>
+    <string name="ocr_plugin_removed_restarting">Приставката OCR е премахната. Рестартиране...</string>
+    <string name="ocr_plugin_open_browser_toast">Отваряне на изданията в GitHub в браузъра… изтеглете APK и използвайте \'Зареждане на APK от хранилището\'</string>
+    <string name="ocr_plugin_downloading">Изтегляне на приставка...</string>
+    <string name="ocr_plugin_active_status">Активна</string>
+    <string name="ocr_plugin_active_version_status">Активна v%s</string>
+    <string name="offline_ai_plugin_update_available_dialog">Налична е актуализация за приставката за офлайн AI!
+Локална версия: %1$s
+Последна версия: %2$s
+
+Искате ли да актуализирате?</string>
+    <string name="offline_ai_plugin_active_desc">Приставката за офлайн AI е активна (версия %s).
+
+Позволява локално изпълнение на GGUF / llama.cpp на устройството за корекция и пренаписване.</string>
+    <string name="offline_ai_plugin_download_dialog_version_msg">Изтеглете най-новата приставка за офлайн AI (%s) от GitHub или заредете APK от локалното хранилище.</string>
+    <string name="offline_ai_plugin_download_dialog_msg">Изтеглете приставката за офлайн AI от GitHub или заредете APK от локалното хранилище за активиране на локална корекция с GGUF.</string>
+    <string name="offline_ai_plugin_loaded_restarting">Приставката за офлайн AI е заредена. Рестартиране...</string>
+    <string name="offline_ai_plugin_removed_restarting">Приставката за офлайн AI е премахната. Рестартиране...</string>
+    <string name="offline_ai_plugin_open_browser_toast">Отваряне на изданията в GitHub в браузъра… изтеглете APK и използвайте \'Зареждане от файл\'</string>
+    <string name="gesture_lib_loaded_restarting">Библиотеката за жестове е заредена. Рестартиране...</string>
+    <string name="gesture_lib_removed_restarting">Библиотеката за жестове е премахната. Рестартиране...</string>
+    <string name="gesture_lib_open_browser_toast">Отваряне на браузъра за изтегляне на библиотеката… използвайте \'Зареждане от файл\' след изтеглянето</string>
+    <string name="button_download_in_browser">Изтегляне в браузъра</string>
+    <string name="plugin_download_failed_format">Грешка при изтегляне: %s</string>
+    <string name="open_browser_failed_format">Неуспешно отваряне на браузъра: %s</string>
+    <string name="storage_item_temporary_cache_name">Временен кеш</string>
+    <string name="storage_item_temporary_cache_desc">Подготовка за изтегляне на модели, временни извличания и дневници на сривове</string>
+    <string name="storage_item_code_cache_name">Кеш на кода</string>
+    <string name="storage_item_code_cache_desc">Оптимизиран dex код и кешове за компилиране</string>
+    <string name="storage_item_plugin_translation_name">Приставка за превод</string>
+    <string name="storage_item_plugin_translation_desc">Динамична среда за офлайн превод с ML Kit</string>
+    <string name="storage_item_plugin_handwriting_name">Приставка за ръкописен текст</string>
+    <string name="storage_item_plugin_handwriting_desc">Двигател за разпознаване Digital Ink</string>
+    <string name="storage_item_plugin_ocr_name">Приставка за разпознаване на текст (OCR)</string>
+    <string name="storage_item_plugin_ocr_desc">Двигател за разпознаване OCR за камера и изображения</string>
+    <string name="storage_item_plugin_offline_ai_name">Приставка за офлайн AI</string>
+    <string name="storage_item_plugin_offline_ai_desc">Двигател за корекция на текст с LLM на устройството</string>
+    <string name="storage_item_trans_model_desc">Файлове с модели за офлайн превод</string>
+    <string name="storage_item_hw_model_desc">Модел за разпознаване Digital Ink</string>
+    <string name="storage_item_dict_desc">Кеширан речник на списъка с думи</string>
+    <string name="storage_type_plugin">приставка</string>
+    <string name="storage_type_translation_model">модел за превод</string>
+    <string name="storage_type_handwriting_model">модел за ръкописен текст</string>
+    <string name="storage_type_dictionary">речник</string>
+    <string name="storage_type_cache">елемент от кеша</string>
+    <string name="voice_plugin_not_installed">Гласовата приставка не е инсталирана. Моля, първо инсталирайте гласовата приставка.</string>
+    <string name="voice_model_installed_success">Моделът %s е инсталиран успешно!</string>
+    <string name="voice_plugin_import_failed">Неуспешно импортиране на модела в гласовата приставка. Уверете се, че приставката е актуализирана.</string>
+    <string name="voice_opening_browser_for">Отваряне на браузъра за %s</string>
+    <string name="voice_whisper_models_title">Модели Whisper</string>
+    <string name="voice_custom_model_title">Персонализиран GGML модел</string>
+    <string name="voice_loaded_external_model">Зареден външен модел</string>
+    <string name="voice_imported_and_ready">Импортиран и готов</string>
+    <string name="voice_load_external_bin">Зареждане на външен .bin файл</string>
+    <string name="voice_custom_model_removed">Персонализираният модел е премахнат</string>
+    <string name="voice_model_replace">Замяна</string>
+    <string name="voice_model_removed">Моделът %s е премахнат</string>
+    <string name="voice_model_name_format">Модел %s</string>
+    <string name="voice_model_downloaded_format">Изтеглен (%s)</string>
+    <string name="button_import">Импортиране</string>
+    <string name="sound_pack_browser_note">Изтеглете в браузъра, след което импортирайте .zip</string>
+    <string name="sound_pack_app_note">Изтеглете в приложението или импортирайте .zip</string>
+    <string name="sound_pack_import_zip">Импортиране на .zip</string>
+    <string name="search_sound_pack_placeholder">Търсене на звуков пакет…</string>
+    <string name="sound_pack_default_system_desc">Системен звук при натискане на клавиш по подразбиране</string>
+    <string name="sound_pack_installed_title">Инсталирани звукови пакети</string>
+    <string name="sound_pack_available_title">Налични звукови пакети</string>
+    <string name="sound_pack_imported_success">Звуковият пакет е импортиран успешно</string>
+    <string name="sound_pack_import_failed">Неуспешно импортиране на звуков пакет (трябва да съдържа валидни аудио файлове или pack.json)</string>
+    <string name="sound_pack_delete_title">Изтриване на звуков пакет</string>
+    <string name="sound_pack_delete_message">Изтриване на звуков пакет „%s“?</string>
+    <string name="sound_pack_status_active">Активен</string>
+    <string name="sound_pack_size_mb_format">%.1f МБ</string>
+    <string name="sound_pack_download_dialog_title">Звукови пакети</string>
+    <string name="sound_pack_download_dialog_desc">Изтегляйте звукови пакети за клавиши от общността или импортирайте свои собствени .zip пакети.</string>
+    <string name="sound_pack_delete_button">Изтриване</string>
+<string name="sound_pack_downloaded_activated">%s е изтеглен и активиран</string>
+    <string name="sound_pack_download_failed">Неуспешно изтегляне на %s</string>
+    <string name="sound_pack_deleted_format">%s е изтрит</string>
+    <string name="sound_pack_downloading_in_browser_toast">Изтегляне в браузъра… импортирайте .zip след завършване</string>
+    <string name="sound_pack_preview">Преглед</string>
 </resources>
+
+
 
 
 

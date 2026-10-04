@@ -1465,7 +1465,124 @@
     <string name="button_download">Λήψη</string>
     <string name="button_load_from_file">Φόρτωση από αρχείο</string>
     <string name="button_delete">Διαγραφή</string>
+<string name="handwriting_plugin_update_available_dialog">Υπάρχει διαθέσιμη ενημέρωση για το πρόσθετο χειρόγραφης γραφής!
+Τοπική έκδοση: %1$s
+Τελευταία έκδοση: %2$s
+
+Θέλετε να κάνετε λήψη και ενημέρωση;</string>
+    <string name="handwriting_plugin_active_warning">Το πρόσθετο χειρόγραφης γραφής είναι ενεργό (έκδοση %s).
+
+Προειδοποίηση: η φόρτωση εξωτερικού κώδικα μπορεί να αποτελεί κίνδυνο ασφαλείας. Χρησιμοποιείτε μόνο πρόσθετα από αξιόπιστες πηγές.</string>
+    <string name="handwriting_plugin_download_dialog_version_msg">Κάντε λήψη του πιο πρόσφατου πρόσθετου χειρόγραφης γραφής (έκδοση %s) από το GitHub ή φορτώστε ένα APK από τον τοπικό χώρο αποθήκευσης.
+
+Προειδοποίηση: η φόρτωση εξωτερικού κώδικα μπορεί να αποτελεί κίνδυνο ασφαλείας. Χρησιμοποιείτε μόνο πρόσθετα από αξιόπιστες πηγές.</string>
+    <string name="handwriting_plugin_download_dialog_msg">Κάντε λήψη του πρόσθετου χειρόγραφης γραφής από το GitHub ή φορτώστε ένα APK από τον τοπικό χώρο αποθήκευσης.
+
+Προειδοποίηση: η φόρτωση εξωτερικού κώδικα μπορεί να αποτελεί κίνδυνο ασφαλείας. Χρησιμοποιείτε μόνο πρόσθετα από αξιόπιστες πηγές.</string>
+    <string name="handwriting_plugin_loaded_restarting">Το πρόσθετο χειρόγραφης γραφής φορτώθηκε. Επανεκκίνηση...</string>
+    <string name="handwriting_plugin_removed_restarting">Το πρόσθετο χειρόγραφης γραφής αφαιρέθηκε. Επανεκκίνηση...</string>
+    <string name="handwriting_plugin_open_browser_toast">Άνοιγμα των εκδόσεων GitHub στο πρόγραμμα περιήγησης… κατεβάστε το APK και επιλέξτε \'Φόρτωση από αρχείο\'</string>
+    <string name="ocr_plugin_update_available_dialog">Υπάρχει διαθέσιμη ενημέρωση για το πρόσθετο OCR!
+Τοπική έκδοση: %1$s
+Τελευταία έκδοση: %2$s
+
+Θέλετε να κάνετε λήψη και ενημέρωση;</string>
+    <string name="ocr_plugin_active_warning">Το πρόσθετο OCR είναι ενεργό (έκδοση %s).
+
+Προειδοποίηση: η φόρτωση εξωτερικού κώδικα μπορεί να αποτελεί κίνδυνο ασφαλείας. Χρησιμοποιείτε μόνο πρόσθετα από αξιόπιστες πηγές.</string>
+    <string name="ocr_plugin_download_dialog_version_msg">Κάντε λήψη του πιο πρόσφατου πρόσθετου OCR (έκδοση %s) από το GitHub ή φορτώστε ένα APK από τον τοπικό χώρο αποθήκευσης.
+
+Προειδοποίηση: η φόρτωση εξωτερικού κώδικα μπορεί να αποτελεί κίνδυνο ασφαλείας. Χρησιμοποιείτε μόνο πρόσθετα από αξιόπιστες πηγές.</string>
+    <string name="ocr_plugin_download_dialog_msg">Κάντε λήψη του πρόσθετου OCR από το GitHub ή φορτώστε ένα APK από τον τοπικό χώρο αποθήκευσης.
+
+Προειδοποίηση: η φόρτωση εξωτερικού κώδικα μπορεί να αποτελεί κίνδυνο ασφαλείας. Χρησιμοποιείτε μόνο πρόσθετα από αξιόπιστες πηγές.</string>
+    <string name="ocr_plugin_button_update_version">Ενημέρωση σε %s</string>
+    <string name="ocr_plugin_button_download_version">Λήψη πρόσθετου (%s)</string>
+    <string name="ocr_plugin_button_download">Λήψη πρόσθετου</string>
+    <string name="ocr_plugin_button_load_storage">Φόρτωση APK από αποθηκευτικό χώρο</string>
+    <string name="ocr_plugin_removed_restarting">Το πρόσθετο OCR αφαιρέθηκε. Επανεκκίνηση...</string>
+    <string name="ocr_plugin_open_browser_toast">Άνοιγμα των εκδόσεων GitHub στο πρόγραμμα περιήγησης… κατεβάστε το APK και επιλέξτε \'Φόρτωση APK από αποθηκευτικό χώρο\'</string>
+    <string name="ocr_plugin_downloading">Λήψη πρόσθετου...</string>
+    <string name="ocr_plugin_active_status">Ενεργό</string>
+    <string name="ocr_plugin_active_version_status">Ενεργό v%s</string>
+    <string name="offline_ai_plugin_update_available_dialog">Υπάρχει διαθέσιμη ενημέρωση για το πρόσθετο AI εκτός σύνδεσης!
+Τοπική έκδοση: %1$s
+Τελευταία έκδοση: %2$s
+
+Θέλετε να ενημερώσετε;</string>
+    <string name="offline_ai_plugin_active_desc">Το πρόσθετο AI εκτός σύνδεσης είναι ενεργό (έκδοση %s).
+
+Επιτρέπει την τοπική εκτέλεση GGUF / llama.cpp στη συσκευή για διόρθωση και αναδιατύπωση κειμένου.</string>
+    <string name="offline_ai_plugin_download_dialog_version_msg">Κάντε λήψη του πιο πρόσφατου πρόσθετου AI εκτός σύνδεσης (έκδοση %s) από το GitHub ή φορτώστε ένα APK από τον τοπικό χώρο αποθήκευσης.</string>
+    <string name="offline_ai_plugin_download_dialog_msg">Κάντε λήψη του πρόσθετου AI εκτός σύνδεσης από το GitHub ή φορτώστε ένα APK από τον χώρο αποθήκευσης για τοπική διόρθωση GGUF.</string>
+    <string name="offline_ai_plugin_loaded_restarting">Το πρόσθετο AI εκτός σύνδεσης φορτώθηκε. Επανεκκίνηση...</string>
+    <string name="offline_ai_plugin_removed_restarting">Το πρόσθετο AI εκτός σύνδεσης αφαιρέθηκε. Επανεκκίνηση...</string>
+    <string name="offline_ai_plugin_open_browser_toast">Άνοιγμα των εκδόσεων GitHub στο πρόγραμμα περιήγησης… κατεβάστε το APK και επιλέξτε \'Φόρτωση από αρχείο\'</string>
+    <string name="gesture_lib_loaded_restarting">Η βιβλιοθήκη χειρονομιών φορτώθηκε. Επανεκκίνηση...</string>
+    <string name="gesture_lib_removed_restarting">Η βιβλιοθήκη χειρονομιών αφαιρέθηκε. Επανεκκίνηση...</string>
+    <string name="gesture_lib_open_browser_toast">Άνοιγμα του προγράμματος περιήγησης για λήψη βιβλιοθήκης… χρησιμοποιήστε \'Φόρτωση από αρχείο\' μετά τη λήψη</string>
+    <string name="button_download_in_browser">Λήψη στο πρόγραμμα περιήγησης</string>
+    <string name="plugin_download_failed_format">Η λήψη απέτυχε: %s</string>
+    <string name="open_browser_failed_format">Αποτυχία ανοίγματος προγράμματος περιήγησης: %s</string>
+    <string name="storage_item_temporary_cache_name">Προσωρινή μνήμη cache</string>
+    <string name="storage_item_temporary_cache_desc">Προετοιμασία λήψης μοντέλων, προσωρινές εξαγωγές και αρχεία καταγραφής σφαλμάτων</string>
+    <string name="storage_item_code_cache_name">Προσωρινή μνήμη κώδικα</string>
+    <string name="storage_item_code_cache_desc">Βελτιστοποιημένος κώδικας dex και μνήμες cache μεταγλώττισης</string>
+    <string name="storage_item_plugin_translation_name">Πρόσθετο μετάφρασης</string>
+    <string name="storage_item_plugin_translation_desc">Δυναμικό περιβάλλον εκτέλεσης για μετάφραση εκτός σύνδεσης ML Kit</string>
+    <string name="storage_item_plugin_handwriting_name">Πρόσθετο χειρόγραφης γραφής</string>
+    <string name="storage_item_plugin_handwriting_desc">Μηχανή αναγνώρισης Digital Ink</string>
+    <string name="storage_item_plugin_ocr_name">Πρόσθετο αναγνώρισης κειμένου (OCR)</string>
+    <string name="storage_item_plugin_ocr_desc">Μηχανή αναγνώρισης κειμένου OCR για κάμερα και εικόνες</string>
+    <string name="storage_item_plugin_offline_ai_name">Πρόσθετο AI εκτός σύνδεσης</string>
+    <string name="storage_item_plugin_offline_ai_desc">Μηχανή διόρθωσης κειμένου με LLM στη συσκευή</string>
+    <string name="storage_item_trans_model_desc">Αρχεία μοντέλων μετάφρασης εκτός σύνδεσης</string>
+    <string name="storage_item_hw_model_desc">Μοντέλο αναγνώρισης Digital Ink</string>
+    <string name="storage_item_dict_desc">Προσωρινά αποθηκευμένο λεξικό λίστας λέξεων</string>
+    <string name="storage_type_plugin">πρόσθετο</string>
+    <string name="storage_type_translation_model">μοντέλο μετάφρασης</string>
+    <string name="storage_type_handwriting_model">μοντέλο χειρόγραφης γραφής</string>
+    <string name="storage_type_dictionary">λεξικό</string>
+    <string name="storage_type_cache">στοιχείο cache</string>
+    <string name="voice_plugin_not_installed">Το πρόσθετο φωνής δεν είναι εγκατεστημένο. Εγκαταστήστε πρώτα το πρόσθετο φωνής.</string>
+    <string name="voice_model_installed_success">Το μοντέλο %s εγκαταστάθηκε επιτυχώς!</string>
+    <string name="voice_plugin_import_failed">Αποτυχία εισαγωγής μοντέλου στο πρόσθετο φωνής. Βεβαιωθείτε ότι το πρόσθετο φωνής είναι ενημερωμένο.</string>
+    <string name="voice_opening_browser_for">Άνοιγμα προγράμματος περιήγησης για %s</string>
+    <string name="voice_whisper_models_title">Μοντέλα Whisper</string>
+    <string name="voice_custom_model_title">Προσαρμοσμένο μοντέλο GGML</string>
+    <string name="voice_loaded_external_model">Φορτώθηκε εξωτερικό μοντέλο</string>
+    <string name="voice_imported_and_ready">Εισήχθη και είναι έτοιμο</string>
+    <string name="voice_load_external_bin">Φόρτωση εξωτερικού αρχείου .bin</string>
+    <string name="voice_custom_model_removed">Το προσαρμοσμένο μοντέλο αφαιρέθηκε</string>
+    <string name="voice_model_replace">Αντικατάσταση</string>
+    <string name="voice_model_removed">Το μοντέλο %s αφαιρέθηκε</string>
+    <string name="voice_model_name_format">Μοντέλο %s</string>
+    <string name="voice_model_downloaded_format">Έγινε λήψη (%s)</string>
+    <string name="button_import">Εισαγωγή</string>
+    <string name="sound_pack_browser_note">Κάντε λήψη στο πρόγραμμα περιήγησης και εισαγάγετε το .zip</string>
+    <string name="sound_pack_app_note">Κάντε λήψη στην εφαρμογή ή εισαγάγετε το .zip</string>
+    <string name="sound_pack_import_zip">Εισαγωγή .zip</string>
+    <string name="search_sound_pack_placeholder">Αναζήτηση πακέτου ήχων…</string>
+    <string name="sound_pack_default_system_desc">Προεπιλεγμένος ήχος πατήματος πλήκτρου συστήματος</string>
+    <string name="sound_pack_installed_title">Εγκατεστημένα πακέτα ήχων</string>
+    <string name="sound_pack_available_title">Διαθέσιμα πακέτα ήχων</string>
+    <string name="sound_pack_imported_success">Το πακέτο ήχων εισήχθη με επιτυχία</string>
+    <string name="sound_pack_import_failed">Αποτυχία εισαγωγής πακέτου ήχων (πρέπει να περιέχει έγκυρα αρχεία ήχου ή pack.json)</string>
+    <string name="sound_pack_delete_title">Διαγραφή πακέτου ήχων</string>
+    <string name="sound_pack_delete_message">Διαγραφή του πακέτου ήχων «%s»;</string>
+    <string name="sound_pack_status_active">Ενεργό</string>
+    <string name="sound_pack_size_mb_format">%.1f MB</string>
+    <string name="sound_pack_download_dialog_title">Πακέτα ήχων</string>
+    <string name="sound_pack_download_dialog_desc">Κατεβάστε πακέτα ήχων πλήκτρων από την κοινότητα ή εισαγάγετε τα δικά σας πακέτα .zip.</string>
+    <string name="sound_pack_delete_button">Διαγραφή</string>
+<string name="sound_pack_downloaded_activated">Το %s λήφθηκε και ενεργοποιήθηκε</string>
+    <string name="sound_pack_download_failed">Αποτυχία λήψης %s</string>
+    <string name="sound_pack_deleted_format">Το %s διαγράφηκε</string>
+    <string name="sound_pack_downloading_in_browser_toast">Λήψη στο πρόγραμμα περιήγησης… εισαγάγετε το .zip μετά την ολοκλήρωση</string>
+    <string name="sound_pack_preview">Προεπισκόπηση</string>
 </resources>
+
+
 
 
 

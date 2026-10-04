@@ -1406,6 +1406,123 @@
     <string name="button_download">下载</string>
     <string name="button_load_from_file">从文件加载</string>
     <string name="button_delete">删除</string>
+<string name="handwriting_plugin_update_available_dialog">手写插件有可用更新！
+本地版本：%1$s
+最新版本：%2$s
+
+是否下载并更新？</string>
+    <string name="handwriting_plugin_active_warning">手写插件处于活动状态（版本 %s）。
+
+警告：加载外部代码可能存在安全风险。请仅使用来自可信来源的插件。</string>
+    <string name="handwriting_plugin_download_dialog_version_msg">从 GitHub 下载最新的手写插件（版本 %s），或从本地存储加载 APK。
+
+警告：加载外部代码可能存在安全风险。请仅使用来自可信来源的插件。</string>
+    <string name="handwriting_plugin_download_dialog_msg">从 GitHub 下载手写插件，或从本地存储加载 APK。
+
+警告：加载外部代码可能存在安全风险。请仅使用来自可信来源的插件。</string>
+    <string name="handwriting_plugin_loaded_restarting">手写插件已加载。正在重启...</string>
+    <string name="handwriting_plugin_removed_restarting">手写插件已移除。正在重启...</string>
+    <string name="handwriting_plugin_open_browser_toast">正在浏览器中打开 GitHub Releases… 请下载 APK 并使用\'从文件加载\'</string>
+    <string name="ocr_plugin_update_available_dialog">OCR 插件有可用更新！
+本地版本：%1$s
+最新版本：%2$s
+
+是否下载并更新？</string>
+    <string name="ocr_plugin_active_warning">OCR 插件处于活动状态（版本 %s）。
+
+警告：加载外部代码可能存在安全风险。请仅使用来自可信来源的插件。</string>
+    <string name="ocr_plugin_download_dialog_version_msg">从 GitHub 下载最新的 OCR 插件（版本 %s），或从本地存储加载 APK。
+
+警告：加载外部代码可能存在安全风险。请仅使用来自可信来源的插件。</string>
+    <string name="ocr_plugin_download_dialog_msg">从 GitHub 下载 OCR 插件，或从本地存储加载 APK。
+
+警告：加载外部代码可能存在安全风险。请仅使用来自可信来源的插件。</string>
+    <string name="ocr_plugin_button_update_version">更新至 %s</string>
+    <string name="ocr_plugin_button_download_version">下载插件 (%s)</string>
+    <string name="ocr_plugin_button_download">下载插件</string>
+    <string name="ocr_plugin_button_load_storage">从存储加载 APK</string>
+    <string name="ocr_plugin_removed_restarting">OCR 插件已移除。正在重启...</string>
+    <string name="ocr_plugin_open_browser_toast">正在浏览器中打开 GitHub Releases… 请下载 APK 并使用\'从存储加载 APK\'</string>
+    <string name="ocr_plugin_downloading">正在下载插件...</string>
+    <string name="ocr_plugin_active_status">已激活</string>
+    <string name="ocr_plugin_active_version_status">已激活 v%s</string>
+    <string name="offline_ai_plugin_update_available_dialog">离线 AI 插件有可用更新！
+本地版本：%1$s
+最新版本：%2$s
+
+是否更新？</string>
+    <string name="offline_ai_plugin_active_desc">离线 AI 插件处于活动状态（版本 %s）。
+
+允许在设备上运行 GGUF / llama.cpp 推理进行文本校对和重写。</string>
+    <string name="offline_ai_plugin_download_dialog_version_msg">从 GitHub 下载最新的离线 AI 插件（版本 %s），或从本地存储加载 APK。</string>
+    <string name="offline_ai_plugin_download_dialog_msg">从 GitHub 下载离线 AI 插件，或从本地存储加载 APK 以启用本地 GGUF 校对。</string>
+    <string name="offline_ai_plugin_loaded_restarting">离线 AI 插件已加载。正在重启...</string>
+    <string name="offline_ai_plugin_removed_restarting">离线 AI 插件已移除。正在重启...</string>
+    <string name="offline_ai_plugin_open_browser_toast">正在浏览器中打开 GitHub Releases… 请下载 APK 并使用\'从文件加载\'</string>
+    <string name="gesture_lib_loaded_restarting">手势库已加载。正在重启...</string>
+    <string name="gesture_lib_removed_restarting">手势库已移除。正在重启...</string>
+    <string name="gesture_lib_open_browser_toast">正在打开浏览器下载手势库… 下载完成后请使用\'从文件加载\'</string>
+    <string name="button_download_in_browser">在浏览器中下载</string>
+    <string name="plugin_download_failed_format">下载失败：%s</string>
+    <string name="open_browser_failed_format">无法打开浏览器：%s</string>
+    <string name="storage_item_temporary_cache_name">临时缓存</string>
+    <string name="storage_item_temporary_cache_desc">模型下载预备、临时解压文件和崩溃日志</string>
+    <string name="storage_item_code_cache_name">代码缓存</string>
+    <string name="storage_item_code_cache_desc">优化的 dex 代码和编译缓存</string>
+    <string name="storage_item_plugin_translation_name">翻译插件</string>
+    <string name="storage_item_plugin_translation_desc">用于 ML Kit 离线翻译的动态运行时</string>
+    <string name="storage_item_plugin_handwriting_name">手写插件</string>
+    <string name="storage_item_plugin_handwriting_desc">Digital Ink 识别引擎</string>
+    <string name="storage_item_plugin_ocr_name">文字识别 (OCR) 插件</string>
+    <string name="storage_item_plugin_ocr_desc">用于相机和图片的 OCR 文字识别引擎</string>
+    <string name="storage_item_plugin_offline_ai_name">离线 AI 插件</string>
+    <string name="storage_item_plugin_offline_ai_desc">设备端 LLM 校对引擎</string>
+    <string name="storage_item_trans_model_desc">离线翻译模型文件</string>
+    <string name="storage_item_hw_model_desc">Digital Ink 识别模型</string>
+    <string name="storage_item_dict_desc">已缓存的词表词典</string>
+    <string name="storage_type_plugin">插件</string>
+    <string name="storage_type_translation_model">翻译模型</string>
+    <string name="storage_type_handwriting_model">手写模型</string>
+    <string name="storage_type_dictionary">词典</string>
+    <string name="storage_type_cache">缓存项</string>
+    <string name="voice_plugin_not_installed">未安装语音插件。请先安装语音插件。</string>
+    <string name="voice_model_installed_success">模型 %s 安装成功！</string>
+    <string name="voice_plugin_import_failed">向语音插件导入模型失败。请确保语音插件已更新。</string>
+    <string name="voice_opening_browser_for">正在为 %s 打开浏览器</string>
+    <string name="voice_whisper_models_title">Whisper 模型</string>
+    <string name="voice_custom_model_title">自定义 GGML 模型</string>
+    <string name="voice_loaded_external_model">已加载外部模型</string>
+    <string name="voice_imported_and_ready">已导入并就绪</string>
+    <string name="voice_load_external_bin">加载外部 .bin 文件</string>
+    <string name="voice_custom_model_removed">已移除自定义模型</string>
+    <string name="voice_model_replace">替换</string>
+    <string name="voice_model_removed">模型 %s 已移除</string>
+    <string name="voice_model_name_format">%s 模型</string>
+    <string name="voice_model_downloaded_format">已下载 (%s)</string>
+    <string name="button_import">导入</string>
+    <string name="sound_pack_browser_note">在浏览器中下载，然后导入 .zip</string>
+    <string name="sound_pack_app_note">在应用内下载或导入 .zip</string>
+    <string name="sound_pack_import_zip">导入 .zip</string>
+    <string name="search_sound_pack_placeholder">搜索按键音效包…</string>
+    <string name="sound_pack_default_system_desc">系统默认按键音</string>
+    <string name="sound_pack_installed_title">已安装的音效包</string>
+    <string name="sound_pack_available_title">可用的音效包</string>
+    <string name="sound_pack_imported_success">音效包导入成功</string>
+    <string name="sound_pack_import_failed">导入音效包失败（必须包含有效的音频文件或 pack.json）</string>
+    <string name="sound_pack_delete_title">删除音效包</string>
+    <string name="sound_pack_delete_message">确定要删除音效包“%s”吗？</string>
+    <string name="sound_pack_status_active">已启用</string>
+    <string name="sound_pack_size_mb_format">%.1f MB</string>
+    <string name="sound_pack_download_dialog_title">按键音效包</string>
+    <string name="sound_pack_download_dialog_desc">下载社区按键音效包或导入自定义 .zip 压缩包。</string>
+    <string name="sound_pack_delete_button">删除</string>
+<string name="sound_pack_downloaded_activated">%s 已下载并启用</string>
+    <string name="sound_pack_download_failed">下载 %s 失败</string>
+    <string name="sound_pack_deleted_format">%s 已删除</string>
+    <string name="sound_pack_downloading_in_browser_toast">正在浏览器中下载… 完成后请导入 .zip</string>
+    <string name="sound_pack_preview">试听</string>
 </resources>
+
+
 
 

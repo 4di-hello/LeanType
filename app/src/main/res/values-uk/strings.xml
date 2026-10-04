@@ -1360,7 +1360,124 @@
     <string name="button_download">Завантажити</string>
     <string name="button_load_from_file">Завантажити з файлу</string>
     <string name="button_delete">Видалити</string>
+<string name="handwriting_plugin_update_available_dialog">Доступне оновлення для плагіна рукописного введення!
+Локальна версія: %1$s
+Остання версія: %2$s
+
+Бажаєте завантажити й оновити?</string>
+    <string name="handwriting_plugin_active_warning">Плагін рукописного введення активний (версія %s).
+
+Увага: завантаження стороннього коду може становити загрозу безпеці. Використовуйте лише перевірені плагіни.</string>
+    <string name="handwriting_plugin_download_dialog_version_msg">Завантажте останню версію плагіна рукописного введення (%s) з GitHub або завантажте APK з локального сховища.
+
+Увага: завантаження стороннього коду може становити загрозу безпеці. Використовуйте лише перевірені плагіни.</string>
+    <string name="handwriting_plugin_download_dialog_msg">Завантажте плагін рукописного введення з GitHub або завантажте APK з локального сховища.
+
+Увага: завантаження стороннього коду може становити загрозу безпеці. Використовуйте лише перевірені плагіни.</string>
+    <string name="handwriting_plugin_loaded_restarting">Плагін рукописного введення завантажено. Перезапуск...</string>
+    <string name="handwriting_plugin_removed_restarting">Плагін рукописного введення видалено. Перезапуск...</string>
+    <string name="handwriting_plugin_open_browser_toast">Відкриття релізів GitHub у браузері… завантажте APK і скористайтеся \'Завантажити з файлу\'</string>
+    <string name="ocr_plugin_update_available_dialog">Доступне оновлення для плагіна OCR!
+Локальна версія: %1$s
+Остання версія: %2$s
+
+Бажаєте завантажити й оновити?</string>
+    <string name="ocr_plugin_active_warning">Плагін OCR активний (версія %s).
+
+Увага: завантаження стороннього коду може становити загрозу безпеці. Використовуйте лише перевірені плагіни.</string>
+    <string name="ocr_plugin_download_dialog_version_msg">Завантажте останню версію плагіна OCR (%s) з GitHub або завантажте APK з локального сховища.
+
+Увага: завантаження стороннього коду може становити загрозу безпеці. Використовуйте лише перевірені плагіни.</string>
+    <string name="ocr_plugin_download_dialog_msg">Завантажте плагін OCR з GitHub або завантажте APK з локального сховища.
+
+Увага: завантаження стороннього коду може становити загрозу безпеці. Використовуйте лише перевірені плагіни.</string>
+    <string name="ocr_plugin_button_update_version">Оновити до %s</string>
+    <string name="ocr_plugin_button_download_version">Завантажити плагін (%s)</string>
+    <string name="ocr_plugin_button_download">Завантажити плагін</string>
+    <string name="ocr_plugin_button_load_storage">Завантажити APK зі сховища</string>
+    <string name="ocr_plugin_removed_restarting">Плагін OCR видалено. Перезапуск...</string>
+    <string name="ocr_plugin_open_browser_toast">Відкриття релізів GitHub у браузері… завантажте APK і скористайтеся \'Завантажити APK зі сховища\'</string>
+    <string name="ocr_plugin_downloading">Завантаження плагіна...</string>
+    <string name="ocr_plugin_active_status">Активний</string>
+    <string name="ocr_plugin_active_version_status">Активний v%s</string>
+    <string name="offline_ai_plugin_update_available_dialog">Доступне оновлення для плагіна автономного AI!
+Локальна версія: %1$s
+Остання версія: %2$s
+
+Бажаєте оновити?</string>
+    <string name="offline_ai_plugin_active_desc">Плагін автономного AI активний (версія %s).
+
+Дозволяє виконувати локальний вивід GGUF / llama.cpp на пристрої для виправлення та переписування тексту.</string>
+    <string name="offline_ai_plugin_download_dialog_version_msg">Завантажте останню версію плагіна автономного AI (%s) з GitHub або завантажте APK з локального сховища.</string>
+    <string name="offline_ai_plugin_download_dialog_msg">Завантажте плагін автономного AI з GitHub або завантажте APK з локального сховища для ввімкнення локального виправлення GGUF.</string>
+    <string name="offline_ai_plugin_loaded_restarting">Плагін автономного AI завантажено. Перезапуск...</string>
+    <string name="offline_ai_plugin_removed_restarting">Плагін автономного AI видалено. Перезапуск...</string>
+    <string name="offline_ai_plugin_open_browser_toast">Відкриття релізів GitHub у браузері… завантажте APK і скористайтеся \'Завантажити з файлу\'</string>
+    <string name="gesture_lib_loaded_restarting">Бібліотеку жестів завантажено. Перезапуск...</string>
+    <string name="gesture_lib_removed_restarting">Бібліотеку жестів видалено. Перезапуск...</string>
+    <string name="gesture_lib_open_browser_toast">Відкриття браузера для завантаження бібліотеки… скористайтеся \'Завантажити з файлу\' після завантаження</string>
+    <string name="button_download_in_browser">Завантажити в браузері</string>
+    <string name="plugin_download_failed_format">Помилка завантаження: %s</string>
+    <string name="open_browser_failed_format">Не вдалося відкрити браузер: %s</string>
+    <string name="storage_item_temporary_cache_name">Тимчасовий кеш</string>
+    <string name="storage_item_temporary_cache_desc">Підготовка завантажень моделей, тимчасові розпакування та журнали збоїв</string>
+    <string name="storage_item_code_cache_name">Кеш коду</string>
+    <string name="storage_item_code_cache_desc">Оптимізований dex-код і кеші компіляції</string>
+    <string name="storage_item_plugin_translation_name">Плагін перекладу</string>
+    <string name="storage_item_plugin_translation_desc">Динамічне середовище для автономного перекладу ML Kit</string>
+    <string name="storage_item_plugin_handwriting_name">Плагін рукописного введення</string>
+    <string name="storage_item_plugin_handwriting_desc">Рушій розпізнавання Digital Ink</string>
+    <string name="storage_item_plugin_ocr_name">Плагін розпізнавання тексту (OCR)</string>
+    <string name="storage_item_plugin_ocr_desc">Рушій оптичного розпізнавання OCR для камери та зображень</string>
+    <string name="storage_item_plugin_offline_ai_name">Плагін автономного AI</string>
+    <string name="storage_item_plugin_offline_ai_desc">Рушій виправлення тексту на основі LLM на пристрої</string>
+    <string name="storage_item_trans_model_desc">Файли моделей автономного перекладу</string>
+    <string name="storage_item_hw_model_desc">Модель розпізнавання Digital Ink</string>
+    <string name="storage_item_dict_desc">Кешований словник списку слів</string>
+    <string name="storage_type_plugin">плагін</string>
+    <string name="storage_type_translation_model">модель перекладу</string>
+    <string name="storage_type_handwriting_model">модель рукописного введення</string>
+    <string name="storage_type_dictionary">словник</string>
+    <string name="storage_type_cache">елемент кешу</string>
+    <string name="voice_plugin_not_installed">Голосовий плагін не встановлено. Спочатку встановіть голосовий плагін.</string>
+    <string name="voice_model_installed_success">Модель %s успішно встановлено!</string>
+    <string name="voice_plugin_import_failed">Не вдалося імпортувати модель у голосовий плагін. Переконайтеся, що голосовий плагін оновлено.</string>
+    <string name="voice_opening_browser_for">Відкриття браузера для %s</string>
+    <string name="voice_whisper_models_title">Моделі Whisper</string>
+    <string name="voice_custom_model_title">Власна модель GGML</string>
+    <string name="voice_loaded_external_model">Завантажено зовнішню модель</string>
+    <string name="voice_imported_and_ready">Імпортовано і готово</string>
+    <string name="voice_load_external_bin">Завантажити зовнішній файл .bin</string>
+    <string name="voice_custom_model_removed">Власну модель видалено</string>
+    <string name="voice_model_replace">Замінити</string>
+    <string name="voice_model_removed">Модель %s видалено</string>
+    <string name="voice_model_name_format">Модель %s</string>
+    <string name="voice_model_downloaded_format">Завантажено (%s)</string>
+    <string name="button_import">Імпорт</string>
+    <string name="sound_pack_browser_note">Завантажте в браузері, потім імпортуйте .zip</string>
+    <string name="sound_pack_app_note">Завантажте в додатку або імпортуйте .zip</string>
+    <string name="sound_pack_import_zip">Імпортувати .zip</string>
+    <string name="search_sound_pack_placeholder">Пошук звукового пакета…</string>
+    <string name="sound_pack_default_system_desc">Стандартний системний звук натискання клавіш</string>
+    <string name="sound_pack_installed_title">Встановлені звукові пакети</string>
+    <string name="sound_pack_available_title">Доступні звукові пакети</string>
+    <string name="sound_pack_imported_success">Звуковий пакет успішно імпортовано</string>
+    <string name="sound_pack_import_failed">Не вдалося імпортувати звуковий пакет (повинен містити коректні аудіофайли або pack.json)</string>
+    <string name="sound_pack_delete_title">Видалити звуковий пакет</string>
+    <string name="sound_pack_delete_message">Видалити звуковий пакет «%s»?</string>
+    <string name="sound_pack_status_active">Активний</string>
+    <string name="sound_pack_size_mb_format">%.1f МБ</string>
+    <string name="sound_pack_download_dialog_title">Звукові пакети</string>
+    <string name="sound_pack_download_dialog_desc">Завантажуйте звукові пакети клавіш від спільноти або імпортуйте власні .zip-пакети.</string>
+    <string name="sound_pack_delete_button">Видалити</string>
+<string name="sound_pack_downloaded_activated">%s завантажено та активовано</string>
+    <string name="sound_pack_download_failed">Не вдалося завантажити %s</string>
+    <string name="sound_pack_deleted_format">%s видалено</string>
+    <string name="sound_pack_downloading_in_browser_toast">Завантаження в браузері… імпортуйте .zip після завершення</string>
+    <string name="sound_pack_preview">Прослухати</string>
 </resources>
+
+
 
 
 

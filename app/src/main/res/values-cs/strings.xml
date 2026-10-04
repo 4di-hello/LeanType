@@ -1405,7 +1405,124 @@ Varování: načítání externího kódu může představovat bezpečnostní ri
     <string name="button_download">Stáhnout</string>
     <string name="button_load_from_file">Načíst ze souboru</string>
     <string name="button_delete">Smazat</string>
+<string name="handwriting_plugin_update_available_dialog">Je k dispozici aktualizace pluginu pro psaní rukou!
+Místní verze: %1$s
+Nejnovější verze: %2$s
+
+Chcete stáhnout a aktualizovat?</string>
+    <string name="handwriting_plugin_active_warning">Plugin pro psaní rukou je aktivní (verze %s).
+
+Varování: načítání externího kódu může představovat bezpečnostní riziko. Používejte pouze pluginy z důvěryhodných zdrojů.</string>
+    <string name="handwriting_plugin_download_dialog_version_msg">Stáhněte si nejnovější plugin pro psaní rukou (%s) z GitHubu nebo načtěte APK z místního úložiště.
+
+Varování: načítání externího kódu může představovat bezpečnostní riziko. Používejte pouze pluginy z důvěryhodných zdrojů.</string>
+    <string name="handwriting_plugin_download_dialog_msg">Stáhněte si plugin pro psaní rukou z GitHubu nebo načtěte APK z místního úložiště.
+
+Varování: načítání externího kódu může představovat bezpečnostní riziko. Používejte pouze pluginy z důvěryhodných zdrojů.</string>
+    <string name="handwriting_plugin_loaded_restarting">Plugin pro psaní rukou byl načten. Restartování...</string>
+    <string name="handwriting_plugin_removed_restarting">Plugin pro psaní rukou byl odebrán. Restartování...</string>
+    <string name="handwriting_plugin_open_browser_toast">Otevírání vydání GitHubu v prohlížeči… stáhněte APK a použijte \'Načíst ze souboru\'</string>
+    <string name="ocr_plugin_update_available_dialog">Je k dispozici aktualizace pluginu OCR!
+Místní verze: %1$s
+Nejnovější verze: %2$s
+
+Chcete stáhnout a aktualizovat?</string>
+    <string name="ocr_plugin_active_warning">Plugin OCR je aktivní (verze %s).
+
+Varování: načítání externího kódu může představovat bezpečnostní riziko. Používejte pouze pluginy z důvěryhodných zdrojů.</string>
+    <string name="ocr_plugin_download_dialog_version_msg">Stáhněte si nejnovější plugin OCR (%s) z GitHubu nebo načtěte APK z místního úložiště.
+
+Varování: načítání externího kódu může představovat bezpečnostní riziko. Používejte pouze pluginy z důvěryhodných zdrojů.</string>
+    <string name="ocr_plugin_download_dialog_msg">Stáhněte si plugin OCR z GitHubu nebo načtěte APK z místního úložiště.
+
+Varování: načítání externího kódu může představovat bezpečnostní riziko. Používejte pouze pluginy z důvěryhodných zdrojů.</string>
+    <string name="ocr_plugin_button_update_version">Aktualizovat na %s</string>
+    <string name="ocr_plugin_button_download_version">Stáhnout plugin (%s)</string>
+    <string name="ocr_plugin_button_download">Stáhnout plugin</string>
+    <string name="ocr_plugin_button_load_storage">Načíst APK z úložiště</string>
+    <string name="ocr_plugin_removed_restarting">Plugin OCR byl odebrán. Restartování...</string>
+    <string name="ocr_plugin_open_browser_toast">Otevírání vydání GitHubu v prohlížeči… stáhněte APK a použijte \'Načíst APK z úložiště\'</string>
+    <string name="ocr_plugin_downloading">Stahování pluginu...</string>
+    <string name="ocr_plugin_active_status">Aktivní</string>
+    <string name="ocr_plugin_active_version_status">Aktivní v%s</string>
+    <string name="offline_ai_plugin_update_available_dialog">Je k dispozici aktualizace pluginu pro offline AI!
+Místní verze: %1$s
+Nejnovější verze: %2$s
+
+Chcete aktualizovat?</string>
+    <string name="offline_ai_plugin_active_desc">Plugin pro offline AI je aktivní (verze %s).
+
+Umožňuje lokální inferenci GGUF / llama.cpp na zařízení pro korektury a přeformulování.</string>
+    <string name="offline_ai_plugin_download_dialog_version_msg">Stáhněte si nejnovější plugin pro offline AI (%s) z GitHubu nebo načtěte APK z místního úložiště.</string>
+    <string name="offline_ai_plugin_download_dialog_msg">Stáhněte si plugin pro offline AI z GitHubu nebo načtěte APK z místního úložiště pro povolení lokálních korektur GGUF.</string>
+    <string name="offline_ai_plugin_loaded_restarting">Plugin pro offline AI byl načten. Restartování...</string>
+    <string name="offline_ai_plugin_removed_restarting">Plugin pro offline AI byl odebrán. Restartování...</string>
+    <string name="offline_ai_plugin_open_browser_toast">Otevírání vydání GitHubu v prohlížeči… stáhněte APK a použijte \'Načíst ze souboru\'</string>
+    <string name="gesture_lib_loaded_restarting">Knihovna gest byla načtena. Restartování...</string>
+    <string name="gesture_lib_removed_restarting">Knihovna gest byla odebrána. Restartování...</string>
+    <string name="gesture_lib_open_browser_toast">Otevírání prohlížeče pro stažení knihovny… po stažení použijte \'Načíst ze souboru\'</string>
+    <string name="button_download_in_browser">Stáhnout v prohlížeči</string>
+    <string name="plugin_download_failed_format">Stažení se nezdařilo: %s</string>
+    <string name="open_browser_failed_format">Otevření prohlížeče se nezdařilo: %s</string>
+    <string name="storage_item_temporary_cache_name">Dočasná mezipaměť</string>
+    <string name="storage_item_temporary_cache_desc">Příprava stahování modelů, dočasná rozbalení a záznamy o selhání</string>
+    <string name="storage_item_code_cache_name">Mezipaměť kódu</string>
+    <string name="storage_item_code_cache_desc">Optimalizovaný dex kód a mezipaměti kompilace</string>
+    <string name="storage_item_plugin_translation_name">Plugin pro překlad</string>
+    <string name="storage_item_plugin_translation_desc">Dynamické běhové prostředí pro offline překlad s ML Kit</string>
+    <string name="storage_item_plugin_handwriting_name">Plugin pro psaní rukou</string>
+    <string name="storage_item_plugin_handwriting_desc">Rozpoznávací modul Digital Ink</string>
+    <string name="storage_item_plugin_ocr_name">Plugin pro rozpoznávání textu (OCR)</string>
+    <string name="storage_item_plugin_ocr_desc">Modul OCR rozpoznávání textu pro fotoaparát a obrázky</string>
+    <string name="storage_item_plugin_offline_ai_name">Plugin pro offline AI</string>
+    <string name="storage_item_plugin_offline_ai_desc">Modul pro korektury textu s LLM přímo na zařízení</string>
+    <string name="storage_item_trans_model_desc">Soubory modelů pro offline překlad</string>
+    <string name="storage_item_hw_model_desc">Model rozpoznávání Digital Ink</string>
+    <string name="storage_item_dict_desc">Slovník seznamu slov uložený v mezipaměti</string>
+    <string name="storage_type_plugin">plugin</string>
+    <string name="storage_type_translation_model">model překladu</string>
+    <string name="storage_type_handwriting_model">model psaní rukou</string>
+    <string name="storage_type_dictionary">slovník</string>
+    <string name="storage_type_cache">položka mezipaměti</string>
+    <string name="voice_plugin_not_installed">Hlasový plugin není nainstalován. Nejprve nainstalujte hlasový plugin.</string>
+    <string name="voice_model_installed_success">Model %s byl úspěšně nainstalován!</string>
+    <string name="voice_plugin_import_failed">Import modelu do hlasového pluginu se nezdařil. Zkontrolujte, zda je hlasový plugin aktualizován.</string>
+    <string name="voice_opening_browser_for">Otevírání prohlížeče pro %s</string>
+    <string name="voice_whisper_models_title">Modely Whisper</string>
+    <string name="voice_custom_model_title">Vlastní model GGML</string>
+    <string name="voice_loaded_external_model">Načten externí model</string>
+    <string name="voice_imported_and_ready">Importováno a připraveno</string>
+    <string name="voice_load_external_bin">Načíst externí soubor .bin</string>
+    <string name="voice_custom_model_removed">Vlastní model byl odebrán</string>
+    <string name="voice_model_replace">Nahradit</string>
+    <string name="voice_model_removed">Model %s byl odebrán</string>
+    <string name="voice_model_name_format">Model %s</string>
+    <string name="voice_model_downloaded_format">Staženo (%s)</string>
+    <string name="button_import">Importovat</string>
+    <string name="sound_pack_browser_note">Stáhněte v prohlížeči a poté importujte .zip</string>
+    <string name="sound_pack_app_note">Stáhněte v aplikaci nebo importujte .zip</string>
+    <string name="sound_pack_import_zip">Importovat .zip</string>
+    <string name="search_sound_pack_placeholder">Hledat zvukový balíček…</string>
+    <string name="sound_pack_default_system_desc">Výchozí systémový zvuk stisknutí klávesy</string>
+    <string name="sound_pack_installed_title">Nainstalované zvukové balíčky</string>
+    <string name="sound_pack_available_title">Dostupné zvukové balíčky</string>
+    <string name="sound_pack_imported_success">Zvukový balíček byl úspěšně importován</string>
+    <string name="sound_pack_import_failed">Import zvukového balíčku se nezdařil (musí obsahovat platné zvukové soubory nebo pack.json)</string>
+    <string name="sound_pack_delete_title">Smazat zvukový balíček</string>
+    <string name="sound_pack_delete_message">Smazat zvukový balíček „%s“?</string>
+    <string name="sound_pack_status_active">Aktivní</string>
+    <string name="sound_pack_size_mb_format">%.1f MB</string>
+    <string name="sound_pack_download_dialog_title">Zvukové balíčky</string>
+    <string name="sound_pack_download_dialog_desc">Stahujte balíčky zvuků kláves od komunity nebo importujte vlastní balíčky .zip.</string>
+    <string name="sound_pack_delete_button">Smazat</string>
+<string name="sound_pack_downloaded_activated">%s stažen a aktivován</string>
+    <string name="sound_pack_download_failed">Stažení %s se nezdařilo</string>
+    <string name="sound_pack_deleted_format">%s smazán</string>
+    <string name="sound_pack_downloading_in_browser_toast">Stahování v prohlížeči… po dokončení importujte .zip</string>
+    <string name="sound_pack_preview">Přehrát</string>
 </resources>
+
+
 
 
 

@@ -1447,7 +1447,116 @@ Waarschuwing: het laden van externe code kan een beveiligingsrisico vormen. Gebr
     <string name="button_download">Downloaden</string>
     <string name="button_load_from_file">Laden uit bestand</string>
     <string name="button_delete">Verwijderen</string>
+<string name="handwriting_plugin_update_available_dialog">Er is een update beschikbaar voor de handschrift-plug-in!
+Lokale versie: %1$s
+Nieuwste versie: %2$s
+
+Wilt u downloaden en bijwerken?</string>
+    <string name="handwriting_plugin_active_warning">Handschrift-plug-in is actief (versie %s).
+
+Waarschuwing: het laden van externe code kan een beveiligingsrisico vormen. Gebruik alleen plug-ins van vertrouwde bronnen.</string>
+    <string name="handwriting_plugin_download_dialog_version_msg">Download de nieuwste handschrift-plug-in (versie %s) van GitHub of laad een APK van lokale opslag.
+
+Waarschuwing: het laden van externe code kan een beveiligingsrisico vormen. Gebruik alleen plug-ins van vertrouwde bronnen.</string>
+    <string name="handwriting_plugin_download_dialog_msg">Download de handschrift-plug-in van GitHub of laad een APK van lokale opslag.
+
+Waarschuwing: het laden van externe code kan een beveiligingsrisico vormen. Gebruik alleen plug-ins van vertrouwde bronnen.</string>
+    <string name="handwriting_plugin_loaded_restarting">Handschrift-plug-in geladen. Herstarten...</string>
+    <string name="handwriting_plugin_removed_restarting">Handschrift-plug-in verwijderd. Herstarten...</string>
+    <string name="handwriting_plugin_open_browser_toast">GitHub-releases openen in browser… download de APK en gebruik \'Laden uit bestand\'</string>
+    <string name="ocr_plugin_update_available_dialog">Er is een update beschikbaar voor de OCR-plug-in!
+Lokale versie: %1$s
+Nieuwste versie: %2$s
+
+Wilt u downloaden en bijwerken?</string>
+    <string name="ocr_plugin_active_warning">OCR-plug-in is actief (versie %s).
+
+Waarschuwing: het laden van externe code kan een beveiligingsrisico vormen. Gebruik alleen plug-ins van vertrouwde bronnen.</string>
+    <string name="ocr_plugin_download_dialog_version_msg">Download de nieuwste OCR-plug-in (versie %s) van GitHub of laad een APK van lokale opslag.
+
+Waarschuwing: het laden van externe code kan een beveiligingsrisico vormen. Gebruik alleen plug-ins van vertrouwde bronnen.</string>
+    <string name="ocr_plugin_download_dialog_msg">Download de OCR-plug-in van GitHub of laad een APK van lokale opslag.
+
+Waarschuwing: het laden van externe code kan een beveiligingsrisico vormen. Gebruik alleen plug-ins van vertrouwde bronnen.</string>
+    <string name="ocr_plugin_button_update_version">Bijwerken naar %s</string>
+    <string name="ocr_plugin_button_download_version">Plug-in downloaden (%s)</string>
+    <string name="ocr_plugin_button_download">Plug-in downloaden</string>
+    <string name="ocr_plugin_button_load_storage">APK laden uit opslag</string>
+    <string name="ocr_plugin_removed_restarting">OCR-plug-in verwijderd. Herstarten...</string>
+    <string name="ocr_plugin_open_browser_toast">GitHub-releases openen in browser… download de APK en gebruik \'APK laden uit opslag\'</string>
+    <string name="ocr_plugin_downloading">Plug-in downloaden...</string>
+    <string name="ocr_plugin_active_status">Actief</string>
+    <string name="ocr_plugin_active_version_status">Actief v%s</string>
+    <string name="offline_ai_plugin_update_available_dialog">Er is een update beschikbaar voor de Offline AI-plug-in!
+Lokale versie: %1$s
+Nieuwste versie: %2$s
+
+Wilt u bijwerken?</string>
+    <string name="offline_ai_plugin_active_desc">Offline AI-plug-in is actief (versie %s).
+
+Maakt GGUF / llama.cpp-inferentie op het apparaat mogelijk voor proeflezen en herschrijven.</string>
+    <string name="offline_ai_plugin_download_dialog_version_msg">Download de nieuwste Offline AI-plug-in (versie %s) van GitHub of laad een APK van lokale opslag.</string>
+    <string name="offline_ai_plugin_download_dialog_msg">Download de Offline AI-plug-in van GitHub of laad een APK van lokale opslag om lokaal GGUF-proeflezen in te schakelen.</string>
+    <string name="offline_ai_plugin_loaded_restarting">Offline AI-plug-in geladen. Herstarten...</string>
+    <string name="offline_ai_plugin_removed_restarting">Offline AI-plug-in verwijderd. Herstarten...</string>
+    <string name="offline_ai_plugin_open_browser_toast">GitHub-releases openen in browser… download de APK en gebruik \'Laden uit bestand\'</string>
+    <string name="gesture_lib_loaded_restarting">Gebaar-bibliotheek geladen. Herstarten...</string>
+    <string name="gesture_lib_removed_restarting">Gebaar-bibliotheek verwijderd. Herstarten...</string>
+    <string name="gesture_lib_open_browser_toast">Browser openen om bibliotheek te downloaden… gebruik na het downloaden \'Laden uit bestand\'</string>
+    <string name="button_download_in_browser">Downloaden in browser</string>
+    <string name="plugin_download_failed_format">Download mislukt: %s</string>
+    <string name="open_browser_failed_format">Openen van browser mislukt: %s</string>
+    <string name="storage_item_temporary_cache_name">Tijdelijke cache</string>
+    <string name="storage_item_temporary_cache_desc">Modeldownload-staging, tijdelijke extracties en crashlogboeken</string>
+    <string name="storage_item_code_cache_name">Codecache</string>
+    <string name="storage_item_code_cache_desc">Geoptimaliseerde dex-code en compilatiecaches</string>
+    <string name="storage_item_plugin_translation_name">Vertaal-plug-in</string>
+    <string name="storage_item_plugin_translation_desc">Dynamische runtime voor offline ML Kit-vertaling</string>
+    <string name="storage_item_plugin_handwriting_name">Handschrift-plug-in</string>
+    <string name="storage_item_plugin_handwriting_desc">Digital Ink-herkenningsmotor</string>
+    <string name="storage_item_plugin_ocr_name">Tekstherkennings-plug-in (OCR)</string>
+    <string name="storage_item_plugin_ocr_desc">Camera- en beeld-OCR-herkenningsmotor</string>
+    <string name="storage_item_plugin_offline_ai_name">Offline AI-plug-in</string>
+    <string name="storage_item_plugin_offline_ai_desc">LLM-proefleesmotor op het apparaat</string>
+    <string name="storage_item_trans_model_desc">Bestanden voor offline vertaalmodel</string>
+    <string name="storage_item_hw_model_desc">Digital Ink-herkenningsmodel</string>
+    <string name="storage_item_dict_desc">Gecachet woordenlijst-woordenboek</string>
+    <string name="storage_type_plugin">plug-in</string>
+    <string name="storage_type_translation_model">vertaalmodel</string>
+    <string name="storage_type_handwriting_model">handschriftmodel</string>
+    <string name="storage_type_dictionary">woordenboek</string>
+    <string name="storage_type_cache">cache-item</string>
+    <string name="voice_plugin_not_installed">Spraak-plug-in is niet geïnstalleerd. Installeer eerst de spraak-plug-in.</string>
+    <string name="voice_model_installed_success">%s-model succesvol geïnstalleerd!</string>
+    <string name="voice_plugin_import_failed">Importeren van model in spraak-plug-in mislukt. Zorg ervoor dat de spraak-plug-in is bijgewerkt.</string>
+    <string name="voice_opening_browser_for">Browser openen voor %s</string>
+    <string name="voice_whisper_models_title">Whisper-modellen</string>
+    <string name="voice_custom_model_title">Aangepast GGML-model</string>
+    <string name="voice_loaded_external_model">Extern model geladen</string>
+    <string name="voice_imported_and_ready">Geïmporteerd en klaar</string>
+    <string name="voice_load_external_bin">Extern .bin-bestand laden</string>
+    <string name="voice_custom_model_removed">Aangepast model verwijderd</string>
+    <string name="voice_model_replace">Vervangen</string>
+    <string name="voice_model_removed">%s-model verwijderd</string>
+    <string name="voice_model_name_format">%s-model</string>
+    <string name="voice_model_downloaded_format">Gedownload (%s)</string>
+    <string name="button_import">Importeren</string>
+    <string name="sound_pack_browser_note">Download in browser, importeer daarna .zip</string>
+    <string name="sound_pack_app_note">Download in app of importeer .zip</string>
+    <string name="sound_pack_import_zip">.zip importeren</string>
+    <string name="search_sound_pack_placeholder">Geluidspakket zoeken…</string>
+    <string name="sound_pack_default_system_desc">Standaard systeemklikgeluid voor toetsaanslag</string>
+    <string name="sound_pack_installed_title">Geïnstalleerde geluidspakketten</string>
+    <string name="sound_pack_available_title">Beschikbare geluidspakketten</string>
+    <string name="sound_pack_imported_success">Geluidspakket succesvol geïmporteerd</string>
+    <string name="sound_pack_import_failed">Importeren van geluidspakket mislukt (moet geldige audiobestanden of pack.json bevatten)</string>
+    <string name="sound_pack_downloaded_activated">%s gedownload en geactiveerd</string>
+    <string name="sound_pack_download_failed">Download mislukt voor %s</string>
+    <string name="sound_pack_deleted_format">%s verwijderd</string>
+    <string name="sound_pack_downloading_in_browser_toast">Downloaden in browser… importeer .zip na voltooiing</string>
+    <string name="sound_pack_preview">Voorbeeld</string>
 </resources>
+
 
 
 

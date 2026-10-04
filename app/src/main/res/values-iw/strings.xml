@@ -1407,7 +1407,124 @@
     <string name="button_download">הורד</string>
     <string name="button_load_from_file">טען מקובץ</string>
     <string name="button_delete">מחק</string>
+<string name="handwriting_plugin_update_available_dialog">קיים עדכון זמין עבור תוסף כתב היד!
+גרסה מקומית: %1$s
+גרסה אחרונה: %2$s
+
+האם ברצונך להוריד ולעדכן?</string>
+    <string name="handwriting_plugin_active_warning">תוסף כתב היד פעיל (גרסה %s).
+
+אזהרה: טעינת קוד חיצוני עלולה להוות סיכון אבטחה. השתמש רק בתוספים ממקורות מהימנים.</string>
+    <string name="handwriting_plugin_download_dialog_version_msg">הורד את תוסף כתב היד האחרון (גרסה %s) מ-GitHub, או טען APK מהאחסון המקומי.
+
+אזהרה: טעינת קוד חיצוני עלולה להוות סיכון אבטחה. השתמש רק בתוספים ממקורות מהימנים.</string>
+    <string name="handwriting_plugin_download_dialog_msg">הורד את תוסף כתב היד מ-GitHub, או טען APK מהאחסון המקומי.
+
+אזהרה: טעינת קוד חיצוני עלולה להוות סיכון אבטחה. השתמש רק בתוספים ממקורות מהימנים.</string>
+    <string name="handwriting_plugin_loaded_restarting">תוסף כתב היד נטען. מפעיל מחדש...</string>
+    <string name="handwriting_plugin_removed_restarting">תוסף כתב היד הוסר. מפעיל מחדש...</string>
+    <string name="handwriting_plugin_open_browser_toast">פותח את מהדורות GitHub בדפדפן… הורד את ה-APK והשתמש ב\'טען מקובץ\'</string>
+    <string name="ocr_plugin_update_available_dialog">קיים עדכון זמין עבור תוסף OCR!
+גרסה מקומית: %1$s
+גרסה אחרונה: %2$s
+
+האם ברצונך להוריד ולעדכן?</string>
+    <string name="ocr_plugin_active_warning">תוסף OCR פעיל (גרסה %s).
+
+אזהרה: טעינת קוד חיצוני עלולה להוות סיכון אבטחה. השתמש רק בתוספים ממקורות מהימנים.</string>
+    <string name="ocr_plugin_download_dialog_version_msg">הורד את תוסף OCR האחרון (גרסה %s) מ-GitHub, או טען APK מהאחסון המקומי.
+
+אזהרה: טעינת קוד חיצוני עלולה להוות סיכון אבטחה. השתמש רק בתוספים ממקורות מהימנים.</string>
+    <string name="ocr_plugin_download_dialog_msg">הורד את תוסף OCR מ-GitHub, או טען APK מהאחסון המקומי.
+
+אזהרה: טעינת קוד חיצוני עלולה להוות סיכון אבטחה. השתמש רק בתוספים ממקורות מהימנים.</string>
+    <string name="ocr_plugin_button_update_version">עדכן ל-%s</string>
+    <string name="ocr_plugin_button_download_version">הורד תוסף (%s)</string>
+    <string name="ocr_plugin_button_download">הורד תוסף</string>
+    <string name="ocr_plugin_button_load_storage">טען APK מהאחסון</string>
+    <string name="ocr_plugin_removed_restarting">תוסף OCR הוסר. מפעיל מחדש...</string>
+    <string name="ocr_plugin_open_browser_toast">פותח את מהדורות GitHub בדפדפן… הורד את ה-APK והשתמש ב\'טען APK מהאחסון\'</string>
+    <string name="ocr_plugin_downloading">מוריד תוסף...</string>
+    <string name="ocr_plugin_active_status">פעיל</string>
+    <string name="ocr_plugin_active_version_status">פעיל v%s</string>
+    <string name="offline_ai_plugin_update_available_dialog">קיים עדכון זמין עבור תוסף AI לא מקוון!
+גרסה מקומית: %1$s
+גרסה אחרונה: %2$s
+
+האם ברצונך לעדכן?</string>
+    <string name="offline_ai_plugin_active_desc">תוסף AI לא מקוון פעיל (גרסה %s).
+
+מאפשר הסקת מסקנות מקומית של GGUF / llama.cpp במכשיר להגהה ושכתוב.</string>
+    <string name="offline_ai_plugin_download_dialog_version_msg">הורד את תוסף AI הלא מקוון האחרון (גרסה %s) מ-GitHub, או טען APK מהאחסון המקומי.</string>
+    <string name="offline_ai_plugin_download_dialog_msg">הורד את תוסף AI הלא מקוון מ-GitHub, או טען APK מהאחסון כדי להפעיל הגהת GGUF מקומית.</string>
+    <string name="offline_ai_plugin_loaded_restarting">תוסף AI לא מקוון נטען. מפעיל מחדש...</string>
+    <string name="offline_ai_plugin_removed_restarting">תוסף AI לא מקוון הוסר. מפעיל מחדש...</string>
+    <string name="offline_ai_plugin_open_browser_toast">פותח את מהדורות GitHub בדפדפן… הורד את ה-APK והשתמש ב\'טען מקובץ\'</string>
+    <string name="gesture_lib_loaded_restarting">ספריית המחוות נטענה. מפעיל מחדש...</string>
+    <string name="gesture_lib_removed_restarting">ספריית המחוות הוסרה. מפעיל מחדש...</string>
+    <string name="gesture_lib_open_browser_toast">פותח דפדפן להורדת הספרייה… השתמש ב\'טען מקובץ\' לאחר ההורדה</string>
+    <string name="button_download_in_browser">הורד בדפדפן</string>
+    <string name="plugin_download_failed_format">ההורדה נכשלה: %s</string>
+    <string name="open_browser_failed_format">פתיחת הדפדפן נכשלה: %s</string>
+    <string name="storage_item_temporary_cache_name">מטמון זמני</string>
+    <string name="storage_item_temporary_cache_desc">הכנת הורדות מודלים, חילוצים זמניים ויומני קריסות</string>
+    <string name="storage_item_code_cache_name">מטמון קוד</string>
+    <string name="storage_item_code_cache_desc">קוד dex מותאם ומטמוני קומפילציה</string>
+    <string name="storage_item_plugin_translation_name">תוסף תרגום</string>
+    <string name="storage_item_plugin_translation_desc">סביבת ריצה דינמית לתרגום לא מקוון של ML Kit</string>
+    <string name="storage_item_plugin_handwriting_name">תוסף כתב יד</string>
+    <string name="storage_item_plugin_handwriting_desc">מנוע זיהוי Digital Ink</string>
+    <string name="storage_item_plugin_ocr_name">תוסף זיהוי טקסט (OCR)</string>
+    <string name="storage_item_plugin_ocr_desc">מנוע זיהוי טקסט OCR עבור מצלמה ותמונות</string>
+    <string name="storage_item_plugin_offline_ai_name">תוסף AI לא מקוון</string>
+    <string name="storage_item_plugin_offline_ai_desc">מנוע הגהה עם LLM במכשיר</string>
+    <string name="storage_item_trans_model_desc">קבצי מודל לתרגום לא מקוון</string>
+    <string name="storage_item_hw_model_desc">מודל זיהוי Digital Ink</string>
+    <string name="storage_item_dict_desc">מילון רשימת מילים במטמון</string>
+    <string name="storage_type_plugin">תוסף</string>
+    <string name="storage_type_translation_model">מודל תרגום</string>
+    <string name="storage_type_handwriting_model">מודל כתב יד</string>
+    <string name="storage_type_dictionary">מילון</string>
+    <string name="storage_type_cache">פריט מטמון</string>
+    <string name="voice_plugin_not_installed">תוסף הקול אינו מותקן. אנא התקן תחילה את תוסף הקול.</string>
+    <string name="voice_model_installed_success">מודל %s הותקן בהצלחה!</string>
+    <string name="voice_plugin_import_failed">ייבוא המודל לתוסף הקול נכשל. ודא שתוסף הקול מעודכן.</string>
+    <string name="voice_opening_browser_for">פותח דפדפן עבור %s</string>
+    <string name="voice_whisper_models_title">מודלי Whisper</string>
+    <string name="voice_custom_model_title">מודל GGML מותאם אישית</string>
+    <string name="voice_loaded_external_model">מודל חיצוני נטען</string>
+    <string name="voice_imported_and_ready">יובא ומוכן לשימוש</string>
+    <string name="voice_load_external_bin">טען קובץ .bin חיצוני</string>
+    <string name="voice_custom_model_removed">מודל מותאם אישית הוסר</string>
+    <string name="voice_model_replace">החלף</string>
+    <string name="voice_model_removed">מודל %s הוסר</string>
+    <string name="voice_model_name_format">מודל %s</string>
+    <string name="voice_model_downloaded_format">הורד (%s)</string>
+    <string name="button_import">ייבוא</string>
+    <string name="sound_pack_browser_note">הורד בדפדפן ולאחר מכן ייבא .zip</string>
+    <string name="sound_pack_app_note">הורד באפליקציה או ייבא .zip</string>
+    <string name="sound_pack_import_zip">ייבא .zip</string>
+    <string name="search_sound_pack_placeholder">חיפוש חבילת צלילים…</string>
+    <string name="sound_pack_default_system_desc">צליל לחיצת מקש ברירת מחדל של המערכת</string>
+    <string name="sound_pack_installed_title">חבילות צלילים מותקנות</string>
+    <string name="sound_pack_available_title">חבילות צלילים זמינות</string>
+    <string name="sound_pack_imported_success">חבילת הצלילים יובאה בהצלחה</string>
+    <string name="sound_pack_import_failed">ייבוא חבילת הצלילים נכשל (חייבת להכיל קובצי שמע תקינים או pack.json)</string>
+    <string name="sound_pack_delete_title">מחק חבילת צלילים</string>
+    <string name="sound_pack_delete_message">למחוק את חבילת הצלילים \'%s\'?</string>
+    <string name="sound_pack_status_active">פעיל</string>
+    <string name="sound_pack_size_mb_format">%.1f מ\"ב</string>
+    <string name="sound_pack_download_dialog_title">חבילות צלילים</string>
+    <string name="sound_pack_download_dialog_desc">הורד חבילות צלילי מקשים מהקהילה או ייבא חבילות .zip משלך.</string>
+    <string name="sound_pack_delete_button">מחק</string>
+<string name="sound_pack_downloaded_activated">%s הורד והופעל</string>
+    <string name="sound_pack_download_failed">הורדת %s נכשלה</string>
+    <string name="sound_pack_deleted_format">%s נמחק</string>
+    <string name="sound_pack_downloading_in_browser_toast">מוריד בדפדפן… ייבא .zip בסיום</string>
+    <string name="sound_pack_preview">תצוגה מקדימה</string>
 </resources>
+
+
 
 
 

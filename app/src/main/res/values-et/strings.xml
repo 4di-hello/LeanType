@@ -1394,7 +1394,116 @@ Hoiatus: välise koodi laadimine võib olla turvarisk. Kasutage ainult usaldusv�
     <string name="button_download">Laadi alla</string>
     <string name="button_load_from_file">Laadi failist</string>
     <string name="button_delete">Kustuta</string>
+<string name="handwriting_plugin_update_available_dialog">Käsitsikirja plugina jaoks on saadaval värskendus!
+Kohalik versioon: %1$s
+Uusim versioon: %2$s
+
+Kas soovite alla laadida ja värskendada?</string>
+    <string name="handwriting_plugin_active_warning">Käsitsikirja plugin on aktiivne (versioon %s).
+
+Hoiatus: välise koodi laadimine võib olla turvarisk. Kasutage ainult usaldusväärsest allikast pärit pluginaid.</string>
+    <string name="handwriting_plugin_download_dialog_version_msg">Laadige GitHubist alla uusim käsitsikirja plugin (versioon %s) või laadige APK kohalikust salvestusruumist.
+
+Hoiatus: välise koodi laadimine võib olla turvarisk. Kasutage ainult usaldusväärsest allikast pärit pluginaid.</string>
+    <string name="handwriting_plugin_download_dialog_msg">Laadige käsitsikirja plugin GitHubist alla või laadige APK kohalikust salvestusruumist.
+
+Hoiatus: välise koodi laadimine võib olla turvarisk. Kasutage ainult usaldusväärsest allikast pärit pluginaid.</string>
+    <string name="handwriting_plugin_loaded_restarting">Käsitsikirja plugin laaditud. Taaskäivitamine...</string>
+    <string name="handwriting_plugin_removed_restarting">Käsitsikirja plugin eemaldatud. Taaskäivitamine...</string>
+    <string name="handwriting_plugin_open_browser_toast">GitHubi väljalasete avamine brauseris… laadige alla APK ja kasutage valikut \'Laadi failist\'</string>
+    <string name="ocr_plugin_update_available_dialog">OCR-plugina jaoks on saadaval värskendus!
+Kohalik versioon: %1$s
+Uusim versioon: %2$s
+
+Kas soovite alla laadida ja värskendada?</string>
+    <string name="ocr_plugin_active_warning">OCR-plugin on aktiivne (versioon %s).
+
+Hoiatus: välise koodi laadimine võib olla turvarisk. Kasutage ainult usaldusväärsest allikast pärit pluginaid.</string>
+    <string name="ocr_plugin_download_dialog_version_msg">Laadige GitHubist alla uusim OCR-plugin (versioon %s) või laadige APK kohalikust salvestusruumist.
+
+Hoiatus: välise koodi laadimine võib olla turvarisk. Kasutage ainult usaldusväärsest allikast pärit pluginaid.</string>
+    <string name="ocr_plugin_download_dialog_msg">Laadige OCR-plugin GitHubist alla või laadige APK kohalikust salvestusruumist.
+
+Hoiatus: välise koodi laadimine võib olla turvarisk. Kasutage ainult usaldusväärsest allikast pärit pluginaid.</string>
+    <string name="ocr_plugin_button_update_version">Värskenda versioonile %s</string>
+    <string name="ocr_plugin_button_download_version">Laadi plugin alla (%s)</string>
+    <string name="ocr_plugin_button_download">Laadi plugin alla</string>
+    <string name="ocr_plugin_button_load_storage">Laadi APK salvestusruumist</string>
+    <string name="ocr_plugin_removed_restarting">OCR-plugin eemaldatud. Taaskäivitamine...</string>
+    <string name="ocr_plugin_open_browser_toast">GitHubi väljalasete avamine brauseris… laadige alla APK ja kasutage valikut \'Laadi APK salvestusruumist\'</string>
+    <string name="ocr_plugin_downloading">Plugina allalaadimine...</string>
+    <string name="ocr_plugin_active_status">Aktiivne</string>
+    <string name="ocr_plugin_active_version_status">Aktiivne v%s</string>
+    <string name="offline_ai_plugin_update_available_dialog">Võrguühenduseta AI plugina jaoks on saadaval värskendus!
+Kohalik versioon: %1$s
+Uusim versioon: %2$s
+
+Kas soovite värskendada?</string>
+    <string name="offline_ai_plugin_active_desc">Võrguühenduseta AI plugin on aktiivne (versioon %s).
+
+Võimaldab seadmesisese GGUF / llama.cpp järelduse korrektuuri ja ümbersõnastamise jaoks.</string>
+    <string name="offline_ai_plugin_download_dialog_version_msg">Laadige GitHubist alla uusim võrguühenduseta AI plugin (versioon %s) või laadige APK kohalikust salvestusruumist.</string>
+    <string name="offline_ai_plugin_download_dialog_msg">Laadige võrguühenduseta AI plugin GitHubist alla või laadige APK kohalikust salvestusruumist, et lubada kohalik GGUF-korrektuur.</string>
+    <string name="offline_ai_plugin_loaded_restarting">Võrguühenduseta AI plugin laaditud. Taaskäivitamine...</string>
+    <string name="offline_ai_plugin_removed_restarting">Võrguühenduseta AI plugin eemaldatud. Taaskäivitamine...</string>
+    <string name="offline_ai_plugin_open_browser_toast">GitHubi väljalasete avamine brauseris… laadige alla APK ja kasutage valikut \'Laadi failist\'</string>
+    <string name="gesture_lib_loaded_restarting">Vipekogu laaditud. Taaskäivitamine...</string>
+    <string name="gesture_lib_removed_restarting">Vipekogu eemaldatud. Taaskäivitamine...</string>
+    <string name="gesture_lib_open_browser_toast">Kogu allalaadimiseks brauseri avamine… pärast allalaadimist kasutage valikut \'Laadi failist\'</string>
+    <string name="button_download_in_browser">Laadi brauseris alla</string>
+    <string name="plugin_download_failed_format">Allalaadimine ebaõnnestus: %s</string>
+    <string name="open_browser_failed_format">Brauseri avamine ebaõnnestus: %s</string>
+    <string name="storage_item_temporary_cache_name">Ajutine vahemälu</string>
+    <string name="storage_item_temporary_cache_desc">Mudelite allalaadimise ettevalmistus, ajutised väljavõtted ja krahhilogid</string>
+    <string name="storage_item_code_cache_name">Koodi vahemälu</string>
+    <string name="storage_item_code_cache_desc">Optimeeritud dexi kood ja kompileerimise vahemälud</string>
+    <string name="storage_item_plugin_translation_name">Tõlkeplugin</string>
+    <string name="storage_item_plugin_translation_desc">Dünaamiline käitusaeg võrguühenduseta ML Kiti tõlkimiseks</string>
+    <string name="storage_item_plugin_handwriting_name">Käsitsikirja plugin</string>
+    <string name="storage_item_plugin_handwriting_desc">Digital Inki tuvastusmootor</string>
+    <string name="storage_item_plugin_ocr_name">Tekstituvastuse (OCR) plugin</string>
+    <string name="storage_item_plugin_ocr_desc">Kaamera ja pildi OCR-tuvastusmootor</string>
+    <string name="storage_item_plugin_offline_ai_name">Võrguühenduseta AI plugin</string>
+    <string name="storage_item_plugin_offline_ai_desc">Seadmesisene LLM-i korrektuurimootor</string>
+    <string name="storage_item_trans_model_desc">Võrguühenduseta tõlkemudeli failid</string>
+    <string name="storage_item_hw_model_desc">Digital Inki tuvastusmudel</string>
+    <string name="storage_item_dict_desc">Vahemällu salvestatud sõnalisti sõnastik</string>
+    <string name="storage_type_plugin">plugin</string>
+    <string name="storage_type_translation_model">tõlkemudel</string>
+    <string name="storage_type_handwriting_model">käsitsikirjamudel</string>
+    <string name="storage_type_dictionary">sõnastik</string>
+    <string name="storage_type_cache">vahemäluüksus</string>
+    <string name="voice_plugin_not_installed">Hääleplugin pole installitud. Palun installige esmalt hääleplugin.</string>
+    <string name="voice_model_installed_success">Mudel %s edukalt installitud!</string>
+    <string name="voice_plugin_import_failed">Mudeli importimine häälepluginasse ebaõnnestus. Veenduge, et hääleplugin on värskendatud.</string>
+    <string name="voice_opening_browser_for">Brauseri avamine mudeli %s jaoks</string>
+    <string name="voice_whisper_models_title">Whisperi mudelid</string>
+    <string name="voice_custom_model_title">Kohandatud GGML-mudel</string>
+    <string name="voice_loaded_external_model">Laaditud väline mudel</string>
+    <string name="voice_imported_and_ready">Imporditud ja valmis</string>
+    <string name="voice_load_external_bin">Laadi väline .bin-fail</string>
+    <string name="voice_custom_model_removed">Kohandatud mudel eemaldatud</string>
+    <string name="voice_model_replace">Asenda</string>
+    <string name="voice_model_removed">Mudel %s eemaldatud</string>
+    <string name="voice_model_name_format">Mudel %s</string>
+    <string name="voice_model_downloaded_format">Alla laaditud (%s)</string>
+    <string name="button_import">Impordi</string>
+    <string name="sound_pack_browser_note">Laadige brauseris alla, seejärel importige .zip</string>
+    <string name="sound_pack_app_note">Laadige rakenduses alla või importige .zip</string>
+    <string name="sound_pack_import_zip">Impordi .zip</string>
+    <string name="search_sound_pack_placeholder">Otsi helipaketti…</string>
+    <string name="sound_pack_default_system_desc">Süsteemi vaikimisi klahvivajutuse klõpsuheli</string>
+    <string name="sound_pack_installed_title">Installitud helipaketid</string>
+    <string name="sound_pack_available_title">Saadaolevad helipaketid</string>
+    <string name="sound_pack_imported_success">Helipakett edukalt imporditud</string>
+    <string name="sound_pack_import_failed">Helipaketi importimine ebaõnnestus (peab sisaldama kehtivaid helifaile või pack.json-i)</string>
+    <string name="sound_pack_downloaded_activated">%s alla laaditud ja aktiveeritud</string>
+    <string name="sound_pack_download_failed">Allalaadimine ebaõnnestus paketile %s</string>
+    <string name="sound_pack_deleted_format">%s kustutatud</string>
+    <string name="sound_pack_downloading_in_browser_toast">Allalaadimine brauseris… importige .zip pärast lõpetamist</string>
+    <string name="sound_pack_preview">Eelvaade</string>
 </resources>
+
 
 
 

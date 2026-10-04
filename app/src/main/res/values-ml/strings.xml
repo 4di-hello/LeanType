@@ -1465,6 +1465,123 @@
     <string name="button_download">ഡൗൺലോഡ്</string>
     <string name="button_load_from_file">ഫയലിൽ നിന്ന് ലോഡ് ചെയ്യുക</string>
     <string name="button_delete">ഇല്ലാതാക്കുക</string>
+<string name="handwriting_plugin_update_available_dialog">കയ്യക്ഷര പ്ലഗിന് അപ്‌ഡേറ്റ് ലഭ്യമാണ്!
+പ്രാദേശിക പതിപ്പ്: %1$s
+ഏറ്റവും പുതിയ പതിപ്പ്: %2$s
+
+ഡൗൺലോഡ് ചെയ്ത് അപ്‌ഡേറ്റ് ചെയ്യണോ?</string>
+    <string name="handwriting_plugin_active_warning">കയ്യക്ഷര പ്ലഗിൻ സജീവമാണ് (പതിപ്പ് %s).
+
+മുന്നറിയിപ്പ്: ബാഹ്യ കോഡ് ലോഡ് ചെയ്യുന്നത് സുരക്ഷാ ഭീഷണിയാകാം. വിശ്വസനീയ ഉറവിടങ്ങളിൽ നിന്നുള്ള പ്ലഗിനുകൾ മാത്രം ഉപയോഗിക്കുക.</string>
+    <string name="handwriting_plugin_download_dialog_version_msg">ഏറ്റവും പുതിയ കയ്യക്ഷര പ്ലഗിൻ (പതിപ്പ് %s) GitHub-ൽ നിന്ന് ഡൗൺലോഡ് ചെയ്യുക, അല്ലെങ്കിൽ ലോക്കൽ സ്റ്റോറേജിൽ നിന്ന് APK ലോഡ് ചെയ്യുക.
+
+മുന്നറിയിപ്പ്: ബാഹ്യ കോഡ് ലോഡ് ചെയ്യുന്നത് സുരക്ഷാ ഭീഷണിയാകാം. വിശ്വസനീയ ഉറവിടങ്ങളിൽ നിന്നുള്ള പ്ലഗിനുകൾ മാത്രം ഉപയോഗിക്കുക.</string>
+    <string name="handwriting_plugin_download_dialog_msg">GitHub-ൽ നിന്ന് കയ്യക്ഷര പ്ലഗിൻ ഡൗൺലോഡ് ചെയ്യുക, അല്ലെങ്കിൽ ലോക്കൽ സ്റ്റോറേജിൽ നിന്ന് APK ലോഡ് ചെയ്യുക.
+
+മുന്നറിയിപ്പ്: ബാഹ്യ കോഡ് ലോഡ് ചെയ്യുന്നത് സുരക്ഷാ ഭീഷണിയാകാം. വിശ്വസനീയ ഉറവിടങ്ങളിൽ നിന്നുള്ള പ്ലഗിനുകൾ മാത്രം ഉപയോഗിക്കുക.</string>
+    <string name="handwriting_plugin_loaded_restarting">കയ്യക്ഷര പ്ലഗിൻ ലോഡ് ചെയ്തു. റീസ്റ്റാർട്ട് ചെയ്യുന്നു...</string>
+    <string name="handwriting_plugin_removed_restarting">കയ്യക്ഷര പ്ലഗിൻ നീക്കംചെയ്തു. റീസ്റ്റാർട്ട് ചെയ്യുന്നു...</string>
+    <string name="handwriting_plugin_open_browser_toast">ബ്രൗസറിൽ GitHub റിലീസുകൾ തുറക്കുന്നു… APK ഡൗൺലോഡ് ചെയ്ത് \'ഫയലിൽ നിന്ന് ലോഡ് ചെയ്യുക\' ഉപയോഗിക്കുക</string>
+    <string name="ocr_plugin_update_available_dialog">OCR പ്ലഗിന് അപ്‌ഡേറ്റ് ലഭ്യമാണ്!
+പ്രാദേശിക പതിപ്പ്: %1$s
+ഏറ്റവും പുതിയ പതിപ്പ്: %2$s
+
+ഡൗൺലോഡ് ചെയ്ത് അപ്‌ഡേറ്റ് ചെയ്യണോ?</string>
+    <string name="ocr_plugin_active_warning">OCR പ്ലഗിൻ സജീവമാണ് (പതിപ്പ് %s).
+
+മുന്നറിയിപ്പ്: ബാഹ്യ കോഡ് ലോഡ് ചെയ്യുന്നത് സുരക്ഷാ ഭീഷണിയാകാം. വിശ്വസനീയ ഉറവിടങ്ങളിൽ നിന്നുള്ള പ്ലഗിനുകൾ മാത്രം ഉപയോഗിക്കുക.</string>
+    <string name="ocr_plugin_download_dialog_version_msg">ഏറ്റവും പുതിയ OCR പ്ലഗിൻ (പതിപ്പ് %s) GitHub-ൽ നിന്ന് ഡൗൺലോഡ് ചെയ്യുക, അല്ലെങ്കിൽ ലോക്കൽ സ്റ്റോറേജിൽ നിന്ന് APK ലോഡ് ചെയ്യുക.
+
+മുന്നറിയിപ്പ്: ബാഹ്യ കോഡ് ലോഡ് ചെയ്യുന്നത് സുരക്ഷാ ഭീഷണിയാകാം. വിശ്വസനീയ ഉറവിടങ്ങളിൽ നിന്നുള്ള പ്ലഗിനുകൾ മാത്രം ഉപയോഗിക്കുക.</string>
+    <string name="ocr_plugin_download_dialog_msg">GitHub-ൽ നിന്ന് OCR പ്ലഗിൻ ഡൗൺലോഡ് ചെയ്യുക, അല്ലെങ്കിൽ ലോക്കൽ സ്റ്റോറേജിൽ നിന്ന് APK ലോഡ് ചെയ്യുക.
+
+മുന്നറിയിപ്പ്: ബാഹ്യ കോഡ് ലോഡ് ചെയ്യുന്നത് സുരക്ഷാ ഭീഷണിയാകാം. വിശ്വസനീയ ഉറവിടങ്ങളിൽ നിന്നുള്ള പ്ലഗിനുകൾ മാത്രം ഉപയോഗിക്കുക.</string>
+    <string name="ocr_plugin_button_update_version">%s-ലേക്ക് അപ്‌ഡേറ്റ് ചെയ്യുക</string>
+    <string name="ocr_plugin_button_download_version">പ്ലഗിൻ ഡൗൺലോഡ് ചെയ്യുക (%s)</string>
+    <string name="ocr_plugin_button_download">പ്ലഗിൻ ഡൗൺലോഡ് ചെയ്യുക</string>
+    <string name="ocr_plugin_button_load_storage">സ്റ്റോറേജിൽ നിന്ന് APK ലോഡ് ചെയ്യുക</string>
+    <string name="ocr_plugin_removed_restarting">OCR പ്ലഗിൻ നീക്കംചെയ്തു. റീസ്റ്റാർട്ട് ചെയ്യുന്നു...</string>
+    <string name="ocr_plugin_open_browser_toast">ബ്രൗസറിൽ GitHub റിലീസുകൾ തുറക്കുന്നു… APK ഡൗൺലോഡ് ചെയ്ത് \'സ്റ്റോറേജിൽ നിന്ന് APK ലോഡ് ചെയ്യുക\' ഉപയോഗിക്കുക</string>
+    <string name="ocr_plugin_downloading">പ്ലഗിൻ ഡൗൺലോഡ് ചെയ്യുന്നു...</string>
+    <string name="ocr_plugin_active_status">സജീവം</string>
+    <string name="ocr_plugin_active_version_status">സജീവം v%s</string>
+    <string name="offline_ai_plugin_update_available_dialog">ഓഫ്‌ലൈൻ AI പ്ലഗിന് അപ്‌ഡേറ്റ് ലഭ്യമാണ്!
+പ്രാദേശിക പതിപ്പ്: %1$s
+ഏറ്റവും പുതിയ പതിപ്പ്: %2$s
+
+അപ്‌ഡേറ്റ് ചെയ്യണോ?</string>
+    <string name="offline_ai_plugin_active_desc">ഓഫ്‌ലൈൻ AI പ്ലഗിൻ സജീവമാണ് (പതിപ്പ് %s).
+
+പ്രൂഫ് റീഡിംഗിനും തിരുത്തിയെഴുതലിനുമായി ഉപകരണത്തിൽ പ്രാദേശിക GGUF / llama.cpp അനുമാനം നൽകുന്നു.</string>
+    <string name="offline_ai_plugin_download_dialog_version_msg">ഏറ്റവും പുതിയ ഓഫ്‌ലൈൻ AI പ്ലഗിൻ (പതിപ്പ് %s) GitHub-ൽ നിന്ന് ഡൗൺലോഡ് ചെയ്യുക, അല്ലെങ്കിൽ ലോക്കൽ സ്റ്റോറേജിൽ നിന്ന് APK ലോഡ് ചെയ്യുക.</string>
+    <string name="offline_ai_plugin_download_dialog_msg">GitHub-ൽ നിന്ന് ഓഫ്‌ലൈൻ AI പ്ലഗിൻ ഡൗൺലോഡ് ചെയ്യുക, അല്ലെങ്കിൽ പ്രാദേശിക GGUF പ്രൂഫ് റീഡിംഗ് പ്രവർത്തനക്ഷമമാക്കാൻ സ്റ്റോറേജിൽ നിന്ന് APK ലോഡ് ചെയ്യുക.</string>
+    <string name="offline_ai_plugin_loaded_restarting">ഓഫ്‌ലൈൻ AI പ്ലഗിൻ ലോഡ് ചെയ്തു. റീസ്റ്റാർട്ട് ചെയ്യുന്നു...</string>
+    <string name="offline_ai_plugin_removed_restarting">ഓഫ്‌ലൈൻ AI പ്ലഗിൻ നീക്കംചെയ്തു. റീസ്റ്റാർട്ട് ചെയ്യുന്നു...</string>
+    <string name="offline_ai_plugin_open_browser_toast">ബ്രൗസറിൽ GitHub റിലീസുകൾ തുറക്കുന്നു… APK ഡൗൺലോഡ് ചെയ്ത് \'ഫയലിൽ നിന്ന് ലോഡ് ചെയ്യുക\' ഉപയോഗിക്കുക</string>
+    <string name="gesture_lib_loaded_restarting">ജെസ്റ്റർ ലൈബ്രറി ലോഡ് ചെയ്തു. റീസ്റ്റാർട്ട് ചെയ്യുന്നു...</string>
+    <string name="gesture_lib_removed_restarting">ജെസ്റ്റർ ലൈബ്രറി നീക്കംചെയ്തു. റീസ്റ്റാർട്ട് ചെയ്യുന്നു...</string>
+    <string name="gesture_lib_open_browser_toast">ലൈബ്രറി ഡൗൺലോഡ് ചെയ്യാൻ ബ്രൗസർ തുറക്കുന്നു… ഡൗൺലോഡിന് ശേഷം \'ഫയലിൽ നിന്ന് ലോഡ് ചെയ്യുക\' ഉപയോഗിക്കുക</string>
+    <string name="button_download_in_browser">ബ്രൗസറിൽ ഡൗൺലോഡ് ചെയ്യുക</string>
+    <string name="plugin_download_failed_format">ഡൗൺലോഡ് പരാജയപ്പെട്ടു: %s</string>
+    <string name="open_browser_failed_format">ബ്രൗസർ തുറക്കുന്നതിൽ പരാജയപ്പെട്ടു: %s</string>
+    <string name="storage_item_temporary_cache_name">താത്കാലിക കാഷെ</string>
+    <string name="storage_item_temporary_cache_desc">മോഡൽ ഡൗൺലോഡ് ഒരുക്കൽ, താത്കാലിക എക്‌സ്‌ട്രാക്റ്റുകൾ, ക്രാഷ് ലോഗുകൾ</string>
+    <string name="storage_item_code_cache_name">കോഡ് കാഷെ</string>
+    <string name="storage_item_code_cache_desc">ഒപ്റ്റിമൈസ് ചെയ്ത dex കോഡും കംപൈലേഷൻ കാഷെകളും</string>
+    <string name="storage_item_plugin_translation_name">വിവർത്തന പ്ലഗിൻ</string>
+    <string name="storage_item_plugin_translation_desc">ML Kit ഓഫ്‌ലൈൻ വിവർത്തനത്തിനായുള്ള ഡൈനാമിക് റൺടൈം</string>
+    <string name="storage_item_plugin_handwriting_name">കയ്യക്ഷര പ്ലഗിൻ</string>
+    <string name="storage_item_plugin_handwriting_desc">Digital Ink തിരിച്ചറിയൽ എഞ്ചിൻ</string>
+    <string name="storage_item_plugin_ocr_name">ടെക്സ്റ്റ് തിരിച്ചറിയൽ (OCR) പ്ലഗിൻ</string>
+    <string name="storage_item_plugin_ocr_desc">ക്യാമറയ്ക്കും ചിത്രങ്ങൾക്കുമുള്ള OCR ടെക്സ്റ്റ് തിരിച്ചറിയൽ എഞ്ചിൻ</string>
+    <string name="storage_item_plugin_offline_ai_name">ഓഫ്‌ലൈൻ AI പ്ലഗിൻ</string>
+    <string name="storage_item_plugin_offline_ai_desc">ഉപകരണത്തിലെ LLM പ്രൂഫ് റീഡിംഗ് എഞ്ചിൻ</string>
+    <string name="storage_item_trans_model_desc">ഓഫ്‌ലൈൻ വിവർത്തന മോഡൽ ഫയലുകൾ</string>
+    <string name="storage_item_hw_model_desc">Digital Ink തിരിച്ചറിയൽ മോഡൽ</string>
+    <string name="storage_item_dict_desc">കാഷെ ചെയ്ത പദാവലി നിഘണ്ടു</string>
+    <string name="storage_type_plugin">പ്ലഗിൻ</string>
+    <string name="storage_type_translation_model">വിവർത്തന മോഡൽ</string>
+    <string name="storage_type_handwriting_model">കയ്യക്ഷര മോഡൽ</string>
+    <string name="storage_type_dictionary">നിഘണ്ടു</string>
+    <string name="storage_type_cache">കാഷെ ഇനം</string>
+    <string name="voice_plugin_not_installed">വോയ്സ് പ്ലഗിൻ ഇൻസ്റ്റാൾ ചെയ്തിട്ടില്ല. ദയവായി ആദ്യം വോയ്സ് പ്ലഗിൻ ഇൻസ്റ്റാൾ ചെയ്യുക.</string>
+    <string name="voice_model_installed_success">%s മോഡൽ വിജയകരമായി ഇൻസ്റ്റാൾ ചെയ്തു!</string>
+    <string name="voice_plugin_import_failed">വോയ്സ് പ്ലഗിനിലേക്ക് മോഡൽ ഇമ്പോർട്ട് ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു. പ്ലഗിൻ അപ്‌ഡേറ്റ് ചെയ്തിട്ടുണ്ടെന്ന് ഉറപ്പാക്കുക.</string>
+    <string name="voice_opening_browser_for">%s-നായി ബ്രൗസർ തുറക്കുന്നു</string>
+    <string name="voice_whisper_models_title">Whisper മോഡലുകൾ</string>
+    <string name="voice_custom_model_title">ഇഷ്ടാനുസൃത GGML മോഡൽ</string>
+    <string name="voice_loaded_external_model">ബാഹ്യ മോഡൽ ലോഡ് ചെയ്തു</string>
+    <string name="voice_imported_and_ready">ഇമ്പോർട്ട് ചെയ്‌തു സജ്ജമായി</string>
+    <string name="voice_load_external_bin">ബാഹ്യ .bin ഫയൽ ലോഡ് ചെയ്യുക</string>
+    <string name="voice_custom_model_removed">ഇഷ്ടാനുസൃത മോഡൽ നീക്കംചെയ്തു</string>
+    <string name="voice_model_replace">മാറ്റിസ്ഥാപിക്കുക</string>
+    <string name="voice_model_removed">%s മോഡൽ നീക്കംചെയ്തു</string>
+    <string name="voice_model_name_format">%s മോഡൽ</string>
+    <string name="voice_model_downloaded_format">ഡൗൺലോഡ് ചെയ്‌തു (%s)</string>
+    <string name="button_import">ഇമ്പോർട്ട് ചെയ്യുക</string>
+    <string name="sound_pack_browser_note">ബ്രൗസറിൽ ഡൗൺലോഡ് ചെയ്ത് ശേഷം .zip ഇമ്പോർട്ട് ചെയ്യുക</string>
+    <string name="sound_pack_app_note">ആപ്പിൽ ഡൗൺലോഡ് ചെയ്യുക അല്ലെങ്കിൽ .zip ഇമ്പോർട്ട് ചെയ്യുക</string>
+    <string name="sound_pack_import_zip">.zip ഇമ്പോർട്ട് ചെയ്യുക</string>
+    <string name="search_sound_pack_placeholder">ശബ്ദ പാക്ക് തിരയുക…</string>
+    <string name="sound_pack_default_system_desc">ഡിഫോൾട്ട് സിസ്റ്റം കീ ക്ലിക്ക് ശബ്ദം</string>
+    <string name="sound_pack_installed_title">ഇൻസ്റ്റാൾ ചെയ്ത ശബ്ദ പാക്കുകൾ</string>
+    <string name="sound_pack_available_title">ലഭ്യമായ ശബ്ദ പാക്കുകൾ</string>
+    <string name="sound_pack_imported_success">ശബ്ദ പാക്ക് വിജയകരമായി ഇമ്പോർട്ട് ചെയ്തു</string>
+    <string name="sound_pack_import_failed">ശബ്ദ പാക്ക് ഇമ്പോർട്ട് പരാജയപ്പെട്ടു (ശരിയായ ഓഡിയോ ഫയലുകളോ pack.json-ഓ ഉണ്ടായിരിക്കണം)</string>
+    <string name="sound_pack_delete_title">ശബ്ദ പാക്ക് ഇല്ലാതാക്കുക</string>
+    <string name="sound_pack_delete_message">\'%s\' ശബ്ദ പാക്ക് ഇല്ലാതാക്കണോ?</string>
+    <string name="sound_pack_status_active">സജീവം</string>
+    <string name="sound_pack_size_mb_format">%.1f MB</string>
+    <string name="sound_pack_download_dialog_title">ശബ്ദ പാക്കുകൾ</string>
+    <string name="sound_pack_download_dialog_desc">കമ്മ്യൂണിറ്റി കീ ശബ്ദ പാക്കുകൾ ഡൗൺലോഡ് ചെയ്യുക അല്ലെങ്കിൽ നിങ്ങളുടെ സ്വന്തം .zip പാക്കുകൾ ഇമ്പോർട്ട് ചെയ്യുക.</string>
+    <string name="sound_pack_delete_button">ഇല്ലാതാക്കുക</string>
+<string name="sound_pack_downloaded_activated">%s ഡൗൺലോഡ് ചെയ്‌ത് സജീവമാക്കി</string>
+    <string name="sound_pack_download_failed">%s ഡൗൺലോഡ് ചെയ്യുന്നത് പരാജയപ്പെട്ടു</string>
+    <string name="sound_pack_deleted_format">%s ഇല്ലാതാക്കി</string>
+    <string name="sound_pack_downloading_in_browser_toast">ബ്രൗസറിൽ ഡൗൺലോഡ് ചെയ്യുന്നു… പൂർത്തിയാകുമ്പോൾ .zip ഇമ്പോർട്ട് ചെയ്യുക</string>
+    <string name="sound_pack_preview">പ്രിവ്യൂ</string>
 </resources>
+
+
 
 

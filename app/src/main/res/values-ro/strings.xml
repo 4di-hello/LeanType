@@ -1394,7 +1394,116 @@ Avertisment: încărcarea de cod extern poate reprezenta un risc de securitate. 
     <string name="button_download">Descărcare</string>
     <string name="button_load_from_file">Încărcare din fișier</string>
     <string name="button_delete">Șterge</string>
+<string name="handwriting_plugin_update_available_dialog">Este disponibilă o actualizare pentru pluginul de scriere de mână!
+Versiune locală: %1$s
+Ultima versiune: %2$s
+
+Doriți să descărcați și să actualizați?</string>
+    <string name="handwriting_plugin_active_warning">Pluginul de scriere de mână este activ (versiunea %s).
+
+Avertisment: încărcarea de cod extern poate reprezenta un risc de securitate. Folosiți doar pluginuri din surse de încredere.</string>
+    <string name="handwriting_plugin_download_dialog_version_msg">Descărcați cel mai recent plugin de scriere de mână (versiunea %s) de pe GitHub sau încărcați un APK din stocarea locală.
+
+Avertisment: încărcarea de cod extern poate reprezenta un risc de securitate. Folosiți doar pluginuri din surse de încredere.</string>
+    <string name="handwriting_plugin_download_dialog_msg">Descărcați pluginul de scriere de mână de pe GitHub sau încărcați un APK din stocarea locală.
+
+Avertisment: încărcarea de cod extern poate reprezenta un risc de securitate. Folosiți doar pluginuri din surse de încredere.</string>
+    <string name="handwriting_plugin_loaded_restarting">Plugin de scriere de mână încărcat. Se repornește...</string>
+    <string name="handwriting_plugin_removed_restarting">Plugin de scriere de mână eliminat. Se repornește...</string>
+    <string name="handwriting_plugin_open_browser_toast">Se deschid versiunile GitHub în browser… descărcați APK-ul și folosiți \'Încărcare din fișier\'</string>
+    <string name="ocr_plugin_update_available_dialog">Este disponibilă o actualizare pentru pluginul OCR!
+Versiune locală: %1$s
+Ultima versiune: %2$s
+
+Doriți să descărcați și să actualizați?</string>
+    <string name="ocr_plugin_active_warning">Pluginul OCR este activ (versiunea %s).
+
+Avertisment: încărcarea de cod extern poate reprezenta un risc de securitate. Folosiți doar pluginuri din surse de încredere.</string>
+    <string name="ocr_plugin_download_dialog_version_msg">Descărcați cel mai recent plugin OCR (versiunea %s) de pe GitHub sau încărcați un APK din stocarea locală.
+
+Avertisment: încărcarea de cod extern poate reprezenta un risc de securitate. Folosiți doar pluginuri din surse de încredere.</string>
+    <string name="ocr_plugin_download_dialog_msg">Descărcați pluginul OCR de pe GitHub sau încărcați un APK din stocarea locală.
+
+Avertisment: încărcarea de cod extern poate reprezenta un risc de securitate. Folosiți doar pluginuri din surse de încredere.</string>
+    <string name="ocr_plugin_button_update_version">Actualizare la %s</string>
+    <string name="ocr_plugin_button_download_version">Descărcare plugin (%s)</string>
+    <string name="ocr_plugin_button_download">Descărcare plugin</string>
+    <string name="ocr_plugin_button_load_storage">Încărcare APK din stocare</string>
+    <string name="ocr_plugin_removed_restarting">Plugin OCR eliminat. Se repornește...</string>
+    <string name="ocr_plugin_open_browser_toast">Se deschid versiunile GitHub în browser… descărcați APK-ul și folosiți \'Încărcare APK din stocare\'</string>
+    <string name="ocr_plugin_downloading">Se descarcă pluginul...</string>
+    <string name="ocr_plugin_active_status">Activ</string>
+    <string name="ocr_plugin_active_version_status">Activ v%s</string>
+    <string name="offline_ai_plugin_update_available_dialog">Este disponibilă o actualizare pentru pluginul AI offline!
+Versiune locală: %1$s
+Ultima versiune: %2$s
+
+Doriți să actualizați?</string>
+    <string name="offline_ai_plugin_active_desc">Pluginul AI offline este activ (versiunea %s).
+
+Activează inferența GGUF / llama.cpp pe dispozitiv pentru corectură și reformulare.</string>
+    <string name="offline_ai_plugin_download_dialog_version_msg">Descărcați cel mai recent plugin AI offline (versiunea %s) de pe GitHub sau încărcați un APK din stocarea locală.</string>
+    <string name="offline_ai_plugin_download_dialog_msg">Descărcați pluginul AI offline de pe GitHub sau încărcați un APK din stocarea locală pentru a activa corectura locală GGUF.</string>
+    <string name="offline_ai_plugin_loaded_restarting">Plugin AI offline încărcat. Se repornește...</string>
+    <string name="offline_ai_plugin_removed_restarting">Plugin AI offline eliminat. Se repornește...</string>
+    <string name="offline_ai_plugin_open_browser_toast">Se deschid versiunile GitHub în browser… descărcați APK-ul și folosiți \'Încărcare din fișier\'</string>
+    <string name="gesture_lib_loaded_restarting">Bibliotecă de gesturi încărcată. Se repornește...</string>
+    <string name="gesture_lib_removed_restarting">Bibliotecă de gesturi eliminată. Se repornește...</string>
+    <string name="gesture_lib_open_browser_toast">Se deschide browserul pentru descărcarea bibliotecii… folosiți \'Încărcare din fișier\' după descărcare</string>
+    <string name="button_download_in_browser">Descărcare în browser</string>
+    <string name="plugin_download_failed_format">Descărcare eșuată: %s</string>
+    <string name="open_browser_failed_format">Deschiderea browserului a eșuat: %s</string>
+    <string name="storage_item_temporary_cache_name">Cache temporar</string>
+    <string name="storage_item_temporary_cache_desc">Zona de pregătire descărcare modele, extrageri temporare și jurnale de eroare</string>
+    <string name="storage_item_code_cache_name">Cache de cod</string>
+    <string name="storage_item_code_cache_desc">Cod dex optimizat și cache-uri de compilare</string>
+    <string name="storage_item_plugin_translation_name">Plugin de traducere</string>
+    <string name="storage_item_plugin_translation_desc">Mediu dinamic pentru traducere offline cu ML Kit</string>
+    <string name="storage_item_plugin_handwriting_name">Plugin de scriere de mână</string>
+    <string name="storage_item_plugin_handwriting_desc">Motor de recunoaștere Digital Ink</string>
+    <string name="storage_item_plugin_ocr_name">Plugin de recunoaștere text (OCR)</string>
+    <string name="storage_item_plugin_ocr_desc">Motor de recunoaștere OCR pentru cameră și imagini</string>
+    <string name="storage_item_plugin_offline_ai_name">Plugin AI offline</string>
+    <string name="storage_item_plugin_offline_ai_desc">Motor de corectură LLM pe dispozitiv</string>
+    <string name="storage_item_trans_model_desc">Fișiere de model de traducere offline</string>
+    <string name="storage_item_hw_model_desc">Model de recunoaștere Digital Ink</string>
+    <string name="storage_item_dict_desc">Dicționar cu lista de cuvinte memorat în cache</string>
+    <string name="storage_type_plugin">plugin</string>
+    <string name="storage_type_translation_model">model de traducere</string>
+    <string name="storage_type_handwriting_model">model de scriere de mână</string>
+    <string name="storage_type_dictionary">dicționar</string>
+    <string name="storage_type_cache">element de cache</string>
+    <string name="voice_plugin_not_installed">Pluginul vocal nu este instalat. Vă rugăm să instalați mai întâi pluginul vocal.</string>
+    <string name="voice_model_installed_success">Modelul %s a fost instalat cu succes!</string>
+    <string name="voice_plugin_import_failed">Importul modelului în pluginul vocal a eșuat. Asigurați-vă că pluginul vocal este actualizat.</string>
+    <string name="voice_opening_browser_for">Se deschide browserul pentru %s</string>
+    <string name="voice_whisper_models_title">Modele Whisper</string>
+    <string name="voice_custom_model_title">Model GGML personalizat</string>
+    <string name="voice_loaded_external_model">Model extern încărcat</string>
+    <string name="voice_imported_and_ready">Importat și gata</string>
+    <string name="voice_load_external_bin">Încărcare fișier .bin extern</string>
+    <string name="voice_custom_model_removed">Model personalizat eliminat</string>
+    <string name="voice_model_replace">Înlocuire</string>
+    <string name="voice_model_removed">Modelul %s a fost eliminat</string>
+    <string name="voice_model_name_format">Model %s</string>
+    <string name="voice_model_downloaded_format">Descărcat (%s)</string>
+    <string name="button_import">Importare</string>
+    <string name="sound_pack_browser_note">Descărcați în browser, apoi importați fișierul .zip</string>
+    <string name="sound_pack_app_note">Descărcați în aplicație sau importați fișierul .zip</string>
+    <string name="sound_pack_import_zip">Importare .zip</string>
+    <string name="search_sound_pack_placeholder">Căutare pachet de sunete…</string>
+    <string name="sound_pack_default_system_desc">Sunet implicit de clic la apăsarea tastelor din sistem</string>
+    <string name="sound_pack_installed_title">Pachete de sunete instalate</string>
+    <string name="sound_pack_available_title">Pachete de sunete disponibile</string>
+    <string name="sound_pack_imported_success">Pachet de sunete importat cu succes</string>
+    <string name="sound_pack_import_failed">Importul pachetului de sunete a eșuat (trebuie să conțină fișiere audio valide sau pack.json)</string>
+    <string name="sound_pack_downloaded_activated">%s descărcat și activat</string>
+    <string name="sound_pack_download_failed">Descărcarea a eșuat pentru %s</string>
+    <string name="sound_pack_deleted_format">%s a fost șters</string>
+    <string name="sound_pack_downloading_in_browser_toast">Se descarcă în browser… importați fișierul .zip după finalizare</string>
+    <string name="sound_pack_preview">Previzualizare</string>
 </resources>
+
 
 
 

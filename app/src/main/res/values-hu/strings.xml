@@ -1403,7 +1403,116 @@ Figyelem: külső kód betöltése biztonsági kockázatot jelenthet. Csak megb�
     <string name="button_download">Letöltés</string>
     <string name="button_load_from_file">Betöltés fájlból</string>
     <string name="button_delete">Törlés</string>
+<string name="handwriting_plugin_update_available_dialog">Frissítés érhető el a kézírás-bővítményhez!
+Helyi verzió: %1$s
+Legújabb verzió: %2$s
+
+Szeretné letölteni és frissíteni?</string>
+    <string name="handwriting_plugin_active_warning">A kézírás-bővítmény aktív (%s verzió).
+
+Figyelmeztetés: külső kód betöltése biztonsági kockázatot jelenthet. Csak megbízható forrásból származó bővítményt használjon.</string>
+    <string name="handwriting_plugin_download_dialog_version_msg">Töltse le a legújabb kézírás-bővítményt (%s verzió) a GitHubról, vagy töltsön be egy APK-t a helyi tárolóból.
+
+Figyelmeztetés: külső kód betöltése biztonsági kockázatot jelenthet. Csak megbízható forrásból származó bővítményt használjon.</string>
+    <string name="handwriting_plugin_download_dialog_msg">Töltse le a kézírás-bővítményt a GitHubról, vagy töltsön be egy APK-t a helyi tárolóból.
+
+Figyelmeztetés: külső kód betöltése biztonsági kockázatot jelenthet. Csak megbízható forrásból származó bővítményt használjon.</string>
+    <string name="handwriting_plugin_loaded_restarting">Kézírás-bővítmény betöltve. Újraindítás...</string>
+    <string name="handwriting_plugin_removed_restarting">Kézírás-bővítmény eltávolítva. Újraindítás...</string>
+    <string name="handwriting_plugin_open_browser_toast">GitHub kiadások megnyitása a böngészőben… töltse le az APK-t és használja a \'Betöltés fájlból\' opciót</string>
+    <string name="ocr_plugin_update_available_dialog">Frissítés érhető el az OCR-bővítményhez!
+Helyi verzió: %1$s
+Legújabb verzió: %2$s
+
+Szeretné letölteni és frissíteni?</string>
+    <string name="ocr_plugin_active_warning">Az OCR-bővítmény aktív (%s verzió).
+
+Figyelmeztetés: külső kód betöltése biztonsági kockázatot jelenthet. Csak megbízható forrásból származó bővítményt használjon.</string>
+    <string name="ocr_plugin_download_dialog_version_msg">Töltse le a legújabb OCR-bővítményt (%s verzió) a GitHubról, vagy töltsön be egy APK-t a helyi tárolóból.
+
+Figyelmeztetés: külső kód betöltése biztonsági kockázatot jelenthet. Csak megbízható forrásból származó bővítményt használjon.</string>
+    <string name="ocr_plugin_download_dialog_msg">Töltse le az OCR-bővítményt a GitHubról, vagy töltsön be egy APK-t a helyi tárolóból.
+
+Figyelmeztetés: külső kód betöltése biztonsági kockázatot jelenthet. Csak megbízható forrásból származó bővítményt használjon.</string>
+    <string name="ocr_plugin_button_update_version">Frissítés erre: %s</string>
+    <string name="ocr_plugin_button_download_version">Bővítmény letöltése (%s)</string>
+    <string name="ocr_plugin_button_download">Bővítmény letöltése</string>
+    <string name="ocr_plugin_button_load_storage">APK betöltése tárolóból</string>
+    <string name="ocr_plugin_removed_restarting">OCR-bővítmény eltávolítva. Újraindítás...</string>
+    <string name="ocr_plugin_open_browser_toast">GitHub kiadások megnyitása a böngészőben… töltse le az APK-t és használja az \'APK betöltése tárolóból\' opciót</string>
+    <string name="ocr_plugin_downloading">Bővítmény letöltése...</string>
+    <string name="ocr_plugin_active_status">Aktív</string>
+    <string name="ocr_plugin_active_version_status">Aktív v%s</string>
+    <string name="offline_ai_plugin_update_available_dialog">Frissítés érhető el az Offline AI bővítményhez!
+Helyi verzió: %1$s
+Legújabb verzió: %2$s
+
+Szeretné frissíteni?</string>
+    <string name="offline_ai_plugin_active_desc">Az Offline AI bővítmény aktív (%s verzió).
+
+Lehetővé teszi az eszközön futó GGUF / llama.cpp következtetést a javításhoz és átfogalmazáshoz.</string>
+    <string name="offline_ai_plugin_download_dialog_version_msg">Töltse le a legújabb Offline AI bővítményt (%s verzió) a GitHubról, vagy töltsön be egy APK-t a helyi tárolóból.</string>
+    <string name="offline_ai_plugin_download_dialog_msg">Töltse le az Offline AI bővítményt a GitHubról, vagy töltsön be egy APK-t a helyi tárolóból a helyi GGUF javítás engedélyezéséhez.</string>
+    <string name="offline_ai_plugin_loaded_restarting">Offline AI bővítmény betöltve. Újraindítás...</string>
+    <string name="offline_ai_plugin_removed_restarting">Offline AI bővítmény eltávolítva. Újraindítás...</string>
+    <string name="offline_ai_plugin_open_browser_toast">GitHub kiadások megnyitása a böngészőben… töltse le az APK-t és használja a \'Betöltés fájlból\' opciót</string>
+    <string name="gesture_lib_loaded_restarting">Gesztuskönyvtár betöltve. Újraindítás...</string>
+    <string name="gesture_lib_removed_restarting">Gesztuskönyvtár eltávolítva. Újraindítás...</string>
+    <string name="gesture_lib_open_browser_toast">Böngésző megnyitása a könyvtár letöltéséhez… letöltés után használja a \'Betöltés fájlból\' opciót</string>
+    <string name="button_download_in_browser">Letöltés böngészőben</string>
+    <string name="plugin_download_failed_format">Letöltés sikertelen: %s</string>
+    <string name="open_browser_failed_format">A böngésző megnyitása sikertelen: %s</string>
+    <string name="storage_item_temporary_cache_name">Ideiglenes gyorsítótár</string>
+    <string name="storage_item_temporary_cache_desc">Modell-letöltések előkészítése, ideiglenes kibontások és összeomlási naplók</string>
+    <string name="storage_item_code_cache_name">Kód gyorsítótár</string>
+    <string name="storage_item_code_cache_desc">Optimalizált dex kód és fordítási gyorsítótárak</string>
+    <string name="storage_item_plugin_translation_name">Fordító bővítmény</string>
+    <string name="storage_item_plugin_translation_desc">Dinamikus futtatókörnyezet az offline ML Kit fordításhoz</string>
+    <string name="storage_item_plugin_handwriting_name">Kézírás-bővítmény</string>
+    <string name="storage_item_plugin_handwriting_desc">Digital Ink felismerő motor</string>
+    <string name="storage_item_plugin_ocr_name">Szövegfelismerő (OCR) bővítmény</string>
+    <string name="storage_item_plugin_ocr_desc">Kamera és képi OCR felismerő motor</string>
+    <string name="storage_item_plugin_offline_ai_name">Offline AI bővítmény</string>
+    <string name="storage_item_plugin_offline_ai_desc">Eszközön futó LLM szövegjavító motor</string>
+    <string name="storage_item_trans_model_desc">Offline fordítási modellfájlok</string>
+    <string name="storage_item_hw_model_desc">Digital Ink felismerő modell</string>
+    <string name="storage_item_dict_desc">Gyorsítótárazott szólista szótár</string>
+    <string name="storage_type_plugin">bővítmény</string>
+    <string name="storage_type_translation_model">fordítási modell</string>
+    <string name="storage_type_handwriting_model">kézírási modell</string>
+    <string name="storage_type_dictionary">szótár</string>
+    <string name="storage_type_cache">gyorsítótár-elem</string>
+    <string name="voice_plugin_not_installed">A hangbővítmény nincs telepítve. Kérjük, először telepítse a hangbővítményt.</string>
+    <string name="voice_model_installed_success">%s modell sikeresen telepítve!</string>
+    <string name="voice_plugin_import_failed">Nem sikerült importálni a modellt a hangbővítménybe. Győződjön meg arról, hogy a hangbővítmény frissítve van.</string>
+    <string name="voice_opening_browser_for">Böngésző megnyitása ehhez: %s</string>
+    <string name="voice_whisper_models_title">Whisper modellek</string>
+    <string name="voice_custom_model_title">Egyéni GGML modell</string>
+    <string name="voice_loaded_external_model">Külső modell betöltve</string>
+    <string name="voice_imported_and_ready">Importálva és kész</string>
+    <string name="voice_load_external_bin">Külső .bin fájl betöltése</string>
+    <string name="voice_custom_model_removed">Egyéni modell eltávolítva</string>
+    <string name="voice_model_replace">Csere</string>
+    <string name="voice_model_removed">%s modell eltávolítva</string>
+    <string name="voice_model_name_format">%s modell</string>
+    <string name="voice_model_downloaded_format">Letöltve (%s)</string>
+    <string name="button_import">Importálás</string>
+    <string name="sound_pack_browser_note">Töltse le böngészőben, majd importálja a .zip fájlt</string>
+    <string name="sound_pack_app_note">Töltse le az alkalmazásban vagy importálja a .zip fájlt</string>
+    <string name="sound_pack_import_zip">.zip importálása</string>
+    <string name="search_sound_pack_placeholder">Hangcsomag keresése…</string>
+    <string name="sound_pack_default_system_desc">Alapértelmezett rendszer billentyűleütési hang</string>
+    <string name="sound_pack_installed_title">Telepített hangcsomagok</string>
+    <string name="sound_pack_available_title">Elérhető hangcsomagok</string>
+    <string name="sound_pack_imported_success">Hangcsomag sikeresen importálva</string>
+    <string name="sound_pack_import_failed">Nem sikerült importálni a hangcsomagot (érvényes hangfájlokat vagy pack.json-t kell tartalmaznia)</string>
+    <string name="sound_pack_downloaded_activated">%s letöltve és aktiválva</string>
+    <string name="sound_pack_download_failed">Letöltés sikertelen ehhez: %s</string>
+    <string name="sound_pack_deleted_format">%s törölve</string>
+    <string name="sound_pack_downloading_in_browser_toast">Letöltés böngészőben… importálja a .zip fájlt, ha kész</string>
+    <string name="sound_pack_preview">Előnézet</string>
 </resources>
+
 
 
 

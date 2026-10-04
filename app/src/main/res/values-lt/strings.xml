@@ -1395,7 +1395,116 @@ Ar norite atsisiųsti ir atnaujinti?</string>
     <string name="button_download">Atsisiųsti</string>
     <string name="button_load_from_file">Įkelti iš failo</string>
     <string name="button_delete">Ištrinti</string>
+<string name="handwriting_plugin_update_available_dialog">Yra pasiekiamas rankraščio įskiepio atnaujinimas!
+Vietinė versija: %1$s
+Naujausia versija: %2$s
+
+Ar norite atsisiųsti ir atnaujinti?</string>
+    <string name="handwriting_plugin_active_warning">Rankraščio įskiepis yra aktyvus (%s versija).
+
+Įspėjimas: išorinio kodo įkėlimas gali kelti saugumo pavojų. Naudokite tik patikimų šaltinių įskiepius.</string>
+    <string name="handwriting_plugin_download_dialog_version_msg">Atsisiųskite naujausią rankraščio įskiepį (%s versija) iš GitHub arba įkelkite APK iš vietinės saugyklos.
+
+Įspėjimas: išorinio kodo įkėlimas gali kelti saugumo pavojų. Naudokite tik patikimų šaltinių įskiepius.</string>
+    <string name="handwriting_plugin_download_dialog_msg">Atsisiųskite rankraščio įskiepį iš GitHub arba įkelkite APK iš vietinės saugyklos.
+
+Įspėjimas: išorinio kodo įkėlimas gali kelti saugumo pavojų. Naudokite tik patikimų šaltinių įskiepius.</string>
+    <string name="handwriting_plugin_loaded_restarting">Rankraščio įskiepis įkeltas. Paleidžiama iš naujo...</string>
+    <string name="handwriting_plugin_removed_restarting">Rankraščio įskiepis pašalintas. Paleidžiama iš naujo...</string>
+    <string name="handwriting_plugin_open_browser_toast">Atidaromi GitHub leidimai naršyklėje… atsisiųskite APK ir pasirinkite \'Įkelti iš failo\'</string>
+    <string name="ocr_plugin_update_available_dialog">Yra pasiekiamas OCR įskiepio atnaujinimas!
+Vietinė versija: %1$s
+Naujausia versija: %2$s
+
+Ar norite atsisiųsti ir atnaujinti?</string>
+    <string name="ocr_plugin_active_warning">OCR įskiepis yra aktyvus (%s versija).
+
+Įspėjimas: išorinio kodo įkėlimas gali kelti saugumo pavojų. Naudokite tik patikimų šaltinių įskiepius.</string>
+    <string name="ocr_plugin_download_dialog_version_msg">Atsisiųskite naujausią OCR įskiepį (%s versija) iš GitHub arba įkelkite APK iš vietinės saugyklos.
+
+Įspėjimas: išorinio kodo įkėlimas gali kelti saugumo pavojų. Naudokite tik patikimų šaltinių įskiepius.</string>
+    <string name="ocr_plugin_download_dialog_msg">Atsisiųskite OCR įskiepį iš GitHub arba įkelkite APK iš vietinės saugyklos.
+
+Įspėjimas: išorinio kodo įkėlimas gali kelti saugumo pavojų. Naudokite tik patikimų šaltinių įskiepius.</string>
+    <string name="ocr_plugin_button_update_version">Atnaujinti į %s</string>
+    <string name="ocr_plugin_button_download_version">Atsisiųsti įskiepį (%s)</string>
+    <string name="ocr_plugin_button_download">Atsisiųsti įskiepį</string>
+    <string name="ocr_plugin_button_load_storage">Įkelti APK iš saugyklos</string>
+    <string name="ocr_plugin_removed_restarting">OCR įskiepis pašalintas. Paleidžiama iš naujo...</string>
+    <string name="ocr_plugin_open_browser_toast">Atidaromi GitHub leidimai naršyklėje… atsisiųskite APK ir pasirinkite \'Įkelti APK iš saugyklos\'</string>
+    <string name="ocr_plugin_downloading">Atsisiunčiamas įskiepis...</string>
+    <string name="ocr_plugin_active_status">Aktyvus</string>
+    <string name="ocr_plugin_active_version_status">Aktyvus v%s</string>
+    <string name="offline_ai_plugin_update_available_dialog">Yra pasiekiamas AI neprisijungus įskiepio atnaujinimas!
+Vietinė versija: %1$s
+Naujausia versija: %2$s
+
+Ar norite atnaujinti?</string>
+    <string name="offline_ai_plugin_active_desc">AI neprisijungus įskiepis yra aktyvus (%s versija).
+
+Įgalina GGUF / llama.cpp išvadų darymą įrenginyje korektūrai ir perrašymui.</string>
+    <string name="offline_ai_plugin_download_dialog_version_msg">Atsisiųskite naujausią AI neprisijungus įskiepį (%s versija) iš GitHub arba įkelkite APK iš vietinės saugyklos.</string>
+    <string name="offline_ai_plugin_download_dialog_msg">Atsisiųskite AI neprisijungus įskiepį iš GitHub arba įkelkite APK iš vietinės saugyklos, kad įgalintumėte vietinę GGUF korektūrą.</string>
+    <string name="offline_ai_plugin_loaded_restarting">AI neprisijungus įskiepis įkeltas. Paleidžiama iš naujo...</string>
+    <string name="offline_ai_plugin_removed_restarting">AI neprisijungus įskiepis pašalintas. Paleidžiama iš naujo...</string>
+    <string name="offline_ai_plugin_open_browser_toast">Atidaromi GitHub leidimai naršyklėje… atsisiųskite APK ir pasirinkite \'Įkelti iš failo\'</string>
+    <string name="gesture_lib_loaded_restarting">Gestų biblioteka įkelta. Paleidžiama iš naujo...</string>
+    <string name="gesture_lib_removed_restarting">Gestų biblioteka pašalinta. Paleidžiama iš naujo...</string>
+    <string name="gesture_lib_open_browser_toast">Atidaroma naršyklė bibliotekai atsisiųsti… atsisiuntę pasirinkite \'Įkelti iš failo\'</string>
+    <string name="button_download_in_browser">Atsisiųsti naršyklėje</string>
+    <string name="plugin_download_failed_format">Atsisiuntimas nepavyko: %s</string>
+    <string name="open_browser_failed_format">Nepavyko atidaryti naršyklės: %s</string>
+    <string name="storage_item_temporary_cache_name">Laikinoji talpykla</string>
+    <string name="storage_item_temporary_cache_desc">Modelių atsisiuntimo paruošimas, laikini ištraukimai ir klaidų žurnalai</string>
+    <string name="storage_item_code_cache_name">Kodo talpykla</string>
+    <string name="storage_item_code_cache_desc">Optimizuotas dex kodas ir kompiliavimo talpyklos</string>
+    <string name="storage_item_plugin_translation_name">Vertimo įskiepis</string>
+    <string name="storage_item_plugin_translation_desc">Dinaminė vykdymo aplinka ML Kit vertimui neprisijungus</string>
+    <string name="storage_item_plugin_handwriting_name">Rankraščio įskiepis</string>
+    <string name="storage_item_plugin_handwriting_desc">Digital Ink atpažinimo variklis</string>
+    <string name="storage_item_plugin_ocr_name">Teksto atpažinimo (OCR) įskiepis</string>
+    <string name="storage_item_plugin_ocr_desc">Kameros ir vaizdo OCR atpažinimo variklis</string>
+    <string name="storage_item_plugin_offline_ai_name">AI neprisijungus įskiepis</string>
+    <string name="storage_item_plugin_offline_ai_desc">Įrenginyje veikiantis LLM korektūros variklis</string>
+    <string name="storage_item_trans_model_desc">Vertimo neprisijungus modelio failai</string>
+    <string name="storage_item_hw_model_desc">Digital Ink atpažinimo modelis</string>
+    <string name="storage_item_dict_desc">Talpykloje esantis žodžių sąrašo žodynas</string>
+    <string name="storage_type_plugin">įskiepis</string>
+    <string name="storage_type_translation_model">vertimo modelis</string>
+    <string name="storage_type_handwriting_model">rankraščio modelis</string>
+    <string name="storage_type_dictionary">žodynas</string>
+    <string name="storage_type_cache">talpyklos elementas</string>
+    <string name="voice_plugin_not_installed">Balso įskiepis neįdiegtas. Pirmiausia įdiekite balso įskiepį.</string>
+    <string name="voice_model_installed_success">%s modelis sėkmingai įdiegtas!</string>
+    <string name="voice_plugin_import_failed">Nepavyko importuoti modelio į balso įskiepį. Įsitikinkite, kad balso įskiepis yra atnaujintas.</string>
+    <string name="voice_opening_browser_for">Atidaroma naršyklė modeliui %s</string>
+    <string name="voice_whisper_models_title">Whisper modeliai</string>
+    <string name="voice_custom_model_title">Tinkintas GGML modelis</string>
+    <string name="voice_loaded_external_model">Įkeltas išorinis modelis</string>
+    <string name="voice_imported_and_ready">Importuota ir paruošta</string>
+    <string name="voice_load_external_bin">Įkelti išorinį .bin failą</string>
+    <string name="voice_custom_model_removed">Tinkintas modelis pašalintas</string>
+    <string name="voice_model_replace">Pakeisti</string>
+    <string name="voice_model_removed">%s modelis pašalintas</string>
+    <string name="voice_model_name_format">%s modelis</string>
+    <string name="voice_model_downloaded_format">Atsisiųsta (%s)</string>
+    <string name="button_import">Importuoti</string>
+    <string name="sound_pack_browser_note">Atsisiųskite naršyklėje, tada importuokite .zip</string>
+    <string name="sound_pack_app_note">Atsisiųskite programėlėje arba importuokite .zip</string>
+    <string name="sound_pack_import_zip">Importuoti .zip</string>
+    <string name="search_sound_pack_placeholder">Ieškoti garso paketo…</string>
+    <string name="sound_pack_default_system_desc">Numatytasis sistemos klavišų paspaudimo garsas</string>
+    <string name="sound_pack_installed_title">Įdiegti garso paketai</string>
+    <string name="sound_pack_available_title">Prieinami garso paketai</string>
+    <string name="sound_pack_imported_success">Garso paketas sėkmingai importuotas</string>
+    <string name="sound_pack_import_failed">Nepavyko importuoti garso paketo (turi būti galiojantys garso failai arba pack.json)</string>
+    <string name="sound_pack_downloaded_activated">%s atsisiųstas ir suaktyvintas</string>
+    <string name="sound_pack_download_failed">Atsisiuntimas nepavyko paketui %s</string>
+    <string name="sound_pack_deleted_format">%s ištrintas</string>
+    <string name="sound_pack_downloading_in_browser_toast">Atsisiunčiama naršyklėje… baigę importuokite .zip</string>
+    <string name="sound_pack_preview">Peržiūra</string>
 </resources>
+
 
 
 

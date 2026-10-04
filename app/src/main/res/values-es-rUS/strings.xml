@@ -1431,7 +1431,116 @@ Advertencia: cargar código externo puede suponer un riesgo de seguridad. Utiliz
     <string name="button_download">Descargar</string>
     <string name="button_load_from_file">Cargar desde archivo</string>
     <string name="button_delete">Eliminar</string>
+<string name="handwriting_plugin_update_available_dialog">¡Hay una actualización disponible para el complemento de escritura manual!
+Versión local: %1$s
+Última versión: %2$s
+
+¿Desea descargar y actualizar?</string>
+    <string name="handwriting_plugin_active_warning">El complemento de escritura manual está activo (versión %s).
+
+Advertencia: cargar código externo puede ser un riesgo de seguridad. Utilice solo complementos de fuentes de confianza.</string>
+    <string name="handwriting_plugin_download_dialog_version_msg">Descargue el complemento de escritura manual más reciente (versión %s) desde GitHub, o cargue un APK desde el almacenamiento local.
+
+Advertencia: cargar código externo puede ser un riesgo de seguridad. Utilice solo complementos de fuentes de confianza.</string>
+    <string name="handwriting_plugin_download_dialog_msg">Descargue el complemento de escritura manual desde GitHub, o cargue un APK desde el almacenamiento local.
+
+Advertencia: cargar código externo puede ser un riesgo de seguridad. Utilice solo complementos de fuentes de confianza.</string>
+    <string name="handwriting_plugin_loaded_restarting">Complemento de escritura manual cargado. Reiniciando...</string>
+    <string name="handwriting_plugin_removed_restarting">Complemento de escritura manual eliminado. Reiniciando...</string>
+    <string name="handwriting_plugin_open_browser_toast">Abriendo las versiones de GitHub en el navegador… descargue el APK y utilice \'Cargar desde archivo\'</string>
+    <string name="ocr_plugin_update_available_dialog">¡Hay una actualización disponible para el complemento OCR!
+Versión local: %1$s
+Última versión: %2$s
+
+¿Desea descargar y actualizar?</string>
+    <string name="ocr_plugin_active_warning">El complemento OCR está activo (versión %s).
+
+Advertencia: cargar código externo puede ser un riesgo de seguridad. Utilice solo complementos de fuentes de confianza.</string>
+    <string name="ocr_plugin_download_dialog_version_msg">Descargue el complemento OCR más reciente (versión %s) desde GitHub, o cargue un APK desde el almacenamiento local.
+
+Advertencia: cargar código externo puede ser un riesgo de seguridad. Utilice solo complementos de fuentes de confianza.</string>
+    <string name="ocr_plugin_download_dialog_msg">Descargue el complemento OCR desde GitHub, o cargue un APK desde el almacenamiento local.
+
+Advertencia: cargar código externo puede ser un riesgo de seguridad. Utilice solo complementos de fuentes de confianza.</string>
+    <string name="ocr_plugin_button_update_version">Actualizar a %s</string>
+    <string name="ocr_plugin_button_download_version">Descargar complemento (%s)</string>
+    <string name="ocr_plugin_button_download">Descargar complemento</string>
+    <string name="ocr_plugin_button_load_storage">Cargar APK desde almacenamiento</string>
+    <string name="ocr_plugin_removed_restarting">Complemento OCR eliminado. Reiniciando...</string>
+    <string name="ocr_plugin_open_browser_toast">Abriendo las versiones de GitHub en el navegador… descargue el APK y utilice \'Cargar APK desde almacenamiento\'</string>
+    <string name="ocr_plugin_downloading">Descargando complemento...</string>
+    <string name="ocr_plugin_active_status">Activo</string>
+    <string name="ocr_plugin_active_version_status">Activo v%s</string>
+    <string name="offline_ai_plugin_update_available_dialog">¡Hay una actualización disponible para el complemento de AI sin conexión!
+Versión local: %1$s
+Última versión: %2$s
+
+¿Desea actualizar?</string>
+    <string name="offline_ai_plugin_active_desc">El complemento de AI sin conexión está activo (versión %s).
+
+Permite la inferencia GGUF / llama.cpp en el dispositivo para corrección y reescritura.</string>
+    <string name="offline_ai_plugin_download_dialog_version_msg">Descargue el complemento de AI sin conexión más reciente (versión %s) desde GitHub, o cargue un APK desde el almacenamiento local.</string>
+    <string name="offline_ai_plugin_download_dialog_msg">Descargue el complemento de AI sin conexión desde GitHub, o cargue un APK desde el almacenamiento local para habilitar la corrección local GGUF.</string>
+    <string name="offline_ai_plugin_loaded_restarting">Complemento de AI sin conexión cargado. Reiniciando...</string>
+    <string name="offline_ai_plugin_removed_restarting">Complemento de AI sin conexión eliminado. Reiniciando...</string>
+    <string name="offline_ai_plugin_open_browser_toast">Abriendo las versiones de GitHub en el navegador… descargue el APK y utilice \'Cargar desde archivo\'</string>
+    <string name="gesture_lib_loaded_restarting">Biblioteca de gestos cargada. Reiniciando...</string>
+    <string name="gesture_lib_removed_restarting">Biblioteca de gestos eliminada. Reiniciando...</string>
+    <string name="gesture_lib_open_browser_toast">Abriendo el navegador para descargar la biblioteca… utilice \'Cargar desde archivo\' después de descargar</string>
+    <string name="button_download_in_browser">Descargar en el navegador</string>
+    <string name="plugin_download_failed_format">Error al descargar: %s</string>
+    <string name="open_browser_failed_format">Error al abrir el navegador: %s</string>
+    <string name="storage_item_temporary_cache_name">Caché temporal</string>
+    <string name="storage_item_temporary_cache_desc">Preparación de descargas de modelos, extracciones temporales y registros de errores</string>
+    <string name="storage_item_code_cache_name">Caché de código</string>
+    <string name="storage_item_code_cache_desc">Código dex optimizado y cachés de compilación</string>
+    <string name="storage_item_plugin_translation_name">Complemento de traducción</string>
+    <string name="storage_item_plugin_translation_desc">Entorno dinámico para traducción sin conexión con ML Kit</string>
+    <string name="storage_item_plugin_handwriting_name">Complemento de escritura manual</string>
+    <string name="storage_item_plugin_handwriting_desc">Motor de reconocimiento Digital Ink</string>
+    <string name="storage_item_plugin_ocr_name">Complemento de reconocimiento de texto (OCR)</string>
+    <string name="storage_item_plugin_ocr_desc">Motor de reconocimiento OCR para cámara e imágenes</string>
+    <string name="storage_item_plugin_offline_ai_name">Complemento de AI sin conexión</string>
+    <string name="storage_item_plugin_offline_ai_desc">Motor de corrección con LLM en el dispositivo</string>
+    <string name="storage_item_trans_model_desc">Archivos de modelo de traducción sin conexión</string>
+    <string name="storage_item_hw_model_desc">Modelo de reconocimiento Digital Ink</string>
+    <string name="storage_item_dict_desc">Diccionario de lista de palabras en caché</string>
+    <string name="storage_type_plugin">complemento</string>
+    <string name="storage_type_translation_model">modelo de traducción</string>
+    <string name="storage_type_handwriting_model">modelo de escritura manual</string>
+    <string name="storage_type_dictionary">diccionario</string>
+    <string name="storage_type_cache">elemento de caché</string>
+    <string name="voice_plugin_not_installed">El complemento de voz no está instalado. Instale primero el complemento de voz.</string>
+    <string name="voice_model_installed_success">¡Modelo %s instalado correctamente!</string>
+    <string name="voice_plugin_import_failed">Error al importar el modelo en el complemento de voz. Asegúrese de que el complemento de voz esté actualizado.</string>
+    <string name="voice_opening_browser_for">Abriendo el navegador para %s</string>
+    <string name="voice_whisper_models_title">Modelos Whisper</string>
+    <string name="voice_custom_model_title">Modelo GGML personalizado</string>
+    <string name="voice_loaded_external_model">Modelo externo cargado</string>
+    <string name="voice_imported_and_ready">Importado y listo</string>
+    <string name="voice_load_external_bin">Cargar archivo .bin externo</string>
+    <string name="voice_custom_model_removed">Modelo personalizado eliminado</string>
+    <string name="voice_model_replace">Reemplazar</string>
+    <string name="voice_model_removed">Modelo %s eliminado</string>
+    <string name="voice_model_name_format">Modelo %s</string>
+    <string name="voice_model_downloaded_format">Descargado (%s)</string>
+    <string name="button_import">Importar</string>
+    <string name="sound_pack_browser_note">Descargue en el navegador y luego importe el .zip</string>
+    <string name="sound_pack_app_note">Descargue en la app o importe el .zip</string>
+    <string name="sound_pack_import_zip">Importar .zip</string>
+    <string name="search_sound_pack_placeholder">Buscar paquete de sonido…</string>
+    <string name="sound_pack_default_system_desc">Sonido de clic de pulsación predeterminado del sistema</string>
+    <string name="sound_pack_installed_title">Paquetes de sonido instalados</string>
+    <string name="sound_pack_available_title">Paquetes de sonido disponibles</string>
+    <string name="sound_pack_imported_success">Paquete de sonido importado correctamente</string>
+    <string name="sound_pack_import_failed">Error al importar el paquete de sonido (debe contener archivos de audio válidos o pack.json)</string>
+    <string name="sound_pack_downloaded_activated">%s descargado y activado</string>
+    <string name="sound_pack_download_failed">Error al descargar %s</string>
+    <string name="sound_pack_deleted_format">%s eliminado</string>
+    <string name="sound_pack_downloading_in_browser_toast">Descargando en el navegador… importe el .zip una vez finalizado</string>
+    <string name="sound_pack_preview">Vista previa</string>
 </resources>
+
 
 
 
