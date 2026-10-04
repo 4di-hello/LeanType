@@ -2744,8 +2744,7 @@ class InputLogic(
             Log.d(TAG, "tryJumpToNextPlaceholder: beforeStr=[$beforeStr] afterStr=[$afterStr]")
         }
 
-        val pattern = java.util.regex.Pattern.compile("%cursor(\\d+)%")
-        val matcher = pattern.matcher(fullText)
+        val matcher = CURSOR_PATTERN.matcher(fullText)
 
         var bestStart = -1
         var bestEnd = -1
@@ -2811,8 +2810,7 @@ class InputLogic(
             return
         }
 
-        val pattern = java.util.regex.Pattern.compile("%cursor(\\d+)%")
-        val matcher = pattern.matcher(expanded)
+        val matcher = CURSOR_PATTERN.matcher(expanded)
         var bestStart = -1
         var bestEnd = -1
         var lowestNum = Int.MAX_VALUE
@@ -2854,6 +2852,7 @@ class InputLogic(
         private const val INLINE_EMOJI_SEARCH_MARKER = ':'
         private val THAI_LOCALE = Locale.forLanguageTag("th")
         private val THAI_WORD_BREAK_ITERATOR = ThreadLocal.withInitial { BreakIterator.getWordInstance(THAI_LOCALE) }
+        private val CURSOR_PATTERN = java.util.regex.Pattern.compile("%cursor(\\d+)%")
 
         fun isSpaceStrippingPunctuation(codePoint: Int): Boolean {
             return codePoint == '.'.code
