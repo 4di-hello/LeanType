@@ -531,7 +531,7 @@ class PointerTracker private constructor(
                 keyboardChangeOccupiedHeightDifference = 0
                 CoordinateUtils.set(mDownCoordinates, x, y + yOffset)
                 val newKey = mKeyDetector.detectHitKey(x, y + yOffset)
-                if (newKey != null && newKey.code == pressedKey.code) {
+                if (newKey != null && (newKey.code == pressedKey.code || (!pressedKey.isModifier() && !newKey.isModifier()))) {
                     key = onDownKey(x, y + yOffset, eventTime)
                 } else {
                     key = null
@@ -1147,9 +1147,15 @@ class PointerTracker private constructor(
             return
         }
 
-        val code = key.code
-        callListenerOnCodeInput(key, code, x, y, eventTime, false)
-        callListenerOnRelease(key, code, false)
+        val targetKey = if (mKeyboardLayoutHasBeenChanged && !key.isModifier()) {
+            mKeyDetector.detectHitKey(x, y) ?: key
+        } else {
+            key
+        }
+
+        val code = targetKey.code
+        callListenerOnCodeInput(targetKey, code, x, y, eventTime, false)
+        callListenerOnRelease(targetKey, code, false)
     }
 
     private fun startRepeatKey(key: Key?) {

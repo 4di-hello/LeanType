@@ -435,7 +435,7 @@ class KeyboardState(private val switchActions: SwitchActions) {
                     && autoCapsFlags != TextUtils.CAP_MODE_CHARACTERS
                     && (alphabetShiftState.isAutomaticShifted || (alphabetShiftState.isManualShifted && shiftKeyState.isReleasing))
                 ) {
-                    switchActions.setAlphabetKeyboard()
+                    setShifted(ShiftMode.UNSHIFT)
                 }
             }
         }
@@ -699,7 +699,13 @@ class KeyboardState(private val switchActions: SwitchActions) {
         }
 
         if (Constants.isLetterCode(code)) {
-            // If the code is a letter, update keyboard shift state.
+            // If the code is a letter, a single-tap shift or auto-caps is consumed by this letter
+            if (alphabetShiftState.isManualShifted || alphabetShiftState.isAutomaticShifted) {
+                if (shiftKeyState.isChording) {
+                    shiftKeyState.onRelease()
+                }
+            }
+            // Update keyboard shift state.
             updateAlphabetShiftState(autoCapsFlags, recapitalizeMode)
         } else when (code) {
             KeyCode.EMOJI -> setEmojiKeyboard()
