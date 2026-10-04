@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import helium314.keyboard.keyboard.KeyboardLayoutSet
 import helium314.keyboard.keyboard.KeyboardSwitcher
 import helium314.keyboard.latin.R
 import helium314.keyboard.latin.common.Constants.Subtype.ExtraValue
@@ -60,6 +61,8 @@ fun LayoutPickerDialog(
     onDismissRequest: () -> Unit,
     setting: Setting,
     layoutType: LayoutType,
+    prefKey: String = Settings.PREF_LAYOUT_PREFIX + layoutType.name,
+    defaultLayoutName: String = layoutType.default,
 ) {
     val ctx = LocalContext.current
     val prefs = ctx.prefs()
@@ -67,8 +70,15 @@ fun LayoutPickerDialog(
     if ((b?.value ?: 0) < 0)
         Log.v("irrelevant", "stupid way to trigger recomposition on preference change")
 
-    val currentLayout = Settings.readDefaultLayoutName(layoutType, prefs)
-    val internalLayouts = LayoutUtils.getAvailableLayouts(layoutType, ctx)
+    val currentLayout = prefs.getString(prefKey, defaultLayoutName) ?: defaultLayoutName
+    val isArabicSymbols = prefKey.endsWith("ARABIC")
+    val internalLayouts = if (isArabicSymbols) {
+        listOf("symbols_arabic")
+    } else if (layoutType == LayoutType.SYMBOLS) {
+        listOf("symbols")
+    } else {
+        LayoutUtils.getAvailableLayouts(layoutType, ctx)
+    }
     val customLayouts = LayoutUtilsCustom.getLayoutFiles(layoutType, ctx).map { it.name }.sorted()
     val layouts = internalLayouts + customLayouts + ""
 
@@ -80,7 +90,7 @@ fun LayoutPickerDialog(
     var errorDialog by rememberSaveable { mutableStateOf(false) }
     var newLayoutDialog: Pair<String, String?>? by rememberSaveable { mutableStateOf(null) }
     val picker = layoutFilePicker { content, name ->
-        newLayoutDialog = (name ?: layoutType.default) to content
+        newLayoutDialog = (name ?: defaultLayoutName) to content
     }
     ThreeButtonAlertDialog(
         onDismissRequest = onDismissRequest,
@@ -104,8 +114,14 @@ fun LayoutPickerDialog(
                                 onClickEdit = { newLayoutDialog = it },
                                 onDelete = { deletedLayout ->
                                     LayoutUtilsCustom.deleteLayout(deletedLayout, layoutType, ctx)
+                                    if (deletedLayout == currentLayout) {
+                                        prefs.edit().putString(prefKey, defaultLayoutName).apply()
+                                    }
+                                    KeyboardLayoutSet.clearKeyboardCache()
+                                    KeyboardSwitcher.getInstance().setThemeNeedsReload()
                                 },
                                 layoutType = layoutType,
+                                prefKey = prefKey,
                                 layoutName = item,
                                 isSelected = item == currentLayout,
                                 isCustom = item in customLayouts
@@ -122,8 +138,14 @@ fun LayoutPickerDialog(
         LayoutEditDialog(
             onDismissRequest = { newLayoutDialog = null },
             layoutType = layoutType,
-            initialLayoutName = newLayoutDialog?.first ?: layoutType.default,
+            initialLayoutName = newLayoutDialog?.first ?: defaultLayoutName,
             startContent = newLayoutDialog?.second,
+            onEdited = { newName ->
+                prefs.edit().putString(prefKey, newName).apply()
+                KeyboardLayoutSet.clearKeyboardCache()
+                (ctx.getActivity() as? SettingsActivity)?.prefChanged()
+                KeyboardSwitcher.getInstance().setThemeNeedsReload()
+            },
             isNameValid = { it.isNotBlank() && it !in customLayouts }
         )
     }
@@ -156,31 +178,31 @@ private fun LayoutItemRow(
     onClickEdit: (Pair<String, String?>) -> Unit,
     onDelete: (String) -> Unit,
     layoutType: LayoutType,
+    prefKey: String,
     layoutName: String,
     isSelected: Boolean,
     isCustom: Boolean,
 ) {
     val ctx = LocalContext.current
     val prefs = ctx.prefs()
+    val onSelect = {
+        onDismissRequest()
+        prefs.edit().putString(prefKey, layoutName).apply()
+        KeyboardLayoutSet.clearKeyboardCache()
+        (ctx.getActivity() as? SettingsActivity)?.prefChanged()
+        KeyboardSwitcher.getInstance().setThemeNeedsReload()
+    }
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .clickable {
-                onDismissRequest()
-                Settings.writeDefaultLayoutName(layoutName, layoutType, prefs)
-                KeyboardSwitcher.getInstance().setThemeNeedsReload()
-            }
+            .clickable(onClick = onSelect)
             .padding(start = 6.dp)
             .heightIn(min = 40.dp)
     ) {
         RadioButton(
             selected = isSelected,
-            onClick = {
-                onDismissRequest()
-                Settings.writeDefaultLayoutName(layoutName, layoutType, prefs)
-                KeyboardSwitcher.getInstance().setThemeNeedsReload()
-            }
+            onClick = onSelect
         )
         Text(
             text = if (isCustom) LayoutUtilsCustom.getDisplayName(layoutName)

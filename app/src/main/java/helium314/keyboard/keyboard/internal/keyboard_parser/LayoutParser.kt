@@ -22,6 +22,7 @@ import helium314.keyboard.latin.utils.LayoutType
 import helium314.keyboard.latin.utils.LayoutUtils
 import helium314.keyboard.latin.utils.LayoutUtilsCustom
 import helium314.keyboard.latin.utils.Log
+import helium314.keyboard.latin.utils.ScriptUtils
 import helium314.keyboard.latin.utils.prefs
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -37,8 +38,19 @@ object LayoutParser {
     fun parseLayout(layoutType: LayoutType, params: KeyboardParams, context: Context): MutableList<MutableList<KeyData>> {
         if (layoutType == LayoutType.FUNCTIONAL && !params.mId.isAlphaOrSymbolKeyboard)
             return mutableListOf(mutableListOf()) // no functional keys
-        val layoutName = if (layoutType == LayoutType.MAIN) params.mId.mSubtype.mainLayoutName
-            else params.mId.mSubtype.layouts[layoutType] ?: Settings.readDefaultLayoutName(layoutType, context.prefs())
+        val explicit = params.mId.mSubtype.layouts[layoutType]
+        val isArabicSymbols = layoutType == LayoutType.SYMBOLS && (params.mId.mSubtype.isRtlSubtype || explicit == "symbols_arabic")
+        val layoutName = if (layoutType == LayoutType.MAIN) {
+            params.mId.mSubtype.mainLayoutName
+        } else if (isArabicSymbols) {
+            if (explicit != null && explicit != "symbols_arabic") {
+                explicit
+            } else {
+                context.prefs().getString(Settings.PREF_LAYOUT_PREFIX + "SYMBOLS_ARABIC", "symbols_arabic") ?: "symbols_arabic"
+            }
+        } else {
+            explicit ?: Settings.readDefaultLayoutName(layoutType, context.prefs())
+        }
         return layoutCache.getOrPut(layoutType.name + layoutName) {
             createCacheLambda(layoutType, layoutName, context)
         }(params)

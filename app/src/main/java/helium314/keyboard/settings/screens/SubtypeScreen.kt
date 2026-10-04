@@ -321,8 +321,20 @@ fun SubtypeScreen(
                             }
                             WithSmallTitle(stringResource(type.displayNameId)) {
                                 val explicitLayout = currentSubtype.layoutName(type)
-                                val layout = explicitLayout ?: Settings.readDefaultLayoutName(type, prefs)
-                                val defaultLayouts = LayoutUtils.getAvailableLayouts(type, ctx)
+                                val isArabicSymbols = type == LayoutType.SYMBOLS && (ScriptUtils.isScriptRtl(currentSubtype.locale.script()) || explicitLayout == "symbols_arabic")
+                                val defaultLayout = if (isArabicSymbols) {
+                                    prefs.getString(Settings.PREF_LAYOUT_PREFIX + "SYMBOLS_ARABIC", "symbols_arabic") ?: "symbols_arabic"
+                                } else {
+                                    Settings.readDefaultLayoutName(type, prefs)
+                                }
+                                val layout = if (isArabicSymbols && explicitLayout == "symbols_arabic") defaultLayout else (explicitLayout ?: defaultLayout)
+                                val defaultLayouts = if (isArabicSymbols) {
+                                    listOf("symbols_arabic")
+                                } else if (type == LayoutType.SYMBOLS) {
+                                    listOf("symbols")
+                                } else {
+                                    LayoutUtils.getAvailableLayouts(type, ctx)
+                                }
                                 val customLayouts = LayoutUtilsCustom.getLayoutFiles(type, ctx).map { it.name }
                                 DropDownField(
                                     items = defaultLayouts + customLayouts,
@@ -331,7 +343,7 @@ fun SubtypeScreen(
                                         setCurrentSubtype(currentSubtype.withLayout(type, it))
                                     },
                                     extraButton = {
-                                        DefaultButton(explicitLayout == null) {
+                                        DefaultButton(explicitLayout == null || (isArabicSymbols && explicitLayout == "symbols_arabic")) {
                                             setCurrentSubtype(currentSubtype.withoutLayout(type))
                                         }
                                     },

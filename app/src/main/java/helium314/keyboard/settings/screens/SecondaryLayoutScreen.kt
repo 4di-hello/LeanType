@@ -54,6 +54,9 @@ fun SecondaryLayoutScreen(
         // Add non-main and non-custom layouts
         LayoutType.entries.filter { it != LayoutType.MAIN && !it.name.startsWith("CUSTOM") }.forEach {
             list.add(Settings.PREF_LAYOUT_PREFIX + it.name)
+            if (it == LayoutType.SYMBOLS) {
+                list.add(Settings.PREF_LAYOUT_PREFIX + "SYMBOLS_ARABIC")
+            }
         }
         // Add configured custom layouts
         for (i in 1..customCount) {
@@ -73,8 +76,8 @@ fun SecondaryLayoutScreen(
 }
 
 fun createLayoutSettings(context: Context): List<Setting> {
-    val list = LayoutType.entries.filter { it != LayoutType.MAIN }.map { layoutType ->
-        Setting(context, Settings.PREF_LAYOUT_PREFIX + layoutType.name, layoutType.displayNameId) { setting ->
+    val list = LayoutType.entries.filter { it != LayoutType.MAIN }.flatMap { layoutType ->
+        val mainSetting = Setting(context, Settings.PREF_LAYOUT_PREFIX + layoutType.name, layoutType.displayNameId) { setting ->
             val ctx = LocalContext.current
             val prefs = ctx.prefs()
             val b = (ctx.getActivity() as? SettingsActivity)?.prefChanged?.collectAsState()
@@ -132,6 +135,35 @@ fun createLayoutSettings(context: Context): List<Setting> {
                     setting = setting,
                     layoutType = layoutType
                 )
+        }
+        if (layoutType == LayoutType.SYMBOLS) {
+            val arabicSetting = Setting(context, Settings.PREF_LAYOUT_PREFIX + "SYMBOLS_ARABIC", R.string.layout_symbols_arabic) { setting ->
+                val ctx = LocalContext.current
+                val prefs = ctx.prefs()
+                val b = (ctx.getActivity() as? SettingsActivity)?.prefChanged?.collectAsState()
+                if ((b?.value ?: 0) < 0)
+                    Log.v("irrelevant", "stupid way to trigger recomposition on preference change")
+                var showDialog by rememberSaveable { mutableStateOf(false) }
+                val currentLayout = prefs.getString(Settings.PREF_LAYOUT_PREFIX + "SYMBOLS_ARABIC", "symbols_arabic") ?: "symbols_arabic"
+                val displayName = if (LayoutUtilsCustom.isCustomLayout(currentLayout)) LayoutUtilsCustom.getDisplayName(currentLayout)
+                    else currentLayout.getStringResourceOrName("layout_", ctx)
+                Preference(
+                    name = setting.title,
+                    description = displayName,
+                    onClick = { showDialog = true }
+                )
+                if (showDialog)
+                    LayoutPickerDialog(
+                        onDismissRequest = { showDialog = false },
+                        setting = setting,
+                        layoutType = LayoutType.SYMBOLS,
+                        prefKey = Settings.PREF_LAYOUT_PREFIX + "SYMBOLS_ARABIC",
+                        defaultLayoutName = "symbols_arabic"
+                    )
+            }
+            listOf(mainSetting, arabicSetting)
+        } else {
+            listOf(mainSetting)
         }
     }.toMutableList()
 
