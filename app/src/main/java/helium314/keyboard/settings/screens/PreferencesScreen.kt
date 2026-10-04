@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import helium314.keyboard.keyboard.KeyboardLayoutSet
 import helium314.keyboard.keyboard.KeyboardSwitcher
 import helium314.keyboard.latin.AudioAndHapticFeedbackManager
+import helium314.keyboard.event.HapticEvent
 import helium314.keyboard.latin.R
 import helium314.keyboard.latin.database.ClipboardDao
 import helium314.keyboard.latin.settings.Defaults
@@ -65,6 +66,8 @@ fun PreferencesScreen(
         Settings.PREF_SHOW_EMOJI_KEY,
         if (AudioAndHapticFeedbackManager.getInstance().hasVibrator())
             Settings.PREF_VIBRATE_ON else null,
+        if (prefs.getBoolean(Settings.PREF_VIBRATE_ON, Defaults.PREF_VIBRATE_ON))
+            Settings.PREF_HAPTIC_ENGINE else null,
         if (prefs.getBoolean(Settings.PREF_VIBRATE_ON, Defaults.PREF_VIBRATE_ON))
             Settings.PREF_VIBRATION_DURATION_SETTINGS else null,
         if (prefs.getBoolean(Settings.PREF_VIBRATE_ON, Defaults.PREF_VIBRATE_ON) && AudioAndHapticFeedbackManager.getInstance().hasAmplitudeControl())
@@ -251,6 +254,16 @@ fun createPreferencesSettings(context: Context) = listOf(
     },
     Setting(context, Settings.PREF_CLIPBOARD_FOLD_PINNED, R.string.clipboard_fold_pinned) {
         SwitchPreference(it, Defaults.PREF_CLIPBOARD_FOLD_PINNED)
+    },
+    Setting(context, Settings.PREF_HAPTIC_ENGINE, R.string.prefs_haptic_engine) { setting ->
+        val items = listOf(
+            stringResource(R.string.haptic_engine_system) to Settings.HAPTIC_ENGINE_SYSTEM,
+            stringResource(R.string.haptic_engine_primitives) to Settings.HAPTIC_ENGINE_PRIMITIVES,
+            stringResource(R.string.haptic_engine_oneshot) to Settings.HAPTIC_ENGINE_ONESHOT,
+        )
+        ListPreference(setting, items, Defaults.PREF_HAPTIC_ENGINE) {
+            AudioAndHapticFeedbackManager.getInstance().performHapticFeedback(null, HapticEvent.KEY_PRESS)
+        }
     },
     Setting(context, Settings.PREF_VIBRATION_DURATION_SETTINGS, R.string.prefs_keypress_vibration_duration_settings) { setting ->
         SliderPreference(

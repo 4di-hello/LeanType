@@ -159,6 +159,7 @@ object Defaults {
     const val PREF_GESTURE_METHOD = "fallback"
     const val PREF_VIBRATION_DURATION_SETTINGS = -1
     const val PREF_VIBRATION_AMPLITUDE_SETTINGS = -1
+    const val PREF_HAPTIC_ENGINE = Settings.HAPTIC_ENGINE_SYSTEM
     const val PREF_KEYPRESS_SOUND_VOLUME = -0.01f
     const val PREF_KEYPRESS_SOUND_STYLE = "system"
     const val PREF_SOUND_PITCH_SCALE = 1.0f

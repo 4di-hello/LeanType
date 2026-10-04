@@ -189,6 +189,7 @@ open class SettingsValues(
     val mSecondaryStripVisible: Boolean
     val mKeypressVibrationDuration: Int
     val mKeypressVibrationAmplitude: Int
+    val mHapticEngine: String
     val mKeypressSoundVolume: Float
     val mKeypressSoundStyle: String
     val mSoundPitchScale: Float
@@ -361,6 +362,7 @@ open class SettingsValues(
         mKeyLongpressTimeout = prefs.getInt(Settings.PREF_KEY_LONGPRESS_TIMEOUT, Defaults.PREF_KEY_LONGPRESS_TIMEOUT)
         mKeypressVibrationDuration = prefs.getInt(Settings.PREF_VIBRATION_DURATION_SETTINGS, Defaults.PREF_VIBRATION_DURATION_SETTINGS)
         mKeypressVibrationAmplitude = prefs.getInt(Settings.PREF_VIBRATION_AMPLITUDE_SETTINGS, Defaults.PREF_VIBRATION_AMPLITUDE_SETTINGS)
+        mHapticEngine = prefs.getString(Settings.PREF_HAPTIC_ENGINE, Defaults.PREF_HAPTIC_ENGINE) ?: Defaults.PREF_HAPTIC_ENGINE
         mKeypressSoundVolume = prefs.getFloat(Settings.PREF_KEYPRESS_SOUND_VOLUME, Defaults.PREF_KEYPRESS_SOUND_VOLUME)
         mKeypressSoundStyle = prefs.getString(Settings.PREF_KEYPRESS_SOUND_STYLE, Defaults.PREF_KEYPRESS_SOUND_STYLE) ?: Defaults.PREF_KEYPRESS_SOUND_STYLE
         mSoundPitchScale = prefs.getFloat(Settings.PREF_SOUND_PITCH_SCALE, Defaults.PREF_SOUND_PITCH_SCALE)
@@ -559,6 +561,7 @@ Current settings :
    mInputAttributes = $mInputAttributes
    mKeypressVibrationDuration = $mKeypressVibrationDuration
    mKeypressVibrationAmplitude = $mKeypressVibrationAmplitude
+   mHapticEngine = $mHapticEngine
    mKeypressSoundVolume = $mKeypressSoundVolume
    mAutoCorrectEnabled = $mAutoCorrectEnabled
    mAutoCorrectionThreshold = $mAutoCorrectionThreshold

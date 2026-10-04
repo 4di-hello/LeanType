@@ -1121,6 +1121,11 @@ language, hence "No language". -->
     <string name="day_or_night_day">Day</string>
     <!-- Button for selecting night -->
     <string name="day_or_night_night">Night</string>
+    <!-- Title of the setting for haptic engine -->
+    <string name="prefs_haptic_engine">Haptic feedback engine</string>
+    <string name="haptic_engine_system">System default (Native view)</string>
+    <string name="haptic_engine_primitives">Modern primitives (Vibration effects)</string>
+    <string name="haptic_engine_oneshot">Legacy one-shot (Pulse vibration)</string>
     <!-- Title of the setting for keypress vibration duration -->
     <string name="prefs_keypress_vibration_duration_settings">Keypress vibration duration</string>
     <!-- Title of the setting for keypress vibration strength -->

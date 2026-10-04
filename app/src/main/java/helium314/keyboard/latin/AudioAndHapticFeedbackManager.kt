@@ -17,6 +17,7 @@ import android.view.View
 import helium314.keyboard.event.HapticEvent
 import helium314.keyboard.keyboard.internal.keyboard_parser.floris.KeyCode
 import helium314.keyboard.latin.common.Constants
+import helium314.keyboard.latin.settings.Settings
 import helium314.keyboard.latin.settings.SettingsValues
 import helium314.keyboard.latin.sound.CustomSoundManager
 import kotlin.math.max
@@ -146,13 +147,30 @@ class AudioAndHapticFeedbackManager private constructor() {
             hapticEvent.feedbackConstant
         }
 
+        val hapticEngine = settings.mHapticEngine
         val allowDuration = hapticEvent.allowCustomDuration || isGesture
         val hasCustomDuration = settings.mKeypressVibrationDuration >= 0
         val hasCustomAmplitude = settings.mKeypressVibrationAmplitude >= 0
 
-        // 1. Native system view haptics: when both duration and amplitude are system default,
+        // 1. One-shot engine override: If user selected legacy one-shot, use timed pulse directly
+        if (hapticEngine == Settings.HAPTIC_ENGINE_ONESHOT) {
+            val duration = if (isGesture) {
+                if (hasCustomDuration) settings.mKeypressVibrationDuration.toLong().coerceAtMost(6L) else 5L
+            } else {
+                if (hasCustomDuration) settings.mKeypressVibrationDuration.toLong() else 15L
+            }
+            val amplitude = if (isGesture && settings.mKeypressVibrationAmplitude > 0) {
+                (settings.mKeypressVibrationAmplitude * 0.4f).toInt().coerceIn(1, 255)
+            } else {
+                settings.mKeypressVibrationAmplitude
+            }
+            vibrate(duration, amplitude)
+            return
+        }
+
+        // 2. Native system view haptics: when engine is "system" (default) and duration/amplitude are default,
         // prioritize view.performHapticFeedback to trigger the hardware-tuned waveform (e.g. Pixel KEYBOARD_TAP).
-        if (!hasCustomDuration && !hasCustomAmplitude) {
+        if (hapticEngine == Settings.HAPTIC_ENGINE_SYSTEM && !hasCustomDuration && !hasCustomAmplitude) {
             val performed = try {
                 viewToPerformHapticFeedbackOn?.performHapticFeedback(
                     feedbackConstant,
@@ -164,7 +182,7 @@ class AudioAndHapticFeedbackManager private constructor() {
             if (performed) return
         }
 
-        // 2. Custom duration override: If user explicitly configured duration (ms), use one-shot.
+        // 3. Custom duration override: If user explicitly configured duration (ms), use one-shot.
         // Gestures respect custom settings, clamped to 6ms and softened amplitude to avoid rumbling while scrubbing.
         if (allowDuration && hasCustomDuration) {
             val duration = if (isGesture) {
