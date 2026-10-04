@@ -1608,9 +1608,8 @@
         <item>വലുത് (4096 ടോക്കണുകൾ)</item>
         <item>വളരെ വലുത് (8192 ടോക്കണുകൾ)</item>
     </string-array>
+    <string name="prefs_haptic_engine">ഹാപ്റ്റിക് ഫീഡ്ബാക്ക് എഞ്ചിൻ</string>
+    <string name="haptic_engine_system">സിസ്റ്റം ഡിഫോൾട്ട് (നേറ്റീവ് വ്യൂ)</string>
+    <string name="haptic_engine_primitives">ആധുനിക പ്രാകൃതങ്ങൾ (വൈബ്രേഷൻ ഇഫക്റ്റുകൾ)</string>
+    <string name="haptic_engine_oneshot">ലെഗസി വൺ-ഷോട്ട് (പൾസ് വൈബ്രേഷൻ)</string>
 </resources>
-
-
-
-
-

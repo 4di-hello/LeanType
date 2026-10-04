@@ -1542,10 +1542,8 @@
         <item>Дакладны (64 токены)</item>
         <item>Глыбокі (128 токенаў)</item>
     </string-array>
+    <string name="prefs_haptic_engine">Механізм тактыльнай зваротнай сувязі</string>
+    <string name="haptic_engine_system">Стандартная сістэма (уласны выгляд)</string>
+    <string name="haptic_engine_primitives">Сучасныя прымітывы (вібрацыйныя эфекты)</string>
+    <string name="haptic_engine_oneshot">Устарэлы аднаразовы (імпульсная вібрацыя)</string>
 </resources>
-
-
-
-
-
-

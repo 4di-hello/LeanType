@@ -1567,9 +1567,8 @@ Permite la inferencia GGUF / llama.cpp en el dispositivo para corrección y rees
         <item>Grande (4096 tokens)</item>
         <item>Extra grande (8192 tokens)</item>
     </string-array>
+    <string name="prefs_haptic_engine">Motor de retroalimentación háptica</string>
+    <string name="haptic_engine_system">Valor predeterminado del sistema (vista nativa)</string>
+    <string name="haptic_engine_primitives">Primitivas modernas (efectos de vibración)</string>
+    <string name="haptic_engine_oneshot">One-shot heredado (vibración de pulso)</string>
 </resources>
-
-
-
-
-

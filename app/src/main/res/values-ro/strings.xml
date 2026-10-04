@@ -1537,9 +1537,8 @@ Activează inferența GGUF / llama.cpp pe dispozitiv pentru corectură și refor
         <item>Precis (64 tokenuri)</item>
         <item>Aprofundat (128 tokenuri)</item>
     </string-array>
+    <string name="prefs_haptic_engine">Motor de feedback haptic</string>
+    <string name="haptic_engine_system">Implicit de sistem (vizualizare nativă)</string>
+    <string name="haptic_engine_primitives">Primitive moderne (Efecte de vibrație)</string>
+    <string name="haptic_engine_oneshot">Moștenire one-shot (vibrație cu puls)</string>
 </resources>
-
-
-
-
-

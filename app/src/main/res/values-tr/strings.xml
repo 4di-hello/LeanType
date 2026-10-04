@@ -1538,9 +1538,8 @@ Metin düzeltme ve yeniden yazma için cihaz üzerinde GGUF / llama.cpp çıkar�
         <item>Büyük (4096 token)</item>
         <item>Çok Büyük (8192 token)</item>
     </string-array>
+    <string name="prefs_haptic_engine">Dokunsal geribildirim motoru</string>
+    <string name="haptic_engine_system">Sistem varsayılanı (Yerel görünüm)</string>
+    <string name="haptic_engine_primitives">Modern ilkeller (Titreşim efektleri)</string>
+    <string name="haptic_engine_oneshot">Eski tek atış (Darbe titreşimi)</string>
 </resources>
-
-
-
-
-

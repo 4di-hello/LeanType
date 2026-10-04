@@ -1599,9 +1599,8 @@
         <item>بڑا (4096 ٹوکنز)</item>
         <item>انتہائی بڑا (8192 ٹوکنز)</item>
     </string-array>
+    <string name="prefs_haptic_engine">ہیپٹک فیڈ بیک انجن</string>
+    <string name="haptic_engine_system">سسٹم ڈیفالٹ (مقامی منظر)</string>
+    <string name="haptic_engine_primitives">جدید قدیم (وائبریشن اثرات)</string>
+    <string name="haptic_engine_oneshot">میراثی ایک شاٹ (پلس وائبریشن)</string>
 </resources>
-
-
-
-
-

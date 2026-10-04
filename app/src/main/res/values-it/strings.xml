@@ -1615,9 +1615,8 @@ Abilita l\'inferenza GGUF / llama.cpp sul dispositivo per correzione e riscrittu
         <item>Grande (4096 token)</item>
         <item>Molto grande (8192 token)</item>
     </string-array>
+    <string name="prefs_haptic_engine">Motore di feedback tattile</string>
+    <string name="haptic_engine_system">Impostazione predefinita del sistema (visualizzazione nativa)</string>
+    <string name="haptic_engine_primitives">Primitivi moderni (effetti di vibrazione)</string>
+    <string name="haptic_engine_oneshot">One-shot legacy (vibrazione a impulsi)</string>
 </resources>
-
-
-
-
-

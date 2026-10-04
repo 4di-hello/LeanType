@@ -1615,10 +1615,8 @@
         <item>Большой (4096 токенов)</item>
         <item>Очень большой (8192 токена)</item>
     </string-array>
+    <string name="prefs_haptic_engine">Механизм тактильной обратной связи</string>
+    <string name="haptic_engine_system">Система по умолчанию (собственный вид)</string>
+    <string name="haptic_engine_primitives">Современные примитивы (эффекты вибрации)</string>
+    <string name="haptic_engine_oneshot">Legacy one-shot (импульсная вибрация)</string>
 </resources>
-
-
-
-
-
-

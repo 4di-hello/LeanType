@@ -1604,9 +1604,8 @@ Permet l\'inférence GGUF / llama.cpp sur l\'appareil pour la correction et la r
         <item>Grand (4096 tokens)</item>
         <item>Très grand (8192 tokens)</item>
     </string-array>
+    <string name="prefs_haptic_engine">Moteur de retour haptique</string>
+    <string name="haptic_engine_system">Système par défaut (vue native)</string>
+    <string name="haptic_engine_primitives">Primitives modernes (effets de vibration)</string>
+    <string name="haptic_engine_oneshot">One-shot hérité (vibration pulsée)</string>
 </resources>
-
-
-
-
-

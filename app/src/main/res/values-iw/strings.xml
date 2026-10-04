@@ -1557,10 +1557,8 @@
         <item>מדויק (64 אסימונים)</item>
         <item>מעמיק (128 אסימונים)</item>
     </string-array>
+    <string name="prefs_haptic_engine">מנוע משוב הפטי</string>
+    <string name="haptic_engine_system">ברירת המחדל של המערכת (תצוגה מקורית)</string>
+    <string name="haptic_engine_primitives">פרימיטיבים מודרניים (אפקטי רטט)</string>
+    <string name="haptic_engine_oneshot">מדור קודם (רטט דופק)</string>
 </resources>
-
-
-
-
-
-

@@ -1537,9 +1537,8 @@ Võimaldab seadmesisese GGUF / llama.cpp järelduse korrektuuri ja ümbersõnast
         <item>Täpne (64 tokenit)</item>
         <item>Põhjalik (128 tokenit)</item>
     </string-array>
+    <string name="prefs_haptic_engine">Haptiline tagasiside mootor</string>
+    <string name="haptic_engine_system">Süsteemi vaikevaade (omavaade)</string>
+    <string name="haptic_engine_primitives">Kaasaegsed primitiivid (vibratsiooniefektid)</string>
+    <string name="haptic_engine_oneshot">Pärand ühekordne (impulssvibratsioon)</string>
 </resources>
-
-
-
-
-

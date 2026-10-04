@@ -1592,10 +1592,8 @@ Umożliwia lokalne wnioskowanie GGUF / llama.cpp na urządzeniu w celu korekty i
         <item>Dokładny (64 tokeny)</item>
         <item>Głęboki (128 tokenów)</item>
     </string-array>
+    <string name="prefs_haptic_engine">Silnik sprzężenia zwrotnego dotykowego</string>
+    <string name="haptic_engine_system">Domyślne systemowe (widok natywny)</string>
+    <string name="haptic_engine_primitives">Nowoczesne prymitywy (efekty wibracji)</string>
+    <string name="haptic_engine_oneshot">Starsze rozwiązanie jednorazowe (wibracje impulsowe)</string>
 </resources>
-
-
-
-
-
-

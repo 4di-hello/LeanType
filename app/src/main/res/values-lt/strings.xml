@@ -1538,9 +1538,8 @@ Ar norite atnaujinti?</string>
         <item>Tikslus (64 leksemų)</item>
         <item>Išsamus (128 leksemų)</item>
     </string-array>
+    <string name="prefs_haptic_engine">Haptic grįžtamojo ryšio variklis</string>
+    <string name="haptic_engine_system">Numatytasis sistemos vaizdas (savasis rodinys)</string>
+    <string name="haptic_engine_primitives">Šiuolaikiniai primityvai (vibracijos efektai)</string>
+    <string name="haptic_engine_oneshot">Senas vienkartinis šūvis (impulsinė vibracija)</string>
 </resources>
-
-
-
-
-

@@ -1590,10 +1590,8 @@
         <item>Точен (64 токена)</item>
         <item>Задълбочен (128 токена)</item>
     </string-array>
+    <string name="prefs_haptic_engine">Механизъм за хаптична обратна връзка</string>
+    <string name="haptic_engine_system">Система по подразбиране (Собствен изглед)</string>
+    <string name="haptic_engine_primitives">Съвременни примитиви (вибрационни ефекти)</string>
+    <string name="haptic_engine_oneshot">Наследен еднократен удар (импулсна вибрация)</string>
 </resources>
-
-
-
-
-
-

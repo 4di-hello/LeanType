@@ -1530,10 +1530,8 @@ Omogućuje lokalno GGUF / llama.cpp zaključivanje na uređaju za lekturu i prep
         <item>Točno (64 tokena)</item>
         <item>Temeljito (128 tokena)</item>
     </string-array>
+    <string name="prefs_haptic_engine">Motor za haptičke povratne informacije</string>
+    <string name="haptic_engine_system">Zadane postavke sustava (izvorni prikaz)</string>
+    <string name="haptic_engine_primitives">Moderni primitivi (efekti vibracija)</string>
+    <string name="haptic_engine_oneshot">Naslijeđeno jednokratno snimanje (pulsna vibracija)</string>
 </resources>
-
-
-
-
-
-

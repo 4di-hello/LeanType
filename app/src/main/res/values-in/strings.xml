@@ -1505,9 +1505,8 @@ Memungkinkan inferensi GGUF / llama.cpp di perangkat untuk koreksi teks dan penu
         <item>Akurat (64 token)</item>
         <item>Mendalam (128 token)</item>
     </string-array>
+    <string name="prefs_haptic_engine">Mesin umpan balik haptik</string>
+    <string name="haptic_engine_system">Default sistem (Tampilan asli)</string>
+    <string name="haptic_engine_primitives">Primitif modern (Efek getaran)</string>
+    <string name="haptic_engine_oneshot">One-shot lawas (Getaran pulsa)</string>
 </resources>
-
-
-
-
-

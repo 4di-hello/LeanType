@@ -1510,11 +1510,8 @@
         <item>Точний (64 токени)</item>
         <item>Глибокий (128 токенів)</item>
     </string-array>
+    <string name="prefs_haptic_engine">Механізм тактильного зворотного зв\'язку</string>
+    <string name="haptic_engine_system">Системне замовчування (власний вигляд)</string>
+    <string name="haptic_engine_primitives">Сучасні примітиви (вібраційні ефекти)</string>
+    <string name="haptic_engine_oneshot">Застарілий одноразовий (імпульсна вібрація)</string>
 </resources>
-
-
-
-
-
-
-

@@ -1555,10 +1555,8 @@ Umožňuje lokální inferenci GGUF / llama.cpp na zařízení pro korektury a p
         <item>Přesný (64 tokenů)</item>
         <item>Hloubkový (128 tokenů)</item>
     </string-array>
+    <string name="prefs_haptic_engine">Motor haptické zpětné vazby</string>
+    <string name="haptic_engine_system">Výchozí nastavení systému (nativní zobrazení)</string>
+    <string name="haptic_engine_primitives">Moderní primitiva (vibrační efekty)</string>
+    <string name="haptic_engine_oneshot">Starší jednorázový (pulzní vibrace)</string>
 </resources>
-
-
-
-
-
-

@@ -1590,9 +1590,8 @@ Maakt GGUF / llama.cpp-inferentie op het apparaat mogelijk voor proeflezen en he
         <item>Nauwkeurig (64 tokens)</item>
         <item>Grondig (128 tokens)</item>
     </string-array>
+    <string name="prefs_haptic_engine">Haptische feedback-engine</string>
+    <string name="haptic_engine_system">Systeemstandaard (native weergave)</string>
+    <string name="haptic_engine_primitives">Moderne primitieven (trillingseffecten)</string>
+    <string name="haptic_engine_oneshot">Legacy one-shot (pulsvibratie)</string>
 </resources>
-
-
-
-
-

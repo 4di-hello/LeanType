@@ -1556,9 +1556,8 @@
         <item>精准 (64 tokens)</item>
         <item>深度 (128 tokens)</item>
     </string-array>
+    <string name="prefs_haptic_engine">触觉反馈引擎</string>
+    <string name="haptic_engine_system">系统默认（本机视图）</string>
+    <string name="haptic_engine_primitives">现代基元（振动效果）</string>
+    <string name="haptic_engine_oneshot">传统单发（脉冲振动）</string>
 </resources>
-
-
-
-
-

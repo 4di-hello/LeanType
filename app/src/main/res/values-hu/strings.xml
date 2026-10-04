@@ -1546,9 +1546,8 @@ Lehetővé teszi az eszközön futó GGUF / llama.cpp következtetést a javít�
         <item>Pontos (64 token)</item>
         <item>Mélyreható (128 token)</item>
     </string-array>
+    <string name="prefs_haptic_engine">Haptikus visszacsatoló motor</string>
+    <string name="haptic_engine_system">Rendszer alapértelmezett (natív nézet)</string>
+    <string name="haptic_engine_primitives">Modern primitívek (rezgéshatások)</string>
+    <string name="haptic_engine_oneshot">Hagyományos egylövés (impulzus vibráció)</string>
 </resources>
-
-
-
-
-

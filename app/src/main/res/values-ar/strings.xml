@@ -1613,10 +1613,8 @@
         <item>كبير (4096 رمز)</item>
         <item>كبير جداً (8192 رمز)</item>
     </string-array>
+    <string name="prefs_haptic_engine">محرك ردود الفعل اللمسية</string>
+    <string name="haptic_engine_system">النظام الافتراضي (العرض الأصلي)</string>
+    <string name="haptic_engine_primitives">البدائيات الحديثة (تأثيرات الاهتزاز)</string>
+    <string name="haptic_engine_oneshot">طلقة واحدة قديمة (اهتزاز النبض)</string>
 </resources>
-
-
-
-
-
-

@@ -1560,9 +1560,8 @@ Habilita inferência GGUF / llama.cpp no dispositivo para revisão e reescrita.<
         <item>Grande (4096 tokens)</item>
         <item>Extra grande (8192 tokens)</item>
     </string-array>
+    <string name="prefs_haptic_engine">Mecanismo de feedback tátil</string>
+    <string name="haptic_engine_system">Padrão do sistema (visualização nativa)</string>
+    <string name="haptic_engine_primitives">Primitivos modernos (efeitos de vibração)</string>
+    <string name="haptic_engine_oneshot">One-shot legado (vibração de pulso)</string>
 </resources>
-
-
-
-
-
