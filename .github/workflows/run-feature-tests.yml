@@ -1,0 +1,40 @@
+name: Run feature tests
+# Only for this fork: runs the unit tests touched by the feature branches.
+# Triggered by pushing to the branch ci/run-tests.
+
+on:
+  push:
+    branches: [ ci/run-tests ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - uses: gradle/actions/setup-gradle@v3
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Run unit tests
+        run: >
+          ./gradlew testOfflineRunTestsUnitTest
+          --tests "helium314.keyboard.latin.InputLogicTest"
+          --tests "helium314.keyboard.latin.suggestions.SuggestionStripLayoutHelperTest"
+
+      - name: Archive test reports
+        uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name: test-reports
+          path: |
+            app/build/reports/tests
+            app/build/test-results
