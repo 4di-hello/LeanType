@@ -25,4 +25,11 @@ class KeySpecParserTest {
         assertEquals('c'.code, KeySpecParser.getCode("a\\|b|c"))
         assertEquals('d'.code, KeySpecParser.getCode("a\\|b|c|d"))
     }
+
+    @Test fun iconName() {
+        assertEquals("delete_key", KeySpecParser.getIconName("!icon/delete_key"))
+        assertEquals("delete_key", KeySpecParser.getIconName("!icon/delete_key|!code/key_delete"))
+        assertEquals("delete_key", KeySpecParser.getIconName("!icon/delete_key|!code/key_forward_delete"))
+        assertEquals("shift_key", KeySpecParser.getIconName("!icon/shift_key|!code/key_shift"))
+    }
 }

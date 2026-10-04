@@ -137,8 +137,6 @@ object KeyLabel {
         }
         val code = when (label) { // maybe a bit lazy to not assemble the entire string above
             "clear_handwriting" -> KeyCode.CLEAR_HANDWRITING
-            DELETE       -> KeyCode.DELETE
-            FORWARD_DELETE, DELETE_FORWARD -> KeyCode.FORWARD_DELETE
             SYMBOL_ALPHA -> KeyCode.SYMBOL_ALPHA
             SYMBOL       -> KeyCode.SYMBOL
             ALPHA        -> KeyCode.ALPHA
