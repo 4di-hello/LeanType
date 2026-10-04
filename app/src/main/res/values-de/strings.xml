@@ -328,6 +328,7 @@
     <string name="suggest_clipboard_content">Zwischenablagen-Inhalt vorschlagen</string>
     <string name="after_symbol_and_space">Drücken der Eingabetaste oder der Leertaste nach anderen Tasten in der Symbolansicht</string>
     <string name="after_clip">Auswählen eines Eintrags des Zwischenablagenverlaufs</string>
+    <string name="after_clip_enter">Drücken der Eingabetaste im Zwischenablagenverlauf</string>
     <string name="after_emoji">Auswählen eines Emojis in der Emojiansicht</string>
     <string name="switch_keyboard_after">Zur Haupttastatur zurückkehren nach …</string>
     <string name="space_swipe_toggle_numpad_entry">Ziffernblock umschalten</string>

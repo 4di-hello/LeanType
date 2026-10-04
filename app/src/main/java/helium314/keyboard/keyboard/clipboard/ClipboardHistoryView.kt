@@ -630,6 +630,9 @@ class ClipboardHistoryView @JvmOverloads constructor(
         }
         
         keyboardActionListener.onCodeInput(primaryCode, x, y, isKeyRepeat)
+        if (primaryCode == Constants.CODE_ENTER && Settings.getValues().mAlphaAfterClipEnter) {
+            keyboardActionListener.onCodeInput(KeyCode.ALPHA, Constants.NOT_A_COORDINATE, Constants.NOT_A_COORDINATE, false)
+        }
     }
     
     override fun onTextInput(text: String?) {

@@ -1111,6 +1111,8 @@ language, hence "No language". -->
     <string name="after_emoji">Selecting emoji in emoji view</string>
     <!-- Switch to main keyboard after selecting clipboard history entry -->
     <string name="after_clip">Selecting clipboard history entry</string>
+    <!-- Description for the setting to switch to the main keyboard after pressing enter in the clipboard history view -->
+    <string name="after_clip_enter">Pressing enter in clipboard history view</string>
     <!-- Switch to main keyboard after entering a symbol in symbols layout and then pressing space or enter -->
     <string name="after_symbol_and_space">Pressing enter or space after other keys in symbols view</string>
     <!-- Switch to main keyboard after entering something in numpad layout and then pressing space or enter -->
