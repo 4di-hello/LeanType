@@ -185,6 +185,7 @@ open class SettingsValues(
     val mRememberToolbarState: Boolean
     val mAlphaAfterEmojiInEmojiView: Boolean
     val mAlphaAfterClipHistoryEntry: Boolean
+    val mAlphaAfterClipEnter: Boolean
     val mAlphaAfterSymbolAndSpace: Boolean
     val mAlphaAfterNumpadAndSpace: Boolean
     val mAbcOnReopen: Boolean
@@ -511,6 +512,7 @@ open class SettingsValues(
 
         mAlphaAfterEmojiInEmojiView = prefs.getBoolean(Settings.PREF_ABC_AFTER_EMOJI, Defaults.PREF_ABC_AFTER_EMOJI)
         mAlphaAfterClipHistoryEntry = prefs.getBoolean(Settings.PREF_ABC_AFTER_CLIP, Defaults.PREF_ABC_AFTER_CLIP)
+        mAlphaAfterClipEnter = prefs.getBoolean(Settings.PREF_ABC_AFTER_CLIP_ENTER, Defaults.PREF_ABC_AFTER_CLIP_ENTER)
         mAlphaAfterSymbolAndSpace = prefs.getBoolean(Settings.PREF_ABC_AFTER_SYMBOL_SPACE, Defaults.PREF_ABC_AFTER_SYMBOL_SPACE)
         mAlphaAfterNumpadAndSpace = prefs.getBoolean(Settings.PREF_ABC_AFTER_NUMPAD_SPACE, Defaults.PREF_ABC_AFTER_NUMPAD_SPACE)
         mAbcOnReopen = prefs.getBoolean(Settings.PREF_ABC_ON_REOPEN, Defaults.PREF_ABC_ON_REOPEN)
