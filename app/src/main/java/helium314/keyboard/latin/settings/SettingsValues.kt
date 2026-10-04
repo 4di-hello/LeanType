@@ -101,6 +101,7 @@ open class SettingsValues(
     val mTouchpadSensitivity: Int
     val mTouchpadFullscreen: Boolean
     val mForceAutoCaps: Boolean
+    val mShiftRecapitalizesWord: Boolean
     val mDeleteSwipeEnabled: Boolean
     val mDeleteSwipeWordByWord: Boolean
     val mAutospaceAfterPunctuation: Boolean
@@ -408,6 +409,7 @@ open class SettingsValues(
         mTouchpadSensitivity = prefs.getInt(Settings.PREF_TOUCHPAD_SENSITIVITY, Defaults.PREF_TOUCHPAD_SENSITIVITY)
         mTouchpadFullscreen = prefs.getBoolean(Settings.PREF_TOUCHPAD_FULLSCREEN, Defaults.PREF_TOUCHPAD_FULLSCREEN)
         mForceAutoCaps = prefs.getBoolean(Settings.PREF_FORCE_AUTO_CAPS, Defaults.PREF_FORCE_AUTO_CAPS)
+        mShiftRecapitalizesWord = prefs.getBoolean(Settings.PREF_SHIFT_RECAPITALIZES_WORD, Defaults.PREF_SHIFT_RECAPITALIZES_WORD)
         mDeleteSwipeEnabled = prefs.getBoolean(Settings.PREF_DELETE_SWIPE, Defaults.PREF_DELETE_SWIPE)
         mDeleteSwipeWordByWord = prefs.getBoolean(Settings.PREF_DELETE_SWIPE_WORD_BY_WORD, Defaults.PREF_DELETE_SWIPE_WORD_BY_WORD)
         mAutospaceAfterPunctuation = prefs.getBoolean(Settings.PREF_AUTOSPACE_AFTER_PUNCTUATION, Defaults.PREF_AUTOSPACE_AFTER_PUNCTUATION)

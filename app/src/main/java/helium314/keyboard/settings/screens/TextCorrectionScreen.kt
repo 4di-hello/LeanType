@@ -68,6 +68,7 @@ fun TextCorrectionScreen(
             R.string.auto_cap,
             Settings.PREF_AUTO_CAP,
             Settings.PREF_FORCE_AUTO_CAPS,
+            Settings.PREF_SHIFT_RECAPITALIZES_WORD,
 
             // Space
             R.string.settings_category_space,
@@ -221,6 +222,11 @@ fun createCorrectionSettings(context: Context) = listOf(
     },
     Setting(context, Settings.PREF_FORCE_AUTO_CAPS, R.string.force_auto_caps_title, R.string.force_auto_caps_summary) {
         SwitchPreference(it, Defaults.PREF_FORCE_AUTO_CAPS)
+    },
+    Setting(context, Settings.PREF_SHIFT_RECAPITALIZES_WORD,
+        R.string.shift_recapitalizes_word, R.string.shift_recapitalizes_word_summary
+    ) {
+        SwitchPreference(it, Defaults.PREF_SHIFT_RECAPITALIZES_WORD)
     },
     Setting(context, Settings.PREF_KEY_USE_DOUBLE_SPACE_PERIOD,
         R.string.use_double_space_period, R.string.use_double_space_period_summary

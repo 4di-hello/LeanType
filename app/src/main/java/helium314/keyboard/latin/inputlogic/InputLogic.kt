@@ -83,6 +83,9 @@ class InputLogic(
     private val mWordComposer = WordComposer()
     private val mConnection = RichInputConnection(mLatinIME)
     private val mRecapitalizeStatus = RecapitalizeStatus()
+    // the composing word at the time the shift key was pressed down, null if there was none
+    // used to tell a tap on shift from typing a letter while holding shift
+    private var mTypedWordOnShiftPress: String? = null
 
     private var mDeleteCount = 0
     private var mLastKeyTime = 0L
@@ -712,7 +715,9 @@ class InputLogic(
                 if (keyboard != null && !keyboard.mId.isAlphabetKeyboard && keyboard.mId.mElementId != KeyboardId.ELEMENT_TEXT_EDIT) {
                     return
                 }
-                performRecapitalization(inputTransaction.settingsValues)
+                if (!recapitalizeComposingWord(inputTransaction.settingsValues)) {
+                    performRecapitalization(inputTransaction.settingsValues)
+                }
                 inputTransaction.requireShiftUpdate(InputTransaction.SHIFT_UPDATE_NOW)
                 inputTransaction.setRequiresUpdateSuggestions()
                 if (mSpaceState == SpaceState.PHANTOM && inputTransaction.settingsValues.mShiftRemovesAutospace) {
@@ -1785,6 +1790,62 @@ class InputLogic(
         mConnection.setSelection(replacement.selectionStart, replacement.selectionEnd())
     }
 
+    /**
+     *  Rotates the capitalization of the composing word if the cursor is at its end and there is no selection:
+     *  lowercase -> Capitalized -> UPPERCASE -> lowercase, see [Settings.PREF_SHIFT_RECAPITALIZES_WORD].
+     *  @return whether the word was changed
+     */
+    private fun recapitalizeComposingWord(settingsValues: SettingsValues): Boolean {
+        val typedWordOnShiftPress = mTypedWordOnShiftPress
+        mTypedWordOnShiftPress = null
+        if (!settingsValues.mShiftRecapitalizesWord) return false
+        if (mConnection.hasSelection() || !mWordComposer.isComposingWord()
+            || mWordComposer.isCursorFrontOrMiddleOfComposingWord()) return false
+        val typedWord = mWordComposer.getTypedWord()
+        // the word changed while shift was held: shift was used for typing an upper case letter
+        if (typedWord != typedWordOnShiftPress) return false
+        val wordStart = mConnection.expectedSelectionEnd - typedWord.length
+        if (typedWord.isEmpty() || wordStart < 0) return false
+        mRecapitalizeStatus.enable()
+        if (!isRecapitalizingComposingWord()) {
+            mRecapitalizeStatus.start(
+                typedWord, wordStart, settingsValues.mLocale,
+                settingsValues.mSpacingAndPunctuations.mSortedWordSeparators
+            )
+            if (!mRecapitalizeStatus.isStarted()) return false
+        }
+        mRecapitalizeStatus.rotate()
+        val replacement = mRecapitalizeStatus.textReplacement().text
+        if (replacement == typedWord) {
+            // nothing to change (e.g. no letters), let shift do its normal work
+            mRecapitalizeStatus.stop()
+            return false
+        }
+        val codePoints = StringUtils.toCodePointArray(replacement)
+        mConnection.beginBatchEdit()
+        mWordComposer.setComposingWord(codePoints, mLatinIME.getCoordinatesForCurrentKeyboard(codePoints))
+        setComposingTextInternal(replacement, 1)
+        mConnection.endBatchEdit()
+        // typing should continue in the same case: caps lock for an upper case word, lower case otherwise
+        KeyboardSwitcher.getInstance().setCapsLock(mRecapitalizeStatus.getCurrentMode() == RecapitalizeMode.ALL_UPPER)
+        return true
+    }
+
+    /** To be called when the shift key is pressed down, necessary for [recapitalizeComposingWord]. */
+    fun onShiftKeyPressed() {
+        mTypedWordOnShiftPress = if (mWordComposer.isComposingWord()) mWordComposer.getTypedWord() else null
+    }
+
+    /** whether the last recapitalization was done by [recapitalizeComposingWord] and the word is unchanged since */
+    private fun isRecapitalizingComposingWord(): Boolean {
+        if (!mRecapitalizeStatus.isStarted() || mConnection.hasSelection() || !mWordComposer.isComposingWord()) {
+            return false
+        }
+        val placement = mRecapitalizeStatus.textReplacement()
+        return placement.text == mWordComposer.getTypedWord()
+                && placement.selectionEnd() == mConnection.expectedSelectionEnd
+    }
+
     internal fun performAdditionToUserHistoryDictionary(
         settingsValues: SettingsValues,
         suggestion: String,
@@ -2104,6 +2165,12 @@ class InputLogic(
     }
 
     fun getCurrentRecapitalizeState(): RecapitalizeMode? {
+        if (isRecapitalizingComposingWord()) {
+            // Shift is used for changing the word, not for the next letter. Reporting lower case keeps the
+            // normal shift handling out of the way (no one-time shift, no caps lock by double tap).
+            // Caps lock for an upper case word is set in recapitalizeComposingWord.
+            return RecapitalizeMode.ALL_LOWER
+        }
         if (!mRecapitalizeStatus.isStarted()
             || !mRecapitalizeStatus.isSetAt(mConnection.expectedSelectionStart, mConnection.expectedSelectionEnd)
         ) {

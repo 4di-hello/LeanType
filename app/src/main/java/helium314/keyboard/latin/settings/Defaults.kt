@@ -208,6 +208,7 @@ object Defaults {
     const val PREF_TOUCHPAD_SENSITIVITY = 50
     const val PREF_TOUCHPAD_FULLSCREEN = false
     const val PREF_FORCE_AUTO_CAPS = false
+    const val PREF_SHIFT_RECAPITALIZES_WORD = false
     const val PREF_OFFLINE_TEMP = 0.1f  // Lower for faster, more deterministic proofreading
     const val PREF_OFFLINE_TOP_P = 0.5f  // Lower for faster token sampling
     const val PREF_OFFLINE_TOP_K = 40
