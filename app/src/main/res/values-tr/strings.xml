@@ -1510,7 +1510,36 @@ Metin düzeltme ve yeniden yazma için cihaz üzerinde GGUF / llama.cpp çıkar�
     <string name="sound_pack_deleted_format">%s silindi</string>
     <string name="sound_pack_downloading_in_browser_toast">Tarayıcıda indiriliyor… bittiğinde .zip dosyasını içe aktarın</string>
     <string name="sound_pack_preview">Önizleme</string>
+<string name="app_slogan">Gelişmiş özelliklere sahip açık kaynaklı klavye.</string>
+    <string name="debug_settings_title">Hata ayıklama ayarları</string>
+    <string name="prefs_show_debug_settings">Hata ayıklama ayarlarını etkinleştir</string>
+    <string name="prefs_debug_settings_enabled">Hata ayıklama ayarları etkinleştirildi. Gelişmiş ayarlar altında bulabilirsiniz.</string>
+    <string name="prefs_debug_mode">Hata ayıklama modu</string>
+    <string name="prefs_show_suggestion_infos">Öneri bilgilerini göster</string>
+    <string name="prefs_force_non_distinct_multitouch">Belirsiz çoklu dokunmayı zorla</string>
+    <string name="sliding_key_input_preview">Kaydırma göstergesini göster</string>
+    <string name="sliding_key_input_preview_summary">Shift veya Sembol tuşlarından kaydırırken görsel ipucu göster</string>
+    <string name="prefs_dump_dynamic_dicts">Sözlüğü dök</string>
+    <string name="debug_dump_dict_format">%s sözlüğünü dök</string>
+    <string name="debug_dumping_dict_toast_format">%s sözlüğü logcat\'e dökülüyor…</string>
+    <string name="background_services_summary">Etkin arka plan hizmetlerini, bellek kilitlerini ve gözlemcileri yönetin</string>
+    <string name="sound_pack_category_title">Ses Paketi</string>
+    <string name="sound_pack_active_info_title">Etkin Paket Bilgisi</string>
+    <string name="plugin_management_category">Eklenti Yönetimi</string>
+    <string name="handwriting_plugin_title">El Yazısı Eklentisi</string>
+    <string name="configuration_category">Yapılandırma</string>
+    <string name="offline_models_category">Çevrimdışı Modeller</string>
+    <string name="handwriting_models_management_desc">Çevrimdışı tanıma modellerini indirin ve yönetin</string>
+    <string name="ocr_plugin_title">OCR Eklentisi APK</string>
+    <string name="plugin_active_version_format">Eklenti etkin (sürüm %s)</string>
+    <string-array name="cloud_ai_max_tokens_entries">
+        <item>Kompakt (1024 token)</item>
+        <item>Standart (2048 token)</item>
+        <item>Büyük (4096 token)</item>
+        <item>Çok Büyük (8192 token)</item>
+    </string-array>
 </resources>
+
 
 
 

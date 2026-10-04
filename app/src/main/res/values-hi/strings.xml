@@ -831,7 +831,43 @@
     <string name="sound_pack_deleted_format">%s हटाया गया</string>
     <string name="sound_pack_downloading_in_browser_toast">ब्राउज़र में डाउनलोड हो रहा है… पूरा होने पर .zip आयात करें</string>
     <string name="sound_pack_preview">पूर्वावलोकन</string>
+<string name="app_slogan">उन्नत सुविधाओं वाला ओपन-सोर्स कीबोर्ड।</string>
+    <string name="debug_settings_title">डीबگ सेटिंग्स</string>
+    <string name="prefs_show_debug_settings">डीबग सेटिंग्स सक्षम करें</string>
+    <string name="prefs_debug_settings_enabled">डीबग सेटिंग्स सक्षम की गईं। उन्हें उन्नत सेटिंग्स में खोजें।</string>
+    <string name="prefs_debug_mode">डीबग मोड</string>
+    <string name="prefs_show_suggestion_infos">सुझाव जानकारी दिखाएं</string>
+    <string name="prefs_force_non_distinct_multitouch">गैर-विशिष्ट मल्टीटच लागू करें</string>
+    <string name="sliding_key_input_preview">स्लाइड संकेतक दिखाएं</string>
+    <string name="sliding_key_input_preview_summary">Shift या सिंबल कुंजियों से स्लाइड करते समय दृश्य संकेत दिखाएं</string>
+    <string name="prefs_dump_dynamic_dicts">शब्दकोश डंप करें</string>
+    <string name="debug_dump_dict_format">%s शब्दकोश डंप करें</string>
+    <string name="debug_dumping_dict_toast_format">%s शब्दकोश logcat में डंप हो रहा है…</string>
+    <string name="background_services_summary">सक्रिय पृष्ठभूमि सेवाओं, मेमोरी लॉक और पर्यवेक्षकों को प्रबंधित करें</string>
+    <string name="sound_pack_category_title">साउंड पैक</string>
+    <string name="sound_pack_active_info_title">सक्रिय पैक जानकारी</string>
+    <string name="plugin_management_category">प्लगइन प्रबंधन</string>
+    <string name="handwriting_plugin_title">हस्तलेखन प्लगइन</string>
+    <string name="configuration_category">कॉन्फ़िगरेशन</string>
+    <string name="offline_models_category">ऑफ़लाइन मॉडल</string>
+    <string name="handwriting_models_management_desc">ऑफ़लाइन पहचान मॉडल डाउनलोड और प्रबंधित करें</string>
+    <string name="ocr_plugin_title">OCR प्लगइन APK</string>
+    <string name="plugin_active_version_format">प्लगइन सक्रिय (संस्करण %s)</string>
+    <string-array name="cloud_ai_max_tokens_entries">
+        <item>कॉम्पैक्ट (1024 टोकन)</item>
+        <item>मानक (2048 टोकन)</item>
+        <item>बड़ा (4096 टोकन)</item>
+        <item>अतिरिक्त बड़ा (8192 टोकन)</item>
+    </string-array>
+    <string-array name="offline_max_tokens_entries">
+        <item>अत्यधिक तेज़ (12 टोकन)</item>
+        <item>तेज़ (20 टोकन)</item>
+        <item>संतुलित (32 टोकन)</item>
+        <item>सटीक (64 टोकन)</item>
+        <item>गहरा (128 टोकन)</item>
+    </string-array>
 </resources>
+
 
 
 

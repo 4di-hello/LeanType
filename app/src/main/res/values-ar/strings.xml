@@ -1585,7 +1585,36 @@
     <string name="sound_pack_deleted_format">تم حذف %s</string>
     <string name="sound_pack_downloading_in_browser_toast">جارٍ التنزيل في المتصفح… استورد .zip فور الانتهاء</string>
     <string name="sound_pack_preview">معاينة</string>
+<string name="app_slogan">لوحة مفاتيح مفتوحة المصدر بميزات متقدمة.</string>
+    <string name="debug_settings_title">إعدادات تصحيح الأخطاء</string>
+    <string name="prefs_show_debug_settings">تمكين إعدادات تصحيح الأخطاء</string>
+    <string name="prefs_debug_settings_enabled">تم تمكين إعدادات تصحيح الأخطاء. يمكنك العثور عليها في الإعدادات المتقدمة.</string>
+    <string name="prefs_debug_mode">وضع تصحيح الأخطاء</string>
+    <string name="prefs_show_suggestion_infos">إظهار معلومات الاقتراحات</string>
+    <string name="prefs_force_non_distinct_multitouch">فرض اللمس المتعدد غير المتمايز</string>
+    <string name="sliding_key_input_preview">إظهار مؤشر السحب</string>
+    <string name="sliding_key_input_preview_summary">عرض تلميح مرئي أثناء السحب من مفاتيح العالي أو الرموز</string>
+    <string name="prefs_dump_dynamic_dicts">تفريغ القاموس</string>
+    <string name="debug_dump_dict_format">تفريغ قاموس %s</string>
+    <string name="debug_dumping_dict_toast_format">جارٍ تفريغ قاموس %s إلى logcat…</string>
+    <string name="background_services_summary">إدارة الخدمات الخلفية النشطة وأقفال الذاكرة والمراقبين</string>
+    <string name="sound_pack_category_title">حزمة الأصوات</string>
+    <string name="sound_pack_active_info_title">معلومات الحزمة النشطة</string>
+    <string name="plugin_management_category">إدارة الملحقات</string>
+    <string name="handwriting_plugin_title">ملحق الكتابة اليدوية</string>
+    <string name="configuration_category">التكوين</string>
+    <string name="offline_models_category">النماذج دون اتصال</string>
+    <string name="handwriting_models_management_desc">تنزيل نماذج التعرف دون اتصال وإدارتها</string>
+    <string name="ocr_plugin_title">APK لملحق OCR</string>
+    <string name="plugin_active_version_format">الملحق نشط (الإصدار %s)</string>
+    <string-array name="cloud_ai_max_tokens_entries">
+        <item>مدمج (1024 رمز)</item>
+        <item>قياسي (2048 رمز)</item>
+        <item>كبير (4096 رمز)</item>
+        <item>كبير جداً (8192 رمز)</item>
+    </string-array>
 </resources>
+
 
 
 

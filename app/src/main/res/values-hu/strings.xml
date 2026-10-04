@@ -1511,7 +1511,43 @@ Lehetővé teszi az eszközön futó GGUF / llama.cpp következtetést a javít�
     <string name="sound_pack_deleted_format">%s törölve</string>
     <string name="sound_pack_downloading_in_browser_toast">Letöltés böngészőben… importálja a .zip fájlt, ha kész</string>
     <string name="sound_pack_preview">Előnézet</string>
+<string name="app_slogan">Nyílt forráskódú billentyűzet fejlett funkciókkal.</string>
+    <string name="debug_settings_title">Hibakeresési beállítások</string>
+    <string name="prefs_show_debug_settings">Hibakeresési beállítások engedélyezése</string>
+    <string name="prefs_debug_settings_enabled">Hibakeresési beállítások engedélyezve. A speciális beállítások között találja.</string>
+    <string name="prefs_debug_mode">Hibakeresési mód</string>
+    <string name="prefs_show_suggestion_infos">Javaslat-információk megjelenítése</string>
+    <string name="prefs_force_non_distinct_multitouch">Nem különálló többérintés kényszerítése</string>
+    <string name="sliding_key_input_preview">Csúszásjelző megjelenítése</string>
+    <string name="sliding_key_input_preview_summary">Vizuális jelzés megjelenítése a Shift vagy Szimbólum billentyűkről történő csúsztatáskor</string>
+    <string name="prefs_dump_dynamic_dicts">Szótár kiírása</string>
+    <string name="debug_dump_dict_format">%s szótár kiírása</string>
+    <string name="debug_dumping_dict_toast_format">%s szótár kiírása a logcatbe…</string>
+    <string name="background_services_summary">Aktív háttérszolgáltatások, memóriazárak és megfigyelők kezelése</string>
+    <string name="sound_pack_category_title">Hangcsomag</string>
+    <string name="sound_pack_active_info_title">Aktív csomag adatai</string>
+    <string name="plugin_management_category">Bővítménykezelés</string>
+    <string name="handwriting_plugin_title">Kézírásbővítmény</string>
+    <string name="configuration_category">Konfiguráció</string>
+    <string name="offline_models_category">Offline modellek</string>
+    <string name="handwriting_models_management_desc">Offline felismerési modellek letöltése és kezelése</string>
+    <string name="ocr_plugin_title">OCR bővítmény APK</string>
+    <string name="plugin_active_version_format">Bővítmény aktív (%s verzió)</string>
+    <string-array name="cloud_ai_max_tokens_entries">
+        <item>Kompakt (1024 token)</item>
+        <item>Normál (2048 token)</item>
+        <item>Nagy (4096 token)</item>
+        <item>Extra nagy (8192 token)</item>
+    </string-array>
+    <string-array name="offline_max_tokens_entries">
+        <item>Rendkívül gyors (12 token)</item>
+        <item>Gyors (20 token)</item>
+        <item>Kiegyensúlyozott (32 token)</item>
+        <item>Pontos (64 token)</item>
+        <item>Mélyreható (128 token)</item>
+    </string-array>
 </resources>
+
 
 
 

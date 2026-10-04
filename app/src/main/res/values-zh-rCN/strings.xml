@@ -1521,7 +1521,43 @@
     <string name="sound_pack_deleted_format">%s 已删除</string>
     <string name="sound_pack_downloading_in_browser_toast">正在浏览器中下载… 完成后请导入 .zip</string>
     <string name="sound_pack_preview">试听</string>
+<string name="app_slogan">具有高级功能的开源键盘。</string>
+    <string name="debug_settings_title">调试设置</string>
+    <string name="prefs_show_debug_settings">启用调试设置</string>
+    <string name="prefs_debug_settings_enabled">调试设置已启用。您可以在高级设置中找到它们。</string>
+    <string name="prefs_debug_mode">调试模式</string>
+    <string name="prefs_show_suggestion_infos">显示候选词信息</string>
+    <string name="prefs_force_non_distinct_multitouch">强制非独立多点触控</string>
+    <string name="sliding_key_input_preview">显示滑动指示器</string>
+    <string name="sliding_key_input_preview_summary">从 Shift 或符号键滑动时显示视觉提示</string>
+    <string name="prefs_dump_dynamic_dicts">转储词典</string>
+    <string name="debug_dump_dict_format">转储 %s 词典</string>
+    <string name="debug_dumping_dict_toast_format">正在将 %s 词典转储到 logcat…</string>
+    <string name="background_services_summary">管理活跃的后台服务、内存锁定与观察者</string>
+    <string name="sound_pack_category_title">音效包</string>
+    <string name="sound_pack_active_info_title">当前音效包信息</string>
+    <string name="plugin_management_category">插件管理</string>
+    <string name="handwriting_plugin_title">手写插件</string>
+    <string name="configuration_category">配置</string>
+    <string name="offline_models_category">离线模型</string>
+    <string name="handwriting_models_management_desc">下载并管理离线识别模型</string>
+    <string name="ocr_plugin_title">OCR 插件 APK</string>
+    <string name="plugin_active_version_format">插件已激活（版本 %s）</string>
+    <string-array name="cloud_ai_max_tokens_entries">
+        <item>紧凑 (1024 tokens)</item>
+        <item>标准 (2048 tokens)</item>
+        <item>大 (4096 tokens)</item>
+        <item>超大 (8192 tokens)</item>
+    </string-array>
+    <string-array name="offline_max_tokens_entries">
+        <item>极速 (12 tokens)</item>
+        <item>快速 (20 tokens)</item>
+        <item>均衡 (32 tokens)</item>
+        <item>精准 (64 tokens)</item>
+        <item>深度 (128 tokens)</item>
+    </string-array>
 </resources>
+
 
 
 

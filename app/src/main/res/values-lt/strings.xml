@@ -1503,7 +1503,43 @@ Ar norite atnaujinti?</string>
     <string name="sound_pack_deleted_format">%s ištrintas</string>
     <string name="sound_pack_downloading_in_browser_toast">Atsisiunčiama naršyklėje… baigę importuokite .zip</string>
     <string name="sound_pack_preview">Peržiūra</string>
+<string name="app_slogan">Atvirojo kodo klaviatūra su pažangiomis funkcijomis.</string>
+    <string name="debug_settings_title">Derinimo nustatymai</string>
+    <string name="prefs_show_debug_settings">Įjungti derinimo nustatymus</string>
+    <string name="prefs_debug_settings_enabled">Derinimo nustatymai įjungti. Juos rasite išplėstiniuose nustatymuose.</string>
+    <string name="prefs_debug_mode">Derinimo režimas</string>
+    <string name="prefs_show_suggestion_infos">Rodyti pasiūlymų informaciją</string>
+    <string name="prefs_force_non_distinct_multitouch">Priverstinis neatskirtas kelių palietimų režimas</string>
+    <string name="sliding_key_input_preview">Rodyti slinkimo indikatorių</string>
+    <string name="sliding_key_input_preview_summary">Rodyti vaizdinę užuominą slenkant nuo lygio keitimo arba simbolių klavišų</string>
+    <string name="prefs_dump_dynamic_dicts">Išskleisti žodyną</string>
+    <string name="debug_dump_dict_format">Išskleisti %s žodyną</string>
+    <string name="debug_dumping_dict_toast_format">Išskleidžiamas %s žodynas į logcat…</string>
+    <string name="background_services_summary">Tvarkyti aktyvias fono paslaugas, atminties užraktus ir stebėtojus</string>
+    <string name="sound_pack_category_title">Garsų paketas</string>
+    <string name="sound_pack_active_info_title">Aktyvaus paketo informacija</string>
+    <string name="plugin_management_category">Papildinių valdymas</string>
+    <string name="handwriting_plugin_title">Rankraščio papildinys</string>
+    <string name="configuration_category">Konfigūracija</string>
+    <string name="offline_models_category">Modeliai neprisijungus</string>
+    <string name="handwriting_models_management_desc">Atsisiųskite ir tvarkykite atpažinimo neprisijungus modelius</string>
+    <string name="ocr_plugin_title">OCR papildinio APK</string>
+    <string name="plugin_active_version_format">Papildinys aktyvus (versija %s)</string>
+    <string-array name="cloud_ai_max_tokens_entries">
+        <item>Kompaktiškas (1024 leksemų)</item>
+        <item>Standartinis (2048 leksemų)</item>
+        <item>Didelis (4096 leksemų)</item>
+        <item>Ypač didelis (8192 leksemų)</item>
+    </string-array>
+    <string-array name="offline_max_tokens_entries">
+        <item>Ypatingai greitas (12 leksemų)</item>
+        <item>Greitas (20 leksemų)</item>
+        <item>Subalansuotas (32 leksemų)</item>
+        <item>Tikslus (64 leksemų)</item>
+        <item>Išsamus (128 leksemų)</item>
+    </string-array>
 </resources>
+
 
 
 

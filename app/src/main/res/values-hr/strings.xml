@@ -1495,7 +1495,43 @@ Omogućuje lokalno GGUF / llama.cpp zaključivanje na uređaju za lekturu i prep
     <string name="sound_pack_deleted_format">%s izbrisan</string>
     <string name="sound_pack_downloading_in_browser_toast">Preuzimanje u pregledniku… uvezite .zip po završetku</string>
     <string name="sound_pack_preview">Pregled</string>
+<string name="app_slogan">Tipkovnica otvorenog koda s naprednim značajkama.</string>
+    <string name="debug_settings_title">Postavke otklanjanja pogrešaka</string>
+    <string name="prefs_show_debug_settings">Omogući postavke otklanjanja pogrešaka</string>
+    <string name="prefs_debug_settings_enabled">Postavke otklanjanja pogrešaka omogućene. Pronađite ih u naprednim postavkama.</string>
+    <string name="prefs_debug_mode">Način otklanjanja pogrešaka</string>
+    <string name="prefs_show_suggestion_infos">Prikaži informacije o prijedlozima</string>
+    <string name="prefs_force_non_distinct_multitouch">Prisili nerazlučiv višedotir</string>
+    <string name="sliding_key_input_preview">Prikaži pokazivač klizanja</string>
+    <string name="sliding_key_input_preview_summary">Prikaz vizualnog vodiča pri klizanju s tipki Shift ili Simbol</string>
+    <string name="prefs_dump_dynamic_dicts">Ispiši rječnik</string>
+    <string name="debug_dump_dict_format">Ispiši rječnik %s</string>
+    <string name="debug_dumping_dict_toast_format">Ispisivanje rječnika %s u logcat…</string>
+    <string name="background_services_summary">Upravljajte aktivnim pozadinskim uslugama, zaključavanjima memorije i promatračima</string>
+    <string name="sound_pack_category_title">Zvučni paket</string>
+    <string name="sound_pack_active_info_title">Informacije o aktivnom paketu</string>
+    <string name="plugin_management_category">Upravljanje dodacima</string>
+    <string name="handwriting_plugin_title">Dodatak za rukopis</string>
+    <string name="configuration_category">Konfiguracija</string>
+    <string name="offline_models_category">Izvanmrežni modeli</string>
+    <string name="handwriting_models_management_desc">Preuzmite i upravljajte izvanmrežnim modelima prepoznavanja</string>
+    <string name="ocr_plugin_title">APK dodatka OCR</string>
+    <string name="plugin_active_version_format">Dodatak je aktivan (verzija %s)</string>
+    <string-array name="cloud_ai_max_tokens_entries">
+        <item>Kompaktno (1024 tokena)</item>
+        <item>Standardno (2048 tokena)</item>
+        <item>Veliko (4096 tokena)</item>
+        <item>Vrlo veliko (8192 tokena)</item>
+    </string-array>
+    <string-array name="offline_max_tokens_entries">
+        <item>Iznimno brzo (12 tokena)</item>
+        <item>Brzo (20 tokena)</item>
+        <item>Uravnoteženo (32 tokena)</item>
+        <item>Točno (64 tokena)</item>
+        <item>Temeljito (128 tokena)</item>
+    </string-array>
 </resources>
+
 
 
 

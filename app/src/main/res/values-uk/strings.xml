@@ -1475,7 +1475,43 @@
     <string name="sound_pack_deleted_format">%s видалено</string>
     <string name="sound_pack_downloading_in_browser_toast">Завантаження в браузері… імпортуйте .zip після завершення</string>
     <string name="sound_pack_preview">Прослухати</string>
+<string name="app_slogan">Клавіатура з відкритим вихідним кодом та розширеними можливостями.</string>
+    <string name="debug_settings_title">Налаштування налагодження</string>
+    <string name="prefs_show_debug_settings">Увімкнути налаштування налагодження</string>
+    <string name="prefs_debug_settings_enabled">Налаштування налагодження увімкнено. Ви знайдете їх у розширених налаштуваннях.</string>
+    <string name="prefs_debug_mode">Режим налагодження</string>
+    <string name="prefs_show_suggestion_infos">Показувати інформацію про підказки</string>
+    <string name="prefs_force_non_distinct_multitouch">Примусовий нероздільний мультитач</string>
+    <string name="sliding_key_input_preview">Показувати індикатор ковзання</string>
+    <string name="sliding_key_input_preview_summary">Відображати візуальну підказку під час ковзання з клавіш Shift або символів</string>
+    <string name="prefs_dump_dynamic_dicts">Створити дамп словника</string>
+    <string name="debug_dump_dict_format">Створити дамп словника %s</string>
+    <string name="debug_dumping_dict_toast_format">Виконується дамп словника %s у logcat…</string>
+    <string name="background_services_summary">Керування активними фоновими службами, блокуваннями пам\'яті та спостерігачами</string>
+    <string name="sound_pack_category_title">Звуковий пакет</string>
+    <string name="sound_pack_active_info_title">Інформація про активний пакет</string>
+    <string name="plugin_management_category">Керування плагінами</string>
+    <string name="handwriting_plugin_title">Плагін рукописного введення</string>
+    <string name="configuration_category">Конфігурація</string>
+    <string name="offline_models_category">Автономні моделі</string>
+    <string name="handwriting_models_management_desc">Завантаження та керування автономними моделями розпізнавання</string>
+    <string name="ocr_plugin_title">APK плагіна OCR</string>
+    <string name="plugin_active_version_format">Плагін активний (версія %s)</string>
+    <string-array name="cloud_ai_max_tokens_entries">
+        <item>Компактний (1024 токени)</item>
+        <item>Стандартний (2048 токенів)</item>
+        <item>Великий (4096 токенів)</item>
+        <item>Дуже великий (8192 токени)</item>
+    </string-array>
+    <string-array name="offline_max_tokens_entries">
+        <item>Надшвидкий (12 токенів)</item>
+        <item>Швидкий (20 токенів)</item>
+        <item>Збалансований (32 токени)</item>
+        <item>Точний (64 токени)</item>
+        <item>Глибокий (128 токенів)</item>
+    </string-array>
 </resources>
+
 
 
 

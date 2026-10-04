@@ -1524,7 +1524,36 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="sound_pack_deleted_format">%s gelöscht</string>
     <string name="sound_pack_downloading_in_browser_toast">Download im Browser läuft… importieren Sie die .zip-Datei nach Abschluss</string>
     <string name="sound_pack_preview">Vorschau</string>
+<string name="app_slogan">Open-Source-Tastatur mit erweiterten Funktionen.</string>
+    <string name="debug_settings_title">Debug-Einstellungen</string>
+    <string name="prefs_show_debug_settings">Debug-Einstellungen aktivieren</string>
+    <string name="prefs_debug_settings_enabled">Debug-Einstellungen aktiviert. Sie finden sie in den erweiterten Einstellungen.</string>
+    <string name="prefs_debug_mode">Debug-Modus</string>
+    <string name="prefs_show_suggestion_infos">Vorschlagsinformationen anzeigen</string>
+    <string name="prefs_force_non_distinct_multitouch">Nicht-eindeutiges Multitouch erzwingen</string>
+    <string name="sliding_key_input_preview">Gleitindikator anzeigen</string>
+    <string name="sliding_key_input_preview_summary">Visuellen Hinweis beim Gleiten von Umschalt- oder Symboltasten anzeigen</string>
+    <string name="prefs_dump_dynamic_dicts">Wörterbuch ausgeben</string>
+    <string name="debug_dump_dict_format">%s-Wörterbuch ausgeben</string>
+    <string name="debug_dumping_dict_toast_format">%s-Wörterbuch wird in Logcat ausgegeben…</string>
+    <string name="background_services_summary">Aktive Hintergrunddienste, Speichersperren und Beobachter verwalten</string>
+    <string name="sound_pack_category_title">Sound-Paket</string>
+    <string name="sound_pack_active_info_title">Info zum aktiven Paket</string>
+    <string name="plugin_management_category">Plugin-Verwaltung</string>
+    <string name="handwriting_plugin_title">Handschrift-Plugin</string>
+    <string name="configuration_category">Konfiguration</string>
+    <string name="offline_models_category">Offline-Modelle</string>
+    <string name="handwriting_models_management_desc">Offline-Erkennungsmodelle herunterladen und verwalten</string>
+    <string name="ocr_plugin_title">OCR-Plugin-APK</string>
+    <string name="plugin_active_version_format">Plugin aktiv (Version %s)</string>
+    <string-array name="cloud_ai_max_tokens_entries">
+        <item>Kompakt (1024 Tokens)</item>
+        <item>Standard (2048 Tokens)</item>
+        <item>Groß (4096 Tokens)</item>
+        <item>Sehr groß (8192 Tokens)</item>
+    </string-array>
 </resources>
+
 
 
 

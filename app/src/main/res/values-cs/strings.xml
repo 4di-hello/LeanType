@@ -1520,7 +1520,43 @@ Umožňuje lokální inferenci GGUF / llama.cpp na zařízení pro korektury a p
     <string name="sound_pack_deleted_format">%s smazán</string>
     <string name="sound_pack_downloading_in_browser_toast">Stahování v prohlížeči… po dokončení importujte .zip</string>
     <string name="sound_pack_preview">Přehrát</string>
+<string name="app_slogan">Open-source klávesnice s pokročilými funkcemi.</string>
+    <string name="debug_settings_title">Ladicí nastavení</string>
+    <string name="prefs_show_debug_settings">Povolit ladicí nastavení</string>
+    <string name="prefs_debug_settings_enabled">Ladicí nastavení povolena. Najdete je v pokročilých nastaveních.</string>
+    <string name="prefs_debug_mode">Ladicí režim</string>
+    <string name="prefs_show_suggestion_infos">Zobrazit informace o návrzích</string>
+    <string name="prefs_force_non_distinct_multitouch">Vynutit nerozlišený vícedotyk</string>
+    <string name="sliding_key_input_preview">Zobrazit indikátor posunutí</string>
+    <string name="sliding_key_input_preview_summary">Zobrazit vizuální nápovědu při posunutí z kláves Shift nebo Symboly</string>
+    <string name="prefs_dump_dynamic_dicts">Vypsat slovník</string>
+    <string name="debug_dump_dict_format">Vypsat slovník %s</string>
+    <string name="debug_dumping_dict_toast_format">Vypisování slovníku %s do logcat…</string>
+    <string name="background_services_summary">Správa aktivních služeb na pozadí, zámků paměti a pozorovatelů</string>
+    <string name="sound_pack_category_title">Zvukový balíček</string>
+    <string name="sound_pack_active_info_title">Informace o aktivním balíčku</string>
+    <string name="plugin_management_category">Správa pluginů</string>
+    <string name="handwriting_plugin_title">Plugin pro psaní rukou</string>
+    <string name="configuration_category">Konfigurace</string>
+    <string name="offline_models_category">Offline modely</string>
+    <string name="handwriting_models_management_desc">Stahujte a spravujte offline modely rozpoznávání</string>
+    <string name="ocr_plugin_title">APK pluginu OCR</string>
+    <string name="plugin_active_version_format">Plugin aktivní (verze %s)</string>
+    <string-array name="cloud_ai_max_tokens_entries">
+        <item>Kompaktní (1024 tokenů)</item>
+        <item>Standardní (2048 tokenů)</item>
+        <item>Velký (4096 tokenů)</item>
+        <item>Velmi velký (8192 tokenů)</item>
+    </string-array>
+    <string-array name="offline_max_tokens_entries">
+        <item>Ultrarychlý (12 tokenů)</item>
+        <item>Rychlý (20 tokenů)</item>
+        <item>Vyvážený (32 tokenů)</item>
+        <item>Přesný (64 tokenů)</item>
+        <item>Hloubkový (128 tokenů)</item>
+    </string-array>
 </resources>
+
 
 
 

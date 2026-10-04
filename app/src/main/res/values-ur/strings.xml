@@ -1571,7 +1571,36 @@
     <string name="sound_pack_deleted_format">%s حذف کر دیا گیا</string>
     <string name="sound_pack_downloading_in_browser_toast">براؤزر میں ڈاؤن لوڈ ہو رہا ہے… مکمل ہونے پر .zip درآمد کریں</string>
     <string name="sound_pack_preview">پیش نظارہ</string>
+<string name="app_slogan">جدید خصوصیات کے ساتھ اوپن سورس کی بورڈ۔</string>
+    <string name="debug_settings_title">ڈیبگ کی ترتیبات</string>
+    <string name="prefs_show_debug_settings">ڈیبگ کی ترتیبات فعال کریں</string>
+    <string name="prefs_debug_settings_enabled">ڈیبگ کی ترتیبات فعال ہو گئیں۔ آپ انہیں جدید ترتیبات میں تلاش کر سکتے ہیں۔</string>
+    <string name="prefs_debug_mode">ڈیبگ موڈ</string>
+    <string name="prefs_show_suggestion_infos">تجویز کی معلومات دکھائیں</string>
+    <string name="prefs_force_non_distinct_multitouch">نان ڈسٹنکٹ ملٹی ٹچ لازمی کریں</string>
+    <string name="sliding_key_input_preview">سلائیڈ انڈیکیٹر دکھائیں</string>
+    <string name="sliding_key_input_preview_summary">شفٹ یا علامتی کیز سے سلائیڈ کرتے وقت بصری اشارہ دکھائیں</string>
+    <string name="prefs_dump_dynamic_dicts">لغت ڈمپ کریں</string>
+    <string name="debug_dump_dict_format">%s لغت ڈمپ کریں</string>
+    <string name="debug_dumping_dict_toast_format">%s لغت logcat میں ڈمپ ہو رہی ہے…</string>
+    <string name="background_services_summary">فعال پس منظر کی خدمات، میموری لاکس اور مانیٹرز کا انتظام کریں</string>
+    <string name="sound_pack_category_title">صوتی پیک</string>
+    <string name="sound_pack_active_info_title">فعال پیک کی معلومات</string>
+    <string name="plugin_management_category">پلگ اِن کا انتظام</string>
+    <string name="handwriting_plugin_title">ہینڈ رائٹنگ پلگ اِن</string>
+    <string name="configuration_category">ترتیب</string>
+    <string name="offline_models_category">آف لائن ماڈلز</string>
+    <string name="handwriting_models_management_desc">آف لائن شناختی ماڈلز ڈاؤن لوڈ اور منظم کریں</string>
+    <string name="ocr_plugin_title">OCR پلگ اِن APK</string>
+    <string name="plugin_active_version_format">پلگ اِن فعال ہے (ورژن %s)</string>
+    <string-array name="cloud_ai_max_tokens_entries">
+        <item>مختصر (1024 ٹوکنز)</item>
+        <item>معیاری (2048 ٹوکنز)</item>
+        <item>بڑا (4096 ٹوکنز)</item>
+        <item>انتہائی بڑا (8192 ٹوکنز)</item>
+    </string-array>
 </resources>
+
 
 
 

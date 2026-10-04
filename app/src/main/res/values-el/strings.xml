@@ -1580,7 +1580,36 @@
     <string name="sound_pack_deleted_format">Το %s διαγράφηκε</string>
     <string name="sound_pack_downloading_in_browser_toast">Λήψη στο πρόγραμμα περιήγησης… εισαγάγετε το .zip μετά την ολοκλήρωση</string>
     <string name="sound_pack_preview">Προεπισκόπηση</string>
+<string name="app_slogan">Πληκτρολόγιο ανοιχτού κώδικα με προηγμένες δυνατότητες.</string>
+    <string name="debug_settings_title">Ρυθμίσεις εντοπισμού σφαλμάτων</string>
+    <string name="prefs_show_debug_settings">Ενεργοποίηση ρυθμίσεων εντοπισμού σφαλμάτων</string>
+    <string name="prefs_debug_settings_enabled">Οι ρυθμίσεις εντοπισμού σφαλμάτων ενεργοποιήθηκαν. Βρείτε τις στις σύνθετες ρυθμίσεις.</string>
+    <string name="prefs_debug_mode">Λειτουργία εντοπισμού σφαλμάτων</string>
+    <string name="prefs_show_suggestion_infos">Εμφάνιση πληροφοριών προτάσεων</string>
+    <string name="prefs_force_non_distinct_multitouch">Επιβολή μη διακριτής πολλαπλής αφής</string>
+    <string name="sliding_key_input_preview">Εμφάνιση δείκτη ολίσθησης</string>
+    <string name="sliding_key_input_preview_summary">Εμφάνιση οπτικής υπόδειξης κατά την ολίσθηση από τα πλήκτρα Shift ή Συμβόλων</string>
+    <string name="prefs_dump_dynamic_dicts">Εξαγωγή λεξικού</string>
+    <string name="debug_dump_dict_format">Εξαγωγή λεξικού %s</string>
+    <string name="debug_dumping_dict_toast_format">Εξαγωγή λεξικού %s στο logcat…</string>
+    <string name="background_services_summary">Διαχείριση ενεργών υπηρεσιών παρασκηνίου, κλειδωμάτων μνήμης και παρατηρητών</string>
+    <string name="sound_pack_category_title">Πακέτο ήχων</string>
+    <string name="sound_pack_active_info_title">Πληροφορίες ενεργού πακέτου</string>
+    <string name="plugin_management_category">Διαχείριση προσθέτων</string>
+    <string name="handwriting_plugin_title">Πρόσθετο χειρόγραφης γραφής</string>
+    <string name="configuration_category">Διαμόρφωση</string>
+    <string name="offline_models_category">Μοντέλα εκτός σύνδεσης</string>
+    <string name="handwriting_models_management_desc">Λήψη και διαχείριση μοντέλων αναγνώρισης εκτός σύνδεσης</string>
+    <string name="ocr_plugin_title">APK πρόσθετου OCR</string>
+    <string name="plugin_active_version_format">Πρόσθετο ενεργό (έκδοση %s)</string>
+    <string-array name="cloud_ai_max_tokens_entries">
+        <item>Συμπαγές (1024 διακριτικά)</item>
+        <item>Τυπικό (2048 διακριτικά)</item>
+        <item>Μεγάλο (4096 διακριτικά)</item>
+        <item>Πολύ μεγάλο (8192 διακριτικά)</item>
+    </string-array>
 </resources>
+
 
 
 

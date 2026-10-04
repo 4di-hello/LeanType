@@ -1522,7 +1522,43 @@
     <string name="sound_pack_deleted_format">%s נמחק</string>
     <string name="sound_pack_downloading_in_browser_toast">מוריד בדפדפן… ייבא .zip בסיום</string>
     <string name="sound_pack_preview">תצוגה מקדימה</string>
+<string name="app_slogan">מקלדת קוד פתוח עם תכונות מתקדמות.</string>
+    <string name="debug_settings_title">הגדרות ניפוי שגיאות</string>
+    <string name="prefs_show_debug_settings">הפעל הגדרות ניפוי שגיאות</string>
+    <string name="prefs_debug_settings_enabled">הגדרות ניפוי שגיאות הופעלו. תוכל למצוא אותן בהגדרות מתקדמות.</string>
+    <string name="prefs_debug_mode">מצב ניפוי שגיאות</string>
+    <string name="prefs_show_suggestion_infos">הצג פרטי הצעות</string>
+    <string name="prefs_force_non_distinct_multitouch">כפה מגע מרובה בלתי מובחן</string>
+    <string name="sliding_key_input_preview">הצג מחוון החלקה</string>
+    <string name="sliding_key_input_preview_summary">הצג רמז חזותי בעת החלקה ממקשי Shift או סמלים</string>
+    <string name="prefs_dump_dynamic_dicts">ייצא מילון</string>
+    <string name="debug_dump_dict_format">ייצא מילון %s</string>
+    <string name="debug_dumping_dict_toast_format">מייצא מילון %s אל logcat…</string>
+    <string name="background_services_summary">ניהול שירותי רקע פעילים, נעילות זיכרון ומשקיפים</string>
+    <string name="sound_pack_category_title">חבילת צלילים</string>
+    <string name="sound_pack_active_info_title">מידע על חבילה פעילה</string>
+    <string name="plugin_management_category">ניהול תוספים</string>
+    <string name="handwriting_plugin_title">תוסף כתב יד</string>
+    <string name="configuration_category">תצורה</string>
+    <string name="offline_models_category">מודלים לא מקוונים</string>
+    <string name="handwriting_models_management_desc">הורד ונהל מודלי זיהוי לא מקוונים</string>
+    <string name="ocr_plugin_title">APK תוסף OCR</string>
+    <string name="plugin_active_version_format">תוסף פעיל (גרסה %s)</string>
+    <string-array name="cloud_ai_max_tokens_entries">
+        <item>קומפקטי (1024 אסימונים)</item>
+        <item>רגיל (2048 אסימונים)</item>
+        <item>גדול (4096 אסימונים)</item>
+        <item>גדול מאוד (8192 אסימונים)</item>
+    </string-array>
+    <string-array name="offline_max_tokens_entries">
+        <item>סופר מהיר (12 אסימונים)</item>
+        <item>מהיר (20 אסימונים)</item>
+        <item>מאוזן (32 אסימונים)</item>
+        <item>מדויק (64 אסימונים)</item>
+        <item>מעמיק (128 אסימונים)</item>
+    </string-array>
 </resources>
+
 
 
 

@@ -1470,7 +1470,43 @@ Memungkinkan inferensi GGUF / llama.cpp di perangkat untuk koreksi teks dan penu
     <string name="sound_pack_deleted_format">%s dihapus</string>
     <string name="sound_pack_downloading_in_browser_toast">Mengunduh di browser… impor .zip setelah selesai</string>
     <string name="sound_pack_preview">Pratinjau</string>
+<string name="app_slogan">Papan ketik sumber terbuka dengan fitur canggih.</string>
+    <string name="debug_settings_title">Pengaturan debug</string>
+    <string name="prefs_show_debug_settings">Aktifkan pengaturan debug</string>
+    <string name="prefs_debug_settings_enabled">Pengaturan debug diaktifkan. Temukan di pengaturan lanjutan.</string>
+    <string name="prefs_debug_mode">Mode debug</string>
+    <string name="prefs_show_suggestion_infos">Tampilkan info saran</string>
+    <string name="prefs_force_non_distinct_multitouch">Paksa multitouch non-berbeda</string>
+    <string name="sliding_key_input_preview">Tampilkan indikator geser</string>
+    <string name="sliding_key_input_preview_summary">Tampilkan petunjuk visual saat menggeser dari tombol Shift atau Simbol</string>
+    <string name="prefs_dump_dynamic_dicts">Ekspor kamus</string>
+    <string name="debug_dump_dict_format">Ekspor kamus %s</string>
+    <string name="debug_dumping_dict_toast_format">Mengekspor kamus %s ke logcat…</string>
+    <string name="background_services_summary">Kelola layanan latar belakang aktif, kunci memori, dan pengamat</string>
+    <string name="sound_pack_category_title">Paket Suara</string>
+    <string name="sound_pack_active_info_title">Info Paket Aktif</string>
+    <string name="plugin_management_category">Manajemen Plugin</string>
+    <string name="handwriting_plugin_title">Plugin Tulisan Tangan</string>
+    <string name="configuration_category">Konfigurasi</string>
+    <string name="offline_models_category">Model Offline</string>
+    <string name="handwriting_models_management_desc">Unduh dan kelola model pengenalan offline</string>
+    <string name="ocr_plugin_title">APK Plugin OCR</string>
+    <string name="plugin_active_version_format">Plugin aktif (versi %s)</string>
+    <string-array name="cloud_ai_max_tokens_entries">
+        <item>Ringkas (1024 token)</item>
+        <item>Standar (2048 token)</item>
+        <item>Besar (4096 token)</item>
+        <item>Sangat Besar (8192 token)</item>
+    </string-array>
+    <string-array name="offline_max_tokens_entries">
+        <item>Sangat Cepat (12 token)</item>
+        <item>Cepat (20 token)</item>
+        <item>Seimbang (32 token)</item>
+        <item>Akurat (64 token)</item>
+        <item>Mendalam (128 token)</item>
+    </string-array>
 </resources>
+
 
 
 

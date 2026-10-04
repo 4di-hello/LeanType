@@ -1555,7 +1555,43 @@
     <string name="sound_pack_deleted_format">%s е изтрит</string>
     <string name="sound_pack_downloading_in_browser_toast">Изтегляне в браузъра… импортирайте .zip след завършване</string>
     <string name="sound_pack_preview">Преглед</string>
+<string name="app_slogan">Клавиатура с отворен код и разширени функции.</string>
+    <string name="debug_settings_title">Настройки за отстраняване на грешки</string>
+    <string name="prefs_show_debug_settings">Активиране на настройките за отстраняване на грешки</string>
+    <string name="prefs_debug_settings_enabled">Настройките за отстраняване на грешки са активирани. Намерете ги в разширените настройки.</string>
+    <string name="prefs_debug_mode">Режим за отстраняване на грешки</string>
+    <string name="prefs_show_suggestion_infos">Показване на информация за предложенията</string>
+    <string name="prefs_force_non_distinct_multitouch">Принудителен недискретен мултидопир</string>
+    <string name="sliding_key_input_preview">Показване на индикатор за плъзгане</string>
+    <string name="sliding_key_input_preview_summary">Показване на визуална подсказка при плъзгане от клавишите Shift или Символ</string>
+    <string name="prefs_dump_dynamic_dicts">Дъмп на речник</string>
+    <string name="debug_dump_dict_format">Дъмп на речник %s</string>
+    <string name="debug_dumping_dict_toast_format">Извеждане на речник %s в logcat…</string>
+    <string name="background_services_summary">Управление на активни фонови услуги, заключвания на памет и наблюдатели</string>
+    <string name="sound_pack_category_title">Звуков пакет</string>
+    <string name="sound_pack_active_info_title">Информация за активния пакет</string>
+    <string name="plugin_management_category">Управление на приставки</string>
+    <string name="handwriting_plugin_title">Приставка за ръкописен текст</string>
+    <string name="configuration_category">Конфигурация</string>
+    <string name="offline_models_category">Офлайн модели</string>
+    <string name="handwriting_models_management_desc">Изтегляне и управление на офлайн модели за разпознаване</string>
+    <string name="ocr_plugin_title">APK на приставка OCR</string>
+    <string name="plugin_active_version_format">Приставката е активна (версия %s)</string>
+    <string-array name="cloud_ai_max_tokens_entries">
+        <item>Компактен (1024 токена)</item>
+        <item>Стандартен (2048 токена)</item>
+        <item>Голям (4096 токена)</item>
+        <item>Много голям (8192 токена)</item>
+    </string-array>
+    <string-array name="offline_max_tokens_entries">
+        <item>Свръхбърз (12 токена)</item>
+        <item>Бърз (20 токена)</item>
+        <item>Балансиран (32 токена)</item>
+        <item>Точен (64 токена)</item>
+        <item>Задълбочен (128 токена)</item>
+    </string-array>
 </resources>
+
 
 
 

@@ -1502,7 +1502,43 @@ Võimaldab seadmesisese GGUF / llama.cpp järelduse korrektuuri ja ümbersõnast
     <string name="sound_pack_deleted_format">%s kustutatud</string>
     <string name="sound_pack_downloading_in_browser_toast">Allalaadimine brauseris… importige .zip pärast lõpetamist</string>
     <string name="sound_pack_preview">Eelvaade</string>
+<string name="app_slogan">Avatud lähtekoodiga klaviatuur täiustatud funktsioonidega.</string>
+    <string name="debug_settings_title">Silumisseaded</string>
+    <string name="prefs_show_debug_settings">Luba silumisseaded</string>
+    <string name="prefs_debug_settings_enabled">Silumisseaded on lubatud. Leiate need lisaseadetest.</string>
+    <string name="prefs_debug_mode">Silumisrežiim</string>
+    <string name="prefs_show_suggestion_infos">Kuva soovituste teave</string>
+    <string name="prefs_force_non_distinct_multitouch">Sunni eristamata mitmikpuute</string>
+    <string name="sliding_key_input_preview">Kuva libistamisnäidik</string>
+    <string name="sliding_key_input_preview_summary">Kuva visuaalne vihje Shift- või sümboliklahvidelt libistades</string>
+    <string name="prefs_dump_dynamic_dicts">Ekspordi sõnastik</string>
+    <string name="debug_dump_dict_format">Ekspordi %s sõnastik</string>
+    <string name="debug_dumping_dict_toast_format">%s sõnastiku eksportimine logcatisse…</string>
+    <string name="background_services_summary">Halda aktiivseid taustateenuseid, mälulukke ja vaatlejaid</string>
+    <string name="sound_pack_category_title">Helipakett</string>
+    <string name="sound_pack_active_info_title">Aktiivse paketi teave</string>
+    <string name="plugin_management_category">Pluginate haldus</string>
+    <string name="handwriting_plugin_title">Käsitsikirja plugin</string>
+    <string name="configuration_category">Seadistamine</string>
+    <string name="offline_models_category">Võrguühenduseta mudelid</string>
+    <string name="handwriting_models_management_desc">Laadi alla ja halda võrguühenduseta tuvastusmudeleid</string>
+    <string name="ocr_plugin_title">OCR plugina APK</string>
+    <string name="plugin_active_version_format">Plugin aktiivne (versioon %s)</string>
+    <string-array name="cloud_ai_max_tokens_entries">
+        <item>Kompaktne (1024 tokenit)</item>
+        <item>Standardne (2048 tokenit)</item>
+        <item>Suur (4096 tokenit)</item>
+        <item>Väga suur (8192 tokenit)</item>
+    </string-array>
+    <string-array name="offline_max_tokens_entries">
+        <item>Ülikiire (12 tokenit)</item>
+        <item>Kiire (20 tokenit)</item>
+        <item>Tasakaalustatud (32 tokenit)</item>
+        <item>Täpne (64 tokenit)</item>
+        <item>Põhjalik (128 tokenit)</item>
+    </string-array>
 </resources>
+
 
 
 

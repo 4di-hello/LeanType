@@ -1576,7 +1576,36 @@ Permet l\'inférence GGUF / llama.cpp sur l\'appareil pour la correction et la r
     <string name="sound_pack_deleted_format">%s supprimé</string>
     <string name="sound_pack_downloading_in_browser_toast">Téléchargement dans le navigateur… importez le .zip une fois terminé</string>
     <string name="sound_pack_preview">Aperçu</string>
+<string name="app_slogan">Clavier open source avec fonctionnalités avancées.</string>
+    <string name="debug_settings_title">Paramètres de débogage</string>
+    <string name="prefs_show_debug_settings">Activer les paramètres de débogage</string>
+    <string name="prefs_debug_settings_enabled">Paramètres de débogage activés. Retrouvez-les dans les paramètres avancés.</string>
+    <string name="prefs_debug_mode">Mode débogage</string>
+    <string name="prefs_show_suggestion_infos">Afficher les infos de suggestion</string>
+    <string name="prefs_force_non_distinct_multitouch">Forcer le multipoint non distinct</string>
+    <string name="sliding_key_input_preview">Afficher l\'indicateur de glissement</string>
+    <string name="sliding_key_input_preview_summary">Afficher un repère visuel lors du glissement depuis les touches Maj ou Symbole</string>
+    <string name="prefs_dump_dynamic_dicts">Exporter le dictionnaire</string>
+    <string name="debug_dump_dict_format">Exporter le dictionnaire %s</string>
+    <string name="debug_dumping_dict_toast_format">Exportation du dictionnaire %s vers logcat…</string>
+    <string name="background_services_summary">Gérer les services en arrière-plan actifs, les verrous mémoire et observateurs</string>
+    <string name="sound_pack_category_title">Pack de sons</string>
+    <string name="sound_pack_active_info_title">Infos du pack actif</string>
+    <string name="plugin_management_category">Gestion des plugins</string>
+    <string name="handwriting_plugin_title">Plugin d\'écriture manuscrite</string>
+    <string name="configuration_category">Configuration</string>
+    <string name="offline_models_category">Modèles hors ligne</string>
+    <string name="handwriting_models_management_desc">Télécharger et gérer les modèles de reconnaissance hors ligne</string>
+    <string name="ocr_plugin_title">APK du plugin OCR</string>
+    <string name="plugin_active_version_format">Plugin actif (version %s)</string>
+    <string-array name="cloud_ai_max_tokens_entries">
+        <item>Compact (1024 tokens)</item>
+        <item>Standard (2048 tokens)</item>
+        <item>Grand (4096 tokens)</item>
+        <item>Très grand (8192 tokens)</item>
+    </string-array>
 </resources>
+
 
 
 

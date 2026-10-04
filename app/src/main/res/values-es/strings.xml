@@ -1506,7 +1506,43 @@ Permite la inferencia GGUF / llama.cpp en el dispositivo para corrección y rees
     <string name="sound_pack_deleted_format">%s eliminado</string>
     <string name="sound_pack_downloading_in_browser_toast">Descargando en el navegador… importe el .zip una vez finalizado</string>
     <string name="sound_pack_preview">Vista previa</string>
+<string name="app_slogan">Teclado de código abierto con funciones avanzadas.</string>
+    <string name="debug_settings_title">Ajustes de depuración</string>
+    <string name="prefs_show_debug_settings">Habilitar ajustes de depuración</string>
+    <string name="prefs_debug_settings_enabled">Ajustes de depuración habilitados. Búscalos en ajustes avanzados.</string>
+    <string name="prefs_debug_mode">Modo de depuración</string>
+    <string name="prefs_show_suggestion_infos">Mostrar información de sugerencias</string>
+    <string name="prefs_force_non_distinct_multitouch">Forzar multitáctil no diferenciado</string>
+    <string name="sliding_key_input_preview">Mostrar indicador de deslizamiento</string>
+    <string name="sliding_key_input_preview_summary">Muestra una guía visual al deslizar desde las teclas Shift o Símbolo</string>
+    <string name="prefs_dump_dynamic_dicts">Volcar diccionario</string>
+    <string name="debug_dump_dict_format">Volcar diccionario %s</string>
+    <string name="debug_dumping_dict_toast_format">Volcando diccionario %s a logcat…</string>
+    <string name="background_services_summary">Administrar servicios en segundo plano, bloqueos de memoria y observadores</string>
+    <string name="sound_pack_category_title">Paquete de sonido</string>
+    <string name="sound_pack_active_info_title">Información del paquete activo</string>
+    <string name="plugin_management_category">Gestión de complementos</string>
+    <string name="handwriting_plugin_title">Complemento de escritura manual</string>
+    <string name="configuration_category">Configuración</string>
+    <string name="offline_models_category">Modelos sin conexión</string>
+    <string name="handwriting_models_management_desc">Descargar y administrar modelos de reconocimiento sin conexión</string>
+    <string name="ocr_plugin_title">APK del complemento OCR</string>
+    <string name="plugin_active_version_format">Complemento activo (versión %s)</string>
+    <string-array name="cloud_ai_max_tokens_entries">
+        <item>Compacto (1024 tokens)</item>
+        <item>Estándar (2048 tokens)</item>
+        <item>Grande (4096 tokens)</item>
+        <item>Extra grande (8192 tokens)</item>
+    </string-array>
+    <string-array name="offline_max_tokens_entries">
+        <item>Ultrarrápido (12 tokens)</item>
+        <item>Rápido (20 tokens)</item>
+        <item>Equilibrado (32 tokens)</item>
+        <item>Preciso (64 tokens)</item>
+        <item>Profundo (128 tokens)</item>
+    </string-array>
 </resources>
+
 
 
 

@@ -1555,7 +1555,43 @@ Maakt GGUF / llama.cpp-inferentie op het apparaat mogelijk voor proeflezen en he
     <string name="sound_pack_deleted_format">%s verwijderd</string>
     <string name="sound_pack_downloading_in_browser_toast">Downloaden in browser… importeer .zip na voltooiing</string>
     <string name="sound_pack_preview">Voorbeeld</string>
+<string name="app_slogan">Open-source toetsenbord met geavanceerde functies.</string>
+    <string name="debug_settings_title">Foutopsporingsinstellingen</string>
+    <string name="prefs_show_debug_settings">Foutopsporingsinstellingen inschakelen</string>
+    <string name="prefs_debug_settings_enabled">Foutopsporingsinstellingen ingeschakeld. Te vinden in geavanceerde instellingen.</string>
+    <string name="prefs_debug_mode">Foutopsporingsmodus</string>
+    <string name="prefs_show_suggestion_infos">Suggestie-informatie tonen</string>
+    <string name="prefs_force_non_distinct_multitouch">Niet-afzonderlijke multitouch forceren</string>
+    <string name="sliding_key_input_preview">Glij-indicator tonen</string>
+    <string name="sliding_key_input_preview_summary">Visuele aanwijzing tonen tijdens glijden vanaf Shift- of Symbooltoetsen</string>
+    <string name="prefs_dump_dynamic_dicts">Woordenboek dumpen</string>
+    <string name="debug_dump_dict_format">%s-woordenboek dumpen</string>
+    <string name="debug_dumping_dict_toast_format">%s-woordenboek dumpen naar logcat…</string>
+    <string name="background_services_summary">Actieve achtergronddiensten, geheugenvergrendelingen en waarnemers beheren</string>
+    <string name="sound_pack_category_title">Geluidspakket</string>
+    <string name="sound_pack_active_info_title">Info over actief pakket</string>
+    <string name="plugin_management_category">Pluginbeheer</string>
+    <string name="handwriting_plugin_title">Handschriftplugin</string>
+    <string name="configuration_category">Configuratie</string>
+    <string name="offline_models_category">Offline modellen</string>
+    <string name="handwriting_models_management_desc">Offline herkenningsmodellen downloaden en beheren</string>
+    <string name="ocr_plugin_title">OCR-plugin-APK</string>
+    <string name="plugin_active_version_format">Plugin actief (versie %s)</string>
+    <string-array name="cloud_ai_max_tokens_entries">
+        <item>Compact (1024 tokens)</item>
+        <item>Standaard (2048 tokens)</item>
+        <item>Groot (4096 tokens)</item>
+        <item>Extra groot (8192 tokens)</item>
+    </string-array>
+    <string-array name="offline_max_tokens_entries">
+        <item>Ultrasnel (12 tokens)</item>
+        <item>Snel (20 tokens)</item>
+        <item>Gebalanceerd (32 tokens)</item>
+        <item>Nauwkeurig (64 tokens)</item>
+        <item>Grondig (128 tokens)</item>
+    </string-array>
 </resources>
+
 
 
 

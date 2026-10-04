@@ -1587,7 +1587,36 @@ Abilita l\'inferenza GGUF / llama.cpp sul dispositivo per correzione e riscrittu
     <string name="sound_pack_deleted_format">%s eliminato</string>
     <string name="sound_pack_downloading_in_browser_toast">Download nel browser in corso… importa il file .zip al termine</string>
     <string name="sound_pack_preview">Anteprima</string>
+<string name="app_slogan">Tastiera open source con funzionalità avanzate.</string>
+    <string name="debug_settings_title">Impostazioni di debug</string>
+    <string name="prefs_show_debug_settings">Abilita impostazioni di debug</string>
+    <string name="prefs_debug_settings_enabled">Impostazioni di debug abilitate. Le trovi nelle impostazioni avanzate.</string>
+    <string name="prefs_debug_mode">Modalità di debug</string>
+    <string name="prefs_show_suggestion_infos">Mostra info sui suggerimenti</string>
+    <string name="prefs_force_non_distinct_multitouch">Forza multitouch non distinto</string>
+    <string name="sliding_key_input_preview">Mostra indicatore di scorrimento</string>
+    <string name="sliding_key_input_preview_summary">Mostra una guida visiva durante lo scorrimento dai tasti Maiusc o Simboli</string>
+    <string name="prefs_dump_dynamic_dicts">Estrai dizionario</string>
+    <string name="debug_dump_dict_format">Estrai dizionario %s</string>
+    <string name="debug_dumping_dict_toast_format">Estrazione del dizionario %s in logcat…</string>
+    <string name="background_services_summary">Gestisci servizi in background attivi, blocchi di memoria e osservatori</string>
+    <string name="sound_pack_category_title">Pacchetto audio</string>
+    <string name="sound_pack_active_info_title">Informazioni pacchetto attivo</string>
+    <string name="plugin_management_category">Gestione plugin</string>
+    <string name="handwriting_plugin_title">Plugin di scrittura a mano</string>
+    <string name="configuration_category">Configurazione</string>
+    <string name="offline_models_category">Modelli offline</string>
+    <string name="handwriting_models_management_desc">Scarica e gestisci i modelli di riconoscimento offline</string>
+    <string name="ocr_plugin_title">APK del plugin OCR</string>
+    <string name="plugin_active_version_format">Plugin attivo (versione %s)</string>
+    <string-array name="cloud_ai_max_tokens_entries">
+        <item>Compatto (1024 token)</item>
+        <item>Standard (2048 token)</item>
+        <item>Grande (4096 token)</item>
+        <item>Molto grande (8192 token)</item>
+    </string-array>
 </resources>
+
 
 
 

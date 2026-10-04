@@ -1502,7 +1502,43 @@ Activează inferența GGUF / llama.cpp pe dispozitiv pentru corectură și refor
     <string name="sound_pack_deleted_format">%s a fost șters</string>
     <string name="sound_pack_downloading_in_browser_toast">Se descarcă în browser… importați fișierul .zip după finalizare</string>
     <string name="sound_pack_preview">Previzualizare</string>
+<string name="app_slogan">Tastatură open-source cu funcții avansate.</string>
+    <string name="debug_settings_title">Setări de depanare</string>
+    <string name="prefs_show_debug_settings">Activează setările de depanare</string>
+    <string name="prefs_debug_settings_enabled">Setările de depanare au fost activate. Le găsiți în setările avansate.</string>
+    <string name="prefs_debug_mode">Mod depanare</string>
+    <string name="prefs_show_suggestion_infos">Afișează informații despre sugestii</string>
+    <string name="prefs_force_non_distinct_multitouch">Forțează atingeri multiple nedistincte</string>
+    <string name="sliding_key_input_preview">Afișează indicatorul de glisare</string>
+    <string name="sliding_key_input_preview_summary">Afișează un indiciu vizual la glisarea de pe tastele Shift sau Simbol</string>
+    <string name="prefs_dump_dynamic_dicts">Descarcă dicționarul</string>
+    <string name="debug_dump_dict_format">Descarcă dicționarul %s</string>
+    <string name="debug_dumping_dict_toast_format">Se descarcă dicționarul %s în logcat…</string>
+    <string name="background_services_summary">Gestionați serviciile de fundal active, blocările de memorie și observatorii</string>
+    <string name="sound_pack_category_title">Pachet de sunete</string>
+    <string name="sound_pack_active_info_title">Informații pachet activ</string>
+    <string name="plugin_management_category">Gestionare pluginuri</string>
+    <string name="handwriting_plugin_title">Plugin de scriere de mână</string>
+    <string name="configuration_category">Configurare</string>
+    <string name="offline_models_category">Modele offline</string>
+    <string name="handwriting_models_management_desc">Descărcați și gestionați modelele de recunoaștere offline</string>
+    <string name="ocr_plugin_title">APK plugin OCR</string>
+    <string name="plugin_active_version_format">Plugin activ (versiunea %s)</string>
+    <string-array name="cloud_ai_max_tokens_entries">
+        <item>Compact (1024 tokenuri)</item>
+        <item>Standard (2048 tokenuri)</item>
+        <item>Mare (4096 tokenuri)</item>
+        <item>Foarte mare (8192 tokenuri)</item>
+    </string-array>
+    <string-array name="offline_max_tokens_entries">
+        <item>Ultrarapid (12 tokenuri)</item>
+        <item>Rapid (20 tokenuri)</item>
+        <item>Echilibrat (32 tokenuri)</item>
+        <item>Precis (64 tokenuri)</item>
+        <item>Aprofundat (128 tokenuri)</item>
+    </string-array>
 </resources>
+
 
 
 

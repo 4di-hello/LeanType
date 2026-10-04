@@ -1557,7 +1557,43 @@ Umożliwia lokalne wnioskowanie GGUF / llama.cpp na urządzeniu w celu korekty i
     <string name="sound_pack_deleted_format">Usunięto %s</string>
     <string name="sound_pack_downloading_in_browser_toast">Pobieranie w przeglądarce… zaimportuj plik .zip po zakończeniu</string>
     <string name="sound_pack_preview">Odsłuchaj</string>
+<string name="app_slogan">Klawiatura open-source z zaawansowanymi funkcjami.</string>
+    <string name="debug_settings_title">Ustawienia debugowania</string>
+    <string name="prefs_show_debug_settings">Włącz ustawienia debugowania</string>
+    <string name="prefs_debug_settings_enabled">Ustawienia debugowania zostały włączone. Znajdziesz je w ustawieniach zaawansowanych.</string>
+    <string name="prefs_debug_mode">Tryb debugowania</string>
+    <string name="prefs_show_suggestion_infos">Pokaż informacje o podpowiedziach</string>
+    <string name="prefs_force_non_distinct_multitouch">Wymuś niejednoznaczny wielodotyk</string>
+    <string name="sliding_key_input_preview">Pokaż wskaźnik przesuwania</string>
+    <string name="sliding_key_input_preview_summary">Wyświetlaj wskazówkę wizualną podczas przesuwania od klawiszy Shift lub symboli</string>
+    <string name="prefs_dump_dynamic_dicts">Zrzut słownika</string>
+    <string name="debug_dump_dict_format">Zrzut słownika %s</string>
+    <string name="debug_dumping_dict_toast_format">Zrzucanie słownika %s do logcat…</string>
+    <string name="background_services_summary">Zarządzaj aktywnymi usługami w tle, blokadami pamięci i obserwatorami</string>
+    <string name="sound_pack_category_title">Pakiet dźwiękowy</string>
+    <string name="sound_pack_active_info_title">Informacje o aktywnym pakiecie</string>
+    <string name="plugin_management_category">Zarządzanie wtyczkami</string>
+    <string name="handwriting_plugin_title">Wtyczka pisma odręcznego</string>
+    <string name="configuration_category">Konfiguracja</string>
+    <string name="offline_models_category">Modele offline</string>
+    <string name="handwriting_models_management_desc">Pobieraj i zarządzaj modelami rozpoznawania offline</string>
+    <string name="ocr_plugin_title">Plik APK wtyczki OCR</string>
+    <string name="plugin_active_version_format">Wtyczka aktywna (wersja %s)</string>
+    <string-array name="cloud_ai_max_tokens_entries">
+        <item>Kompaktowy (1024 tokeny)</item>
+        <item>Standardowy (2048 tokenów)</item>
+        <item>Duży (4096 tokenów)</item>
+        <item>Bardzo duży (8192 tokeny)</item>
+    </string-array>
+    <string-array name="offline_max_tokens_entries">
+        <item>Ultraszybki (12 tokenów)</item>
+        <item>Szybki (20 tokenów)</item>
+        <item>Zrównoważony (32 tokeny)</item>
+        <item>Dokładny (64 tokeny)</item>
+        <item>Głęboki (128 tokenów)</item>
+    </string-array>
 </resources>
+
 
 
 

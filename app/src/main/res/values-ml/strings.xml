@@ -1580,7 +1580,36 @@
     <string name="sound_pack_deleted_format">%s ഇല്ലാതാക്കി</string>
     <string name="sound_pack_downloading_in_browser_toast">ബ്രൗസറിൽ ഡൗൺലോഡ് ചെയ്യുന്നു… പൂർത്തിയാകുമ്പോൾ .zip ഇമ്പോർട്ട് ചെയ്യുക</string>
     <string name="sound_pack_preview">പ്രിവ്യൂ</string>
+<string name="app_slogan">നൂതന സവിശേഷതകളുള്ള ഓപ്പൺ സോഴ്സ് കീബോർഡ്.</string>
+    <string name="debug_settings_title">ഡീബഗ് ക്രമീകരണങ്ങൾ</string>
+    <string name="prefs_show_debug_settings">ഡീബഗ് ക്രമീകരണങ്ങൾ പ്രവർത്തനക്ഷമമാക്കുക</string>
+    <string name="prefs_debug_settings_enabled">ഡീബഗ് ക്രമീകരണങ്ങൾ പ്രവർത്തനക്ഷമമാക്കി. വിപുലമായ ക്രമീകരണങ്ങളിൽ കണ്ടെത്താം.</string>
+    <string name="prefs_debug_mode">ഡീബഗ് മോഡ്</string>
+    <string name="prefs_show_suggestion_infos">നിർദ്ദേശ വിവരങ്ങൾ കാണിക്കുക</string>
+    <string name="prefs_force_non_distinct_multitouch">വ്യത്യസ്തമല്ലാത്ത മൾട്ടിടച്ച് നിർബന്ധമാക്കുക</string>
+    <string name="sliding_key_input_preview">സ്ലൈഡ് ഇൻഡിക്കേറ്റർ കാണിക്കുക</string>
+    <string name="sliding_key_input_preview_summary">ഷിഫ്റ്റ് അല്ലെങ്കിൽ സിംബൽ കീകൾ സ്ലൈഡ് ചെയ്യുമ്പോൾ വിഷ്വൽ സൂചന നൽകുക</string>
+    <string name="prefs_dump_dynamic_dicts">നിഘണ്ടു ഡംപ് ചെയ്യുക</string>
+    <string name="debug_dump_dict_format">%s നിഘണ്ടു ഡംപ് ചെയ്യുക</string>
+    <string name="debug_dumping_dict_toast_format">%s നിഘണ്ടു logcat-ലേക്ക് ഡംപ് ചെയ്യുന്നു…</string>
+    <string name="background_services_summary">സജീവ പശ്ചാത്തല സേവനങ്ങളും മെമ്മറി ലോക്കുകളും നിരീക്ഷകരും കൈകാര്യം ചെയ്യുക</string>
+    <string name="sound_pack_category_title">ശബ്ദ പാക്ക്</string>
+    <string name="sound_pack_active_info_title">സജീവ പാക്ക് വിവരം</string>
+    <string name="plugin_management_category">പ്ലഗിൻ മാനേജ്മെന്റ്</string>
+    <string name="handwriting_plugin_title">കയ്യക്ഷര പ്ലഗിൻ</string>
+    <string name="configuration_category">കോൺഫിഗറേഷൻ</string>
+    <string name="offline_models_category">ഓഫ്‌ലൈൻ മോഡലുകൾ</string>
+    <string name="handwriting_models_management_desc">ഓഫ്‌ലൈൻ തിരിച്ചറിയൽ മോഡലുകൾ ഡൗൺലോഡ് ചെയ്യുകയും നിയന്ത്രിക്കുകയും ചെയ്യുക</string>
+    <string name="ocr_plugin_title">OCR പ്ലഗിൻ APK</string>
+    <string name="plugin_active_version_format">പ്ലഗിൻ സജീവമാണ് (പതിപ്പ് %s)</string>
+    <string-array name="cloud_ai_max_tokens_entries">
+        <item>കോംപാക്റ്റ് (1024 ടോക്കണുകൾ)</item>
+        <item>സ്റ്റാൻഡേർഡ് (2048 ടോക്കണുകൾ)</item>
+        <item>വലുത് (4096 ടോക്കണുകൾ)</item>
+        <item>വളരെ വലുത് (8192 ടോക്കണുകൾ)</item>
+    </string-array>
 </resources>
+
 
 
 

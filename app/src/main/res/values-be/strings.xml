@@ -1507,7 +1507,43 @@
     <string name="sound_pack_deleted_format">%s выдалены</string>
     <string name="sound_pack_downloading_in_browser_toast">Спампоўванне ў браўзеры… імпартуйце .zip пасля завяршэння</string>
     <string name="sound_pack_preview">Праслухаць</string>
+<string name="app_slogan">Клавіятура з адкрытым зыходным кодам і пашыранымі магчымасцямі.</string>
+    <string name="debug_settings_title">Налады адладкі</string>
+    <string name="prefs_show_debug_settings">Уключыць налады адладкі</string>
+    <string name="prefs_debug_settings_enabled">Налады адладкі ўключаны. Вы знойдзеце іх у пашыраных наладах.</string>
+    <string name="prefs_debug_mode">Рэжым адладкі</string>
+    <string name="prefs_show_suggestion_infos">Паказваць інфармацыю пра падказкі</string>
+    <string name="prefs_force_non_distinct_multitouch">Прымусовы непадзельны мультытач</string>
+    <string name="sliding_key_input_preview">Паказваць індыкатар слізгацення</string>
+    <string name="sliding_key_input_preview_summary">Адлюстроўваць візуальную падказку пры слізгаценні з клавіш Shift ці сімвалаў</string>
+    <string name="prefs_dump_dynamic_dicts">Зрабіць дамп слоўніка</string>
+    <string name="debug_dump_dict_format">Зрабіць дамп слоўніка %s</string>
+    <string name="debug_dumping_dict_toast_format">Выконваецца дамп слоўніка %s у logcat…</string>
+    <string name="background_services_summary">Кіраванне актыўнымі фонавымі службамі, блакіроўкамі памяці і назіральнікамі</string>
+    <string name="sound_pack_category_title">Гукавы пакет</string>
+    <string name="sound_pack_active_info_title">Інфармацыя пра актыўны пакет</string>
+    <string name="plugin_management_category">Кіраванне плагінамі</string>
+    <string name="handwriting_plugin_title">Плагін рукапіснага ўводу</string>
+    <string name="configuration_category">Канфігурацыя</string>
+    <string name="offline_models_category">Аўтаномныя мадэлі</string>
+    <string name="handwriting_models_management_desc">Спампоўванне аўтаномных мадэлей распазнавання і кіраванне імі</string>
+    <string name="ocr_plugin_title">APK плагіна OCR</string>
+    <string name="plugin_active_version_format">Плагін актыўны (версія %s)</string>
+    <string-array name="cloud_ai_max_tokens_entries">
+        <item>Кампактны (1024 токены)</item>
+        <item>Стандартны (2048 токенаў)</item>
+        <item>Вялікі (4096 токенаў)</item>
+        <item>Вельмі вялікі (8192 токены)</item>
+    </string-array>
+    <string-array name="offline_max_tokens_entries">
+        <item>Звышхуткі (12 токенаў)</item>
+        <item>Хуткі (20 токенаў)</item>
+        <item>Збалансаваны (32 токены)</item>
+        <item>Дакладны (64 токены)</item>
+        <item>Глыбокі (128 токенаў)</item>
+    </string-array>
 </resources>
+
 
 
 
