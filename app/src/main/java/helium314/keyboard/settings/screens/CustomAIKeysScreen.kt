@@ -177,7 +177,7 @@ private fun CustomAIKeySlot(index: Int, context: Context, onNavigateToConfig: (I
             
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = if (currentTag.isNotBlank()) currentTag else "Key $index",
+                    text = if (currentTag.isNotBlank()) currentTag else stringResource(R.string.custom_ai_key_format, index),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
@@ -232,19 +232,19 @@ fun ConfigCustomAIKeyScreen(
     val keyEnum = CUSTOM_AI_KEY_ENUMS[index - 1]
     
     val modes = listOf(
-        "#editor" to "Edit text",
-        "#proofread" to "Fix grammar",
-        "#paraphrase" to "Rewrite",
-        "#summarize" to "Summarize",
-        "#expand" to "Expand",
-        "#toneshift" to "Adjust tone",
-        "#generate" to "Generate"
+        "#editor" to stringResource(R.string.custom_ai_keyword_editor_label),
+        "#proofread" to stringResource(R.string.custom_ai_keyword_proofread_label),
+        "#paraphrase" to stringResource(R.string.custom_ai_keyword_paraphrase_label),
+        "#summarize" to stringResource(R.string.custom_ai_keyword_summarize_label),
+        "#expand" to stringResource(R.string.custom_ai_keyword_expand_label),
+        "#toneshift" to stringResource(R.string.custom_ai_keyword_toneshift_label),
+        "#generate" to stringResource(R.string.custom_ai_keyword_generate_label)
     )
     
     val modifiersList = listOf(
-        "#outputonly" to "Result only",
-        "#append" to "Append result",
-        "#showthought" to "Show reasoning"
+        "#outputonly" to stringResource(R.string.custom_ai_keyword_outputonly_label),
+        "#append" to stringResource(R.string.custom_ai_keyword_append_label),
+        "#showthought" to stringResource(R.string.custom_ai_keyword_showthought_label)
     )
 
     val allKeywords = (modes.map { it.first } + modifiersList.map { it.first })
@@ -259,16 +259,16 @@ fun ConfigCustomAIKeyScreen(
 
 
     val keywordDescriptions = mapOf(
-        "#editor" to "Free-form editing and formatting of text according to prompt.",
-        "#proofread" to "Corrects grammar, spelling, and punctuation.",
-        "#paraphrase" to "Rewrites text while maintaining original meaning.",
-        "#summarize" to "Condenses text to its most important points.",
-        "#expand" to "Elaborates on the text by adding more details.",
-        "#toneshift" to "Changes the tone (e.g., professional, casual).",
-        "#generate" to "Generates new text completely ignoring selected text.",
-        "#outputonly" to "Returns only the modified text, without conversational fillers.",
-        "#append" to "Appends the result to the end of the original text.",
-        "#showthought" to "Includes AI's reasoning process along with result."
+        "#editor" to stringResource(R.string.custom_ai_keyword_editor_desc),
+        "#proofread" to stringResource(R.string.custom_ai_keyword_proofread_desc),
+        "#paraphrase" to stringResource(R.string.custom_ai_keyword_paraphrase_desc),
+        "#summarize" to stringResource(R.string.custom_ai_keyword_summarize_desc),
+        "#expand" to stringResource(R.string.custom_ai_keyword_expand_desc),
+        "#toneshift" to stringResource(R.string.custom_ai_keyword_toneshift_desc),
+        "#generate" to stringResource(R.string.custom_ai_keyword_generate_desc),
+        "#outputonly" to stringResource(R.string.custom_ai_keyword_outputonly_desc),
+        "#append" to stringResource(R.string.custom_ai_keyword_append_desc),
+        "#showthought" to stringResource(R.string.custom_ai_keyword_showthought_desc)
     )
 
     // Prevents nested scrollable areas from bubbling leftover scroll events to the parent screen

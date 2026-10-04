@@ -113,7 +113,7 @@ fun UpdatesScreen(
 
                         if (cleanRemote.isNotBlank() && isNewerVersion(cleanCurrent, cleanRemote)) {
                             isUpdateAvailable = true
-                            updateCheckStatus = "Update available: $tag"
+                            updateCheckStatus = context.getString(R.string.updates_update_available, tag)
                         } else {
                             isUpdateAvailable = false
                             updateCheckStatus = context.getString(R.string.updates_up_to_date)
@@ -121,12 +121,12 @@ fun UpdatesScreen(
                     }
                 } else {
                     withContext(Dispatchers.Main) {
-                        updateCheckStatus = "Check failed (HTTP ${conn.responseCode})"
+                        updateCheckStatus = context.getString(R.string.updates_check_failed_http, conn.responseCode)
                     }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    updateCheckStatus = "Network error checking updates"
+                    updateCheckStatus = context.getString(R.string.updates_network_error)
                 }
             } finally {
                 withContext(Dispatchers.Main) {
@@ -158,9 +158,9 @@ fun UpdatesScreen(
             ListPreference(
                 setting = it,
                 items = listOf(
-                    "Daily" to "1",
-                    "Weekly" to "7",
-                    "Monthly" to "30"
+                    context.getString(R.string.updates_frequency_daily) to "1",
+                    context.getString(R.string.updates_frequency_weekly) to "7",
+                    context.getString(R.string.updates_frequency_monthly) to "30"
                 ),
                 default = "7"
             )
@@ -200,13 +200,13 @@ fun UpdatesScreen(
                                 ) {
                                     Column(modifier = Modifier.weight(1f)) {
                                         Text(
-                                            text = "🎉 New Update Available",
+                                            text = "🎉 " + stringResource(R.string.updates_new_update_title),
                                             style = MaterialTheme.typography.titleSmall,
                                             fontWeight = FontWeight.Bold,
                                             color = MaterialTheme.colorScheme.onPrimaryContainer
                                         )
                                         Text(
-                                            text = "Version $latestVersionTag is ready to install",
+                                            text = stringResource(R.string.updates_new_update_desc, latestVersionTag ?: ""),
                                             style = MaterialTheme.typography.bodySmall,
                                             color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.85f)
                                         )
@@ -225,7 +225,7 @@ fun UpdatesScreen(
                                         },
                                         shape = RoundedCornerShape(12.dp)
                                     ) {
-                                        Text("View Release", fontWeight = FontWeight.Bold)
+                                        Text(stringResource(R.string.updates_view_release), fontWeight = FontWeight.Bold)
                                     }
                                 }
                             }
@@ -241,7 +241,7 @@ fun UpdatesScreen(
                         )
                     ) {
                         Column(modifier = Modifier.padding(vertical = 4.dp)) {
-                            val currentVersionText = "Installed: v${BuildConfig.VERSION_NAME} (${BuildConfig.FLAVOR})"
+                            val currentVersionText = stringResource(R.string.updates_installed_version, BuildConfig.VERSION_NAME, BuildConfig.FLAVOR)
                             val status = updateCheckStatus
                             val checkDescription = when {
                                 isCheckingUpdates -> stringResource(R.string.updates_checking)
@@ -267,7 +267,7 @@ fun UpdatesScreen(
                                             color = MaterialTheme.colorScheme.primaryContainer
                                         ) {
                                             Text(
-                                                text = "Update",
+                                                text = stringResource(R.string.updates_badge_update),
                                                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                                                 style = MaterialTheme.typography.labelMedium,
                                                 fontWeight = FontWeight.SemiBold,
@@ -280,7 +280,7 @@ fun UpdatesScreen(
                                             color = MaterialTheme.colorScheme.surfaceVariant
                                         ) {
                                             Text(
-                                                text = "Latest",
+                                                text = stringResource(R.string.updates_badge_latest),
                                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                                 style = MaterialTheme.typography.labelMedium,
                                                 fontWeight = FontWeight.SemiBold,
@@ -369,7 +369,7 @@ fun UpdatesScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "What's New in v${BuildConfig.VERSION_NAME}",
+                                text = stringResource(R.string.updates_whats_new_title, BuildConfig.VERSION_NAME),
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.primary,
                                 fontWeight = FontWeight.SemiBold
@@ -383,7 +383,7 @@ fun UpdatesScreen(
                                     color = MaterialTheme.colorScheme.secondaryContainer
                                 ) {
                                     Text(
-                                        text = "Current",
+                                        text = stringResource(R.string.updates_badge_current),
                                         style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.onSecondaryContainer,
                                         fontWeight = FontWeight.SemiBold,

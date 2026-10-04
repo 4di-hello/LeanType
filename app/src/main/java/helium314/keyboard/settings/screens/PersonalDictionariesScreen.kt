@@ -112,13 +112,13 @@ fun PersonalDictionariesScreen(
                 try {
                     val count = importGboardDictionary(ctx, uri)
                     withContext(Dispatchers.Main) {
-                        KeyboardSwitcher.getInstance().showToast("Imported $count words", true)
+                        KeyboardSwitcher.getInstance().showToast(ctx.getString(R.string.personal_dict_imported_count, count), true)
                         showImporting = false
                     }
                 } catch (e: Exception) {
                     Log.e("ImportDict", "Failed to import", e)
                     withContext(Dispatchers.Main) {
-                        KeyboardSwitcher.getInstance().showToast("Import failed: ${e.message}", true)
+                        KeyboardSwitcher.getInstance().showToast(ctx.getString(R.string.personal_dict_import_failed, e.message ?: ""), true)
                         showImporting = false
                     }
                 }
@@ -129,8 +129,8 @@ fun PersonalDictionariesScreen(
     Box(Modifier.fillMaxSize()) {
         ExtendedFloatingActionButton(
             onClick = { importLauncher.launch(arrayOf("application/zip", "application/x-zip-compressed", "text/plain")) },
-            text = { Text("Import Gboard Dictionary") },
-            icon = { Icon(painterResource(R.drawable.ic_plus), "Import Gboard Dictionary") },
+            text = { Text(stringResource(R.string.personal_dict_import_gboard)) },
+            icon = { Icon(painterResource(R.drawable.ic_plus), stringResource(R.string.personal_dict_import_gboard)) },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp)

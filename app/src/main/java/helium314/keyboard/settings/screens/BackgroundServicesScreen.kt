@@ -29,7 +29,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import helium314.keyboard.latin.R
 import helium314.keyboard.latin.settings.Defaults
 import helium314.keyboard.latin.settings.Settings
 import helium314.keyboard.latin.utils.prefs
@@ -56,7 +58,7 @@ fun BackgroundServicesScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Background Services") },
+                title = { Text(stringResource(R.string.background_services_title)) },
                 navigationIcon = { BackButton(onClickBack) }
             )
         }
@@ -69,16 +71,16 @@ fun BackgroundServicesScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
-                text = "Manage background listeners and memory locks.",
+                text = stringResource(R.string.background_services_subtitle),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
             // 1. Spell Checker Service
             CompactServiceCard(
-                title = "Spell Checker Service",
-                description = "System spellchecker & dictionary cache.",
-                status = if (spellCheckerEnabled) "ACTIVE" else "DISABLED",
+                title = stringResource(R.string.bg_service_spellchecker_title),
+                description = stringResource(R.string.bg_service_spellchecker_desc),
+                status = if (spellCheckerEnabled) stringResource(R.string.status_active) else stringResource(R.string.status_disabled),
                 enabled = spellCheckerEnabled,
                 onToggle = { enabled ->
                     spellCheckerEnabled = enabled
@@ -87,15 +89,15 @@ fun BackgroundServicesScreen(
                 onStopClicked = {
                     spellCheckerEnabled = false
                     prefs.edit().putBoolean(Settings.PREF_ENABLE_SPELL_CHECKER_SERVICE, false).apply()
-                    Toast.makeText(context, "Spell Checker stopped & memory flushed", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.bg_service_spellchecker_stopped), Toast.LENGTH_SHORT).show()
                 }
             )
 
             // 2. Clipboard History Listener
             CompactServiceCard(
-                title = "Clipboard Listener",
-                description = "Listens to system primary clip changes.",
-                status = if (clipboardEnabled) "LISTENING" else "DISABLED",
+                title = stringResource(R.string.bg_service_clipboard_title),
+                description = stringResource(R.string.bg_service_clipboard_desc),
+                status = if (clipboardEnabled) stringResource(R.string.status_listening) else stringResource(R.string.status_disabled),
                 enabled = clipboardEnabled,
                 onToggle = { enabled ->
                     clipboardEnabled = enabled
@@ -104,15 +106,15 @@ fun BackgroundServicesScreen(
                 onStopClicked = {
                     clipboardEnabled = false
                     prefs.edit().putBoolean(Settings.PREF_ENABLE_CLIPBOARD_LISTENER, false).apply()
-                    Toast.makeText(context, "Clipboard listener stopped", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.bg_service_clipboard_stopped), Toast.LENGTH_SHORT).show()
                 }
             )
 
             // 3. App Name Launcher Sync
             CompactServiceCard(
-                title = "App Launcher Sync",
-                description = "Monitors app installs for app name suggestions.",
-                status = if (appSyncEnabled) "LISTENING" else "DISABLED",
+                title = stringResource(R.string.bg_service_appsync_title),
+                description = stringResource(R.string.bg_service_appsync_desc),
+                status = if (appSyncEnabled) stringResource(R.string.status_listening) else stringResource(R.string.status_disabled),
                 enabled = appSyncEnabled,
                 onToggle = { enabled ->
                     appSyncEnabled = enabled
@@ -121,7 +123,7 @@ fun BackgroundServicesScreen(
                 onStopClicked = {
                     appSyncEnabled = false
                     prefs.edit().putBoolean(Settings.PREF_USE_APPS, false).apply()
-                    Toast.makeText(context, "App sync listener stopped", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.bg_service_appsync_stopped), Toast.LENGTH_SHORT).show()
                 }
             )
         }
@@ -179,7 +181,7 @@ private fun CompactServiceCard(
                     modifier = Modifier.align(Alignment.End),
                     contentPadding = PaddingValues(horizontal = 10.dp, vertical = 2.dp)
                 ) {
-                    Text("Stop & Free Memory", style = MaterialTheme.typography.labelSmall)
+                    Text(stringResource(R.string.bg_service_stop_free_memory), style = MaterialTheme.typography.labelSmall)
                 }
             }
         }
@@ -189,8 +191,8 @@ private fun CompactServiceCard(
 fun createBackgroundServicesSettings(context: android.content.Context): List<helium314.keyboard.settings.Setting> = listOf(
     helium314.keyboard.settings.Setting(
         key = Settings.PREF_ENABLE_SPELL_CHECKER_SERVICE,
-        title = "Spell Checker Service",
-        description = "System spellchecker & dictionary cache."
+        title = context.getString(R.string.bg_service_spellchecker_title),
+        description = context.getString(R.string.bg_service_spellchecker_desc)
     ) { setting ->
         var enabled by remember { mutableStateOf(context.prefs().getBoolean(setting.key, Defaults.PREF_ENABLE_SPELL_CHECKER_SERVICE)) }
         helium314.keyboard.settings.preferences.SwitchPreference(
@@ -206,8 +208,8 @@ fun createBackgroundServicesSettings(context: android.content.Context): List<hel
     },
     helium314.keyboard.settings.Setting(
         key = Settings.PREF_ENABLE_CLIPBOARD_LISTENER,
-        title = "Clipboard Listener",
-        description = "Listens to system primary clip changes."
+        title = context.getString(R.string.bg_service_clipboard_title),
+        description = context.getString(R.string.bg_service_clipboard_desc)
     ) { setting ->
         var enabled by remember { mutableStateOf(context.prefs().getBoolean(setting.key, Defaults.PREF_ENABLE_CLIPBOARD_LISTENER)) }
         helium314.keyboard.settings.preferences.SwitchPreference(
@@ -223,8 +225,8 @@ fun createBackgroundServicesSettings(context: android.content.Context): List<hel
     },
     helium314.keyboard.settings.Setting(
         key = Settings.PREF_USE_APPS,
-        title = "App Launcher Sync",
-        description = "Monitors app installs for app name suggestions."
+        title = context.getString(R.string.bg_service_appsync_title),
+        description = context.getString(R.string.bg_service_appsync_desc)
     ) { setting ->
         var enabled by remember { mutableStateOf(context.prefs().getBoolean(setting.key, Defaults.PREF_USE_APPS)) }
         helium314.keyboard.settings.preferences.SwitchPreference(

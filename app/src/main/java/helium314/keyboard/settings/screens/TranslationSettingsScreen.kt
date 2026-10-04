@@ -58,10 +58,10 @@ fun TranslationSettingsScreen(
                     )
                 ) {
                     Column {
-                        PreferenceCategory("Plugin Management")
+                        PreferenceCategory(stringResource(R.string.translation_plugin_management))
 
                         LoadTranslationPluginPreference(
-                            title = "Translation Plugin",
+                            title = stringResource(R.string.load_translation_plugin),
                             summary = if (translationInstalled) stringResource(R.string.libraries_status_active) else stringResource(R.string.libraries_status_not_installed),
                             icon = R.drawable.ic_translate,
                             onSuccess = { translationInstalled = TranslationLoader.hasPlugin(context) }
@@ -103,7 +103,7 @@ fun TranslationSettingsScreen(
                         )
                     ) {
                         Column {
-                            PreferenceCategory("Offline Models")
+                            PreferenceCategory(stringResource(R.string.translation_offline_models))
 
                             var showModelsDialog by remember { mutableStateOf(false) }
                             Preference(

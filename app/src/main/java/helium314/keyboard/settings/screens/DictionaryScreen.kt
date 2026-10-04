@@ -163,7 +163,7 @@ fun DictionaryScreen(
                     )
                 ) {
                     Column {
-                        PreferenceCategory("Word learning")
+                        PreferenceCategory(stringResource(R.string.word_learning_category))
 
                         SwitchPreference(
                             name = stringResource(R.string.add_to_personal_dictionary),
@@ -265,7 +265,7 @@ fun DictionaryScreen(
                             ) {
                                 if (types.isEmpty()) {
                                     Text(
-                                        text = "No active dictionaries",
+                                        text = stringResource(R.string.dictionary_no_active),
                                         style = MaterialTheme.typography.bodyMedium,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                                     )
@@ -347,7 +347,7 @@ fun DictionaryScreen(
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("Download from GitHub")
+                        Text(stringResource(R.string.dictionary_download_from_github))
                     }
                 }
             }

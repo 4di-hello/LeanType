@@ -127,10 +127,10 @@ fun HandwritingModelDownloadDialog(
                             downloadedMap[lang.code] = newStatus.isReady
                             downloadedMap[canonical] = newStatus.isReady
                             if (ok && (newStatus.isReady || newStatus.hasModel || newStatus.hasFst)) {
-                                Toast.makeText(context, "Imported handwriting model for ${lang.displayName}", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, context.getString(R.string.handwriting_imported_model, lang.displayName), Toast.LENGTH_SHORT).show()
                                 onModelChanged?.invoke()
                             } else {
-                                Toast.makeText(context, "Failed to import model files", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, context.getString(R.string.handwriting_import_failed), Toast.LENGTH_SHORT).show()
                             }
                         }
                     }
@@ -139,7 +139,7 @@ fun HandwritingModelDownloadDialog(
             },
             confirmButtonText = stringResource(R.string.load_gesture_library_button_load),
             cancelButtonText = stringResource(android.R.string.cancel),
-            title = { Text("Import Handwriting Model") },
+            title = { Text(stringResource(R.string.handwriting_import_model_title)) },
             content = {
                 Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp, vertical = 2.dp)) {
                     Text(
@@ -258,7 +258,7 @@ fun HandwritingModelDownloadDialog(
                                 contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp),
                                 modifier = Modifier.height(28.dp)
                             ) {
-                                Text("Download", style = MaterialTheme.typography.labelSmall)
+                                Text(stringResource(R.string.button_download), style = MaterialTheme.typography.labelSmall)
                             }
                         }
                     }
@@ -269,7 +269,7 @@ fun HandwritingModelDownloadDialog(
 
     PreferenceDialog(
         onDismissRequest = onDismissRequest,
-        title = "Handwriting Models",
+        title = stringResource(R.string.handwriting_models_title),
         content = {
             Column(
                 modifier = Modifier
@@ -284,7 +284,7 @@ fun HandwritingModelDownloadDialog(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = if (isOffline) "Download models in browser, then import" else "Download in app or import files",
+                        text = if (isOffline) stringResource(R.string.handwriting_browser_download_note) else stringResource(R.string.handwriting_app_download_note),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.weight(1f).padding(end = 8.dp)
@@ -294,14 +294,14 @@ fun HandwritingModelDownloadDialog(
                         contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp),
                         modifier = Modifier.height(32.dp)
                     ) {
-                        Text("Import Files", style = MaterialTheme.typography.labelMedium)
+                        Text(stringResource(R.string.handwriting_import_files_button), style = MaterialTheme.typography.labelMedium)
                     }
                 }
 
                 OutlinedTextField(
                     value = searchQuery,
                     onValueChange = { searchQuery = it },
-                    placeholder = { Text("Search language…") },
+                    placeholder = { Text(stringResource(R.string.search_languages_placeholder)) },
                     singleLine = true,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -357,12 +357,12 @@ fun HandwritingModelDownloadDialog(
                                             overflow = TextOverflow.Ellipsis
                                         )
                                         val statusText = when {
-                                            isDownloading -> if (downloadProgress > 0f) "Downloading... ${(downloadProgress * 100).toInt()}%" else "Downloading..."
-                                            status.isComplete -> "Ready (Full: Model + FST)"
-                                            status.isReady -> "Ready"
-                                            status.hasModel && !status.hasFst -> "Missing dictionary (FST)"
-                                            status.hasFst && !status.hasModel -> "Missing neural model"
-                                            else -> "Not downloaded"
+                                            isDownloading -> if (downloadProgress > 0f) "${stringResource(R.string.downloading)} ${(downloadProgress * 100).toInt()}%" else stringResource(R.string.downloading)
+                                            status.isComplete -> stringResource(R.string.handwriting_status_ready_full)
+                                            status.isReady -> stringResource(R.string.handwriting_status_ready)
+                                            status.hasModel && !status.hasFst -> stringResource(R.string.handwriting_status_missing_fst)
+                                            status.hasFst && !status.hasModel -> stringResource(R.string.handwriting_status_missing_model)
+                                            else -> stringResource(R.string.handwriting_status_not_downloaded)
                                         }
                                         Text(
                                             text = statusText,
@@ -390,7 +390,7 @@ fun HandwritingModelDownloadDialog(
                                                         statusMap[canonical] = newStatus
                                                         downloadedMap[code] = isReady
                                                         downloadedMap[canonical] = isReady
-                                                        Toast.makeText(context, "Model deleted", Toast.LENGTH_SHORT).show()
+                                                        Toast.makeText(context, context.getString(R.string.handwriting_model_deleted), Toast.LENGTH_SHORT).show()
                                                         onModelChanged?.invoke()
                                                     }
                                                 }
@@ -402,7 +402,7 @@ fun HandwritingModelDownloadDialog(
                                             contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp),
                                             modifier = Modifier.height(28.dp)
                                         ) {
-                                            Text("Delete", style = MaterialTheme.typography.labelSmall)
+                                            Text(stringResource(R.string.button_delete), style = MaterialTheme.typography.labelSmall)
                                         }
                                     } else {
                                         Button(
@@ -434,10 +434,10 @@ fun HandwritingModelDownloadDialog(
                                                             downloadedMap[code] = newStatus.isReady
                                                             downloadedMap[canonical] = newStatus.isReady
                                                             if (ok && newStatus.isReady) {
-                                                                Toast.makeText(context, "Downloaded ${item.displayName}", Toast.LENGTH_SHORT).show()
+                                                                Toast.makeText(context, context.getString(R.string.handwriting_downloaded_model, item.displayName), Toast.LENGTH_SHORT).show()
                                                                 onModelChanged?.invoke()
                                                             } else {
-                                                                Toast.makeText(context, "Download failed", Toast.LENGTH_SHORT).show()
+                                                                Toast.makeText(context, context.getString(R.string.handwriting_download_failed), Toast.LENGTH_SHORT).show()
                                                             }
                                                         }
                                                     }
@@ -446,7 +446,7 @@ fun HandwritingModelDownloadDialog(
                                             contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp),
                                             modifier = Modifier.height(28.dp)
                                         ) {
-                                            Text("Download", style = MaterialTheme.typography.labelSmall)
+                                            Text(stringResource(R.string.button_download), style = MaterialTheme.typography.labelSmall)
                                         }
                                     }
                                 }

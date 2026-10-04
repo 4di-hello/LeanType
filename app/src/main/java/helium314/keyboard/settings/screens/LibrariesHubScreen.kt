@@ -73,7 +73,7 @@ fun LibrariesHubScreen(
                     )
                 ) {
                     Column {
-                        PreferenceCategory("Active Engines & Capabilities")
+                        PreferenceCategory(stringResource(R.string.libraries_active_engines_title))
 
                         // Offline AI Plugin (Only available in offline flavor)
                         val isOfflineAiSupported = BuildConfig.FLAVOR == "offline" &&
@@ -100,7 +100,7 @@ fun LibrariesHubScreen(
                         val isHandwritingSupported = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O
                         val handwritingInstalled = isHandwritingSupported && HandwritingLoader.hasPlugin(context)
                         val summary = when {
-                            !isHandwritingSupported -> "Requires Android 8.0+"
+                            !isHandwritingSupported -> stringResource(R.string.libraries_requires_android, "8.0+")
                             handwritingInstalled -> stringResource(R.string.libraries_status_active)
                             else -> stringResource(R.string.libraries_status_not_installed)
                         }
@@ -116,7 +116,7 @@ fun LibrariesHubScreen(
                         val isOcrSupported = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O
                         val ocrInstalled = isOcrSupported && OcrPluginLoader.hasPlugin(context)
                         val ocrSummary = when {
-                            !isOcrSupported -> "Requires Android 8.0+"
+                            !isOcrSupported -> stringResource(R.string.libraries_requires_android, "8.0+")
                             ocrInstalled -> stringResource(R.string.libraries_status_active)
                             else -> stringResource(R.string.libraries_status_not_installed)
                         }
@@ -134,14 +134,14 @@ fun LibrariesHubScreen(
                         val voicePluginManager = remember { helium314.keyboard.latin.voice.VoicePluginManager(context) }
                         val voiceInstalled = voicePluginManager.isPluginInstalled()
                         val voiceSummary = when (voiceProvider) {
-                            com.leanbitlab.leantype.voice.VoiceConstants.VOICE_PROVIDER_ONLINE -> "Online AI"
+                            com.leanbitlab.leantype.voice.VoiceConstants.VOICE_PROVIDER_ONLINE -> stringResource(R.string.voice_provider_online_ai)
                             com.leanbitlab.leantype.voice.VoiceConstants.VOICE_PROVIDER_OFFLINE -> {
                                 if (voiceInstalled) stringResource(R.string.libraries_status_active)
                                 else stringResource(R.string.libraries_status_not_installed)
                             }
-                            com.leanbitlab.leantype.voice.VoiceConstants.VOICE_PROVIDER_THIRD_PARTY -> "System / Third-Party"
+                            com.leanbitlab.leantype.voice.VoiceConstants.VOICE_PROVIDER_THIRD_PARTY -> stringResource(R.string.voice_provider_system_third_party)
                             com.leanbitlab.leantype.voice.VoiceConstants.VOICE_PROVIDER_NONE -> stringResource(R.string.voice_provider_none)
-                            else -> if (voiceInstalled) "Installed" else stringResource(R.string.libraries_status_not_installed)
+                            else -> if (voiceInstalled) stringResource(R.string.installed) else stringResource(R.string.libraries_status_not_installed)
                         }
                         Preference(
                             name = stringResource(R.string.voice_input_title),
@@ -154,7 +154,7 @@ fun LibrariesHubScreen(
                         val isTranslationSupported = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N
                         val translationInstalled = isTranslationSupported && TranslationLoader.hasPlugin(context)
                         val translationSummary = when {
-                            !isTranslationSupported -> "Requires Android 7.0+"
+                            !isTranslationSupported -> stringResource(R.string.libraries_requires_android, "7.0+")
                             translationInstalled -> stringResource(R.string.libraries_status_active)
                             else -> stringResource(R.string.libraries_status_not_installed)
                         }
@@ -197,11 +197,11 @@ fun LibrariesHubScreen(
                     )
                 ) {
                     Column {
-                        PreferenceCategory("Storage & Maintenance")
+                        PreferenceCategory(stringResource(R.string.libraries_storage_category_title))
 
                         Preference(
-                            name = "Storage & Cache",
-                            description = "Inspect and delete plugins, offline models, dictionaries, and cache",
+                            name = stringResource(R.string.libraries_storage_cache_title),
+                            description = stringResource(R.string.libraries_storage_cache_desc),
                             onClick = { helium314.keyboard.settings.SettingsDestination.navigateTo(helium314.keyboard.settings.SettingsDestination.Storage) },
                             icon = R.drawable.ic_settings_advanced
                         ) { NextScreenIcon() }
@@ -218,11 +218,11 @@ fun LibrariesHubScreen(
                     )
                 ) {
                     Column {
-                        PreferenceCategory("Documentation")
+                        PreferenceCategory(stringResource(R.string.libraries_documentation_title))
 
                         Preference(
-                            name = "Features Guide",
-                            description = "View the detailed features.md guide on GitHub",
+                            name = stringResource(R.string.libraries_features_guide_title),
+                            description = stringResource(R.string.libraries_features_guide_desc),
                             onClick = { uriHandler.openUri("https://github.com/LeanBitLab/HeliboardL/blob/main/docs/FEATURES.md") },
                             icon = R.drawable.ic_settings_about_wiki
                         ) { NextScreenIcon() }

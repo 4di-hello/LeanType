@@ -235,7 +235,7 @@ fun createAdvancedSettings(context: Context) = listOfNotNull(
         val service = remember { helium314.keyboard.latin.utils.ProofreadService(ctx) }
         Preference(
             name = setting.title,
-            description = if (service.hasApiKey()) "Key set" else stringResource(R.string.gemini_api_key_summary),
+            description = if (service.hasApiKey()) stringResource(R.string.key_set) else stringResource(R.string.gemini_api_key_summary),
             onClick = { showDialog = true }
         )
         if (showDialog) {
@@ -317,7 +317,7 @@ fun createAdvancedSettings(context: Context) = listOfNotNull(
         
         Preference(
             name = setting.title,
-            description = if (hasToken) "Key set" else "Not set",
+            description = if (hasToken) stringResource(R.string.key_set) else stringResource(R.string.key_not_set),
             onClick = { showDialog = true }
         )
         if (showDialog) {
@@ -352,7 +352,7 @@ fun createAdvancedSettings(context: Context) = listOfNotNull(
         val service = remember { helium314.keyboard.latin.utils.ProofreadService(ctx) }
         Preference(
             name = setting.title,
-            description = if (service.getHuggingFaceToken() != null) "Key set" else "Not set",
+            description = if (service.getHuggingFaceToken() != null) stringResource(R.string.key_set) else stringResource(R.string.key_not_set),
             onClick = { showDialog = true }
         )
         if (showDialog) {
@@ -834,12 +834,12 @@ fun createAdvancedSettings(context: Context) = listOfNotNull(
     Setting(context, SettingsWithoutKey.TRANSLATE_GEMINI_MODEL, R.string.translate_model_title, R.string.translate_model_summary) { setting ->
         val ctx = LocalContext.current
         val service = remember { helium314.keyboard.latin.utils.ProofreadService(ctx) }
-        var items by remember { mutableStateOf(listOf("Default (Proofreading)" to "") + helium314.keyboard.latin.utils.ProofreadService.AVAILABLE_MODELS.map { it to it }) }
+        var items by remember { mutableStateOf(listOf(ctx.getString(R.string.default_proofreading) to "") + helium314.keyboard.latin.utils.ProofreadService.AVAILABLE_MODELS.map { it to it }) }
         var selectedModel by remember { mutableStateOf(service.getTranslateModelName()) }
 
         LaunchedEffect(Unit) {
             val models = service.fetchAvailableModels(helium314.keyboard.latin.utils.ProofreadService.AIProvider.GEMINI)
-            items = listOf("Default (Proofreading)" to "") + models.map { it to it }
+            items = listOf(ctx.getString(R.string.default_proofreading) to "") + models.map { it to it }
         }
 
         ListPreference(
@@ -855,12 +855,12 @@ fun createAdvancedSettings(context: Context) = listOfNotNull(
     Setting(context, SettingsWithoutKey.TRANSLATE_GROQ_MODEL, R.string.translate_model_title, R.string.translate_model_summary) { setting ->
         val ctx = LocalContext.current
         val service = remember { helium314.keyboard.latin.utils.ProofreadService(ctx) }
-        var items by remember { mutableStateOf(listOf("Default (Proofreading)" to "") + helium314.keyboard.latin.utils.GroqModels.AVAILABLE_MODELS.map { it to it }) }
+        var items by remember { mutableStateOf(listOf(ctx.getString(R.string.default_proofreading) to "") + helium314.keyboard.latin.utils.GroqModels.AVAILABLE_MODELS.map { it to it }) }
         var selectedModel by remember { mutableStateOf(service.getTranslateGroqModel()) }
 
         LaunchedEffect(Unit) {
             val models = service.fetchAvailableModels(helium314.keyboard.latin.utils.ProofreadService.AIProvider.GROQ)
-            items = listOf("Default (Proofreading)" to "") + models.map { it to it }
+            items = listOf(ctx.getString(R.string.default_proofreading) to "") + models.map { it to it }
         }
         
         ListPreference(
@@ -877,7 +877,7 @@ fun createAdvancedSettings(context: Context) = listOfNotNull(
         var showDialog by rememberSaveable { mutableStateOf(false) }
         val ctx = LocalContext.current
         val service = remember { helium314.keyboard.latin.utils.ProofreadService(ctx) }
-        val currentModel = service.getTranslateHuggingFaceModel().ifBlank { "Default (Proofreading)" }
+        val currentModel = service.getTranslateHuggingFaceModel().ifBlank { ctx.getString(R.string.default_proofreading) }
         Preference(
             name = setting.title,
             description = currentModel,

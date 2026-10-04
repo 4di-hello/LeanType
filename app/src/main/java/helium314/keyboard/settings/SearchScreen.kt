@@ -292,6 +292,7 @@ fun ExpandableSearchField(
     onSearchChange: (TextFieldValue) -> Unit,
     modifier: Modifier = Modifier,
     colors: TextFieldColors = TextFieldDefaults.colors(),
+    placeholder: @Composable (() -> Unit)? = { Text(stringResource(R.string.search_placeholder)) },
 ) {
     val focusRequester = remember { FocusRequester() }
 
@@ -302,6 +303,7 @@ fun ExpandableSearchField(
         TextField(
             value = search,
             onValueChange = onSearchChange,
+            placeholder = placeholder,
             modifier = modifier
                 .focusRequester(focusRequester)
                 .clip(androidx.compose.foundation.shape.CircleShape),

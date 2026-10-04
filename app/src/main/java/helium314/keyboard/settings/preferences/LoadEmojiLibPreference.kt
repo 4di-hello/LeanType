@@ -129,7 +129,7 @@ fun LoadEmojiLibPreference(
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     isDownloading = false
-                    Toast.makeText(ctx, "Failed to download emoji dictionary", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(ctx, ctx.getString(R.string.emoji_dict_download_failed), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -148,11 +148,11 @@ fun LoadEmojiLibPreference(
                     }
                 }
                 tmpFile.delete()
-                FeedbackManager.message(ctx, "Emoji dictionary loaded successfully")
+                FeedbackManager.message(ctx, ctx.getString(R.string.emoji_dict_loaded_success))
                 showDialog = false
                 refreshAndLoad()
             } catch (e: IOException) {
-                Toast.makeText(ctx, "Failed to load emoji dictionary from file", Toast.LENGTH_SHORT).show()
+                Toast.makeText(ctx, ctx.getString(R.string.emoji_dict_load_failed), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -183,9 +183,9 @@ fun LoadEmojiLibPreference(
                         ) {
                             Text(
                                 text = if (downloadProgress > 0f) {
-                                    "Downloading... ${(downloadProgress * 100).toInt()}%"
+                                    stringResource(R.string.downloading) + " ${(downloadProgress * 100).toInt()}%"
                                 } else {
-                                    "Downloading..."
+                                    stringResource(R.string.downloading)
                                 },
                                 style = MaterialTheme.typography.bodyMedium
                             )
@@ -216,7 +216,7 @@ fun LoadEmojiLibPreference(
                             onClick = { startDownload() },
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text("Download")
+                            Text(stringResource(R.string.button_download))
                         }
                         OutlinedButton(
                             onClick = {
@@ -228,7 +228,7 @@ fun LoadEmojiLibPreference(
                             },
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text("Load from file")
+                            Text(stringResource(R.string.button_load_from_file))
                         }
                         if (isInstalled) {
                             Button(
@@ -243,14 +243,14 @@ fun LoadEmojiLibPreference(
                                 ),
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                Text("Delete")
+                                Text(stringResource(R.string.button_delete))
                             }
                         }
                     }
                 }
             }
         ) {
-            Text("Download or load an emoji dictionary file for the current language ($lang) to enable emoji suggestions.")
+            Text(stringResource(R.string.emoji_dict_download_desc, lang))
         }
     }
 }

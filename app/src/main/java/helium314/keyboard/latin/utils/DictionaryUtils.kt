@@ -403,7 +403,7 @@ fun DownloadableDictionaryRow(locale: Locale, desc: String, link: String, refres
                 }
                 hasUpgrade -> stringResource(R.string.dictionary_update_available)
                 isInstalled -> stringResource(R.string.installed)
-                else -> "Available in dictionary repository"
+                else -> stringResource(R.string.dictionary_available_in_repo)
             }
             val statusColor = when {
                 downloading -> MaterialTheme.colorScheme.primary
@@ -451,7 +451,7 @@ fun DownloadableDictionaryRow(locale: Locale, desc: String, link: String, refres
                                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                             }
                             ctx.startActivity(intent)
-                            android.widget.Toast.makeText(ctx, "Downloading in browser… import dictionary once finished", android.widget.Toast.LENGTH_LONG).show()
+                            android.widget.Toast.makeText(ctx, ctx.getString(R.string.downloading_in_browser_import), android.widget.Toast.LENGTH_LONG).show()
                         } else {
                             downloading = true
                             downloadProgress = 0f
@@ -482,7 +482,7 @@ fun DownloadableDictionaryRow(locale: Locale, desc: String, link: String, refres
                     ),
                     modifier = Modifier.height(32.dp)
                 ) {
-                    Text("Delete", style = MaterialTheme.typography.labelMedium)
+                    Text(stringResource(R.string.button_delete), style = MaterialTheme.typography.labelMedium)
                 }
             }
         } else if (isInstalled) {
@@ -498,7 +498,7 @@ fun DownloadableDictionaryRow(locale: Locale, desc: String, link: String, refres
                 ),
                 modifier = Modifier.height(32.dp)
             ) {
-                Text("Delete", style = MaterialTheme.typography.labelMedium)
+                Text(stringResource(R.string.button_delete), style = MaterialTheme.typography.labelMedium)
             }
         } else {
             OutlinedButton(
@@ -508,7 +508,7 @@ fun DownloadableDictionaryRow(locale: Locale, desc: String, link: String, refres
                             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         }
                         ctx.startActivity(intent)
-                        android.widget.Toast.makeText(ctx, "Downloading in browser… import dictionary once finished", android.widget.Toast.LENGTH_LONG).show()
+                        android.widget.Toast.makeText(ctx, ctx.getString(R.string.downloading_in_browser_import), android.widget.Toast.LENGTH_LONG).show()
                     } else {
                         downloading = true
                         downloadProgress = 0f

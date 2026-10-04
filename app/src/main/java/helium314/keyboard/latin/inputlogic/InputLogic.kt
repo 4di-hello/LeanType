@@ -588,7 +588,7 @@ class InputLogic(
                 if (proofreadText.isNotEmpty() && proofreadText != textBefore) {
                     if (textBefore != null && textBefore.length > 20 && proofreadText.length < textBefore.length * 0.3) {
                         Log.w(TAG, "Proofread result suspiciously short (${proofreadText.length} vs ${textBefore.length}), aborting replacement to prevent truncation data loss")
-                        KeyboardSwitcher.getInstance().showToast("Proofread output truncated by model; replacement aborted.", false)
+                        KeyboardSwitcher.getInstance().showToast(mLatinIME.getString(R.string.proofread_output_truncated), false)
                         if (!hasSelection) {
                             val len = textBefore.length
                             mConnection.setSelection(len, len)
@@ -663,7 +663,7 @@ class InputLogic(
                 if (translatedText.isNotEmpty() && translatedText != textBefore) {
                     if (textBefore != null && textBefore.length > 20 && translatedText.length < textBefore.length * 0.3) {
                         Log.w(TAG, "Translation result suspiciously short (${translatedText.length} vs ${textBefore.length}), aborting replacement to prevent truncation data loss")
-                        KeyboardSwitcher.getInstance().showToast("Translation output truncated by model; replacement aborted.", false)
+                        KeyboardSwitcher.getInstance().showToast(mLatinIME.getString(R.string.translation_output_truncated), false)
                         if (!hasSelection) {
                             val len = textBefore.length
                             mConnection.setSelection(len, len)
@@ -681,7 +681,7 @@ class InputLogic(
                         mConnection.setSelection(len, len)
                     }
                     if (translatedText == textBefore) {
-                        KeyboardSwitcher.getInstance().showToast("Translation unchanged or identical to source text.", false)
+                        KeyboardSwitcher.getInstance().showToast(mLatinIME.getString(R.string.translation_unchanged), false)
                     }
                 }
             },
@@ -2470,7 +2470,7 @@ class InputLogic(
         } catch (e: Exception) {
             Log.e(TAG, "Error fetching suggested words, using empty words instead", e)
             callback.onGetSuggestedWords(SuggestedWords.getEmptyInstance())
-            KeyboardSwitcher.getInstance().showToast("Error getting suggestions", true)
+            KeyboardSwitcher.getInstance().showToast(mLatinIME.getString(R.string.error_getting_suggestions), true)
         }
     }
 
@@ -2664,7 +2664,7 @@ class InputLogic(
         }
 
         if (TextUtils.isEmpty(prompt)) {
-            KeyboardSwitcher.getInstance().showToast("Custom AI key is not set. Long-press to configure.", true)
+            KeyboardSwitcher.getInstance().showToast(mLatinIME.getString(R.string.custom_ai_key_not_set), true)
             return
         }
 
@@ -2728,7 +2728,7 @@ class InputLogic(
             },
             onError = { errorMessage ->
                 Log.e(TAG, "Custom AI Error: $errorMessage")
-                KeyboardSwitcher.getInstance().showToast("AI Error: $errorMessage", true)
+                KeyboardSwitcher.getInstance().showToast(mLatinIME.getString(R.string.ai_error_format, errorMessage), true)
             }
         )
     }

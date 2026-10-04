@@ -6,6 +6,7 @@ import helium314.keyboard.keyboard.internal.KeyboardCodesSet
 import helium314.keyboard.keyboard.internal.KeyboardIconsSet
 import helium314.keyboard.keyboard.internal.KeyboardParams
 import helium314.keyboard.keyboard.internal.keyboard_parser.floris.KeyData.Companion.replaceIconWithLabelIfNoDrawable
+import helium314.keyboard.latin.R
 import helium314.keyboard.latin.settings.Settings
 import helium314.keyboard.latin.utils.InputTypeUtils
 import helium314.keyboard.latin.utils.ToolbarKey
@@ -115,6 +116,15 @@ object KeyLabel {
             CTRL, ALT, FN, META, ESCAPE -> label.uppercase(Locale.US)
             TAB -> "!icon/tab_key|!code/${KeyCode.TAB}"
             TIMESTAMP -> "⌚"
+            "Cut" -> params.mContext?.getString(android.R.string.cut) ?: label
+            "Copy" -> params.mContext?.getString(android.R.string.copy) ?: label
+            "Paste" -> params.mContext?.getString(android.R.string.paste) ?: label
+            "Select all" -> params.mContext?.getString(android.R.string.selectAll) ?: label
+            "Undo" -> params.mContext?.getString(R.string.undo) ?: label
+            "Redo" -> params.mContext?.getString(R.string.redo) ?: label
+            "Select" -> params.mContext?.getString(helium314.keyboard.latin.R.string.label_select) ?: label
+            "All" -> params.mContext?.getString(helium314.keyboard.latin.R.string.label_all) ?: label
+            "Word" -> params.mContext?.getString(helium314.keyboard.latin.R.string.label_word) ?: label
             else -> {
                 if (label.startsWith("layout_")) {
                     label.substringAfter("layout_")

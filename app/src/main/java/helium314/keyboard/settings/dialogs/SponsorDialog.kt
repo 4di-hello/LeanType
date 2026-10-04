@@ -169,7 +169,7 @@ fun SponsorDialog(
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = "Sponsor on GitHub",
+                                text = stringResource(R.string.sponsor_github_button),
                                 fontWeight = FontWeight.Bold
                             )
                         }
@@ -194,7 +194,7 @@ fun SponsorDialog(
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = "Donate on Open Collective",
+                                text = stringResource(R.string.sponsor_opencollective_button),
                                 fontWeight = FontWeight.Bold
                             )
                         }

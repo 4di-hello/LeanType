@@ -1818,4 +1818,265 @@ New dictionary:
     <string name="emoticon_group_dancing">Dancing</string>
     <string name="emoticon_group_shruggie">Shruggie</string>
     <string name="emoticon_group_table_flip">Table flip</string>
+
+    <!-- Welcome Wizard -->
+    <string name="welcome_tagline">Your private, customizable keyboard</string>
+    <string name="setup_step_previous">Previous</string>
+    <string name="setup_step3_title_languages">Language &amp; Input Selection</string>
+    <string name="setup_step3_instruction_languages">Configure your typing languages.</string>
+    <string name="setup_typing_languages_title">Typing Languages</string>
+    <string name="setup_enabled_languages_title">Enabled Languages:</string>
+    <string name="setup_choose_languages_button">Choose Languages</string>
+    <string name="setup_step4_title_libraries">Libraries</string>
+    <string name="setup_step4_instruction_libraries">Download emoji and gesture libraries to improve typing and suggestions.</string>
+    <string name="setup_enable_gesture_typing">Enable Gesture Typing</string>
+    <string name="setup_gesture_typing_summary">Slide across keys to type words</string>
+    <string name="setup_step5_title_offline_ai">Offline AI Integration</string>
+    <string name="setup_step5_instruction_offline_ai">Configure on-device GGUF AI models for local proofreading and translation without internet.</string>
+    <string name="setup_step5_title_cloud_ai">AI Integration</string>
+    <string name="setup_step5_instruction_cloud_ai">Configure cloud AI services (Groq, Gemini, or OpenAI compatible) for smart proofreading and rewriting.</string>
+    <string name="setup_offline_ai_plugin_active">Plugin active (version %s)</string>
+    <string name="setup_offline_ai_plugin_needed">Required for on-device GGUF inference - tap to download or load</string>
+    <string name="setup_gguf_model_title">GGUF Model (.gguf)</string>
+    <string name="setup_gguf_model_summary">Optional - select local GGUF model file</string>
+    <string name="setup_remove_model">Remove Model</string>
+    <string name="setup_remove_model_summary">Unload model and clear selection</string>
+    <string name="setup_offline_lite_active">Offline Lite edition active.\nZero background AI or network footprint.</string>
+    <string name="setup_step6_title_screenshots">Screenshot Suggestions</string>
+    <string name="setup_step6_instruction_screenshots">Suggest recently taken screenshots in the suggestion strip. Note: This permission also allows saving screenshots to the clipboard.</string>
+    <string name="setup_step7_title_height">Keyboard Height</string>
+    <string name="setup_step7_instruction_height">Adjust the height of the keyboard. Recommended: 77% for more square keys, 100% for taller keys.</string>
+    <string name="setup_step0_headline">Welcome to a better typing experience</string>
+    <string name="setup_step0_subtitle">LeanType is designed from the ground up for privacy, speed, and deep customization.</string>
+    <string name="setup_step0_feature1_title">100% Private &amp; Secure</string>
+    <string name="setup_step0_feature1_desc">Zero telemetry, network tracking, or cloud logging. Your typing stays on your device.</string>
+    <string name="setup_step0_feature2_title">Deeply Customizable</string>
+    <string name="setup_step0_feature2_desc">Tailor layouts, keyboard themes, sizes, gestures, and multilingual typing to your preferences.</string>
+    <string name="setup_step0_feature3_title">Smart Productivity</string>
+    <string name="setup_step0_feature3_desc">Fast word suggestions, clipboard manager, voice input, and rich editing shortcuts.</string>
+
+    <!-- Text Expander -->
+    <string name="text_expander_no_shortcuts_title">No shortcuts configured yet.</string>
+    <string name="text_expander_no_shortcuts_desc">Tap the \'Add Shortcut\' floating button in the bottom corner to quickly create your first smart text expansion template.</string>
+    <string name="text_expander_how_it_works_title">How it works:</string>
+    <string name="text_expander_step1_title">Specify Shortcut Prefix</string>
+    <string name="text_expander_step1_desc">Configure an optional prefix like \'.\' or \';\' per shortcut on the edit screen to prevent accidental expansions.</string>
+    <string name="text_expander_step2_title">Add Custom Shortcuts</string>
+    <string name="text_expander_step2_desc">Define triggers (e.g. \'brb\') and their expanded templates (e.g. \'Be right back!\').</string>
+    <string name="text_expander_step3_title">Type Prefix + Shortcut</string>
+    <string name="text_expander_step3_desc">Type your prefix followed by the shortcut keyword (e.g., \'.brb\') and press Space or punctuation on the keyboard to expand instantly.</string>
+    <string name="text_expander_tag_desc_date">Date (YYYY-MM-DD)</string>
+    <string name="text_expander_tag_desc_time">Time (24h, HH:MM)</string>
+    <string name="text_expander_tag_desc_time12">Time (12h, hh:mm AM/PM)</string>
+    <string name="text_expander_tag_desc_year">Year (YYYY)</string>
+    <string name="text_expander_tag_desc_week">Week of year (1-53)</string>
+    <string name="text_expander_tag_desc_battery">Battery level (e.g. 85%)</string>
+    <string name="text_expander_tag_desc_greeting">Time-gated greeting</string>
+    <string name="text_expander_tag_desc_tomorrow">Tomorrow\'s date (YYYY-MM-DD)</string>
+    <string name="text_expander_tag_desc_clipboard">Clipboard content</string>
+    <string name="text_expander_tag_desc_clipboard_clean">Clipboard (citations stripped)</string>
+    <string name="text_expander_tag_desc_clipboard_singleline">Clipboard (single-line)</string>
+    <string name="text_expander_tag_desc_clipboard_title">Clipboard (Title Case)</string>
+    <string name="text_expander_tag_desc_clipboard_slug">Clipboard (URL kebab-slug)</string>
+    <string name="text_expander_tag_desc_day">Day name (e.g. Monday)</string>
+    <string name="text_expander_tag_desc_month">Month (e.g. June)</string>
+    <string name="text_expander_tag_desc_language">Keyboard language (e.g. English)</string>
+    <string name="text_expander_tag_desc_cursor">Cursor position after expansion</string>
+    <string name="text_expander_tag_desc_bullets">Bullet list (e.g. %bullets_5%)</string>
+    <string name="text_expander_tag_desc_list">Numbered list (e.g. %list_5%)</string>
+
+    <!-- Updates Screen -->
+    <string name="updates_new_update_title">New Update Available</string>
+    <string name="updates_new_update_desc">Version %s is ready to install</string>
+    <string name="updates_view_release">View Release</string>
+    <string name="updates_installed_version">Installed: v%1$s (%2$s)</string>
+    <string name="updates_badge_update">Update</string>
+    <string name="updates_badge_latest">Latest</string>
+    <string name="updates_badge_current">Current</string>
+    <string name="updates_whats_new_title">What\'s New in v%s</string>
+    <string name="updates_frequency_daily">Daily</string>
+    <string name="updates_frequency_weekly">Weekly</string>
+    <string name="updates_frequency_monthly">Monthly</string>
+    <string name="updates_check_failed_http">Check failed (HTTP %d)</string>
+    <string name="updates_network_error">Network error checking updates</string>
+    <string name="updates_update_available">Update available: %s</string>
+
+    <!-- Sponsor Buttons -->
+    <string name="sponsor_github_button">Sponsor on GitHub</string>
+    <string name="sponsor_opencollective_button">Donate on Open Collective</string>
+
+    <!-- Emoji Dictionary -->
+    <string name="emoji_dict_download_desc">Download or load an emoji dictionary file for the current language (%s) to enable emoji suggestions.</string>
+    <string name="emoji_dict_loaded_success">Emoji dictionary loaded successfully</string>
+    <string name="emoji_dict_load_failed">Failed to load emoji dictionary from file</string>
+    <string name="emoji_dict_download_failed">Failed to download emoji dictionary</string>
+
+    <!-- Dictionary Screen &amp; Utils -->
+    <string name="word_learning_category">Word learning</string>
+    <string name="dictionary_installed_on_device">Installed on device</string>
+    <string name="dictionary_available_in_repo">Available in dictionary repository</string>
+    <string name="dictionary_download_from_github">Download from GitHub</string>
+    <string name="dictionary_no_active">No active dictionaries</string>
+    <string name="downloading_in_browser_import">Downloading in browser… import dictionary once finished</string>
+    <string name="personal_dict_import_gboard">Import Gboard Dictionary</string>
+    <string name="personal_dict_imported_count">Imported %1$d words</string>
+    <string name="personal_dict_import_failed">Import failed: %1$s</string>
+
+    <!-- Libraries Hub -->
+    <string name="libraries_active_engines_title">Active Engines &amp; Capabilities</string>
+    <string name="libraries_storage_category_title">Storage &amp; Maintenance</string>
+    <string name="libraries_documentation_title">Documentation</string>
+    <string name="libraries_features_guide_title">Features Guide</string>
+    <string name="libraries_features_guide_desc">View the detailed features.md guide on GitHub</string>
+    <string name="libraries_storage_cache_title">Storage &amp; Cache</string>
+    <string name="libraries_storage_cache_desc">Inspect and delete plugins, offline models, dictionaries, and cache</string>
+    <string name="libraries_requires_android">Requires Android %s</string>
+    <string name="voice_provider_online_ai">Online AI</string>
+    <string name="voice_provider_system_third_party">System / Third-Party</string>
+
+    <!-- Storage Screen -->
+    <string name="storage_overview_title">Storage Overview</string>
+    <string name="storage_internal_data">Internal Data</string>
+    <string name="storage_cache">Cache</string>
+    <string name="storage_total_used">Total Used</string>
+    <string name="storage_clear_cache_button">Clear Cache</string>
+    <string name="storage_prune_files_button">Prune Stale Files</string>
+    <string name="storage_installed_plugins">Installed Plugins (%d)</string>
+    <string name="storage_no_plugins">No dynamic plugins installed</string>
+    <string name="storage_translation_models">Translation Models (%d)</string>
+    <string name="storage_no_translation_models">No translation models downloaded</string>
+    <string name="storage_handwriting_models">Handwriting Models (%d)</string>
+    <string name="storage_no_handwriting_models">No handwriting models downloaded</string>
+    <string name="storage_cached_dictionaries">Dictionaries (%d)</string>
+    <string name="storage_no_dictionaries">No cached dictionaries found</string>
+    <string name="storage_cache_temp_files">Cache &amp; Temporary Files (%d)</string>
+    <string name="storage_cache_clean">Cache is clean</string>
+    <string name="storage_delete_confirm_title">Delete Confirmation</string>
+    <string name="storage_delete_confirm_message">Are you sure you want to remove this %1$s (%2$s)? This will free %3$s.</string>
+    <string name="storage_deleted_item">Deleted %s</string>
+    <string name="storage_clear_cache_title">Clear App Cache</string>
+    <string name="storage_clear_cache_message">Are you sure you want to clear temporary download caches and staged files? This will not remove your downloaded models or settings.</string>
+    <string name="storage_cache_cleared_freed">Cache cleared (%s freed)</string>
+    <string name="storage_prune_confirm_title">Prune Redundant Files</string>
+    <string name="storage_prune_confirm_message">This will scan for redundant duplicate model folders, stale staging zips, and unused dictionary caches and purge them safely.</string>
+    <string name="storage_prune_complete_freed">Cleanup complete (%s freed)</string>
+    <string name="storage_button_clear">Clear</string>
+    <string name="storage_button_prune">Prune</string>
+
+    <!-- Translation -->
+    <string name="translation_plugin_management">Plugin Management</string>
+    <string name="translation_offline_models">Offline Models</string>
+    <string name="translation_engine_mlkit">Translation Plugin (ML Kit)</string>
+    <string name="translation_engine_local_gguf">Built-in AI (Local GGUF)</string>
+    <string name="translation_engine_cloud_ai">Built-in AI (Gemini/Groq/OpenAI)</string>
+    <string name="translation_custom_language_button">+ Custom Language</string>
+    <string name="translation_add_custom_language_title">Add Custom Language</string>
+    <string name="translation_custom_lang_name_hint">Language Name (e.g. Sanskrit)</string>
+    <string name="translation_custom_lang_code_hint">Language Code (e.g. sa)</string>
+    <string name="translation_plugin_update_available_dialog">An update is available for the translation plugin!\nLocal version: %1$s\nLatest version: %2$s\n\nDo you want to download and update?</string>
+    <string name="translation_plugin_active_warning">Translation plugin is active (version %s).\n\nWarning: loading external code can be a security risk. Only use a plugin from a source you trust.</string>
+    <string name="translation_plugin_download_dialog_msg">Download or load the official LeanType Translation Plugin (APK) to enable offline neural machine translation powered by ML Kit.\n\nWarning: loading external code can be a security risk. Only use a plugin from a source you trust.</string>
+    <string name="translation_plugin_loaded_restarting">Translation plugin loaded. Restarting...</string>
+    <string name="translation_plugin_removed_restarting">Translation plugin removed. Restarting...</string>
+    <string name="translation_plugin_open_browser_toast">Opening GitHub releases in browser… download the APK and use \'Load from file\'</string>
+    <string name="translation_import_model_title">Import Translation Model</string>
+    <string name="translation_imported_model">Imported translation model for %s</string>
+    <string name="translation_import_failed">Failed to import translation model</string>
+    <string name="translation_model_browser_note">Download model in browser, then import .zip</string>
+    <string name="translation_model_app_note">Download in app or import .zip</string>
+    <string name="translation_import_zip_button">Import .zip</string>
+    <string name="translation_model_builtin">Built-in</string>
+    <string name="translation_model_downloaded_offline_ready">Downloaded (Offline ready)</string>
+    <string name="translation_model_removed">%s model removed</string>
+    <string name="translation_model_remove_failed">Failed to remove model</string>
+    <string name="translation_model_downloading_in_browser">Downloading in browser… import .zip once finished</string>
+    <string name="translation_model_url_not_available">Download URL not available</string>
+
+    <!-- Handwriting Models &amp; Dialog -->
+    <string name="handwriting_models_title">Handwriting Models</string>
+    <string name="handwriting_import_model_title">Import Handwriting Model</string>
+    <string name="handwriting_import_files_button">Import Files</string>
+    <string name="handwriting_browser_download_note">Download models in browser, then import</string>
+    <string name="handwriting_app_download_note">Download in app or import files</string>
+    <string name="handwriting_status_ready_full">Ready (Full: Model + FST)</string>
+    <string name="handwriting_status_ready">Ready</string>
+    <string name="handwriting_status_missing_fst">Missing dictionary (FST)</string>
+    <string name="handwriting_status_missing_model">Missing neural model</string>
+    <string name="handwriting_status_not_downloaded">Not downloaded</string>
+    <string name="handwriting_downloaded_model">Downloaded %s</string>
+    <string name="handwriting_download_failed">Download failed</string>
+    <string name="handwriting_imported_model">Imported handwriting model for %s</string>
+    <string name="handwriting_import_failed">Failed to import model files</string>
+
+    <!-- Background Services -->
+    <string name="background_services_title">Background Services</string>
+    <string name="background_services_subtitle">Manage background listeners and memory locks.</string>
+    <string name="bg_service_spellchecker_title">Spell Checker Service</string>
+    <string name="bg_service_spellchecker_desc">System spellchecker &amp; dictionary cache.</string>
+    <string name="bg_service_spellchecker_stopped">Spell Checker stopped &amp; memory flushed</string>
+    <string name="bg_service_clipboard_title">Clipboard Listener</string>
+    <string name="bg_service_clipboard_desc">Listens to system primary clip changes.</string>
+    <string name="bg_service_clipboard_stopped">Clipboard listener stopped</string>
+    <string name="bg_service_appsync_title">App Launcher Sync</string>
+    <string name="bg_service_appsync_desc">Monitors app installs for app name suggestions.</string>
+    <string name="bg_service_appsync_stopped">App sync listener stopped</string>
+    <string name="bg_service_stop_free_memory">Stop &amp; Free Memory</string>
+    <string name="status_active">ACTIVE</string>
+    <string name="status_listening">LISTENING</string>
+    <string name="status_disabled">DISABLED</string>
+
+    <!-- Custom AI Keys &amp; Warnings -->
+    <string name="custom_ai_1">Custom AI 1</string>
+    <string name="custom_ai_2">Custom AI 2</string>
+    <string name="custom_ai_3">Custom AI 3</string>
+    <string name="custom_ai_4">Custom AI 4</string>
+    <string name="custom_ai_5">Custom AI 5</string>
+    <string name="custom_ai_6">Custom AI 6</string>
+    <string name="custom_ai_7">Custom AI 7</string>
+    <string name="custom_ai_8">Custom AI 8</string>
+    <string name="custom_ai_9">Custom AI 9</string>
+    <string name="custom_ai_10">Custom AI 10</string>
+    <string name="custom_ai_key_format">Key %1$d</string>
+    <string name="custom_ai_key_not_set">Custom AI key is not set. Long-press to configure.</string>
+    <string name="proofread_output_truncated">Proofread output truncated by model; replacement aborted.</string>
+    <string name="translation_output_truncated">Translation output truncated by model; replacement aborted.</string>
+    <string name="translation_unchanged">Translation unchanged or identical to source text.</string>
+    <string name="error_getting_suggestions">Error getting suggestions</string>
+    <string name="ai_error_format">AI Error: %s</string>
+    <string name="suggestion_word_removed">\"%1$s\" removed</string>
+    <string name="error_loading_keyboard_fallback">Error loading the keyboard, falling back to defaults</string>
+    <string name="key_set">Key set</string>
+    <string name="key_not_set">Not set</string>
+    <string name="default_proofreading">Default (Proofreading)</string>
+    <string name="search_languages_placeholder">Search languages…</string>
+    <string name="search_placeholder">Search…</string>
+    <string name="custom_ai_keyword_editor_label">Edit text</string>
+    <string name="custom_ai_keyword_proofread_label">Fix grammar</string>
+    <string name="custom_ai_keyword_paraphrase_label">Rewrite</string>
+    <string name="custom_ai_keyword_summarize_label">Summarize</string>
+    <string name="custom_ai_keyword_expand_label">Expand</string>
+    <string name="custom_ai_keyword_toneshift_label">Adjust tone</string>
+    <string name="custom_ai_keyword_generate_label">Generate</string>
+    <string name="custom_ai_keyword_outputonly_label">Result only</string>
+    <string name="custom_ai_keyword_append_label">Append result</string>
+    <string name="custom_ai_keyword_showthought_label">Show reasoning</string>
+    <string name="custom_ai_keyword_editor_desc">Free-form editing and formatting of text according to prompt.</string>
+    <string name="custom_ai_keyword_proofread_desc">Corrects grammar, spelling, and punctuation.</string>
+    <string name="custom_ai_keyword_paraphrase_desc">Rewrites text while maintaining original meaning.</string>
+    <string name="custom_ai_keyword_summarize_desc">Condenses text to its most important points.</string>
+    <string name="custom_ai_keyword_expand_desc">Elaborates on the text by adding more details.</string>
+    <string name="custom_ai_keyword_toneshift_desc">Changes the tone (e.g., professional, casual).</string>
+    <string name="custom_ai_keyword_generate_desc">Generates new text completely ignoring selected text.</string>
+    <string name="custom_ai_keyword_outputonly_desc">Returns only the modified text, without conversational fillers.</string>
+    <string name="custom_ai_keyword_append_desc">Appends the result to the end of the original text.</string>
+    <string name="custom_ai_keyword_showthought_desc">Includes AI\'s reasoning process along with result.</string>
+
+    <!-- Text Editing Layout Keys -->
+    <string name="label_select">Select</string>
+    <string name="label_all">All</string>
+    <string name="label_word">Word</string>
+    <string name="next_step">Next</string>
+    <string name="button_download">Download</string>
+    <string name="button_load_from_file">Load from file</string>
+    <string name="button_delete">Delete</string>
 </resources>

@@ -117,9 +117,9 @@ fun TranslationModelDownloadDialog(
                         withContext(Dispatchers.Main) {
                             if (importedModel != null) {
                                 downloadedMap[lang.code] = true
-                                Toast.makeText(context, "Imported translation model for ${lang.displayName}", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, context.getString(R.string.translation_imported_model, lang.displayName), Toast.LENGTH_SHORT).show()
                             } else {
-                                Toast.makeText(context, "Failed to import translation model", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, context.getString(R.string.translation_import_failed), Toast.LENGTH_SHORT).show()
                             }
                         }
                     }
@@ -128,7 +128,7 @@ fun TranslationModelDownloadDialog(
             },
             confirmButtonText = stringResource(R.string.load_gesture_library_button_load),
             cancelButtonText = stringResource(android.R.string.cancel),
-            title = { Text("Import Translation Model") },
+            title = { Text(stringResource(R.string.translation_import_model_title)) },
             content = {
                 Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp, vertical = 2.dp)) {
                     Text(
@@ -216,7 +216,7 @@ fun TranslationModelDownloadDialog(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = if (isOffline) "Download model in browser, then import .zip" else "Download in app or import .zip",
+                        text = if (isOffline) stringResource(R.string.translation_model_browser_note) else stringResource(R.string.translation_model_app_note),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.weight(1f).padding(end = 8.dp)
@@ -226,14 +226,14 @@ fun TranslationModelDownloadDialog(
                         contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp),
                         modifier = Modifier.height(32.dp)
                     ) {
-                        Text("Import .zip", style = MaterialTheme.typography.labelMedium)
+                        Text(stringResource(R.string.translation_import_zip_button), style = MaterialTheme.typography.labelMedium)
                     }
                 }
 
                 OutlinedTextField(
                     value = searchQuery,
                     onValueChange = { searchQuery = it },
-                    placeholder = { Text("Search language…") },
+                    placeholder = { Text(stringResource(R.string.search_languages_placeholder)) },
                     singleLine = true,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -283,8 +283,17 @@ fun TranslationModelDownloadDialog(
                                             style = MaterialTheme.typography.bodyMedium,
                                             fontWeight = if (isDownloaded) FontWeight.Bold else FontWeight.Normal
                                         )
+                                        val statusText = if (isEnglish) {
+                                            stringResource(R.string.translation_model_builtin)
+                                        } else if (isDownloaded) {
+                                            stringResource(R.string.translation_model_downloaded_offline_ready)
+                                        } else if (isDownloading) {
+                                            if (downloadProgress > 0f) "${stringResource(R.string.downloading)} ${(downloadProgress * 100).toInt()}%" else stringResource(R.string.downloading)
+                                        } else {
+                                            stringResource(R.string.handwriting_status_not_downloaded)
+                                        }
                                         Text(
-                                            text = if (isEnglish) "Built-in" else if (isDownloaded) "Downloaded (Offline ready)" else if (isDownloading) (if (downloadProgress > 0f) "Downloading... ${(downloadProgress * 100).toInt()}%" else "Downloading…") else "Not downloaded",
+                                            text = statusText,
                                             style = MaterialTheme.typography.bodySmall,
                                             color = if (isDownloaded || isDownloading)
                                                 MaterialTheme.colorScheme.primary
@@ -295,7 +304,7 @@ fun TranslationModelDownloadDialog(
 
                                     if (isEnglish) {
                                         Text(
-                                            text = "Active",
+                                            text = stringResource(R.string.libraries_status_active),
                                             style = MaterialTheme.typography.labelMedium,
                                             color = MaterialTheme.colorScheme.primary,
                                             modifier = Modifier.padding(end = 8.dp)
@@ -316,9 +325,9 @@ fun TranslationModelDownloadDialog(
                                                     withContext(Dispatchers.Main) {
                                                         if (deleted) {
                                                             downloadedMap[item.code] = false
-                                                            Toast.makeText(context, "${item.displayName} model removed", Toast.LENGTH_SHORT).show()
+                                                            Toast.makeText(context, context.getString(R.string.translation_model_removed, item.displayName), Toast.LENGTH_SHORT).show()
                                                         } else {
-                                                            Toast.makeText(context, "Failed to remove model", Toast.LENGTH_SHORT).show()
+                                                            Toast.makeText(context, context.getString(R.string.translation_model_remove_failed), Toast.LENGTH_SHORT).show()
                                                         }
                                                     }
                                                 }
@@ -330,7 +339,7 @@ fun TranslationModelDownloadDialog(
                                             contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp),
                                             modifier = Modifier.height(28.dp)
                                         ) {
-                                            Text("Delete", style = MaterialTheme.typography.labelSmall)
+                                            Text(stringResource(R.string.button_delete), style = MaterialTheme.typography.labelSmall)
                                         }
                                     } else {
                                         Button(
@@ -342,9 +351,9 @@ fun TranslationModelDownloadDialog(
                                                             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                                         }
                                                         context.startActivity(intent)
-                                                        Toast.makeText(context, "Downloading in browser… import .zip once finished", Toast.LENGTH_LONG).show()
+                                                        Toast.makeText(context, context.getString(R.string.translation_model_downloading_in_browser), Toast.LENGTH_LONG).show()
                                                     } else {
-                                                        Toast.makeText(context, "Download URL not available", Toast.LENGTH_SHORT).show()
+                                                        Toast.makeText(context, context.getString(R.string.translation_model_url_not_available), Toast.LENGTH_SHORT).show()
                                                     }
                                                  } else {
                                                     downloadModelWithFallback(
@@ -361,7 +370,7 @@ fun TranslationModelDownloadDialog(
                                             contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp),
                                             modifier = Modifier.height(28.dp)
                                         ) {
-                                            Text("Download", style = MaterialTheme.typography.labelSmall)
+                                            Text(stringResource(R.string.button_download), style = MaterialTheme.typography.labelSmall)
                                         }
                                     }
                                 }

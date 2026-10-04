@@ -113,7 +113,7 @@ fun WelcomeWizard(
             )
             if (step == 0) {
                 Text(
-                    "Your private, customizable keyboard",
+                    stringResource(R.string.welcome_tagline),
                     style = MaterialTheme.typography.bodyLarge,
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -172,7 +172,7 @@ fun WelcomeWizard(
                 ) {
                     if (onBack != null) {
                         androidx.compose.material3.FilledTonalButton(onClick = onBack) {
-                            Text("Previous")
+                            Text(stringResource(R.string.setup_step_previous))
                         }
                     } else {
                         Spacer(Modifier.weight(0.1f)) // Placeholder to maintain spacing
@@ -238,14 +238,14 @@ fun WelcomeWizard(
 
                     Step(
                         3,
-                        "Language & Input Selection",
-                        "Configure your typing languages.",
-                        "Next",
+                        stringResource(R.string.setup_step3_title_languages),
+                        stringResource(R.string.setup_step3_instruction_languages),
+                        stringResource(R.string.next_step),
                         painterResource(R.drawable.sym_keyboard_language_switch),
                         { step++ },
                         { step-- }
                     ) {
-                        WithSmallTitle("Typing Languages") {
+                        WithSmallTitle(stringResource(R.string.setup_typing_languages_title)) {
                             Column(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -253,7 +253,7 @@ fun WelcomeWizard(
                                     .padding(16.dp)
                             ) {
                                 Text(
-                                    "Enabled Languages:",
+                                    stringResource(R.string.setup_enabled_languages_title),
                                     style = MaterialTheme.typography.titleMedium,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
@@ -281,7 +281,7 @@ fun WelcomeWizard(
                                     onClick = { showDialog = true },
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
-                                    Text("Choose Languages")
+                                    Text(stringResource(R.string.setup_choose_languages_button))
                                 }
                             }
                         }
@@ -312,9 +312,9 @@ fun WelcomeWizard(
                 } else if (step == 4) {
                     Step(
                         4,
-                        "Libraries",
-                        "Download emoji and gesture libraries to improve typing and suggestions.",
-                        "Next",
+                        stringResource(R.string.setup_step4_title_libraries),
+                        stringResource(R.string.setup_step4_instruction_libraries),
+                        stringResource(R.string.next_step),
                         painterResource(R.drawable.sym_keyboard_language_switch),
                         { step++ },
                         { step-- }
@@ -326,7 +326,7 @@ fun WelcomeWizard(
 
                         Box(Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surfaceVariant, MaterialTheme.shapes.medium)) {
                             LoadEmojiLibPreference(
-                                title = "Emoji Dictionary",
+                                title = stringResource(R.string.libraries_hub_emoji_title),
                                 onSuccess = { refreshTrigger++ }
                             )
                             if (emojiLibInstalled) {
@@ -336,7 +336,7 @@ fun WelcomeWizard(
                         Spacer(Modifier.height(8.dp))
                         Box(Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surfaceVariant, MaterialTheme.shapes.medium)) {
                             LoadGestureLibPreference(
-                                title = "Gesture Typing Library",
+                                title = stringResource(R.string.load_gesture_library),
                                 restartOnSuccess = false,
                                 onSuccess = { 
                                     requiresRestart = true
@@ -361,12 +361,12 @@ fun WelcomeWizard(
                         ) {
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
-                                    text = "Enable Gesture Typing",
+                                    text = stringResource(R.string.setup_enable_gesture_typing),
                                     style = MaterialTheme.typography.titleMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                                 Text(
-                                    text = "Slide across keys to type words",
+                                    text = stringResource(R.string.setup_gesture_typing_summary),
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                                 )
@@ -382,19 +382,19 @@ fun WelcomeWizard(
                     }
                 } else if (step == 5) {
                     val stepTitle = when (BuildConfig.FLAVOR) {
-                        "offline" -> "Offline AI Integration"
-                        else -> "AI Integration"
+                        "offline" -> stringResource(R.string.setup_step5_title_offline_ai)
+                        else -> stringResource(R.string.setup_step5_title_cloud_ai)
                     }
                     val stepInstruction = when (BuildConfig.FLAVOR) {
-                        "offline" -> "Configure on-device GGUF AI models for local proofreading and translation without internet."
-                        else -> "Configure cloud AI services (Groq, Gemini, or OpenAI compatible) for smart proofreading and rewriting."
+                        "offline" -> stringResource(R.string.setup_step5_instruction_offline_ai)
+                        else -> stringResource(R.string.setup_step5_instruction_cloud_ai)
                     }
 
                     Step(
                         5,
                         stepTitle,
                         stepInstruction,
-                        "Next",
+                        stringResource(R.string.next_step),
                         painterResource(R.drawable.sym_keyboard_language_switch),
                         { step++ },
                         { step-- }
@@ -478,8 +478,8 @@ fun WelcomeWizard(
                             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                                 Box(Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surfaceVariant, MaterialTheme.shapes.medium)) {
                                     helium314.keyboard.settings.preferences.LoadOfflineAiPluginPreference(
-                                        title = "Offline AI Plugin",
-                                        summary = if (hasPlugin) "Plugin active (version ${pluginVersion ?: "1.0"})" else "Required for on-device GGUF inference — tap to download or load",
+                                        title = stringResource(R.string.load_offline_ai_plugin),
+                                        summary = if (hasPlugin) stringResource(R.string.setup_offline_ai_plugin_active, pluginVersion ?: "1.0") else stringResource(R.string.setup_offline_ai_plugin_needed),
                                         icon = R.drawable.ic_proofread,
                                         onSuccess = { refreshTrigger++ }
                                     )
@@ -491,15 +491,15 @@ fun WelcomeWizard(
                                 Box(Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surfaceVariant, MaterialTheme.shapes.medium)) {
                                     Column {
                                         Preference(
-                                            name = "GGUF Model (.gguf)",
-                                            description = if (modelPath != null) service.getModelName() else "Optional — select local GGUF model file",
+                                            name = stringResource(R.string.setup_gguf_model_title),
+                                            description = if (modelPath != null) service.getModelName() else stringResource(R.string.setup_gguf_model_summary),
                                             onClick = { modelLauncher.launch(arrayOf("application/octet-stream", "*/*")) },
                                             icon = R.drawable.ic_settings_advanced
                                         )
                                         if (modelPath != null) {
                                             Preference(
-                                                name = "Remove Model",
-                                                description = "Unload model and clear selection",
+                                                name = stringResource(R.string.setup_remove_model),
+                                                description = stringResource(R.string.setup_remove_model_summary),
                                                 onClick = {
                                                     service.unloadModel()
                                                     service.setModelPath(null)
@@ -529,7 +529,7 @@ fun WelcomeWizard(
                                         modifier = Modifier.padding(end = 12.dp)
                                     )
                                     Text(
-                                        "Offline Lite edition active.\nZero background AI or network footprint.",
+                                        stringResource(R.string.setup_offline_lite_active),
                                         style = MaterialTheme.typography.bodyMedium,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
@@ -540,9 +540,9 @@ fun WelcomeWizard(
                 } else if (step == 6) {
                     Step(
                         6,
-                        "Screenshot Suggestions",
-                        "Suggest recently taken screenshots in the suggestion strip. Note: This permission also allows saving screenshots to the clipboard.",
-                        "Next",
+                        stringResource(R.string.setup_step6_title_screenshots),
+                        stringResource(R.string.setup_step6_instruction_screenshots),
+                        stringResource(R.string.next_step),
                         painterResource(R.drawable.sym_keyboard_language_switch),
                         { step++ },
                         { step-- }
@@ -578,9 +578,9 @@ fun WelcomeWizard(
                 } else if (step == 7) {
                     Step(
                         7,
-                        "Keyboard Height",
-                        "Adjust the height of the keyboard. Recommended: 77% for more square keys, 100% for taller keys.",
-                        "Next",
+                        stringResource(R.string.setup_step7_title_height),
+                        stringResource(R.string.setup_step7_instruction_height),
+                        stringResource(R.string.next_step),
                         painterResource(R.drawable.sym_keyboard_language_switch),
                         { step++ },
                         { step-- }
@@ -666,11 +666,11 @@ fun Step0(onClick: () -> Unit) {
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
-                    text = "Welcome to a better typing experience",
+                    text = stringResource(R.string.setup_step0_headline),
                     style = MaterialTheme.typography.titleLarge
                 )
                 Text(
-                    text = "LeanType is designed from the ground up for privacy, speed, and deep customization.",
+                    text = stringResource(R.string.setup_step0_subtitle),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -680,18 +680,18 @@ fun Step0(onClick: () -> Unit) {
                 )
 
                 WelcomeFeatureItem(
-                    title = "100% Private & Secure",
-                    description = "Zero telemetry, network tracking, or cloud logging. Your typing stays on your device."
+                    title = stringResource(R.string.setup_step0_feature1_title),
+                    description = stringResource(R.string.setup_step0_feature1_desc)
                 )
 
                 WelcomeFeatureItem(
-                    title = "Deeply Customizable",
-                    description = "Tailor layouts, keyboard themes, sizes, gestures, and multilingual typing to your preferences."
+                    title = stringResource(R.string.setup_step0_feature2_title),
+                    description = stringResource(R.string.setup_step0_feature2_desc)
                 )
 
                 WelcomeFeatureItem(
-                    title = "Smart Productivity",
-                    description = "Fast word suggestions, clipboard manager, voice input, and rich editing shortcuts."
+                    title = stringResource(R.string.setup_step0_feature3_title),
+                    description = stringResource(R.string.setup_step0_feature3_desc)
                 )
 
                 Spacer(Modifier.height(8.dp))

@@ -167,7 +167,7 @@ fun LoadTranslationPluginPreference(
                     isDownloading = false
                     downloadProgress = 0f
                     if (success) {
-                        FeedbackManager.message(ctx, "Translation plugin loaded. Restarting...")
+                        FeedbackManager.message(ctx, R.string.translation_plugin_loaded_restarting)
                         onSuccess?.invoke()
                         showDialog = false
                         if (restartOnSuccess) {
@@ -215,9 +215,9 @@ fun LoadTranslationPluginPreference(
                         ) {
                             Text(
                                 text = if (downloadProgress > 0f) {
-                                    "Downloading... ${(downloadProgress * 100).toInt()}%"
+                                    stringResource(R.string.downloading) + " ${(downloadProgress * 100).toInt()}%"
                                 } else {
-                                    "Downloading..."
+                                    stringResource(R.string.downloading)
                                 },
                                 style = MaterialTheme.typography.bodyMedium
                             )
@@ -249,7 +249,7 @@ fun LoadTranslationPluginPreference(
                                 onClick = { startDownload() },
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                Text(if (updateAvailable) "Update" else "Download")
+                                Text(if (updateAvailable) stringResource(R.string.updates_badge_update) else stringResource(R.string.button_download))
                             }
                         }
                         if (!hasPlugin) {
@@ -265,14 +265,14 @@ fun LoadTranslationPluginPreference(
                                 },
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                Text("Load from file")
+                                Text(stringResource(R.string.button_load_from_file))
                             }
                         }
                         if (hasPlugin) {
                             Button(
                                 onClick = {
                                     TranslationLoader.removePlugin(ctx)
-                                    FeedbackManager.message(ctx, "Translation plugin removed. Restarting...")
+                                    FeedbackManager.message(ctx, R.string.translation_plugin_removed_restarting)
                                     onSuccess?.invoke()
                                     showDialog = false
                                     if (restartOnSuccess) {
@@ -296,10 +296,9 @@ fun LoadTranslationPluginPreference(
             }
         ) {
             val message = when {
-                hasPlugin && updateAvailable -> "An update is available for the translation plugin!\nLocal version: $localVersion\nLatest version: $remoteVersion\n\nDo you want to download and update?"
-                hasPlugin -> "Translation plugin is active (version $localVersion).\n\nWarning: loading external code can be a security risk. Only use a plugin from a source you trust."
-                remoteVersion != null -> "Download the latest translation plugin (version $remoteVersion) from GitHub, or load an APK from local storage.\n\nWarning: loading external code can be a security risk. Only use a plugin from a source you trust."
-                else -> "Download the translation plugin from GitHub, or load an APK from local storage.\n\nWarning: loading external code can be a security risk. Only use a plugin from a source you trust."
+                hasPlugin && updateAvailable -> stringResource(R.string.translation_plugin_update_available_dialog, localVersion.orEmpty(), remoteVersion ?: "")
+                hasPlugin -> stringResource(R.string.translation_plugin_active_warning, localVersion.orEmpty())
+                else -> stringResource(R.string.translation_plugin_download_dialog_msg)
             }
             Text(message)
         }
@@ -354,13 +353,13 @@ fun TranslationEnginePreference() {
     val isOfflineFlavor = helium314.keyboard.latin.BuildConfig.FLAVOR == "offline"
     val items = if (isOfflineFlavor) {
         listOf(
-            "Translation Plugin (ML Kit)" to "plugin",
-            "Built-in AI (Local GGUF)" to "ai"
+            ctx.getString(R.string.translation_engine_mlkit) to "plugin",
+            ctx.getString(R.string.translation_engine_local_gguf) to "ai"
         )
     } else {
         listOf(
-            "Translation Plugin (ML Kit)" to "plugin",
-            "Built-in AI (Gemini/Groq/OpenAI)" to "ai"
+            ctx.getString(R.string.translation_engine_mlkit) to "plugin",
+            ctx.getString(R.string.translation_engine_cloud_ai) to "ai"
         )
     }
     val setting = remember {
@@ -442,7 +441,7 @@ fun TranslationTargetLanguagePreference() {
                     onConfirmed = { showPickerDialog = false },
                     confirmButtonText = null,
                     cancelButtonText = null,
-                    neutralButtonText = "+ Custom Language",
+                    neutralButtonText = stringResource(R.string.translation_custom_language_button),
                     onNeutral = {
                         showPickerDialog = false
                         showCustomDialog = true
@@ -526,19 +525,19 @@ fun TranslationTargetLanguagePreference() {
                         }
                         showCustomDialog = false
                     },
-                    title = { Text("Add Custom Language") },
+                    title = { Text(stringResource(R.string.translation_add_custom_language_title)) },
                     content = {
                         Column {
                             androidx.compose.material3.OutlinedTextField(
                                 value = customLangName,
                                 onValueChange = { customLangName = it },
-                                label = { Text("Language Name (e.g. Sanskrit)") },
+                                label = { Text(stringResource(R.string.translation_custom_lang_name_hint)) },
                                 modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
                             )
                             androidx.compose.material3.OutlinedTextField(
                                 value = customLangCode,
                                 onValueChange = { customLangCode = it },
-                                label = { Text("Language Code (e.g. sa)") },
+                                label = { Text(stringResource(R.string.translation_custom_lang_code_hint)) },
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }
@@ -611,7 +610,7 @@ fun TranslationSourceLanguagePreference() {
                     onConfirmed = { showPickerDialog = false },
                     confirmButtonText = null,
                     cancelButtonText = null,
-                    neutralButtonText = "+ Custom Language",
+                    neutralButtonText = stringResource(R.string.translation_custom_language_button),
                     onNeutral = {
                         showPickerDialog = false
                         showCustomDialog = true
@@ -695,19 +694,19 @@ fun TranslationSourceLanguagePreference() {
                         }
                         showCustomDialog = false
                     },
-                    title = { Text("Add Custom Language") },
+                    title = { Text(stringResource(R.string.translation_add_custom_language_title)) },
                     content = {
                         Column {
                             androidx.compose.material3.OutlinedTextField(
                                 value = customLangName,
                                 onValueChange = { customLangName = it },
-                                label = { Text("Language Name (e.g. Sanskrit)") },
+                                label = { Text(stringResource(R.string.translation_custom_lang_name_hint)) },
                                 modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
                             )
                             androidx.compose.material3.OutlinedTextField(
                                 value = customLangCode,
                                 onValueChange = { customLangCode = it },
-                                label = { Text("Language Code (e.g. sa)") },
+                                label = { Text(stringResource(R.string.translation_custom_lang_code_hint)) },
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }

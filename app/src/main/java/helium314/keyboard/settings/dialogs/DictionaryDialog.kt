@@ -186,7 +186,7 @@ private fun DictionaryDetails(dict: File, onDelete: () -> Unit) {
                     fontWeight = FontWeight.Medium
                 )
                 Text(
-                    text = "Installed on device",
+                    text = stringResource(R.string.dictionary_installed_on_device),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.primary
                 )
@@ -209,7 +209,7 @@ private fun DictionaryDetails(dict: File, onDelete: () -> Unit) {
                     ),
                     modifier = Modifier.height(32.dp)
                 ) {
-                    Text("Delete", style = MaterialTheme.typography.labelMedium)
+                    Text(stringResource(R.string.button_delete), style = MaterialTheme.typography.labelMedium)
                 }
                 ExpandButton { showDetails = !showDetails }
             }

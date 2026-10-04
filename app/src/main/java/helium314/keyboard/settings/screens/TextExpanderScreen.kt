@@ -202,7 +202,7 @@ fun TextExpanderScreen(onClickBack: () -> Unit) {
                                     verticalArrangement = Arrangement.spacedBy(16.dp)
                                 ) {
                                     Text(
-                                        text = "How it works:",
+                                        text = stringResource(R.string.text_expander_how_it_works_title),
                                         style = MaterialTheme.typography.titleSmall,
                                         fontWeight = FontWeight.Bold,
                                         color = MaterialTheme.colorScheme.onSurface
@@ -216,13 +216,13 @@ fun TextExpanderScreen(onClickBack: () -> Unit) {
                                         StepBadge(num = "1")
                                         Column(modifier = Modifier.weight(1f)) {
                                             Text(
-                                                text = "Specify Shortcut Prefix",
+                                                text = stringResource(R.string.text_expander_step1_title),
                                                 style = MaterialTheme.typography.bodyMedium,
                                                 fontWeight = FontWeight.Bold,
                                                 color = MaterialTheme.colorScheme.onSurface
                                             )
                                             Text(
-                                                text = "Configure an optional prefix like '.' or ';' per shortcut on the edit screen to prevent accidental expansions.",
+                                                text = stringResource(R.string.text_expander_step1_desc),
                                                 style = MaterialTheme.typography.bodySmall,
                                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                                             )
@@ -237,13 +237,13 @@ fun TextExpanderScreen(onClickBack: () -> Unit) {
                                         StepBadge(num = "2")
                                         Column(modifier = Modifier.weight(1f)) {
                                             Text(
-                                                text = "Add Custom Shortcuts",
+                                                text = stringResource(R.string.text_expander_step2_title),
                                                 style = MaterialTheme.typography.bodyMedium,
                                                 fontWeight = FontWeight.Bold,
                                                 color = MaterialTheme.colorScheme.onSurface
                                             )
                                             Text(
-                                                text = "Define triggers (e.g. 'brb') and their expanded templates (e.g. 'Be right back!').",
+                                                text = stringResource(R.string.text_expander_step2_desc),
                                                 style = MaterialTheme.typography.bodySmall,
                                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                                             )
@@ -258,13 +258,13 @@ fun TextExpanderScreen(onClickBack: () -> Unit) {
                                         StepBadge(num = "3")
                                         Column(modifier = Modifier.weight(1f)) {
                                             Text(
-                                                text = "Type Prefix + Shortcut",
+                                                text = stringResource(R.string.text_expander_step3_title),
                                                 style = MaterialTheme.typography.bodyMedium,
                                                 fontWeight = FontWeight.Bold,
                                                 color = MaterialTheme.colorScheme.onSurface
                                             )
                                             Text(
-                                                text = "Type your prefix followed by the shortcut keyword (e.g., '.brb') and press Space or punctuation on the keyboard to expand instantly.",
+                                                text = stringResource(R.string.text_expander_step3_desc),
                                                 style = MaterialTheme.typography.bodySmall,
                                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                                             )
@@ -285,27 +285,27 @@ fun TextExpanderScreen(onClickBack: () -> Unit) {
                                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                                         ) {
                                             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                                PlaceholderChip(tag = "%date%", desc = "Date (YYYY-MM-DD)")
-                                                PlaceholderChip(tag = "%time%", desc = "Time (24h, HH:MM)")
-                                                PlaceholderChip(tag = "%time12%", desc = "Time (12h, hh:mm AM/PM)")
-                                                PlaceholderChip(tag = "%year%", desc = "Year (YYYY)")
-                                                PlaceholderChip(tag = "%week%", desc = "Week of year (1-53)")
-                                                PlaceholderChip(tag = "%battery%", desc = "Battery level (e.g. 85%)")
-                                                PlaceholderChip(tag = "%greeting%", desc = "Time-gated greeting")
-                                                PlaceholderChip(tag = "%tomorrow%", desc = "Tomorrow's date (YYYY-MM-DD)")
+                                                PlaceholderChip(tag = "%date%", desc = stringResource(R.string.text_expander_tag_desc_date))
+                                                PlaceholderChip(tag = "%time%", desc = stringResource(R.string.text_expander_tag_desc_time))
+                                                PlaceholderChip(tag = "%time12%", desc = stringResource(R.string.text_expander_tag_desc_time12))
+                                                PlaceholderChip(tag = "%year%", desc = stringResource(R.string.text_expander_tag_desc_year))
+                                                PlaceholderChip(tag = "%week%", desc = stringResource(R.string.text_expander_tag_desc_week))
+                                                PlaceholderChip(tag = "%battery%", desc = stringResource(R.string.text_expander_tag_desc_battery))
+                                                PlaceholderChip(tag = "%greeting%", desc = stringResource(R.string.text_expander_tag_desc_greeting))
+                                                PlaceholderChip(tag = "%tomorrow%", desc = stringResource(R.string.text_expander_tag_desc_tomorrow))
                                             }
                                             Column(modifier = Modifier.weight(1.1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                                PlaceholderChip(tag = "%clipboard%", desc = "Clipboard content")
-                                                PlaceholderChip(tag = "%clipboard:clean%", desc = "Clipboard (citations stripped)")
-                                                PlaceholderChip(tag = "%clipboard:singleline%", desc = "Clipboard (single-line)")
-                                                PlaceholderChip(tag = "%clipboard:title%", desc = "Clipboard (Title Case)")
-                                                PlaceholderChip(tag = "%clipboard:slug%", desc = "Clipboard (URL kebab-slug)")
-                                                PlaceholderChip(tag = "%day%", desc = "Day name (e.g. Monday)")
-                                                PlaceholderChip(tag = "%month%", desc = "Month (e.g. June)")
-                                                PlaceholderChip(tag = "%language%", desc = "Keyboard language (e.g. English)")
-                                                PlaceholderChip(tag = "%cursor%", desc = "Cursor position after expansion")
-                                                PlaceholderChip(tag = "%bullets%", desc = "Bullet list (e.g. %bullets_5%)")
-                                                PlaceholderChip(tag = "%list%", desc = "Numbered list (e.g. %list_5%)")
+                                                PlaceholderChip(tag = "%clipboard%", desc = stringResource(R.string.text_expander_tag_desc_clipboard))
+                                                PlaceholderChip(tag = "%clipboard:clean%", desc = stringResource(R.string.text_expander_tag_desc_clipboard_clean))
+                                                PlaceholderChip(tag = "%clipboard:singleline%", desc = stringResource(R.string.text_expander_tag_desc_clipboard_singleline))
+                                                PlaceholderChip(tag = "%clipboard:title%", desc = stringResource(R.string.text_expander_tag_desc_clipboard_title))
+                                                PlaceholderChip(tag = "%clipboard:slug%", desc = stringResource(R.string.text_expander_tag_desc_clipboard_slug))
+                                                PlaceholderChip(tag = "%day%", desc = stringResource(R.string.text_expander_tag_desc_day))
+                                                PlaceholderChip(tag = "%month%", desc = stringResource(R.string.text_expander_tag_desc_month))
+                                                PlaceholderChip(tag = "%language%", desc = stringResource(R.string.text_expander_tag_desc_language))
+                                                PlaceholderChip(tag = "%cursor%", desc = stringResource(R.string.text_expander_tag_desc_cursor))
+                                                PlaceholderChip(tag = "%bullets%", desc = stringResource(R.string.text_expander_tag_desc_bullets))
+                                                PlaceholderChip(tag = "%list%", desc = stringResource(R.string.text_expander_tag_desc_list))
                                             }
                                         }
                                     }
@@ -384,14 +384,14 @@ fun TextExpanderScreen(onClickBack: () -> Unit) {
                                     )
                                 }
                                 Text(
-                                    text = "No shortcuts configured yet.",
+                                    text = stringResource(R.string.text_expander_no_shortcuts_title),
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Bold,
                                     color = MaterialTheme.colorScheme.onSurface,
                                     textAlign = TextAlign.Center
                                 )
                                 Text(
-                                    text = "Tap the 'Add Shortcut' floating button in the bottom corner to quickly create your first smart text expansion template.",
+                                    text = stringResource(R.string.text_expander_no_shortcuts_desc),
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     textAlign = TextAlign.Center,
@@ -755,8 +755,8 @@ private fun PlaceholderChip(tag: String, desc: String) {
 fun createTextExpanderSettings(context: Context): List<helium314.keyboard.settings.Setting> = listOf(
     helium314.keyboard.settings.Setting(
         key = TextExpanderUtils.PREF_ENABLED,
-        title = "Enable Text Expander",
-        description = "Auto-expand shortcuts on space or punctuation natively and securely."
+        title = context.getString(R.string.text_expander_enable_title),
+        description = context.getString(R.string.text_expander_enable_summary)
     ) { setting ->
         var isEnabled by remember { mutableStateOf(TextExpanderUtils.isEnabled(context)) }
         SwitchPreference(
@@ -773,8 +773,8 @@ fun createTextExpanderSettings(context: Context): List<helium314.keyboard.settin
     },
     helium314.keyboard.settings.Setting(
         key = TextExpanderUtils.PREF_IMMEDIATE,
-        title = "Expand immediately",
-        description = "Expand shortcuts immediately without pressing space."
+        title = context.getString(R.string.text_expander_immediate_title),
+        description = context.getString(R.string.text_expander_immediate_summary)
     ) { setting ->
         var isImmediate by remember { mutableStateOf(TextExpanderUtils.isImmediateEnabled(context)) }
         SwitchPreference(
@@ -790,8 +790,8 @@ fun createTextExpanderSettings(context: Context): List<helium314.keyboard.settin
     },
     helium314.keyboard.settings.Setting(
         key = TextExpanderUtils.PREF_BACKSPACE_REVERTS,
-        title = "Backspace reverts expansion",
-        description = "Pressing backspace right after an expansion reverts it back to the typed shortcut."
+        title = context.getString(R.string.text_expander_backspace_undo_title),
+        description = context.getString(R.string.text_expander_backspace_undo_summary)
     ) { setting ->
         var isReverts by remember { mutableStateOf(TextExpanderUtils.isBackspaceRevertsEnabled(context)) }
         SwitchPreference(

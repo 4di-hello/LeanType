@@ -293,7 +293,7 @@ class MoreSuggestionsView @JvmOverloads constructor(
 
         listener.removeSuggestion(word)
         dismissPopupKeysPanel()
-        KeyboardSwitcher.getInstance().showToast("\"$word\" removed", true)
+        KeyboardSwitcher.getInstance().showToast(context.getString(R.string.suggestion_word_removed, word), true)
     }
 
     companion object {

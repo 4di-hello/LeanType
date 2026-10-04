@@ -34,8 +34,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import helium314.keyboard.latin.R
 import helium314.keyboard.latin.utils.StorageItem
 import helium314.keyboard.latin.utils.StorageItemType
 import helium314.keyboard.latin.utils.StorageManagerHelper
@@ -78,7 +80,7 @@ fun StorageScreen(
 
     SearchSettingsScreen(
         onClickBack = onClickBack,
-        title = "Storage & Cache",
+        title = stringResource(R.string.libraries_storage_cache_title),
         settings = emptyList(),
     ) {
         if (isLoading && overview == null) {
@@ -111,7 +113,7 @@ fun StorageScreen(
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = "Storage Overview",
+                        text = stringResource(R.string.storage_overview_title),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -123,15 +125,15 @@ fun StorageScreen(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         StorageMetric(
-                            label = "Internal Data",
+                            label = stringResource(R.string.storage_internal_data),
                             value = StorageManagerHelper.formatBytes(context, data.totalDataBytes)
                         )
                         StorageMetric(
-                            label = "Cache",
+                            label = stringResource(R.string.storage_cache),
                             value = StorageManagerHelper.formatBytes(context, data.totalCacheBytes)
                         )
                         StorageMetric(
-                            label = "Total Used",
+                            label = stringResource(R.string.storage_total_used),
                             value = StorageManagerHelper.formatBytes(context, data.totalAppBytes),
                             highlight = true
                         )
@@ -147,14 +149,14 @@ fun StorageScreen(
                             onClick = { showClearCacheConfirm = true },
                             modifier = Modifier.weight(1f)
                         ) {
-                            Text("Clear Cache")
+                            Text(stringResource(R.string.storage_clear_cache_button))
                         }
 
                         FilledTonalButton(
                             onClick = { showPruneConfirm = true },
                             modifier = Modifier.weight(1f)
                         ) {
-                            Text("Prune Stale Files")
+                            Text(stringResource(R.string.storage_prune_files_button))
                         }
                     }
                 }
@@ -162,41 +164,41 @@ fun StorageScreen(
 
             // Section 1: Installed Plugins
             StorageCategoryCard(
-                title = "Installed Plugins (${data.plugins.size})",
+                title = stringResource(R.string.storage_installed_plugins, data.plugins.size),
                 items = data.plugins,
-                emptyText = "No dynamic plugins installed",
+                emptyText = stringResource(R.string.storage_no_plugins),
                 onDeleteItem = { itemToDelete = it }
             )
 
             // Section 2: Offline Translation Models
             StorageCategoryCard(
-                title = "Translation Models (${data.translationModels.size})",
+                title = stringResource(R.string.storage_translation_models, data.translationModels.size),
                 items = data.translationModels,
-                emptyText = "No translation models downloaded",
+                emptyText = stringResource(R.string.storage_no_translation_models),
                 onDeleteItem = { itemToDelete = it }
             )
 
             // Section 3: Offline Handwriting Models
             StorageCategoryCard(
-                title = "Handwriting Models (${data.handwritingModels.size})",
+                title = stringResource(R.string.storage_handwriting_models, data.handwritingModels.size),
                 items = data.handwritingModels,
-                emptyText = "No handwriting models downloaded",
+                emptyText = stringResource(R.string.storage_no_handwriting_models),
                 onDeleteItem = { itemToDelete = it }
             )
 
             // Section 4: Cached Dictionaries
             StorageCategoryCard(
-                title = "Dictionaries (${data.dictionaries.size})",
+                title = stringResource(R.string.storage_cached_dictionaries, data.dictionaries.size),
                 items = data.dictionaries,
-                emptyText = "No cached dictionaries found",
+                emptyText = stringResource(R.string.storage_no_dictionaries),
                 onDeleteItem = { itemToDelete = it }
             )
 
             // Section 5: Cache & Temporary Files
             StorageCategoryCard(
-                title = "Cache & Temporary Files (${data.cacheItems.size})",
+                title = stringResource(R.string.storage_cache_temp_files, data.cacheItems.size),
                 items = data.cacheItems,
-                emptyText = "Cache is clean",
+                emptyText = stringResource(R.string.storage_cache_clean),
                 onDeleteItem = { itemToDelete = it }
             )
         }
@@ -221,15 +223,15 @@ fun StorageScreen(
                     withContext(Dispatchers.IO) {
                         item.onDelete()
                     }
-                    FeedbackManager.message(context, "Deleted ${item.name}")
+                    FeedbackManager.message(context, context.getString(R.string.storage_deleted_item, item.name))
                     refresh()
                 }
             },
-            title = { Text("Delete Confirmation") },
+            title = { Text(stringResource(R.string.storage_delete_confirm_title)) },
             content = {
-                Text("Are you sure you want to remove this $typeLabel (${targetItem.name})? This will free ${StorageManagerHelper.formatBytes(context, targetItem.sizeBytes)}.")
+                Text(stringResource(R.string.storage_delete_confirm_message, typeLabel, targetItem.name, StorageManagerHelper.formatBytes(context, targetItem.sizeBytes)))
             },
-            confirmButtonText = "Delete"
+            confirmButtonText = stringResource(R.string.button_delete)
         )
     }
 
@@ -243,15 +245,15 @@ fun StorageScreen(
                     val freed = withContext(Dispatchers.IO) {
                         StorageManagerHelper.clearAllCache(context)
                     }
-                    FeedbackManager.message(context, "Cache cleared (${StorageManagerHelper.formatBytes(context, freed)} freed)")
+                    FeedbackManager.message(context, context.getString(R.string.storage_cache_cleared_freed, StorageManagerHelper.formatBytes(context, freed)))
                     refresh()
                 }
             },
-            title = { Text("Clear App Cache") },
+            title = { Text(stringResource(R.string.storage_clear_cache_title)) },
             content = {
-                Text("Are you sure you want to clear temporary download caches and staged files? This will not remove your downloaded models or settings.")
+                Text(stringResource(R.string.storage_clear_cache_message))
             },
-            confirmButtonText = "Clear"
+            confirmButtonText = stringResource(R.string.storage_button_clear)
         )
     }
 
@@ -265,15 +267,15 @@ fun StorageScreen(
                     val freed = withContext(Dispatchers.IO) {
                         StorageManagerHelper.pruneRedundantFiles(context)
                     }
-                    FeedbackManager.message(context, "Cleanup complete (${StorageManagerHelper.formatBytes(context, freed)} freed)")
+                    FeedbackManager.message(context, context.getString(R.string.storage_prune_complete_freed, StorageManagerHelper.formatBytes(context, freed)))
                     refresh()
                 }
             },
-            title = { Text("Prune Redundant Files") },
+            title = { Text(stringResource(R.string.storage_prune_confirm_title)) },
             content = {
-                Text("This will scan for redundant duplicate model folders, stale staging zips, and unused dictionary caches and purge them safely.")
+                Text(stringResource(R.string.storage_prune_confirm_message))
             },
-            confirmButtonText = "Prune"
+            confirmButtonText = stringResource(R.string.storage_button_prune)
         )
     }
 }
