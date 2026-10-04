@@ -63,12 +63,15 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 private val currentChangelogItems = listOf(
-    "• Input Freeze Fix: Resolved UI freeze / ANR when typing punctuation or backspacing via O(1) blacklist lookups",
-    "• Android 12 Crash Fix: Resolved NoSuchMethodError crash loop on Android 12 when tapping keys or suggestions",
-    "• Haptic Intensity Slider: Restored vibration amplitude scaling when adjusting the haptic feedback slider",
-    "• Auto-Capitalization Controls: Added toolbar toggles and JSON layout actions for auto-caps and force auto-caps",
-    "• Crash Log Hardening: Hardened internal crash report generation and dialog detection in release builds",
-    "• Complete Translations: 100% translation coverage across 25 languages for all new settings and features"
+    "• Backspace Lag Fix: Resolved backspace lag in Obsidian and accelerated web editor deletions",
+    "• Double Capitalization Fix: Prevented double capitalization during fast typing and chording",
+    "• Pixel Haptic Fix: Restored crisp system default haptic feedback on Pixel devices",
+    "• Delete Key Icon Fix: Restored missing delete key icon by preventing duplicate code suffix",
+    "• Arabic Symbols Fix: Isolated Arabic secondary symbols settings and order from English symbols",
+    "• Landscape Keyboard Fix: Enabled TYPE_NULL keyboard display in landscape and game loaders",
+    "• Haptic Engine Selection: Added haptic feedback engine selection in preferences",
+    "• Game Quirks Refactor: Replaced hardcoded game package names with landscape focus handling",
+    "• Translations: Settings strings translated across 29 languages"
 )
 
 @Composable
