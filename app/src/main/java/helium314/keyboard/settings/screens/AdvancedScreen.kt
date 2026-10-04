@@ -176,10 +176,10 @@ fun createAdvancedSettings(context: Context) = listOfNotNull(
     Setting(context, SettingsWithoutKey.BACKUP_RESTORE, R.string.backup_restore_title) {
         BackupRestorePreference(it)
     },
-    Setting(context, SettingsWithoutKey.BACKGROUND_SERVICES, R.string.settings_screen_advanced) {
+    Setting(context, SettingsWithoutKey.BACKGROUND_SERVICES, R.string.background_services_title) {
         Preference(
-            name = "Background Services & Processes",
-            description = "Manage active background services, memory locks, and observers",
+            name = it.title,
+            description = stringResource(R.string.background_services_summary),
             onClick = { SettingsDestination.navigateTo(SettingsDestination.BackgroundServices) }
         ) { NextScreenIcon() }
     },
@@ -963,9 +963,10 @@ fun createAdvancedSettings(context: Context) = listOfNotNull(
         ) { NextScreenIcon() }
     } else null,
     if (BuildConfig.FLAVOR == "offline") Setting(context, SettingsWithoutKey.LOAD_OFFLINE_AI_PLUGIN, R.string.load_offline_ai_plugin, R.string.load_offline_ai_plugin_summary) {
+        val pluginVersion = helium314.keyboard.latin.ai.OfflineAiLoader.getPluginVersion(LocalContext.current) ?: "1.0"
         helium314.keyboard.settings.preferences.LoadOfflineAiPluginPreference(
             title = stringResource(R.string.load_offline_ai_plugin),
-            summary = if (helium314.keyboard.latin.ai.OfflineAiLoader.hasPlugin(LocalContext.current)) "Plugin active (version ${helium314.keyboard.latin.ai.OfflineAiLoader.getPluginVersion(LocalContext.current) ?: "1.0"})" else stringResource(R.string.load_offline_ai_plugin_summary),
+            summary = if (helium314.keyboard.latin.ai.OfflineAiLoader.hasPlugin(LocalContext.current)) stringResource(R.string.plugin_active_version_format, pluginVersion) else stringResource(R.string.load_offline_ai_plugin_summary),
             icon = R.drawable.ic_proofread
         )
     } else null,

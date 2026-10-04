@@ -2173,4 +2173,36 @@ New dictionary:
     <string name="sound_pack_deleted_format">Deleted %s</string>
     <string name="sound_pack_downloading_in_browser_toast">Downloading in browser… import .zip once finished</string>
     <string name="sound_pack_preview">Preview</string>
+
+    <!-- App slogan on About screen -->
+    <string name="app_slogan">Open-source keyboard with advanced features.</string>
+
+    <!-- Debug settings -->
+    <string name="debug_settings_title">Debug settings</string>
+    <string name="prefs_show_debug_settings">Enable debug settings</string>
+    <string name="prefs_debug_settings_enabled">Debug settings enabled. Find them in advanced settings.</string>
+    <string name="prefs_debug_mode">Debug Mode</string>
+    <string name="prefs_show_suggestion_infos">Show suggestion infos</string>
+    <string name="prefs_force_non_distinct_multitouch">Force non-distinct multitouch</string>
+    <string name="sliding_key_input_preview">Show slide indicator</string>
+    <string name="sliding_key_input_preview_summary">Display visual cue while sliding from Shift or Symbol keys</string>
+    <string name="prefs_dump_dynamic_dicts">Dump dictionary</string>
+    <string name="debug_dump_dict_format">Dump %s dictionary</string>
+    <string name="debug_dumping_dict_toast_format">Dumping %s dictionary to logcat…</string>
+
+    <!-- Background Services tab description in Advanced settings -->
+    <string name="background_services_summary">Manage active background services, memory locks, and observers</string>
+
+    <!-- Sound pack categories and info in Sound settings -->
+    <string name="sound_pack_category_title">Sound Pack</string>
+    <string name="sound_pack_active_info_title">Active Pack Info</string>
+
+    <!-- Plugin titles and category headers -->
+    <string name="plugin_management_category">Plugin Management</string>
+    <string name="handwriting_plugin_title">Handwriting Plugin</string>
+    <string name="configuration_category">Configuration</string>
+    <string name="offline_models_category">Offline Models</string>
+    <string name="handwriting_models_management_desc">Download and manage offline recognition models</string>
+    <string name="ocr_plugin_title">OCR Plugin APK</string>
+    <string name="plugin_active_version_format">Plugin active (version %s)</string>
 </resources>

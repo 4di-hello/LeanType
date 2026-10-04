@@ -125,7 +125,7 @@ fun OcrSettingsScreen(
                         PreferenceCategory(stringResource(R.string.ocr_plugin_category))
 
                         LoadOcrPluginPreference(
-                            title = "OCR Plugin APK",
+                            title = stringResource(R.string.ocr_plugin_title),
                             summary = if (ocrInstalled) stringResource(R.string.libraries_status_active) else stringResource(R.string.libraries_status_not_installed),
                             icon = R.drawable.ic_ocr,
                             onSuccess = { ocrInstalled = OcrPluginLoader.hasPlugin(context) }

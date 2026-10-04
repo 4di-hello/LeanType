@@ -98,13 +98,13 @@ private fun createDebugSettings(context: Context) = listOf(
     Setting(context, DebugSettings.PREF_KEY_DUMP_DICT_PREFIX + type, R.string.button_default) {
         val ctx = LocalContext.current
         Preference(
-            name = "Dump $type dictionary",
+            name = stringResource(R.string.debug_dump_dict_format, type),
             onClick = {
                 val intent = Intent(DictionaryDumpBroadcastReceiver.DICTIONARY_DUMP_INTENT_ACTION)
                 intent.setPackage(context.packageName)
                 intent.putExtra(DictionaryDumpBroadcastReceiver.DICTIONARY_NAME_KEY, type)
                 ctx.sendBroadcast(intent)
-                android.widget.Toast.makeText(ctx, "Dumping $type dictionary to logcat...", android.widget.Toast.LENGTH_SHORT).show()
+                android.widget.Toast.makeText(ctx, ctx.getString(R.string.debug_dumping_dict_toast_format, type), android.widget.Toast.LENGTH_SHORT).show()
             }
         )
     }

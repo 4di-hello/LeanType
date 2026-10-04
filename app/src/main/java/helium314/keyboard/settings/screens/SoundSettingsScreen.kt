@@ -128,7 +128,7 @@ fun SoundSettingsScreen(
                         )
                     ) {
                         Column {
-                            PreferenceCategory("Sound Pack")
+                            PreferenceCategory(stringResource(R.string.sound_pack_category_title))
 
                             Preference(
                                 name = stringResource(R.string.prefs_keypress_sound_style_settings),
@@ -144,7 +144,7 @@ fun SoundSettingsScreen(
                                 val descText = listOfNotNull(soundManifest.summary, metaLine.takeIf { it.isNotBlank() }).joinToString("\n")
                                 if (descText.isNotBlank()) {
                                     Preference(
-                                        name = "Active Pack Info",
+                                        name = stringResource(R.string.sound_pack_active_info_title),
                                         description = descText,
                                         onClick = { showSoundPackDialog = true }
                                     )

@@ -55,10 +55,10 @@ fun HandwritingSettingsScreen(
                     )
                 ) {
                     Column {
-                        PreferenceCategory("Plugin Management")
+                        PreferenceCategory(stringResource(R.string.plugin_management_category))
 
                         LoadHandwritingPluginPreference(
-                            title = "Handwriting Plugin",
+                            title = stringResource(R.string.handwriting_plugin_title),
                             summary = if (handwritingInstalled) stringResource(R.string.libraries_status_active) else stringResource(R.string.libraries_status_not_installed),
                             icon = R.drawable.ic_edit,
                             onSuccess = { handwritingInstalled = HandwritingLoader.hasPlugin(context) }
@@ -76,7 +76,7 @@ fun HandwritingSettingsScreen(
                     )
                 ) {
                     Column {
-                        PreferenceCategory("Configuration")
+                        PreferenceCategory(stringResource(R.string.configuration_category))
 
                         HandwritingLanguagePreference()
                     }
@@ -93,12 +93,12 @@ fun HandwritingSettingsScreen(
                         )
                     ) {
                         Column {
-                            PreferenceCategory("Offline Models")
+                            PreferenceCategory(stringResource(R.string.offline_models_category))
 
                             var showModelsDialog by remember { mutableStateOf(false) }
                             Preference(
-                                name = "Handwriting Models",
-                                description = "Download and manage offline recognition models",
+                                name = stringResource(R.string.handwriting_models_title),
+                                description = stringResource(R.string.handwriting_models_management_desc),
                                 onClick = { showModelsDialog = true },
                                 icon = R.drawable.ic_settings_languages
                             )

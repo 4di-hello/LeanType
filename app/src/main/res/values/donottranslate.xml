@@ -71,7 +71,5 @@
     <string name="subtype_hebrew_1452_2" translatable="false">%s (1452-2)</string>
 
     <string name="english_ime_name" translatable="false">LeanType</string>
-    <!-- App slogan-->
-    <string name="app_slogan" translatable="false">Open-source keyboard with AI integration.</string>
 
 </resources>
