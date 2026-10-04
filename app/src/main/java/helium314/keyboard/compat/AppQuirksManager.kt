@@ -158,8 +158,12 @@ object AppQuirksManager {
      */
     fun isTypeNullKeyboardAllowed(packageName: String?): Boolean {
         if (packageName == null) return false
-        if (packageName == "com.termux" || packageName.startsWith("com.termux.") || packageName.endsWith(".termux") || packageName.contains("terminal")) return true
-        if (packageName.contains("dialer", ignoreCase = true) || packageName.contains("contacts", ignoreCase = true) || packageName.contains("phone", ignoreCase = true)) return true
+        val pkg = packageName.lowercase()
+        if (pkg == "com.termux" || pkg.startsWith("com.termux.") || pkg.endsWith(".termux") || pkg.contains("terminal")) return true
+        if (pkg.contains("dialer") || pkg.contains("contacts") || pkg.contains("phone")) return true
+        if (pkg.contains("minecraft") || pkg.contains("mojang") || pkg.contains("mbloader") || pkg.contains("pojav")) return true
+        if (pkg.contains("tadami") || pkg.contains("aniyomi") || pkg.contains("tachiyomi") || pkg.contains("mihon")) return true
+        if (pkg.contains("game") || pkg.contains("craft") || pkg.contains("emulator") || pkg.contains("loader")) return true
         if (isWebEditor(packageName)) return true
         return getEffectiveQuirk(packageName)?.allowTypeNullKeyboard == true
     }

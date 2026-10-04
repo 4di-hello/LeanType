@@ -1076,6 +1076,11 @@ class LatinIME : InputMethodService(),
         if (AppQuirksManager.isWebEditor(editorInfo.packageName)) {
             return false
         }
+        // In landscape orientation, full-screen games, emulators, and media loaders commonly use TYPE_NULL
+        // for custom in-game canvas text fields. Do not suppress in landscape.
+        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            return false
+        }
         // If cursor position is -1, -1 and inputType is TYPE_NULL (0),
         // it is a non-editable focusable widget (e.g. Sort, Filter, Menu button, or container view).
         // Opening the keyboard here causes transient open/close flicker.
