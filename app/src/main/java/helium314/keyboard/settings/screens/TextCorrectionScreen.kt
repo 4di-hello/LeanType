@@ -86,7 +86,8 @@ fun TextCorrectionScreen(
             Settings.PREF_ABC_AFTER_SYMBOL_SPACE,
             Settings.PREF_ABC_AFTER_NUMPAD_SPACE,
             Settings.PREF_ABC_AFTER_EMOJI,
-            Settings.PREF_ABC_AFTER_CLIP
+            Settings.PREF_ABC_AFTER_CLIP,
+            Settings.PREF_ABC_AFTER_CLIP_ENTER
         )
     }
 
@@ -256,6 +257,9 @@ fun createCorrectionSettings(context: Context) = listOf(
     },
     Setting(context, Settings.PREF_ABC_AFTER_CLIP, R.string.switch_keyboard_after, R.string.after_clip) {
         SwitchPreference(it, Defaults.PREF_ABC_AFTER_CLIP)
+    },
+    Setting(context, Settings.PREF_ABC_AFTER_CLIP_ENTER, R.string.switch_keyboard_after, R.string.after_clip_enter) {
+        SwitchPreference(it, Defaults.PREF_ABC_AFTER_CLIP_ENTER)
     },
 )
 
