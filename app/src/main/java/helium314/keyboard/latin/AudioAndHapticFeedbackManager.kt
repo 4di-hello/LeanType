@@ -134,17 +134,43 @@ class AudioAndHapticFeedbackManager private constructor() {
             mLastGestureVibrationTime = now
         }
 
-        // 1. Custom duration / amplitude override: If user explicitly configured duration (ms) or amplitude (%),
-        // use one-shot vibration so the intensity slider directly controls tactile amplitude.
-        // Gestures respect custom settings, clamped to 6ms and softened amplitude to avoid rumbling while scrubbing.
+        val feedbackConstant = if (isGesture) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                HapticFeedbackConstants.SEGMENT_TICK
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+                HapticFeedbackConstants.TEXT_HANDLE_MOVE
+            } else {
+                HapticFeedbackConstants.KEYBOARD_TAP
+            }
+        } else {
+            hapticEvent.feedbackConstant
+        }
+
         val allowDuration = hapticEvent.allowCustomDuration || isGesture
         val hasCustomDuration = settings.mKeypressVibrationDuration >= 0
         val hasCustomAmplitude = settings.mKeypressVibrationAmplitude >= 0
-        if (allowDuration && (hasCustomDuration || hasCustomAmplitude)) {
+
+        // 1. Native system view haptics: when both duration and amplitude are system default,
+        // prioritize view.performHapticFeedback to trigger the hardware-tuned waveform (e.g. Pixel KEYBOARD_TAP).
+        if (!hasCustomDuration && !hasCustomAmplitude) {
+            val performed = try {
+                viewToPerformHapticFeedbackOn?.performHapticFeedback(
+                    feedbackConstant,
+                    HapticFeedbackConstants.FLAG_IGNORE_GLOBAL_SETTING
+                ) == true
+            } catch (_: Throwable) {
+                false
+            }
+            if (performed) return
+        }
+
+        // 2. Custom duration override: If user explicitly configured duration (ms), use one-shot.
+        // Gestures respect custom settings, clamped to 6ms and softened amplitude to avoid rumbling while scrubbing.
+        if (allowDuration && hasCustomDuration) {
             val duration = if (isGesture) {
-                if (hasCustomDuration) settings.mKeypressVibrationDuration.toLong().coerceAtMost(6L) else 5L
+                settings.mKeypressVibrationDuration.toLong().coerceAtMost(6L)
             } else {
-                if (hasCustomDuration) settings.mKeypressVibrationDuration.toLong() else 15L
+                settings.mKeypressVibrationDuration.toLong()
             }
             val amplitude = if (isGesture && settings.mKeypressVibrationAmplitude > 0) {
                 (settings.mKeypressVibrationAmplitude * 0.4f).toInt().coerceIn(1, 255)
@@ -155,7 +181,7 @@ class AudioAndHapticFeedbackManager private constructor() {
             return
         }
 
-        // 2. Modern Primitive Haptics (API 30+) for System Default tactile feedback
+        // 3. Modern Primitive Haptics (API 30+) with amplitude scaling
         if (vibrator != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val primitiveId = when (hapticEvent) {
                 HapticEvent.KEY_LONG_PRESS -> VibrationEffect.Composition.PRIMITIVE_CLICK
@@ -173,7 +199,7 @@ class AudioAndHapticFeedbackManager private constructor() {
 
             if (isSupported) {
                 try {
-                    val baseScale = if (settings.mKeypressVibrationAmplitude > 0) {
+                    val baseScale = if (hasCustomAmplitude && settings.mKeypressVibrationAmplitude > 0) {
                         (settings.mKeypressVibrationAmplitude / 100f).coerceIn(0.01f, 1.0f)
                     } else {
                         1.0f
@@ -200,7 +226,7 @@ class AudioAndHapticFeedbackManager private constructor() {
             }
         }
 
-        // 3. Predefined hardware effects (API 29+)
+        // 4. Predefined hardware effects (API 29+)
         if (vibrator != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val effectId = when (hapticEvent) {
                 HapticEvent.KEY_LONG_PRESS -> VibrationEffect.EFFECT_HEAVY_CLICK
@@ -215,18 +241,7 @@ class AudioAndHapticFeedbackManager private constructor() {
             }
         }
 
-        // 4. Default system view fallback (Legacy API < 29 or total HAL fallback)
-        val feedbackConstant = if (isGesture) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                HapticFeedbackConstants.SEGMENT_TICK
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-                HapticFeedbackConstants.TEXT_HANDLE_MOVE
-            } else {
-                HapticFeedbackConstants.KEYBOARD_TAP
-            }
-        } else {
-            hapticEvent.feedbackConstant
-        }
+        // 5. Default system view fallback (Legacy API < 29 or total HAL fallback)
         try {
             viewToPerformHapticFeedbackOn?.performHapticFeedback(
                 feedbackConstant,
