@@ -148,6 +148,8 @@ object LanguageDetector {
         return null
     }
 
+    private val NON_LETTER_REGEX = Regex("[^\\p{L}]+")
+
     private fun detectByHeuristics(text: String, targetLangCode: String?): String? {
         val scores = mutableMapOf<String, Int>()
 
@@ -173,7 +175,7 @@ object LanguageDetector {
             }
         }
 
-        val words = text.lowercase().split(Regex("[^\\p{L}]+")).filter { it.length >= 2 }
+        val words = text.lowercase().split(NON_LETTER_REGEX).filter { it.length >= 2 }
         for (word in words) {
             if (SPANISH_WORDS.contains(word)) addScore("es", 2)
             if (FRENCH_WORDS.contains(word)) addScore("fr", 2)
