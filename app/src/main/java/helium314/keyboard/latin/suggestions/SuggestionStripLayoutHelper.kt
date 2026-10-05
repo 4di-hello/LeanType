@@ -74,6 +74,9 @@ internal class SuggestionStripLayoutHelper(
     private val mOriginalCenterSuggestionWeight: Float
     private var mCenterPositionInStrip: Int
     private var mTypedWordPositionWhenAutocorrect: Int
+    // whether the typed word takes the center position for the suggestions currently laid out,
+    // see Settings.PREF_CENTER_TYPED_WORD
+    private var mCenterTypedWord = false
     private val mMoreSuggestionsHint: Drawable
 
     private val mSuggestionStripOptions: Int
@@ -199,8 +202,21 @@ internal class SuggestionStripLayoutHelper(
         )
         return getPositionInSuggestionStrip(
             indexInSuggestedWords, suggestedWords.mWillAutoCorrect,
-            shouldOmitTypedWord, mCenterPositionInStrip, mTypedWordPositionWhenAutocorrect
+            shouldOmitTypedWord, mCenterPositionInStrip, mTypedWordPositionWhenAutocorrect, mCenterTypedWord
         )
+    }
+
+    /**
+     *  Whether the typed word should be shown in the center although it will be auto-corrected.
+     *  Requires the typed word to be in the list a second time, right after the auto-correction (done in Suggest).
+     */
+    private fun shouldCenterTypedWord(suggestedWords: SuggestedWords): Boolean {
+        if (!Settings.getValues().mCenterTypedWord || !suggestedWords.mWillAutoCorrect) return false
+        // with a single suggestion in the strip there is no room for both typed word and auto-correction
+        if (mTypedWordPositionWhenAutocorrect == mCenterPositionInStrip) return false
+        return suggestedWords.size() > INDEX_OF_TYPED_WORD_WHEN_AUTOCORRECT
+                && suggestedWords.getWord(INDEX_OF_TYPED_WORD_WHEN_AUTOCORRECT) ==
+                    suggestedWords.getWord(SuggestedWords.INDEX_OF_TYPED_WORD)
     }
 
     private fun getSuggestionTextColor(suggestedWords: SuggestedWords, indexInSuggestedWords: Int): Int {
@@ -348,7 +364,8 @@ internal class SuggestionStripLayoutHelper(
         }
 
         val maxSuggestions = if (promptView != null) maxOf(1, mSuggestionsCountInStrip - 1) else mSuggestionsCountInStrip
-        val startIndexOfMoreSuggestions = setupWordViewsAndReturnStartIndexOfMoreSuggestions(
+        mCenterTypedWord = shouldCenterTypedWord(suggestedWords)
+        var startIndexOfMoreSuggestions = setupWordViewsAndReturnStartIndexOfMoreSuggestions(
             suggestedWords, maxSuggestions
         )
         val centerWordView = mWordViews[mCenterPositionInStrip]
@@ -408,6 +425,14 @@ internal class SuggestionStripLayoutHelper(
         }
 
         val centerWidth = getSuggestionWidth(mCenterPositionInStrip, stripWidth)
+        if (mCenterTypedWord && getTextScaleX(centerWordView.text, centerWidth, centerWordView.paint) < MIN_TEXT_XSCALE) {
+            // The typed word is too long for the center, so only a single word will be shown. This must be
+            // the auto-correction, as otherwise the user can't see what will be entered: use the default order.
+            mCenterTypedWord = false
+            startIndexOfMoreSuggestions = setupWordViewsAndReturnStartIndexOfMoreSuggestions(
+                suggestedWords, maxSuggestions
+            )
+        }
         if (wordCountToShow == 1 || getTextScaleX(centerWordView.text, centerWidth, centerWordView.paint) < MIN_TEXT_XSCALE) {
             val countInStrip = 1
             mMoreSuggestionsAvailable = wordCountToShow > countInStrip
@@ -468,6 +493,8 @@ internal class SuggestionStripLayoutHelper(
 
     companion object {
         private const val DEFAULT_SUGGESTIONS_COUNT_IN_STRIP = 3
+        // when there is an auto-correction, Suggest puts the typed word right after it
+        private const val INDEX_OF_TYPED_WORD_WHEN_AUTOCORRECT = SuggestedWords.INDEX_OF_AUTO_CORRECTION + 1
         private const val DEFAULT_CENTER_SUGGESTION_PERCENTILE = 0.40f
         private const val DEFAULT_MAX_MORE_SUGGESTIONS_ROW = 2
         private const val PUNCTUATIONS_IN_STRIP = 5
@@ -515,11 +542,21 @@ internal class SuggestionStripLayoutHelper(
         fun getPositionInSuggestionStrip(
             indexInSuggestedWords: Int,
             willAutoCorrect: Boolean, omitTypedWord: Boolean,
-            centerPositionInStrip: Int, typedWordPositionWhenAutoCorrect: Int
+            centerPositionInStrip: Int, typedWordPositionWhenAutoCorrect: Int,
+            centerTypedWord: Boolean = false
         ): Int {
             if (omitTypedWord) {
                 if (indexInSuggestedWords == SuggestedWords.INDEX_OF_TYPED_WORD) {
                     return -1
+                }
+                if (centerTypedWord && willAutoCorrect) {
+                    // swap the positions of auto-correction and typed word, so the typed word stays in the center
+                    if (indexInSuggestedWords == INDEX_OF_TYPED_WORD_WHEN_AUTOCORRECT) {
+                        return centerPositionInStrip
+                    }
+                    if (indexInSuggestedWords == SuggestedWords.INDEX_OF_AUTO_CORRECTION) {
+                        return typedWordPositionWhenAutoCorrect
+                    }
                 }
                 if (indexInSuggestedWords == SuggestedWords.INDEX_OF_AUTO_CORRECTION) {
                     return centerPositionInStrip
