@@ -151,6 +151,7 @@ class KeyboardIconsSet private constructor() {
                     ToolbarKey.VOICE -> R.drawable.sym_keyboard_voice_holo
                     ToolbarKey.CLIPBOARD -> R.drawable.sym_keyboard_clipboard_holo
                     ToolbarKey.CLIPBOARD_SEARCH -> R.drawable.sym_keyboard_search_holo
+                    ToolbarKey.CLIPBOARD_SELECT -> R.drawable.ic_select
                     ToolbarKey.NUMPAD -> R.drawable.sym_keyboard_numpad_key_holo
                     ToolbarKey.UNDO -> R.drawable.ic_undo
                     ToolbarKey.REDO -> R.drawable.ic_redo
@@ -234,6 +235,7 @@ class KeyboardIconsSet private constructor() {
                     ToolbarKey.VOICE -> R.drawable.sym_keyboard_voice_lxx
                     ToolbarKey.CLIPBOARD -> R.drawable.sym_keyboard_clipboard_lxx
                     ToolbarKey.CLIPBOARD_SEARCH -> R.drawable.sym_keyboard_search_lxx
+                    ToolbarKey.CLIPBOARD_SELECT -> R.drawable.ic_select
                     ToolbarKey.NUMPAD -> R.drawable.sym_keyboard_numpad_key_lxx
                     ToolbarKey.UNDO -> R.drawable.ic_undo
                     ToolbarKey.REDO -> R.drawable.ic_redo
@@ -317,6 +319,7 @@ class KeyboardIconsSet private constructor() {
                     ToolbarKey.VOICE -> R.drawable.sym_keyboard_voice_rounded
                     ToolbarKey.CLIPBOARD -> R.drawable.sym_keyboard_clipboard_rounded
                     ToolbarKey.CLIPBOARD_SEARCH -> R.drawable.sym_keyboard_search_rounded
+                    ToolbarKey.CLIPBOARD_SELECT -> R.drawable.ic_select_rounded
                     ToolbarKey.NUMPAD -> R.drawable.sym_keyboard_numpad_key_lxx
                     ToolbarKey.UNDO -> R.drawable.ic_undo_rounded
                     ToolbarKey.REDO -> R.drawable.ic_redo_rounded

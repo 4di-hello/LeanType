@@ -1617,4 +1617,23 @@
     <string name="haptic_engine_system">النظام الافتراضي (العرض الأصلي)</string>
     <string name="haptic_engine_primitives">البدائيات الحديثة (تأثيرات الاهتزاز)</string>
     <string name="haptic_engine_oneshot">طلقة واحدة قديمة (اهتزاز النبض)</string>
+    <string name="center_typed_word">إظهار الكلمة المكتوبة في المنتصف دائمًا</string>
+    <string name="center_typed_word_summary">تبقى الكلمة التي تكتبها في المنتصف، ويظهر التصحيح التلقائي بجوارها</string>
+    <string name="clipboard_select_items">حدد المقاطع</string>
+    <string name="clipboard_selected_count">تم تحديد%1$d</string>
+    <string name="clipboard_action_select_all">حدد الكل</string>
+    <string name="clipboard_action_deselect_all">قم بإلغاء تحديد الكل</string>
+    <string name="clipboard_action_pin">دبوس</string>
+    <string name="clipboard_action_unpin">إزالة التثبيت</string>
+    <string name="clipboard_action_edit">يحرر</string>
+    <string name="clipboard_action_delete">يمسح</string>
+    <string name="clipboard_action_select">يختار</string>
+    <string name="clipboard_options_title">خيارات المقطع</string>
+    <string name="clipboard_items_deleted">%1$dالعناصر المحذوفة</string>
+    <string name="clipboard_select">حدد المقاطع</string>
+    <string name="shift_recapitalizes_word">يغير Shift الكتابة بالأحرف الكبيرة للكلمة المكتوبة</string>
+    <string name="shift_recapitalizes_word_summary">يؤدي الضغط على مفتاح Shift في نهاية الكلمة إلى الانتقال من الأحرف الصغيرة والأحرف الكبيرة والأحرف الكبيرة (مع قفل الأحرف الكبيرة)</string>
+    <string name="action_back">خلف</string>
+    <string name="action_clear_search">مسح البحث</string>
+    <string name="touchpad_close">أغلق وضع لوحة اللمس</string>
 </resources>

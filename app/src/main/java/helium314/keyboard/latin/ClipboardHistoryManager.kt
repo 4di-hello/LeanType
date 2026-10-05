@@ -514,6 +514,35 @@ class ClipboardHistoryManager(
         return entry
     }
 
+    fun deleteEntryById(id: Long): ClipboardHistoryEntry? {
+        val entry = clipboardDao?.deleteClipById(id) ?: return null
+        if (entry.imageUri != null) {
+            val prefs = latinIME.prefs()
+            val deletedSet = prefs.getStringSet("deleted_screenshot_uris", emptySet())?.toMutableSet() ?: mutableSetOf()
+            deletedSet.add(entry.imageUri)
+            prefs.edit().putStringSet("deleted_screenshot_uris", deletedSet).apply()
+            if (cachedScreenshotInfo?.fullPath == entry.imageUri || cachedScreenshotInfo?.uri?.toString() == entry.imageUri) {
+                cachedScreenshotInfo = null
+            }
+        }
+        try {
+            val primaryText = retrieveClipboardContent().toString()
+            if (primaryText == entry.text || (entry.text == "[Screenshot]" && entry.imageUri != null)) {
+                ClipboardManagerCompat.clearPrimaryClip(clipboardManager)
+            }
+        } catch (_: Exception) {}
+        return entry
+    }
+
+    fun deleteEntries(ids: Collection<Long>): List<ClipboardHistoryEntry> {
+        return ids.mapNotNull { deleteEntryById(it) }
+    }
+
+    fun setClipsPinned(ids: Collection<Long>, pinned: Boolean) {
+        ids.forEach { clipboardDao?.setPinned(it, pinned) }
+        sortHistoryEntries()
+    }
+
     fun restoreEntry(entry: ClipboardHistoryEntry) {
         clipboardDao?.restoreClip(entry)
     }

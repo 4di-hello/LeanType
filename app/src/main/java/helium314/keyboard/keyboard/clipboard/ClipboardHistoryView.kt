@@ -42,8 +42,12 @@ import helium314.keyboard.latin.utils.RepeatableKeyTouchListener
 import helium314.keyboard.latin.utils.getCodeForToolbarKey
 import helium314.keyboard.latin.utils.getCodeForToolbarKeyLongClick
 import helium314.keyboard.latin.utils.getEnabledClipboardToolbarKeys
+import helium314.keyboard.latin.utils.getPlatformDialogThemeContext
+import helium314.keyboard.latin.utils.dpToPx
 import helium314.keyboard.latin.utils.prefs
 import helium314.keyboard.latin.utils.setToolbarButtonsActivatedStateOnPrefChange
+import android.app.AlertDialog
+import android.view.WindowManager
 
 @SuppressLint("CustomViewStyleable")
 class ClipboardHistoryView @JvmOverloads constructor(
@@ -140,6 +144,10 @@ class ClipboardHistoryView @JvmOverloads constructor(
         clipboardAdapter = ClipboardAdapter(clipboardLayoutParams, this).apply {
             itemBackgroundId = keyBackgroundId
             pinnedIconResId = pinIconId
+            onClipLongClickListener = { entry, anchor -> showClipActionDialog(entry, anchor) }
+            onSelectionChangedListener = { selectedCount, totalCount ->
+                updateSelectionDisplay(selectedCount, totalCount)
+            }
         }
         
         // Search & Empty View init
@@ -508,6 +516,249 @@ class ClipboardHistoryView @JvmOverloads constructor(
         }
     }
 
+    private var selectionCountTextView: TextView? = null
+    private var selectionSelectAllButton: ImageButton? = null
+    private var selectionPinButton: ImageButton? = null
+    private var selectionDeleteButton: ImageButton? = null
+
+    val inSelectionMode: Boolean
+        get() = this::clipboardAdapter.isInitialized && clipboardAdapter.isSelectionMode
+
+    fun startSelectionMode(initialSelectedId: Long? = null) {
+        if (!this::clipboardAdapter.isInitialized) return
+        clipboardRecyclerView.dismissUndoBar()
+        dismissConfirmationBar()
+        if (inEditMode) {
+            stopEditMode(save = false)
+        }
+        val clipboardStrip = KeyboardSwitcher.getInstance().clipboardStrip ?: return
+        val inSearchMode = this::searchBarTextView.isInitialized && searchBarTextView.parent == clipboardStrip
+        if (inSearchMode) {
+            stopSearchMode()
+        }
+
+        clipboardStrip.removeAllViews()
+
+        val colors = Settings.getValues().mColors
+        val btnWidth = resources.getDimensionPixelSize(R.dimen.config_suggestions_strip_edge_key_width)
+
+        val closeButton = ImageButton(context).apply {
+            layoutParams = LinearLayout.LayoutParams(btnWidth, LinearLayout.LayoutParams.MATCH_PARENT)
+            setImageResource(R.drawable.ic_close)
+            setBackgroundResource(R.drawable.toolbar_key_background)
+            setColorFilter(colors.get(ColorType.KEY_ICON))
+            colors.setColor(background, ColorType.TOOL_BAR_EXPAND_KEY_BACKGROUND)
+            contentDescription = context.getString(R.string.voice_action_cancel)
+            setOnClickListener { stopSelectionMode() }
+        }
+        clipboardStrip.addView(closeButton)
+
+        val countTextView = TextView(context).apply {
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
+            gravity = Gravity.CENTER_VERTICAL or Gravity.START
+            textSize = 16f
+            setTextColor(colors.get(ColorType.KEY_TEXT))
+            setPadding(16.dpToPx(resources), 0, 0, 0)
+        }
+        configureInlineTextView(countTextView)
+        selectionCountTextView = countTextView
+        clipboardStrip.addView(countTextView)
+
+        val selectAllButton = ImageButton(context).apply {
+            layoutParams = LinearLayout.LayoutParams(btnWidth, LinearLayout.LayoutParams.MATCH_PARENT)
+            setImageResource(R.drawable.ic_select_all_rounded)
+            setBackgroundResource(R.drawable.toolbar_key_background)
+            setColorFilter(colors.get(ColorType.KEY_ICON))
+            colors.setColor(background, ColorType.TOOL_BAR_EXPAND_KEY_BACKGROUND)
+            contentDescription = context.getString(R.string.clipboard_action_select_all)
+            setOnClickListener {
+                val total = clipboardAdapter.getAllClipEntries().size
+                if (clipboardAdapter.selectedEntryIds.size == total && total > 0) {
+                    clipboardAdapter.deselectAll()
+                } else {
+                    clipboardAdapter.selectAll()
+                }
+            }
+        }
+        selectionSelectAllButton = selectAllButton
+        clipboardStrip.addView(selectAllButton)
+
+        val pinButton = ImageButton(context).apply {
+            layoutParams = LinearLayout.LayoutParams(btnWidth, LinearLayout.LayoutParams.MATCH_PARENT)
+            setImageResource(R.drawable.ic_clipboard_pin_rounded)
+            setBackgroundResource(R.drawable.toolbar_key_background)
+            setColorFilter(colors.get(ColorType.KEY_ICON))
+            colors.setColor(background, ColorType.TOOL_BAR_EXPAND_KEY_BACKGROUND)
+            contentDescription = context.getString(R.string.clipboard_action_pin)
+            setOnClickListener {
+                val selected = clipboardAdapter.getSelectedEntries()
+                if (selected.isNotEmpty()) {
+                    val allPinned = selected.all { it.isPinned }
+                    clipboardHistoryManager.setClipsPinned(selected.map { it.id }, !allPinned)
+                    clipboardAdapter.refresh()
+                    updateSelectionDisplay()
+                }
+            }
+        }
+        selectionPinButton = pinButton
+        clipboardStrip.addView(pinButton)
+
+        val deleteButton = ImageButton(context).apply {
+            layoutParams = LinearLayout.LayoutParams(btnWidth, LinearLayout.LayoutParams.MATCH_PARENT)
+            setImageResource(R.drawable.ic_bin_rounded)
+            setBackgroundResource(R.drawable.toolbar_key_background)
+            setColorFilter(colors.get(ColorType.KEY_ICON))
+            colors.setColor(background, ColorType.TOOL_BAR_EXPAND_KEY_BACKGROUND)
+            contentDescription = context.getString(R.string.clipboard_action_delete)
+            setOnClickListener {
+                val selected = clipboardAdapter.getSelectedEntries()
+                if (selected.isNotEmpty()) {
+                    val deletedList = clipboardHistoryManager.deleteEntries(selected.map { it.id })
+                    stopSelectionMode()
+                    if (deletedList.isNotEmpty()) {
+                        clipboardAdapter.refresh()
+                        clipboardRecyclerView.showUndoBar(deletedList)
+                    }
+                }
+            }
+        }
+        selectionDeleteButton = deleteButton
+        clipboardStrip.addView(deleteButton)
+
+        clipboardAdapter.setSelectionMode(true)
+        if (initialSelectedId != null) {
+            clipboardAdapter.toggleSelection(initialSelectedId)
+        } else {
+            updateSelectionDisplay()
+        }
+    }
+
+    fun stopSelectionMode() {
+        if (!this::clipboardAdapter.isInitialized) return
+        clipboardAdapter.setSelectionMode(false)
+        selectionCountTextView = null
+        selectionSelectAllButton = null
+        selectionPinButton = null
+        selectionDeleteButton = null
+
+        val clipboardStrip = KeyboardSwitcher.getInstance().clipboardStrip ?: return
+        clipboardStrip.removeAllViews()
+        toolbarKeys.forEach { clipboardStrip.addView(it) }
+        applyClipboardToolbarKeyLayoutParams()
+        clipboardStrip.post { applyClipboardToolbarKeyLayoutParams() }
+        updateEmptyView(clipboardAdapter.isFiltering)
+    }
+
+    fun updateSelectionDisplay(
+        selectedCount: Int = if (this::clipboardAdapter.isInitialized) clipboardAdapter.selectedEntryIds.size else 0,
+        totalCount: Int = if (this::clipboardAdapter.isInitialized) clipboardAdapter.getAllClipEntries().size else 0
+    ) {
+        val countView = selectionCountTextView ?: return
+        countView.text = if (selectedCount == 0) {
+            context.getString(R.string.clipboard_select_items)
+        } else {
+            context.getString(R.string.clipboard_selected_count, selectedCount)
+        }
+
+        selectionSelectAllButton?.let { btn ->
+            val allSelected = selectedCount == totalCount && totalCount > 0
+            btn.contentDescription = context.getString(
+                if (allSelected) R.string.clipboard_action_deselect_all else R.string.clipboard_action_select_all
+            )
+        }
+
+        val hasSelection = selectedCount > 0
+        selectionPinButton?.let { btn ->
+            btn.isEnabled = hasSelection
+            btn.alpha = if (hasSelection) 1.0f else 0.4f
+            val selected = clipboardAdapter.getSelectedEntries()
+            val allPinned = selected.isNotEmpty() && selected.all { it.isPinned }
+            btn.contentDescription = context.getString(
+                if (allPinned) R.string.clipboard_action_unpin else R.string.clipboard_action_pin
+            )
+        }
+
+        selectionDeleteButton?.let { btn ->
+            btn.isEnabled = hasSelection
+            btn.alpha = if (hasSelection) 1.0f else 0.4f
+        }
+    }
+
+    private enum class ClipAction {
+        PIN, UNPIN, EDIT, DELETE, SELECT
+    }
+
+    private fun showClipActionDialog(entry: ClipboardHistoryEntry, anchorView: View): Boolean {
+        val token = windowToken ?: return false
+        val items = mutableListOf<CharSequence>()
+        val actions = mutableListOf<ClipAction>()
+
+        if (entry.isPinned) {
+            items.add(context.getString(R.string.clipboard_action_unpin))
+            actions.add(ClipAction.UNPIN)
+        } else {
+            items.add(context.getString(R.string.clipboard_action_pin))
+            actions.add(ClipAction.PIN)
+        }
+
+        if (entry.imageUri == null && !entry.text.isNullOrEmpty()) {
+            items.add(context.getString(R.string.clipboard_action_edit))
+            actions.add(ClipAction.EDIT)
+        }
+
+        items.add(context.getString(R.string.clipboard_action_delete))
+        actions.add(ClipAction.DELETE)
+
+        items.add(context.getString(R.string.clipboard_action_select))
+        actions.add(ClipAction.SELECT)
+
+        val builder = AlertDialog.Builder(getPlatformDialogThemeContext(context))
+            .setTitle(R.string.clipboard_options_title)
+            .setItems(items.toTypedArray()) { _, which ->
+                when (actions[which]) {
+                    ClipAction.PIN, ClipAction.UNPIN -> {
+                        clipboardHistoryManager.toggleClipPinned(entry.id)
+                    }
+                    ClipAction.EDIT -> {
+                        startEditMode(entry)
+                    }
+                    ClipAction.DELETE -> {
+                        deleteSingleEntry(entry)
+                    }
+                    ClipAction.SELECT -> {
+                        startSelectionMode(initialSelectedId = entry.id)
+                    }
+                }
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+
+        showDialogForIme(builder)
+        return true
+    }
+
+    private fun showDialogForIme(builder: AlertDialog.Builder) {
+        val dialog = builder.create()
+        val window = dialog.window
+        if (window != null) {
+            val lp = window.attributes
+            lp.token = windowToken
+            lp.type = WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG
+            window.attributes = lp
+            window.addFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM)
+        }
+        dialog.show()
+    }
+
+    private fun deleteSingleEntry(entry: ClipboardHistoryEntry) {
+        clipboardRecyclerView.dismissUndoBar()
+        dismissConfirmationBar()
+        val deleted = clipboardHistoryManager.deleteEntryById(entry.id)
+        if (deleted != null) {
+            clipboardAdapter.refresh()
+            clipboardRecyclerView.showUndoBar(listOf(deleted))
+        }
+    }
+
     private val currentBottomRowLayout: Int
         get() {
             val keyboardView = findViewById<MainKeyboardView>(R.id.bottom_row_keyboard) ?: return KeyboardId.ELEMENT_ALPHABET
@@ -546,6 +797,19 @@ class ClipboardHistoryView @JvmOverloads constructor(
     override fun onCodeInput(primaryCode: Int, x: Int, y: Int, isKeyRepeat: Boolean) {
         val clipboardStrip = KeyboardSwitcher.getInstance().clipboardStrip
         val inSearchMode = this::searchBarTextView.isInitialized && searchBarTextView.parent == clipboardStrip
+
+        if (inSelectionMode && primaryCode == KeyCode.DELETE) {
+            val selected = clipboardAdapter.getSelectedEntries()
+            if (selected.isNotEmpty()) {
+                val deletedList = clipboardHistoryManager.deleteEntries(selected.map { it.id })
+                stopSelectionMode()
+                if (deletedList.isNotEmpty()) {
+                    clipboardAdapter.refresh()
+                    clipboardRecyclerView.showUndoBar(deletedList)
+                }
+                return
+            }
+        }
         
         if (inEditMode) {
             if (handleLayoutSwitchInEditOrSearch(primaryCode)) {
@@ -676,6 +940,10 @@ class ClipboardHistoryView @JvmOverloads constructor(
         keyboardActionListener.onLongPressKey(primaryCode)
     }
     override fun onKeyDown(keyCode: Int, keyEvent: android.view.KeyEvent): Boolean {
+        if (keyCode == android.view.KeyEvent.KEYCODE_BACK && inSelectionMode) {
+            stopSelectionMode()
+            return true
+        }
         return keyboardActionListener.onKeyDown(keyCode, keyEvent)
     }
     override fun onKeyUp(keyCode: Int, keyEvent: android.view.KeyEvent): Boolean {
@@ -910,6 +1178,10 @@ class ClipboardHistoryView @JvmOverloads constructor(
             stopSearchMode()
         }
 
+        if (inSelectionMode && isAttachedToWindow) {
+            stopSelectionMode()
+        }
+
         // Dismiss any active undo bar
         clipboardRecyclerView.dismissUndoBar()
         dismissConfirmationBar()
@@ -942,6 +1214,14 @@ class ClipboardHistoryView @JvmOverloads constructor(
             if (code == KeyCode.CLIPBOARD_SEARCH) {
                  startSearchMode()
                  return
+            }
+            if (code == KeyCode.CLIPBOARD_SELECT_ITEMS) {
+                if (inSelectionMode) {
+                    stopSelectionMode()
+                } else {
+                    startSelectionMode()
+                }
+                return
             }
             if (code == KeyCode.CLIPBOARD_CLEAR_HISTORY) {
                 showClearAllConfirmationBar()
@@ -1034,7 +1314,7 @@ class ClipboardHistoryView @JvmOverloads constructor(
         if (count == 0) return
 
         val inSearchMode = this::searchBarTextView.isInitialized && searchBarTextView.parent == clipboardStrip
-        if (inEditMode || inSearchMode) return
+        if (inEditMode || inSearchMode || inSelectionMode) return
 
         val singleKeyWidth = kotlin.math.min(
             context.resources.getDimensionPixelSize(R.dimen.config_suggestions_strip_edge_key_width),

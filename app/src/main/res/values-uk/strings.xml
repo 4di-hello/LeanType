@@ -1514,4 +1514,23 @@
     <string name="haptic_engine_system">Системне замовчування (власний вигляд)</string>
     <string name="haptic_engine_primitives">Сучасні примітиви (вібраційні ефекти)</string>
     <string name="haptic_engine_oneshot">Застарілий одноразовий (імпульсна вібрація)</string>
+    <string name="center_typed_word">Завжди показуйте введене слово посередині</string>
+    <string name="center_typed_word_summary">Слово, яке ви вводите, залишається посередині, поряд з ним відображається автовиправлення</string>
+    <string name="clipboard_select_items">Виберіть кліпи</string>
+    <string name="clipboard_selected_count">Вибрано%1$d</string>
+    <string name="clipboard_action_select_all">Вибрати все</string>
+    <string name="clipboard_action_deselect_all">Зняти вибір із усіх</string>
+    <string name="clipboard_action_pin">Pin</string>
+    <string name="clipboard_action_unpin">Відкріпити</string>
+    <string name="clipboard_action_edit">Редагувати</string>
+    <string name="clipboard_action_delete">Видалити</string>
+    <string name="clipboard_action_select">Виберіть</string>
+    <string name="clipboard_options_title">Опції кліпу</string>
+    <string name="clipboard_items_deleted">%1$dелементів видалено</string>
+    <string name="clipboard_select">Виберіть кліпи</string>
+    <string name="shift_recapitalizes_word">Shift змінює великі літери у введеному слові</string>
+    <string name="shift_recapitalizes_word_summary">Натискання Shift у кінці слова циклічно перемикається між малими, великими та ВЕРХНИМИ літерами (з Caps Lock)</string>
+    <string name="action_back">Назад</string>
+    <string name="action_clear_search">Очистити пошук</string>
+    <string name="touchpad_close">Закрийте режим сенсорної панелі</string>
 </resources>

@@ -1619,4 +1619,23 @@
     <string name="haptic_engine_system">Система по умолчанию (собственный вид)</string>
     <string name="haptic_engine_primitives">Современные примитивы (эффекты вибрации)</string>
     <string name="haptic_engine_oneshot">Legacy one-shot (импульсная вибрация)</string>
+    <string name="center_typed_word">Всегда показывать набранное слово посередине</string>
+    <string name="center_typed_word_summary">Набираемое вами слово остается посередине, рядом с ним отображается автокоррекция.</string>
+    <string name="clipboard_select_items">Выбрать клипы</string>
+    <string name="clipboard_selected_count">%1$dвыбрано</string>
+    <string name="clipboard_action_select_all">Выбрать все</string>
+    <string name="clipboard_action_deselect_all">Отменить выбор всех</string>
+    <string name="clipboard_action_pin">Приколоть</string>
+    <string name="clipboard_action_unpin">Открепить</string>
+    <string name="clipboard_action_edit">Редактировать</string>
+    <string name="clipboard_action_delete">Удалить</string>
+    <string name="clipboard_action_select">Выбирать</string>
+    <string name="clipboard_options_title">Параметры клипа</string>
+    <string name="clipboard_items_deleted">%1$dэлементов удалено</string>
+    <string name="clipboard_select">Выбрать клипы</string>
+    <string name="shift_recapitalizes_word">Shift меняет заглавную букву набранного слова</string>
+    <string name="shift_recapitalizes_word_summary">Нажатие клавиши Shift в конце слова переключает строчные, заглавные и ПРОПИСНЫЕ регистры (с заглавными буквами).</string>
+    <string name="action_back">Назад</string>
+    <string name="action_clear_search">Очистить поиск</string>
+    <string name="touchpad_close">Закрыть режим сенсорной панели</string>
 </resources>

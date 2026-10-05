@@ -1561,4 +1561,23 @@
     <string name="haptic_engine_system">ברירת המחדל של המערכת (תצוגה מקורית)</string>
     <string name="haptic_engine_primitives">פרימיטיבים מודרניים (אפקטי רטט)</string>
     <string name="haptic_engine_oneshot">מדור קודם (רטט דופק)</string>
+    <string name="center_typed_word">הצג תמיד מילה מוקלדת באמצע</string>
+    <string name="center_typed_word_summary">המילה שאתה מקליד נשארת באמצע, התיקון האוטומטי מוצג לידה</string>
+    <string name="clipboard_select_items">בחר קליפים</string>
+    <string name="clipboard_selected_count">%1$dנבחר</string>
+    <string name="clipboard_action_select_all">בחר הכל</string>
+    <string name="clipboard_action_deselect_all">בטל את הבחירה בכולם</string>
+    <string name="clipboard_action_pin">פִּין</string>
+    <string name="clipboard_action_unpin">לְהוֹצִיא סִיכָּה</string>
+    <string name="clipboard_action_edit">לַעֲרוֹך</string>
+    <string name="clipboard_action_delete">לִמְחוֹק</string>
+    <string name="clipboard_action_select">לִבחוֹר</string>
+    <string name="clipboard_options_title">אפשרויות קליפ</string>
+    <string name="clipboard_items_deleted">%1$dפריטים נמחקו</string>
+    <string name="clipboard_select">בחר קליפים</string>
+    <string name="shift_recapitalizes_word">Shift משנה אותיות רישיות במילה שהוקלדה</string>
+    <string name="shift_recapitalizes_word_summary">לחיצה על Shift בסוף מילה עוברת בין אותיות קטנות, אותיות רישיות ורישיות (עם Caps Lock)</string>
+    <string name="action_back">בְּחֲזָרָה</string>
+    <string name="action_clear_search">נקה חיפוש</string>
+    <string name="touchpad_close">סגור את מצב לוח המגע</string>
 </resources>

@@ -1571,4 +1571,23 @@ Permite la inferencia GGUF / llama.cpp en el dispositivo para corrección y rees
     <string name="haptic_engine_system">Valor predeterminado del sistema (vista nativa)</string>
     <string name="haptic_engine_primitives">Primitivas modernas (efectos de vibración)</string>
     <string name="haptic_engine_oneshot">One-shot heredado (vibración de pulso)</string>
+    <string name="center_typed_word">Mostrar siempre la palabra escrita en el medio</string>
+    <string name="center_typed_word_summary">La palabra que estás escribiendo permanece en el medio, la autocorrección se muestra al lado</string>
+    <string name="clipboard_select_items">Seleccionar clips</string>
+    <string name="clipboard_selected_count">%1$dseleccionado</string>
+    <string name="clipboard_action_select_all">Seleccionar todo</string>
+    <string name="clipboard_action_deselect_all">Deseleccionar todo</string>
+    <string name="clipboard_action_pin">Alfiler</string>
+    <string name="clipboard_action_unpin">Desprender</string>
+    <string name="clipboard_action_edit">Editar</string>
+    <string name="clipboard_action_delete">Borrar</string>
+    <string name="clipboard_action_select">Seleccionar</string>
+    <string name="clipboard_options_title">Opciones de clip</string>
+    <string name="clipboard_items_deleted">%1$delementos eliminados</string>
+    <string name="clipboard_select">Seleccionar clips</string>
+    <string name="shift_recapitalizes_word">Shift cambia el uso de mayúsculas en la palabra escrita</string>
+    <string name="shift_recapitalizes_word_summary">Al presionar Mayús al final de una palabra, se alterna entre minúsculas, mayúsculas y MAYÚSCULAS (con bloqueo de mayúsculas)</string>
+    <string name="action_back">Atrás</string>
+    <string name="action_clear_search">Borrar búsqueda</string>
+    <string name="touchpad_close">Cerrar el modo de panel táctil</string>
 </resources>

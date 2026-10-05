@@ -43,8 +43,67 @@ class ClipboardAdapter(
     private val displayList = mutableListOf<ClipboardDisplayItem>()
     private var isPinnedFolded = true
 
+    var isSelectionMode = false
+        private set
+    val selectedEntryIds = mutableSetOf<Long>()
+
+    var onSelectionChangedListener: ((selectedCount: Int, totalCount: Int) -> Unit)? = null
+    var onClipLongClickListener: ((ClipboardHistoryEntry, View) -> Boolean)? = null
+
     val isFiltering: Boolean
         get() = filteredList != null
+
+    fun setSelectionMode(enabled: Boolean) {
+        if (isSelectionMode != enabled) {
+            isSelectionMode = enabled
+            if (!enabled) {
+                selectedEntryIds.clear()
+            }
+            refresh()
+            onSelectionChangedListener?.invoke(selectedEntryIds.size, getAllClipEntries().size)
+        }
+    }
+
+    fun toggleSelection(id: Long) {
+        if (selectedEntryIds.contains(id)) {
+            selectedEntryIds.remove(id)
+        } else {
+            selectedEntryIds.add(id)
+        }
+        refresh()
+        onSelectionChangedListener?.invoke(selectedEntryIds.size, getAllClipEntries().size)
+    }
+
+    fun selectAll() {
+        val all = getAllClipEntries()
+        selectedEntryIds.clear()
+        selectedEntryIds.addAll(all.map { it.id })
+        refresh()
+        onSelectionChangedListener?.invoke(selectedEntryIds.size, all.size)
+    }
+
+    fun deselectAll() {
+        selectedEntryIds.clear()
+        refresh()
+        onSelectionChangedListener?.invoke(0, getAllClipEntries().size)
+    }
+
+    fun getAllClipEntries(): List<ClipboardHistoryEntry> {
+        return filteredList ?: clipboardHistoryManager?.getClips() ?: emptyList()
+    }
+
+    fun getSelectedEntries(): List<ClipboardHistoryEntry> {
+        val all = getAllClipEntries()
+        return all.filter { selectedEntryIds.contains(it.id) }
+    }
+
+    fun getItemById(id: Long): ClipboardHistoryEntry? {
+        return getAllClipEntries().firstOrNull { it.id == id }
+    }
+
+    fun findEntryPosition(id: Long): Int {
+        return displayList.indexOfFirst { it is ClipboardDisplayItem.Clip && it.entry.id == id }
+    }
 
     fun filter(query: String) {
         searchQuery = query
@@ -175,6 +234,7 @@ class ClipboardAdapter(
             view: View
     ) : RecyclerView.ViewHolder(view), View.OnClickListener, View.OnTouchListener, View.OnLongClickListener {
 
+        private val selectIconView: ImageView
         private val pinnedIconView: ImageView
         private val contentView: TextView
         private val imageContainer: View
@@ -192,6 +252,7 @@ class ClipboardAdapter(
                 isHapticFeedbackEnabled = false
             }
             Settings.getValues().mColors.setBackground(view, ColorType.POPUP_KEYS_BACKGROUND)
+            selectIconView = view.findViewById(R.id.clipboard_entry_select_icon)
             pinnedIconView = view.findViewById<ImageView>(R.id.clipboard_entry_pinned_icon).apply {
                 visibility = View.GONE
                 if (pinnedIconResId != 0) {
@@ -214,8 +275,29 @@ class ClipboardAdapter(
         }
 
         fun setContent(historyEntry: ClipboardHistoryEntry?) {
-            itemView.tag = historyEntry?.id
-            
+            val id = historyEntry?.id ?: 0L
+            itemView.tag = id
+            val isSelected = isSelectionMode && selectedEntryIds.contains(id)
+            val colors = Settings.getValues().mColors
+
+            if (isSelectionMode) {
+                selectIconView.visibility = View.VISIBLE
+                if (isSelected) {
+                    selectIconView.setImageResource(R.drawable.ic_check_circle_filled)
+                    selectIconView.alpha = 1.0f
+                    colors.setColor(selectIconView, ColorType.ACTION_KEY_ICON)
+                    colors.setBackground(itemView, ColorType.TOOL_BAR_KEY_ENABLED_BACKGROUND)
+                } else {
+                    selectIconView.setImageResource(R.drawable.ic_check_circle_outline)
+                    selectIconView.alpha = 0.5f
+                    colors.setColor(selectIconView, ColorType.KEY_ICON)
+                    colors.setBackground(itemView, ColorType.POPUP_KEYS_BACKGROUND)
+                }
+            } else {
+                selectIconView.visibility = View.GONE
+                colors.setBackground(itemView, ColorType.POPUP_KEYS_BACKGROUND)
+            }
+
             if (historyEntry?.imageUri != null) {
                 contentView.visibility = View.GONE
                 imageContainer.visibility = View.VISIBLE
@@ -234,6 +316,7 @@ class ClipboardAdapter(
 
         @SuppressLint("ClickableViewAccessibility")
         override fun onTouch(view: View, event: MotionEvent): Boolean {
+            if (isSelectionMode) return false
             if (event.actionMasked == MotionEvent.ACTION_DOWN) {
                 keyEventListener.onKeyDown(view.tag as Long)
             }
@@ -241,12 +324,22 @@ class ClipboardAdapter(
         }
 
         override fun onClick(view: View) {
-            keyEventListener.onKeyUp(view.tag as Long)
+            val id = view.tag as? Long ?: return
+            if (isSelectionMode) {
+                toggleSelection(id)
+                return
+            }
+            keyEventListener.onKeyUp(id)
         }
 
         override fun onLongClick(view: View): Boolean {
-            clipboardHistoryManager?.toggleClipPinned(view.tag as Long)
-            return true
+            val id = view.tag as? Long ?: return false
+            if (isSelectionMode) {
+                toggleSelection(id)
+                return true
+            }
+            val entry = getItemById(id) ?: return false
+            return onClipLongClickListener?.invoke(entry, view) ?: false
         }
     }
 }

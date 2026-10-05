@@ -29,7 +29,7 @@ class ClipboardHistoryRecyclerView @JvmOverloads constructor(
 
     // Undo state
     private var undoBar: View? = null
-    private var lastDeletedEntry: ClipboardHistoryEntry? = null
+    private val lastDeletedEntries = mutableListOf<ClipboardHistoryEntry>()
     private val undoHandler = Handler(Looper.getMainLooper())
     private val undoDismissRunnable = Runnable { dismissUndoBar() }
 
@@ -37,6 +37,7 @@ class ClipboardHistoryRecyclerView @JvmOverloads constructor(
     private val touchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
         override fun onMove(recyclerView: RecyclerView, viewHolder: ViewHolder, target: ViewHolder) = false
         override fun getSwipeDirs(recyclerView: RecyclerView, viewHolder: ViewHolder): Int {
+            if ((adapter as? ClipboardAdapter)?.isSelectionMode == true) return 0
             val position = viewHolder.absoluteAdapterPosition
             val entry = (adapter as? ClipboardAdapter)?.getItem(position) ?: return 0
             val cacheIndex = historyManager?.getClips()?.indexOfFirst { it.id == entry.id } ?: -1
@@ -84,10 +85,12 @@ class ClipboardHistoryRecyclerView @JvmOverloads constructor(
         (view as? ClipboardHistoryView)?.startEditMode(entry)
     }
 
-    private fun showUndoBar(entry: ClipboardHistoryEntry) {
+    fun showUndoBar(entries: List<ClipboardHistoryEntry>) {
+        if (entries.isEmpty()) return
         // Cancel any pending dismiss from a previous undo
         undoHandler.removeCallbacks(undoDismissRunnable)
-        lastDeletedEntry = entry
+        lastDeletedEntries.clear()
+        lastDeletedEntries.addAll(entries)
 
         // Dismiss confirmation bar if active
         (parent as? View)?.findViewById<View>(R.id.clipboard_confirmation_bar)?.visibility = View.GONE
@@ -104,10 +107,16 @@ class ClipboardHistoryRecyclerView @JvmOverloads constructor(
             bar.findViewById<TextView>(R.id.clipboard_undo_button)?.setTextColor(colors.get(ColorType.KEY_TEXT))
         } catch (_: Exception) { /* colors may not be available */ }
 
+        bar.findViewById<TextView>(R.id.clipboard_undo_text)?.text = if (entries.size == 1) {
+            context.getString(R.string.clipboard_item_deleted)
+        } else {
+            context.getString(R.string.clipboard_items_deleted, entries.size)
+        }
+
         bar.visibility = View.VISIBLE
 
         bar.findViewById<View>(R.id.clipboard_undo_button)?.setOnClickListener {
-            lastDeletedEntry?.let { deletedEntry ->
+            lastDeletedEntries.forEach { deletedEntry ->
                 historyManager?.restoreEntry(deletedEntry)
                 // The listener in the DAO will trigger onClipInserted, which notifies the adapter
             }
@@ -118,10 +127,14 @@ class ClipboardHistoryRecyclerView @JvmOverloads constructor(
         undoHandler.postDelayed(undoDismissRunnable, 5000)
     }
 
+    fun showUndoBar(entry: ClipboardHistoryEntry) {
+        showUndoBar(listOf(entry))
+    }
+
     fun dismissUndoBar() {
         undoHandler.removeCallbacks(undoDismissRunnable)
         undoBar?.visibility = View.GONE
-        lastDeletedEntry = null
+        lastDeletedEntries.clear()
     }
 
     private val adapterDataObserver: AdapterDataObserver = object : AdapterDataObserver() {

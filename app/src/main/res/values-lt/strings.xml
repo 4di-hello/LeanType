@@ -1542,4 +1542,23 @@ Ar norite atnaujinti?</string>
     <string name="haptic_engine_system">Numatytasis sistemos vaizdas (savasis rodinys)</string>
     <string name="haptic_engine_primitives">Šiuolaikiniai primityvai (vibracijos efektai)</string>
     <string name="haptic_engine_oneshot">Senas vienkartinis šūvis (impulsinė vibracija)</string>
+    <string name="center_typed_word">Įvestą žodį visada rodyti viduryje</string>
+    <string name="center_typed_word_summary">Žodis, kurį rašote, lieka viduryje, šalia rodomas automatinis taisymas</string>
+    <string name="clipboard_select_items">Pasirinkite klipus</string>
+    <string name="clipboard_selected_count">%1$dpasirinkta</string>
+    <string name="clipboard_action_select_all">Pasirinkite viską</string>
+    <string name="clipboard_action_deselect_all">Panaikinkite visų pasirinkimą</string>
+    <string name="clipboard_action_pin">Smeigtukas</string>
+    <string name="clipboard_action_unpin">Atsegti</string>
+    <string name="clipboard_action_edit">Redaguoti</string>
+    <string name="clipboard_action_delete">Ištrinti</string>
+    <string name="clipboard_action_select">Pasirinkite</string>
+    <string name="clipboard_options_title">Klipo parinktys</string>
+    <string name="clipboard_items_deleted">%1$delementai ištrinti</string>
+    <string name="clipboard_select">Pasirinkite klipus</string>
+    <string name="shift_recapitalizes_word">Shift pakeičia įvesto žodžio didžiąsias raides</string>
+    <string name="shift_recapitalizes_word_summary">Paspaudus „Shift“ žodžio pabaigoje, rašomos mažosios, didžiosios ir didžiosios raidės (su didžiųjų raidžių užraktu)</string>
+    <string name="action_back">Atgal</string>
+    <string name="action_clear_search">Išvalyti paiešką</string>
+    <string name="touchpad_close">Uždaryti jutiklinės dalies režimą</string>
 </resources>

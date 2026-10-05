@@ -9,6 +9,16 @@
         android:orientation="horizontal">
 
     <ImageView
+            android:id="@+id/clipboard_entry_select_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="6dp"
+            android:visibility="gone"
+            android:contentDescription="@null"
+            android:importantForAccessibility="no"/>
+
+    <ImageView
             android:id="@+id/clipboard_entry_pinned_icon"
             android:contentDescription="@string/clipboard_history_pinned_first"
             android:layout_width="@dimen/config_clipboard_pinned_icon_size"

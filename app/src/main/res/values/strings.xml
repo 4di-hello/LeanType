@@ -330,6 +330,18 @@
     <string name="clipboard_no_search_results">No results found</string>
     <string name="clipboard_clear_all_confirmation">Are you sure you want to clear all history?</string>
     <string name="clear_all">Clear All</string>
+    <!-- Clipboard multi-selection and item management -->
+    <string name="clipboard_select_items">Select clips</string>
+    <string name="clipboard_selected_count">%1$d selected</string>
+    <string name="clipboard_action_select_all">Select all</string>
+    <string name="clipboard_action_deselect_all">Deselect all</string>
+    <string name="clipboard_action_pin">Pin</string>
+    <string name="clipboard_action_unpin">Unpin</string>
+    <string name="clipboard_action_edit">Edit</string>
+    <string name="clipboard_action_delete">Delete</string>
+    <string name="clipboard_action_select">Select</string>
+    <string name="clipboard_options_title">Clip options</string>
+    <string name="clipboard_items_deleted">%1$d items deleted</string>
     <!-- Preferences item for enabling swipe deletion -->
     <string name="delete_swipe">Delete swipe</string>
     <!-- Description for "delete_swipe" option. -->
@@ -597,6 +609,7 @@
     <string name="clear_clipboard" tools:keep="@string/clear_clipboard">Clear clipboard</string>
     <!-- ponytail: add missing string resource for toolbar settings UI -->
     <string name="clipboard_search" tools:keep="@string/clipboard_search">Clipboard search</string>
+    <string name="clipboard_select" tools:keep="@string/clipboard_select">Select clips</string>
     <!-- ponytail: add missing string resources for dynamic dictionary downloads -->
     <string name="download">Download</string>
     <string name="downloading">Downloading…</string>

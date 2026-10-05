@@ -1608,4 +1608,23 @@ Permet l\'inférence GGUF / llama.cpp sur l\'appareil pour la correction et la r
     <string name="haptic_engine_system">Système par défaut (vue native)</string>
     <string name="haptic_engine_primitives">Primitives modernes (effets de vibration)</string>
     <string name="haptic_engine_oneshot">One-shot hérité (vibration pulsée)</string>
+    <string name="center_typed_word">Toujours afficher le mot tapé au milieu</string>
+    <string name="center_typed_word_summary">Le mot que vous tapez reste au milieu, la correction automatique s\'affiche à côté</string>
+    <string name="clipboard_select_items">Sélectionner des clips</string>
+    <string name="clipboard_selected_count">%1$dsélectionné</string>
+    <string name="clipboard_action_select_all">Tout sélectionner</string>
+    <string name="clipboard_action_deselect_all">Tout désélectionner</string>
+    <string name="clipboard_action_pin">Épingle</string>
+    <string name="clipboard_action_unpin">Détacher</string>
+    <string name="clipboard_action_edit">Modifier</string>
+    <string name="clipboard_action_delete">Supprimer</string>
+    <string name="clipboard_action_select">Sélectionner</string>
+    <string name="clipboard_options_title">Options de clips</string>
+    <string name="clipboard_items_deleted">%1$déléments supprimés</string>
+    <string name="clipboard_select">Sélectionner des clips</string>
+    <string name="shift_recapitalizes_word">Shift modifie la majuscule du mot tapé</string>
+    <string name="shift_recapitalizes_word_summary">Appuyer sur Maj à la fin d\'un mot fait défiler les minuscules, les majuscules et les majuscules (avec verrouillage des majuscules)</string>
+    <string name="action_back">Dos</string>
+    <string name="action_clear_search">Effacer la recherche</string>
+    <string name="touchpad_close">Fermer le mode pavé tactile</string>
 </resources>

@@ -1550,4 +1550,23 @@ Lehetővé teszi az eszközön futó GGUF / llama.cpp következtetést a javít�
     <string name="haptic_engine_system">Rendszer alapértelmezett (natív nézet)</string>
     <string name="haptic_engine_primitives">Modern primitívek (rezgéshatások)</string>
     <string name="haptic_engine_oneshot">Hagyományos egylövés (impulzus vibráció)</string>
+    <string name="center_typed_word">A beírt szót mindig középen mutasd</string>
+    <string name="center_typed_word_summary">A beírt szó középen marad, mellette megjelenik az automatikus javítás</string>
+    <string name="clipboard_select_items">Válasszon klipeket</string>
+    <string name="clipboard_selected_count">%1$dkiválasztva</string>
+    <string name="clipboard_action_select_all">Válassza ki az összeset</string>
+    <string name="clipboard_action_deselect_all">Törölje az összes kijelölését</string>
+    <string name="clipboard_action_pin">Pin</string>
+    <string name="clipboard_action_unpin">Kibont</string>
+    <string name="clipboard_action_edit">Szerkesztés</string>
+    <string name="clipboard_action_delete">Töröl</string>
+    <string name="clipboard_action_select">Válassza ki</string>
+    <string name="clipboard_options_title">Klip opciók</string>
+    <string name="clipboard_items_deleted">%1$delem törölve</string>
+    <string name="clipboard_select">Válasszon klipeket</string>
+    <string name="shift_recapitalizes_word">A Shift megváltoztatja a beírt szó nagybetűit</string>
+    <string name="shift_recapitalizes_word_summary">A szó végén a Shift megnyomása váltogatja a kisbetűket, a nagybetűket és a NAGYBETŐKET (nagybetűkkel)</string>
+    <string name="action_back">Vissza</string>
+    <string name="action_clear_search">Keresés törlése</string>
+    <string name="touchpad_close">Az érintőpad mód bezárása</string>
 </resources>

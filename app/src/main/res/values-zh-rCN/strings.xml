@@ -1560,4 +1560,23 @@
     <string name="haptic_engine_system">系统默认（本机视图）</string>
     <string name="haptic_engine_primitives">现代基元（振动效果）</string>
     <string name="haptic_engine_oneshot">传统单发（脉冲振动）</string>
+    <string name="center_typed_word">始终在中间显示输入的单词</string>
+    <string name="center_typed_word_summary">您输入的单词保留在中间，自动更正显示在旁边</string>
+    <string name="clipboard_select_items">选择剪辑</string>
+    <string name="clipboard_selected_count">已选择%1$d</string>
+    <string name="clipboard_action_select_all">选择全部</string>
+    <string name="clipboard_action_deselect_all">取消全选</string>
+    <string name="clipboard_action_pin">别针</string>
+    <string name="clipboard_action_unpin">取消固定</string>
+    <string name="clipboard_action_edit">编辑</string>
+    <string name="clipboard_action_delete">删除</string>
+    <string name="clipboard_action_select">选择</string>
+    <string name="clipboard_options_title">剪辑选项</string>
+    <string name="clipboard_items_deleted">%1$d项已删除</string>
+    <string name="clipboard_select">选择剪辑</string>
+    <string name="shift_recapitalizes_word">Shift 更改键入单词的大小写</string>
+    <string name="shift_recapitalizes_word_summary">在单词末尾按 Shift 键可在小写、大写和大写之间循环（带大写锁定）</string>
+    <string name="action_back">后退</string>
+    <string name="action_clear_search">清除搜索</string>
+    <string name="touchpad_close">关闭触摸板模式</string>
 </resources>
