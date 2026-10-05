@@ -1512,7 +1512,7 @@ Memungkinkan inferensi GGUF / llama.cpp di perangkat untuk koreksi teks dan penu
     <string name="center_typed_word">Selalu tampilkan kata yang diketik di tengah</string>
     <string name="center_typed_word_summary">Kata yang Anda ketikkan tetap berada di tengah, koreksi otomatis ditampilkan di sebelahnya</string>
     <string name="clipboard_select_items">Pilih klip</string>
-    <string name="clipboard_selected_count">%1$ddipilih</string>
+    <string name="clipboard_selected_count">%1$d dipilih</string>
     <string name="clipboard_action_select_all">Pilih semua</string>
     <string name="clipboard_action_deselect_all">Batalkan pilihan semua</string>
     <string name="clipboard_action_pin">Pin</string>
@@ -1521,8 +1521,7 @@ Memungkinkan inferensi GGUF / llama.cpp di perangkat untuk koreksi teks dan penu
     <string name="clipboard_action_delete">Menghapus</string>
     <string name="clipboard_action_select">Memilih</string>
     <string name="clipboard_options_title">Opsi klip</string>
-    <string name="clipboard_items_deleted">%1$ditem dihapus</string>
-    <string name="clipboard_select">Pilih klip</string>
+    <string name="clipboard_items_deleted">%1$d item dihapus</string>
     <string name="shift_recapitalizes_word">Shift mengubah kapitalisasi kata yang diketik</string>
     <string name="shift_recapitalizes_word_summary">Menekan shift di akhir kata akan memutar huruf kecil, huruf kapital, dan huruf besar (dengan caps lock)</string>
     <string name="action_back">Kembali</string>

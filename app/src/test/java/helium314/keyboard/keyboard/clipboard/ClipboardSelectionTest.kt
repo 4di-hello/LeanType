@@ -1,39 +1,40 @@
 // SPDX-License-Identifier: GPL-3.0-only
 package helium314.keyboard.keyboard.clipboard
 
-import helium314.keyboard.keyboard.internal.keyboard_parser.floris.KeyCode
-import helium314.keyboard.keyboard.internal.keyboard_parser.floris.KeyCode.checkAndConvertCode
 import helium314.keyboard.latin.utils.ToolbarKey
 import helium314.keyboard.latin.utils.defaultClipboardToolbarPref
 import helium314.keyboard.latin.utils.defaultToolbarPref
-import helium314.keyboard.latin.utils.getCodeForToolbarKey
 import org.junit.Test
-import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class ClipboardSelectionTest {
 
     @Test
-    fun testClipboardSelectKeyMapping() {
-        val code = getCodeForToolbarKey(ToolbarKey.CLIPBOARD_SELECT)
-        assertEquals(KeyCode.CLIPBOARD_SELECT_ITEMS, code)
-        assertEquals(KeyCode.CLIPBOARD_SELECT_ITEMS, KeyCode.CLIPBOARD_SELECT_ITEMS.checkAndConvertCode())
-    }
-
-    @Test
-    fun testClipboardToolbarPrefContainsClipboardSelect() {
+    fun testClipboardToolbarPrefKeys() {
         assertTrue(
-            defaultClipboardToolbarPref.contains("${ToolbarKey.CLIPBOARD_SELECT.name}:true"),
-            "defaultClipboardToolbarPref should include CLIPBOARD_SELECT"
+            defaultClipboardToolbarPref.contains("${ToolbarKey.CLIPBOARD_SEARCH.name}:true"),
+            "defaultClipboardToolbarPref should include CLIPBOARD_SEARCH"
+        )
+        assertTrue(
+            defaultClipboardToolbarPref.contains("${ToolbarKey.CLEAR_CLIPBOARD.name}:true"),
+            "defaultClipboardToolbarPref should include CLEAR_CLIPBOARD"
         )
     }
 
     @Test
-    fun testMainToolbarPrefExcludesClipboardSelect() {
+    fun testToolbarPrefExcludesClipboardSelect() {
         assertFalse(
-            defaultToolbarPref.contains(ToolbarKey.CLIPBOARD_SELECT.name),
+            defaultClipboardToolbarPref.contains("CLIPBOARD_SELECT"),
+            "defaultClipboardToolbarPref should not include CLIPBOARD_SELECT"
+        )
+        assertFalse(
+            defaultToolbarPref.contains("CLIPBOARD_SELECT"),
             "Main defaultToolbarPref should not include CLIPBOARD_SELECT"
+        )
+        assertFalse(
+            ToolbarKey.entries.any { it.name == "CLIPBOARD_SELECT" },
+            "ToolbarKey should not define CLIPBOARD_SELECT"
         )
     }
 }

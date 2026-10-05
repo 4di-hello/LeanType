@@ -1597,7 +1597,7 @@ Maakt GGUF / llama.cpp-inferentie op het apparaat mogelijk voor proeflezen en he
     <string name="center_typed_word">Toon het getypte woord altijd in het midden</string>
     <string name="center_typed_word_summary">Het woord dat u typt, blijft in het midden staan, de autocorrectie wordt ernaast weergegeven</string>
     <string name="clipboard_select_items">Selecteer clips</string>
-    <string name="clipboard_selected_count">%1$dgeselecteerd</string>
+    <string name="clipboard_selected_count">%1$d geselecteerd</string>
     <string name="clipboard_action_select_all">Selecteer alles</string>
     <string name="clipboard_action_deselect_all">Deselecteer alles</string>
     <string name="clipboard_action_pin">Pin</string>
@@ -1606,8 +1606,7 @@ Maakt GGUF / llama.cpp-inferentie op het apparaat mogelijk voor proeflezen en he
     <string name="clipboard_action_delete">Verwijderen</string>
     <string name="clipboard_action_select">Selecteer</string>
     <string name="clipboard_options_title">Clip-opties</string>
-    <string name="clipboard_items_deleted">%1$ditems verwijderd</string>
-    <string name="clipboard_select">Selecteer clips</string>
+    <string name="clipboard_items_deleted">%1$d items verwijderd</string>
     <string name="shift_recapitalizes_word">Shift wijzigt het hoofdlettergebruik van getypte woorden</string>
     <string name="shift_recapitalizes_word_summary">Door aan het einde van een woord op Shift te drukken, bladert u door kleine letters, hoofdletters en HOOFDLETTERS (met caps lock)</string>
     <string name="action_back">Rug</string>

@@ -1289,14 +1289,6 @@ class ClipboardHistoryView @JvmOverloads constructor(
                  startSearchMode()
                  return
             }
-            if (code == KeyCode.CLIPBOARD_SELECT_ITEMS) {
-                if (inSelectionMode) {
-                    stopSelectionMode()
-                } else {
-                    startSelectionMode()
-                }
-                return
-            }
             if (code == KeyCode.CLIPBOARD_CLEAR_HISTORY) {
                 showClearAllConfirmationBar()
                 return

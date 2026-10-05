@@ -1537,7 +1537,7 @@ Omogućuje lokalno GGUF / llama.cpp zaključivanje na uređaju za lekturu i prep
     <string name="center_typed_word">Uvijek prikaži upisanu riječ u sredini</string>
     <string name="center_typed_word_summary">Riječ koju upisujete ostaje u sredini, auto-ispravak je prikazan pored nje</string>
     <string name="clipboard_select_items">Odaberite isječke</string>
-    <string name="clipboard_selected_count">%1$dodabrano</string>
+    <string name="clipboard_selected_count">%1$d odabrano</string>
     <string name="clipboard_action_select_all">Odaberite sve</string>
     <string name="clipboard_action_deselect_all">Poništi odabir svih</string>
     <string name="clipboard_action_pin">Pin</string>
@@ -1546,8 +1546,7 @@ Omogućuje lokalno GGUF / llama.cpp zaključivanje na uređaju za lekturu i prep
     <string name="clipboard_action_delete">Izbrisati</string>
     <string name="clipboard_action_select">Odaberite</string>
     <string name="clipboard_options_title">Opcije isječka</string>
-    <string name="clipboard_items_deleted">%1$dstavki izbrisano</string>
-    <string name="clipboard_select">Odaberite isječke</string>
+    <string name="clipboard_items_deleted">%1$d stavki izbrisano</string>
     <string name="shift_recapitalizes_word">Shift mijenja velika slova u upisanoj riječi</string>
     <string name="shift_recapitalizes_word_summary">Pritiskom na shift na kraju riječi kruži kroz mala slova, velika i velika slova (s caps lock)</string>
     <string name="action_back">Nazad</string>

@@ -1549,7 +1549,7 @@
     <string name="center_typed_word">Заўсёды паказваць набранае слова пасярэдзіне</string>
     <string name="center_typed_word_summary">Слова, якое вы ўводзіце, застаецца пасярэдзіне, побач з ім паказваецца аўтавыпраўленне</string>
     <string name="clipboard_select_items">Выберыце кліпы</string>
-    <string name="clipboard_selected_count">%1$dвыбрана</string>
+    <string name="clipboard_selected_count">%1$d выбрана</string>
     <string name="clipboard_action_select_all">Выбраць усё</string>
     <string name="clipboard_action_deselect_all">Зняць выбар з усіх</string>
     <string name="clipboard_action_pin">Pin</string>
@@ -1558,8 +1558,7 @@
     <string name="clipboard_action_delete">Выдаліць</string>
     <string name="clipboard_action_select">Выберыце</string>
     <string name="clipboard_options_title">Параметры кліпа</string>
-    <string name="clipboard_items_deleted">%1$dэлементаў выдалена</string>
-    <string name="clipboard_select">Выберыце кліпы</string>
+    <string name="clipboard_items_deleted">%1$d элементаў выдалена</string>
     <string name="shift_recapitalizes_word">Shift змяняе капіталізацыю набранага слова</string>
     <string name="shift_recapitalizes_word_summary">Націсканне Shift у канцы слова пераключае малыя, вялікія і ВЕЛІКІЯ літары (з Caps Lock)</string>
     <string name="action_back">Назад</string>

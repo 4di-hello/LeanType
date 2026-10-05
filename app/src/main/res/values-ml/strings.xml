@@ -1615,7 +1615,7 @@
     <string name="center_typed_word">ടൈപ്പ് ചെയ്ത വാക്ക് എപ്പോഴും മധ്യത്തിൽ കാണിക്കുക</string>
     <string name="center_typed_word_summary">നിങ്ങൾ ടൈപ്പ് ചെയ്യുന്ന വാക്ക് മധ്യത്തിൽ തന്നെ തുടരുന്നു, അതിനടുത്തായി യാന്ത്രിക-തിരുത്തൽ കാണിക്കുന്നു</string>
     <string name="clipboard_select_items">ക്ലിപ്പുകൾ തിരഞ്ഞെടുക്കുക</string>
-    <string name="clipboard_selected_count">%1$dതിരഞ്ഞെടുത്തു</string>
+    <string name="clipboard_selected_count">%1$d തിരഞ്ഞെടുത്തു</string>
     <string name="clipboard_action_select_all">എല്ലാം തിരഞ്ഞെടുക്കുക</string>
     <string name="clipboard_action_deselect_all">എല്ലാം തിരഞ്ഞെടുത്തത് മാറ്റുക</string>
     <string name="clipboard_action_pin">പിൻ</string>
@@ -1624,8 +1624,7 @@
     <string name="clipboard_action_delete">ഇല്ലാതാക്കുക</string>
     <string name="clipboard_action_select">തിരഞ്ഞെടുക്കുക</string>
     <string name="clipboard_options_title">ക്ലിപ്പ് ഓപ്ഷനുകൾ</string>
-    <string name="clipboard_items_deleted">%1$dഇനങ്ങൾ ഇല്ലാതാക്കി</string>
-    <string name="clipboard_select">ക്ലിപ്പുകൾ തിരഞ്ഞെടുക്കുക</string>
+    <string name="clipboard_items_deleted">%1$d ഇനങ്ങൾ ഇല്ലാതാക്കി</string>
     <string name="shift_recapitalizes_word">ഷിഫ്റ്റ് ടൈപ്പ് ചെയ്‌ത പദത്തിൻ്റെ വലിയക്ഷരം മാറ്റുന്നു</string>
     <string name="shift_recapitalizes_word_summary">ചെറിയക്ഷരം, വലിയക്ഷരം, അപ്പർകേസ് (ക്യാപ്സ് ലോക്ക് ഉള്ളത്) എന്നിവയിലൂടെ ഒരു പദചക്രത്തിൻ്റെ അവസാനം ഷിഫ്റ്റ് അമർത്തുക</string>
     <string name="action_back">തിരികെ</string>

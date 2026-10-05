@@ -1615,7 +1615,7 @@
     <string name="center_typed_word">Να εμφανίζεται πάντα η πληκτρολογημένη λέξη στη μέση</string>
     <string name="center_typed_word_summary">Η λέξη που πληκτρολογείτε παραμένει στη μέση, η αυτόματη διόρθωση εμφανίζεται δίπλα της</string>
     <string name="clipboard_select_items">Επιλέξτε κλιπ</string>
-    <string name="clipboard_selected_count">Επιλέχτηκε%1$d</string>
+    <string name="clipboard_selected_count">Επιλέχτηκε %1$d</string>
     <string name="clipboard_action_select_all">Επιλέξτε όλα</string>
     <string name="clipboard_action_deselect_all">Αποεπιλογή όλων</string>
     <string name="clipboard_action_pin">Καρφίτσα</string>
@@ -1624,8 +1624,7 @@
     <string name="clipboard_action_delete">Διαγράφω</string>
     <string name="clipboard_action_select">Επιλέγω</string>
     <string name="clipboard_options_title">Επιλογές κλιπ</string>
-    <string name="clipboard_items_deleted">%1$dστοιχεία διαγράφηκαν</string>
-    <string name="clipboard_select">Επιλέξτε κλιπ</string>
+    <string name="clipboard_items_deleted">%1$d στοιχεία διαγράφηκαν</string>
     <string name="shift_recapitalizes_word">Το Shift αλλάζει την κεφαλαιοποίηση της πληκτρολογημένης λέξης</string>
     <string name="shift_recapitalizes_word_summary">Πατώντας το shift στο τέλος μιας λέξης γίνεται κύκλος μεταξύ πεζών, κεφαλαίων και κεφαλαίων (με κλείδωμα κεφαλαίων)</string>
     <string name="action_back">Πίσω</string>

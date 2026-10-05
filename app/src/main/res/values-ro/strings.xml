@@ -1544,7 +1544,7 @@ Activează inferența GGUF / llama.cpp pe dispozitiv pentru corectură și refor
     <string name="center_typed_word">Afișați întotdeauna cuvântul tastat în mijloc</string>
     <string name="center_typed_word_summary">Cuvântul pe care îl tastați rămâne în mijloc, corectarea automată este afișată lângă el</string>
     <string name="clipboard_select_items">Selectați clipuri</string>
-    <string name="clipboard_selected_count">%1$dselectat</string>
+    <string name="clipboard_selected_count">%1$d selectat</string>
     <string name="clipboard_action_select_all">Selectați toate</string>
     <string name="clipboard_action_deselect_all">Deselectați toate</string>
     <string name="clipboard_action_pin">Pin</string>
@@ -1553,8 +1553,7 @@ Activează inferența GGUF / llama.cpp pe dispozitiv pentru corectură și refor
     <string name="clipboard_action_delete">Şterge</string>
     <string name="clipboard_action_select">Selecta</string>
     <string name="clipboard_options_title">Opțiuni de clipare</string>
-    <string name="clipboard_items_deleted">%1$darticole au fost șterse</string>
-    <string name="clipboard_select">Selectați clipuri</string>
+    <string name="clipboard_items_deleted">%1$d articole au fost șterse</string>
     <string name="shift_recapitalizes_word">Shift modifică scrierea cu majuscule a cuvântului tastat</string>
     <string name="shift_recapitalizes_word_summary">Apăsând pe Shift la sfârșitul unui cuvânt, se trece prin litere mici, cu majuscule și majuscule (cu majuscule)</string>
     <string name="action_back">Spate</string>

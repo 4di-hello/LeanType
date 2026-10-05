@@ -1541,7 +1541,7 @@
     <string name="center_typed_word">टाइप किया हुआ शब्द हमेशा बीच में दिखाएं</string>
     <string name="center_typed_word_summary">जो शब्द आप टाइप कर रहे हैं वह बीच में रहता है, उसके आगे स्वतः सुधार दिखाया जाता है</string>
     <string name="clipboard_select_items">क्लिप चुनें</string>
-    <string name="clipboard_selected_count">%1$dचयनित</string>
+    <string name="clipboard_selected_count">%1$d चयनित</string>
     <string name="clipboard_action_select_all">सबका चयन करें</string>
     <string name="clipboard_action_deselect_all">सबको अचयनित करो</string>
     <string name="clipboard_action_pin">नत्थी करना</string>
@@ -1550,8 +1550,7 @@
     <string name="clipboard_action_delete">मिटाना</string>
     <string name="clipboard_action_select">चुनना</string>
     <string name="clipboard_options_title">क्लिप विकल्प</string>
-    <string name="clipboard_items_deleted">%1$dआइटम हटा दिए गए</string>
-    <string name="clipboard_select">क्लिप चुनें</string>
+    <string name="clipboard_items_deleted">%1$d आइटम हटा दिए गए</string>
     <string name="shift_recapitalizes_word">शिफ्ट से टाइप किए गए शब्द का कैपिटलाइज़ेशन बदल जाता है</string>
     <string name="shift_recapitalizes_word_summary">किसी शब्द के अंत में शिफ्ट दबाने पर लोअरकेस, कैपिटलाइज़्ड और अपरकेस (कैप्स लॉक के साथ) का चक्र चलता है</string>
     <string name="action_back">पीछे</string>

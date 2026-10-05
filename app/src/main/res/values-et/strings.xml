@@ -1544,7 +1544,7 @@ Võimaldab seadmesisese GGUF / llama.cpp järelduse korrektuuri ja ümbersõnast
     <string name="center_typed_word">Näita sisestatud sõna alati keskel</string>
     <string name="center_typed_word_summary">Sisestatav sõna jääb keskele, selle kõrval kuvatakse automaatne parandus</string>
     <string name="clipboard_select_items">Valige klipid</string>
-    <string name="clipboard_selected_count">%1$dvalitud</string>
+    <string name="clipboard_selected_count">%1$d valitud</string>
     <string name="clipboard_action_select_all">Valige kõik</string>
     <string name="clipboard_action_deselect_all">Tühista kõik valikud</string>
     <string name="clipboard_action_pin">Pin</string>
@@ -1553,8 +1553,7 @@ Võimaldab seadmesisese GGUF / llama.cpp järelduse korrektuuri ja ümbersõnast
     <string name="clipboard_action_delete">Kustuta</string>
     <string name="clipboard_action_select">Valige</string>
     <string name="clipboard_options_title">Klipi valikud</string>
-    <string name="clipboard_items_deleted">%1$düksust kustutatud</string>
-    <string name="clipboard_select">Valige klipid</string>
+    <string name="clipboard_items_deleted">%1$d üksust kustutatud</string>
     <string name="shift_recapitalizes_word">Shift muudab trükitud sõna suurtähtede kasutamist</string>
     <string name="shift_recapitalizes_word_summary">Tõstuklahvi vajutamine sõna lõpus vahetab väiketähti, suurtähti ja SUURTÄHE (suurtähelukuga)</string>
     <string name="action_back">Tagasi</string>

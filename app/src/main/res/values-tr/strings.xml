@@ -1545,7 +1545,7 @@ Metin düzeltme ve yeniden yazma için cihaz üzerinde GGUF / llama.cpp çıkar�
     <string name="center_typed_word">Yazılan kelimeyi her zaman ortada göster</string>
     <string name="center_typed_word_summary">Yazdığınız kelime ortada kalır, yanında otomatik düzeltme gösterilir</string>
     <string name="clipboard_select_items">Klipleri seçin</string>
-    <string name="clipboard_selected_count">%1$dseçildi</string>
+    <string name="clipboard_selected_count">%1$d seçildi</string>
     <string name="clipboard_action_select_all">Tümünü seç</string>
     <string name="clipboard_action_deselect_all">Tümünün seçimini kaldır</string>
     <string name="clipboard_action_pin">Sabitle</string>
@@ -1554,8 +1554,7 @@ Metin düzeltme ve yeniden yazma için cihaz üzerinde GGUF / llama.cpp çıkar�
     <string name="clipboard_action_delete">Silmek</string>
     <string name="clipboard_action_select">Seçme</string>
     <string name="clipboard_options_title">Klip seçenekleri</string>
-    <string name="clipboard_items_deleted">%1$döğe silindi</string>
-    <string name="clipboard_select">Klipleri seçin</string>
+    <string name="clipboard_items_deleted">%1$d öğe silindi</string>
     <string name="shift_recapitalizes_word">Shift, yazılan kelimenin büyük harf kullanımını değiştirir</string>
     <string name="shift_recapitalizes_word_summary">Bir sözcüğün sonunda Shift tuşuna basıldığında küçük harf, Büyük Harf ve BÜYÜK HARF (büyük harf kilitli) arasında geçiş yapılır</string>
     <string name="action_back">Geri</string>

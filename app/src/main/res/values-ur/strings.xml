@@ -1606,7 +1606,7 @@
     <string name="center_typed_word">ہمیشہ درمیان میں ٹائپ کردہ لفظ دکھائیں۔</string>
     <string name="center_typed_word_summary">آپ جو لفظ ٹائپ کر رہے ہیں وہ درمیان میں رہتا ہے، اس کے آگے خودکار تصحیح دکھائی جاتی ہے۔</string>
     <string name="clipboard_select_items">کلپس منتخب کریں۔</string>
-    <string name="clipboard_selected_count">%1$dکو منتخب کیا گیا۔</string>
+    <string name="clipboard_selected_count">%1$d کو منتخب کیا گیا۔</string>
     <string name="clipboard_action_select_all">سبھی کو منتخب کریں۔</string>
     <string name="clipboard_action_deselect_all">سبھی کو غیر منتخب کریں۔</string>
     <string name="clipboard_action_pin">پن</string>
@@ -1615,8 +1615,7 @@
     <string name="clipboard_action_delete">حذف کریں۔</string>
     <string name="clipboard_action_select">منتخب کریں۔</string>
     <string name="clipboard_options_title">کلپ کے اختیارات</string>
-    <string name="clipboard_items_deleted">%1$dآئٹمز حذف کر دیے گئے۔</string>
-    <string name="clipboard_select">کلپس منتخب کریں۔</string>
+    <string name="clipboard_items_deleted">%1$d آئٹمز حذف کر دیے گئے۔</string>
     <string name="shift_recapitalizes_word">شفٹ ٹائپ شدہ لفظ کی کیپیٹلائزیشن کو تبدیل کرتا ہے۔</string>
     <string name="shift_recapitalizes_word_summary">لفظ کے آخر میں شفٹ کو دبانے سے چھوٹے، کیپیٹلائزڈ اور اپر کیس (کیپس لاک کے ساتھ)</string>
     <string name="action_back">پیچھے</string>

@@ -1562,7 +1562,7 @@ Umožňuje lokální inferenci GGUF / llama.cpp na zařízení pro korektury a p
     <string name="center_typed_word">Vždy zobrazovat napsané slovo uprostřed</string>
     <string name="center_typed_word_summary">Slovo, které píšete, zůstane uprostřed, vedle něj se zobrazí automatická oprava</string>
     <string name="clipboard_select_items">Vyberte klipy</string>
-    <string name="clipboard_selected_count">Vybráno%1$d</string>
+    <string name="clipboard_selected_count">Vybráno %1$d</string>
     <string name="clipboard_action_select_all">Vyberte vše</string>
     <string name="clipboard_action_deselect_all">Zrušte výběr všech</string>
     <string name="clipboard_action_pin">Kolík</string>
@@ -1571,8 +1571,7 @@ Umožňuje lokální inferenci GGUF / llama.cpp na zařízení pro korektury a p
     <string name="clipboard_action_delete">Vymazat</string>
     <string name="clipboard_action_select">Vybrat</string>
     <string name="clipboard_options_title">Možnosti klipu</string>
-    <string name="clipboard_items_deleted">Počet smazaných položek:%1$d</string>
-    <string name="clipboard_select">Vyberte klipy</string>
+    <string name="clipboard_items_deleted">Počet smazaných položek: %1$d</string>
     <string name="shift_recapitalizes_word">Shift změní velká písmena napsaného slova</string>
     <string name="shift_recapitalizes_word_summary">Stisknutím Shift na konci slova se střídají malá písmena, velká a VELKÁ PÍSMENA (s caps lock)</string>
     <string name="action_back">Zadní</string>

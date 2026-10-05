@@ -244,7 +244,6 @@ fun getCodeForToolbarKey(key: ToolbarKey) = Settings.getInstance().getCustomTool
     VOICE -> KeyCode.VOICE_INPUT
     CLIPBOARD -> KeyCode.CLIPBOARD
     CLIPBOARD_SEARCH -> KeyCode.CLIPBOARD_SEARCH
-    CLIPBOARD_SELECT -> KeyCode.CLIPBOARD_SELECT_ITEMS
     NUMPAD -> KeyCode.NUMPAD
     HANDWRITING -> KeyCode.HANDWRITING
     UNDO -> KeyCode.UNDO
@@ -318,7 +317,7 @@ fun getCodeForToolbarKeyLongClick(key: ToolbarKey) = Settings.getInstance().getC
 
 // names need to be aligned with resources strings (using lowercase of key.name)
 enum class ToolbarKey {
-    VOICE, CLIPBOARD, CLIPBOARD_SEARCH, CLIPBOARD_SELECT, NUMPAD, HANDWRITING, UNDO, REDO, SETTINGS, SELECT_ALL, SELECT_WORD, COPY, CUT, PASTE, ONE_HANDED, SPLIT, FLOATING,
+    VOICE, CLIPBOARD, CLIPBOARD_SEARCH, NUMPAD, HANDWRITING, UNDO, REDO, SETTINGS, SELECT_ALL, SELECT_WORD, COPY, CUT, PASTE, ONE_HANDED, SPLIT, FLOATING,
     INCOGNITO, TOUCHPAD, TEXT_EDIT, AUTOCORRECT, AUTO_CAP, FORCE_AUTO_CAPS, CLEAR_CLIPBOARD, CLOSE_HISTORY, EMOJI, LEFT, RIGHT, UP, DOWN, WORD_LEFT, WORD_RIGHT,
     PAGE_UP, PAGE_DOWN, FULL_LEFT, FULL_RIGHT, PAGE_START, PAGE_END, PROOFREAD, TRANSLATE, OCR, SELECT_MODE,
     CUSTOM_AI_1, CUSTOM_AI_2, CUSTOM_AI_3, CUSTOM_AI_4, CUSTOM_AI_5,
@@ -350,7 +349,7 @@ private val flavorExcludedKeys by lazy {
     (customAiKeys + otherKeys).distinct()
 }
 
-private val mainToolbarExcludedKeys = listOf(CLOSE_HISTORY, CLIPBOARD_SEARCH, CLIPBOARD_SELECT)
+private val mainToolbarExcludedKeys = listOf(CLOSE_HISTORY, CLIPBOARD_SEARCH)
 
 private val excludedKeys by lazy {
     flavorExcludedKeys + mainToolbarExcludedKeys
@@ -376,7 +375,7 @@ val defaultPinnedToolbarPref by lazy {
 }
 
 val defaultClipboardToolbarPref by lazy {
-    val default = listOf(CLIPBOARD_SEARCH, CLIPBOARD_SELECT, CLEAR_CLIPBOARD, SELECT_ALL, SELECT_WORD, COPY, CUT, PASTE, UNDO, REDO, SETTINGS, CLOSE_HISTORY)
+    val default = listOf(CLIPBOARD_SEARCH, CLEAR_CLIPBOARD, SELECT_ALL, SELECT_WORD, COPY, CUT, PASTE, UNDO, REDO, SETTINGS, CLOSE_HISTORY)
     val others = entries.filterNot { it in default }
     default.joinToString(Separators.ENTRY) { it.name + Separators.KV + true } + Separators.ENTRY +
             others.joinToString(Separators.ENTRY) { it.name + Separators.KV + false }

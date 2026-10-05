@@ -609,7 +609,6 @@
     <string name="clear_clipboard" tools:keep="@string/clear_clipboard">Clear clipboard</string>
     <!-- ponytail: add missing string resource for toolbar settings UI -->
     <string name="clipboard_search" tools:keep="@string/clipboard_search">Clipboard search</string>
-    <string name="clipboard_select" tools:keep="@string/clipboard_select">Select clips</string>
     <!-- ponytail: add missing string resources for dynamic dictionary downloads -->
     <string name="download">Download</string>
     <string name="downloading">Downloading…</string>

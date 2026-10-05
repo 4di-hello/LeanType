@@ -1597,7 +1597,7 @@
     <string name="center_typed_word">Винаги показвайте въведената дума в средата</string>
     <string name="center_typed_word_summary">Думата, която въвеждате, остава в средата, до нея се показва автоматичната корекция</string>
     <string name="clipboard_select_items">Изберете клипове</string>
-    <string name="clipboard_selected_count">%1$dизбрано</string>
+    <string name="clipboard_selected_count">%1$d избрано</string>
     <string name="clipboard_action_select_all">Изберете всички</string>
     <string name="clipboard_action_deselect_all">Демаркирайте всички</string>
     <string name="clipboard_action_pin">ПИН</string>
@@ -1606,8 +1606,7 @@
     <string name="clipboard_action_delete">Изтриване</string>
     <string name="clipboard_action_select">Изберете</string>
     <string name="clipboard_options_title">Опции за клипове</string>
-    <string name="clipboard_items_deleted">%1$dелемента са изтрити</string>
-    <string name="clipboard_select">Изберете клипове</string>
+    <string name="clipboard_items_deleted">%1$d елемента са изтрити</string>
     <string name="shift_recapitalizes_word">Shift променя главните букви на въведената дума</string>
     <string name="shift_recapitalizes_word_summary">Натискането на shift в края на дума преминава през малки букви, главни букви и ГЛАВНИ букви (с Caps Lock)</string>
     <string name="action_back">Назад</string>
