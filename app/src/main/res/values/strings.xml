@@ -1616,6 +1616,9 @@ New dictionary:
     <string name="auto_show_toolbar_no_suggestions_summary">Show the toolbar when no word suggestions are available</string>
     <!-- Title of the setting to swipe down on toolbar to dismiss keyboard -->
     <string name="toolbar_swipe_down_dismiss">Swipe down to close</string>
+    <string name="action_back" tools:ignore="MissingTranslation">Back</string>
+    <string name="action_clear_search" tools:ignore="MissingTranslation">Clear search</string>
+    <string name="touchpad_close" tools:ignore="MissingTranslation">Close touchpad mode</string>
     <!-- Description of the setting for swiping down on toolbar to dismiss keyboard -->
     <string name="toolbar_swipe_down_dismiss_summary">Swipe down on toolbar to hide keyboard</string>
     <string name="toolbar_swipe_up_gesture">Toolbar swipe up gesture</string>
