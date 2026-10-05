@@ -131,7 +131,8 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@drawable/ic_ocr"
-            android:contentDescription="" />
+            android:contentDescription="@null"
+            android:importantForAccessibility="no" />
 
         <TextView
             android:id="@+id/ocr_plugin_title"
