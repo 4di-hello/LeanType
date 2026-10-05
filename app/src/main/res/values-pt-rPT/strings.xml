@@ -1370,7 +1370,7 @@ Aviso: carregar código externo pode constituir um risco de segurança. Utilize 
     <string name="ai_error_format">Erro de AI: %s</string>
     <string name="suggestion_word_removed">\"%1$s\" removida</string>
     <string name="error_loading_keyboard_fallback">Erro ao carregar o teclado, a reverter para as predefinições</string>
-    <string name="key_set">Tecla definida</string>
+    <string name="key_set">Chave definida</string>
     <string name="key_not_set">Não definida</string>
     <string name="default_proofreading">Predefinido (Revisão)</string>
     <string name="search_languages_placeholder">Pesquisar idiomas…</string>
