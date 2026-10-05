@@ -20,6 +20,29 @@ object TextExpanderUtils {
     const val PREF_DATA = "pref_text_expander_data"
     const val REGEX_PREFIX = "__regex__:"
 
+    // Pre-compiled regexes for performance
+    private val CITATION_REGEX = Regex(
+        """\[(?:\s*\d+(?:\s*[,;\-–—]\s*\d+)*\s*|\s*note\s*\d+\s*|\s*citation\s+needed\s*|\s*edit\s*|\s*source\s*)\]""",
+        RegexOption.IGNORE_CASE
+    )
+    private val SPACE_PUNCT_REGEX = Regex("""\s+([.,;:!?])""")
+    private val MULTI_SPACE_REGEX = Regex("""[^\S\r\n]{2,}""")
+    private val NEWLINE_REGEX = Regex("""[\r\n]+""")
+    private val WHITESPACE_REGEX = Regex("""\s+""")
+    private val NON_ALPHANUM_DASH_REGEX = Regex("""[^\w\s-]""")
+    private val SPACE_UNDERSCORE_REGEX = Regex("""[\s_]+""")
+    private val MULTI_DASH_REGEX = Regex("""-+""")
+    private val NON_ALPHANUM_REGEX = Regex("""[^\w\s]""")
+    private val SPACE_DASH_REGEX = Regex("""[\s-]+""")
+    private val MULTI_UNDERSCORE_REGEX = Regex("""_+""")
+    private val URL_REGEX = Regex("""https?://\S+""")
+    private val TWO_OR_MORE_SPACES_REGEX = Regex("""\s{2,}""")
+    private val DATE_REGEX = Regex("%date(?::([a-zA-Z0-9_():, -]+))?%")
+    private val CLIPBOARD_REGEX = Regex("%clipboard(?::([a-zA-Z0-9_():, -]+))?%")
+    private val BULLETS_REGEX = Regex("%bullets(?:_(\\d+))?%")
+    private val LIST_REGEX = Regex("%list(?:_(\\d+))?%")
+    private val SPACE_UNDERSCORE_DASH_REGEX = Regex("""[\s_-]+""")
+
     fun isEnabled(context: Context): Boolean {
         return context.prefs().getBoolean(PREF_ENABLED, false)
     }
@@ -129,13 +152,9 @@ object TextExpanderUtils {
     }
 
     fun cleanCitations(text: String): String {
-        val citationRegex = Regex(
-            """\[(?:\s*\d+(?:\s*[,;\-–—]\s*\d+)*\s*|\s*note\s*\d+\s*|\s*citation\s+needed\s*|\s*edit\s*|\s*source\s*)\]""",
-            RegexOption.IGNORE_CASE
-        )
-        var cleaned = citationRegex.replace(text, "")
-        cleaned = cleaned.replace(Regex("""\s+([.,;:!?])"""), "$1")
-        cleaned = cleaned.replace(Regex("""[^\S\r\n]{2,}"""), " ")
+        var cleaned = CITATION_REGEX.replace(text, "")
+        cleaned = cleaned.replace(SPACE_PUNCT_REGEX, "$1")
+        cleaned = cleaned.replace(MULTI_SPACE_REGEX, " ")
         return cleaned
     }
 
@@ -160,27 +179,27 @@ object TextExpanderUtils {
         for (mod in modifierTokens) {
             text = when {
                 mod.equals("clean", ignoreCase = true) || mod.equals("nocite", ignoreCase = true) -> cleanCitations(text)
-                mod.equals("singleline", ignoreCase = true) || mod.equals("oneline", ignoreCase = true) -> text.replace(Regex("""[\r\n]+"""), " ")
+                mod.equals("singleline", ignoreCase = true) || mod.equals("oneline", ignoreCase = true) -> text.replace(NEWLINE_REGEX, " ")
                 mod.equals("trim", ignoreCase = true) -> text.trim()
                 mod.equals("lower", ignoreCase = true) -> text.lowercase(Locale.getDefault())
                 mod.equals("upper", ignoreCase = true) -> text.uppercase(Locale.getDefault())
-                mod.equals("title", ignoreCase = true) -> text.split(Regex("""\s+""")).joinToString(" ") { word ->
+                mod.equals("title", ignoreCase = true) -> text.split(WHITESPACE_REGEX).joinToString(" ") { word ->
                     word.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
                 }
                 mod.equals("slug", ignoreCase = true) || mod.equals("kebab", ignoreCase = true) -> {
                     text.trim().lowercase(Locale.getDefault())
-                        .replace(Regex("""[^\w\s-]"""), "")
-                        .replace(Regex("""[\s_]+"""), "-")
-                        .replace(Regex("""-+"""), "-")
+                        .replace(NON_ALPHANUM_DASH_REGEX, "")
+                        .replace(SPACE_UNDERSCORE_REGEX, "-")
+                        .replace(MULTI_DASH_REGEX, "-")
                 }
                 mod.equals("snake", ignoreCase = true) -> {
                     text.trim().lowercase(Locale.getDefault())
-                        .replace(Regex("""[^\w\s]"""), "")
-                        .replace(Regex("""[\s-]+"""), "_")
-                        .replace(Regex("""_+"""), "_")
+                        .replace(NON_ALPHANUM_REGEX, "")
+                        .replace(SPACE_DASH_REGEX, "_")
+                        .replace(MULTI_UNDERSCORE_REGEX, "_")
                 }
                 mod.equals("camel", ignoreCase = true) -> {
-                    val words = text.trim().split(Regex("""[\s_-]+"""))
+                    val words = text.trim().split(SPACE_UNDERSCORE_DASH_REGEX)
                     words.mapIndexed { index, w ->
                         if (index == 0) w.lowercase(Locale.getDefault())
                         else w.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
@@ -193,7 +212,7 @@ object TextExpanderUtils {
                     }
                     trimmed
                 }
-                mod.equals("nourl", ignoreCase = true) -> text.replace(Regex("""https?://\S+"""), "").replace(Regex("""\s{2,}"""), " ")
+                mod.equals("nourl", ignoreCase = true) -> text.replace(URL_REGEX, "").replace(TWO_OR_MORE_SPACES_REGEX, " ")
                 mod.startsWith("replace(", ignoreCase = true) && mod.endsWith(")") -> {
                     val inner = mod.substring(8, mod.length - 1)
                     val parts = inner.split(",", limit = 2)
@@ -230,8 +249,7 @@ object TextExpanderUtils {
 
         // Resolve %date[:modifiers]%
         if (result.contains("%date")) {
-            val dateRegex = Regex("%date(?::([a-zA-Z0-9_():, -]+))?%")
-            result = dateRegex.replace(result) { match ->
+            result = DATE_REGEX.replace(result) { match ->
                 val mods = match.groups[1]?.value
                 val rawDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
                 if (mods != null) applyModifiers(rawDate, mods) else rawDate
@@ -252,8 +270,7 @@ object TextExpanderUtils {
 
         // Resolve %clipboard[:modifiers]%
         if (result.contains("%clipboard")) {
-            val clipRegex = Regex("%clipboard(?::([a-zA-Z0-9_():, -]+))?%")
-            result = clipRegex.replace(result) { match ->
+            result = CLIPBOARD_REGEX.replace(result) { match ->
                 val mods = match.groups[1]?.value
                 val rawClip = getClipboardText(context)
                 if (mods != null) applyModifiers(rawClip, mods) else rawClip
@@ -332,8 +349,7 @@ object TextExpanderUtils {
 
         // Resolve %bullets% with optional count
         if (result.contains("%bullets")) {
-            val bulletsRegex = Regex("%bullets(?:_(\\d+))?%")
-            result = bulletsRegex.replace(result) { match ->
+            result = BULLETS_REGEX.replace(result) { match ->
                 val count = match.groups[1]?.value?.toIntOrNull() ?: 3
                 if (count <= 0) ""
                 else {
@@ -349,8 +365,7 @@ object TextExpanderUtils {
 
         // Resolve %list% with optional count
         if (result.contains("%list")) {
-            val listRegex = Regex("%list(?:_(\\d+))?%")
-            result = listRegex.replace(result) { match ->
+            result = LIST_REGEX.replace(result) { match ->
                 val count = match.groups[1]?.value?.toIntOrNull() ?: 3
                 if (count <= 0) ""
                 else {
