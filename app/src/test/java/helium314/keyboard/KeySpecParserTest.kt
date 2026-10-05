@@ -30,6 +30,7 @@ class KeySpecParserTest {
         assertEquals("delete_key", KeySpecParser.getIconName("!icon/delete_key"))
         assertEquals("delete_key", KeySpecParser.getIconName("!icon/delete_key|!code/key_delete"))
         assertEquals("delete_key", KeySpecParser.getIconName("!icon/delete_key|!code/key_forward_delete"))
+        assertEquals("forward_delete_key", KeySpecParser.getIconName("!icon/forward_delete_key|!code/key_forward_delete"))
         assertEquals("shift_key", KeySpecParser.getIconName("!icon/shift_key|!code/key_shift"))
     }
 }
