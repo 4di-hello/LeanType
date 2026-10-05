@@ -63,15 +63,15 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 private val currentChangelogItems = listOf(
-    "• Backspace Lag Fix: Resolved backspace lag in Obsidian and accelerated web editor deletions",
-    "• Double Capitalization Fix: Prevented double capitalization during fast typing and chording",
-    "• Pixel Haptic Fix: Restored crisp system default haptic feedback on Pixel devices",
-    "• Delete Key Icon Fix: Restored missing delete key icon by preventing duplicate code suffix",
-    "• Arabic Symbols Fix: Isolated Arabic secondary symbols settings and order from English symbols",
-    "• Landscape Keyboard Fix: Enabled TYPE_NULL keyboard display in landscape and game loaders",
-    "• Haptic Engine Selection: Added haptic feedback engine selection in preferences",
-    "• Game Quirks Refactor: Replaced hardcoded game package names with landscape focus handling",
-    "• Translations: Settings strings translated across 29 languages"
+    "• Clipboard Action Pill & Multi-Select: Added Gboard-style floating action pill on long press, multi-selection mode, and fixed card background rendering",
+    "• Shift Word Recapitalization: Added preference to cycle the capitalization of typed words with Shift",
+    "• Center Typed Word: Added option to display actively typed word in center of suggestion strip",
+    "• Forward Delete Icon: Added dedicated right-pointing icon for forward delete key layouts",
+    "• Screenshot Suggestion Stability: Enlarged dismiss touch target and ensured instant strip resumption",
+    "• Text Expander Optimization: Pre-compiled regex patterns for faster snippet expansions",
+    "• Language Detector Optimization: Pre-compiled regex patterns for reduced CPU overhead",
+    "• TalkBack & Accessibility: Added missing content descriptions and accessibility labels",
+    "• Translation Polish: Fixed Portuguese terms, spacing across 29 languages, and refined Pin verbs"
 )
 
 @Composable
