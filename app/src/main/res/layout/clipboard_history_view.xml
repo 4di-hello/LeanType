@@ -168,6 +168,64 @@
                     android:background="?android:attr/selectableItemBackground" />
             </LinearLayout>
 
+            <!-- Floating in-keyboard action pill overlay (Gboard-style) -->
+            <FrameLayout
+                android:id="@+id/clipboard_action_pill_overlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:id="@+id/clipboard_action_pill"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:elevation="6dp"
+                    android:paddingHorizontal="6dp"
+                    android:paddingVertical="4dp"
+                    android:background="@drawable/clipboard_action_pill_background">
+
+                    <ImageButton
+                        android:id="@+id/clip_action_pin"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/clipboard_action_pin"
+                        android:scaleType="centerInside" />
+
+                    <ImageButton
+                        android:id="@+id/clip_action_edit"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_edit"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/clipboard_action_edit"
+                        android:scaleType="centerInside" />
+
+                    <ImageButton
+                        android:id="@+id/clip_action_delete"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_bin"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/clipboard_action_delete"
+                        android:scaleType="centerInside" />
+
+                    <ImageButton
+                        android:id="@+id/clip_action_select"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_check_circle_outline"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/clipboard_action_select"
+                        android:scaleType="centerInside" />
+
+                </LinearLayout>
+            </FrameLayout>
+
         </FrameLayout>
     </LinearLayout>
 

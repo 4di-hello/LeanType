@@ -1540,6 +1540,7 @@ class LatinIME : InputMethodService(),
     fun getDictionaryFacilitator(): DictionaryFacilitator = dictionaryFacilitator
 
     override fun removeExternalSuggestions() {
+        suggestionStripView?.setExternalSuggestionView(null, false)
         setNeutralSuggestionStrip()
         handler.postResumeSuggestions(false)
     }

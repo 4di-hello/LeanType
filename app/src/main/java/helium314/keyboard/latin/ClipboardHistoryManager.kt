@@ -193,7 +193,7 @@ class ClipboardHistoryManager(
                                 val rawDeletedSet = prefs.getStringSet("deleted_screenshot_uris", emptySet()) ?: emptySet()
                                 val deletedSet = rawDeletedSet.filter { it.startsWith("content://") || it.contains("clipboard_images") }.toSet()
                                 if (deletedSet.contains(contentUri.toString())) {
-                                    return@execute
+                                    continue
                                 }
 
                                 if (cachedScreenshotInfo?.uri != contentUri) {
@@ -756,7 +756,9 @@ class ClipboardHistoryManager(
             binding.root.isGone = true
         }
 
-        closeButton.setImageDrawable(latinIME.mKeyboardSwitcher.keyboard?.mIconsSet?.getIconDrawable(ToolbarKey.CLOSE_HISTORY.name.lowercase()))
+        val closeDrawable = latinIME.mKeyboardSwitcher.keyboard?.mIconsSet?.getIconDrawable(ToolbarKey.CLOSE_HISTORY.name.lowercase())
+            ?: androidx.core.content.ContextCompat.getDrawable(latinIME, R.drawable.ic_close)
+        closeButton.setImageDrawable(closeDrawable)
         closeButton.setOnClickListener { 
             val prefs = latinIME.prefs()
             val rawDeletedSet = prefs.getStringSet("deleted_screenshot_uris", emptySet()) ?: emptySet()
@@ -782,9 +784,7 @@ class ClipboardHistoryManager(
         dontShowCurrentSuggestion = true
         val csv = clipboardSuggestionView ?: return
         if (csv.parent != null && !csv.isGone) {
-            // clipboard view is shown ->
-            latinIME.setNeutralSuggestionStrip()
-            latinIME.mHandler.postResumeSuggestions(false)
+            latinIME.removeExternalSuggestions()
         }
         csv.isGone = true
     }

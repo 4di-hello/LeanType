@@ -235,6 +235,7 @@ class ClipboardAdapter(
     ) : RecyclerView.ViewHolder(view), View.OnClickListener, View.OnTouchListener, View.OnLongClickListener {
 
         private val selectIconView: ImageView
+        private val selectedOverlay: View?
         private val pinnedIconView: ImageView
         private val contentView: TextView
         private val imageContainer: View
@@ -250,9 +251,11 @@ class ClipboardAdapter(
                     setBackgroundResource(itemBackgroundId)
                 }
                 isHapticFeedbackEnabled = false
+                clipToOutline = true
             }
             Settings.getValues().mColors.setBackground(view, ColorType.POPUP_KEYS_BACKGROUND)
             selectIconView = view.findViewById(R.id.clipboard_entry_select_icon)
+            selectedOverlay = view.findViewById(R.id.clipboard_entry_selected_overlay)
             pinnedIconView = view.findViewById<ImageView>(R.id.clipboard_entry_pinned_icon).apply {
                 visibility = View.GONE
                 if (pinnedIconResId != 0) {
@@ -286,16 +289,18 @@ class ClipboardAdapter(
                     selectIconView.setImageResource(R.drawable.ic_check_circle_filled)
                     selectIconView.alpha = 1.0f
                     colors.setColor(selectIconView, ColorType.ACTION_KEY_ICON)
-                    colors.setBackground(itemView, ColorType.TOOL_BAR_KEY_ENABLED_BACKGROUND)
+                    selectedOverlay?.visibility = View.VISIBLE
+                    val actionColor = colors.get(ColorType.ACTION_KEY_ICON)
+                    selectedOverlay?.setBackgroundColor((actionColor and 0x00FFFFFF) or 0x2A000000)
                 } else {
                     selectIconView.setImageResource(R.drawable.ic_check_circle_outline)
                     selectIconView.alpha = 0.5f
                     colors.setColor(selectIconView, ColorType.KEY_ICON)
-                    colors.setBackground(itemView, ColorType.POPUP_KEYS_BACKGROUND)
+                    selectedOverlay?.visibility = View.GONE
                 }
             } else {
                 selectIconView.visibility = View.GONE
-                colors.setBackground(itemView, ColorType.POPUP_KEYS_BACKGROUND)
+                selectedOverlay?.visibility = View.GONE
             }
 
             if (historyEntry?.imageUri != null) {

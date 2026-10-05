@@ -42,12 +42,9 @@ import helium314.keyboard.latin.utils.RepeatableKeyTouchListener
 import helium314.keyboard.latin.utils.getCodeForToolbarKey
 import helium314.keyboard.latin.utils.getCodeForToolbarKeyLongClick
 import helium314.keyboard.latin.utils.getEnabledClipboardToolbarKeys
-import helium314.keyboard.latin.utils.getPlatformDialogThemeContext
 import helium314.keyboard.latin.utils.dpToPx
 import helium314.keyboard.latin.utils.prefs
 import helium314.keyboard.latin.utils.setToolbarButtonsActivatedStateOnPrefChange
-import android.app.AlertDialog
-import android.view.WindowManager
 
 @SuppressLint("CustomViewStyleable")
 class ClipboardHistoryView @JvmOverloads constructor(
@@ -110,6 +107,13 @@ class ClipboardHistoryView @JvmOverloads constructor(
     private lateinit var emptyViewContainer: View
     private lateinit var listContainer: View
 
+    private var actionPillOverlay: View? = null
+    private var actionPill: View? = null
+    private var actionPinButton: ImageButton? = null
+    private var actionEditButton: ImageButton? = null
+    private var actionDeleteButton: ImageButton? = null
+    private var actionSelectButton: ImageButton? = null
+
     private var confirmationBar: View? = null
     private val confirmationDismissRunnable = Runnable { dismissConfirmationBar() }
     private val confirmationHandler = android.os.Handler(android.os.Looper.getMainLooper())
@@ -144,7 +148,7 @@ class ClipboardHistoryView @JvmOverloads constructor(
         clipboardAdapter = ClipboardAdapter(clipboardLayoutParams, this).apply {
             itemBackgroundId = keyBackgroundId
             pinnedIconResId = pinIconId
-            onClipLongClickListener = { entry, anchor -> showClipActionDialog(entry, anchor) }
+            onClipLongClickListener = { entry, anchor -> showClipActionPill(entry, anchor) }
             onSelectionChangedListener = { selectedCount, totalCount ->
                 updateSelectionDisplay(selectedCount, totalCount)
             }
@@ -197,6 +201,13 @@ class ClipboardHistoryView @JvmOverloads constructor(
             @Suppress("deprecation") // "no cache" should be fine according to warning in https://developer.android.com/reference/android/view/ViewGroup#setPersistentDrawingCache(int)
             persistentDrawingCache = PERSISTENT_NO_CACHE
             clipboardLayoutParams.setListProperties(this)
+            addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: androidx.recyclerview.widget.RecyclerView, newState: Int) {
+                    if (newState != androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE) {
+                        dismissActionPill()
+                    }
+                }
+            })
         }
 
         confirmationBar = findViewById(R.id.clipboard_confirmation_bar)
@@ -211,6 +222,14 @@ class ClipboardHistoryView @JvmOverloads constructor(
                 dismissConfirmationBar()
             }
         }
+
+        actionPillOverlay = findViewById(R.id.clipboard_action_pill_overlay)
+        actionPill = findViewById(R.id.clipboard_action_pill)
+        actionPinButton = findViewById(R.id.clip_action_pin)
+        actionEditButton = findViewById(R.id.clip_action_edit)
+        actionDeleteButton = findViewById(R.id.clip_action_delete)
+        actionSelectButton = findViewById(R.id.clip_action_select)
+        actionPillOverlay?.setOnClickListener { dismissActionPill() }
 
         val clipboardStrip = KeyboardSwitcher.getInstance().clipboardStrip ?: return
         val clipboardStripScrollView = KeyboardSwitcher.getInstance().clipboardStripScrollView
@@ -528,6 +547,7 @@ class ClipboardHistoryView @JvmOverloads constructor(
         if (!this::clipboardAdapter.isInitialized) return
         clipboardRecyclerView.dismissUndoBar()
         dismissConfirmationBar()
+        dismissActionPill()
         if (inEditMode) {
             stopEditMode(save = false)
         }
@@ -635,6 +655,7 @@ class ClipboardHistoryView @JvmOverloads constructor(
 
     fun stopSelectionMode() {
         if (!this::clipboardAdapter.isInitialized) return
+        dismissActionPill()
         clipboardAdapter.setSelectionMode(false)
         selectionCountTextView = null
         selectionSelectAllButton = null
@@ -684,69 +705,119 @@ class ClipboardHistoryView @JvmOverloads constructor(
         }
     }
 
-    private enum class ClipAction {
-        PIN, UNPIN, EDIT, DELETE, SELECT
+    fun dismissActionPill(): Boolean {
+        val overlay = actionPillOverlay ?: return false
+        if (overlay.visibility == View.VISIBLE) {
+            overlay.visibility = View.GONE
+            return true
+        }
+        return false
     }
 
-    private fun showClipActionDialog(entry: ClipboardHistoryEntry, anchorView: View): Boolean {
-        val token = windowToken ?: return false
-        val items = mutableListOf<CharSequence>()
-        val actions = mutableListOf<ClipAction>()
+    private fun showClipActionPill(entry: ClipboardHistoryEntry, anchorView: View): Boolean {
+        val overlay = actionPillOverlay ?: return false
+        val pill = actionPill ?: return false
+        val pinBtn = actionPinButton ?: return false
+        val editBtn = actionEditButton ?: return false
+        val deleteBtn = actionDeleteButton ?: return false
+        val selectBtn = actionSelectButton ?: return false
 
+        val colors = Settings.getValues().mColors
+
+        // Pill background
+        val pillBg = androidx.core.content.ContextCompat.getDrawable(context, R.drawable.clipboard_action_pill_background)?.mutate()
+        if (pillBg != null) {
+            colors.setColor(pillBg, ColorType.KEY_PREVIEW_BACKGROUND)
+            pill.background = pillBg
+        }
+
+        // Configure Pin button
+        val pinIconRes = if (pinIconId != 0) pinIconId else R.drawable.ic_clipboard_pin_rounded
+        pinBtn.setImageResource(pinIconRes)
         if (entry.isPinned) {
-            items.add(context.getString(R.string.clipboard_action_unpin))
-            actions.add(ClipAction.UNPIN)
+            pinBtn.contentDescription = context.getString(R.string.clipboard_action_unpin)
+            colors.setColor(pinBtn, ColorType.CLIPBOARD_PIN)
         } else {
-            items.add(context.getString(R.string.clipboard_action_pin))
-            actions.add(ClipAction.PIN)
+            pinBtn.contentDescription = context.getString(R.string.clipboard_action_pin)
+            colors.setColor(pinBtn, ColorType.KEY_ICON)
+        }
+        pinBtn.setOnClickListener {
+            dismissActionPill()
+            clipboardHistoryManager.toggleClipPinned(entry.id)
         }
 
+        // Configure Edit button
         if (entry.imageUri == null && !entry.text.isNullOrEmpty()) {
-            items.add(context.getString(R.string.clipboard_action_edit))
-            actions.add(ClipAction.EDIT)
-        }
-
-        items.add(context.getString(R.string.clipboard_action_delete))
-        actions.add(ClipAction.DELETE)
-
-        items.add(context.getString(R.string.clipboard_action_select))
-        actions.add(ClipAction.SELECT)
-
-        val builder = AlertDialog.Builder(getPlatformDialogThemeContext(context))
-            .setTitle(R.string.clipboard_options_title)
-            .setItems(items.toTypedArray()) { _, which ->
-                when (actions[which]) {
-                    ClipAction.PIN, ClipAction.UNPIN -> {
-                        clipboardHistoryManager.toggleClipPinned(entry.id)
-                    }
-                    ClipAction.EDIT -> {
-                        startEditMode(entry)
-                    }
-                    ClipAction.DELETE -> {
-                        deleteSingleEntry(entry)
-                    }
-                    ClipAction.SELECT -> {
-                        startSelectionMode(initialSelectedId = entry.id)
-                    }
-                }
+            editBtn.visibility = View.VISIBLE
+            colors.setColor(editBtn, ColorType.KEY_ICON)
+            editBtn.setOnClickListener {
+                dismissActionPill()
+                startEditMode(entry)
             }
-            .setNegativeButton(android.R.string.cancel, null)
-
-        showDialogForIme(builder)
-        return true
-    }
-
-    private fun showDialogForIme(builder: AlertDialog.Builder) {
-        val dialog = builder.create()
-        val window = dialog.window
-        if (window != null) {
-            val lp = window.attributes
-            lp.token = windowToken
-            lp.type = WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG
-            window.attributes = lp
-            window.addFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM)
+        } else {
+            editBtn.visibility = View.GONE
         }
-        dialog.show()
+
+        // Configure Delete button
+        colors.setColor(deleteBtn, ColorType.REMOVE_SUGGESTION_ICON)
+        deleteBtn.setOnClickListener {
+            dismissActionPill()
+            deleteSingleEntry(entry)
+        }
+
+        // Configure Select button
+        colors.setColor(selectBtn, ColorType.KEY_ICON)
+        selectBtn.setOnClickListener {
+            dismissActionPill()
+            startSelectionMode(initialSelectedId = entry.id)
+        }
+
+        overlay.visibility = View.VISIBLE
+
+        // Measure pill to calculate target position
+        pill.measure(
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+        )
+        val pillWidth = pill.measuredWidth
+        val pillHeight = pill.measuredHeight
+
+        val anchorLoc = IntArray(2)
+        anchorView.getLocationInWindow(anchorLoc)
+        val overlayLoc = IntArray(2)
+        overlay.getLocationInWindow(overlayLoc)
+
+        val relX = anchorLoc[0] - overlayLoc[0]
+        val relY = anchorLoc[1] - overlayLoc[1]
+
+        val containerWidth = overlay.width.takeIf { it > 0 } ?: measuredWidth
+        val containerHeight = overlay.height.takeIf { it > 0 } ?: measuredHeight
+
+        val margin = 8.dpToPx(resources)
+        val targetX = (relX + (anchorView.width - pillWidth) / 2).coerceIn(margin, (containerWidth - pillWidth - margin).coerceAtLeast(0))
+
+        val gap = 6.dpToPx(resources)
+        val preferredY = relY - pillHeight - gap
+        val targetY = if (preferredY >= 4.dpToPx(resources)) {
+            preferredY
+        } else {
+            (relY + anchorView.height + gap).coerceAtMost(containerHeight - pillHeight - 4.dpToPx(resources))
+        }
+
+        pill.translationX = targetX.toFloat()
+        pill.translationY = targetY.toFloat()
+
+        pill.alpha = 0f
+        pill.scaleX = 0.85f
+        pill.scaleY = 0.85f
+        pill.animate()
+            ?.alpha(1f)
+            ?.scaleX(1f)
+            ?.scaleY(1f)
+            ?.setDuration(120)
+            ?.start()
+
+        return true
     }
 
     private fun deleteSingleEntry(entry: ClipboardHistoryEntry) {
@@ -940,9 +1011,12 @@ class ClipboardHistoryView @JvmOverloads constructor(
         keyboardActionListener.onLongPressKey(primaryCode)
     }
     override fun onKeyDown(keyCode: Int, keyEvent: android.view.KeyEvent): Boolean {
-        if (keyCode == android.view.KeyEvent.KEYCODE_BACK && inSelectionMode) {
-            stopSelectionMode()
-            return true
+        if (keyCode == android.view.KeyEvent.KEYCODE_BACK) {
+            if (dismissActionPill()) return true
+            if (inSelectionMode) {
+                stopSelectionMode()
+                return true
+            }
         }
         return keyboardActionListener.onKeyDown(keyCode, keyEvent)
     }
@@ -1375,6 +1449,7 @@ class ClipboardHistoryView @JvmOverloads constructor(
     }
 
     override fun onDetachedFromWindow() {
+        dismissActionPill()
         PointerTracker.setClipboardInlineInputActive(false)
         super.onDetachedFromWindow()
     }
@@ -1382,6 +1457,7 @@ class ClipboardHistoryView @JvmOverloads constructor(
     override fun onVisibilityChanged(changedView: View, visibility: Int) {
         super.onVisibilityChanged(changedView, visibility)
         if (!isShown) {
+            dismissActionPill()
             PointerTracker.setClipboardInlineInputActive(false)
         } else {
             updateClipboardGestureSuppression()
