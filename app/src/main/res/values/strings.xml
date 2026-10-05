@@ -1585,6 +1585,10 @@ New dictionary:
     <string name="caps_control_paused_auto_cap">Saved on; requires Auto-capitalization</string>
     <string name="caps_control_no_uppercase">Saved on; this language has no uppercase letters</string>
     <string name="force_auto_caps_summary">Force sentence capitalization on all text fields except passwords</string>
+    <!-- Option to change the capitalization of the word being typed by pressing shift -->
+    <string name="shift_recapitalizes_word">Shift changes capitalization of typed word</string>
+    <!-- Description for the shift recapitalizes word setting -->
+    <string name="shift_recapitalizes_word_summary">Pressing shift at the end of a word cycles through lowercase, Capitalized and UPPERCASE (with caps lock)</string>
     <!-- Title of the setting for variable toolbar direction -->
     <string name="var_toolbar_direction">Variable toolbar direction</string>
     <!-- Description of the variable toolbar direction setting -->

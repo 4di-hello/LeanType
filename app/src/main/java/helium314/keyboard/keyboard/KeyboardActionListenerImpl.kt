@@ -57,6 +57,7 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
 
     override fun onPressKey(primaryCode: Int, repeatCount: Int, isSinglePointer: Boolean, hapticEvent: HapticEvent) {
         metaOnPressKey(primaryCode)
+        if (primaryCode == KeyCode.SHIFT) inputLogic.onShiftKeyPressed()
         keyboardSwitcher.onPressKey(primaryCode, isSinglePointer, latinIME.currentAutoCapsState, latinIME.currentRecapitalizeState)
         // we need to use LatinIME for handling of key-down audio and haptics
         latinIME.hapticAndAudioFeedback(primaryCode, repeatCount, hapticEvent)

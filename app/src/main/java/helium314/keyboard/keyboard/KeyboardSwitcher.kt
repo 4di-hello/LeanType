@@ -766,6 +766,11 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         }
     }
 
+    /** Enables or disables caps lock, see [KeyboardState.setCapsLock]. */
+    fun setCapsLock(enabled: Boolean) {
+        mState?.setCapsLock(enabled)
+    }
+
     override fun requestUpdatingShiftState(autoCapsFlags: Int, recapitalizeMode: RecapitalizeMode?) {
         if (DEBUG_ACTION) {
             Log.d(TAG, "requestUpdatingShiftState: autoCapsFlags=" + CapsModeUtils.flagsToString(autoCapsFlags) + " recapitalizeMode=" + recapitalizeMode)

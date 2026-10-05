@@ -735,6 +735,8 @@
     <string name="touchpad_sensitivity">Touchpad-Empfindlichkeit</string>
     <string name="force_auto_caps_title">Automatische Großschreibung erzwingen</string>
     <string name="force_auto_caps_summary">Erzwingt Satzanfangs-Großschreibung in allen Textfeldern außer Passwörtern</string>
+    <string name="shift_recapitalizes_word">Shift ändert Schreibweise des getippten Worts</string>
+    <string name="shift_recapitalizes_word_summary">Shift am Wortende wechselt zwischen klein, Groß und ALLES GROSS (mit Feststelltaste)</string>
     <string name="toolbar_only_with_hw_keyboard">Nur Werkzeugleiste mit physischer Tastatur anzeigen</string>
     <string name="toolbar_only_with_hw_keyboard_summary">Sie müssen das Anzeigen der virtuellen Tastatur noch in den Systemeinstellungen aktivieren</string>
     <string name="auto_show_toolbar_open">Werkzeugleiste beim Öffnen automatisch anzeigen</string>

@@ -209,6 +209,14 @@ class KeyboardState(private val switchActions: SwitchActions) {
         alphabetShiftState.setShiftLocked(shiftLocked)
     }
 
+    /**
+     *  Enables or disables caps lock. Used when shift changes the capitalization of the composing word,
+     *  so typing continues in upper case after changing the word to upper case.
+     */
+    fun setCapsLock(enabled: Boolean) {
+        if (alphabetShiftState.isShiftLocked != enabled) setShiftLocked(enabled)
+    }
+
     private fun toggleAlphabetAndSymbols(autoCapsFlags: Int, recapitalizeMode: RecapitalizeMode?) {
         if (DebugFlags.DEBUG_ENABLED) {
             Log.d(TAG, "toggleAlphabetAndSymbols: ${stateToString(autoCapsFlags, recapitalizeMode)}")
@@ -415,7 +423,12 @@ class KeyboardState(private val switchActions: SwitchActions) {
             switchActions.cancelDoubleTapShiftKeyTimer()
         }
         when (code) {
-            KeyCode.SHIFT -> onPressShift()
+            KeyCode.SHIFT -> {
+                // Recapitalizing may have ended without a shift state update, e.g. by typing a letter
+                // after the capitalization of the composing word was changed with shift.
+                if (recapitalizeMode == null) this.recapitalizeMode = null
+                onPressShift()
+            }
             KeyCode.CAPS_LOCK -> {} // Nothing to do here. See onReleaseKey.
             KeyCode.SYMBOL_ALPHA -> onPressAlphaSymbol(autoCapsFlags, recapitalizeMode)
             KeyCode.SYMBOL, KeyCode.ALPHA, KeyCode.NUMPAD -> {} // don't start sliding, causes issues with fully customizable layouts (also does not allow chording, but can be fixed later)

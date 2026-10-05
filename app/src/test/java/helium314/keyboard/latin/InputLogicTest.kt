@@ -368,6 +368,42 @@ class InputLogicTest {
         assertEquals("", composingText)
     }
 
+    @Test fun `shift at end of word rotates capitalization when enabled`() {
+        reset()
+        latinIME.prefs().edit { putBoolean(Settings.PREF_SHIFT_RECAPITALIZES_WORD, true) }
+        chainInput("hello")
+        shiftTap()
+        assertEquals("Hello", text)
+        assertEquals("Hello", composingText)
+        shiftTap()
+        assertEquals("HELLO", text)
+        assertEquals("HELLO", composingText)
+        shiftTap()
+        assertEquals("hello", text)
+        assertEquals("hello", composingText)
+        input(' ')
+        assertEquals("hello ", text)
+    }
+
+    @Test fun `shift at end of word does not change the word by default`() {
+        reset()
+        chainInput("hello")
+        shiftTap()
+        assertEquals("hello", text)
+        assertEquals("hello", composingText)
+    }
+
+    @Test fun `typing a letter while holding shift does not rotate capitalization`() {
+        reset()
+        latinIME.prefs().edit { putBoolean(Settings.PREF_SHIFT_RECAPITALIZES_WORD, true) }
+        chainInput("lean")
+        inputLogic.onShiftKeyPressed()
+        input('T')
+        functionalKeyPress(KeyCode.SHIFT)
+        assertEquals("leanT", text)
+        assertEquals("leanT", composingText)
+    }
+
     @Test fun delete() {
         reset()
         setText("hello there ")
@@ -1581,6 +1617,12 @@ class InputLogicTest {
         assertEquals(oldAfter, textAfterCursor)
         assertEquals(textBeforeCursor + textAfterCursor, getText())
         checkConnectionConsistency()
+    }
+
+    // press and release of the shift key without typing anything in between
+    private fun shiftTap() {
+        inputLogic.onShiftKeyPressed()
+        functionalKeyPress(KeyCode.SHIFT)
     }
 
     private fun functionalKeyPress(keyCode: Int, isKeyRepeat: Boolean = false) {
