@@ -117,6 +117,7 @@ class ClipboardHistoryView @JvmOverloads constructor(
     private var actionEditButton: ImageButton? = null
     private var actionDeleteButton: ImageButton? = null
     private var actionSelectButton: ImageButton? = null
+    private var activeAnchorView: View? = null
 
     private var confirmationBar: View? = null
     private val confirmationDismissRunnable = Runnable { dismissConfirmationBar() }
@@ -715,9 +716,41 @@ class ClipboardHistoryView @JvmOverloads constructor(
 
     fun dismissActionPill(): Boolean {
         val overlay = actionPillOverlay ?: return false
+        val pill = actionPill
         if (overlay.visibility == View.VISIBLE) {
-            overlay.visibility = View.GONE
-            overlay.background = null
+            val anchor = activeAnchorView
+            activeAnchorView = null
+            if (anchor != null) {
+                anchor.animate()
+                    ?.scaleX(1.0f)
+                    ?.scaleY(1.0f)
+                    ?.setDuration(140)
+                    ?.setInterpolator(android.view.animation.DecelerateInterpolator())
+                    ?.withEndAction {
+                        anchor.translationZ = 0f
+                    }
+                    ?.start()
+            }
+
+            if (pill != null) {
+                pill.animate()
+                    ?.alpha(0f)
+                    ?.scaleX(0.85f)
+                    ?.scaleY(0.85f)
+                    ?.setDuration(100)
+                    ?.setInterpolator(android.view.animation.AccelerateInterpolator())
+                    ?.withEndAction {
+                        overlay.visibility = View.GONE
+                        overlay.background = null
+                        pill.alpha = 1f
+                        pill.scaleX = 1f
+                        pill.scaleY = 1f
+                    }
+                    ?.start()
+            } else {
+                overlay.visibility = View.GONE
+                overlay.background = null
+            }
             return true
         }
         return false
@@ -730,6 +763,19 @@ class ClipboardHistoryView @JvmOverloads constructor(
         val editBtn = actionEditButton ?: return false
         val deleteBtn = actionDeleteButton ?: return false
         val selectBtn = actionSelectButton ?: return false
+
+        // Dismiss any existing pill and reset prior anchor view
+        dismissActionPill()
+        activeAnchorView = anchorView
+
+        // Animate anchor view lift
+        anchorView.translationZ = 4.dpToPx(resources).toFloat()
+        anchorView.animate()
+            ?.scaleX(1.025f)
+            ?.scaleY(1.025f)
+            ?.setDuration(180)
+            ?.setInterpolator(android.view.animation.OvershootInterpolator(1.2f))
+            ?.start()
 
         val colors = Settings.getValues().mColors
         val cardBg = colors.get(ColorType.POPUP_KEYS_BACKGROUND)
@@ -761,7 +807,7 @@ class ClipboardHistoryView @JvmOverloads constructor(
         pill.clipToOutline = true
         pill.elevation = 8.dpToPx(resources).toFloat()
 
-        overlay.setBackgroundColor(if (isDark) 0x33000000 else 0x1A000000)
+        overlay.setBackgroundColor(if (isDark) 0x44000000.toInt() else 0x22000000)
 
         // Configure Pin button
         val pinIconRes = if (pinIconId != 0) pinIconId else R.drawable.ic_clipboard_pin_rounded
@@ -836,17 +882,20 @@ class ClipboardHistoryView @JvmOverloads constructor(
             (relY + anchorView.height + gap).coerceAtMost(containerHeight - pillHeight - 4.dpToPx(resources))
         }
 
+        val startY = targetY.toFloat() + (if (preferredY >= 4.dpToPx(resources)) 6.dpToPx(resources) else -6.dpToPx(resources))
         pill.translationX = targetX.toFloat()
-        pill.translationY = targetY.toFloat()
+        pill.translationY = startY
 
         pill.alpha = 0f
-        pill.scaleX = 0.85f
-        pill.scaleY = 0.85f
+        pill.scaleX = 0.82f
+        pill.scaleY = 0.82f
         pill.animate()
             ?.alpha(1f)
             ?.scaleX(1f)
             ?.scaleY(1f)
-            ?.setDuration(120)
+            ?.translationY(targetY.toFloat())
+            ?.setDuration(180)
+            ?.setInterpolator(android.view.animation.OvershootInterpolator(1.15f))
             ?.start()
 
         return true

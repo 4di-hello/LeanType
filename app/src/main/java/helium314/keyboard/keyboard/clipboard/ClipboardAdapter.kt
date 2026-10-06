@@ -13,7 +13,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.RippleDrawable
 import androidx.core.graphics.ColorUtils
 import helium314.keyboard.latin.ClipboardHistoryEntry
 import helium314.keyboard.latin.ClipboardHistoryManager
@@ -21,6 +25,7 @@ import helium314.keyboard.latin.R
 import helium314.keyboard.latin.common.ColorType
 import helium314.keyboard.latin.settings.Settings
 import helium314.keyboard.latin.utils.dpToPx
+import helium314.keyboard.latin.utils.isDarkColor
 
 sealed class ClipboardDisplayItem {
     data class Header(val count: Int, val isFolded: Boolean) : ClipboardDisplayItem()
@@ -208,13 +213,53 @@ class ClipboardAdapter(
         return displayList.size
     }
 
+    private fun createCardBackground(view: View): Drawable {
+        val colors = Settings.getValues().mColors
+        val radiusDp = Settings.getValues().mKeyBorderRadius.takeIf { it >= 0f } ?: 8f
+        val radiusPx = radiusDp * view.resources.displayMetrics.density
+        val cardBg = colors.get(ColorType.POPUP_KEYS_BACKGROUND)
+        val mainBg = colors.get(ColorType.MAIN_BACKGROUND)
+        val keyText = colors.get(ColorType.KEY_TEXT)
+        val isDark = isDarkColor(mainBg) || isDarkColor(cardBg)
+        val hasBorders = colors.hasKeyBorders
+
+        val contentDrawable = GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = radiusPx
+            setColor(cardBg)
+            if (hasBorders) {
+                val strokeColor = if (isDark) {
+                    ColorUtils.setAlphaComponent(keyText, 0x28)
+                } else {
+                    ColorUtils.setAlphaComponent(keyText, 0x1E)
+                }
+                setStroke(1.dpToPx(view.resources), strokeColor)
+            }
+        }
+
+        val maskDrawable = GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = radiusPx
+            setColor(Color.WHITE)
+        }
+
+        val rippleColor = if (isDark) {
+            ColorUtils.setAlphaComponent(Color.WHITE, 0x26)
+        } else {
+            ColorUtils.setAlphaComponent(Color.BLACK, 0x18)
+        }
+
+        return RippleDrawable(ColorStateList.valueOf(rippleColor), contentDrawable, maskDrawable)
+    }
+
     inner class HeaderViewHolder(val textView: TextView) : RecyclerView.ViewHolder(textView) {
         fun bind(header: ClipboardDisplayItem.Header) {
             textView.apply {
                 typeface = itemTypeFace
                 setTextColor(itemTextColor)
                 setTextSize(TypedValue.COMPLEX_UNIT_PX, itemTextSize)
-                setBackgroundResource(itemBackgroundId)
+                background = createCardBackground(this)
+                clipToOutline = true
                 
                 text = buildString {
                     append(if (header.isFolded) "▶  " else "▼  ")
@@ -229,7 +274,6 @@ class ClipboardAdapter(
                     refresh()
                 }
             }
-            Settings.getValues().mColors.setBackground(textView, ColorType.POPUP_KEYS_BACKGROUND)
         }
     }
 
@@ -250,13 +294,10 @@ class ClipboardAdapter(
                 setOnClickListener(this@ClipViewHolder)
                 setOnTouchListener(this@ClipViewHolder)
                 setOnLongClickListener(this@ClipViewHolder)
-                if (itemBackgroundId != 0) {
-                    setBackgroundResource(itemBackgroundId)
-                }
+                background = createCardBackground(this)
                 isHapticFeedbackEnabled = false
                 clipToOutline = true
             }
-            Settings.getValues().mColors.setBackground(view, ColorType.POPUP_KEYS_BACKGROUND)
             selectIconView = view.findViewById(R.id.clipboard_entry_select_icon)
             selectedOverlay = view.findViewById(R.id.clipboard_entry_selected_overlay)
             pinnedIconView = view.findViewById<ImageView>(R.id.clipboard_entry_pinned_icon).apply {
@@ -334,8 +375,24 @@ class ClipboardAdapter(
         @SuppressLint("ClickableViewAccessibility")
         override fun onTouch(view: View, event: MotionEvent): Boolean {
             if (isSelectionMode) return false
-            if (event.actionMasked == MotionEvent.ACTION_DOWN) {
-                keyEventListener.onKeyDown(view.tag as Long)
+            when (event.actionMasked) {
+                MotionEvent.ACTION_DOWN -> {
+                    keyEventListener.onKeyDown(view.tag as Long)
+                    view.animate()
+                        .scaleX(0.97f)
+                        .scaleY(0.97f)
+                        .setDuration(90)
+                        .start()
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    if (view.scaleX != 1.0f) {
+                        view.animate()
+                            .scaleX(1.0f)
+                            .scaleY(1.0f)
+                            .setDuration(120)
+                            .start()
+                    }
+                }
             }
             return false
         }
@@ -356,6 +413,7 @@ class ClipboardAdapter(
                 return true
             }
             val entry = getItemById(id) ?: return false
+            view.isPressed = false
             return onClipLongClickListener?.invoke(entry, view) ?: false
         }
     }
