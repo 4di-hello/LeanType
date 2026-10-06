@@ -50,11 +50,6 @@ open class KeyDetector {
         mKeyboard = keyboard
     }
 
-    fun setCoordinatesCorrection(correctionX: Float, correctionY: Float) {
-        mCorrectionX = correctionX.toInt()
-        mCorrectionY = correctionY.toInt()
-    }
-
     fun getKeyHysteresisDistanceSquared(isSlidingFromModifier: Boolean): Int {
         return if (isSlidingFromModifier) {
             mKeyHysteresisDistanceForSlidingModifierSquared

@@ -1,7 +1,6 @@
 package helium314.keyboard.keyboard
 
 import android.content.Context
-import android.os.Build
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.NinePatchDrawable
@@ -227,16 +226,7 @@ open class KeyboardView @JvmOverloads constructor(
             super.setPadding(0, 0, 0, 0)
             return insets
         }
-        val navInsets = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            insets.getInsets(WindowInsets.Type.navigationBars())
-        } else {
-            null
-        }
-        val navLeft = navInsets?.left ?: @Suppress("DEPRECATION") insets.systemWindowInsetLeft
-        val navRight = navInsets?.right ?: @Suppress("DEPRECATION") insets.systemWindowInsetRight
-        val navBottom = navInsets?.bottom ?: @Suppress("DEPRECATION") insets.systemWindowInsetBottom
-        setPadding(navLeft, 0, navRight, navBottom)
-        return insets
+        return super.onApplyWindowInsets(insets)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

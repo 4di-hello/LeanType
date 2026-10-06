@@ -77,7 +77,7 @@ class MainKeyboardView @JvmOverloads constructor(
     private var mPopupKeysPanel: PopupKeysPanel? = null
 
     private val mGestureFloatingPreviewTextLingerTimeout: Int
-    private lateinit var mKeyDetector: KeyDetector
+    private val mKeyDetector: KeyDetector
     private val mNonDistinctMultitouchHelper: NonDistinctMultitouchHelper?
     private val mTimerHandler: TimerHandler
     private val mLanguageOnSpacebarHorizontalMargin: Int
@@ -162,27 +162,6 @@ class MainKeyboardView @JvmOverloads constructor(
     }
     fun getKeyX(x: Int): Int = if (Constants.isValidCoordinate(x)) mKeyDetector.getTouchX(x) else x
     fun getKeyY(y: Int): Int = if (Constants.isValidCoordinate(y)) mKeyDetector.getTouchY(y) else y
-
-    private fun updateKeyDetectorCorrections() {
-        if (::mKeyDetector.isInitialized) {
-            mKeyDetector.setCoordinatesCorrection(-paddingLeft.toFloat(), -paddingTop.toFloat() + verticalCorrection)
-        }
-    }
-
-    override fun setPadding(left: Int, top: Int, right: Int, bottom: Int) {
-        super.setPadding(left, top, right, bottom)
-        updateKeyDetectorCorrections()
-    }
-
-    override fun setPaddingRelative(start: Int, top: Int, end: Int, bottom: Int) {
-        super.setPaddingRelative(start, top, end, bottom)
-        updateKeyDetectorCorrections()
-    }
-
-    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        super.onLayout(changed, left, top, right, bottom)
-        updateKeyDetectorCorrections()
-    }
 
     override fun setKeyboard(keyboard: Keyboard) {
         mTimerHandler.cancelLongPressTimers()
