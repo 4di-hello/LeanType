@@ -1223,12 +1223,7 @@ class ClipboardHistoryView @JvmOverloads constructor(
         if (clipContent.imageUri != null) {
             keyboardActionListener.onImageSelected(clipContent.imageUri)
         } else {
-            val text = clipContent.text
-            if (text.length > 1000) {
-                clipboardHistoryManager.pasteLargeText(text)
-            } else {
-                keyboardActionListener.onTextInput(text)
-            }
+            keyboardActionListener.onTextInput(clipContent.text)
         }
         keyboardActionListener.onReleaseKey(KeyCode.NOT_SPECIFIED, false)
         if (Settings.getValues().mAlphaAfterClipHistoryEntry)

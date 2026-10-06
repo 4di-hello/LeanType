@@ -534,11 +534,7 @@ class InputLogic(
         if (clipboardContent.isEmpty()) {
             return
         }
-        if (clipboardContent.length > 1000) {
-            mConnection.performContextMenuAction(android.R.id.paste)
-        } else {
-            mLatinIME.onTextInput(clipboardContent)
-        }
+        mLatinIME.onTextInput(clipboardContent)
     }
 
     private fun handleProofread() {
