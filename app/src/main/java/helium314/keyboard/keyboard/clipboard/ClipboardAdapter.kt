@@ -24,7 +24,6 @@ import helium314.keyboard.latin.ClipboardHistoryManager
 import helium314.keyboard.latin.R
 import helium314.keyboard.latin.common.ColorType
 import helium314.keyboard.latin.settings.Settings
-import helium314.keyboard.latin.utils.dpToPx
 import helium314.keyboard.latin.utils.isDarkColor
 
 sealed class ClipboardDisplayItem {
@@ -219,22 +218,12 @@ class ClipboardAdapter(
         val radiusPx = radiusDp * view.resources.displayMetrics.density
         val cardBg = colors.get(ColorType.POPUP_KEYS_BACKGROUND)
         val mainBg = colors.get(ColorType.MAIN_BACKGROUND)
-        val keyText = colors.get(ColorType.KEY_TEXT)
         val isDark = isDarkColor(mainBg) || isDarkColor(cardBg)
-        val hasBorders = colors.hasKeyBorders
 
         val contentDrawable = GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE
             cornerRadius = radiusPx
             setColor(cardBg)
-            if (hasBorders) {
-                val strokeColor = if (isDark) {
-                    ColorUtils.setAlphaComponent(keyText, 0x28)
-                } else {
-                    ColorUtils.setAlphaComponent(keyText, 0x1E)
-                }
-                setStroke(1.dpToPx(view.resources), strokeColor)
-            }
         }
 
         val maskDrawable = GradientDrawable().apply {
@@ -337,12 +326,10 @@ class ClipboardAdapter(
                     val accentColor = colors.get(ColorType.ACTION_KEY_BACKGROUND)
                     val radiusDp = Settings.getValues().mKeyBorderRadius.takeIf { it >= 0f } ?: 8f
                     val radiusPx = radiusDp * itemView.resources.displayMetrics.density
-                    val strokeWidth = 1.dpToPx(itemView.resources)
                     val overlayDrawable = GradientDrawable().apply {
                         shape = GradientDrawable.RECTANGLE
                         cornerRadius = radiusPx
                         setColor(ColorUtils.setAlphaComponent(accentColor, 0x26))
-                        setStroke(strokeWidth, ColorUtils.setAlphaComponent(accentColor, 0x80))
                     }
                     selectedOverlay?.background = overlayDrawable
                 } else {

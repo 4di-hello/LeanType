@@ -780,7 +780,6 @@ class ClipboardHistoryView @JvmOverloads constructor(
         val colors = Settings.getValues().mColors
         val cardBg = colors.get(ColorType.POPUP_KEYS_BACKGROUND)
         val mainBg = colors.get(ColorType.MAIN_BACKGROUND)
-        val keyText = colors.get(ColorType.KEY_TEXT)
         val isDark = isDarkColor(mainBg) || isDarkColor(cardBg)
 
         val pillFillColor = if (isDark) {
@@ -789,19 +788,11 @@ class ClipboardHistoryView @JvmOverloads constructor(
             Color.WHITE
         }
 
-        val strokeColor = if (isDark) {
-            ColorUtils.setAlphaComponent(keyText, 0x40)
-        } else {
-            ColorUtils.setAlphaComponent(keyText, 0x2A)
-        }
-
         val pillRadius = 24.dpToPx(resources).toFloat()
-        val pillStrokeWidth = 1.dpToPx(resources)
         val pillDrawable = GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE
             cornerRadius = pillRadius
             setColor(pillFillColor)
-            setStroke(pillStrokeWidth, strokeColor)
         }
         pill.background = pillDrawable
         pill.clipToOutline = true
