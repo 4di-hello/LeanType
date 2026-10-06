@@ -1,0 +1,8 @@
+- Fixed cursor space-swipe crash in hybrid and custom editors.
+- Fixed pasting long clipboard text exceeding 1000 characters.
+- Enlarged suggestion strip dismiss touch targets to 44dp.
+- Dynamically update touch coordinate corrections on padding changes.
+- Achieved 100% translation coverage across all 30 languages.
+- Fully localized voice settings, permissions, and download badges.
+- Localized emoji dictionary type labels and descriptions.
+- Refined clipboard item long-press animation and styling.

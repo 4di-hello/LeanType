@@ -63,15 +63,15 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 private val currentChangelogItems = listOf(
-    "• Clipboard Action Pill & Multi-Select: Added Gboard-style floating action pill on long press, multi-selection mode, and fixed card background rendering",
-    "• Shift Word Recapitalization: Added preference to cycle the capitalization of typed words with Shift",
-    "• Center Typed Word: Added option to display actively typed word in center of suggestion strip",
-    "• Forward Delete Icon: Added dedicated right-pointing icon for forward delete key layouts",
-    "• Screenshot Suggestion Stability: Enlarged dismiss touch target and ensured instant strip resumption",
-    "• Text Expander Optimization: Pre-compiled regex patterns for faster snippet expansions",
-    "• Language Detector Optimization: Pre-compiled regex patterns for reduced CPU overhead",
-    "• TalkBack & Accessibility: Added missing content descriptions and accessibility labels",
-    "• Translation Polish: Fixed Portuguese terms, spacing across 29 languages, and refined Pin verbs"
+    "• Composing Region Stability: Fixed StringIndexOutOfBoundsException crash during cursor space-swipe in hybrid and custom editors",
+    "• Pasting Long Text: Fixed failures and crashes when pasting clipboard items exceeding 1000 characters",
+    "• Suggestion Strip Close Button: Enlarged dismiss touch targets to 44dp across clipboard, screenshot, and OTP suggestions",
+    "• Key Detector Touch Alignment: Dynamically update coordinate corrections on keyboard padding changes",
+    "• 100% Translation Coverage: Achieved complete translation coverage across all 30 supported languages",
+    "• Voice Settings Localization: Fully localized voice settings, permissions, and download status badges",
+    "• Emoji Dictionary Localization: Localized dictionary types and translated embedded dictionary descriptions",
+    "• Clipboard Visual Polish: Refined long-press scale animations, theme ripples, and removed redundant border strokes",
+    "• Rendering Performance: Optimized char and string width measurements using Paint.measureText"
 )
 
 @Composable
