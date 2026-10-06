@@ -1785,7 +1785,7 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
         suggestionsStrip.removeAllViews()
 
         val btn = android.widget.Button(context)
-        btn.text = if (isDownloading) "Downloading..." else "Download Dictionary"
+        btn.text = if (isDownloading) context.getString(R.string.downloading) else context.getString(R.string.button_download)
         btn.textSize = 12f
         btn.isAllCaps = false
         btn.isEnabled = !isDownloading

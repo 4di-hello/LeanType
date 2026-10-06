@@ -2233,4 +2233,101 @@ New dictionary:
     <string name="handwriting_models_management_desc">Download and manage offline recognition models</string>
     <string name="ocr_plugin_title">OCR Plugin APK</string>
     <string name="plugin_active_version_format">Plugin active (version %s)</string>
+
+    <!-- Text expander time-based greetings -->
+    <string name="text_expander_greeting_morning">Good morning</string>
+    <string name="text_expander_greeting_afternoon">Good afternoon</string>
+    <string name="text_expander_greeting_evening">Good evening</string>
+    <string name="text_expander_greeting_night">Good night</string>
+
+    <!-- Dictionaries tab description in Language settings -->
+    <string name="dictionaries_screen_summary">Manage main, personal, and downloadable dictionaries</string>
+
+    <!-- Crash report dialog -->
+    <string name="crash_reports_dialog_title">Crash Reports Found</string>
+    <string name="crash_reports_dialog_message">Crash report files were found from a previous session.</string>
+    <string name="crash_report_save">Save to file</string>
+    <string name="crash_report_share">Share</string>
+    <string name="button_ignore">Ignore</string>
+
+    <!-- Voice Plugin Dialog & Status -->
+    <string name="voice_plugin_title">Voice Plugin</string>
+    <string name="voice_plugin_view_update_github">View Update on GitHub</string>
+    <string name="voice_plugin_download_github">Download Plugin from GitHub</string>
+    <string name="voice_plugin_connect">Connect</string>
+    <string name="voice_plugin_uninstall">Uninstall</string>
+    <string name="voice_plugin_update_available_msg">An update is available for the voice plugin!\nInstalled version: %1$s\nLatest version: %2$s\n\nVisit the GitHub release page to download and update.</string>
+    <string name="voice_plugin_active_msg">Voice plugin is active (version %1$s).\n\nLeanType Voice Plugin handles high-performance on-device Whisper speech-to-text inference.</string>
+    <string name="voice_plugin_disconnected_msg">Voice plugin is installed on this device, but currently disconnected.\n\nTap Connect to establish connection.</string>
+    <string name="voice_plugin_download_latest_msg">Download the latest voice plugin (version %1$s) from GitHub to enable private, fast offline voice typing.</string>
+    <string name="voice_plugin_download_required_msg">Offline voice input requires the LeanType Voice Plugin (com.leanbitlab.leantype.voice.offline).\n\nDownload the voice plugin from GitHub to enable private, fast offline voice typing.</string>
+    <string name="voice_plugin_status_update_available">Update available (%1$s → %2$s)</string>
+    <string name="voice_plugin_status_active">Active (%1$s)</string>
+    <string name="voice_plugin_status_disconnected">Installed (Disconnected)</string>
+    <string name="voice_plugin_status_not_installed">Not installed</string>
+    <string name="voice_open_settings_error">Could not open settings: %s</string>
+
+    <!-- Permissions Category -->
+    <string name="permissions_category">Permissions</string>
+    <string name="mic_permission_title">Microphone Permission</string>
+    <string name="mic_permission_granted">Permission granted</string>
+    <string name="mic_permission_prompt">Tap to grant microphone permission for voice dictation</string>
+
+    <!-- Engine & Models / Speech Language -->
+    <string name="voice_engine_models_category">Engine &amp; Models</string>
+    <string name="voice_speech_language_category">Speech Language</string>
+    <string name="voice_badge_ready">Ready</string>
+    <string name="voice_badge_loading">Loading…</string>
+    <string name="voice_badge_error">Error</string>
+    <string name="voice_badge_no_model">No model</string>
+    <string name="voice_badge_connecting">Connecting…</string>
+    <string name="voice_badge_disconnected">Disconnected</string>
+    <string name="voice_manage_download_models">Manage &amp; Download Models</string>
+
+    <!-- Dictation & Behavior Category -->
+    <string name="voice_dictation_behavior_category">Dictation &amp; Behavior</string>
+    <string name="voice_smart_punctuation_setting_title">Smart Punctuation</string>
+    <string name="voice_smart_punctuation_setting_desc">Automatically add punctuation and sentence capitalization</string>
+    <string name="voice_silence_timeout_title">Silence Timeout</string>
+    <string name="voice_silence_timeout_2s">2 seconds (Fastest)</string>
+    <string name="voice_silence_timeout_3s">3 seconds</string>
+    <string name="voice_silence_timeout_5s">5 seconds (Recommended)</string>
+    <string name="voice_silence_timeout_7s">7 seconds</string>
+    <string name="voice_silence_timeout_10s">10 seconds</string>
+    <string name="voice_silence_timeout_15s">15 seconds</string>
+    <string name="voice_silence_timeout_never">Never (Listen until mic tapped)</string>
+
+    <string name="voice_mic_sensitivity_title">Microphone Sensitivity</string>
+    <string name="voice_mic_sensitivity_high">High (Quiet rooms / Whisper)</string>
+    <string name="voice_mic_sensitivity_normal">Standard (Recommended)</string>
+    <string name="voice_mic_sensitivity_low">Low (Noisy environments / In-car)</string>
+
+    <string name="voice_max_duration_title">Max Recording Duration</string>
+    <string name="voice_max_duration_15s">15 seconds</string>
+    <string name="voice_max_duration_30s">30 seconds (Default)</string>
+    <string name="voice_max_duration_60s">60 seconds</string>
+    <string name="voice_max_duration_unlimited">Unlimited</string>
+
+    <!-- Performance & Advanced Category -->
+    <string name="voice_performance_advanced_category">Performance &amp; Advanced</string>
+    <string name="voice_cpu_threads_title">CPU Inference Threads</string>
+    <string name="voice_cpu_threads_2">2 threads (Battery saver)</string>
+    <string name="voice_cpu_threads_4">4 threads (Recommended)</string>
+    <string name="voice_cpu_threads_6">6 threads (High performance)</string>
+    <string name="voice_cpu_threads_8">8 threads (Maximum speed)</string>
+
+    <string name="voice_custom_prompt_title">Vocabulary &amp; Context Prompt</string>
+    <string name="voice_custom_prompt_desc">Guide Whisper with technical terms, names, slang, or jargon</string>
+
+    <string name="voice_whisper_keep_loaded_title">Keep Whisper Loaded</string>
+    <string name="voice_keep_loaded_always">Always keep in memory</string>
+    <string name="voice_keep_loaded_15m">Keep in memory for 15 minutes</string>
+    <string name="voice_keep_loaded_5m">Keep in memory for 5 minutes</string>
+    <string name="voice_keep_loaded_1m">Keep in memory for 1 minute</string>
+    <string name="voice_keep_loaded_never">Unload immediately after session</string>
+
+    <string name="voice_ai_provider_model_title">AI Provider &amp; Voice Model</string>
+    <string name="voice_whisper_import_dispatched">Whisper model import dispatched</string>
+    <string name="voice_model_import_failed_format">Model import failed: %s</string>
+    <string name="voice_model_multilingual">Multilingual</string>
 </resources>

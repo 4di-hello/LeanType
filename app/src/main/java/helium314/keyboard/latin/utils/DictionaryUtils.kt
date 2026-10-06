@@ -42,6 +42,7 @@ import helium314.keyboard.latin.common.Links
 import helium314.keyboard.latin.common.LocaleUtils
 import helium314.keyboard.latin.common.LocaleUtils.constructLocale
 import helium314.keyboard.latin.settings.Defaults
+import helium314.keyboard.latin.dictionary.Dictionary
 import helium314.keyboard.latin.settings.Settings
 import helium314.keyboard.settings.Theme
 import helium314.keyboard.settings.dialogs.ConfirmationDialog
@@ -177,7 +178,12 @@ fun getKnownDictionariesForLocale(locale: Locale, context: Context): List<Pair<S
         // further, the dicts in the dictionaries repo should be compatible with other AOSP-based keyboards
         val dictLocale = localeString.constructLocale()
         if (LocaleUtils.getMatchLevel(locale, dictLocale) < LocaleUtils.LOCALE_GOOD_MATCH) return@forEachLine
-        val rawDictString = "$type: ${dictLocale.getDisplayName(context.resources.configuration.locale())}"
+        val typeDisplayName = when (type) {
+            Dictionary.TYPE_EMOJI -> context.getString(R.string.subtype_emoji)
+            DictionaryInfoUtils.DEFAULT_MAIN_DICT -> context.getString(R.string.main_dictionary)
+            else -> type
+        }
+        val rawDictString = "$typeDisplayName: ${dictLocale.getDisplayName(context.resources.configuration.locale())}"
         val dictString = if (experimental != "exp") rawDictString
             else context.getString(R.string.available_dictionary_experimental, rawDictString)
         val dictLinkSuffix = when (experimental) {

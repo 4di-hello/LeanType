@@ -35,8 +35,14 @@ class DictionaryHeader(
     fun info(locale: Locale): String {
         val date = if (mDate == null) ""
             else DateFormat.getDateInstance(DateFormat.SHORT, locale).format(Date(mDate * 1000L)) + "\n"
+        val desc = description?.let { raw ->
+            if (raw.startsWith("Emoji for ") && raw.endsWith(" words")) {
+                val dictLocale = mLocaleString.constructLocale()
+                "Emoji (${dictLocale.getDisplayName(locale)})"
+            } else raw
+        } ?: ""
         return mIdString + "\n" + mLocaleString.constructLocale().getDisplayName(locale) +
-                "\nv" + mVersionString + "\n" + date + description
+                "\nv" + mVersionString + "\n" + date + desc
     }
 
     companion object {

@@ -448,13 +448,13 @@ class EmojiPalettesView @JvmOverloads constructor(
             updateSplitToolbarEmojiSuggestions()
         } else if (sDictionaryFacilitator == null) {
             val downloadBtn = Button(ctx)
-            downloadBtn.text = "Download Dictionary"
+            downloadBtn.text = ctx.getString(R.string.button_download)
             downloadBtn.textSize = 12f
             downloadBtn.isAllCaps = false
             downloadBtn.setOnClickListener {
                 if ("standard" == BuildConfig.FLAVOR || "standardfull" == BuildConfig.FLAVOR) {
                     downloadEmojiDictionary()
-                    downloadBtn.text = "Downloading..."
+                    downloadBtn.text = ctx.getString(R.string.downloading)
                     downloadBtn.isEnabled = false
                 } else {
                     val intent = Intent(ctx, SettingsActivity::class.java)
@@ -1191,7 +1191,7 @@ class EmojiPalettesView @JvmOverloads constructor(
         val lang = locale.language
         val urlStr = Links.DICTIONARY_URL + Links.DICTIONARY_DOWNLOAD_SUFFIX + Links.DICTIONARY_EMOJI_CLDR_SUFFIX + "emoji_$lang.dict"
 
-        Toast.makeText(context, "Downloading Emoji Dictionary...", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, context.getString(R.string.downloading), Toast.LENGTH_SHORT).show()
 
         ExecutorUtils.getBackgroundExecutor(ExecutorUtils.KEYBOARD).execute {
             try {
@@ -1227,7 +1227,7 @@ class EmojiPalettesView @JvmOverloads constructor(
                         .apply()
 
                     this@EmojiPalettesView.post {
-                        Toast.makeText(context, "Emoji dictionary installed!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getString(R.string.emoji_dict_loaded_success), Toast.LENGTH_SHORT).show()
                         closeDictionaryFacilitator()
                         initDictionaryFacilitator()
                         mIsDownloadingEmojiDict = false
@@ -1249,7 +1249,7 @@ class EmojiPalettesView @JvmOverloads constructor(
             } catch (e: Exception) {
                 Log.e("EmojiSearch", "Failed to download dictionary", e)
                 this@EmojiPalettesView.post {
-                    Toast.makeText(context, "Failed to download dictionary", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.emoji_dict_download_failed), Toast.LENGTH_SHORT).show()
                     mIsDownloadingEmojiDict = false
                     if (mInSearchMode) {
                         stopSearchMode()
