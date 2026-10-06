@@ -130,6 +130,11 @@ class ClipboardHistoryManager(
             onComplete?.invoke()
             return
         }
+        if (!ScreenshotHelper.isExternalStorageAvailable(latinIME)) {
+            cachedScreenshotInfo = null
+            onComplete?.invoke()
+            return
+        }
 
         ExecutorUtils.getBackgroundExecutor(ExecutorUtils.KEYBOARD).execute {
             val projection = mutableListOf(
@@ -219,6 +224,8 @@ class ClipboardHistoryManager(
                         }
                     }
                 }
+            } catch (e: IllegalArgumentException) {
+                helium314.keyboard.latin.utils.Log.d("ClipboardHistoryManager", "Screenshot volume unavailable: ${e.message}")
             } catch (e: Exception) {
                 helium314.keyboard.latin.utils.Log.e("ClipboardHistoryManager", "Failed to query screenshots in background", e)
             }

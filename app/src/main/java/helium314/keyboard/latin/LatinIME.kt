@@ -1296,7 +1296,11 @@ class LatinIME : InputMethodService(),
         val event = Event.createSoftwareTextEvent(rawText, KeyCode.MULTIPLE_CODE_POINTS, null)
         val completeInputTransaction = inputLogic.onTextInput(settings.current, event, keyboardSwitcher.keyboardShiftMode, handler)
         updateStateAfterInputTransaction(completeInputTransaction)
-        inputLogic.restartSuggestionsOnWordTouchedByCursor(settings.current)
+        if (rawText.length <= Constants.EDITOR_CONTENTS_CACHE_SIZE) {
+            inputLogic.restartSuggestionsOnWordTouchedByCursor(settings.current)
+        } else {
+            setNeutralSuggestionStrip()
+        }
         keyboardSwitcher.onEvent(event, currentAutoCapsState, currentRecapitalizeState)
     }
 

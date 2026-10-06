@@ -13,7 +13,29 @@ object ScreenshotHelper {
     private const val TAG = "ScreenshotHelper"
     private const val MAX_DIMENSION = 1920
 
+    fun isExternalStorageAvailable(context: Context): Boolean {
+        val state = android.os.Environment.getExternalStorageState()
+        if (state != android.os.Environment.MEDIA_MOUNTED && state != android.os.Environment.MEDIA_MOUNTED_READ_ONLY) {
+            return false
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            try {
+                val volumes = MediaStore.getExternalVolumeNames(context)
+                if (!volumes.contains(MediaStore.VOLUME_EXTERNAL_PRIMARY) && !volumes.contains(MediaStore.VOLUME_EXTERNAL)) {
+                    return false
+                }
+            } catch (_: Exception) {
+                return false
+            }
+        }
+        return true
+    }
+
     fun getLatestScreenshotUri(context: Context): Uri? {
+        if (!isExternalStorageAvailable(context)) {
+            return null
+        }
+
         val projection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             arrayOf(
                 MediaStore.Images.Media._ID,
@@ -67,6 +89,9 @@ object ScreenshotHelper {
                 }
                 null
             }
+        } catch (e: IllegalArgumentException) {
+            Log.d(TAG, "Screenshot storage volume unavailable: ${e.message}")
+            null
         } catch (e: Exception) {
             Log.e(TAG, "Error querying latest screenshot", e)
             null

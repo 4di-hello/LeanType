@@ -102,7 +102,7 @@ fun LanguageScreen(
                         ) { NextScreenIcon() }
                         Preference(
                             name = stringResource(R.string.dictionary_settings_category),
-                            description = "Manage main, personal, and downloadable dictionaries",
+                            description = stringResource(R.string.dictionaries_screen_summary),
                             onClick = { SettingsDestination.navigateTo(SettingsDestination.Dictionaries) },
                             icon = R.drawable.ic_dictionary
                         ) { NextScreenIcon() }

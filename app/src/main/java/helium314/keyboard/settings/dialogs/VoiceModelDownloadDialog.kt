@@ -208,7 +208,8 @@ private fun ModelDownloadRow(
                     } else if (isThisModelInstalled) {
                         stringResource(R.string.voice_model_downloaded_format, model.sizeMb)
                     } else {
-                        "${model.language} • ${model.sizeMb}"
+                        val langText = if (model.language.equals("multilingual", ignoreCase = true)) stringResource(R.string.voice_model_multilingual) else model.language
+                        "$langText • ${model.sizeMb}"
                     },
                     style = MaterialTheme.typography.bodySmall,
                     color = if (isThisModelInstalled || isThisModelDownloading)

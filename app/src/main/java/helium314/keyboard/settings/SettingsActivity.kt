@@ -43,9 +43,23 @@ import helium314.keyboard.latin.utils.UncachedInputMethodManagerUtils
 import helium314.keyboard.latin.translation.TranslationModelImporter
 import helium314.keyboard.latin.utils.cleanUnusedMainDicts
 import helium314.keyboard.latin.utils.prefs
-import helium314.keyboard.settings.dialogs.ConfirmationDialog
+import android.content.ClipData
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.ui.unit.dp
+import androidx.core.content.FileProvider
+import androidx.lifecycle.lifecycleScope
 import helium314.keyboard.settings.dialogs.NewDictionaryDialog
+import helium314.keyboard.settings.dialogs.PreferenceDialog
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileInputStream
@@ -156,21 +170,70 @@ open class SettingsActivity : ComponentActivity(), SharedPreferences.OnSharedPre
                                 if (showWelcomeWizard) {
                                     WelcomeWizard(close = { showWelcomeWizard = false }, finish = this@SettingsActivity::finish)
                                 } else if (crashReports.isNotEmpty()) {
-                                    ConfirmationDialog(
-                                        cancelButtonText = "ignore",
+                                    PreferenceDialog(
                                         onDismissRequest = { crashReportFiles.value = emptyList() },
-                                        neutralButtonText = "delete",
-                                        onNeutral = { crashReports.forEach { it.delete() }; crashReportFiles.value = emptyList() },
-                                        confirmButtonText = "get",
-                                        onConfirmed = {
-                                            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
-                                            intent.addCategory(Intent.CATEGORY_OPENABLE)
-                                            intent.putExtra(Intent.EXTRA_TITLE, "crash_reports.zip")
-                                            intent.type = "application/zip"
-                                            crashFilePicker.launch(intent)
-                                        },
-                                        content = { Text("Crash report files found") },
-                                    )
+                                        title = stringResource(R.string.crash_reports_dialog_title),
+                                        showCloseButton = true,
+                                        buttons = {
+                                            Column(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(top = 16.dp),
+                                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                                            ) {
+                                                Row(
+                                                    modifier = Modifier.fillMaxWidth(),
+                                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                                ) {
+                                                    Button(
+                                                        onClick = {
+                                                            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                                                                addCategory(Intent.CATEGORY_OPENABLE)
+                                                                putExtra(Intent.EXTRA_TITLE, "crash_reports.zip")
+                                                                type = "application/zip"
+                                                            }
+                                                            crashFilePicker.launch(intent)
+                                                        },
+                                                        modifier = Modifier.weight(1f)
+                                                    ) {
+                                                        Text(stringResource(R.string.crash_report_save))
+                                                    }
+                                                    Button(
+                                                        onClick = { shareCrashReports() },
+                                                        modifier = Modifier.weight(1f)
+                                                    ) {
+                                                        Text(stringResource(R.string.crash_report_share))
+                                                    }
+                                                }
+                                                Row(
+                                                    modifier = Modifier.fillMaxWidth(),
+                                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                                ) {
+                                                    Button(
+                                                        onClick = {
+                                                            crashReports.forEach { it.delete() }
+                                                            crashReportFiles.value = emptyList()
+                                                        },
+                                                        colors = ButtonDefaults.buttonColors(
+                                                            containerColor = MaterialTheme.colorScheme.error,
+                                                            contentColor = MaterialTheme.colorScheme.onError
+                                                        ),
+                                                        modifier = Modifier.weight(1f)
+                                                    ) {
+                                                        Text(stringResource(R.string.button_delete))
+                                                    }
+                                                    OutlinedButton(
+                                                        onClick = { crashReportFiles.value = emptyList() },
+                                                        modifier = Modifier.weight(1f)
+                                                    ) {
+                                                        Text(stringResource(R.string.button_ignore))
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    ) {
+                                        Text(stringResource(R.string.crash_reports_dialog_message))
+                                    }
                                 }
                             }
                         }
@@ -257,6 +320,50 @@ open class SettingsActivity : ComponentActivity(), SharedPreferences.OnSharedPre
                 bos.close()
                 for (file in files) {
                     file.delete()
+                }
+            }
+            crashReportFiles.value = emptyList()
+        }
+    }
+
+    private fun shareCrashReports() {
+        val files = findCrashReports(false)
+        if (files.isEmpty()) return
+        lifecycleScope.launch(Dispatchers.IO) {
+            runCatching {
+                val logsDir = File(cacheDir, "logs")
+                logsDir.mkdirs()
+                val zipFile = File(logsDir, "crash_reports.zip")
+                zipFile.outputStream().use { os ->
+                    val bos = BufferedOutputStream(os)
+                    val z = ZipOutputStream(bos)
+                    for (file in files) {
+                        FileInputStream(file).use { fis ->
+                            z.putNextEntry(ZipEntry(file.name))
+                            FileUtils.copyStreamToOtherStream(fis, z)
+                            z.closeEntry()
+                        }
+                    }
+                    z.close()
+                    bos.close()
+                }
+                for (file in files) {
+                    file.delete()
+                }
+                withContext(Dispatchers.Main) {
+                    crashReportFiles.value = emptyList()
+                    val uri = FileProvider.getUriForFile(
+                        this@SettingsActivity,
+                        "${packageName}.fileprovider",
+                        zipFile
+                    )
+                    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                        type = "application/zip"
+                        putExtra(Intent.EXTRA_STREAM, uri)
+                        clipData = ClipData.newRawUri("", uri)
+                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    }
+                    startActivity(Intent.createChooser(shareIntent, getString(R.string.crash_report_share)))
                 }
             }
         }

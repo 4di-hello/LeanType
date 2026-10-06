@@ -245,14 +245,14 @@ fun VoiceSettingsScreen(
                     pluginManager.importModelSafely(request)
                     withContext(Dispatchers.Main) {
                         prefs.edit().putString("installed_model_${VoiceConstants.ENGINE_WHISPER}", "custom").apply()
-                        Toast.makeText(context, "Whisper model import dispatched", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getString(R.string.voice_whisper_import_dispatched), Toast.LENGTH_SHORT).show()
                         updatePluginStatus()
                     }
                 }
             } catch (e: Exception) {
                 Log.e("VoiceSettingsScreen", "Failed to import Whisper model", e)
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(context, "Model import failed: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, context.getString(R.string.voice_model_import_failed_format, e.localizedMessage ?: ""), Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -322,19 +322,19 @@ fun VoiceSettingsScreen(
         }
     }
 
-    val whisperKeepLoadedSetting = remember {
+    val whisperKeepLoadedSetting = remember(context) {
         Setting(
             key = VoiceConstants.PREF_VOICE_WHISPER_KEEP_LOADED_SECONDS,
-            title = "Keep Whisper Loaded"
+            title = context.getString(R.string.voice_whisper_keep_loaded_title)
         ) {
             ListPreference(
                 setting = it,
                 items = listOf(
-                    "Always keep in memory" to "-1",
-                    "Keep in memory for 15 minutes" to "900",
-                    "Keep in memory for 5 minutes" to "300",
-                    "Keep in memory for 1 minute" to "60",
-                    "Unload immediately after session" to "0"
+                    context.getString(R.string.voice_keep_loaded_always) to "-1",
+                    context.getString(R.string.voice_keep_loaded_15m) to "900",
+                    context.getString(R.string.voice_keep_loaded_5m) to "300",
+                    context.getString(R.string.voice_keep_loaded_1m) to "60",
+                    context.getString(R.string.voice_keep_loaded_never) to "0"
                 ),
                 default = "300",
                 icon = R.drawable.ic_settings_advanced
@@ -357,21 +357,21 @@ fun VoiceSettingsScreen(
         }
     }
 
-    val silenceTimeoutSetting = remember {
+    val silenceTimeoutSetting = remember(context) {
         Setting(
             key = VoiceConstants.PREF_VOICE_SILENCE_TIMEOUT_SECONDS,
-            title = "Silence Timeout"
+            title = context.getString(R.string.voice_silence_timeout_title)
         ) {
             ListPreference(
                 setting = it,
                 items = listOf(
-                    "2 seconds (Fastest)" to "2",
-                    "3 seconds" to "3",
-                    "5 seconds (Recommended)" to "5",
-                    "7 seconds" to "7",
-                    "10 seconds" to "10",
-                    "15 seconds" to "15",
-                    "Never (Listen until mic tapped)" to "0"
+                    context.getString(R.string.voice_silence_timeout_2s) to "2",
+                    context.getString(R.string.voice_silence_timeout_3s) to "3",
+                    context.getString(R.string.voice_silence_timeout_5s) to "5",
+                    context.getString(R.string.voice_silence_timeout_7s) to "7",
+                    context.getString(R.string.voice_silence_timeout_10s) to "10",
+                    context.getString(R.string.voice_silence_timeout_15s) to "15",
+                    context.getString(R.string.voice_silence_timeout_never) to "0"
                 ),
                 default = "5",
                 icon = R.drawable.ic_settings_preferences
@@ -379,17 +379,17 @@ fun VoiceSettingsScreen(
         }
     }
 
-    val micSensitivitySetting = remember {
+    val micSensitivitySetting = remember(context) {
         Setting(
             key = VoiceConstants.PREF_VOICE_MIC_SENSITIVITY,
-            title = "Microphone Sensitivity"
+            title = context.getString(R.string.voice_mic_sensitivity_title)
         ) {
             ListPreference(
                 setting = it,
                 items = listOf(
-                    "High (Quiet rooms / Whisper)" to "high",
-                    "Standard (Recommended)" to "normal",
-                    "Low (Noisy environments / In-car)" to "low"
+                    context.getString(R.string.voice_mic_sensitivity_high) to "high",
+                    context.getString(R.string.voice_mic_sensitivity_normal) to "normal",
+                    context.getString(R.string.voice_mic_sensitivity_low) to "low"
                 ),
                 default = "normal",
                 icon = R.drawable.sym_keyboard_voice_holo
@@ -397,18 +397,18 @@ fun VoiceSettingsScreen(
         }
     }
 
-    val maxDurationSetting = remember {
+    val maxDurationSetting = remember(context) {
         Setting(
             key = VoiceConstants.PREF_VOICE_MAX_DURATION_SECONDS,
-            title = "Max Recording Duration"
+            title = context.getString(R.string.voice_max_duration_title)
         ) {
             ListPreference(
                 setting = it,
                 items = listOf(
-                    "15 seconds" to "15",
-                    "30 seconds (Default)" to "30",
-                    "60 seconds" to "60",
-                    "Unlimited" to "0"
+                    context.getString(R.string.voice_max_duration_15s) to "15",
+                    context.getString(R.string.voice_max_duration_30s) to "30",
+                    context.getString(R.string.voice_max_duration_60s) to "60",
+                    context.getString(R.string.voice_max_duration_unlimited) to "0"
                 ),
                 default = "30",
                 icon = R.drawable.ic_settings_preferences
@@ -416,11 +416,11 @@ fun VoiceSettingsScreen(
         }
     }
 
-    val smartPunctuationSetting = remember {
+    val smartPunctuationSetting = remember(context) {
         Setting(
             key = VoiceConstants.PREF_VOICE_SMART_PUNCTUATION,
-            title = "Smart Punctuation",
-            description = "Automatically add punctuation and sentence capitalization"
+            title = context.getString(R.string.voice_smart_punctuation_setting_title),
+            description = context.getString(R.string.voice_smart_punctuation_setting_desc)
         ) {
             SwitchPreference(
                 setting = it,
@@ -444,18 +444,18 @@ fun VoiceSettingsScreen(
         }
     }
 
-    val cpuThreadsSetting = remember {
+    val cpuThreadsSetting = remember(context) {
         Setting(
             key = VoiceConstants.PREF_VOICE_CPU_THREADS,
-            title = "CPU Inference Threads"
+            title = context.getString(R.string.voice_cpu_threads_title)
         ) {
             ListPreference(
                 setting = it,
                 items = listOf(
-                    "2 threads (Battery saver)" to "2",
-                    "4 threads (Recommended)" to "4",
-                    "6 threads (High performance)" to "6",
-                    "8 threads (Maximum speed)" to "8"
+                    context.getString(R.string.voice_cpu_threads_2) to "2",
+                    context.getString(R.string.voice_cpu_threads_4) to "4",
+                    context.getString(R.string.voice_cpu_threads_6) to "6",
+                    context.getString(R.string.voice_cpu_threads_8) to "8"
                 ),
                 default = "4",
                 icon = R.drawable.ic_settings_advanced
@@ -463,11 +463,11 @@ fun VoiceSettingsScreen(
         }
     }
 
-    val customPromptSetting = remember {
+    val customPromptSetting = remember(context) {
         Setting(
             key = VoiceConstants.PREF_VOICE_CUSTOM_PROMPT,
-            title = "Vocabulary & Context Prompt",
-            description = "Guide Whisper with technical terms, names, slang, or jargon"
+            title = context.getString(R.string.voice_custom_prompt_title),
+            description = context.getString(R.string.voice_custom_prompt_desc)
         ) {
             TextInputPreference(
                 setting = it,
@@ -496,7 +496,7 @@ fun VoiceSettingsScreen(
     if (showVoicePluginDialog) {
         PreferenceDialog(
             onDismissRequest = { showVoicePluginDialog = false },
-            title = "Voice Plugin",
+            title = stringResource(R.string.voice_plugin_title),
             showCloseButton = true,
             buttons = {
                 Column(
@@ -517,7 +517,7 @@ fun VoiceSettingsScreen(
                             },
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text(if (updateAvailable) "View Update on GitHub" else "Download Plugin from GitHub")
+                            Text(stringResource(if (updateAvailable) R.string.voice_plugin_view_update_github else R.string.voice_plugin_download_github))
                         }
                     }
                     if (isPluginInstalled) {
@@ -529,7 +529,7 @@ fun VoiceSettingsScreen(
                                 },
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                Text("Connect")
+                                Text(stringResource(R.string.voice_plugin_connect))
                             }
                         }
                         Button(
@@ -547,18 +547,18 @@ fun VoiceSettingsScreen(
                             ),
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text("Uninstall")
+                            Text(stringResource(R.string.voice_plugin_uninstall))
                         }
                     }
                 }
             }
         ) {
             val message = when {
-                isPluginInstalled && updateAvailable -> "An update is available for the voice plugin!\nInstalled version: $pluginVersion\nLatest version: $remoteVersion\n\nVisit the GitHub release page to download and update."
-                isPluginConnected -> "Voice plugin is active (version ${pluginVersion ?: "v1.0.0"}).\n\nLeanType Voice Plugin handles high-performance on-device Whisper speech-to-text inference."
-                isPluginInstalled -> "Voice plugin is installed on this device, but currently disconnected.\n\nTap Connect to establish connection."
-                remoteVersion != null -> "Download the latest voice plugin (version $remoteVersion) from GitHub to enable private, fast offline voice typing."
-                else -> "Offline voice input requires the LeanType Voice Plugin (com.leanbitlab.leantype.voice.offline).\n\nDownload the voice plugin from GitHub to enable private, fast offline voice typing."
+                isPluginInstalled && updateAvailable -> stringResource(R.string.voice_plugin_update_available_msg, pluginVersion.orEmpty(), remoteVersion.orEmpty())
+                isPluginConnected -> stringResource(R.string.voice_plugin_active_msg, pluginVersion ?: "v1.0.0")
+                isPluginInstalled -> stringResource(R.string.voice_plugin_disconnected_msg)
+                remoteVersion != null -> stringResource(R.string.voice_plugin_download_latest_msg, remoteVersion.orEmpty())
+                else -> stringResource(R.string.voice_plugin_download_required_msg)
             }
             Text(message)
         }
@@ -592,15 +592,15 @@ fun VoiceSettingsScreen(
                         if (isOfflineVoiceEnabled) {
                             val voicePluginSummary = remember(isPluginInstalled, isPluginConnected, pluginVersion, updateAvailable, remoteVersion) {
                                 when {
-                                    updateAvailable -> "Update available ($pluginVersion → $remoteVersion)"
-                                    isPluginConnected -> "Active (${pluginVersion ?: "v1.0.0"})"
-                                    isPluginInstalled -> "Installed (Disconnected)"
-                                    else -> "Not installed"
+                                    updateAvailable -> context.getString(R.string.voice_plugin_status_update_available, pluginVersion.orEmpty(), remoteVersion.orEmpty())
+                                    isPluginConnected -> context.getString(R.string.voice_plugin_status_active, pluginVersion ?: "v1.0.0")
+                                    isPluginInstalled -> context.getString(R.string.voice_plugin_status_disconnected)
+                                    else -> context.getString(R.string.voice_plugin_status_not_installed)
                                 }
                             }
 
                             Preference(
-                                name = "Voice Plugin",
+                                name = stringResource(R.string.voice_plugin_title),
                                 description = voicePluginSummary,
                                 icon = R.drawable.sym_keyboard_voice_holo,
                                 onClick = { showVoicePluginDialog = true }
@@ -619,7 +619,7 @@ fun VoiceSettingsScreen(
                                     service.getVoiceHuggingFaceModel().ifBlank { helium314.keyboard.latin.utils.ProofreadService.DEFAULT_VOICE_HF_MODEL }
                             }
                             Preference(
-                                name = "AI Provider & Voice Model",
+                                name = stringResource(R.string.voice_ai_provider_model_title),
                                 description = "${provider.name} • $voiceModelName",
                                 icon = R.drawable.ic_proofread,
                                 onClick = onClickAIIntegration
@@ -653,7 +653,7 @@ fun VoiceSettingsScreen(
                                                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
                                             })
                                         } catch (e: Exception) {
-                                            Toast.makeText(context, "Could not open settings: ${e.message}", Toast.LENGTH_SHORT).show()
+                                            Toast.makeText(context, context.getString(R.string.voice_open_settings_error, e.message ?: ""), Toast.LENGTH_SHORT).show()
                                         }
                                     }
                                 }
@@ -682,11 +682,11 @@ fun VoiceSettingsScreen(
                         )
                     ) {
                         Column {
-                            PreferenceCategory("Permissions")
+                            PreferenceCategory(stringResource(R.string.permissions_category))
 
                             Preference(
-                                name = "Microphone Permission",
-                                description = if (isMicPermissionGranted) "Permission granted" else "Tap to grant microphone permission for voice dictation",
+                                name = stringResource(R.string.mic_permission_title),
+                                description = stringResource(if (isMicPermissionGranted) R.string.mic_permission_granted else R.string.mic_permission_prompt),
                                 onClick = {
                                     if (!isMicPermissionGranted) {
                                         permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
@@ -707,24 +707,24 @@ fun VoiceSettingsScreen(
                         )
                     ) {
                         Column {
-                            PreferenceCategory(if (isOfflineVoiceEnabled) "Engine & Models" else "Speech Language")
+                            PreferenceCategory(stringResource(if (isOfflineVoiceEnabled) R.string.voice_engine_models_category else R.string.voice_speech_language_category))
 
                             if (isOfflineVoiceEnabled) {
                                 val (badgeText, badgeContainerColor, badgeContentColor) = when (whisperState?.state) {
-                                    ModelState.STATE_READY -> Triple("Ready", MaterialTheme.colorScheme.primaryContainer, MaterialTheme.colorScheme.onPrimaryContainer)
-                                    ModelState.STATE_LOADING -> Triple("Loading…", MaterialTheme.colorScheme.tertiaryContainer, MaterialTheme.colorScheme.onTertiaryContainer)
-                                    ModelState.STATE_ERROR -> Triple("Error", MaterialTheme.colorScheme.errorContainer, MaterialTheme.colorScheme.onErrorContainer)
+                                    ModelState.STATE_READY -> Triple(stringResource(R.string.voice_badge_ready), MaterialTheme.colorScheme.primaryContainer, MaterialTheme.colorScheme.onPrimaryContainer)
+                                    ModelState.STATE_LOADING -> Triple(stringResource(R.string.voice_badge_loading), MaterialTheme.colorScheme.tertiaryContainer, MaterialTheme.colorScheme.onTertiaryContainer)
+                                    ModelState.STATE_ERROR -> Triple(stringResource(R.string.voice_badge_error), MaterialTheme.colorScheme.errorContainer, MaterialTheme.colorScheme.onErrorContainer)
                                     else -> if (isPluginConnected) {
-                                        Triple("No model", MaterialTheme.colorScheme.surfaceVariant, MaterialTheme.colorScheme.onSurfaceVariant)
+                                        Triple(stringResource(R.string.voice_badge_no_model), MaterialTheme.colorScheme.surfaceVariant, MaterialTheme.colorScheme.onSurfaceVariant)
                                     } else if (isInitialConnectionPending) {
-                                        Triple("Connecting…", MaterialTheme.colorScheme.surfaceVariant, MaterialTheme.colorScheme.onSurfaceVariant)
+                                        Triple(stringResource(R.string.voice_badge_connecting), MaterialTheme.colorScheme.surfaceVariant, MaterialTheme.colorScheme.onSurfaceVariant)
                                     } else {
-                                        Triple("Disconnected", MaterialTheme.colorScheme.surfaceVariant, MaterialTheme.colorScheme.onSurfaceVariant)
+                                        Triple(stringResource(R.string.voice_badge_disconnected), MaterialTheme.colorScheme.surfaceVariant, MaterialTheme.colorScheme.onSurfaceVariant)
                                     }
                                 }
 
                                 Preference(
-                                    name = "Manage & Download Models",
+                                    name = stringResource(R.string.voice_manage_download_models),
                                     description = null,
                                     icon = R.drawable.sym_keyboard_voice_holo,
                                     onClick = {
@@ -761,7 +761,7 @@ fun VoiceSettingsScreen(
                         )
                     ) {
                         Column {
-                            PreferenceCategory("Dictation & Behavior")
+                            PreferenceCategory(stringResource(R.string.voice_dictation_behavior_category))
 
                             smartPunctuationSetting.Preference()
                             silenceTimeoutSetting.Preference()
@@ -780,7 +780,7 @@ fun VoiceSettingsScreen(
                         )
                     ) {
                         Column {
-                            PreferenceCategory("Performance & Advanced")
+                            PreferenceCategory(stringResource(R.string.voice_performance_advanced_category))
 
                             if (isOfflineVoiceEnabled) {
                                 cpuThreadsSetting.Preference()

@@ -896,12 +896,13 @@ fun createAdvancedSettings(context: Context) = listOfNotNull(
     Setting(context, SettingsWithoutKey.VOICE_GEMINI_MODEL, R.string.voice_model_title, R.string.voice_model_summary) { setting ->
         val ctx = LocalContext.current
         val service = remember { helium314.keyboard.latin.utils.ProofreadService(ctx) }
-        var items by remember { mutableStateOf(listOf("Default (gemini-2.0-flash)" to "") + listOf("gemini-2.0-flash", "gemini-2.5-flash", "gemini-flash-latest", "gemini-1.5-flash").map { it to it }) }
+        val defaultGeminiLabel = remember(ctx) { "${ctx.getString(R.string.button_default)} (gemini-2.0-flash)" }
+        var items by remember { mutableStateOf(listOf(defaultGeminiLabel to "") + listOf("gemini-2.0-flash", "gemini-2.5-flash", "gemini-flash-latest", "gemini-1.5-flash").map { it to it }) }
         var selectedModel by remember { mutableStateOf(service.getVoiceGeminiModel()) }
 
         LaunchedEffect(Unit) {
             val models = service.fetchAvailableVoiceModels(helium314.keyboard.latin.utils.ProofreadService.AIProvider.GEMINI)
-            items = listOf("Default (gemini-2.0-flash)" to "") + models.map { it to it }
+            items = listOf(defaultGeminiLabel to "") + models.map { it to it }
         }
 
         ListPreference(
@@ -917,12 +918,13 @@ fun createAdvancedSettings(context: Context) = listOfNotNull(
     Setting(context, SettingsWithoutKey.VOICE_GROQ_MODEL, R.string.voice_model_title, R.string.voice_model_summary) { setting ->
         val ctx = LocalContext.current
         val service = remember { helium314.keyboard.latin.utils.ProofreadService(ctx) }
-        var items by remember { mutableStateOf(listOf("Default (whisper-large-v3-turbo)" to "") + helium314.keyboard.latin.utils.GroqModels.VOICE_MODELS.map { it to it }) }
+        val defaultGroqVoiceLabel = remember(ctx) { "${ctx.getString(R.string.button_default)} (whisper-large-v3-turbo)" }
+        var items by remember { mutableStateOf(listOf(defaultGroqVoiceLabel to "") + helium314.keyboard.latin.utils.GroqModels.VOICE_MODELS.map { it to it }) }
         var selectedModel by remember { mutableStateOf(service.getVoiceGroqModel()) }
 
         LaunchedEffect(Unit) {
             val models = service.fetchAvailableVoiceModels(helium314.keyboard.latin.utils.ProofreadService.AIProvider.GROQ)
-            items = listOf("Default (whisper-large-v3-turbo)" to "") + models.map { it to it }
+            items = listOf(defaultGroqVoiceLabel to "") + models.map { it to it }
         }
 
         ListPreference(

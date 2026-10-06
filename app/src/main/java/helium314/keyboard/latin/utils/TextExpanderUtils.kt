@@ -11,6 +11,7 @@ import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import helium314.keyboard.latin.R
 
 object TextExpanderUtils {
     const val PREF_ENABLED = "pref_text_expander_enabled"
@@ -332,10 +333,10 @@ object TextExpanderUtils {
         if (result.contains("%greeting%")) {
             val hour = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY)
             val greeting = when (hour) {
-                in 5..11 -> "Good morning"
-                in 12..16 -> "Good afternoon"
-                in 17..21 -> "Good evening"
-                else -> "Good night"
+                in 5..11 -> context.getString(R.string.text_expander_greeting_morning)
+                in 12..16 -> context.getString(R.string.text_expander_greeting_afternoon)
+                in 17..21 -> context.getString(R.string.text_expander_greeting_evening)
+                else -> context.getString(R.string.text_expander_greeting_night)
             }
             result = result.replace("%greeting%", greeting)
         }
