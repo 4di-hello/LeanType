@@ -183,45 +183,50 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center"
-                    android:elevation="6dp"
-                    android:paddingHorizontal="6dp"
-                    android:paddingVertical="4dp"
+                    android:clipToOutline="true"
+                    android:elevation="8dp"
+                    android:paddingHorizontal="4dp"
+                    android:paddingVertical="3dp"
                     android:background="@drawable/clipboard_action_pill_background">
 
                     <ImageButton
                         android:id="@+id/clip_action_pin"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:padding="9dp"
+                        android:scaleType="fitCenter"
                         android:background="?android:attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="@string/clipboard_action_pin"
-                        android:scaleType="centerInside" />
+                        android:contentDescription="@string/clipboard_action_pin" />
 
                     <ImageButton
                         android:id="@+id/clip_action_edit"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:padding="9dp"
+                        android:scaleType="fitCenter"
                         android:src="@drawable/ic_edit"
                         android:background="?android:attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="@string/clipboard_action_edit"
-                        android:scaleType="centerInside" />
+                        android:contentDescription="@string/clipboard_action_edit" />
 
                     <ImageButton
                         android:id="@+id/clip_action_delete"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/ic_bin"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:padding="9dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_bin_rounded"
                         android:background="?android:attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="@string/clipboard_action_delete"
-                        android:scaleType="centerInside" />
+                        android:contentDescription="@string/clipboard_action_delete" />
 
                     <ImageButton
                         android:id="@+id/clip_action_select"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:padding="9dp"
+                        android:scaleType="fitCenter"
                         android:src="@drawable/ic_check_circle_outline"
                         android:background="?android:attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="@string/clipboard_action_select"
-                        android:scaleType="centerInside" />
+                        android:contentDescription="@string/clipboard_action_select" />
 
                 </LinearLayout>
             </FrameLayout>

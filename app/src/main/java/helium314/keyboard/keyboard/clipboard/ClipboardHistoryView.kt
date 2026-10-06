@@ -14,6 +14,9 @@ import android.view.inputmethod.EditorInfo
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
+import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import helium314.keyboard.event.HapticEvent
 import helium314.keyboard.keyboard.KeyboardActionListener
@@ -43,6 +46,7 @@ import helium314.keyboard.latin.utils.getCodeForToolbarKey
 import helium314.keyboard.latin.utils.getCodeForToolbarKeyLongClick
 import helium314.keyboard.latin.utils.getEnabledClipboardToolbarKeys
 import helium314.keyboard.latin.utils.dpToPx
+import helium314.keyboard.latin.utils.isDarkColor
 import helium314.keyboard.latin.utils.prefs
 import helium314.keyboard.latin.utils.setToolbarButtonsActivatedStateOnPrefChange
 
@@ -215,7 +219,7 @@ class ClipboardHistoryView @JvmOverloads constructor(
             try {
                 colors.setBackground(bar, ColorType.CLIPBOARD_SUGGESTION_BACKGROUND)
                 bar.findViewById<TextView>(R.id.clipboard_confirmation_text)?.setTextColor(colors.get(ColorType.KEY_TEXT))
-                bar.findViewById<TextView>(R.id.clipboard_confirmation_button)?.setTextColor(colors.get(ColorType.KEY_TEXT))
+                bar.findViewById<TextView>(R.id.clipboard_confirmation_button)?.setTextColor(colors.get(ColorType.ACTION_KEY_BACKGROUND))
             } catch (_: Exception) {}
             bar.findViewById<View>(R.id.clipboard_confirmation_button)?.setOnClickListener {
                 clipboardHistoryManager.clearHistory()
@@ -681,11 +685,14 @@ class ClipboardHistoryView @JvmOverloads constructor(
             context.getString(R.string.clipboard_selected_count, selectedCount)
         }
 
+        val colors = Settings.getValues().mColors
+
         selectionSelectAllButton?.let { btn ->
             val allSelected = selectedCount == totalCount && totalCount > 0
             btn.contentDescription = context.getString(
                 if (allSelected) R.string.clipboard_action_deselect_all else R.string.clipboard_action_select_all
             )
+            btn.setColorFilter(if (allSelected) colors.get(ColorType.ACTION_KEY_BACKGROUND) else colors.get(ColorType.KEY_ICON))
         }
 
         val hasSelection = selectedCount > 0
@@ -697,6 +704,7 @@ class ClipboardHistoryView @JvmOverloads constructor(
             btn.contentDescription = context.getString(
                 if (allPinned) R.string.clipboard_action_unpin else R.string.clipboard_action_pin
             )
+            btn.setColorFilter(if (allPinned) colors.get(ColorType.CLIPBOARD_PIN) else colors.get(ColorType.KEY_ICON))
         }
 
         selectionDeleteButton?.let { btn ->
@@ -709,6 +717,7 @@ class ClipboardHistoryView @JvmOverloads constructor(
         val overlay = actionPillOverlay ?: return false
         if (overlay.visibility == View.VISIBLE) {
             overlay.visibility = View.GONE
+            overlay.background = null
             return true
         }
         return false
@@ -723,13 +732,36 @@ class ClipboardHistoryView @JvmOverloads constructor(
         val selectBtn = actionSelectButton ?: return false
 
         val colors = Settings.getValues().mColors
+        val cardBg = colors.get(ColorType.POPUP_KEYS_BACKGROUND)
+        val mainBg = colors.get(ColorType.MAIN_BACKGROUND)
+        val keyText = colors.get(ColorType.KEY_TEXT)
+        val isDark = isDarkColor(mainBg) || isDarkColor(cardBg)
 
-        // Pill background
-        val pillBg = androidx.core.content.ContextCompat.getDrawable(context, R.drawable.clipboard_action_pill_background)?.mutate()
-        if (pillBg != null) {
-            colors.setColor(pillBg, ColorType.KEY_PREVIEW_BACKGROUND)
-            pill.background = pillBg
+        val pillFillColor = if (isDark) {
+            colors.get(ColorType.TOOL_BAR_EXPAND_KEY_BACKGROUND)
+        } else {
+            Color.WHITE
         }
+
+        val strokeColor = if (isDark) {
+            ColorUtils.setAlphaComponent(keyText, 0x40)
+        } else {
+            ColorUtils.setAlphaComponent(keyText, 0x2A)
+        }
+
+        val pillRadius = 24.dpToPx(resources).toFloat()
+        val pillStrokeWidth = 1.dpToPx(resources)
+        val pillDrawable = GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = pillRadius
+            setColor(pillFillColor)
+            setStroke(pillStrokeWidth, strokeColor)
+        }
+        pill.background = pillDrawable
+        pill.clipToOutline = true
+        pill.elevation = 8.dpToPx(resources).toFloat()
+
+        overlay.setBackgroundColor(if (isDark) 0x33000000 else 0x1A000000)
 
         // Configure Pin button
         val pinIconRes = if (pinIconId != 0) pinIconId else R.drawable.ic_clipboard_pin_rounded
@@ -759,7 +791,7 @@ class ClipboardHistoryView @JvmOverloads constructor(
         }
 
         // Configure Delete button
-        colors.setColor(deleteBtn, ColorType.REMOVE_SUGGESTION_ICON)
+        colors.setColor(deleteBtn, ColorType.KEY_ICON)
         deleteBtn.setOnClickListener {
             dismissActionPill()
             deleteSingleEntry(entry)

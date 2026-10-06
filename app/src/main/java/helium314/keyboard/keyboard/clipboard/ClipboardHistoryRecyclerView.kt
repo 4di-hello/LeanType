@@ -104,7 +104,7 @@ class ClipboardHistoryRecyclerView @JvmOverloads constructor(
             val colors = Settings.getValues().mColors
             colors.setBackground(bar, ColorType.CLIPBOARD_SUGGESTION_BACKGROUND)
             bar.findViewById<TextView>(R.id.clipboard_undo_text)?.setTextColor(colors.get(ColorType.KEY_TEXT))
-            bar.findViewById<TextView>(R.id.clipboard_undo_button)?.setTextColor(colors.get(ColorType.KEY_TEXT))
+            bar.findViewById<TextView>(R.id.clipboard_undo_button)?.setTextColor(colors.get(ColorType.ACTION_KEY_BACKGROUND))
         } catch (_: Exception) { /* colors may not be available */ }
 
         bar.findViewById<TextView>(R.id.clipboard_undo_text)?.text = if (entries.size == 1) {

@@ -13,11 +13,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import android.graphics.drawable.GradientDrawable
+import androidx.core.graphics.ColorUtils
 import helium314.keyboard.latin.ClipboardHistoryEntry
 import helium314.keyboard.latin.ClipboardHistoryManager
 import helium314.keyboard.latin.R
 import helium314.keyboard.latin.common.ColorType
 import helium314.keyboard.latin.settings.Settings
+import helium314.keyboard.latin.utils.dpToPx
 
 sealed class ClipboardDisplayItem {
     data class Header(val count: Int, val isFolded: Boolean) : ClipboardDisplayItem()
@@ -288,10 +291,19 @@ class ClipboardAdapter(
                 if (isSelected) {
                     selectIconView.setImageResource(R.drawable.ic_check_circle_filled)
                     selectIconView.alpha = 1.0f
-                    colors.setColor(selectIconView, ColorType.ACTION_KEY_ICON)
+                    colors.setColor(selectIconView, ColorType.ACTION_KEY_BACKGROUND)
                     selectedOverlay?.visibility = View.VISIBLE
-                    val actionColor = colors.get(ColorType.ACTION_KEY_ICON)
-                    selectedOverlay?.setBackgroundColor((actionColor and 0x00FFFFFF) or 0x2A000000)
+                    val accentColor = colors.get(ColorType.ACTION_KEY_BACKGROUND)
+                    val radiusDp = Settings.getValues().mKeyBorderRadius.takeIf { it >= 0f } ?: 8f
+                    val radiusPx = radiusDp * itemView.resources.displayMetrics.density
+                    val strokeWidth = 1.dpToPx(itemView.resources)
+                    val overlayDrawable = GradientDrawable().apply {
+                        shape = GradientDrawable.RECTANGLE
+                        cornerRadius = radiusPx
+                        setColor(ColorUtils.setAlphaComponent(accentColor, 0x26))
+                        setStroke(strokeWidth, ColorUtils.setAlphaComponent(accentColor, 0x80))
+                    }
+                    selectedOverlay?.background = overlayDrawable
                 } else {
                     selectIconView.setImageResource(R.drawable.ic_check_circle_outline)
                     selectIconView.alpha = 0.5f
