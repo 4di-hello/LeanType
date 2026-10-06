@@ -452,6 +452,18 @@ class InputLogicTest {
         assert(!connectionComposingText.startsWith(" "))
     }
 
+    @Test fun testSetComposingRegionOutOfBoundsSafety() {
+        reset()
+        setText("hello how are you")
+        // Start after end: returns false safely
+        assert(!connection.setComposingRegion(13, 9))
+        // Start is negative: returns false safely
+        assert(!connection.setComposingRegion(-1, 5))
+        // Cursor is before start: returns false safely without throwing exception
+        setCursorPosition(5)
+        assert(!connection.setComposingRegion(6, 10))
+    }
+
 
     @Test fun deleteInsideWord() {
         reset()

@@ -214,7 +214,11 @@ class InputLogic(
 
             mRecapitalizeStatus.enable()
             if (!mLatinIME.isCursorGestureActive) {
-                mLatinIME.mHandler.postResumeSuggestions(true)
+                if (kotlin.math.abs(newSelStart - oldSelStart) > Constants.EDITOR_CONTENTS_CACHE_SIZE || mConnection.hasRecentLargeCommit()) {
+                    mSuggestionStripViewAccessor.setNeutralSuggestionStrip()
+                } else {
+                    mLatinIME.mHandler.postResumeSuggestions(true)
+                }
             }
             mRecapitalizeStatus.stop()
             mWordBeingCorrectedByCursor = null
@@ -1955,6 +1959,8 @@ class InputLogic(
             || mInputLogicHandler.isInBatchInput()
             || mConnection.hasSelection()
             || mConnection.expectedSelectionStart < 0
+            || mConnection.hasSlowInputConnection()
+            || mConnection.hasRecentLargeCommit()
         ) {
             mSuggestionStripViewAccessor.setNeutralSuggestionStrip()
             return
@@ -1973,7 +1979,7 @@ class InputLogic(
             return
         }
 
-        if (!mConnection.isCursorTouchingWord(settingsValues.mSpacingAndPunctuations, true /* checkTextAfter */)) {
+        if (!mConnection.isCursorTouchingWord(settingsValues.mSpacingAndPunctuations, !mConnection.hasSlowInputConnection())) {
             mWordComposer.setCapitalizedModeAtStartComposingTime(WordComposer.CAPS_MODE_OFF)
             mLatinIME.mHandler.postUpdateSuggestionStrip(SuggestedWords.INPUT_STYLE_RECORRECTION)
             mConnection.finishComposingText()
@@ -2031,10 +2037,15 @@ class InputLogic(
             val codePoints = StringUtils.toCodePointArray(typedWordString)
             mWordComposer.setComposingWord(codePoints, mLatinIME.getCoordinatesForCurrentKeyboard(codePoints))
             mWordComposer.setCursorPositionWithinWord(typedWordString.codePointCount(0, numberOfCharsInWordBeforeCursor))
-            mConnection.setComposingRegion(
+            val success = mConnection.setComposingRegion(
                 expectedCursorPosition - numberOfCharsInWordBeforeCursor,
                 expectedCursorPosition + range.getNumberOfCharsInWordAfterCursor()
             )
+            if (!success) {
+                mWordComposer.reset()
+                mSuggestionStripViewAccessor.setNeutralSuggestionStrip()
+                return
+            }
         }
         if (suggestions.size <= 1) {
             mInputLogicHandler.getSuggestedWords {

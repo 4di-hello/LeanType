@@ -68,6 +68,7 @@ class RichInputConnection(private val mParent: InputMethodService) : PrivateComm
     private val mTempObjectForCommitText = SpannableStringBuilder()
 
     private var mLastSlowInputConnectionTime = -SLOW_INPUTCONNECTION_PERSIST_MS
+    private var mLastLargeCommitTime = -LARGE_COMMIT_GUARD_DURATION_MS
     @Volatile private var mIsActive = false
 
     fun isConnected(): Boolean {
@@ -82,8 +83,13 @@ class RichInputConnection(private val mParent: InputMethodService) : PrivateComm
         return (SystemClock.uptimeMillis() - mLastSlowInputConnectionTime) <= SLOW_INPUTCONNECTION_PERSIST_MS
     }
 
+    fun hasRecentLargeCommit(): Boolean {
+        return (SystemClock.uptimeMillis() - mLastLargeCommitTime) <= LARGE_COMMIT_GUARD_DURATION_MS
+    }
+
     fun onStartInput() {
         mLastSlowInputConnectionTime = -SLOW_INPUTCONNECTION_PERSIST_MS
+        mLastLargeCommitTime = -LARGE_COMMIT_GUARD_DURATION_MS
         mNestLevel = 0
         mIsActive = true
         mPendingInFlightDeletions = 0
@@ -200,6 +206,14 @@ class RichInputConnection(private val mParent: InputMethodService) : PrivateComm
         }
 
         mComposingText.setLength(0)
+
+        // If a large commit recently happened and the cursor matches our expected position,
+        // we already hold the tail in our committed cache. Avoid a synchronous Binder IPC query
+        // that would block the IME thread while the host app finishes layout.
+        if (hasRecentLargeCommit() && mExpectedSelStart == newSelStart && mExpectedSelEnd == newSelEnd) {
+            mPendingInFlightDeletions = 0
+            return true
+        }
 
         mExpectedSelStart = newSelStart
         mExpectedSelEnd = newSelEnd
@@ -319,11 +333,26 @@ class RichInputConnection(private val mParent: InputMethodService) : PrivateComm
             mComposingText.setLength(0)
         }
 
-        mCommittedTextBeforeComposingText.append(text)
+        if (text.length > Constants.EDITOR_CONTENTS_CACHE_SIZE) {
+            mLastLargeCommitTime = SystemClock.uptimeMillis()
+            mLastSlowInputConnectionTime = SystemClock.uptimeMillis()
+            mCommittedTextBeforeComposingText.setLength(0)
+            mCommittedTextBeforeComposingText.append(
+                text.subSequence(text.length - Constants.EDITOR_CONTENTS_CACHE_SIZE, text.length)
+            )
+        } else {
+            mCommittedTextBeforeComposingText.append(text)
+            if (mCommittedTextBeforeComposingText.length > Constants.EDITOR_CONTENTS_CACHE_SIZE * 2) {
+                mCommittedTextBeforeComposingText.delete(
+                    0,
+                    mCommittedTextBeforeComposingText.length - Constants.EDITOR_CONTENTS_CACHE_SIZE
+                )
+            }
+        }
 
         if (isConnected()) {
             val isDirectCommit = AppQuirksManager.isDirectCommitApp(mParent.currentInputEditorInfo?.packageName)
-            if (isDirectCommit) {
+            if (isDirectCommit || text.length > Constants.EDITOR_CONTENTS_CACHE_SIZE || text !is Spanned) {
                 mIC?.commitText(text.toString(), newCursorPosition)
             } else {
                 mTempObjectForCommitText.clear()
@@ -371,7 +400,15 @@ class RichInputConnection(private val mParent: InputMethodService) : PrivateComm
 
             mCommittedTextBeforeComposingText.setLength(0)
             mComposingText.setLength(0)
-            mCommittedTextBeforeComposingText.append(newText)
+            if (newText.length > Constants.EDITOR_CONTENTS_CACHE_SIZE) {
+                mCommittedTextBeforeComposingText.append(
+                    newText.subSequence(newText.length - Constants.EDITOR_CONTENTS_CACHE_SIZE, newText.length)
+                )
+                mLastLargeCommitTime = SystemClock.uptimeMillis()
+                mLastSlowInputConnectionTime = SystemClock.uptimeMillis()
+            } else {
+                mCommittedTextBeforeComposingText.append(newText)
+            }
 
             mExpectedSelStart = newText.length
             mExpectedSelEnd = newText.length
@@ -819,7 +856,7 @@ class RichInputConnection(private val mParent: InputMethodService) : PrivateComm
         if (DEBUG_BATCH_NESTING) checkBatchEdit()
         if (DEBUG_PREVIOUS_TEXT) checkConsistencyForDebug()
 
-        if (start < 0 || end < start) return false
+        if (start < 0 || end < start || mExpectedSelStart < 0) return false
 
         var adjustedStart = start
         val moveBy = mExpectedSelStart - adjustedStart
@@ -828,26 +865,32 @@ class RichInputConnection(private val mParent: InputMethodService) : PrivateComm
         val textBeforeCursor = getTextBeforeCursor(
             Constants.EDITOR_CONTENTS_CACHE_SIZE + (end - adjustedStart),
             0
-        )
+        ) ?: return false
 
+        // In case getTextBeforeCursor triggered a cache/cursor reload (e.g. out of sync detection),
+        // revalidate that the cursor position is still valid and at or after adjustedStart.
+        if (mExpectedSelStart < adjustedStart || mExpectedSelStart < 0) return false
+
+        val charsBeforeCursor = mExpectedSelStart - adjustedStart
+        var indexOfStartOfComposingText = (textBeforeCursor.length - charsBeforeCursor).coerceIn(0, textBeforeCursor.length)
+        while (indexOfStartOfComposingText < textBeforeCursor.length && Character.isWhitespace(textBeforeCursor[indexOfStartOfComposingText])) {
+            indexOfStartOfComposingText++
+            adjustedStart++
+        }
+
+        if (adjustedStart > end) return false
+
+        val safeIndex = indexOfStartOfComposingText.coerceIn(0, textBeforeCursor.length)
         mCommittedTextBeforeComposingText.setLength(0)
         mComposingText.setLength(0)
 
-        textBeforeCursor?.let { text ->
-            var indexOfStartOfComposingText = max(text.length - (mExpectedSelStart - adjustedStart), 0)
-            while (indexOfStartOfComposingText < text.length && Character.isWhitespace(text[indexOfStartOfComposingText])) {
-                indexOfStartOfComposingText++
-                adjustedStart++
-            }
+        mComposingText.append(
+            textBeforeCursor.subSequence(safeIndex, textBeforeCursor.length)
+        )
 
-            mComposingText.append(
-                text.subSequence(indexOfStartOfComposingText, text.length)
-            )
-
-            mCommittedTextBeforeComposingText.append(
-                text.subSequence(0, indexOfStartOfComposingText)
-            )
-        }
+        mCommittedTextBeforeComposingText.append(
+            textBeforeCursor.subSequence(0, safeIndex)
+        )
 
         return if (isConnected()) {
             mIC?.setComposingRegion(adjustedStart, end) ?: false
@@ -1423,5 +1466,6 @@ class RichInputConnection(private val mParent: InputMethodService) : PrivateComm
         )
 
         private val SLOW_INPUTCONNECTION_PERSIST_MS = TimeUnit.MINUTES.toMillis(2)
+        private const val LARGE_COMMIT_GUARD_DURATION_MS = 3000L
     }
 }
