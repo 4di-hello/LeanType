@@ -7,7 +7,6 @@ SPDX-License-Identifier: GPL-3.0-only
     android:orientation="horizontal"
     android:background="@drawable/clipboard_suggestion_background"
     android:gravity="center"
-    android:paddingEnd="12dp"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     tools:ignore="RtlSymmetry">
@@ -29,8 +28,11 @@ SPDX-License-Identifier: GPL-3.0-only
         android:id="@+id/otp_suggestion_close"
         android:contentDescription="@string/spoken_otp_suggestion"
         android:src="@drawable/ic_close"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="44dp"
+        android:layout_height="match_parent"
+        android:scaleType="centerInside"
+        android:padding="10dp"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
         android:gravity="center" />
 
 </LinearLayout>

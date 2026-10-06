@@ -54,6 +54,8 @@ class MathSuggestionManager(private val latinIME: LatinIME) {
         val closeButton = binding.otpSuggestionClose
         closeButton.setImageDrawable(latinIME.mKeyboardSwitcher.keyboard?.mIconsSet?.getIconDrawable(ToolbarKey.CLOSE_HISTORY.name.lowercase()))
         closeButton.setOnClickListener {
+            AudioAndHapticFeedbackManager.getInstance().performHapticAndAudioFeedback(KeyCode.NOT_SPECIFIED, it, HapticEvent.KEY_PRESS)
+            binding.root.isGone = true
             lastDismissedExpression = match.expression
             removeMathSuggestion()
         }
@@ -68,11 +70,8 @@ class MathSuggestionManager(private val latinIME: LatinIME) {
     }
 
     fun removeMathSuggestion() {
-        val view = mathSuggestionView ?: return
-        if (view.parent != null && !view.isGone) {
-            latinIME.setNeutralSuggestionStrip()
-            latinIME.mHandler.postResumeSuggestions(false)
-        }
-        view.isGone = true
+        mathSuggestionView?.isGone = true
+        mathSuggestionView = null
+        latinIME.removeExternalSuggestions()
     }
 }

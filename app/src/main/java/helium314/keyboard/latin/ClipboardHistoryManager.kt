@@ -584,6 +584,8 @@ class ClipboardHistoryManager(
 
     fun getClipboardSuggestionView(editorInfo: EditorInfo?, parent: ViewGroup?): View? {
         clipboardSuggestionView = null
+        if (dontShowCurrentSuggestion) return null
+        if (parent == null) return null
 
         // check for screenshot first if enabled
         if (latinIME.mSettings.current.mSuggestScreenshots) {
@@ -596,8 +598,6 @@ class ClipboardHistoryManager(
 
         // get the content, or return null
         if (!latinIME.mSettings.current.mSuggestClipboardContent) return null
-        if (dontShowCurrentSuggestion) return null
-        if (parent == null) return null
         val clipData = clipboardManager.primaryClip ?: return null
         if (clipData.itemCount == 0 || clipData.description?.hasMimeType("text/*") == false) return null
         val clipItem = clipData.getItemAt(0) ?: return null
@@ -630,6 +630,8 @@ class ClipboardHistoryManager(
         closeButton.setOnClickListener {
             val prefs = latinIME.prefs()
             prefs.edit().putString("last_dismissed_clipboard_text", content.toString()).apply()
+            AudioAndHapticFeedbackManager.getInstance().performHapticAndAudioFeedback(KeyCode.NOT_SPECIFIED, it, HapticEvent.KEY_PRESS)
+            binding.root.isGone = true
             removeClipboardSuggestion()
         }
 
@@ -769,6 +771,8 @@ class ClipboardHistoryManager(
             cachedScreenshotInfo = null
             dontShowCurrentSuggestion = true
             lastSuggestedScreenshotUri = contentUri.toString()
+            AudioAndHapticFeedbackManager.getInstance().performHapticAndAudioFeedback(KeyCode.NOT_SPECIFIED, it, HapticEvent.KEY_PRESS)
+            binding.root.isGone = true
             removeClipboardSuggestion() 
         }
 
@@ -782,11 +786,9 @@ class ClipboardHistoryManager(
 
     private fun removeClipboardSuggestion() {
         dontShowCurrentSuggestion = true
-        val csv = clipboardSuggestionView ?: return
-        if (csv.parent != null && !csv.isGone) {
-            latinIME.removeExternalSuggestions()
-        }
-        csv.isGone = true
+        clipboardSuggestionView?.isGone = true
+        clipboardSuggestionView = null
+        latinIME.removeExternalSuggestions()
     }
 
     companion object {

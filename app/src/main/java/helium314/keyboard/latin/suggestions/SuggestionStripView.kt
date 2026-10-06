@@ -545,17 +545,18 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
     }
 
     fun setExternalSuggestionView(view: View?, addCloseButton: Boolean) {
+        if (view == null) {
+            clear()
+            isExternalSuggestionVisible = false
+            updateSplitToolbarState()
+            return
+        }
         if (isVoiceActive) return
         if (isShowingEmojiSuggestions && !helium314.keyboard.keyboard.KeyboardSwitcher.getInstance().isShowingEmojiPalettes) {
             isShowingEmojiSuggestions = false
         }
         if (isShowingEmojiSuggestions) return
         clear()
-        if (view == null) {
-            isExternalSuggestionVisible = false
-            updateSplitToolbarState()
-            return
-        }
         isExternalSuggestionVisible = true
 
         val targetView = if (addCloseButton) {

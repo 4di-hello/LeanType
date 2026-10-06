@@ -1461,9 +1461,13 @@ class LatinIME : InputMethodService(),
         get() = suggestionStripView?.isExternalSuggestionVisible == true
 
     override fun setNeutralSuggestionStrip() {
+        setNeutralSuggestionStrip(skipExternalSuggestions = false)
+    }
+
+    fun setNeutralSuggestionStrip(skipExternalSuggestions: Boolean) {
         if (keyboardSwitcher.isHandwritingShowing) return
         val currentSettings = settings.current
-        if (tryShowExternalSuggestion()) {
+        if (!skipExternalSuggestions && tryShowExternalSuggestion()) {
             if (currentSettings.mAutoHideToolbar) suggestionStripView?.setToolbarVisibility(false)
             return
         }
@@ -1541,7 +1545,7 @@ class LatinIME : InputMethodService(),
 
     override fun removeExternalSuggestions() {
         suggestionStripView?.setExternalSuggestionView(null, false)
-        setNeutralSuggestionStrip()
+        setNeutralSuggestionStrip(skipExternalSuggestions = true)
         handler.postResumeSuggestions(false)
     }
 

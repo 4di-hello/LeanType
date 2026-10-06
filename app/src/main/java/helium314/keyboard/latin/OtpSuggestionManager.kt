@@ -70,7 +70,11 @@ class OtpSuggestionManager(private val latinIME: LatinIME) {
         }
         val closeButton = binding.otpSuggestionClose
         closeButton.setImageDrawable(latinIME.mKeyboardSwitcher.keyboard?.mIconsSet?.getIconDrawable(ToolbarKey.CLOSE_HISTORY.name.lowercase()))
-        closeButton.setOnClickListener { removeOtpSuggestion() }
+        closeButton.setOnClickListener {
+            AudioAndHapticFeedbackManager.getInstance().performHapticAndAudioFeedback(KeyCode.NOT_SPECIFIED, it, HapticEvent.KEY_PRESS)
+            binding.root.isGone = true
+            removeOtpSuggestion()
+        }
 
         val colors = latinIME.mSettings.current.mColors
         textView.setTextColor(colors.get(ColorType.KEY_TEXT))
@@ -84,12 +88,9 @@ class OtpSuggestionManager(private val latinIME: LatinIME) {
 
     private fun removeOtpSuggestion() {
         dismissedOtp = latestOtp
-        val view = otpSuggestionView ?: return
-        if (view.parent != null && !view.isGone) {
-            latinIME.setNeutralSuggestionStrip()
-            latinIME.mHandler.postResumeSuggestions(false)
-        }
-        view.isGone = true
+        otpSuggestionView?.isGone = true
+        otpSuggestionView = null
+        latinIME.removeExternalSuggestions()
     }
 
     companion object {
