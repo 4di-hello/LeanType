@@ -37,8 +37,6 @@ object TypefaceUtils {
 
     // This sparse array caches key label text width in pixel indexed by key label text size.
     private val sTextWidthCache = SparseArray<Float>()
-    // Working variable for the following method.
-    private val sTextWidthBounds = Rect()
 
     private fun getCharWidth(referenceChar: CharArray, paint: Paint): Float {
         val key = getCharGeometryCacheKey(referenceChar[0], paint)
@@ -48,8 +46,7 @@ object TypefaceUtils {
                 return cachedValue
             }
 
-            paint.getTextBounds(referenceChar, 0, 1, sTextWidthBounds)
-            val width = sTextWidthBounds.width().toFloat()
+            val width = paint.measureText(referenceChar, 0, 1)
             sTextWidthCache.put(key, width)
             return width
         }
@@ -79,13 +76,7 @@ object TypefaceUtils {
         return getCharWidth(KEY_NUMERIC_HINT_LABEL_REFERENCE_CHAR, paint)
     }
 
-    // Working variable for the following method.
-    private val sStringWidthBounds = Rect()
-
     fun getStringWidth(string: String, paint: Paint): Float {
-        synchronized(sStringWidthBounds) {
-            paint.getTextBounds(string, 0, string.length, sStringWidthBounds)
-            return sStringWidthBounds.width().toFloat()
-        }
+        return paint.measureText(string)
     }
 }
