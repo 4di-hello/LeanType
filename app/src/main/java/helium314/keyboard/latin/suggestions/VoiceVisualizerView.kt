@@ -35,6 +35,12 @@ class VoiceVisualizerView @JvmOverloads constructor(
     private var phase = 0f
     private var animator: ValueAnimator? = null
 
+    private val barWidth = 3.dpToPx(resources).toFloat()
+    private val barSpacing = 3.dpToPx(resources).toFloat()
+    private val totalBarsWidth = barCount * barWidth + (barCount - 1) * barSpacing
+    private val minHeight = 4.dpToPx(resources).toFloat()
+    private val minHeightExtra = 6.dpToPx(resources).toFloat()
+
     init {
         val defaultColor = 0xFF4285F4.toInt()
         paint.color = defaultColor
@@ -110,14 +116,9 @@ class VoiceVisualizerView @JvmOverloads constructor(
         val viewHeight = height.toFloat()
         if (viewWidth <= 0 || viewHeight <= 0) return
 
-        val barWidth = 3.dpToPx(resources).toFloat()
-        val barSpacing = 3.dpToPx(resources).toFloat()
-        val totalBarsWidth = barCount * barWidth + (barCount - 1) * barSpacing
         var startX = (viewWidth - totalBarsWidth) / 2f
         val centerY = viewHeight / 2f
-
-        val minHeight = 4.dpToPx(resources).toFloat()
-        val maxHeight = (viewHeight * 0.6f).coerceAtLeast(minHeight + 6.dpToPx(resources))
+        val maxHeight = (viewHeight * 0.6f).coerceAtLeast(minHeight + minHeightExtra)
 
         for (i in 0 until barCount) {
             val barHeight = when (mode) {
