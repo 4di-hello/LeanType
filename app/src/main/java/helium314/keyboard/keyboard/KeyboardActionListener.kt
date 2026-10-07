@@ -98,6 +98,10 @@ interface KeyboardActionListener {
 
     fun onMoveDeletePointer(steps: Int)
 
+    fun onMoveDeletePointer(stepsX: Int, stepsY: Int) {
+        onMoveDeletePointer(stepsX)
+    }
+
     fun onUpWithDeletePointerActive()
 
     fun resetMetaState()

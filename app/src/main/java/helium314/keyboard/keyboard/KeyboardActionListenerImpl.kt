@@ -461,57 +461,111 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
 
     private var deleteSwipeInitialEnd = -1
     private var deleteSwipeWordBoundaries = emptyList<Int>()
+    private var deleteSwipeLineBoundaries = emptyList<Int>()
     private var deleteSwipeWordIndex = 0
+    private var deleteSwipeLineIndex = 0
+    private var deleteSwipeCharOffset = 0
     private var deleteSwipeStepCount = 0
 
     override fun onMoveDeletePointer(steps: Int) {
-        if (settings.current.mDeleteSwipeWordByWord) {
-            onMoveDeletePointerWords(steps)
-        } else {
-            onMoveDeletePointerChars(steps)
-        }
+        onMoveDeletePointer(steps, 0)
     }
 
-    private fun onMoveDeletePointerChars(steps: Int) {
-        inputLogic.finishInput()
-        val end = connection.expectedSelectionEnd
-        val actualSteps = actualSteps(steps)
-        val oldStart = connection.expectedSelectionStart
-        val start = (oldStart + actualSteps).coerceAtMost(end)
-        if (start != oldStart) {
-            deleteSwipeStepCount++
-            if (deleteSwipeStepCount % 2 != 0) {
-                performHapticFeedback(HapticEvent.GESTURE_MOVE)
-            }
-            connection.setSelection(start, end)
-        }
-    }
-
-    private fun onMoveDeletePointerWords(steps: Int) {
+    override fun onMoveDeletePointer(stepsX: Int, stepsY: Int) {
         inputLogic.finishInput()
         val currentEnd = connection.expectedSelectionEnd
         if (deleteSwipeInitialEnd == -1 || deleteSwipeInitialEnd != currentEnd) {
             deleteSwipeInitialEnd = currentEnd
-            val textBefore = connection.getTextBeforeCursor(1000, 0)?.toString() ?: ""
+            val textBefore = connection.getTextBeforeCursor(2000, 0)?.toString() ?: ""
             val baseStart = connection.expectedSelectionStart
             deleteSwipeWordBoundaries = getWordBoundariesBackwards(textBefore, baseStart)
+            deleteSwipeLineBoundaries = getLineBoundariesBackwards(textBefore, baseStart)
             deleteSwipeWordIndex = 0
+            deleteSwipeLineIndex = 0
+            deleteSwipeCharOffset = 0
             deleteSwipeStepCount = 0
         }
 
-        if (deleteSwipeWordBoundaries.isEmpty()) return
+        if (settings.current.mDeleteSwipeWordByWord) {
+            onMoveDeletePointerWords2D(stepsX, stepsY)
+        } else {
+            onMoveDeletePointerChars2D(stepsX, stepsY)
+        }
+    }
 
-        val oldIndex = deleteSwipeWordIndex
-        // Negative steps move left (select more words), positive steps move right (deselect words)
-        val newIndex = (deleteSwipeWordIndex - steps).coerceIn(0, deleteSwipeWordBoundaries.size - 1)
-        if (newIndex != oldIndex) {
-            deleteSwipeWordIndex = newIndex
-            val newStart = deleteSwipeWordBoundaries[newIndex]
+    private fun onMoveDeletePointerChars2D(stepsX: Int, stepsY: Int) {
+        val oldLineIndex = deleteSwipeLineIndex
+        val oldCharOffset = deleteSwipeCharOffset
+
+        if (stepsY != 0 && deleteSwipeLineBoundaries.isNotEmpty()) {
+            deleteSwipeLineIndex = (deleteSwipeLineIndex - stepsY).coerceIn(0, deleteSwipeLineBoundaries.size - 1)
+        }
+
+        if (stepsX != 0) {
+            val actual = actualSteps(stepsX)
+            deleteSwipeCharOffset = (deleteSwipeCharOffset - actual).coerceAtLeast(0)
+        }
+
+        if (deleteSwipeLineIndex != oldLineIndex || deleteSwipeCharOffset != oldCharOffset) {
+            val lineBaseStart = if (deleteSwipeLineBoundaries.isNotEmpty()) {
+                deleteSwipeLineBoundaries[deleteSwipeLineIndex]
+            } else {
+                deleteSwipeInitialEnd
+            }
+            val finalStart = (lineBaseStart - deleteSwipeCharOffset).coerceIn(0, deleteSwipeInitialEnd)
+
             deleteSwipeStepCount++
             if (deleteSwipeStepCount % 2 != 0) {
                 performHapticFeedback(HapticEvent.GESTURE_MOVE)
             }
-            connection.setSelection(newStart, deleteSwipeInitialEnd)
+            connection.setSelection(finalStart, deleteSwipeInitialEnd)
+        }
+    }
+
+    private fun onMoveDeletePointerWords2D(stepsX: Int, stepsY: Int) {
+        val oldLineIndex = deleteSwipeLineIndex
+        val oldWordIndex = deleteSwipeWordIndex
+
+        // Negative stepsY moves UP (select more lines), positive stepsY moves DOWN (deselect lines)
+        if (stepsY != 0 && deleteSwipeLineBoundaries.isNotEmpty()) {
+            deleteSwipeLineIndex = (deleteSwipeLineIndex - stepsY).coerceIn(0, deleteSwipeLineBoundaries.size - 1)
+        }
+
+        // Negative stepsX moves LEFT (select more words), positive stepsX moves RIGHT (deselect words)
+        if (stepsX != 0) {
+            deleteSwipeWordIndex = (deleteSwipeWordIndex - stepsX).coerceAtLeast(0)
+        }
+
+        if (deleteSwipeLineIndex != oldLineIndex || deleteSwipeWordIndex != oldWordIndex) {
+            val lineBaseStart = if (deleteSwipeLineBoundaries.isNotEmpty()) {
+                deleteSwipeLineBoundaries[deleteSwipeLineIndex]
+            } else {
+                deleteSwipeInitialEnd
+            }
+
+            val finalStart = if (deleteSwipeWordIndex == 0) {
+                lineBaseStart
+            } else {
+                val wordsBeforeLine = if (deleteSwipeLineIndex == 0) {
+                    deleteSwipeWordBoundaries
+                } else {
+                    val textBefore = connection.getTextBeforeCursor(2000, 0)?.toString() ?: ""
+                    val currentLengthBeforeLine = (lineBaseStart - (deleteSwipeInitialEnd - textBefore.length)).coerceIn(0, textBefore.length)
+                    getWordBoundariesBackwards(textBefore.take(currentLengthBeforeLine), lineBaseStart)
+                }
+                if (wordsBeforeLine.isNotEmpty()) {
+                    val idx = deleteSwipeWordIndex.coerceIn(0, wordsBeforeLine.size - 1)
+                    wordsBeforeLine[idx]
+                } else {
+                    lineBaseStart
+                }
+            }
+
+            deleteSwipeStepCount++
+            if (deleteSwipeStepCount % 2 != 0) {
+                performHapticFeedback(HapticEvent.GESTURE_MOVE)
+            }
+            connection.setSelection(finalStart.coerceAtMost(deleteSwipeInitialEnd), deleteSwipeInitialEnd)
         }
     }
 
@@ -537,7 +591,10 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
     override fun onUpWithDeletePointerActive() {
         deleteSwipeInitialEnd = -1
         deleteSwipeWordBoundaries = emptyList()
+        deleteSwipeLineBoundaries = emptyList()
         deleteSwipeWordIndex = 0
+        deleteSwipeLineIndex = 0
+        deleteSwipeCharOffset = 0
         deleteSwipeStepCount = 0
         if (!connection.hasSelection()) return
         inputLogic.finishInput()
@@ -553,7 +610,10 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
         mConsumedPhysicalKeys.clear()
         deleteSwipeInitialEnd = -1
         deleteSwipeWordBoundaries = emptyList()
+        deleteSwipeLineBoundaries = emptyList()
         deleteSwipeWordIndex = 0
+        deleteSwipeLineIndex = 0
+        deleteSwipeCharOffset = 0
         deleteSwipeStepCount = 0
     }
 
@@ -884,6 +944,65 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
         }
 
         private fun Int.isMetaLock() = this == KeyCode.CTRL_LOCK || this == KeyCode.ALT_LOCK || this == KeyCode.FN_LOCK || this == KeyCode.META_LOCK
+
+        internal fun getLineBoundariesBackwards(text: String, endOffset: Int): List<Int> {
+            val boundaries = mutableListOf<Int>()
+            boundaries.add(endOffset)
+            if (text.isEmpty()) return boundaries
+
+            var currentEnd = text.length
+            while (currentEnd > 0) {
+                val lastNewline = text.lastIndexOf('\n', currentEnd - 1)
+                if (lastNewline != -1) {
+                    val lineStart = lastNewline + 1
+                    if (currentEnd > lineStart) {
+                        val segLength = currentEnd - lineStart
+                        if (segLength > 50) {
+                            var subEnd = currentEnd
+                            while (subEnd - lineStart > 50) {
+                                var breakPoint = (subEnd - 40).coerceAtLeast(lineStart)
+                                while (breakPoint > lineStart && !Character.isWhitespace(text[breakPoint])) {
+                                    breakPoint--
+                                }
+                                if (breakPoint <= lineStart) {
+                                    breakPoint = (subEnd - 40).coerceAtLeast(lineStart)
+                                }
+                                val offset = endOffset - (text.length - breakPoint)
+                                boundaries.add(offset)
+                                subEnd = breakPoint
+                            }
+                        }
+                        val offset = endOffset - (text.length - lineStart)
+                        if (boundaries.last() != offset) {
+                            boundaries.add(offset)
+                        }
+                    }
+                    currentEnd = lastNewline
+                } else {
+                    if (currentEnd > 50) {
+                        var subEnd = currentEnd
+                        while (subEnd > 50) {
+                            var breakPoint = (subEnd - 40).coerceAtLeast(0)
+                            while (breakPoint > 0 && !Character.isWhitespace(text[breakPoint])) {
+                                breakPoint--
+                            }
+                            if (breakPoint <= 0) {
+                                breakPoint = (subEnd - 40).coerceAtLeast(0)
+                            }
+                            val offset = endOffset - (text.length - breakPoint)
+                            boundaries.add(offset)
+                            subEnd = breakPoint
+                        }
+                    }
+                    val offset = endOffset - text.length
+                    if (boundaries.last() != offset) {
+                        boundaries.add(offset)
+                    }
+                    break
+                }
+            }
+            return boundaries
+        }
 
         internal fun getWordBoundariesBackwards(text: String, endOffset: Int): List<Int> {
             val boundaries = mutableListOf<Int>()

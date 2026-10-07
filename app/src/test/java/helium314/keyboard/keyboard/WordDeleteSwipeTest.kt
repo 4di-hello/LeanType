@@ -56,4 +56,43 @@ class WordDeleteSwipeTest {
         // text length is 11, offset is 100 - 11 = 89
         assertEquals(listOf(100, 94, 89), boundaries)
     }
+
+    @Test
+    fun `empty text line boundaries returns single boundary at offset`() {
+        val boundaries = KeyboardActionListenerImpl.getLineBoundariesBackwards("", 0)
+        assertEquals(listOf(0), boundaries)
+    }
+
+    @Test
+    fun `single line without newline`() {
+        val text = "hello world"
+        val boundaries = KeyboardActionListenerImpl.getLineBoundariesBackwards(text, text.length)
+        assertEquals(listOf(11, 0), boundaries)
+    }
+
+    @Test
+    fun `multiple lines selection progression with newlines`() {
+        val text = "first line\nsecond line\nthird line"
+        val boundaries = KeyboardActionListenerImpl.getLineBoundariesBackwards(text, text.length)
+        // text length: "first line\n" (11) + "second line\n" (12) + "third line" (10) = 33
+        // Line 3 start: index 23
+        // Line 2 start: index 11
+        // Line 1 start: index 0
+        assertEquals(listOf(33, 23, 11, 0), boundaries)
+        assertEquals("third line", text.substring(boundaries[1], boundaries[0]))
+        assertEquals("second line\nthird line", text.substring(boundaries[2], boundaries[0]))
+        assertEquals("first line\nsecond line\nthird line", text.substring(boundaries[3], boundaries[0]))
+    }
+
+    @Test
+    fun `handles absolute offset with lines correctly`() {
+        val text = "line 1\nline 2"
+        val endOffset = 50
+        val boundaries = KeyboardActionListenerImpl.getLineBoundariesBackwards(text, endOffset)
+        // text length is 13: "line 1\n" (7) + "line 2" (6)
+        // base offset is 50 - 13 = 37
+        // line 2 start is 37 + 7 = 44
+        // line 1 start is 37
+        assertEquals(listOf(50, 44, 37), boundaries)
+    }
 }
