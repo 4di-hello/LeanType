@@ -668,6 +668,8 @@ class LatinIME : InputMethodService(),
         
         suggestionStripView?.setRtl(richImm.currentSubtype.isRtlSubtype)
         settings.saveSubtypeForApp(richImm.currentSubtype, currentInputEditorInfo.packageName)
+        handler.cancelUpdateSuggestionStrip()
+        setNeutralSuggestionStrip()
     }
 
     fun switchToSubtype(subtype: InputMethodSubtype?) {
