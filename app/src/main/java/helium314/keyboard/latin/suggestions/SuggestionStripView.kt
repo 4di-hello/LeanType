@@ -693,27 +693,14 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             layoutParams = LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-            setPadding(8.dpToPx(resources), 0, 4.dpToPx(resources), 0)
+            setPadding(12.dpToPx(resources), 0, 4.dpToPx(resources), 0)
         }
 
-        // Microphone Icon
-        val micIconView = android.widget.ImageView(context).apply {
-            val micDrawable = KeyboardIconsSet.instance.getNewDrawable(ToolbarKey.VOICE.name.lowercase(Locale.US), context)
-                ?: ContextCompat.getDrawable(context, R.drawable.sym_keyboard_voice_lxx)?.mutate()
-            setImageDrawable(micDrawable)
-            scaleType = android.widget.ImageView.ScaleType.CENTER_INSIDE
-            val pad = 6.dpToPx(resources)
-            setPadding(pad, pad, pad, pad)
-            layoutParams = LinearLayout.LayoutParams(34.dpToPx(resources), 34.dpToPx(resources))
-            colors.setColor(this, ColorType.TOOL_BAR_KEY)
-        }
-        container.addView(micIconView)
-
-        // Animated Audio Waveform Visualizer (Google Rambler style live sound graph occupying the center strip)
+        // Animated Audio Waveform Visualizer occupying the full free space
         val visualizer = VoiceVisualizerView(context).apply {
             layoutParams = LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 1f).apply {
                 marginStart = 4.dpToPx(resources)
-                marginEnd = 4.dpToPx(resources)
+                marginEnd = 6.dpToPx(resources)
             }
             contentDescription = statusText
             setColor(actionColor)
