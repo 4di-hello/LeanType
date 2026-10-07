@@ -19,6 +19,7 @@ import helium314.keyboard.settings.screens.createGestureTypingSettings
 import helium314.keyboard.settings.screens.createLanguageSettings
 import helium314.keyboard.settings.screens.createLayoutSettings
 import helium314.keyboard.settings.screens.createOcrSettings
+import helium314.keyboard.settings.screens.createLibrariesSettings
 import helium314.keyboard.settings.screens.createPreferencesSettings
 import helium314.keyboard.settings.screens.createSoundSettings
 import helium314.keyboard.settings.screens.createTextExpanderSettings
@@ -137,7 +138,7 @@ private val modules = listOf(
     SettingsModule(SettingsWithoutKey.SCREEN_NAV_ADVANCED, SettingsDestination.Advanced, R.string.settings_screen_advanced, iconRes = R.drawable.ic_settings_advanced, provider = ::createAdvancedSettings),
     SettingsModule(SettingsWithoutKey.SCREEN_NAV_ABOUT, SettingsDestination.About, R.string.settings_screen_about, iconRes = R.drawable.ic_settings_about, provider = ::createAboutSettings),
     SettingsModule(SettingsWithoutKey.SCREEN_NAV_OCR, SettingsDestination.OCR, R.string.ocr_settings_title, iconRes = R.drawable.ic_ocr, provider = ::createOcrSettings),
-    SettingsModule(SettingsWithoutKey.SCREEN_NAV_LIBRARIES, SettingsDestination.Libraries, R.string.libraries_hub_title, iconRes = R.drawable.ic_emoji_objects),
+    SettingsModule(SettingsWithoutKey.SCREEN_NAV_LIBRARIES, SettingsDestination.Libraries, R.string.libraries_hub_title, iconRes = R.drawable.ic_emoji_objects, provider = ::createLibrariesSettings),
     SettingsModule(SettingsWithoutKey.SCREEN_NAV_BACKGROUND_SERVICES, SettingsDestination.BackgroundServices, titleString = "Background Services", provider = ::createBackgroundServicesSettings),
     SettingsModule(SettingsWithoutKey.SCREEN_NAV_DICTIONARIES, SettingsDestination.Dictionaries, R.string.dictionary_settings_category, iconRes = R.drawable.ic_dictionary),
     SettingsModule(SettingsWithoutKey.SCREEN_NAV_PERSONAL_DICTIONARIES, SettingsDestination.PersonalDictionaries, R.string.edit_personal_dictionary, iconRes = R.drawable.ic_dictionary),

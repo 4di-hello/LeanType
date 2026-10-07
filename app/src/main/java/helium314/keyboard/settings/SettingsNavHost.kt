@@ -126,7 +126,8 @@ fun SettingsNavHost(
                 onClickHandwriting = { navController.navigate(SettingsDestination.Handwriting) },
                 onClickOcr = { navController.navigate(SettingsDestination.OCR) },
                 onClickAIIntegration = { navController.navigate(SettingsDestination.AIIntegration) },
-                onClickSound = { navController.navigate(SettingsDestination.Sound) }
+                onClickSound = { navController.navigate(SettingsDestination.Sound) },
+                onClickAppProfiles = { navController.navigate(SettingsDestination.AppQuirks) }
             )
         }
         composable(SettingsDestination.Sound) {

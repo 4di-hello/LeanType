@@ -28,11 +28,16 @@ import helium314.keyboard.latin.sound.SoundPackUrls
 import helium314.keyboard.latin.translation.TranslationLoader
 import helium314.keyboard.latin.utils.getActivity
 import helium314.keyboard.latin.utils.prefs
+import android.content.Context
 import helium314.keyboard.settings.NextScreenIcon
 import helium314.keyboard.settings.SearchSettingsScreen
+import helium314.keyboard.settings.Setting
 import helium314.keyboard.settings.SettingsActivity
+import helium314.keyboard.settings.SettingsDestination
+import helium314.keyboard.settings.SettingsWithoutKey
 import helium314.keyboard.settings.preferences.Preference
 import helium314.keyboard.settings.preferences.PreferenceCategory
+import helium314.keyboard.settings.preferences.SwitchPreference
 
 @Composable
 fun LibrariesHubScreen(
@@ -43,6 +48,7 @@ fun LibrariesHubScreen(
     onClickOcr: () -> Unit = {},
     onClickAIIntegration: () -> Unit = {},
     onClickSound: () -> Unit = {},
+    onClickAppProfiles: () -> Unit = { SettingsDestination.navigateTo(SettingsDestination.AppQuirks) },
 ) {
     val context = LocalContext.current
     val prefs = remember { context.prefs() }
@@ -187,7 +193,35 @@ fun LibrariesHubScreen(
                     }
                 }
 
-                // Section 2: Storage & Maintenance
+                // Section 2: App Profiles
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer
+                    )
+                ) {
+                    Column {
+                        PreferenceCategory(stringResource(R.string.settings_category_app_profiles))
+
+                        Preference(
+                            name = stringResource(R.string.app_quirks_title),
+                            description = stringResource(R.string.app_quirks_summary),
+                            onClick = onClickAppProfiles,
+                            icon = R.drawable.ic_settings_preferences
+                        ) { NextScreenIcon() }
+
+                        SwitchPreference(
+                            name = stringResource(R.string.save_subtype_per_app),
+                            key = Settings.PREF_SAVE_SUBTYPE_PER_APP,
+                            default = Defaults.PREF_SAVE_SUBTYPE_PER_APP,
+                            icon = R.drawable.ic_ime_switcher
+                        )
+                    }
+                }
+
+                // Section 3: Storage & Maintenance
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -202,13 +236,13 @@ fun LibrariesHubScreen(
                         Preference(
                             name = stringResource(R.string.libraries_storage_cache_title),
                             description = stringResource(R.string.libraries_storage_cache_desc),
-                            onClick = { helium314.keyboard.settings.SettingsDestination.navigateTo(helium314.keyboard.settings.SettingsDestination.Storage) },
+                            onClick = { SettingsDestination.navigateTo(SettingsDestination.Storage) },
                             icon = R.drawable.ic_settings_advanced
                         ) { NextScreenIcon() }
                     }
                 }
 
-                // Section 3: Documentation
+                // Section 4: Documentation
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -231,3 +265,17 @@ fun LibrariesHubScreen(
             }
         }
     }
+
+fun createLibrariesSettings(context: Context) = listOf(
+    Setting(context, Settings.PREF_SAVE_SUBTYPE_PER_APP, R.string.save_subtype_per_app) {
+        SwitchPreference(it, Defaults.PREF_SAVE_SUBTYPE_PER_APP, icon = R.drawable.ic_ime_switcher)
+    },
+    Setting(context, SettingsWithoutKey.APP_QUIRKS, R.string.app_quirks_title) {
+        Preference(
+            name = stringResource(R.string.app_quirks_title),
+            description = stringResource(R.string.app_quirks_summary),
+            onClick = { SettingsDestination.navigateTo(SettingsDestination.AppQuirks) },
+            icon = R.drawable.ic_settings_preferences
+        ) { NextScreenIcon() }
+    },
+)

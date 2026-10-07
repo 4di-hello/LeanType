@@ -39,8 +39,6 @@ import helium314.keyboard.settings.NextScreenIcon
 import helium314.keyboard.settings.SearchSettingsScreen
 import helium314.keyboard.settings.Setting
 import helium314.keyboard.settings.SettingsActivity
-import helium314.keyboard.settings.SettingsDestination
-import helium314.keyboard.settings.SettingsWithoutKey
 import helium314.keyboard.settings.Theme
 import helium314.keyboard.settings.initPreview
 import helium314.keyboard.settings.preferences.ListPreference
@@ -94,10 +92,6 @@ fun PreferencesScreen(
         Settings.PREF_DIRECT_IME_SWITCH_TARGET,
         Settings.PREF_REMOVE_REDUNDANT_POPUPS,
 
-        R.string.settings_category_app_profiles,
-        SettingsWithoutKey.APP_QUIRKS,
-        Settings.PREF_SAVE_SUBTYPE_PER_APP,
-
         R.string.settings_category_window_modes,
         Settings.PREF_REMEMBER_FLOATING_KEYBOARD,
         Settings.PREF_PERSIST_TEXT_EDIT_MODE,
@@ -141,16 +135,6 @@ fun createPreferencesSettings(context: Context) = listOf(
             "\uD83C\uDFFF" to "\uD83C\uDFFF"
         )
         ListPreference(setting, items, Defaults.PREF_EMOJI_SKIN_TONE) { KeyboardSwitcher.getInstance().setThemeNeedsReload() }
-    },
-    Setting(context, Settings.PREF_SAVE_SUBTYPE_PER_APP, R.string.save_subtype_per_app) {
-        SwitchPreference(it, Defaults.PREF_SAVE_SUBTYPE_PER_APP)
-    },
-    Setting(context, SettingsWithoutKey.APP_QUIRKS, R.string.app_quirks_title) {
-        Preference(
-            name = stringResource(R.string.app_quirks_title),
-            description = stringResource(R.string.app_quirks_summary),
-            onClick = { SettingsDestination.navigateTo(SettingsDestination.AppQuirks) }
-        ) { NextScreenIcon() }
     },
     Setting(context, Settings.PREF_VIBRATE_ON, R.string.vibrate_on_keypress) {
         SwitchPreference(it, Defaults.PREF_VIBRATE_ON)
