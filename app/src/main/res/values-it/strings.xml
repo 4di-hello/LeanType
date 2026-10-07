@@ -1723,4 +1723,7 @@ Abilita l\'inferenza GGUF / llama.cpp sul dispositivo per correzione e riscrittu
     <string name="app_quirks_badge_no_suggestions">Nessun suggerimento</string>
     <string name="app_quirks_badge_no_toolbar">Nessuna barra degli strumenti</string>
     <string name="text_expander_tag_desc_date_format">Data formattata (ad esempio%date:aaaa/MM/gg% o%date:format(pattern)%)</string>
+    <string name="app_quirks_always_show_suggestions">Mostra sempre suggerimenti</string>
+    <string name="app_quirks_always_show_suggestions_summary">Ignora le richieste di questa app per disabilitare i suggerimenti</string>
+    <string name="app_quirks_badge_always_suggestions">Sempre suggerimenti</string>
 </resources>

@@ -419,7 +419,9 @@ open class SettingsValues(
 
         val moreAutoCorrection = prefs.getBoolean(Settings.PREF_MORE_AUTO_CORRECTION, Defaults.PREF_MORE_AUTO_CORRECTION)
         val isUriOrEmail = InputTypeUtils.isUriOrEmailType(mInputAttributes.mInputType)
-        mOverrideShowingSuggestions = mInputAttributes.mMayOverrideShowingSuggestions && (prefs.getBoolean(Settings.PREF_ALWAYS_SHOW_SUGGESTIONS, Defaults.PREF_ALWAYS_SHOW_SUGGESTIONS) || (moreAutoCorrection && !isUriOrEmail)) && ((mInputAttributes.mInputType and InputType.TYPE_MASK_VARIATION) != InputType.TYPE_TEXT_VARIATION_WEB_EDIT_TEXT || !prefs.getBoolean(Settings.PREF_ALWAYS_SHOW_SUGGESTIONS_EXCEPT_WEB_TEXT, Defaults.PREF_ALWAYS_SHOW_SUGGESTIONS_EXCEPT_WEB_TEXT))
+        val appQuirkAlwaysShowSuggestions = AppQuirksManager.isAlwaysShowSuggestions(mInputAttributes.mTargetApplicationPackageName)
+        val alwaysShow = appQuirkAlwaysShowSuggestions || prefs.getBoolean(Settings.PREF_ALWAYS_SHOW_SUGGESTIONS, Defaults.PREF_ALWAYS_SHOW_SUGGESTIONS)
+        mOverrideShowingSuggestions = mInputAttributes.mMayOverrideShowingSuggestions && (alwaysShow || (moreAutoCorrection && !isUriOrEmail)) && ((mInputAttributes.mInputType and InputType.TYPE_MASK_VARIATION) != InputType.TYPE_TEXT_VARIATION_WEB_EDIT_TEXT || (!prefs.getBoolean(Settings.PREF_ALWAYS_SHOW_SUGGESTIONS_EXCEPT_WEB_TEXT, Defaults.PREF_ALWAYS_SHOW_SUGGESTIONS_EXCEPT_WEB_TEXT) || appQuirkAlwaysShowSuggestions))
 
         val suggestionsEnabled = prefs.getBoolean(Settings.PREF_SHOW_SUGGESTIONS, Defaults.PREF_SHOW_SUGGESTIONS)
         mSuggestionsEnabledPerUserSettings = suggestionsEnabled && (mInputAttributes.mShouldShowSuggestions || mOverrideShowingSuggestions) && !mSuggestionStripHiddenPerUserSettings

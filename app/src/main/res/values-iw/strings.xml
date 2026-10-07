@@ -1665,4 +1665,7 @@
     <string name="app_quirks_badge_no_suggestions">אין הצעות</string>
     <string name="app_quirks_badge_no_toolbar">אין סרגל כלים</string>
     <string name="text_expander_tag_desc_date_format">תאריך מעוצב (למשל%date:yyyy/MM/dd% או%date:format(pattern)%)</string>
+    <string name="app_quirks_always_show_suggestions">הצג תמיד הצעות</string>
+    <string name="app_quirks_always_show_suggestions_summary">התעלם מהבקשות של אפליקציה זו להשבית הצעות</string>
+    <string name="app_quirks_badge_always_suggestions">תמיד הצעות</string>
 </resources>

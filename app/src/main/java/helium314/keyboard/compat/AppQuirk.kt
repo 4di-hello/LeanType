@@ -20,11 +20,12 @@ data class AppQuirk(
     val autoCorrectionMode: Int? = null,
     val hideSuggestionStrip: Boolean = false,
     val hideToolbar: Boolean = false,
+    val alwaysShowSuggestions: Boolean = false,
 ) {
     fun hasCustomSettings(): Boolean =
         forceWebEditor || stripNoEnterAction || (forceEnterAction != null) || forceIncognito ||
                 forceNonIncognito || forceDirectCommit || allowSymbolComposing || disableAutoSpace ||
-                allowTypeNullKeyboard || (autoCorrectionMode != null) || hideSuggestionStrip || hideToolbar
+                allowTypeNullKeyboard || (autoCorrectionMode != null) || hideSuggestionStrip || hideToolbar || alwaysShowSuggestions
 
     fun toJson(): JSONObject {
         val json = JSONObject()
@@ -41,6 +42,7 @@ data class AppQuirk(
         if (autoCorrectionMode != null) json.put("autoCorrectionMode", autoCorrectionMode)
         if (hideSuggestionStrip) json.put("hideSuggestionStrip", true)
         if (hideToolbar) json.put("hideToolbar", true)
+        if (alwaysShowSuggestions) json.put("alwaysShowSuggestions", true)
         return json
     }
 
@@ -59,6 +61,7 @@ data class AppQuirk(
             val autoCorrectionMode = if (json.has("autoCorrectionMode")) json.getInt("autoCorrectionMode") else null
             val hideSuggestionStrip = json.optBoolean("hideSuggestionStrip", false)
             val hideToolbar = json.optBoolean("hideToolbar", false)
+            val alwaysShowSuggestions = json.optBoolean("alwaysShowSuggestions", false)
             return AppQuirk(
                 packageName = packageName,
                 forceWebEditor = forceWebEditor,
@@ -73,6 +76,7 @@ data class AppQuirk(
                 autoCorrectionMode = autoCorrectionMode,
                 hideSuggestionStrip = hideSuggestionStrip,
                 hideToolbar = hideToolbar,
+                alwaysShowSuggestions = alwaysShowSuggestions,
             )
         }
     }

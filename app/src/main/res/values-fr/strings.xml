@@ -1712,4 +1712,7 @@ Permet l\'inférence GGUF / llama.cpp sur l\'appareil pour la correction et la r
     <string name="app_quirks_badge_no_suggestions">Aucune suggestion</string>
     <string name="app_quirks_badge_no_toolbar">Aucune barre d\'outils</string>
     <string name="text_expander_tag_desc_date_format">Date formatée (par exemple,%date:aaaa/MM/dd% ou%date:format(pattern)%)</string>
+    <string name="app_quirks_always_show_suggestions">Toujours afficher les suggestions</string>
+    <string name="app_quirks_always_show_suggestions_summary">Ignorer les demandes de cette application pour désactiver les suggestions</string>
+    <string name="app_quirks_badge_always_suggestions">Toujours des suggestions</string>
 </resources>

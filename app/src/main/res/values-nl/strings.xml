@@ -1698,4 +1698,7 @@ Maakt GGUF / llama.cpp-inferentie op het apparaat mogelijk voor proeflezen en he
     <string name="app_quirks_badge_no_suggestions">Geen suggesties</string>
     <string name="app_quirks_badge_no_toolbar">Geen werkbalk</string>
     <string name="text_expander_tag_desc_date_format">Opgemaakte datum (bijvoorbeeld%dat:jjjj/MM/dd% of%dat:format(patroon)%)</string>
+    <string name="app_quirks_always_show_suggestions">Laat altijd suggesties zien</string>
+    <string name="app_quirks_always_show_suggestions_summary">Negeer de verzoeken van deze app om suggesties uit te schakelen</string>
+    <string name="app_quirks_badge_always_suggestions">Altijd suggesties</string>
 </resources>

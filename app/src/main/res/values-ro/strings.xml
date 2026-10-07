@@ -1645,4 +1645,7 @@ Activează inferența GGUF / llama.cpp pe dispozitiv pentru corectură și refor
     <string name="app_quirks_badge_no_suggestions">Fără sugestii</string>
     <string name="app_quirks_badge_no_toolbar">Fără bară de instrumente</string>
     <string name="text_expander_tag_desc_date_format">Data formatată (de exemplu,%date:aaaa/LL/zz% sau%date:format(model)%)</string>
+    <string name="app_quirks_always_show_suggestions">Afișați întotdeauna sugestii</string>
+    <string name="app_quirks_always_show_suggestions_summary">Ignorați solicitările acestei aplicații pentru a dezactiva sugestiile</string>
+    <string name="app_quirks_badge_always_suggestions">Întotdeauna sugestii</string>
 </resources>

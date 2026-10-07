@@ -183,6 +183,14 @@ object AppQuirksManager {
     }
 
     /**
+     * Returns whether suggestions are always forced on for this application.
+     */
+    fun isAlwaysShowSuggestions(packageName: String?): Boolean {
+        if (packageName == null) return false
+        return getEffectiveQuirk(packageName)?.alwaysShowSuggestions == true
+    }
+
+    /**
      * Returns whether toolbar is hidden for this application.
      */
     fun isToolbarHidden(packageName: String?): Boolean {

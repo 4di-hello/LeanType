@@ -1645,4 +1645,7 @@ Võimaldab seadmesisese GGUF / llama.cpp järelduse korrektuuri ja ümbersõnast
     <string name="app_quirks_badge_no_suggestions">Soovitusi pole</string>
     <string name="app_quirks_badge_no_toolbar">Tööriistariba pole</string>
     <string name="text_expander_tag_desc_date_format">Vormindatud kuupäev (nt%date:yyyy/MM/dd% või%date:format(muster)%)</string>
+    <string name="app_quirks_always_show_suggestions">Näita alati soovitusi</string>
+    <string name="app_quirks_always_show_suggestions_summary">Ignoreeri selle rakenduse taotlusi soovituste keelamiseks</string>
+    <string name="app_quirks_badge_always_suggestions">Alati soovitused</string>
 </resources>

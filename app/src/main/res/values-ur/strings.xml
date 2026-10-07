@@ -1707,4 +1707,7 @@
     <string name="app_quirks_badge_no_suggestions">کوئی تجاویز نہیں۔</string>
     <string name="app_quirks_badge_no_toolbar">کوئی ٹول بار نہیں۔</string>
     <string name="text_expander_tag_desc_date_format">فارمیٹ شدہ تاریخ (جیسے%date:yyyy/MM/dd% یا%date:format(pattern)%)</string>
+    <string name="app_quirks_always_show_suggestions">ہمیشہ تجاویز دکھائیں۔</string>
+    <string name="app_quirks_always_show_suggestions_summary">تجاویز کو غیر فعال کرنے کے لیے اس ایپ کی درخواستوں کو نظر انداز کریں۔</string>
+    <string name="app_quirks_badge_always_suggestions">ہمیشہ تجاویز</string>
 </resources>

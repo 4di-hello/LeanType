@@ -1716,4 +1716,7 @@
     <string name="app_quirks_badge_no_suggestions">Δεν υπάρχουν προτάσεις</string>
     <string name="app_quirks_badge_no_toolbar">Χωρίς γραμμή εργαλείων</string>
     <string name="text_expander_tag_desc_date_format">Μορφοποιημένη ημερομηνία (π.χ.%date:yyyy/MM/dd% ή%date:format(pattern)%)</string>
+    <string name="app_quirks_always_show_suggestions">Να εμφανίζονται πάντα προτάσεις</string>
+    <string name="app_quirks_always_show_suggestions_summary">Αγνοήστε τα αιτήματα αυτής της εφαρμογής για απενεργοποίηση προτάσεων</string>
+    <string name="app_quirks_badge_always_suggestions">Πάντα Προτάσεις</string>
 </resources>

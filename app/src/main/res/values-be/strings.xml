@@ -1650,4 +1650,7 @@
     <string name="app_quirks_badge_no_suggestions">Няма прапаноў</string>
     <string name="app_quirks_badge_no_toolbar">Няма панэлі інструментаў</string>
     <string name="text_expander_tag_desc_date_format">Адфарматаваная дата (напрыклад,%date:yyyy/MM/dd% або%date:format(pattern)%)</string>
+    <string name="app_quirks_always_show_suggestions">Заўсёды паказваць прапановы</string>
+    <string name="app_quirks_always_show_suggestions_summary">Ігнараваць запыты гэтай праграмы аб адключэнні прапаноў</string>
+    <string name="app_quirks_badge_always_suggestions">Заўсёды прапановы</string>
 </resources>

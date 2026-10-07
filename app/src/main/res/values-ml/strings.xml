@@ -1716,4 +1716,7 @@
     <string name="app_quirks_badge_no_suggestions">നിർദ്ദേശങ്ങളൊന്നുമില്ല</string>
     <string name="app_quirks_badge_no_toolbar">ടൂൾബാർ ഇല്ല</string>
     <string name="text_expander_tag_desc_date_format">ഫോർമാറ്റ് ചെയ്ത തീയതി (ഉദാ.%dകഴിച്ചത്:yyyy/MM/dd% അല്ലെങ്കിൽ%date:ഫോർമാറ്റ്(പാറ്റേൺ)%)</string>
+    <string name="app_quirks_always_show_suggestions">എപ്പോഴും നിർദ്ദേശങ്ങൾ കാണിക്കുക</string>
+    <string name="app_quirks_always_show_suggestions_summary">നിർദ്ദേശങ്ങൾ പ്രവർത്തനരഹിതമാക്കാനുള്ള ഈ ആപ്പിൻ്റെ അഭ്യർത്ഥനകൾ അവഗണിക്കുക</string>
+    <string name="app_quirks_badge_always_suggestions">എപ്പോഴും നിർദ്ദേശങ്ങൾ</string>
 </resources>

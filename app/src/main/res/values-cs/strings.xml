@@ -1663,4 +1663,7 @@ Umožňuje lokální inferenci GGUF / llama.cpp na zařízení pro korektury a p
     <string name="app_quirks_badge_no_suggestions">Žádné návrhy</string>
     <string name="app_quirks_badge_no_toolbar">Žádná lišta Toolbar</string>
     <string name="text_expander_tag_desc_date_format">Formátované datum (např.%date:yyyy/MM/dd% nebo%date:format(pattern)%)</string>
+    <string name="app_quirks_always_show_suggestions">Vždy zobrazovat návrhy</string>
+    <string name="app_quirks_always_show_suggestions_summary">Ignorujte požadavky této aplikace na deaktivaci návrhů</string>
+    <string name="app_quirks_badge_always_suggestions">Vždy návrhy</string>
 </resources>

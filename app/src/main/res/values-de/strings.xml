@@ -1660,4 +1660,7 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="app_quirks_badge_no_suggestions">Keine Vorschläge</string>
     <string name="app_quirks_badge_no_toolbar">Keine Symbolleiste</string>
     <string name="text_expander_tag_desc_date_format">Formatiertes Datum (z. B.%date:yyyy/MM/dd% oder%date:format(pattern)%)</string>
+    <string name="app_quirks_always_show_suggestions">Vorschläge immer anzeigen</string>
+    <string name="app_quirks_always_show_suggestions_summary">Ignorieren Sie die Aufforderungen dieser App, Vorschläge zu deaktivieren</string>
+    <string name="app_quirks_badge_always_suggestions">Immer Vorschläge</string>
 </resources>

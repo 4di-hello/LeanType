@@ -1698,4 +1698,7 @@
     <string name="app_quirks_badge_no_suggestions">Няма предложения</string>
     <string name="app_quirks_badge_no_toolbar">Няма лента с инструменти</string>
     <string name="text_expander_tag_desc_date_format">Форматирана дата (напр.%date:yyyy/MM/dd% или%date:format(pattern)%)</string>
+    <string name="app_quirks_always_show_suggestions">Винаги показвайте предложения</string>
+    <string name="app_quirks_always_show_suggestions_summary">Игнорирайте заявките на това приложение за деактивиране на предложенията</string>
+    <string name="app_quirks_badge_always_suggestions">Винаги предложения</string>
 </resources>

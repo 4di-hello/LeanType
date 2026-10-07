@@ -1721,4 +1721,7 @@
     <string name="app_quirks_badge_no_suggestions">لا اقتراحات</string>
     <string name="app_quirks_badge_no_toolbar">لا يوجد شريط أدوات</string>
     <string name="text_expander_tag_desc_date_format">التاريخ المنسق (على سبيل المثال%date:yyyy/MM/dd% أو%date:format(pattern)%)</string>
+    <string name="app_quirks_always_show_suggestions">اعرض الاقتراحات دائمًا</string>
+    <string name="app_quirks_always_show_suggestions_summary">تجاهل طلبات هذا التطبيق لتعطيل الاقتراحات</string>
+    <string name="app_quirks_badge_always_suggestions">دائما الاقتراحات</string>
 </resources>

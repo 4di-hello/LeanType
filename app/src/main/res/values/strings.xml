@@ -1838,6 +1838,9 @@ New dictionary:
     <string name="app_quirks_hide_toolbar_summary">Hide toolbar keys, actions, and expand button when typing in this app</string>
     <string name="app_quirks_badge_no_suggestions">No Suggestions</string>
     <string name="app_quirks_badge_no_toolbar">No Toolbar</string>
+    <string name="app_quirks_always_show_suggestions">Always show suggestions</string>
+    <string name="app_quirks_always_show_suggestions_summary">Ignore this app’s requests to disable suggestions</string>
+    <string name="app_quirks_badge_always_suggestions">Always Suggestions</string>
 
     <!-- Emoticon sub-category names -->
     <string name="emoticon_group_classic">Classic</string>

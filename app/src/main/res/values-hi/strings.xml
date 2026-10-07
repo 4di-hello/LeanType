@@ -1642,4 +1642,7 @@
     <string name="app_quirks_badge_no_suggestions">कोई सुझाव नहीं</string>
     <string name="app_quirks_badge_no_toolbar">कोई टूलबार नहीं</string>
     <string name="text_expander_tag_desc_date_format">स्वरूपित दिनांक (उदा.%dखाया:yyyy/MM/dd% या%dखाया:प्रारूप(पैटर्न)%)</string>
+    <string name="app_quirks_always_show_suggestions">हमेशा सुझाव दिखाएं</string>
+    <string name="app_quirks_always_show_suggestions_summary">सुझावों को अक्षम करने के लिए इस ऐप के अनुरोधों पर ध्यान न दें</string>
+    <string name="app_quirks_badge_always_suggestions">हमेशा सुझाव</string>
 </resources>

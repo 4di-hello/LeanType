@@ -1654,4 +1654,7 @@ Lehetővé teszi az eszközön futó GGUF / llama.cpp következtetést a javít�
     <string name="app_quirks_badge_no_suggestions">Nincsenek javaslatok</string>
     <string name="app_quirks_badge_no_toolbar">Nincs Eszköztár</string>
     <string name="text_expander_tag_desc_date_format">Formázott dátum (pl.%devett:éééé/hh/nn% vagy%date:formátum(minta)%)</string>
+    <string name="app_quirks_always_show_suggestions">Mindig mutasson javaslatokat</string>
+    <string name="app_quirks_always_show_suggestions_summary">Hagyja figyelmen kívül az alkalmazás kéréseit a javaslatok letiltásához</string>
+    <string name="app_quirks_badge_always_suggestions">Mindig javaslatok</string>
 </resources>

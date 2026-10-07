@@ -1700,4 +1700,7 @@ Umożliwia lokalne wnioskowanie GGUF / llama.cpp na urządzeniu w celu korekty i
     <string name="app_quirks_badge_no_suggestions">Brak sugestii</string>
     <string name="app_quirks_badge_no_toolbar">Brak paska narzędzi</string>
     <string name="text_expander_tag_desc_date_format">Sformatowana data (np.%date:rrrr/MM/dd% lub%date:format(wzór)%)</string>
+    <string name="app_quirks_always_show_suggestions">Zawsze pokazuj sugestie</string>
+    <string name="app_quirks_always_show_suggestions_summary">Zignoruj ​​prośby tej aplikacji o wyłączenie sugestii</string>
+    <string name="app_quirks_badge_always_suggestions">Zawsze sugestie</string>
 </resources>

@@ -255,6 +255,13 @@ fun AppQuirksScreen(
                         MaterialTheme.colorScheme.onSecondaryContainer
                     ))
                 }
+                if (effective?.alwaysShowSuggestions == true) {
+                    badges.add(BadgeInfo(
+                        stringResource(R.string.app_quirks_badge_always_suggestions),
+                        MaterialTheme.colorScheme.primaryContainer,
+                        MaterialTheme.colorScheme.onPrimaryContainer
+                    ))
+                }
                 if (effective?.hideSuggestionStrip == true) {
                     badges.add(BadgeInfo(
                         stringResource(R.string.app_quirks_badge_no_suggestions),
@@ -415,6 +422,7 @@ private fun AppQuirkDialog(
     var allowTypeNullKeyboard by remember { mutableStateOf(initialEffective.allowTypeNullKeyboard) }
     var autoCorrectionMode by remember { mutableStateOf(initialEffective.autoCorrectionMode) }
     var hideSuggestionStrip by remember { mutableStateOf(initialEffective.hideSuggestionStrip) }
+    var alwaysShowSuggestions by remember { mutableStateOf(initialEffective.alwaysShowSuggestions) }
     var hideToolbar by remember { mutableStateOf(initialEffective.hideToolbar) }
     var selectedAction by remember { mutableStateOf(initialEffective.forceEnterAction) }
 
@@ -453,6 +461,7 @@ private fun AppQuirkDialog(
                 autoCorrectionMode = autoCorrectionMode,
                 hideSuggestionStrip = hideSuggestionStrip,
                 hideToolbar = hideToolbar,
+                alwaysShowSuggestions = alwaysShowSuggestions,
             )
             AppQuirksManager.saveQuirk(newQuirk)
             onSaved()
@@ -485,10 +494,22 @@ private fun AppQuirkDialog(
         content = {
             Column(modifier = Modifier.fillMaxWidth()) {
                 QuirkToggleRow(
+                    title = stringResource(R.string.app_quirks_always_show_suggestions),
+                    summary = stringResource(R.string.app_quirks_always_show_suggestions_summary),
+                    checked = alwaysShowSuggestions,
+                    onCheckedChange = {
+                        alwaysShowSuggestions = it
+                        if (it) hideSuggestionStrip = false
+                    }
+                )
+                QuirkToggleRow(
                     title = stringResource(R.string.app_quirks_hide_suggestion_strip),
                     summary = stringResource(R.string.app_quirks_hide_suggestion_strip_summary),
                     checked = hideSuggestionStrip,
-                    onCheckedChange = { hideSuggestionStrip = it }
+                    onCheckedChange = {
+                        hideSuggestionStrip = it
+                        if (it) alwaysShowSuggestions = false
+                    }
                 )
                 QuirkToggleRow(
                     title = stringResource(R.string.app_quirks_hide_toolbar),

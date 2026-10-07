@@ -1613,4 +1613,7 @@ Memungkinkan inferensi GGUF / llama.cpp di perangkat untuk koreksi teks dan penu
     <string name="app_quirks_badge_no_suggestions">Tidak Ada Saran</string>
     <string name="app_quirks_badge_no_toolbar">Tidak Ada Bilah Alat</string>
     <string name="text_expander_tag_desc_date_format">Tanggal yang diformat (misalnya%dmakan:yyyy/MM/dd% atau%dmakan:format(pola)%)</string>
+    <string name="app_quirks_always_show_suggestions">Selalu tampilkan saran</string>
+    <string name="app_quirks_always_show_suggestions_summary">Abaikan permintaan aplikasi ini untuk menonaktifkan saran</string>
+    <string name="app_quirks_badge_always_suggestions">Selalu Saran</string>
 </resources>

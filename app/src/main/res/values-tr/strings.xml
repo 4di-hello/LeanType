@@ -1646,4 +1646,7 @@ Metin düzeltme ve yeniden yazma için cihaz üzerinde GGUF / llama.cpp çıkar�
     <string name="app_quirks_badge_no_suggestions">Öneri Yok</string>
     <string name="app_quirks_badge_no_toolbar">Araç Çubuğu Yok</string>
     <string name="text_expander_tag_desc_date_format">Biçimlendirilmiş tarih (ör.%date:yyyy/MM/gg% veya%date:format(pattern)%)</string>
+    <string name="app_quirks_always_show_suggestions">Önerileri her zaman göster</string>
+    <string name="app_quirks_always_show_suggestions_summary">Bu uygulamanın önerileri devre dışı bırakma isteklerini göz ardı edin</string>
+    <string name="app_quirks_badge_always_suggestions">Her zaman Öneriler</string>
 </resources>

@@ -1646,4 +1646,7 @@ Ar norite atnaujinti?</string>
     <string name="app_quirks_badge_no_suggestions">Jokių pasiūlymų</string>
     <string name="app_quirks_badge_no_toolbar">Nėra įrankių juostos</string>
     <string name="text_expander_tag_desc_date_format">Suformatuota data (pvz.,%date:yyyy/MM/dd% arba%date:format(pattern)%)</string>
+    <string name="app_quirks_always_show_suggestions">Visada rodyti pasiūlymus</string>
+    <string name="app_quirks_always_show_suggestions_summary">Nepaisykite šios programos užklausų išjungti pasiūlymus</string>
+    <string name="app_quirks_badge_always_suggestions">Visada Pasiūlymai</string>
 </resources>

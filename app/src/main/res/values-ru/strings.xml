@@ -1723,4 +1723,7 @@
     <string name="app_quirks_badge_no_suggestions">Нет предложений</string>
     <string name="app_quirks_badge_no_toolbar">Нет панели инструментов</string>
     <string name="text_expander_tag_desc_date_format">Форматированная дата (например,%date:гггг/ММ/дд% или%date:format(шаблон)%)</string>
+    <string name="app_quirks_always_show_suggestions">Всегда показывать предложения</string>
+    <string name="app_quirks_always_show_suggestions_summary">Игнорируйте запросы этого приложения, чтобы отключить предложения.</string>
+    <string name="app_quirks_badge_always_suggestions">Всегда предложения</string>
 </resources>

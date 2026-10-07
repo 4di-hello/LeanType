@@ -1664,4 +1664,7 @@
     <string name="app_quirks_badge_no_suggestions">没有建议</string>
     <string name="app_quirks_badge_no_toolbar">无工具栏</string>
     <string name="text_expander_tag_desc_date_format">格式化日期（例如%date:yyyy/MM/dd% 或%date:format(pattern)%）</string>
+    <string name="app_quirks_always_show_suggestions">始终显示建议</string>
+    <string name="app_quirks_always_show_suggestions_summary">忽略此应用程序的禁用建议的请求</string>
+    <string name="app_quirks_badge_always_suggestions">总是建议</string>
 </resources>
