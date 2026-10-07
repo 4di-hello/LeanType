@@ -702,6 +702,11 @@ class LatinIME : InputMethodService(),
         gestureConsumer = GestureConsumer.NULL_GESTURE_CONSUMER
         richImm.refreshSubtypeCaches()
         
+        val prefLang = DeviceProtectedUtils.getSharedPreferences(this).getString(Settings.PREF_APP_LANGUAGE, Defaults.PREF_APP_LANGUAGE) ?: Defaults.PREF_APP_LANGUAGE
+        if (prefLang != appliedLanguage) {
+            onAppLanguageChanged()
+        }
+
         val switcher = keyboardSwitcher
         switcher.updateKeyboardTheme(displayContext ?: this)
         val mainKeyboardView = switcher.mainKeyboardView

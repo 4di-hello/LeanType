@@ -913,6 +913,7 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
     fun reloadMainKeyboard() {
         val wasEmoji = isShowingEmojiPalettes
         val wasClipboard = isShowingClipboardHistory
+        val wasTextEdit = keyboard?.mId?.mElementId == KeyboardId.ELEMENT_TEXT_EDIT || KeyboardActionListenerImpl.sPersistentTextEditModeActive
         val latinIme = mLatinIME
         if (latinIme != null) {
             loadKeyboard(
@@ -924,6 +925,8 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
             setEmojiKeyboard()
         } else if (wasClipboard) {
             setClipboardKeyboard()
+        } else if (wasTextEdit) {
+            showTextEditView()
         }
     }
 
