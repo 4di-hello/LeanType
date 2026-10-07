@@ -807,29 +807,17 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
             setPadding(8.dpToPx(resources), 0, 4.dpToPx(resources), 0)
         }
 
-        // Warning Icon
-        val warningIconView = android.widget.ImageView(context).apply {
-            val icon = ContextCompat.getDrawable(context, R.drawable.ic_close)?.mutate()
-            setImageDrawable(icon)
-            scaleType = android.widget.ImageView.ScaleType.CENTER_INSIDE
-            val pad = 6.dpToPx(resources)
-            setPadding(pad, pad, pad, pad)
-            colors.setColor(this, ColorType.REMOVE_SUGGESTION_ICON)
-            layoutParams = LinearLayout.LayoutParams(36.dpToPx(resources), LayoutParams.MATCH_PARENT)
-        }
-        container.addView(warningIconView)
-
         // Error message text
         val textView = TextView(context).apply {
             text = message
             setTextColor(textColor)
-            setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
             gravity = Gravity.CENTER_VERTICAL
             maxLines = 1
             ellipsize = TextUtils.TruncateAt.END
             layoutParams = LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 1f).apply {
-                marginStart = 4.dpToPx(resources)
-                marginEnd = 6.dpToPx(resources)
+                marginStart = 8.dpToPx(resources)
+                marginEnd = 8.dpToPx(resources)
             }
         }
         container.addView(textView)
