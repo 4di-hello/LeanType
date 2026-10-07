@@ -203,6 +203,7 @@ class EmojiPalettesView @JvmOverloads constructor(
     private var mSearchBar: EditText? = null
     private var mInSearchMode = false
     private var mIsDownloadingEmojiDict = false
+    private var mDownloadBtn: Button? = null
     private var mOriginalActionListener: KeyboardActionListener? = null
     private var mSearchKeyboardLayoutSet: KeyboardLayoutSet? = null
     private var mSearchAlphabetKeyboardId = KeyboardId.ELEMENT_ALPHABET
@@ -465,6 +466,7 @@ class EmojiPalettesView @JvmOverloads constructor(
             }
             downloadBtn.layoutParams = LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 0.6f)
             stripContainer.addView(downloadBtn)
+            mDownloadBtn = downloadBtn
         } else {
             val resultsList = RecyclerView(ctx)
             resultsList.layoutParams = LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 0.6f)
@@ -1157,6 +1159,14 @@ class EmojiPalettesView @JvmOverloads constructor(
 
         mEmojiCategory.clearKeyboardCache()
         updateColors()
+        mDownloadBtn?.let { btn ->
+            if (!mIsDownloadingEmojiDict) {
+                btn.text = context.getString(R.string.button_download)
+            }
+        }
+        if (Settings.getValues().mSplitToolbar) {
+            updateSplitToolbarEmojiSuggestions()
+        }
         mPager?.adapter?.notifyDataSetChanged()
         closeDictionaryFacilitator()
     }

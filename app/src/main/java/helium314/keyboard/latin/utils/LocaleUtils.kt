@@ -2,6 +2,7 @@ package helium314.keyboard.latin.utils
 
 import android.content.Context
 import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.Build
 import helium314.keyboard.compat.locale
 import helium314.keyboard.latin.R
@@ -18,34 +19,57 @@ object LocaleUtils {
     }
 
     fun wrapContextWithLocale(context: Context, localeTag: String): Context {
-        if (localeTag.isEmpty() || localeTag == "system") {
-            return context
-        }
-        val locale = parseLocale(localeTag)
         val config = Configuration(context.resources.configuration)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            val localeList = android.os.LocaleList(locale)
-            config.setLocales(localeList)
+        if (localeTag.isEmpty() || localeTag == "system") {
+            val systemConfig = Resources.getSystem().configuration
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                config.setLocales(systemConfig.locales)
+            } else {
+                @Suppress("DEPRECATION")
+                config.locale = systemConfig.locale
+            }
         } else {
-            @Suppress("DEPRECATION")
-            config.locale = locale
+            val locale = parseLocale(localeTag)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                val localeList = android.os.LocaleList(locale)
+                config.setLocales(localeList)
+            } else {
+                @Suppress("DEPRECATION")
+                config.locale = locale
+            }
         }
         return context.createConfigurationContext(config)
     }
 
     fun applyAppLanguageToResources(context: Context, localeTag: String) {
-        if (localeTag.isEmpty() || localeTag == "system") return
-        val locale = parseLocale(localeTag)
         val res = context.resources
         val config = Configuration(res.configuration)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            config.setLocales(android.os.LocaleList(locale))
+        if (localeTag.isEmpty() || localeTag == "system") {
+            val systemConfig = Resources.getSystem().configuration
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                config.setLocales(systemConfig.locales)
+            } else {
+                @Suppress("DEPRECATION")
+                config.locale = systemConfig.locale
+            }
         } else {
-            @Suppress("DEPRECATION")
-            config.locale = locale
+            val locale = parseLocale(localeTag)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                config.setLocales(android.os.LocaleList(locale))
+            } else {
+                @Suppress("DEPRECATION")
+                config.locale = locale
+            }
         }
         @Suppress("DEPRECATION")
         res.updateConfiguration(config, res.displayMetrics)
+        try {
+            val appRes = context.applicationContext.resources
+            if (appRes != null && appRes !== res) {
+                @Suppress("DEPRECATION")
+                appRes.updateConfiguration(config, appRes.displayMetrics)
+            }
+        } catch (_: Throwable) {}
     }
 
     val localeCodes = listOf(

@@ -385,6 +385,7 @@ open class SettingsActivity : ComponentActivity(), SharedPreferences.OnSharedPre
             val lang = prefs.getString(Settings.PREF_APP_LANGUAGE, Defaults.PREF_APP_LANGUAGE) ?: Defaults.PREF_APP_LANGUAGE
             LocaleUtils.applyAppLanguageToResources(this, lang)
             settingsContainer = SettingsContainer(this)
+            recreate()
         }
     }
 }

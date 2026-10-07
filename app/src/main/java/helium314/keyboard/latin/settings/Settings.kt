@@ -90,6 +90,11 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
         if (PREF_ADDITIONAL_SUBTYPES == key) {
             mContext?.let { SubtypeSettings.reloadEnabledSubtypes(it) }
         }
+        if (PREF_APP_LANGUAGE == key) {
+            helium314.keyboard.latin.LatinIME.getInstance()?.let { ime ->
+                ime.handler.post { ime.onAppLanguageChanged() }
+            }
+        }
     }
 
     fun loadSettings(context: Context) {

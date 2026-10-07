@@ -449,6 +449,22 @@ class LatinIME : InputMethodService(),
         setNavigationBarColor()
     }
 
+    fun onAppLanguageChanged() {
+        val prefs = DeviceProtectedUtils.getSharedPreferences(this)
+        val lang = prefs.getString(Settings.PREF_APP_LANGUAGE, Defaults.PREF_APP_LANGUAGE)
+        appliedLanguage = lang ?: Defaults.PREF_APP_LANGUAGE
+        LocaleUtils.applyAppLanguageToResources(this, appliedLanguage)
+        displayContext?.let { LocaleUtils.applyAppLanguageToResources(it, appliedLanguage) }
+        KeyboardIconsSet.instance.loadIcons(this)
+        KeyboardLayoutSet.onSystemLocaleChanged()
+        SubtypeSettings.reloadSystemLocales(this)
+        keyboardSwitcher.setThemeNeedsReload()
+        keyboardSwitcher.updateKeyboardTheme(displayContext ?: this)
+        keyboardSwitcher.reloadKeyboard()
+        suggestionStripView?.onAppLanguageChanged()
+        keyboardSwitcher.emojiPalettesView?.clearKeyboardCache()
+    }
+
     override fun onInitializeInterface() {
         displayContext = getDisplayContext()
         Log.d(TAG, "onInitializeInterface")

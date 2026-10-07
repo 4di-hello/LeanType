@@ -916,15 +916,25 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
             || key == Settings.PREF_CUSTOM_ICON_NAMES
             || key == Settings.PREF_ICON_STYLE
             || key == Settings.PREF_CLEAR_CLIPBOARD_ICON
+            || key == Settings.PREF_APP_LANGUAGE
             || key == "pref_custom_ai_show_tags_on_toolbar"
             || key?.startsWith("pref_custom_ai_tag_") == true
             || key?.startsWith("pref_dict_download_link_") == true) {
+            missingDictPromptView = null
             KeyboardIconsSet.instance.loadIcons(context)
             rebuildToolbarKeys()
             // Update visibility with auto-hide logic
             setToolbarVisibility(isToolbarManuallyOpen, false)
             updateKeys()
         }
+    }
+
+    fun onAppLanguageChanged() {
+        missingDictPromptView = null
+        KeyboardIconsSet.instance.loadIcons(context)
+        rebuildToolbarKeys()
+        updateKeys()
+        updateSplitToolbarState()
     }
 
     override fun onVisibilityChanged(view: View, visibility: Int) {
