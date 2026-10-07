@@ -504,19 +504,22 @@ class LatinIME : InputMethodService(),
         voiceInputManager?.setListener(object : VoiceInputManager.VoiceInputListener {
             override fun onStateChanged(state: VoiceInputManager.VoiceState) { onVoiceStateChanged(state) }
             override fun onError(message: String, canRetry: Boolean) {
-                if (canRetry && voiceInputManager?.lastFailedOnlineAudio != null) {
-                    suggestionStripView?.showVoiceErrorWithRetry(
-                        message = message,
-                        onRetry = Runnable { voiceInputManager?.retryLastFailedOnlineVoice() },
-                        onDismiss = Runnable {
-                            voiceInputManager?.clearFailedAudio()
-                            suggestionStripView?.hideVoiceStatus()
+                suggestionStripView?.showVoiceErrorWithRetry(
+                    message = message,
+                    onRetry = Runnable {
+                        if (voiceInputManager?.lastFailedOnlineAudio != null) {
+                            voiceInputManager?.retryLastFailedOnlineVoice()
+                        } else {
+                            voiceInputManager?.startVoice()
                         }
-                    )
-                } else {
-                    Toast.makeText(this@LatinIME, message, Toast.LENGTH_LONG).show()
-                    onVoiceStateChanged(VoiceInputManager.VoiceState.ERROR)
-                }
+                    },
+                    onDismiss = Runnable {
+                        voiceInputManager?.clearFailedAudio()
+                        suggestionStripView?.hideVoiceStatus()
+                    }
+                )
+                Toast.makeText(this@LatinIME, message, Toast.LENGTH_SHORT).show()
+                onVoiceStateChanged(VoiceInputManager.VoiceState.ERROR)
             }
         })
     }

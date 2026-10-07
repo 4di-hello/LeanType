@@ -70,17 +70,63 @@ class VoiceInputManager(
     }
 
     private fun isNetworkAvailable(): Boolean {
-        return try {
-            val interfaces = java.net.NetworkInterface.getNetworkInterfaces() ?: return false
-            for (iface in interfaces) {
-                if (iface.isUp && !iface.isLoopback && iface.inetAddresses.hasMoreElements()) {
-                    return true
-                }
+        try {
+            val cr = ims.contentResolver
+            if (android.provider.Settings.Global.getInt(cr, android.provider.Settings.Global.AIRPLANE_MODE_ON, 0) != 0) {
+                return false
             }
-            false
+            val wifiOn = android.provider.Settings.Global.getInt(cr, android.provider.Settings.Global.WIFI_ON, 0)
+            val mobileOn = android.provider.Settings.Global.getInt(cr, "mobile_data", 0)
+            val mobileOn2 = android.provider.Settings.Global.getInt(cr, "mobile_data2", 0)
+            if (wifiOn == 0 && mobileOn == 0 && mobileOn2 == 0) {
+                return false
+            }
         } catch (e: Throwable) {
-            Log.w(TAG, "isNetworkAvailable check failed", e)
+            Log.w(TAG, "Settings.Global network check failed", e)
+        }
+
+        try {
+            val interfaces = java.net.NetworkInterface.getNetworkInterfaces() ?: return false
+            var hasValidInterface = false
+            for (iface in interfaces) {
+                if (!iface.isUp || iface.isLoopback || iface.isPointToPoint) continue
+                val name = iface.name.lowercase()
+                if (name.startsWith("dummy") || name.startsWith("bond") || name.startsWith("sit") || name.startsWith("ip_vti")) continue
+                val addrs = iface.inetAddresses
+                while (addrs.hasMoreElements()) {
+                    val addr = addrs.nextElement()
+                    if (!addr.isLoopbackAddress && !addr.isLinkLocalAddress && !addr.isAnyLocalAddress) {
+                        hasValidInterface = true
+                        break
+                    }
+                }
+                if (hasValidInterface) break
+            }
+            if (!hasValidInterface) return false
+        } catch (e: Throwable) {
+            Log.w(TAG, "NetworkInterface check failed", e)
+        }
+
+        return true
+    }
+
+    private fun isSocketConnected(): Boolean {
+        return try {
+            val socket = java.net.Socket()
+            socket.connect(java.net.InetSocketAddress("1.1.1.1", 53), 500)
+            socket.close()
             true
+        } catch (_: java.net.SocketTimeoutException) {
+            try {
+                val socket = java.net.Socket()
+                socket.connect(java.net.InetSocketAddress("8.8.8.8", 53), 500)
+                socket.close()
+                true
+            } catch (_: Throwable) {
+                false
+            }
+        } catch (_: Throwable) {
+            false
         }
     }
 
@@ -248,9 +294,9 @@ class VoiceInputManager(
         if (!isNetworkAvailable()) {
             val warningMsg = ims.getString(R.string.voice_no_internet_warning)
             mainHandler.post {
-                Toast.makeText(ims, warningMsg, Toast.LENGTH_LONG).show()
+                Toast.makeText(ims, warningMsg, Toast.LENGTH_SHORT).show()
             }
-            notifyError(warningMsg, canRetry = false)
+            notifyError(warningMsg, canRetry = true)
             updateState(VoiceState.ERROR)
             return
         }
@@ -266,6 +312,22 @@ class VoiceInputManager(
         val started = startAudioRecordingThread()
         if (started) {
             updateState(VoiceState.RECORDING)
+            coroutineScope.launch(Dispatchers.IO) {
+                val ok = isSocketConnected()
+                if (!ok && activeSessionId == sessionId && state == VoiceState.RECORDING) {
+                    mainHandler.post {
+                        if (activeSessionId == sessionId && state == VoiceState.RECORDING) {
+                            Log.w(TAG, "Active socket check failed while recording, aborting online voice")
+                            stopAudioLoop()
+                            val warningMsg = ims.getString(R.string.voice_no_internet_warning)
+                            Toast.makeText(ims, warningMsg, Toast.LENGTH_SHORT).show()
+                            notifyError(warningMsg, canRetry = true)
+                            cleanupSession()
+                            updateState(VoiceState.ERROR)
+                        }
+                    }
+                }
+            }
         } else {
             notifyError("Failed to start audio recording")
             cleanupSession()
