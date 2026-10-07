@@ -45,6 +45,7 @@ import helium314.keyboard.keyboard.KeyboardSwitcher
 import helium314.keyboard.keyboard.internal.KeyboardIconsSet
 import helium314.keyboard.keyboard.internal.keyboard_parser.floris.KeyCode
 import helium314.keyboard.latin.AudioAndHapticFeedbackManager
+import helium314.keyboard.latin.RichInputMethodManager
 import helium314.keyboard.latin.dictionary.Dictionary
 import helium314.keyboard.latin.R
 import helium314.keyboard.latin.SuggestedWords
@@ -52,6 +53,7 @@ import helium314.keyboard.latin.SuggestedWords.SuggestedWordInfo
 import helium314.keyboard.latin.common.ColorType
 import helium314.keyboard.latin.common.Colors
 import helium314.keyboard.latin.common.Constants
+import helium314.keyboard.latin.common.LocaleUtils.localizedDisplayName
 import helium314.keyboard.latin.define.DebugFlags
 import helium314.keyboard.latin.settings.DebugSettings
 import helium314.keyboard.latin.settings.Defaults
@@ -505,7 +507,8 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
         setRtl(isRtlLanguage)
         suggestedWords = suggestions
 
-        val currentLocale = SubtypeSettings.getSelectedSubtype(context.prefs()).locale()
+        val currentLocale = KeyboardSwitcher.getInstance().keyboard?.mId?.mSubtype?.locale
+            ?: RichInputMethodManager.getInstance().currentSubtypeLocale
         val isMissingDict = Settings.getValues().mShowDownloadButtonInToolbar && isMainDictionaryMissing(context, currentLocale)
         val promptView = if (isMissingDict) {
             val isCompact = !suggestions.isEmpty && !suggestions.isPunctuationSuggestions && suggestions.getWordCountToShow() > 0
@@ -1458,6 +1461,7 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
             maxLines = 1
             ellipsize = TextUtils.TruncateAt.END
 
+            val langName = currentLocale.localizedDisplayName(context.resources)
             val paddingH = if (isCompact) 10.dpToPx(resources) else 16.dpToPx(resources)
             val paddingV = 4.dpToPx(resources)
             setPadding(paddingH, paddingV, paddingH, paddingV)
@@ -1465,7 +1469,7 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
             text = if (isCompact) {
                 context.getString(R.string.download_dictionary_chip)
             } else {
-                context.getString(R.string.download_dictionary_for_language, currentLocale.displayName)
+                context.getString(R.string.download_dictionary_for_language, langName)
             }
             setTextColor(accentColor)
             setTextSize(TypedValue.COMPLEX_UNIT_SP, if (isCompact) 13f else 14f)
@@ -1493,7 +1497,7 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
 
             setOnClickListener {
                 val builder = android.app.AlertDialog.Builder(getPlatformDialogThemeContext(context))
-                    .setTitle(context.getString(R.string.download_dictionary_for_language, currentLocale.displayName))
+                    .setTitle(context.getString(R.string.download_dictionary_for_language, langName))
                     .setMessage(context.getString(R.string.download_dictionary_prompt_description))
                     .setPositiveButton(R.string.download) { _, _ ->
                         val intent = android.content.Intent().apply {
@@ -1511,7 +1515,7 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
             }
 
             setOnLongClickListener {
-                android.widget.Toast.makeText(context, context.getString(R.string.download_dictionary_for_language, currentLocale.displayName), android.widget.Toast.LENGTH_SHORT).show()
+                android.widget.Toast.makeText(context, context.getString(R.string.download_dictionary_for_language, langName), android.widget.Toast.LENGTH_SHORT).show()
                 true
             }
         }

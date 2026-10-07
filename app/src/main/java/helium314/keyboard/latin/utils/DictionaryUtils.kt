@@ -41,6 +41,7 @@ import helium314.keyboard.latin.common.FileUtils
 import helium314.keyboard.latin.common.Links
 import helium314.keyboard.latin.common.LocaleUtils
 import helium314.keyboard.latin.common.LocaleUtils.constructLocale
+import helium314.keyboard.latin.common.LocaleUtils.localizedDisplayName
 import helium314.keyboard.latin.settings.Defaults
 import helium314.keyboard.latin.dictionary.Dictionary
 import helium314.keyboard.latin.settings.Settings
@@ -117,10 +118,11 @@ fun MissingDictionaryDialog(onDismissRequest: () -> Unit, locale: Locale) {
         onDismissRequest()
         return
     }
+    val languageDisplayName = locale.localizedDisplayName(context.resources)
     val availableDicts = createDictionaryTextAnnotated(locale)
     val repositoryLink = stringResource(R.string.dictionary_link_text).withHtmlLink(Links.DICTIONARY_URL)
     val dictionaryLink = stringResource(R.string.dictionary_link_text).withHtmlLink("${Links.DICTIONARY_URL}/src/branch/main/dictionaries/main_$locale.dict")
-    val message = stringResource(R.string.no_dictionary_message, repositoryLink, locale.displayName, dictionaryLink)
+    val message = stringResource(R.string.no_dictionary_message, repositoryLink, languageDisplayName, dictionaryLink)
     var annotatedString = message.htmlToAnnotated()
     // ponytail: in standard flavor, if there are known dicts we show them as downloadable rows instead of bullet links
     val knownDicts = remember {
@@ -132,7 +134,7 @@ fun MissingDictionaryDialog(onDismissRequest: () -> Unit, locale: Locale) {
     var refreshTrigger by remember { mutableStateOf(0) }
 
     val dialogTitle: @Composable () -> Unit = {
-        Text(stringResource(R.string.download_dictionary_for_language, locale.displayName))
+        Text(stringResource(R.string.download_dictionary_for_language, languageDisplayName))
     }
 
     ConfirmationDialog(
@@ -183,7 +185,7 @@ fun getKnownDictionariesForLocale(locale: Locale, context: Context): List<Pair<S
             DictionaryInfoUtils.DEFAULT_MAIN_DICT -> context.getString(R.string.main_dictionary)
             else -> type
         }
-        val rawDictString = "$typeDisplayName: ${dictLocale.getDisplayName(context.resources.configuration.locale())}"
+        val rawDictString = "$typeDisplayName: ${dictLocale.localizedDisplayName(context.resources)}"
         val dictString = if (experimental != "exp") rawDictString
             else context.getString(R.string.available_dictionary_experimental, rawDictString)
         val dictLinkSuffix = when (experimental) {
