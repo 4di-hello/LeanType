@@ -70,10 +70,44 @@ class VoiceInputManager(
     }
 
     private fun isNetworkAvailable(): Boolean {
-        val cm = ims.getSystemService(Context.CONNECTIVITY_SERVICE) as? android.net.ConnectivityManager ?: return false
-        val activeNet = cm.activeNetwork ?: return false
-        val caps = cm.getNetworkCapabilities(activeNet) ?: return false
-        return caps.hasCapability(android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET)
+        return try {
+            val interfaces = java.net.NetworkInterface.getNetworkInterfaces() ?: return false
+            for (iface in interfaces) {
+                if (iface.isUp && !iface.isLoopback && iface.inetAddresses.hasMoreElements()) {
+                    return true
+                }
+            }
+            false
+        } catch (e: Throwable) {
+            Log.w(TAG, "isNetworkAvailable check failed", e)
+            true
+        }
+    }
+
+    private fun isNetworkException(t: Throwable): Boolean {
+        var cur: Throwable? = t
+        while (cur != null) {
+            if (cur is java.net.UnknownHostException ||
+                cur is java.net.ConnectException ||
+                cur is java.net.SocketTimeoutException ||
+                cur is java.net.SocketException ||
+                cur is java.net.NoRouteToHostException
+            ) {
+                return true
+            }
+            val msg = cur.message.orEmpty()
+            if (msg.contains("Unable to resolve host", ignoreCase = true) ||
+                msg.contains("Network is unreachable", ignoreCase = true) ||
+                msg.contains("Failed to connect", ignoreCase = true) ||
+                msg.contains("No address associated with hostname", ignoreCase = true) ||
+                msg.contains("Connection refused", ignoreCase = true) ||
+                msg.contains("route to host", ignoreCase = true)
+            ) {
+                return true
+            }
+            cur = cur.cause
+        }
+        return !isNetworkAvailable()
     }
 
     private var state = VoiceState.IDLE
@@ -212,7 +246,13 @@ class VoiceInputManager(
 
     private fun startOnlineVoice() {
         if (!isNetworkAvailable()) {
-            Toast.makeText(ims, R.string.voice_no_internet_warning, Toast.LENGTH_SHORT).show()
+            val warningMsg = ims.getString(R.string.voice_no_internet_warning)
+            mainHandler.post {
+                Toast.makeText(ims, warningMsg, Toast.LENGTH_LONG).show()
+            }
+            notifyError(warningMsg, canRetry = false)
+            updateState(VoiceState.ERROR)
+            return
         }
         val sessionId = UUID.randomUUID().toString()
         activeSessionId = sessionId
@@ -624,6 +664,19 @@ class VoiceInputManager(
         val cachedAudio = CachedVoiceAudio(wavBytes, languageTag)
         val autoRetryEnabled = ims.prefs().getBoolean(VoiceConstants.PREF_VOICE_AUTO_RETRY, true)
 
+        if (!isNetworkAvailable()) {
+            Log.w(TAG, "No internet connection before voice AI API access")
+            lastFailedOnlineAudio = cachedAudio
+            val warningMsg = ims.getString(R.string.voice_no_internet_warning)
+            mainHandler.post {
+                Toast.makeText(ims, warningMsg, Toast.LENGTH_SHORT).show()
+            }
+            notifyError(warningMsg, canRetry = true)
+            cleanupSession()
+            updateState(VoiceState.ERROR)
+            return
+        }
+
         onlineTranscriptionJob?.cancel()
         onlineTranscriptionJob = coroutineScope.launch(Dispatchers.IO) {
             val result = try {
@@ -645,9 +698,19 @@ class VoiceInputManager(
                         cleanupSession()
                         updateState(VoiceState.IDLE)
                     }.onFailure { ex ->
-                        val err = ex.message ?: "Transcription failed"
+                        val isNetworkErr = isNetworkException(ex)
+                        val err = if (isNetworkErr) {
+                            ims.getString(R.string.voice_no_internet_warning)
+                        } else {
+                            ex.message ?: "Transcription failed"
+                        }
                         Log.e(TAG, "Online transcription error (retryCount=$retryCount): $err", ex)
-                        if (autoRetryEnabled && retryCount < 1) {
+                        if (isNetworkErr) {
+                            mainHandler.post {
+                                Toast.makeText(ims, err, Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        if (autoRetryEnabled && retryCount < 1 && !isNetworkErr) {
                             Log.i(TAG, "Auto-retrying online transcription in 1500ms...")
                             mainHandler.postDelayed({
                                 if (state == VoiceState.PROCESSING_FINAL) {
@@ -668,6 +731,14 @@ class VoiceInputManager(
 
     fun retryLastFailedOnlineVoice() {
         val cached = lastFailedOnlineAudio ?: return
+        if (!isNetworkAvailable()) {
+            val warningMsg = ims.getString(R.string.voice_no_internet_warning)
+            mainHandler.post {
+                Toast.makeText(ims, warningMsg, Toast.LENGTH_SHORT).show()
+            }
+            notifyError(warningMsg, canRetry = true)
+            return
+        }
         Log.i(TAG, "Retrying last failed online voice audio")
         updateState(VoiceState.PROCESSING_FINAL)
         activeSessionId = UUID.randomUUID().toString()
