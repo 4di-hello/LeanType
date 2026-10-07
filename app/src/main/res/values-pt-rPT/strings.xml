@@ -571,7 +571,7 @@
     <string name="ocr_casing_sentence">Formato de frase</string>
     <string name="ocr_casing_lower">minúsculas</string>
     <string name="ocr_casing_upper">MAIÚSCULAS</string>
-    <string name="ocr_casing_title_case">Iniciais Maiúsculas (Capitalizar palavras)</string>
+    <string name="ocr_casing_title_case">Iniciais Maiúsculas (Capitalizar Palavras)</string>
     <string name="ocr_line_join_title">Formato de junção de linhas</string>
     <string name="ocr_line_join_newline">Quebras de linha (Padrão)</string>
     <string name="ocr_line_join_space">Espaço simples</string>
