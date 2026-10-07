@@ -1231,7 +1231,7 @@
     <string name="download_dictionaries_button">Scarica dizionario</string>
     <string name="pref_voice_auto_retry_title">Riprova automaticamente digitazione vocale fallita</string>
     <string name="pref_voice_auto_retry_summary">Riprova automaticamente la trascrizione in caso di temporanea disconnessione di rete</string>
-    <string name="voice_no_internet_warning">Nessuna connessione internet. L\'audio verrà salvato per riprovare alla riconnessione.</string>
+    <string name="voice_no_internet_warning">Nessuna connessione internet</string>
     <string name="voice_retry_button">Riprova</string>
     <string name="select_color_strip_background">Sfondo barra strumenti</string>
     <string name="select_color_toolbar_key">Icone barra strumenti</string>

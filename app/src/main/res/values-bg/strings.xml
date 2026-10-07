@@ -1192,7 +1192,7 @@
     <string name="download_dictionaries_button">Изтегляне на речник</string>
     <string name="pref_voice_auto_retry_title">Автоматично повторение при неуспешно гласово въвеждане</string>
     <string name="pref_voice_auto_retry_summary">Автоматично повторение на транскрипцията при временен срив на мрежата</string>
-    <string name="voice_no_internet_warning">Няма връзка с интернет. Аудиото ще бъде запазено за повторен опит при свързване.</string>
+    <string name="voice_no_internet_warning">Няма връзка с интернет</string>
     <string name="voice_retry_button">Повтори</string>
     <string name="select_color_strip_background">Фон на лентата с инструменти</string>
     <string name="select_color_toolbar_key">Икони на лентата с инструменти</string>

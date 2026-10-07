@@ -1159,7 +1159,7 @@
     <string name="download_dictionaries_button">Baixar dicionário</string>
     <string name="pref_voice_auto_retry_title">Repetir automaticamente a digitação por voz com falha</string>
     <string name="pref_voice_auto_retry_summary">Tentar novamente a transcrição automaticamente quando ocorrer uma queda temporária de rede</string>
-    <string name="voice_no_internet_warning">Sem conexão com a internet. O áudio será salvo para tentar novamente quando estiver conectado.</string>
+    <string name="voice_no_internet_warning">Sem conexão com a internet</string>
     <string name="voice_retry_button">Tentar novamente</string>
     <string name="select_color_strip_background">Fundo da barra de ferramentas</string>
     <string name="select_color_toolbar_key">Ícones da barra de ferramentas</string>

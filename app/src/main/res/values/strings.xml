@@ -638,7 +638,7 @@
     <string name="pref_online_voice_summary">Dictate text online using your configured AI provider and voice model</string>
     <string name="pref_voice_auto_retry_title">Auto-retry failed voice typing</string>
     <string name="pref_voice_auto_retry_summary">Automatically retry transcription when a temporary network dropout occurs</string>
-    <string name="voice_no_internet_warning">No internet connection. Audio will be saved to retry when reconnected.</string>
+    <string name="voice_no_internet_warning">No internet connection</string>
     <string name="voice_retry_button">Retry</string>
     <string name="voice_provider_title">Voice Input Provider</string>
     <string name="voice_provider_summary">Select how voice dictation is processed</string>

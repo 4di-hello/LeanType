@@ -1194,7 +1194,7 @@
     <string name="download_dictionaries_button">Pobierz słownik</string>
     <string name="pref_voice_auto_retry_title">Automatycznie ponawiaj nieudane pisanie głosowe</string>
     <string name="pref_voice_auto_retry_summary">Automatycznie ponawiaj transkrypcję po chwilowej utracie połączenia sieciowego</string>
-    <string name="voice_no_internet_warning">Brak połączenia z internetem. Nagranie zostanie zapisane i ponowione po połączeniu.</string>
+    <string name="voice_no_internet_warning">Brak połączenia z internetem</string>
     <string name="voice_retry_button">Ponów</string>
     <string name="select_color_strip_background">Tło paska narzędzi</string>
     <string name="select_color_toolbar_key">Ikony paska narzędzi</string>

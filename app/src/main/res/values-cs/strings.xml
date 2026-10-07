@@ -1157,7 +1157,7 @@
     <string name="download_dictionaries_button">Stáhnout slovník</string>
     <string name="pref_voice_auto_retry_title">Automaticky opakovat neúspěšné hlasové zadávání</string>
     <string name="pref_voice_auto_retry_summary">Automaticky opakovat přepis při dočasném výpadku sítě</string>
-    <string name="voice_no_internet_warning">Žádné připojení k internetu. Zvuk bude uložen k opakování po opětovném připojení.</string>
+    <string name="voice_no_internet_warning">Žádné připojení k internetu</string>
     <string name="voice_retry_button">Opakovat</string>
     <string name="select_color_strip_background">Pozadí panelu nástrojů</string>
     <string name="select_color_toolbar_key">Ikony panelu nástrojů</string>

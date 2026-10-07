@@ -1224,7 +1224,7 @@
     <string name="download_dictionaries_button">Скачать словарь</string>
     <string name="pref_voice_auto_retry_title">Автоповтор при сбое голосового ввода</string>
     <string name="pref_voice_auto_retry_summary">Автоматически повторять расшифровку при кратковременном отключении сети</string>
-    <string name="voice_no_internet_warning">Нет подключения к интернету. Аудиозапись сохранится для повтора при подключении.</string>
+    <string name="voice_no_internet_warning">Нет подключения к интернету</string>
     <string name="voice_retry_button">Повторить</string>
     <string name="select_color_strip_background">Фон панели инструментов</string>
     <string name="select_color_toolbar_key">Значки панели инструментов</string>

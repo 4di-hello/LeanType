@@ -1144,7 +1144,7 @@
     <string name="download_dictionaries_button">Спампаваць слоўнік</string>
     <string name="pref_voice_auto_retry_title">Аўтаматычны паўтор пры збоі галасавога ўводу</string>
     <string name="pref_voice_auto_retry_summary">Аўтаматычна паўтараць транскрыпцыю пры часовым абрыве сеткавага злучэння</string>
-    <string name="voice_no_internet_warning">Няма падключэння да інтэрнэту. Аўдыя будзе захавана для паўтору пасля падключэння.</string>
+    <string name="voice_no_internet_warning">Няма падключэння да інтэрнэту</string>
     <string name="voice_retry_button">Паўтарыць</string>
     <string name="select_color_strip_background">Фон панэлі інструментаў</string>
     <string name="select_color_toolbar_key">Значкі панэлі інструментаў</string>

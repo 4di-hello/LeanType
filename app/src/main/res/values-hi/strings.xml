@@ -468,7 +468,7 @@
     <string name="download_dictionaries_button">शब्दकोश डाउनलोड करें</string>
     <string name="pref_voice_auto_retry_title">विफल वॉइस टाइपिंग का स्वचालित पुनः प्रयास</string>
     <string name="pref_voice_auto_retry_summary">अस्थायी नेटवर्क रुकावट होने पर ट्रांसक्रिप्शन का स्वचालित पुनः प्रयास करें</string>
-    <string name="voice_no_internet_warning">कोई इंटरनेट कनेक्शन नहीं है। पुनः कनेक्ट होने पर प्रयास करने के लिए ऑडियो सहेजा जाएगा।</string>
+    <string name="voice_no_internet_warning">कोई इंटरनेट कनेक्शन नहीं है</string>
     <string name="voice_retry_button">पुनः प्रयास करें</string>
     <string name="select_color_strip_background">टूलबार पृष्ठभूमि</string>
     <string name="select_color_toolbar_key">टूलबार आइकन</string>

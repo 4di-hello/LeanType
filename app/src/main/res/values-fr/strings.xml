@@ -1229,7 +1229,7 @@ Nouveau dictionnaire:
     <string name="download_dictionaries_button">Télécharger le dictionnaire</string>
     <string name="pref_voice_auto_retry_title">Réessayer automatiquement la saisie vocale échouée</string>
     <string name="pref_voice_auto_retry_summary">Réessayer automatiquement la transcription en cas d\'interruption temporaire du réseau</string>
-    <string name="voice_no_internet_warning">Aucune connexion Internet. L\'enregistrement audio sera sauvegardé pour réessayer dès la reconnexion.</string>
+    <string name="voice_no_internet_warning">Aucune connexion Internet</string>
     <string name="voice_retry_button">Réessayer</string>
     <string name="select_color_strip_background">Arrière-plan de la barre d\'outils</string>
     <string name="select_color_toolbar_key">Icônes de la barre d\'outils</string>

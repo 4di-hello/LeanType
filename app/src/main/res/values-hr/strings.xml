@@ -1132,7 +1132,7 @@
     <string name="download_dictionaries_button">Preuzmi rječnik</string>
     <string name="pref_voice_auto_retry_title">Automatski ponovi neuspjelo glasovno tipkanje</string>
     <string name="pref_voice_auto_retry_summary">Automatski ponovi transkripciju kada dođe do privremenog prekida mreže</string>
-    <string name="voice_no_internet_warning">Nema internetske veze. Zvuk će se spremiti za ponovni pokušaj nakon spajanja.</string>
+    <string name="voice_no_internet_warning">Nema internetske veze</string>
     <string name="voice_retry_button">Ponovi</string>
     <string name="select_color_strip_background">Pozadina alatne trake</string>
     <string name="select_color_toolbar_key">Ikone alatne trake</string>

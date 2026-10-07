@@ -1146,7 +1146,7 @@
     <string name="download_dictionaries_button">Descărcare dicționar</string>
     <string name="pref_voice_auto_retry_title">Reîncercare automată tastare vocală eșuată</string>
     <string name="pref_voice_auto_retry_summary">Reîncearcă automat transcrierea când apare o întrerupere temporară a rețelei</string>
-    <string name="voice_no_internet_warning">Fără conexiune la internet. Audio va fi salvat pentru reîncercare la reconectare.</string>
+    <string name="voice_no_internet_warning">Fără conexiune la internet</string>
     <string name="voice_retry_button">Reîncearcă</string>
     <string name="select_color_strip_background">Fundal bară de instrumente</string>
     <string name="select_color_toolbar_key">Pictograme bară de instrumente</string>

@@ -1199,7 +1199,7 @@
     <string name="download_dictionaries_button">Woordenboek downloaden</string>
     <string name="pref_voice_auto_retry_title">Mislukt spraaktypen automatisch opnieuw proberen</string>
     <string name="pref_voice_auto_retry_summary">Transcriptie automatisch opnieuw proberen bij een tijdelijke netwerkonderbreking</string>
-    <string name="voice_no_internet_warning">Geen internetverbinding. Audio wordt opgeslagen om opnieuw te proberen bij verbinding.</string>
+    <string name="voice_no_internet_warning">Geen internetverbinding</string>
     <string name="voice_retry_button">Opnieuw proberen</string>
     <string name="select_color_strip_background">Werkbalkachtergrond</string>
     <string name="select_color_toolbar_key">Werkbalkpictogrammen</string>

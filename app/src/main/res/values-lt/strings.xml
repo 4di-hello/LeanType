@@ -1147,7 +1147,7 @@
     <string name="download_dictionaries_button">Atsisiųsti žodyną</string>
     <string name="pref_voice_auto_retry_title">Automatiškai kartoti nepavykusią balso įvestį</string>
     <string name="pref_voice_auto_retry_summary">Automatiškai kartoti transkripciją, kai laikinai nutrūksta tinklo ryšys</string>
-    <string name="voice_no_internet_warning">Nėra interneto ryšio. Garso įrašas bus išsaugotas ir pakartotas atkūrus ryšį.</string>
+    <string name="voice_no_internet_warning">Nėra interneto ryšio</string>
     <string name="voice_retry_button">Kartoti</string>
     <string name="select_color_strip_background">Įrankių juostos fonas</string>
     <string name="select_color_toolbar_key">Įrankių juostos piktogramos</string>

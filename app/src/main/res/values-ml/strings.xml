@@ -1217,7 +1217,7 @@
     <string name="download_dictionaries_button">നിഘണ്ടു ഡൗൺലോഡ് ചെയ്യുക</string>
     <string name="pref_voice_auto_retry_title">പരാജയപ്പെട്ട വോയ്‌സ് ടൈപ്പിംഗ് സ്വയമേവ വീണ്ടും ശ്രമിക്കുക</string>
     <string name="pref_voice_auto_retry_summary">താൽക്കാലിക നെറ്റ്‌വർക്ക് തടസ്സം ഉണ്ടാകുമ്പോൾ സ്വയമേവ ട്രാൻസ്ക്രിപ്ഷൻ വീണ്ടും ശ്രമിക്കുക</string>
-    <string name="voice_no_internet_warning">ഇന്റർനെറ്റ് കണക്ഷൻ ഇല്ല. കണക്റ്റ് ചെയ്യുമ്പോൾ വീണ്ടും ശ്രമിക്കുന്നതിനായി ഓഡിയോ സൂക്ഷിക്കും.</string>
+    <string name="voice_no_internet_warning">ഇന്റർനെറ്റ് കണക്ഷൻ ഇല്ല</string>
     <string name="voice_retry_button">വീണ്ടും ശ്രമിക്കുക</string>
     <string name="select_color_strip_background">ടൂൾബാർ പശ്ചാത്തലം</string>
     <string name="select_color_toolbar_key">ടൂൾബാർ ഐക്കണുകൾ</string>

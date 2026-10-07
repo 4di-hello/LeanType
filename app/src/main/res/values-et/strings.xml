@@ -1146,7 +1146,7 @@
     <string name="download_dictionaries_button">Laadi sõnastik alla</string>
     <string name="pref_voice_auto_retry_title">Ebaõnnestunud häälsisestuse automaatne kordus</string>
     <string name="pref_voice_auto_retry_summary">Proovi transkribeerimist automaatselt uuesti ajutise võrgukatkestuse korral</string>
-    <string name="voice_no_internet_warning">Internetiühendus puudub. Helifail salvestatakse uuesti proovimiseks pärast ühenduse taastumist.</string>
+    <string name="voice_no_internet_warning">Internetiühendus puudub</string>
     <string name="voice_retry_button">Proovi uuesti</string>
     <string name="select_color_strip_background">Tööriistariba taust</string>
     <string name="select_color_toolbar_key">Tööriistariba ikoonid</string>

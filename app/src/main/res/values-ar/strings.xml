@@ -1231,7 +1231,7 @@
     <string name="download_dictionaries_button">تنزيل قاموس</string>
     <string name="pref_voice_auto_retry_title">إعادة المحاولة التلقائية للكتابة بالصوت الفاشلة</string>
     <string name="pref_voice_auto_retry_summary">إعادة محاولة النسخ الصوتي تلقائيًا عند حدوث انقطاع مؤقت في الشبكة</string>
-    <string name="voice_no_internet_warning">لا يوجد اتصال بالإنترنت. سيتم حفظ الصوت لإعادة المحاولة عند الاتصال مجددًا.</string>
+    <string name="voice_no_internet_warning">لا يوجد اتصال بالإنترنت</string>
     <string name="voice_retry_button">إعادة المحاولة</string>
     <string name="select_color_strip_background">خلفية شريط الأدوات</string>
     <string name="select_color_toolbar_key">أيقونات شريط الأدوات</string>

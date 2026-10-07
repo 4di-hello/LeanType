@@ -1147,7 +1147,7 @@ Uyarı: Harici kod yüklemek güvenlik riski oluşturabilir. Yalnızca güvendi�
     <string name="download_dictionaries_button">Sözlük indir</string>
     <string name="pref_voice_auto_retry_title">Başarısız sesli yazmayı otomatik yeniden dene</string>
     <string name="pref_voice_auto_retry_summary">Geçici ağ kesintisi oluştuğunda dökümü otomatik olarak yeniden dene</string>
-    <string name="voice_no_internet_warning">İnternet bağlantısı yok. Yeniden bağlanıldığında denenmek üzere ses kaydedilecek.</string>
+    <string name="voice_no_internet_warning">İnternet bağlantısı yok</string>
     <string name="voice_retry_button">Yeniden dene</string>
     <string name="select_color_strip_background">Araç çubuğu arka planı</string>
     <string name="select_color_toolbar_key">Araç çubuğu simgeleri</string>

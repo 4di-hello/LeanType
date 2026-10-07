@@ -1217,7 +1217,7 @@
     <string name="download_dictionaries_button">لغت ڈاؤن لوڈ کریں</string>
     <string name="pref_voice_auto_retry_title">ناکام صوتی ٹائپنگ کی خودکار دوبارہ کوشش</string>
     <string name="pref_voice_auto_retry_summary">عارضی نیٹ ورک تعطل کی صورت میں ٹرانسکرپشن کی خودکار دوبارہ کوشش کریں</string>
-    <string name="voice_no_internet_warning">انٹرنیٹ کنکشن موجود نہیں ہے۔ دوبارہ جڑنے پر آڈیو محفوظ کر کے دوبارہ کوشش کی جائے گی۔</string>
+    <string name="voice_no_internet_warning">انٹرنیٹ کنکشن موجود نہیں ہے</string>
     <string name="voice_retry_button">دوبارہ کوشش کریں</string>
     <string name="select_color_strip_background">ٹول بار کا پس منظر</string>
     <string name="select_color_toolbar_key">ٹول بار کے آئیکنز</string>

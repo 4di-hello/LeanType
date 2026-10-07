@@ -1116,7 +1116,7 @@
     <string name="download_dictionaries_button">Unduh kamus</string>
     <string name="pref_voice_auto_retry_title">Coba lagi otomatis pengetikan suara yang gagal</string>
     <string name="pref_voice_auto_retry_summary">Mencoba kembali transkripsi secara otomatis saat terjadi gangguan jaringan sementara</string>
-    <string name="voice_no_internet_warning">Tidak ada koneksi internet. Audio akan disimpan untuk dicoba lagi saat terhubung kembali.</string>
+    <string name="voice_no_internet_warning">Tidak ada koneksi internet</string>
     <string name="voice_retry_button">Coba lagi</string>
     <string name="select_color_strip_background">Latar belakang bilah alat</string>
     <string name="select_color_toolbar_key">Ikon bilah alat</string>

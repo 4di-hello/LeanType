@@ -1217,7 +1217,7 @@
     <string name="download_dictionaries_button">Λήψη λεξικού</string>
     <string name="pref_voice_auto_retry_title">Αυτόματη επανάληψη αποτυχημένης φωνητικής πληκτρολόγησης</string>
     <string name="pref_voice_auto_retry_summary">Αυτόματη επανάληψη μεταγραφής όταν παρουσιάζεται προσωρινή διακοπή δικτύου</string>
-    <string name="voice_no_internet_warning">Δεν υπάρχει σύνδεση στο διαδίκτυο. Ο ήχος θα αποθηκευτεί για επανάληψη μόλις συνδεθείτε.</string>
+    <string name="voice_no_internet_warning">Δεν υπάρχει σύνδεση στο διαδίκτυο</string>
     <string name="voice_retry_button">Επανάληψη</string>
     <string name="select_color_strip_background">Φόντο γραμμής εργαλείων</string>
     <string name="select_color_toolbar_key">Εικονίδια γραμμής εργαλείων</string>
