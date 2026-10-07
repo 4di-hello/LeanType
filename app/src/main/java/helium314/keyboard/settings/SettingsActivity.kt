@@ -91,6 +91,8 @@ open class SettingsActivity : ComponentActivity(), SharedPreferences.OnSharedPre
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val lang = prefs.getString(Settings.PREF_APP_LANGUAGE, Defaults.PREF_APP_LANGUAGE) ?: Defaults.PREF_APP_LANGUAGE
+        LocaleUtils.applyAppLanguageToResources(this, lang)
         Settings.getInstance().loadSettings(this)
         ExecutorUtils.getBackgroundExecutor(ExecutorUtils.KEYBOARD).execute {
             cleanUnusedMainDicts(this)
