@@ -1653,4 +1653,10 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="voice_whisper_import_dispatched">Whisper-Modellimport versandt</string>
     <string name="voice_model_import_failed_format">Modellimport fehlgeschlagen:%s</string>
     <string name="voice_model_multilingual">Mehrsprachig</string>
+    <string name="app_quirks_hide_suggestion_strip">Vorschlagsleiste ausblenden</string>
+    <string name="app_quirks_hide_suggestion_strip_summary">Blenden Sie Wortvorschläge und Kandidatenstreifen aus, wenn Sie in dieser App tippen</string>
+    <string name="app_quirks_hide_toolbar">Symbolleiste ausblenden</string>
+    <string name="app_quirks_hide_toolbar_summary">Blenden Sie Symbolleistentasten, Aktionen und die Schaltfläche zum Erweitern aus, wenn Sie in dieser App etwas eingeben</string>
+    <string name="app_quirks_badge_no_suggestions">Keine Vorschläge</string>
+    <string name="app_quirks_badge_no_toolbar">Keine Symbolleiste</string>
 </resources>

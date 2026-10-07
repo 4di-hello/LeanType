@@ -18,11 +18,13 @@ data class AppQuirk(
     val disableAutoSpace: Boolean = false,
     val allowTypeNullKeyboard: Boolean = false,
     val autoCorrectionMode: Int? = null,
+    val hideSuggestionStrip: Boolean = false,
+    val hideToolbar: Boolean = false,
 ) {
     fun hasCustomSettings(): Boolean =
         forceWebEditor || stripNoEnterAction || (forceEnterAction != null) || forceIncognito ||
                 forceNonIncognito || forceDirectCommit || allowSymbolComposing || disableAutoSpace ||
-                allowTypeNullKeyboard || (autoCorrectionMode != null)
+                allowTypeNullKeyboard || (autoCorrectionMode != null) || hideSuggestionStrip || hideToolbar
 
     fun toJson(): JSONObject {
         val json = JSONObject()
@@ -37,6 +39,8 @@ data class AppQuirk(
         if (disableAutoSpace) json.put("disableAutoSpace", true)
         if (allowTypeNullKeyboard) json.put("allowTypeNullKeyboard", true)
         if (autoCorrectionMode != null) json.put("autoCorrectionMode", autoCorrectionMode)
+        if (hideSuggestionStrip) json.put("hideSuggestionStrip", true)
+        if (hideToolbar) json.put("hideToolbar", true)
         return json
     }
 
@@ -53,6 +57,8 @@ data class AppQuirk(
             val disableAutoSpace = json.optBoolean("disableAutoSpace", false)
             val allowTypeNullKeyboard = json.optBoolean("allowTypeNullKeyboard", false)
             val autoCorrectionMode = if (json.has("autoCorrectionMode")) json.getInt("autoCorrectionMode") else null
+            val hideSuggestionStrip = json.optBoolean("hideSuggestionStrip", false)
+            val hideToolbar = json.optBoolean("hideToolbar", false)
             return AppQuirk(
                 packageName = packageName,
                 forceWebEditor = forceWebEditor,
@@ -65,6 +71,8 @@ data class AppQuirk(
                 disableAutoSpace = disableAutoSpace,
                 allowTypeNullKeyboard = allowTypeNullKeyboard,
                 autoCorrectionMode = autoCorrectionMode,
+                hideSuggestionStrip = hideSuggestionStrip,
+                hideToolbar = hideToolbar,
             )
         }
     }

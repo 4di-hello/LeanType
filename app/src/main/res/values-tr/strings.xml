@@ -1639,4 +1639,10 @@ Metin düzeltme ve yeniden yazma için cihaz üzerinde GGUF / llama.cpp çıkar�
     <string name="voice_whisper_import_dispatched">Whisper modelinin içe aktarımı gönderildi</string>
     <string name="voice_model_import_failed_format">Model içe aktarma işlemi başarısız oldu:%s</string>
     <string name="voice_model_multilingual">Çok dilli</string>
+    <string name="app_quirks_hide_suggestion_strip">Öneri şeridini gizle</string>
+    <string name="app_quirks_hide_suggestion_strip_summary">Bu uygulamada yazarken kelime önerilerini ve aday şeridini gizleyin</string>
+    <string name="app_quirks_hide_toolbar">Araç çubuğunu gizle</string>
+    <string name="app_quirks_hide_toolbar_summary">Bu uygulamaya yazarken araç çubuğu tuşlarını, eylemleri ve genişletme düğmesini gizleyin</string>
+    <string name="app_quirks_badge_no_suggestions">Öneri Yok</string>
+    <string name="app_quirks_badge_no_toolbar">Araç Çubuğu Yok</string>
 </resources>

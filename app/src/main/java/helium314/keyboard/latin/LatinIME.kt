@@ -127,6 +127,8 @@ class LatinIME : InputMethodService(),
     private var lastInputType = 0
     private var lastOrientation = 0
     private var lastNightMode = 0
+    private var lastPackageName: String? = null
+    private var lastInputPackageName: String? = null
 
     val mSettings: Settings = Settings.getInstance()
     val settings: Settings get() = mSettings
@@ -262,12 +264,14 @@ class LatinIME : InputMethodService(),
         val inputType = editorInfo?.inputType ?: 0
         val orientation = resources.configuration.orientation
         val nightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val packageName = editorInfo?.packageName
 
         if (!sSettingsDirty &&
             locale == lastSettingsLocale &&
             inputType == lastInputType &&
             orientation == lastOrientation &&
-            nightMode == lastNightMode
+            nightMode == lastNightMode &&
+            packageName == lastPackageName
         ) {
             return
         }
@@ -277,6 +281,7 @@ class LatinIME : InputMethodService(),
         lastInputType = inputType
         lastOrientation = orientation
         lastNightMode = nightMode
+        lastPackageName = packageName
 
         val inputAttributes = InputAttributes(editorInfo, isFullscreenMode, packageName)
         val currentKeyboardScript = keyboardSwitcher.currentKeyboardScript
@@ -482,7 +487,7 @@ class LatinIME : InputMethodService(),
         insetsUpdater = setInsetsOutlineProvider(view)
         updateSoftInputWindowLayoutParameters(inputView)
         
-        suggestionStripView = if (settings.current.mToolbarMode == ToolbarMode.HIDDEN) null else view.findViewById(R.id.suggestion_strip_view)
+        suggestionStripView = view.findViewById(R.id.suggestion_strip_view)
         suggestionStripView?.let { strip ->
             strip.setRtl(richImm.currentSubtype.isRtlSubtype)
             strip.setListener(this, view)
@@ -738,7 +743,9 @@ class LatinIME : InputMethodService(),
         }
         
         val inputTypeChanged = !currentSettingsValues.isSameInputType(editorInfo)
-        val isDifferentTextField = !restarting || inputTypeChanged
+        val packageChanged = editorInfo.packageName != lastInputPackageName
+        lastInputPackageName = editorInfo.packageName
+        val isDifferentTextField = !restarting || inputTypeChanged || packageChanged
         StatsUtils.onStartInputView(editorInfo.inputType, Settings.getValues().mDisplayOrientation, !isDifferentTextField)
         
         updateFullscreenMode()
@@ -778,7 +785,12 @@ class LatinIME : InputMethodService(),
             switcher.requestUpdatingShiftState(currentAutoCapsState, currentRecapitalizeState)
         }
         
-        if (!currentSettingsValues.mRememberToolbarState) {
+        keyboardSwitcher.updateStripVisibility(currentSettingsValues)
+        if (currentSettingsValues.mToolbarMode != ToolbarMode.HIDDEN) {
+            suggestionStripView?.onStartInputView()
+        }
+
+        if (currentSettingsValues.mToolbarMode == ToolbarMode.EXPANDABLE && !currentSettingsValues.mRememberToolbarState) {
             val defaultVisible = currentSettingsValues.mAutoShowToolbar
             suggestionStripView?.let { strip ->
                 strip.isToolbarManuallyOpen = defaultVisible
@@ -791,10 +803,10 @@ class LatinIME : InputMethodService(),
         if (!handler.hasPendingResumeSuggestions()) {
             handler.cancelUpdateSuggestionStrip()
             setNeutralSuggestionStrip()
-            if ((currentSettingsValues.mAutoShowToolbar || currentSettingsValues.mAutoShowToolbarNoSuggestions) && suggestionStripView?.isExternalSuggestionVisible != true) {
+            if (currentSettingsValues.mToolbarMode == ToolbarMode.EXPANDABLE && (currentSettingsValues.mAutoShowToolbar || currentSettingsValues.mAutoShowToolbarNoSuggestions) && suggestionStripView?.isExternalSuggestionVisible != true) {
                 suggestionStripView?.setToolbarVisibility(true)
             }
-            if (shouldRequestInitialPredictions(currentSettingsValues) && suggestionStripView?.isExternalSuggestionVisible != true) {
+            if (currentSettingsValues.isSuggestionsEnabledPerUserSettings() && shouldRequestInitialPredictions(currentSettingsValues) && suggestionStripView?.isExternalSuggestionVisible != true) {
                 handler.postUpdateSuggestionStrip(SuggestedWords.INPUT_STYLE_RECORRECTION)
             }
         }
@@ -1399,7 +1411,8 @@ class LatinIME : InputMethodService(),
         keyboardSwitcher.mainKeyboardView?.showGestureFloatingPreviewText(suggestedWords, dismissGestureFloatingPreviewText)
     }
 
-    private fun hasSuggestionStripView(): Boolean = suggestionStripView != null
+    private fun hasSuggestionStripView(): Boolean =
+        suggestionStripView != null && settings.current.mToolbarMode != ToolbarMode.HIDDEN
 
     private fun setSuggestedWords(suggestedWords: SuggestedWords) {
         val currentSettingsValues = settings.current

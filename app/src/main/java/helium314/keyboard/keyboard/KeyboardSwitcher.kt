@@ -871,7 +871,7 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
                 kbView.alpha = 1f
             }
         }
-        mStripContainer?.visibility = if (Settings.getValues().mToolbarMode == ToolbarMode.HIDDEN) View.GONE else View.VISIBLE
+        updateStripVisibility()
         mKeyboardViewWrapper?.let { wrapper ->
             if (wrapper.oneHandedModeEnabled) {
                 wrapper.findViewById<View>(R.id.btn_stop_one_handed_mode)?.visibility = View.VISIBLE
@@ -1047,6 +1047,10 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
     val suggestionStripView: SuggestionStripView? get() = mSuggestionStripView
 
     val stripContainer: LinearLayout? get() = mStripContainer
+
+    fun updateStripVisibility(settingsValues: SettingsValues = Settings.getValues()) {
+        mStripContainer?.visibility = if (settingsValues.mToolbarMode == ToolbarMode.HIDDEN) View.GONE else View.VISIBLE
+    }
 
     fun deallocateMemory() {
         mKeyboardView?.let {

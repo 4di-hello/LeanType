@@ -1646,4 +1646,10 @@ Habilita inferência GGUF / llama.cpp no dispositivo para revisão e reescrita.<
     <string name="voice_whisper_import_dispatched">Importação do modelo Whisper despachada</string>
     <string name="voice_model_import_failed_format">Falha na importação do modelo:%s</string>
     <string name="voice_model_multilingual">Multilíngue</string>
+    <string name="app_quirks_hide_suggestion_strip">Ocultar faixa de sugestões</string>
+    <string name="app_quirks_hide_suggestion_strip_summary">Ocultar sugestões de palavras e faixas de candidatos ao digitar neste aplicativo</string>
+    <string name="app_quirks_hide_toolbar">Ocultar barra de ferramentas</string>
+    <string name="app_quirks_hide_toolbar_summary">Ocultar teclas da barra de ferramentas, ações e botão de expansão ao digitar neste aplicativo</string>
+    <string name="app_quirks_badge_no_suggestions">Sem sugestões</string>
+    <string name="app_quirks_badge_no_toolbar">Sem barra de ferramentas</string>
 </resources>

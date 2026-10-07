@@ -297,10 +297,12 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val stripHeight = ResourceUtils.getSuggestionsStripHeight(resources)
-        val split = Settings.getValues().mSplitToolbar
+        val settingsValues = Settings.getValues()
+        val split = settingsValues.mSplitToolbar
         val isEmojiView = split && (isShowingEmojiSuggestions || helium314.keyboard.keyboard.KeyboardSwitcher.getInstance().isShowingEmojiPalettes)
+        val singleRow = isEmojiView || settingsValues.mToolbarMode == ToolbarMode.SUGGESTION_STRIP || settingsValues.mToolbarMode == ToolbarMode.TOOLBAR_KEYS
 
-        val newHeightSpec = if (split && !isEmojiView) {
+        val newHeightSpec = if (split && !singleRow) {
             MeasureSpec.makeMeasureSpec(stripHeight * 2, MeasureSpec.EXACTLY)
         } else {
             MeasureSpec.makeMeasureSpec(stripHeight, MeasureSpec.EXACTLY)
@@ -378,9 +380,10 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
         if (split) {
             // suggestionsStrip visibility is handled dynamically in updateSplitToolbarState
             val isEmojiView = isShowingEmojiSuggestions || helium314.keyboard.keyboard.KeyboardSwitcher.getInstance().isShowingEmojiPalettes
-            toolbarRow?.isVisible = !isEmojiView
-            toolbarContainer.isVisible = !locked && !isEmojiView
-            toolbar.visibility = if (isEmojiView) GONE else VISIBLE
+            val hideToolbarRow = Settings.getValues().mToolbarMode == ToolbarMode.SUGGESTION_STRIP
+            toolbarRow?.isVisible = !isEmojiView && !hideToolbarRow
+            toolbarContainer.isVisible = !locked && !isEmojiView && !hideToolbarRow
+            toolbar.visibility = if (isEmojiView || hideToolbarRow) GONE else VISIBLE
             pinnedKeys.isVisible = false // Hide pinned keys
             toolbarExpandKey.isVisible = false // Hide expand key
             updateSplitToolbarState()
@@ -489,6 +492,33 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
     fun foldToolbar(saveState: Boolean = false) {
         isToolbarManuallyOpen = false
         setToolbarVisibility(false, saveState = saveState)
+    }
+
+    /** Refresh toolbar and suggestions visibility and keys when starting input view. */
+    fun onStartInputView() {
+        val settingsValues = Settings.getValues()
+        rebuildToolbarKeys()
+        updateKeys()
+        val split = settingsValues.mSplitToolbar
+        if (split) {
+            updateSplitToolbarState()
+        } else {
+            val shouldShow = when (settingsValues.mToolbarMode) {
+                ToolbarMode.TOOLBAR_KEYS -> true
+                ToolbarMode.SUGGESTION_STRIP -> false
+                ToolbarMode.HIDDEN -> false
+                ToolbarMode.EXPANDABLE -> {
+                    if (settingsValues.mRememberToolbarState) {
+                        isToolbarManuallyOpen
+                    } else {
+                        settingsValues.mAutoShowToolbar
+                    }
+                }
+            }
+            setToolbarVisibility(shouldShow, saveState = false)
+        }
+        requestLayout()
+        invalidate()
     }
 
     fun setSuggestions(suggestions: SuggestedWords, isRtlLanguage: Boolean) {
@@ -1421,9 +1451,10 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
             pinnedKeys.isVisible = false // Hide pinned keys completely in split mode
 
             val isEmojiView = isShowingEmojiSuggestions || helium314.keyboard.keyboard.KeyboardSwitcher.getInstance().isShowingEmojiPalettes
-            toolbarRow?.isVisible = !isEmojiView
-            toolbarContainer.isVisible = !hideToolbarKeys && !isEmojiView
-            toolbar.visibility = if (isEmojiView) GONE else VISIBLE
+            val hideToolbarRow = settingsValues.mToolbarMode == ToolbarMode.SUGGESTION_STRIP
+            toolbarRow?.isVisible = !isEmojiView && !hideToolbarRow
+            toolbarContainer.isVisible = !hideToolbarKeys && !isEmojiView && !hideToolbarRow
+            toolbar.visibility = if (isEmojiView || hideToolbarRow) GONE else VISIBLE
 
             updateVoiceKey() // Re-apply voice logic to pinned keys
             val count = Settings.getValues().mSuggestionsCountInStrip
@@ -1559,10 +1590,10 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
         // Toolbar keys setup
         // Always populate toolbar keys if mode allows, visibility handled in updateKeys
         if (mToolbarMode == ToolbarMode.TOOLBAR_KEYS || mToolbarMode == ToolbarMode.EXPANDABLE) {
-            // In split mode, show ALL enabled keys in the toolbar, ignoring pin status
+            // In split mode or toolbar-keys-only mode, show ALL enabled keys in the toolbar, ignoring pin status
             // When autoHidePinnedKeys=false: include pinned keys in toolbar too (they show side-by-side)
             // When autoHidePinnedKeys=true: exclude pinned keys from toolbar (pinnedKeys container handles them)
-            val keysToRender = if (isSplitToolbar || !Settings.getValues().mAutoHidePinnedKeys) {
+            val keysToRender = if (isSplitToolbar || mToolbarMode == ToolbarMode.TOOLBAR_KEYS || !Settings.getValues().mAutoHidePinnedKeys) {
                 getEnabledToolbarKeys(context.prefs())
             } else {
                 getEnabledToolbarKeys(context.prefs()).filterNot { it in pinnedKeysList }
@@ -1662,23 +1693,26 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
     }
 
     fun updateSplitToolbarState() {
-        if (!Settings.getValues().mSplitToolbar) return
+        val settingsValues = Settings.getValues()
+        if (!settingsValues.mSplitToolbar) return
         val isEmojiView = isShowingEmojiSuggestions || helium314.keyboard.keyboard.KeyboardSwitcher.getInstance().isShowingEmojiPalettes
+        val hideToolbarRow = settingsValues.mToolbarMode == ToolbarMode.SUGGESTION_STRIP
+        val hideSuggestions = settingsValues.mToolbarMode == ToolbarMode.TOOLBAR_KEYS || settingsValues.mSuggestionStripHiddenPerUserSettings
         if (isEmojiView) {
             toolbarRow?.isVisible = false
             toolbarContainer.isVisible = false
             suggestionsStrip.isVisible = true
             return
         }
-        toolbarRow?.isVisible = true
-        toolbarContainer.isVisible = !isDeviceLocked(context)
-        // Clipboard/screenshot suggestions are LinearLayout roots, not TextViews —
+        toolbarRow?.isVisible = !hideToolbarRow
+        toolbarContainer.isVisible = !isDeviceLocked(context) && !hideToolbarRow
+        // Clipboard/screenshot suggestions are LinearLayout roots, not TextViews -
         // skip placeholder logic entirely so the external view is not obscured.
         if (isExternalSuggestionVisible) {
-            suggestionsStrip.isVisible = true
+            suggestionsStrip.isVisible = !hideSuggestions
             return
         }
-        suggestionsStrip.isVisible = true
+        suggestionsStrip.isVisible = !hideSuggestions
         
         // ponytail: no fallback suggestions to keep it clean and minimal
         val PLACEHOLDER_TAG = "PLACEHOLDER_VIEW"

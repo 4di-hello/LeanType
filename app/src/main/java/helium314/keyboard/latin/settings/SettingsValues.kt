@@ -246,7 +246,29 @@ open class SettingsValues(
         mScreenProfile = helium314.keyboard.latin.utils.ScreenProfileProvider.getScreenProfile(context, res.configuration, this)
         val selectedSubtype = SubtypeSettings.getSelectedSubtype(prefs)
 
-        mToolbarMode = Settings.readToolbarMode(prefs)
+        val globalToolbarMode = Settings.readToolbarMode(prefs)
+        val appQuirk = AppQuirksManager.getEffectiveQuirk(mInputAttributes.mTargetApplicationPackageName)
+        val hideSuggestionStrip = appQuirk?.hideSuggestionStrip == true
+        val hideToolbar = appQuirk?.hideToolbar == true
+
+        mToolbarMode = when {
+            hideSuggestionStrip && hideToolbar -> ToolbarMode.HIDDEN
+            hideSuggestionStrip -> {
+                if (globalToolbarMode == ToolbarMode.SUGGESTION_STRIP || globalToolbarMode == ToolbarMode.HIDDEN) {
+                    ToolbarMode.HIDDEN
+                } else {
+                    ToolbarMode.TOOLBAR_KEYS
+                }
+            }
+            hideToolbar -> {
+                if (globalToolbarMode == ToolbarMode.TOOLBAR_KEYS || globalToolbarMode == ToolbarMode.HIDDEN) {
+                    ToolbarMode.HIDDEN
+                } else {
+                    ToolbarMode.SUGGESTION_STRIP
+                }
+            }
+            else -> globalToolbarMode
+        }
         mPhysicalKeyboardSuggestionShortcuts = prefs.getString(Settings.PREF_PHYSICAL_KEYBOARD_SUGGESTION_SHORTCUTS, Defaults.PREF_PHYSICAL_KEYBOARD_SUGGESTION_SHORTCUTS) ?: Defaults.PREF_PHYSICAL_KEYBOARD_SUGGESTION_SHORTCUTS
         mPhysicalKeyboardLayout = prefs.getString(Settings.PREF_PHYSICAL_KEYBOARD_LAYOUT, Defaults.PREF_PHYSICAL_KEYBOARD_LAYOUT) ?: Defaults.PREF_PHYSICAL_KEYBOARD_LAYOUT
         mToolbarHidingGlobal = prefs.getBoolean(Settings.PREF_TOOLBAR_HIDING_GLOBAL, Defaults.PREF_TOOLBAR_HIDING_GLOBAL)

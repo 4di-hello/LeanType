@@ -1606,4 +1606,10 @@ Memungkinkan inferensi GGUF / llama.cpp di perangkat untuk koreksi teks dan penu
     <string name="voice_whisper_import_dispatched">Impor model bisikan dikirim</string>
     <string name="voice_model_import_failed_format">Impor model gagal:%s</string>
     <string name="voice_model_multilingual">Multibahasa</string>
+    <string name="app_quirks_hide_suggestion_strip">Sembunyikan strip saran</string>
+    <string name="app_quirks_hide_suggestion_strip_summary">Sembunyikan saran kata dan strip kandidat saat mengetik di aplikasi ini</string>
+    <string name="app_quirks_hide_toolbar">Sembunyikan bilah alat</string>
+    <string name="app_quirks_hide_toolbar_summary">Sembunyikan tombol toolbar, tindakan, dan tombol perluas saat mengetik di aplikasi ini</string>
+    <string name="app_quirks_badge_no_suggestions">Tidak Ada Saran</string>
+    <string name="app_quirks_badge_no_toolbar">Tidak Ada Bilah Alat</string>
 </resources>

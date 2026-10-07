@@ -1639,4 +1639,10 @@ Ar norite atnaujinti?</string>
     <string name="voice_whisper_import_dispatched">Whisper modelio importas išsiųstas</string>
     <string name="voice_model_import_failed_format">Nepavyko importuoti modelio:%s</string>
     <string name="voice_model_multilingual">Daugiakalbis</string>
+    <string name="app_quirks_hide_suggestion_strip">Slėpti pasiūlymų juostą</string>
+    <string name="app_quirks_hide_suggestion_strip_summary">Slėpkite žodžių pasiūlymus ir kandidato juostelę, kai rašote šioje programoje</string>
+    <string name="app_quirks_hide_toolbar">Slėpti įrankių juostą</string>
+    <string name="app_quirks_hide_toolbar_summary">Slėpti įrankių juostos klavišus, veiksmus ir išplėtimo mygtuką, kai rašote šioje programoje</string>
+    <string name="app_quirks_badge_no_suggestions">Jokių pasiūlymų</string>
+    <string name="app_quirks_badge_no_toolbar">Nėra įrankių juostos</string>
 </resources>

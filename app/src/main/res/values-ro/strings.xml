@@ -1638,4 +1638,10 @@ Activează inferența GGUF / llama.cpp pe dispozitiv pentru corectură și refor
     <string name="voice_whisper_import_dispatched">Importul modelului Whisper a fost expediat</string>
     <string name="voice_model_import_failed_format">Importarea modelului a eșuat:%s</string>
     <string name="voice_model_multilingual">Multilingv</string>
+    <string name="app_quirks_hide_suggestion_strip">Ascundeți banda de sugestii</string>
+    <string name="app_quirks_hide_suggestion_strip_summary">Ascundeți sugestiile de cuvinte și banda de candidați atunci când scrieți în această aplicație</string>
+    <string name="app_quirks_hide_toolbar">Ascundeți bara de instrumente</string>
+    <string name="app_quirks_hide_toolbar_summary">Ascunde tastele barei de instrumente, acțiunile și butonul de extindere atunci când tastați în această aplicație</string>
+    <string name="app_quirks_badge_no_suggestions">Fără sugestii</string>
+    <string name="app_quirks_badge_no_toolbar">Fără bară de instrumente</string>
 </resources>

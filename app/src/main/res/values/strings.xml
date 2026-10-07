@@ -1832,6 +1832,12 @@ New dictionary:
     <string name="app_quirks_autocorrect_disable">Always Disabled</string>
     <string name="app_quirks_badge_autocorrect_on">Auto-Correct ON</string>
     <string name="app_quirks_badge_autocorrect_off">Auto-Correct OFF</string>
+    <string name="app_quirks_hide_suggestion_strip">Hide suggestion strip</string>
+    <string name="app_quirks_hide_suggestion_strip_summary">Hide word suggestions and candidate strip when typing in this app</string>
+    <string name="app_quirks_hide_toolbar">Hide toolbar</string>
+    <string name="app_quirks_hide_toolbar_summary">Hide toolbar keys, actions, and expand button when typing in this app</string>
+    <string name="app_quirks_badge_no_suggestions">No Suggestions</string>
+    <string name="app_quirks_badge_no_toolbar">No Toolbar</string>
 
     <!-- Emoticon sub-category names -->
     <string name="emoticon_group_classic">Classic</string>

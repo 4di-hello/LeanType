@@ -1705,4 +1705,10 @@ Permet l\'inférence GGUF / llama.cpp sur l\'appareil pour la correction et la r
     <string name="voice_whisper_import_dispatched">Importation du modèle Whisper expédiée</string>
     <string name="voice_model_import_failed_format">Échec de l\'importation du modèle :%s</string>
     <string name="voice_model_multilingual">Multilingue</string>
+    <string name="app_quirks_hide_suggestion_strip">Masquer la bande de suggestions</string>
+    <string name="app_quirks_hide_suggestion_strip_summary">Masquer les suggestions de mots et la bande de candidats lors de la saisie dans cette application</string>
+    <string name="app_quirks_hide_toolbar">Masquer la barre d\'outils</string>
+    <string name="app_quirks_hide_toolbar_summary">Masquer les touches de la barre d\'outils, les actions et le bouton de développement lors de la saisie dans cette application</string>
+    <string name="app_quirks_badge_no_suggestions">Aucune suggestion</string>
+    <string name="app_quirks_badge_no_toolbar">Aucune barre d\'outils</string>
 </resources>

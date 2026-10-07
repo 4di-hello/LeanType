@@ -1635,4 +1635,10 @@
     <string name="voice_whisper_import_dispatched">व्हिस्पर मॉडल आयात भेजा गया</string>
     <string name="voice_model_import_failed_format">मॉडल आयात विफल:%s</string>
     <string name="voice_model_multilingual">बहुभाषी</string>
+    <string name="app_quirks_hide_suggestion_strip">सुझाव पट्टी छिपाएँ</string>
+    <string name="app_quirks_hide_suggestion_strip_summary">इस ऐप में टाइप करते समय शब्द सुझाव और उम्मीदवार पट्टी छुपाएं</string>
+    <string name="app_quirks_hide_toolbar">उपकरण पट्टी छिपाओ</string>
+    <string name="app_quirks_hide_toolbar_summary">इस ऐप में टाइप करते समय टूलबार कुंजियाँ, क्रियाएँ और विस्तृत बटन छिपाएँ</string>
+    <string name="app_quirks_badge_no_suggestions">कोई सुझाव नहीं</string>
+    <string name="app_quirks_badge_no_toolbar">कोई टूलबार नहीं</string>
 </resources>

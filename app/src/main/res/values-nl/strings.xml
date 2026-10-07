@@ -1691,4 +1691,10 @@ Maakt GGUF / llama.cpp-inferentie op het apparaat mogelijk voor proeflezen en he
     <string name="voice_whisper_import_dispatched">Import van Whisper-modellen verzonden</string>
     <string name="voice_model_import_failed_format">Modelimport mislukt:%s</string>
     <string name="voice_model_multilingual">Meertalig</string>
+    <string name="app_quirks_hide_suggestion_strip">Suggestiestrook verbergen</string>
+    <string name="app_quirks_hide_suggestion_strip_summary">Verberg woordsuggesties en kandidatenstrook tijdens het typen in deze app</string>
+    <string name="app_quirks_hide_toolbar">Werkbalk verbergen</string>
+    <string name="app_quirks_hide_toolbar_summary">Verberg werkbalktoetsen, acties en uitvouwknop tijdens het typen in deze app</string>
+    <string name="app_quirks_badge_no_suggestions">Geen suggesties</string>
+    <string name="app_quirks_badge_no_toolbar">Geen werkbalk</string>
 </resources>

@@ -1693,4 +1693,10 @@ Umożliwia lokalne wnioskowanie GGUF / llama.cpp na urządzeniu w celu korekty i
     <string name="voice_whisper_import_dispatched">Wysłano import modelu Whisper</string>
     <string name="voice_model_import_failed_format">Import modelu nie powiódł się:%s</string>
     <string name="voice_model_multilingual">Wielojęzyczny</string>
+    <string name="app_quirks_hide_suggestion_strip">Ukryj pasek sugestii</string>
+    <string name="app_quirks_hide_suggestion_strip_summary">Ukryj sugestie słów i pasek kandydatów podczas pisania w tej aplikacji</string>
+    <string name="app_quirks_hide_toolbar">Ukryj pasek narzędzi</string>
+    <string name="app_quirks_hide_toolbar_summary">Ukryj klawisze paska narzędzi, akcje i przycisk rozwijania podczas pisania w tej aplikacji</string>
+    <string name="app_quirks_badge_no_suggestions">Brak sugestii</string>
+    <string name="app_quirks_badge_no_toolbar">Brak paska narzędzi</string>
 </resources>

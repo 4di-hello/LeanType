@@ -1642,4 +1642,10 @@ Permite la inferencia GGUF / llama.cpp en el dispositivo para corrección y rees
     <string name="voice_whisper_import_dispatched">Importación del modelo Whisper enviada</string>
     <string name="voice_model_import_failed_format">Error al importar el modelo:%s</string>
     <string name="voice_model_multilingual">Plurilingüe</string>
+    <string name="app_quirks_hide_suggestion_strip">Ocultar tira de sugerencias</string>
+    <string name="app_quirks_hide_suggestion_strip_summary">Oculte sugerencias de palabras y franjas de candidatos al escribir en esta aplicación</string>
+    <string name="app_quirks_hide_toolbar">Ocultar barra de herramientas</string>
+    <string name="app_quirks_hide_toolbar_summary">Oculte las teclas de la barra de herramientas, las acciones y el botón de expandir al escribir en esta aplicación</string>
+    <string name="app_quirks_badge_no_suggestions">Sin sugerencias</string>
+    <string name="app_quirks_badge_no_toolbar">Sin barra de herramientas</string>
 </resources>

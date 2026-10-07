@@ -1709,4 +1709,10 @@
     <string name="voice_whisper_import_dispatched">Η εισαγωγή μοντέλου Whisper εστάλη</string>
     <string name="voice_model_import_failed_format">Η εισαγωγή μοντέλου απέτυχε:%s</string>
     <string name="voice_model_multilingual">Πολύγλωσσος</string>
+    <string name="app_quirks_hide_suggestion_strip">Απόκρυψη λωρίδας προτάσεων</string>
+    <string name="app_quirks_hide_suggestion_strip_summary">Απόκρυψη προτάσεων λέξεων και υποψήφιων λωρίδων όταν πληκτρολογείτε σε αυτήν την εφαρμογή</string>
+    <string name="app_quirks_hide_toolbar">Απόκρυψη γραμμής εργαλείων</string>
+    <string name="app_quirks_hide_toolbar_summary">Απόκρυψη πλήκτρων της γραμμής εργαλείων, ενεργειών και επέκταση του κουμπιού κατά την πληκτρολόγηση σε αυτήν την εφαρμογή</string>
+    <string name="app_quirks_badge_no_suggestions">Δεν υπάρχουν προτάσεις</string>
+    <string name="app_quirks_badge_no_toolbar">Χωρίς γραμμή εργαλείων</string>
 </resources>

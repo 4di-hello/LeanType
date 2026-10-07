@@ -1656,4 +1656,10 @@ Umožňuje lokální inferenci GGUF / llama.cpp na zařízení pro korektury a p
     <string name="voice_whisper_import_dispatched">Import modelu Whisper byl odeslán</string>
     <string name="voice_model_import_failed_format">Import modelu se nezdařil:%s</string>
     <string name="voice_model_multilingual">Vícejazyčný</string>
+    <string name="app_quirks_hide_suggestion_strip">Skrýt pruh návrhů</string>
+    <string name="app_quirks_hide_suggestion_strip_summary">Při psaní v této aplikaci skryjte návrhy slov a pruh kandidátů</string>
+    <string name="app_quirks_hide_toolbar">Skrýt panel nástrojů</string>
+    <string name="app_quirks_hide_toolbar_summary">Při psaní v této aplikaci skryjte klávesy, akce a rozbalovací tlačítko na panelu nástrojů</string>
+    <string name="app_quirks_badge_no_suggestions">Žádné návrhy</string>
+    <string name="app_quirks_badge_no_toolbar">Žádná lišta Toolbar</string>
 </resources>

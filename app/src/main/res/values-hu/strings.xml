@@ -1647,4 +1647,10 @@ Lehetővé teszi az eszközön futó GGUF / llama.cpp következtetést a javít�
     <string name="voice_whisper_import_dispatched">Whisper modell import kiküldve</string>
     <string name="voice_model_import_failed_format">A modell importálása sikertelen:%s</string>
     <string name="voice_model_multilingual">Többnyelvű</string>
+    <string name="app_quirks_hide_suggestion_strip">Javaslatsáv elrejtése</string>
+    <string name="app_quirks_hide_suggestion_strip_summary">A szójavaslatok és a jelöltsáv elrejtése, amikor gépel ebben az alkalmazásban</string>
+    <string name="app_quirks_hide_toolbar">Eszköztár elrejtése</string>
+    <string name="app_quirks_hide_toolbar_summary">Az eszköztár billentyűinek, műveleteinek elrejtése és a kibontás gomb, amikor gépel ebben az alkalmazásban</string>
+    <string name="app_quirks_badge_no_suggestions">Nincsenek javaslatok</string>
+    <string name="app_quirks_badge_no_toolbar">Nincs Eszköztár</string>
 </resources>

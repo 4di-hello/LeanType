@@ -1716,4 +1716,10 @@
     <string name="voice_whisper_import_dispatched">Импорт модели Whisper отправлен.</string>
     <string name="voice_model_import_failed_format">Не удалось импортировать модель:%s</string>
     <string name="voice_model_multilingual">Многоязычный</string>
+    <string name="app_quirks_hide_suggestion_strip">Скрыть полосу предложений</string>
+    <string name="app_quirks_hide_suggestion_strip_summary">Скрыть варианты слов и полосу кандидатов при вводе текста в этом приложении</string>
+    <string name="app_quirks_hide_toolbar">Скрыть панель инструментов</string>
+    <string name="app_quirks_hide_toolbar_summary">Скрыть клавиши панели инструментов, действия и кнопку развертывания при вводе в этом приложении</string>
+    <string name="app_quirks_badge_no_suggestions">Нет предложений</string>
+    <string name="app_quirks_badge_no_toolbar">Нет панели инструментов</string>
 </resources>

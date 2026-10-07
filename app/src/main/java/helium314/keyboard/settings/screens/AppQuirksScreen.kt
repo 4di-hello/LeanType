@@ -255,6 +255,20 @@ fun AppQuirksScreen(
                         MaterialTheme.colorScheme.onSecondaryContainer
                     ))
                 }
+                if (effective?.hideSuggestionStrip == true) {
+                    badges.add(BadgeInfo(
+                        stringResource(R.string.app_quirks_badge_no_suggestions),
+                        MaterialTheme.colorScheme.tertiaryContainer,
+                        MaterialTheme.colorScheme.onTertiaryContainer
+                    ))
+                }
+                if (effective?.hideToolbar == true) {
+                    badges.add(BadgeInfo(
+                        stringResource(R.string.app_quirks_badge_no_toolbar),
+                        MaterialTheme.colorScheme.secondaryContainer,
+                        MaterialTheme.colorScheme.onSecondaryContainer
+                    ))
+                }
                 if (effective?.forceEnterAction != null) {
                     val actionLabel = when (effective.forceEnterAction) {
                         EditorInfo.IME_ACTION_NONE -> stringResource(R.string.app_quirks_enter_action_none)
@@ -400,6 +414,8 @@ private fun AppQuirkDialog(
     var disableAutoSpace by remember { mutableStateOf(initialEffective.disableAutoSpace) }
     var allowTypeNullKeyboard by remember { mutableStateOf(initialEffective.allowTypeNullKeyboard) }
     var autoCorrectionMode by remember { mutableStateOf(initialEffective.autoCorrectionMode) }
+    var hideSuggestionStrip by remember { mutableStateOf(initialEffective.hideSuggestionStrip) }
+    var hideToolbar by remember { mutableStateOf(initialEffective.hideToolbar) }
     var selectedAction by remember { mutableStateOf(initialEffective.forceEnterAction) }
 
     val options = listOf(
@@ -435,6 +451,8 @@ private fun AppQuirkDialog(
                 disableAutoSpace = disableAutoSpace,
                 allowTypeNullKeyboard = allowTypeNullKeyboard,
                 autoCorrectionMode = autoCorrectionMode,
+                hideSuggestionStrip = hideSuggestionStrip,
+                hideToolbar = hideToolbar,
             )
             AppQuirksManager.saveQuirk(newQuirk)
             onSaved()
@@ -466,6 +484,18 @@ private fun AppQuirkDialog(
         },
         content = {
             Column(modifier = Modifier.fillMaxWidth()) {
+                QuirkToggleRow(
+                    title = stringResource(R.string.app_quirks_hide_suggestion_strip),
+                    summary = stringResource(R.string.app_quirks_hide_suggestion_strip_summary),
+                    checked = hideSuggestionStrip,
+                    onCheckedChange = { hideSuggestionStrip = it }
+                )
+                QuirkToggleRow(
+                    title = stringResource(R.string.app_quirks_hide_toolbar),
+                    summary = stringResource(R.string.app_quirks_hide_toolbar_summary),
+                    checked = hideToolbar,
+                    onCheckedChange = { hideToolbar = it }
+                )
                 QuirkToggleRow(
                     title = stringResource(R.string.app_quirks_force_web_editor),
                     summary = stringResource(R.string.app_quirks_force_web_editor_summary),

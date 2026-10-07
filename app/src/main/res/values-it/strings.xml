@@ -1716,4 +1716,10 @@ Abilita l\'inferenza GGUF / llama.cpp sul dispositivo per correzione e riscrittu
     <string name="voice_whisper_import_dispatched">Importazione del modello Whisper spedita</string>
     <string name="voice_model_import_failed_format">Importazione del modello non riuscita:%s</string>
     <string name="voice_model_multilingual">Multilingue</string>
+    <string name="app_quirks_hide_suggestion_strip">Nascondi la striscia dei suggerimenti</string>
+    <string name="app_quirks_hide_suggestion_strip_summary">Nascondi i suggerimenti di parole e la striscia dei candidati durante la digitazione in questa app</string>
+    <string name="app_quirks_hide_toolbar">Nascondi barra degli strumenti</string>
+    <string name="app_quirks_hide_toolbar_summary">Nascondi i tasti della barra degli strumenti, le azioni e il pulsante di espansione durante la digitazione in questa app</string>
+    <string name="app_quirks_badge_no_suggestions">Nessun suggerimento</string>
+    <string name="app_quirks_badge_no_toolbar">Nessuna barra degli strumenti</string>
 </resources>

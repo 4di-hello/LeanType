@@ -1631,4 +1631,10 @@ Omogućuje lokalno GGUF / llama.cpp zaključivanje na uređaju za lekturu i prep
     <string name="voice_whisper_import_dispatched">Uvoz modela Whisper je poslan</string>
     <string name="voice_model_import_failed_format">Uvoz modela nije uspio:%s</string>
     <string name="voice_model_multilingual">Višejezični</string>
+    <string name="app_quirks_hide_suggestion_strip">Sakrij traku s prijedlozima</string>
+    <string name="app_quirks_hide_suggestion_strip_summary">Sakrij prijedloge riječi i traku s kandidatima dok upisujete u ovoj aplikaciji</string>
+    <string name="app_quirks_hide_toolbar">Sakrij alatnu traku</string>
+    <string name="app_quirks_hide_toolbar_summary">Sakrij tipke alatne trake, radnje i gumb za proširenje kada upisujete u ovu aplikaciju</string>
+    <string name="app_quirks_badge_no_suggestions">Nema prijedloga</string>
+    <string name="app_quirks_badge_no_toolbar">Nema alatne trake</string>
 </resources>

@@ -1714,4 +1714,10 @@
     <string name="voice_whisper_import_dispatched">تم إرسال استيراد نموذج Whisper</string>
     <string name="voice_model_import_failed_format">فشل استيراد النموذج:%s</string>
     <string name="voice_model_multilingual">متعدد اللغات</string>
+    <string name="app_quirks_hide_suggestion_strip">إخفاء شريط الاقتراحات</string>
+    <string name="app_quirks_hide_suggestion_strip_summary">إخفاء اقتراحات الكلمات وشريط المرشح عند الكتابة في هذا التطبيق</string>
+    <string name="app_quirks_hide_toolbar">إخفاء شريط الأدوات</string>
+    <string name="app_quirks_hide_toolbar_summary">إخفاء مفاتيح شريط الأدوات والإجراءات وزر التوسيع عند الكتابة في هذا التطبيق</string>
+    <string name="app_quirks_badge_no_suggestions">لا اقتراحات</string>
+    <string name="app_quirks_badge_no_toolbar">لا يوجد شريط أدوات</string>
 </resources>

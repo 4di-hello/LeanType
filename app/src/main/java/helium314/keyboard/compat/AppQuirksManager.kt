@@ -174,6 +174,22 @@ object AppQuirksManager {
         return getEffectiveQuirk(packageName)?.autoCorrectionMode ?: AUTOCORRECT_DEFAULT
     }
 
+    /**
+     * Returns whether suggestion strip is hidden for this application.
+     */
+    fun isSuggestionStripHidden(packageName: String?): Boolean {
+        if (packageName == null) return false
+        return getEffectiveQuirk(packageName)?.hideSuggestionStrip == true
+    }
+
+    /**
+     * Returns whether toolbar is hidden for this application.
+     */
+    fun isToolbarHidden(packageName: String?): Boolean {
+        if (packageName == null) return false
+        return getEffectiveQuirk(packageName)?.hideToolbar == true
+    }
+
     fun getUserQuirk(packageName: String): AppQuirk? = userQuirks[packageName]
 
     fun getAllUserQuirks(): Map<String, AppQuirk> = HashMap(userQuirks)

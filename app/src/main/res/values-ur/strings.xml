@@ -1700,4 +1700,10 @@
     <string name="voice_whisper_import_dispatched">وسپر ماڈل امپورٹ بھیج دیا گیا۔</string>
     <string name="voice_model_import_failed_format">ماڈل کی درآمد ناکام ہوگئی:%s</string>
     <string name="voice_model_multilingual">کثیر لسانی</string>
+    <string name="app_quirks_hide_suggestion_strip">تجویز کی پٹی چھپائیں۔</string>
+    <string name="app_quirks_hide_suggestion_strip_summary">اس ایپ میں ٹائپ کرتے وقت الفاظ کی تجاویز اور امیدوار کی پٹی چھپائیں۔</string>
+    <string name="app_quirks_hide_toolbar">ٹول بار چھپائیں۔</string>
+    <string name="app_quirks_hide_toolbar_summary">اس ایپ میں ٹائپ کرتے وقت ٹول بار کیز، ایکشنز، اور ایکسپینڈ بٹن کو چھپائیں۔</string>
+    <string name="app_quirks_badge_no_suggestions">کوئی تجاویز نہیں۔</string>
+    <string name="app_quirks_badge_no_toolbar">کوئی ٹول بار نہیں۔</string>
 </resources>

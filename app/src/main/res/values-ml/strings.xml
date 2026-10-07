@@ -1709,4 +1709,10 @@
     <string name="voice_whisper_import_dispatched">വിസ്‌പർ മോഡൽ ഇറക്കുമതി അയച്ചു</string>
     <string name="voice_model_import_failed_format">മോഡൽ ഇറക്കുമതി പരാജയപ്പെട്ടു:%s</string>
     <string name="voice_model_multilingual">ബഹുഭാഷ</string>
+    <string name="app_quirks_hide_suggestion_strip">നിർദ്ദേശ സ്ട്രിപ്പ് മറയ്ക്കുക</string>
+    <string name="app_quirks_hide_suggestion_strip_summary">ഈ ആപ്പിൽ ടൈപ്പ് ചെയ്യുമ്പോൾ പദ നിർദ്ദേശങ്ങളും കാൻഡിഡേറ്റ് സ്ട്രിപ്പും മറയ്ക്കുക</string>
+    <string name="app_quirks_hide_toolbar">ടൂൾബാർ മറയ്ക്കുക</string>
+    <string name="app_quirks_hide_toolbar_summary">ഈ ആപ്പിൽ ടൈപ്പ് ചെയ്യുമ്പോൾ ടൂൾബാർ കീകൾ, പ്രവർത്തനങ്ങൾ, വിപുലീകരിക്കുക ബട്ടൺ എന്നിവ മറയ്ക്കുക</string>
+    <string name="app_quirks_badge_no_suggestions">നിർദ്ദേശങ്ങളൊന്നുമില്ല</string>
+    <string name="app_quirks_badge_no_toolbar">ടൂൾബാർ ഇല്ല</string>
 </resources>
