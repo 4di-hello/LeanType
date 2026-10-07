@@ -44,10 +44,15 @@ fun createPopupKeysArray(popupSet: PopupSet<*>?, params: KeyboardParams, label: 
     if (!popupKeysDelegate.isInitialized() || popupKeys.isEmpty())
         return null
     val fco = popupKeys.firstOrNull { it.startsWith(Key.POPUP_KEYS_FIXED_ORDER) }
-    if (fco != null && fco.substringAfter(Key.POPUP_KEYS_FIXED_ORDER).toIntOrNull() != popupKeys.size - 1) {
-        val fcoExpected = popupKeys.size - popupKeys.count { it.startsWith("!") && it.endsWith("!") } - 1
-        if (fco.substringAfter(Key.POPUP_KEYS_FIXED_ORDER).toIntOrNull() != fcoExpected)
-            popupKeys.remove(fco) // maybe rather adjust the number instead of remove?
+    if (fco != null) {
+        val actualKeyCount = popupKeys.count { !it.startsWith("!") || !it.endsWith("!") }
+        val fcoCols = fco.substringAfter(Key.POPUP_KEYS_FIXED_ORDER).toIntOrNull()
+        if (fcoCols != null && fcoCols >= actualKeyCount - 1 && fcoCols != actualKeyCount) {
+            val tmp = popupKeys.toList()
+            popupKeys.clear()
+            popupKeys.add("${Key.POPUP_KEYS_FIXED_ORDER}$actualKeyCount")
+            popupKeys.addAll(tmp.filterNot { it.startsWith(Key.POPUP_KEYS_FIXED_ORDER) })
+        }
     }
     if (popupKeys.size > 1 && (label == "(" || label == ")")) { // add fixed column order for that case (typically other variants of brackets / parentheses
         // not really fast, but no other way to add first in a LinkedHashSet

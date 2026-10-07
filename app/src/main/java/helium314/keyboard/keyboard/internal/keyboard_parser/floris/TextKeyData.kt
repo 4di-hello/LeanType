@@ -458,13 +458,13 @@ sealed interface KeyData : AbstractKeyData {
     }
 
     private fun getAdditionalPopupKeys(params: KeyboardParams): PopupSet<AbstractKeyData>? {
-        if (groupId == GROUP_COMMA) return SimplePopups(getCommaPopupKeys(params))
-        if (groupId == GROUP_PERIOD) return getPeriodPopups(params)
+        if (groupId == GROUP_COMMA) return if (popup.isEmpty()) SimplePopups(getCommaPopupKeys(params)) else null
+        if (groupId == GROUP_PERIOD) return if (popup.isEmpty()) getPeriodPopups(params) else null
         if (groupId == GROUP_ENTER) return getActionKeyPopupKeys(params)
         if (groupId == GROUP_NO_DEFAULT_POPUP) return null
         return when (label) {
-            KeyLabel.COMMA -> SimplePopups(getCommaPopupKeys(params))
-            KeyLabel.PERIOD -> getPeriodPopups(params)
+            KeyLabel.COMMA -> if (popup.isEmpty()) SimplePopups(getCommaPopupKeys(params)) else null
+            KeyLabel.PERIOD -> if (popup.isEmpty()) getPeriodPopups(params) else null
             KeyLabel.ACTION -> getActionKeyPopupKeys(params)
             KeyLabel.SHIFT -> {
                 if (params.mId.isAlphabetKeyboard) SimplePopups(
