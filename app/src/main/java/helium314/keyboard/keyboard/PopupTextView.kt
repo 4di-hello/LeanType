@@ -114,9 +114,6 @@ class PopupTextView @JvmOverloads constructor(
     }
 
     override fun dismissPopupKeysPanel() {
-        if (!isShowingInParent) {
-            return
-        }
         mController.onDismissPopupKeysPanel()
     }
 

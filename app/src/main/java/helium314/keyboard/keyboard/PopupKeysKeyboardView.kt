@@ -304,12 +304,11 @@ open class PopupKeysKeyboardView @JvmOverloads constructor(
     }
 
     override fun dismissPopupKeysPanel() {
-        if (!isShowingInParent) {
-            return
-        }
-        val accessibilityDelegate = mAccessibilityDelegate
-        if (accessibilityDelegate != null && AccessibilityUtils.instance.isAccessibilityEnabled) {
-            accessibilityDelegate.onDismissPopupKeysKeyboard()
+        if (isShowingInParent) {
+            val accessibilityDelegate = mAccessibilityDelegate
+            if (accessibilityDelegate != null && AccessibilityUtils.instance.isAccessibilityEnabled) {
+                accessibilityDelegate.onDismissPopupKeysKeyboard()
+            }
         }
         mController.onDismissPopupKeysPanel()
     }

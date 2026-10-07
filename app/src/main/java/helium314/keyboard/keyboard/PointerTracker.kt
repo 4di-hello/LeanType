@@ -508,6 +508,7 @@ class PointerTracker private constructor(
         if (isShowingPopupKeysPanel()) {
             mPopupKeysPanel?.dismissPopupKeysPanel()
             mPopupKeysPanel = null
+            mIsTrackingForActionDisabled = true
         }
     }
 
@@ -1325,6 +1326,10 @@ class PointerTracker private constructor(
 
         fun cancelAllPointerTrackers() {
             sPointerTrackerQueue.cancelAllPointerTrackers()
+        }
+
+        fun releaseAllPointers(eventTime: Long = SystemClock.uptimeMillis()) {
+            sPointerTrackerQueue.releaseAllPointers(eventTime)
         }
 
         fun setKeyboardActionListener(listener: KeyboardActionListener) {

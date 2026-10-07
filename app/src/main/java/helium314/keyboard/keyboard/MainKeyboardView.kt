@@ -319,14 +319,15 @@ class MainKeyboardView @JvmOverloads constructor(
     }
 
     fun isShowingPopupKeysPanel(): Boolean = mPopupKeysPanel?.isShowingInParent == true
-    override fun onCancelPopupKeysPanel() { PointerTracker.dismissAllPopupKeysPanels() }
+    override fun onCancelPopupKeysPanel() {
+        PointerTracker.dismissAllPopupKeysPanels()
+        onDismissPopupKeysPanel()
+    }
     override fun onDismissPopupKeysPanel() {
-        if (isShowingPopupKeysPanel()) {
-            val panel = mPopupKeysPanel
-            mPopupKeysPanel = null
-            panel?.dismissInParent {
-                LatinIME.getInstance()?.requestInsetsUpdate()
-            }
+        val panel = mPopupKeysPanel ?: return
+        mPopupKeysPanel = null
+        panel.dismissInParent {
+            LatinIME.getInstance()?.requestInsetsUpdate()
         }
     }
 
@@ -349,7 +350,10 @@ class MainKeyboardView @JvmOverloads constructor(
         val index = event.actionIndex
         val id = event.getPointerId(index)
         val tracker = PointerTracker.getPointerTracker(id)
-        if (isShowingPopupKeysPanel() && !tracker.isShowingPopupKeysPanel() && PointerTracker.getActivePointerTrackerCount() == 1) return true
+        val action = event.actionMasked
+        if (action != MotionEvent.ACTION_UP && action != MotionEvent.ACTION_POINTER_UP && action != MotionEvent.ACTION_CANCEL) {
+            if (isShowingPopupKeysPanel() && !tracker.isShowingPopupKeysPanel() && PointerTracker.getActivePointerTrackerCount() == 1) return true
+        }
         tracker.processMotionEvent(event, mKeyDetector)
         return true
     }
@@ -369,6 +373,7 @@ class MainKeyboardView @JvmOverloads constructor(
         mPopupKeysPanel = null
         dismissAllKeyPreviews()
         PointerTracker.cancelAllPointerTrackers()
+        PointerTracker.releaseAllPointers()
     }
 
     fun closing() { cancelAllOngoingEvents(); mPopupKeysKeyboardCache.clear() }
