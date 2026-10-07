@@ -677,7 +677,8 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
         isProcessing: Boolean,
         onStop: Runnable? = null,
         onCancel: Runnable? = null,
-        mode: VoiceVisualizerView.Mode = if (isProcessing) VoiceVisualizerView.Mode.PROCESSING else VoiceVisualizerView.Mode.RECORDING
+        mode: VoiceVisualizerView.Mode = if (isProcessing) VoiceVisualizerView.Mode.PROCESSING else VoiceVisualizerView.Mode.RECORDING,
+        audioLevelProvider: (() -> Float)? = null
     ) {
         clear()
         isExternalSuggestionVisible = true
@@ -708,33 +709,19 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
         }
         container.addView(micIconView)
 
-        // Animated Audio Waveform Visualizer
+        // Animated Audio Waveform Visualizer (Google Rambler style live sound graph occupying the center strip)
         val visualizer = VoiceVisualizerView(context).apply {
-            layoutParams = LinearLayout.LayoutParams(28.dpToPx(resources), LayoutParams.MATCH_PARENT).apply {
-                marginStart = 2.dpToPx(resources)
-                marginEnd = 6.dpToPx(resources)
-            }
-            setColor(actionColor)
-            setMode(mode)
-        }
-        voiceVisualizerView = visualizer
-        container.addView(visualizer)
-
-        // Status Text
-        val textView = TextView(context).apply {
-            text = statusText
-            setTextColor(textColor)
-            setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
-            typeface = android.graphics.Typeface.DEFAULT_BOLD
-            gravity = Gravity.CENTER_VERTICAL
-            maxLines = 1
-            ellipsize = TextUtils.TruncateAt.END
             layoutParams = LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 1f).apply {
                 marginStart = 4.dpToPx(resources)
                 marginEnd = 4.dpToPx(resources)
             }
+            contentDescription = statusText
+            setColor(actionColor)
+            this.audioLevelProvider = audioLevelProvider
+            setMode(mode)
         }
-        container.addView(textView)
+        voiceVisualizerView = visualizer
+        container.addView(visualizer)
 
         // Done / Stop Button (Checkmark)
         if (!isProcessing && onStop != null) {

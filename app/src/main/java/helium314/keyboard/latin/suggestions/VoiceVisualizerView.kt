@@ -35,11 +35,15 @@ class VoiceVisualizerView @JvmOverloads constructor(
     private var phase = 0f
     private var animator: ValueAnimator? = null
 
-    private val barWidth = 3.dpToPx(resources).toFloat()
-    private val barSpacing = 3.dpToPx(resources).toFloat()
+    var audioLevelProvider: (() -> Float)? = null
+    private var smoothedLevel = 0f
+
+    private val barWidth = 5.dpToPx(resources).toFloat()
+    private val barSpacing = 7.dpToPx(resources).toFloat()
     private val totalBarsWidth = barCount * barWidth + (barCount - 1) * barSpacing
-    private val minHeight = 4.dpToPx(resources).toFloat()
-    private val minHeightExtra = 6.dpToPx(resources).toFloat()
+    private val minHeight = barWidth
+    private val idleBreathingExtra = 2.dpToPx(resources).toFloat()
+    private val minHeightExtra = 8.dpToPx(resources).toFloat()
 
     init {
         val defaultColor = 0xFF4285F4.toInt()
@@ -54,6 +58,9 @@ class VoiceVisualizerView @JvmOverloads constructor(
     fun setMode(newMode: Mode) {
         if (mode == newMode) return
         mode = newMode
+        if (newMode != Mode.RECORDING) {
+            smoothedLevel = 0f
+        }
         updateAnimation()
         invalidate()
     }
@@ -63,6 +70,7 @@ class VoiceVisualizerView @JvmOverloads constructor(
         animator = null
 
         if (mode == Mode.IDLE || !isAttachedToWindow) {
+            smoothedLevel = 0f
             return
         }
 
@@ -80,6 +88,11 @@ class VoiceVisualizerView @JvmOverloads constructor(
                 interpolator = LinearInterpolator()
                 addUpdateListener { va ->
                     phase = va.animatedValue as Float
+                    if (mode == Mode.RECORDING) {
+                        val target = audioLevelProvider?.invoke() ?: 0f
+                        val smoothingFactor = if (target > smoothedLevel) 0.35f else 0.15f
+                        smoothedLevel += (target - smoothedLevel) * smoothingFactor
+                    }
                     invalidate()
                 }
                 start()
@@ -96,6 +109,7 @@ class VoiceVisualizerView @JvmOverloads constructor(
         super.onDetachedFromWindow()
         animator?.cancel()
         animator = null
+        smoothedLevel = 0f
     }
 
     override fun onVisibilityChanged(changedView: View, visibility: Int) {
@@ -105,6 +119,7 @@ class VoiceVisualizerView @JvmOverloads constructor(
         } else {
             animator?.cancel()
             animator = null
+            smoothedLevel = 0f
         }
     }
 
@@ -118,25 +133,39 @@ class VoiceVisualizerView @JvmOverloads constructor(
 
         var startX = (viewWidth - totalBarsWidth) / 2f
         val centerY = viewHeight / 2f
-        val maxHeight = (viewHeight * 0.6f).coerceAtLeast(minHeight + minHeightExtra)
+        val maxHeight = (viewHeight * 0.65f).coerceAtLeast(minHeight + minHeightExtra)
 
         for (i in 0 until barCount) {
             val barHeight = when (mode) {
                 Mode.RECORDING -> {
-                    val offset = i * 0.9f
-                    val wave = (sin(phase + offset) + 1f) / 2f
-                    val secondary = (sin(phase * 1.5f + offset * 1.3f) + 1f) / 4f
-                    val normalized = (wave * 0.7f + secondary * 0.3f).coerceIn(0f, 1f)
-                    minHeight + normalized * (maxHeight - minHeight)
+                    val level = smoothedLevel
+                    if (level < 0.04f) {
+                        // Subtle gentle idle breathing when mic is open but quiet
+                        val idleWave = (sin(phase * 1.2f + i * 0.7f) + 1f) / 2f
+                        minHeight + idleWave * idleBreathingExtra
+                    } else {
+                        // Bar sensitivity curve (inner bars react slightly more, outer bars slightly less)
+                        val barWeight = when (i) {
+                            0 -> 0.72f
+                            1 -> 1.0f
+                            2 -> 0.88f
+                            3 -> 0.68f
+                            else -> 0.8f
+                        }
+                        // Organic dynamic movement mimicking frequency spectrum
+                        val microWave = (sin(phase * 2.8f + i * 1.3f) + 1f) / 2f
+                        val dynamicFactor = (0.7f + 0.3f * microWave) * barWeight
+                        val expansion = (level * dynamicFactor).coerceIn(0f, 1f)
+                        minHeight + expansion * (maxHeight - minHeight)
+                    }
                 }
                 Mode.PROCESSING -> {
-                    val offset = i * (Math.PI / 2).toFloat()
-                    val wave = (sin(phase * 2 + offset) + 1f) / 2f
-                    minHeight + wave * (maxHeight - minHeight) * 0.75f
+                    val wave = (sin(phase * 2.2f + i * 0.9f) + 1f) / 2f
+                    minHeight + wave * (maxHeight - minHeight) * 0.65f
                 }
                 Mode.CONNECTING -> {
-                    val pulse = (sin(phase) + 1f) / 2f
-                    minHeight + pulse * (maxHeight - minHeight) * 0.4f
+                    val pulse = (sin(phase + i * 0.6f) + 1f) / 2f
+                    minHeight + pulse * (maxHeight - minHeight) * 0.35f
                 }
                 Mode.IDLE -> minHeight
             }

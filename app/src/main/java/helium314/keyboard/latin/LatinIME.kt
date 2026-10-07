@@ -541,7 +541,8 @@ class LatinIME : InputMethodService(),
                         strip.showVoiceStatus(
                             getString(R.string.voice_status_listening), false,
                             { voiceInputManager?.stopVoice() }, { voiceInputManager?.cancelVoice() },
-                            VoiceVisualizerView.Mode.RECORDING
+                            VoiceVisualizerView.Mode.RECORDING,
+                            { voiceInputManager?.currentAudioLevel ?: 0f }
                         )
                     }
                     VoiceInputManager.VoiceState.PROCESSING_FINAL -> {

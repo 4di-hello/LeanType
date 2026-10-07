@@ -65,6 +65,10 @@ class VoiceInputManager(
     var lastFailedOnlineAudio: CachedVoiceAudio? = null
         private set
 
+    @Volatile
+    var currentAudioLevel: Float = 0f
+        private set
+
     fun clearFailedAudio() {
         lastFailedOnlineAudio = null
     }
@@ -623,17 +627,26 @@ class VoiceInputManager(
                             break
                         }
 
+                        var sum = 0.0
+                        var sampleCount = 0
+                        var i = 0
+                        while (i < read - 1) {
+                            val sample = ((buffer[i + 1].toInt() shl 8) or (buffer[i].toInt() and 0xFF)).toShort()
+                            sum += sample.toDouble() * sample.toDouble()
+                            sampleCount++
+                            i += 2
+                        }
+                        val rms = if (sampleCount > 0) kotlin.math.sqrt(sum / sampleCount) else 0.0
+
+                        // Normalize RMS for live audio visualizer (typical speech RMS: 100 - 3000)
+                        val rawNormalized = if (rms > 40.0) {
+                            ((rms - 40.0) / 1400.0).coerceIn(0.0, 1.0)
+                        } else {
+                            0.0
+                        }
+                        currentAudioLevel = kotlin.math.sqrt(rawNormalized).toFloat()
+
                         if (silenceTimeoutMs > 0L) {
-                            var sum = 0.0
-                            var sampleCount = 0
-                            var i = 0
-                            while (i < read - 1) {
-                                val sample = ((buffer[i + 1].toInt() shl 8) or (buffer[i].toInt() and 0xFF)).toShort()
-                                sum += sample.toDouble() * sample.toDouble()
-                                sampleCount++
-                                i += 2
-                            }
-                            val rms = if (sampleCount > 0) kotlin.math.sqrt(sum / sampleCount) else 0.0
                             if (rms > speechRmsThreshold) {
                                 lastSpeechTime = now
                                 hasSpoken = true
@@ -659,6 +672,7 @@ class VoiceInputManager(
                     Log.e(TAG, "Exception in audio write loop", e)
                 }
             } finally {
+                currentAudioLevel = 0f
                 try { outputStream?.close() } catch (_: Exception) {}
                 Log.i(TAG, "Audio loop ended. Total wrote: $totalBytesWritten bytes")
             }
@@ -818,6 +832,7 @@ class VoiceInputManager(
     }
 
     private fun stopAudioLoop() {
+        currentAudioLevel = 0f
         if (!isRecording.getAndSet(false)) return
         Log.i(TAG, "stopAudioLoop() executing")
 
