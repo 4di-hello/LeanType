@@ -1711,4 +1711,5 @@ Permet l\'inférence GGUF / llama.cpp sur l\'appareil pour la correction et la r
     <string name="app_quirks_hide_toolbar_summary">Masquer les touches de la barre d\'outils, les actions et le bouton de développement lors de la saisie dans cette application</string>
     <string name="app_quirks_badge_no_suggestions">Aucune suggestion</string>
     <string name="app_quirks_badge_no_toolbar">Aucune barre d\'outils</string>
+    <string name="text_expander_tag_desc_date_format">Date formatée (par exemple,%date:aaaa/MM/dd% ou%date:format(pattern)%)</string>
 </resources>

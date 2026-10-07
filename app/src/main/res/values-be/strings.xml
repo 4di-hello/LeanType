@@ -1649,4 +1649,5 @@
     <string name="app_quirks_hide_toolbar_summary">Схаваць клавішы панэлі інструментаў, дзеянні і кнопку разгортвання падчас уводу ў гэтай праграме</string>
     <string name="app_quirks_badge_no_suggestions">Няма прапаноў</string>
     <string name="app_quirks_badge_no_toolbar">Няма панэлі інструментаў</string>
+    <string name="text_expander_tag_desc_date_format">Адфарматаваная дата (напрыклад,%date:yyyy/MM/dd% або%date:format(pattern)%)</string>
 </resources>

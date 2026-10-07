@@ -1648,4 +1648,5 @@ Permite la inferencia GGUF / llama.cpp en el dispositivo para corrección y rees
     <string name="app_quirks_hide_toolbar_summary">Oculte las teclas de la barra de herramientas, las acciones y el botón de expandir al escribir en esta aplicación</string>
     <string name="app_quirks_badge_no_suggestions">Sin sugerencias</string>
     <string name="app_quirks_badge_no_toolbar">Sin barra de herramientas</string>
+    <string name="text_expander_tag_desc_date_format">Fecha formateada (por ejemplo,%dcomió:aaaa/MM/dd% o%dcomió:formato(patrón)%)</string>
 </resources>

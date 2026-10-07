@@ -1699,4 +1699,5 @@ Umożliwia lokalne wnioskowanie GGUF / llama.cpp na urządzeniu w celu korekty i
     <string name="app_quirks_hide_toolbar_summary">Ukryj klawisze paska narzędzi, akcje i przycisk rozwijania podczas pisania w tej aplikacji</string>
     <string name="app_quirks_badge_no_suggestions">Brak sugestii</string>
     <string name="app_quirks_badge_no_toolbar">Brak paska narzędzi</string>
+    <string name="text_expander_tag_desc_date_format">Sformatowana data (np.%date:rrrr/MM/dd% lub%date:format(wzór)%)</string>
 </resources>

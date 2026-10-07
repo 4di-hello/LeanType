@@ -1722,4 +1722,5 @@ Abilita l\'inferenza GGUF / llama.cpp sul dispositivo per correzione e riscrittu
     <string name="app_quirks_hide_toolbar_summary">Nascondi i tasti della barra degli strumenti, le azioni e il pulsante di espansione durante la digitazione in questa app</string>
     <string name="app_quirks_badge_no_suggestions">Nessun suggerimento</string>
     <string name="app_quirks_badge_no_toolbar">Nessuna barra degli strumenti</string>
+    <string name="text_expander_tag_desc_date_format">Data formattata (ad esempio%date:aaaa/MM/gg% o%date:format(pattern)%)</string>
 </resources>

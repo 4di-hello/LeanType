@@ -1664,4 +1664,5 @@
     <string name="app_quirks_hide_toolbar_summary">הסתר מקשי סרגל כלים, פעולות וכפתור הרחבה בעת הקלדה באפליקציה זו</string>
     <string name="app_quirks_badge_no_suggestions">אין הצעות</string>
     <string name="app_quirks_badge_no_toolbar">אין סרגל כלים</string>
+    <string name="text_expander_tag_desc_date_format">תאריך מעוצב (למשל%date:yyyy/MM/dd% או%date:format(pattern)%)</string>
 </resources>

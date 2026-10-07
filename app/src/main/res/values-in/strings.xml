@@ -1612,4 +1612,5 @@ Memungkinkan inferensi GGUF / llama.cpp di perangkat untuk koreksi teks dan penu
     <string name="app_quirks_hide_toolbar_summary">Sembunyikan tombol toolbar, tindakan, dan tombol perluas saat mengetik di aplikasi ini</string>
     <string name="app_quirks_badge_no_suggestions">Tidak Ada Saran</string>
     <string name="app_quirks_badge_no_toolbar">Tidak Ada Bilah Alat</string>
+    <string name="text_expander_tag_desc_date_format">Tanggal yang diformat (misalnya%dmakan:yyyy/MM/dd% atau%dmakan:format(pola)%)</string>
 </resources>

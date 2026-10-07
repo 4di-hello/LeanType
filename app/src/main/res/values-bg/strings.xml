@@ -1697,4 +1697,5 @@
     <string name="app_quirks_hide_toolbar_summary">Скриване на бутоните на лентата с инструменти, действията и бутона за разширяване, когато пишете в това приложение</string>
     <string name="app_quirks_badge_no_suggestions">Няма предложения</string>
     <string name="app_quirks_badge_no_toolbar">Няма лента с инструменти</string>
+    <string name="text_expander_tag_desc_date_format">Форматирана дата (напр.%date:yyyy/MM/dd% или%date:format(pattern)%)</string>
 </resources>

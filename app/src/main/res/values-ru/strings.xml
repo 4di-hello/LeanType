@@ -1722,4 +1722,5 @@
     <string name="app_quirks_hide_toolbar_summary">Скрыть клавиши панели инструментов, действия и кнопку развертывания при вводе в этом приложении</string>
     <string name="app_quirks_badge_no_suggestions">Нет предложений</string>
     <string name="app_quirks_badge_no_toolbar">Нет панели инструментов</string>
+    <string name="text_expander_tag_desc_date_format">Форматированная дата (например,%date:гггг/ММ/дд% или%date:format(шаблон)%)</string>
 </resources>

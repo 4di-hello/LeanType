@@ -1644,4 +1644,5 @@ Võimaldab seadmesisese GGUF / llama.cpp järelduse korrektuuri ja ümbersõnast
     <string name="app_quirks_hide_toolbar_summary">Peida tööriistariba klahvid, toimingud ja laiendamisnupp sellesse rakendusse tippimisel</string>
     <string name="app_quirks_badge_no_suggestions">Soovitusi pole</string>
     <string name="app_quirks_badge_no_toolbar">Tööriistariba pole</string>
+    <string name="text_expander_tag_desc_date_format">Vormindatud kuupäev (nt%date:yyyy/MM/dd% või%date:format(muster)%)</string>
 </resources>

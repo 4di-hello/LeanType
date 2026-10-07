@@ -1715,4 +1715,5 @@
     <string name="app_quirks_hide_toolbar_summary">Απόκρυψη πλήκτρων της γραμμής εργαλείων, ενεργειών και επέκταση του κουμπιού κατά την πληκτρολόγηση σε αυτήν την εφαρμογή</string>
     <string name="app_quirks_badge_no_suggestions">Δεν υπάρχουν προτάσεις</string>
     <string name="app_quirks_badge_no_toolbar">Χωρίς γραμμή εργαλείων</string>
+    <string name="text_expander_tag_desc_date_format">Μορφοποιημένη ημερομηνία (π.χ.%date:yyyy/MM/dd% ή%date:format(pattern)%)</string>
 </resources>

@@ -1663,4 +1663,5 @@
     <string name="app_quirks_hide_toolbar_summary">在此应用程序中键入内容时隐藏工具栏键、操作和展开按钮</string>
     <string name="app_quirks_badge_no_suggestions">没有建议</string>
     <string name="app_quirks_badge_no_toolbar">无工具栏</string>
+    <string name="text_expander_tag_desc_date_format">格式化日期（例如%date:yyyy/MM/dd% 或%date:format(pattern)%）</string>
 </resources>

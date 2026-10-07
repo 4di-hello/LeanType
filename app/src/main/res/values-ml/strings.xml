@@ -1715,4 +1715,5 @@
     <string name="app_quirks_hide_toolbar_summary">ഈ ആപ്പിൽ ടൈപ്പ് ചെയ്യുമ്പോൾ ടൂൾബാർ കീകൾ, പ്രവർത്തനങ്ങൾ, വിപുലീകരിക്കുക ബട്ടൺ എന്നിവ മറയ്ക്കുക</string>
     <string name="app_quirks_badge_no_suggestions">നിർദ്ദേശങ്ങളൊന്നുമില്ല</string>
     <string name="app_quirks_badge_no_toolbar">ടൂൾബാർ ഇല്ല</string>
+    <string name="text_expander_tag_desc_date_format">ഫോർമാറ്റ് ചെയ്ത തീയതി (ഉദാ.%dകഴിച്ചത്:yyyy/MM/dd% അല്ലെങ്കിൽ%date:ഫോർമാറ്റ്(പാറ്റേൺ)%)</string>
 </resources>

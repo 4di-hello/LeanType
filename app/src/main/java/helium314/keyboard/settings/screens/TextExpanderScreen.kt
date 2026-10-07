@@ -286,6 +286,7 @@ fun TextExpanderScreen(onClickBack: () -> Unit) {
                                         ) {
                                             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                                                 PlaceholderChip(tag = "%date%", desc = stringResource(R.string.text_expander_tag_desc_date))
+                                                PlaceholderChip(tag = "%date:yyyy/MM/dd%", desc = stringResource(R.string.text_expander_tag_desc_date_format))
                                                 PlaceholderChip(tag = "%time%", desc = stringResource(R.string.text_expander_tag_desc_time))
                                                 PlaceholderChip(tag = "%time12%", desc = stringResource(R.string.text_expander_tag_desc_time12))
                                                 PlaceholderChip(tag = "%year%", desc = stringResource(R.string.text_expander_tag_desc_year))
@@ -572,7 +573,7 @@ fun TextExpanderScreen(onClickBack: () -> Unit) {
                         val tags = listOf(
                             "%clipboard%", "%clipboard:clean%", "%clipboard:singleline%",
                             "%clipboard:title%", "%clipboard:slug%", "%clipboard:upper%",
-                            "%date%", "%time%", "%time12%",
+                            "%date%", "%date:yyyy/MM/dd%", "%date:dd-MM-yyyy%", "%time%", "%time12%",
                             "%day%", "%month%", "%year%", "%week%",
                             "%battery%", "%language%", "%cursor%", "%greeting%",
                             "%tomorrow%", "%bullets%", "%list%"

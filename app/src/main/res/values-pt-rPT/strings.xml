@@ -1652,4 +1652,5 @@ Habilita inferência GGUF / llama.cpp no dispositivo para revisão e reescrita.<
     <string name="app_quirks_hide_toolbar_summary">Ocultar teclas da barra de ferramentas, ações e botão de expansão ao digitar neste aplicativo</string>
     <string name="app_quirks_badge_no_suggestions">Sem sugestões</string>
     <string name="app_quirks_badge_no_toolbar">Sem barra de ferramentas</string>
+    <string name="text_expander_tag_desc_date_format">Data formatada (por exemplo,%date:yyyy/MM/dd% ou%date:format(pattern)%)</string>
 </resources>

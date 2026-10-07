@@ -1645,4 +1645,5 @@ Ar norite atnaujinti?</string>
     <string name="app_quirks_hide_toolbar_summary">Slėpti įrankių juostos klavišus, veiksmus ir išplėtimo mygtuką, kai rašote šioje programoje</string>
     <string name="app_quirks_badge_no_suggestions">Jokių pasiūlymų</string>
     <string name="app_quirks_badge_no_toolbar">Nėra įrankių juostos</string>
+    <string name="text_expander_tag_desc_date_format">Suformatuota data (pvz.,%date:yyyy/MM/dd% arba%date:format(pattern)%)</string>
 </resources>

@@ -1644,4 +1644,5 @@ Activează inferența GGUF / llama.cpp pe dispozitiv pentru corectură și refor
     <string name="app_quirks_hide_toolbar_summary">Ascunde tastele barei de instrumente, acțiunile și butonul de extindere atunci când tastați în această aplicație</string>
     <string name="app_quirks_badge_no_suggestions">Fără sugestii</string>
     <string name="app_quirks_badge_no_toolbar">Fără bară de instrumente</string>
+    <string name="text_expander_tag_desc_date_format">Data formatată (de exemplu,%date:aaaa/LL/zz% sau%date:format(model)%)</string>
 </resources>

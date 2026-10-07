@@ -1706,4 +1706,5 @@
     <string name="app_quirks_hide_toolbar_summary">اس ایپ میں ٹائپ کرتے وقت ٹول بار کیز، ایکشنز، اور ایکسپینڈ بٹن کو چھپائیں۔</string>
     <string name="app_quirks_badge_no_suggestions">کوئی تجاویز نہیں۔</string>
     <string name="app_quirks_badge_no_toolbar">کوئی ٹول بار نہیں۔</string>
+    <string name="text_expander_tag_desc_date_format">فارمیٹ شدہ تاریخ (جیسے%date:yyyy/MM/dd% یا%date:format(pattern)%)</string>
 </resources>

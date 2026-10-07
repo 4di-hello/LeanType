@@ -38,7 +38,8 @@ object TextExpanderUtils {
     private val MULTI_UNDERSCORE_REGEX = Regex("""_+""")
     private val URL_REGEX = Regex("""https?://\S+""")
     private val TWO_OR_MORE_SPACES_REGEX = Regex("""\s{2,}""")
-    private val DATE_REGEX = Regex("%date(?::([a-zA-Z0-9_():, -]+))?%")
+    private val DATE_REGEX = Regex("%date(?::([a-zA-Z0-9_():, ./-]+))?%")
+    private val TOMORROW_REGEX = Regex("%tomorrow(?::([a-zA-Z0-9_():, ./-]+))?%")
     private val CLIPBOARD_REGEX = Regex("%clipboard(?::([a-zA-Z0-9_():, -]+))?%")
     private val BULLETS_REGEX = Regex("%bullets(?:_(\\d+))?%")
     private val LIST_REGEX = Regex("%list(?:_(\\d+))?%")
@@ -159,9 +160,8 @@ object TextExpanderUtils {
         return cleaned
     }
 
-    fun applyModifiers(input: String, modifiersString: String): String {
-        if (modifiersString.isBlank()) return input
-        var text = input
+    fun parseModifierTokens(modifiersString: String): List<String> {
+        if (modifiersString.isBlank()) return emptyList()
         val modifierTokens = mutableListOf<String>()
         var currentToken = StringBuilder()
         var parenDepth = 0
@@ -176,6 +176,83 @@ object TextExpanderUtils {
             }
         }
         if (currentToken.isNotBlank()) modifierTokens.add(currentToken.toString().trim())
+        return modifierTokens
+    }
+
+    fun resolveDateWithModifiers(date: Date, mods: String?): String {
+        if (mods.isNullOrBlank()) {
+            return SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(date)
+        }
+        val tokens = parseModifierTokens(mods)
+        var formatPattern: String? = null
+        var isNamedFormat = false
+        var namedFormatType = ""
+        val textModifiers = mutableListOf<String>()
+
+        val stringModifiers = setOf(
+            "clean", "nocite", "singleline", "oneline", "trim",
+            "lower", "upper", "title", "slug", "kebab", "snake",
+            "camel", "unquote", "nourl"
+        )
+
+        for (token in tokens) {
+            when {
+                token.startsWith("format(", ignoreCase = true) && token.endsWith(")") -> {
+                    formatPattern = token.substring(7, token.length - 1).trim()
+                }
+                token.equals("short", ignoreCase = true) ||
+                token.equals("medium", ignoreCase = true) ||
+                token.equals("long", ignoreCase = true) ||
+                token.equals("full", ignoreCase = true) ||
+                token.equals("iso", ignoreCase = true) -> {
+                    isNamedFormat = true
+                    namedFormatType = token.lowercase(Locale.US)
+                }
+                stringModifiers.contains(token.lowercase(Locale.US)) ||
+                token.startsWith("replace(", ignoreCase = true) -> {
+                    textModifiers.add(token)
+                }
+                else -> {
+                    val isValid = runCatching { SimpleDateFormat(token, Locale.getDefault()) }.isSuccess
+                    if (isValid && formatPattern == null) {
+                        formatPattern = token
+                    } else {
+                        textModifiers.add(token)
+                    }
+                }
+            }
+        }
+
+        var dateString = when {
+            formatPattern != null -> {
+                runCatching { SimpleDateFormat(formatPattern, Locale.getDefault()).format(date) }
+                    .getOrElse { SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(date) }
+            }
+            isNamedFormat -> {
+                when (namedFormatType) {
+                    "short" -> java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT, Locale.getDefault()).format(date)
+                    "medium" -> java.text.DateFormat.getDateInstance(java.text.DateFormat.MEDIUM, Locale.getDefault()).format(date)
+                    "long" -> java.text.DateFormat.getDateInstance(java.text.DateFormat.LONG, Locale.getDefault()).format(date)
+                    "full" -> java.text.DateFormat.getDateInstance(java.text.DateFormat.FULL, Locale.getDefault()).format(date)
+                    "iso" -> SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(date)
+                    else -> SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(date)
+                }
+            }
+            else -> {
+                SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(date)
+            }
+        }
+
+        if (textModifiers.isNotEmpty()) {
+            dateString = applyModifiers(dateString, textModifiers.joinToString(":"))
+        }
+        return dateString
+    }
+
+    fun applyModifiers(input: String, modifiersString: String): String {
+        if (modifiersString.isBlank()) return input
+        var text = input
+        val modifierTokens = parseModifierTokens(modifiersString)
 
         for (mod in modifierTokens) {
             text = when {
@@ -252,8 +329,7 @@ object TextExpanderUtils {
         if (result.contains("%date")) {
             result = DATE_REGEX.replace(result) { match ->
                 val mods = match.groups[1]?.value
-                val rawDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
-                if (mods != null) applyModifiers(rawDate, mods) else rawDate
+                resolveDateWithModifiers(Date(), mods)
             }
         }
 
@@ -341,11 +417,13 @@ object TextExpanderUtils {
             result = result.replace("%greeting%", greeting)
         }
 
-        // Resolve %tomorrow%
-        if (result.contains("%tomorrow%")) {
+        // Resolve %tomorrow[:modifiers]%
+        if (result.contains("%tomorrow")) {
             val cal = java.util.Calendar.getInstance().apply { add(java.util.Calendar.DAY_OF_YEAR, 1) }
-            val tomorrowStr = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(cal.time)
-            result = result.replace("%tomorrow%", tomorrowStr)
+            result = TOMORROW_REGEX.replace(result) { match ->
+                val mods = match.groups[1]?.value
+                resolveDateWithModifiers(cal.time, mods)
+            }
         }
 
         // Resolve %bullets% with optional count

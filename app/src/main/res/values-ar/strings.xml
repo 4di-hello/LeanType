@@ -1720,4 +1720,5 @@
     <string name="app_quirks_hide_toolbar_summary">إخفاء مفاتيح شريط الأدوات والإجراءات وزر التوسيع عند الكتابة في هذا التطبيق</string>
     <string name="app_quirks_badge_no_suggestions">لا اقتراحات</string>
     <string name="app_quirks_badge_no_toolbar">لا يوجد شريط أدوات</string>
+    <string name="text_expander_tag_desc_date_format">التاريخ المنسق (على سبيل المثال%date:yyyy/MM/dd% أو%date:format(pattern)%)</string>
 </resources>

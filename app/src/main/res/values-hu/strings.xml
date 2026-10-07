@@ -1653,4 +1653,5 @@ Lehetővé teszi az eszközön futó GGUF / llama.cpp következtetést a javít�
     <string name="app_quirks_hide_toolbar_summary">Az eszköztár billentyűinek, műveleteinek elrejtése és a kibontás gomb, amikor gépel ebben az alkalmazásban</string>
     <string name="app_quirks_badge_no_suggestions">Nincsenek javaslatok</string>
     <string name="app_quirks_badge_no_toolbar">Nincs Eszköztár</string>
+    <string name="text_expander_tag_desc_date_format">Formázott dátum (pl.%devett:éééé/hh/nn% vagy%date:formátum(minta)%)</string>
 </resources>

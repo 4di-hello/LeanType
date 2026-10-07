@@ -1903,6 +1903,7 @@ New dictionary:
     <string name="text_expander_step3_title">Type Prefix + Shortcut</string>
     <string name="text_expander_step3_desc">Type your prefix followed by the shortcut keyword (e.g., \'.brb\') and press Space or punctuation on the keyboard to expand instantly.</string>
     <string name="text_expander_tag_desc_date">Date (YYYY-MM-DD)</string>
+    <string name="text_expander_tag_desc_date_format">Formatted date (e.g. %date:yyyy/MM/dd% or %date:format(pattern)%)</string>
     <string name="text_expander_tag_desc_time">Time (24h, HH:MM)</string>
     <string name="text_expander_tag_desc_time12">Time (12h, hh:mm AM/PM)</string>
     <string name="text_expander_tag_desc_year">Year (YYYY)</string>

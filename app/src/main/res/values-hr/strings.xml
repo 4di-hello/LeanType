@@ -1637,4 +1637,5 @@ Omogućuje lokalno GGUF / llama.cpp zaključivanje na uređaju za lekturu i prep
     <string name="app_quirks_hide_toolbar_summary">Sakrij tipke alatne trake, radnje i gumb za proširenje kada upisujete u ovu aplikaciju</string>
     <string name="app_quirks_badge_no_suggestions">Nema prijedloga</string>
     <string name="app_quirks_badge_no_toolbar">Nema alatne trake</string>
+    <string name="text_expander_tag_desc_date_format">Formatirani datum (npr.%date:gggg/MM/dd% ili%date:format(pattern)%)</string>
 </resources>

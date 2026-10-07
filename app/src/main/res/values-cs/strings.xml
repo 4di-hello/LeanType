@@ -1662,4 +1662,5 @@ Umožňuje lokální inferenci GGUF / llama.cpp na zařízení pro korektury a p
     <string name="app_quirks_hide_toolbar_summary">Při psaní v této aplikaci skryjte klávesy, akce a rozbalovací tlačítko na panelu nástrojů</string>
     <string name="app_quirks_badge_no_suggestions">Žádné návrhy</string>
     <string name="app_quirks_badge_no_toolbar">Žádná lišta Toolbar</string>
+    <string name="text_expander_tag_desc_date_format">Formátované datum (např.%date:yyyy/MM/dd% nebo%date:format(pattern)%)</string>
 </resources>

@@ -1697,4 +1697,5 @@ Maakt GGUF / llama.cpp-inferentie op het apparaat mogelijk voor proeflezen en he
     <string name="app_quirks_hide_toolbar_summary">Verberg werkbalktoetsen, acties en uitvouwknop tijdens het typen in deze app</string>
     <string name="app_quirks_badge_no_suggestions">Geen suggesties</string>
     <string name="app_quirks_badge_no_toolbar">Geen werkbalk</string>
+    <string name="text_expander_tag_desc_date_format">Opgemaakte datum (bijvoorbeeld%dat:jjjj/MM/dd% of%dat:format(patroon)%)</string>
 </resources>
