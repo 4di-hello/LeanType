@@ -1072,6 +1072,9 @@
     <string name="key_border_radius">കീ കോർണർ റേഡിയസ്</string>
     <string name="key_border_radius_functional">ഫങ്ഷണൽ കീ കോർണർ റേഡിയസ്</string>
     <string name="key_border_radius_action">ആക്ഷൻ കീ കോർണർ റേഡിയസ്</string>
+    <string name="key_preview_width_scale">കീ പോപ്പ്അപ്പ് വീതി</string>
+    <string name="key_preview_height_scale">കീ പോപ്പ്അപ്പ് ഉയരം</string>
+    <string name="key_preview_radius">കീ പോപ്പ്അപ്പ് കോർണർ റേഡിയസ്</string>
     <string name="settings_screen_updates">അപ്‌ഡേറ്റുകൾ</string>
     <string name="updates_check_title">അപ്‌ഡേറ്റുകൾ പരിശോധിക്കുക</string>
     <string name="updates_checking">അപ്‌ഡേറ്റുകൾ പരിശോധിക്കുന്നു…</string>

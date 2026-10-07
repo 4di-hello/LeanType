@@ -844,6 +844,9 @@
     <string name="key_border_radius">Klavišo kampo spindulys</string>
     <string name="key_border_radius_functional">Funkcinio klavišo kampo spindulys</string>
     <string name="key_border_radius_action">Veiksmo klavišo kampo spindulys</string>
+    <string name="key_preview_width_scale">Klavišo iškylančiojo lango plotis</string>
+    <string name="key_preview_height_scale">Klavišo iškylančiojo lango aukštis</string>
+    <string name="key_preview_radius">Klavišo iškylančiojo lango kampo spindulys</string>
     <string name="theme_name_mint_and_pink">Mėtų ir rožinė</string>
     <string name="theme_name_leanbitlab_light">LeanBitLab šviesi</string>
     <string name="theme_name_leanbitlab_dark">LeanBitLab tamsi</string>

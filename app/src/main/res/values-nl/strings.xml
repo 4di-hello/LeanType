@@ -886,6 +886,9 @@
     <string name="key_border_radius">Hoekradius van toetsen</string>
     <string name="key_border_radius_functional">Hoekradius van functietoetsen</string>
     <string name="key_border_radius_action">Hoekradius van actietoets</string>
+    <string name="key_preview_width_scale">Breedte van toets-pop-up</string>
+    <string name="key_preview_height_scale">Hoogte van toets-pop-up</string>
+    <string name="key_preview_radius">Hoekradius van toets-pop-up</string>
     <string name="settings_category_key_appearance">Toetsuiterlijk &amp; hints</string>
     <string name="settings_screen_updates">Updates</string>
     <string name="updates_check_title">Controleren op updates</string>

@@ -323,6 +323,9 @@
     <string name="key_border_radius">कुंजी कोनों की गोलाई</string>
     <string name="key_border_radius_functional">कार्यात्मक कुंजी कोनों की गोलाई</string>
     <string name="key_border_radius_action">एक्शन कुंजी कोनों की गोलाई</string>
+    <string name="key_preview_width_scale">कुंजी पॉपअप की चौड़ाई</string>
+    <string name="key_preview_height_scale">कुंजी पॉपअप की ऊंचाई</string>
+    <string name="key_preview_radius">कुंजी पॉपअप के कोनों की गोलाई</string>
     <string name="settings_screen_updates">अपडेट</string>
     <string name="updates_check_title">अपडेट जांचें</string>
     <string name="updates_checking">अपडेट की जांच हो रही है…</string>

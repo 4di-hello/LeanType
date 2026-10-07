@@ -871,6 +871,9 @@
     <string name="key_border_radius">Radijus kuta tipke</string>
     <string name="key_border_radius_functional">Radijus kuta funkcijske tipke</string>
     <string name="key_border_radius_action">Radijus kuta akcijske tipke</string>
+    <string name="key_preview_width_scale">Širina skočnog prozora tipke</string>
+    <string name="key_preview_height_scale">Visina skočnog prozora tipke</string>
+    <string name="key_preview_radius">Radijus kuta skočnog prozora tipke</string>
     <string name="theme_name_mint_and_pink">Menta i roza</string>
     <string name="theme_name_leanbitlab_light">LeanBitLab Light</string>
     <string name="theme_name_leanbitlab_dark">LeanBitLab Dark</string>

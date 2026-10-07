@@ -1306,6 +1306,9 @@ New dictionary:
     <string name="key_border_radius_functional">Functional key corner radius</string>
     <!-- Option for choosing action key corner radius -->
     <string name="key_border_radius_action">Action key corner radius</string>
+    <string name="key_preview_width_scale">Key popup width</string>
+    <string name="key_preview_height_scale">Key popup height</string>
+    <string name="key_preview_radius">Key popup corner radius</string>
     <!-- Option for choosing auto day/night theme switch -->
     <string name="day_night_mode">Auto day/night mode</string>
     <!-- Description for "day_night_mode" option. -->

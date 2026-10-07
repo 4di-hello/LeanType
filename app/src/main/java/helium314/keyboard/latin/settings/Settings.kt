@@ -327,6 +327,9 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
         const val PREF_INLINE_EMOJI_SEARCH = "inline_emoji_search"
         const val PREF_SHOW_EMOJI_DESCRIPTIONS = "show_emoji_descriptions"
         const val PREF_POPUP_ON = "popup_on"
+        const val PREF_KEY_PREVIEW_WIDTH_SCALE = "key_preview_width_scale"
+        const val PREF_KEY_PREVIEW_HEIGHT_SCALE = "key_preview_height_scale"
+        const val PREF_KEY_PREVIEW_RADIUS = "key_preview_radius"
         const val PREF_AUTO_CORRECTION = "auto_correction"
         const val PREF_AUTO_CORRECT_AGGRESSIVENESS = "auto_correct_aggressiveness"
         const val AUTO_CORRECT_LEVEL_MODEST = 1

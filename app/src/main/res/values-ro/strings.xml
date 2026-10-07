@@ -849,6 +849,9 @@
     <string name="key_border_radius">Raza colțului tastei</string>
     <string name="key_border_radius_functional">Raza colțului tastei funcționale</string>
     <string name="key_border_radius_action">Raza colțului tastei de acțiune</string>
+    <string name="key_preview_width_scale">Lățimea ferestrei pop-up a tastei</string>
+    <string name="key_preview_height_scale">Înălțimea ferestrei pop-up a tastei</string>
+    <string name="key_preview_radius">Raza colțului ferestrei pop-up a tastei</string>
     <string name="theme_name_mint_and_pink">Mentă și Roz</string>
     <string name="theme_name_leanbitlab_light">LeanBitLab Light</string>
     <string name="theme_name_leanbitlab_dark">LeanBitLab Dark</string>

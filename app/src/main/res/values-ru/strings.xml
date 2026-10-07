@@ -1080,6 +1080,9 @@
     <string name="key_border_radius">Радиус скругления клавиш</string>
     <string name="key_border_radius_functional">Радиус функциональных клавиш</string>
     <string name="key_border_radius_action">Радиус клавиши действия</string>
+    <string name="key_preview_width_scale">Ширина всплывающего окна клавиши</string>
+    <string name="key_preview_height_scale">Высота всплывающего окна клавиши</string>
+    <string name="key_preview_radius">Радиус скругления всплывающего окна клавиши</string>
     <string name="settings_screen_updates">Обновления</string>
     <string name="updates_check_title">Проверить обновления</string>
     <string name="updates_checking">Проверка обновлений…</string>

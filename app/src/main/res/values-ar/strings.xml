@@ -1087,6 +1087,9 @@
     <string name="key_border_radius">نصف قطر زوايا المفاتيح</string>
     <string name="key_border_radius_functional">نصف قطر زوايا المفاتيح الوظيفية</string>
     <string name="key_border_radius_action">نصف قطر زوايا مفتاح الإجراء</string>
+    <string name="key_preview_width_scale">عرض نافذة المفتاح المنبثقة</string>
+    <string name="key_preview_height_scale">ارتفاع نافذة المفتاح المنبثقة</string>
+    <string name="key_preview_radius">نصف قطر زوايا نافذة المفتاح المنبثقة</string>
     <string name="settings_screen_updates">التحديثات</string>
     <string name="updates_check_title">التحقق من وجود تحديثات</string>
     <string name="updates_checking">جار التحقق من التحديثات…</string>

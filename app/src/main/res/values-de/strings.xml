@@ -1037,6 +1037,9 @@
     <string name="key_border_radius">Tasteneckenradius</string>
     <string name="key_border_radius_functional">Funktionstasten-Eckenradius</string>
     <string name="key_border_radius_action">Aktionstasten-Eckenradius</string>
+    <string name="key_preview_width_scale">Breite des Tasten-Popups</string>
+    <string name="key_preview_height_scale">Höhe des Tasten-Popups</string>
+    <string name="key_preview_radius">Eckenradius des Tasten-Popups</string>
     <string name="settings_screen_updates">Updates</string>
     <string name="updates_check_title">Nach Updates suchen</string>
     <string name="updates_checking">Nach Updates suchen…</string>

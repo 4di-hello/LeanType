@@ -708,6 +708,9 @@
     <string name="key_border_radius">Raio dos cantos das teclas</string>
     <string name="key_border_radius_functional">Raio dos cantos das teclas funcionais</string>
     <string name="key_border_radius_action">Raio dos cantos da tecla de ação</string>
+    <string name="key_preview_width_scale">Largura do popup da tecla</string>
+    <string name="key_preview_height_scale">Altura do popup da tecla</string>
+    <string name="key_preview_radius">Raio dos cantos do popup da tecla</string>
     <string name="settings_screen_updates">Atualizações</string>
     <string name="updates_check_title">Verificar atualizações</string>
     <string name="updates_checking">Verificando atualizações…</string>

@@ -19,6 +19,7 @@ import helium314.keyboard.keyboard.Key
 import helium314.keyboard.latin.R
 import helium314.keyboard.latin.common.isEmoji
 import helium314.keyboard.latin.settings.Settings
+import helium314.keyboard.latin.utils.dpToPx
 
 open class KeyPreviewView @JvmOverloads constructor(
     context: Context,
@@ -33,7 +34,13 @@ open class KeyPreviewView @JvmOverloads constructor(
         gravity = Gravity.CENTER
     }
 
-    fun setPreviewVisual(key: Key, iconsSet: KeyboardIconsSet, drawParams: KeyDrawParams) {
+    fun setPreviewVisual(
+        key: Key,
+        iconsSet: KeyboardIconsSet,
+        drawParams: KeyDrawParams,
+        previewWidth: Int = -1,
+        bubbleHeight: Int = -1
+    ) {
         if (key.iconName != null) {
             setCompoundDrawables(key.getPreviewIcon(iconsSet), null, null, null)
             text = null
@@ -42,12 +49,16 @@ open class KeyPreviewView @JvmOverloads constructor(
 
         setCompoundDrawables(null, null, null, null)
         setTextColor(drawParams.mPreviewTextColor)
-        setTextSize(TypedValue.COMPLEX_UNIT_PX, key.selectPreviewTextSize(drawParams) * Settings.getValues().mFontSizeMultiplier)
+        val baseSize = key.selectPreviewTextSize(drawParams) * Settings.getValues().mFontSizeMultiplier
+        val maxSize = if (bubbleHeight > 0) (bubbleHeight - 8.dpToPx(resources)).toFloat() else Float.MAX_VALUE
+        val targetSize = if (maxSize > 0f) minOf(baseSize, maxSize) else baseSize
+        setTextSize(TypedValue.COMPLEX_UNIT_PX, targetSize)
         typeface = mTypeface ?: key.selectPreviewTypeface(drawParams)
-        setTextAndScaleX(key.previewLabel)
+        val contentWidth = if (previewWidth > 0) previewWidth - 8.dpToPx(resources) else -1
+        setTextAndScaleX(key.previewLabel, contentWidth)
     }
 
-    private fun setTextAndScaleX(text: String?) {
+    private fun setTextAndScaleX(text: String?, contentWidth: Int = -1) {
         setTextScaleX(1.0f)
         setText(text)
         if (text == null || sNoScaleXTextSet.contains(text)) {
@@ -57,9 +68,13 @@ open class KeyPreviewView @JvmOverloads constructor(
             sNoScaleXTextSet.add(text)
             return
         }
-        val background = background ?: return
-        background.getPadding(mBackgroundPadding)
-        val maxWidth = background.intrinsicWidth - mBackgroundPadding.left - mBackgroundPadding.right
+        val maxWidth = if (contentWidth > 0) {
+            contentWidth
+        } else {
+            val background = background ?: return
+            background.getPadding(mBackgroundPadding)
+            background.intrinsicWidth - mBackgroundPadding.left - mBackgroundPadding.right
+        }
         val width = getTextWidth(text, paint)
         if (width <= maxWidth) {
             sNoScaleXTextSet.add(text)
@@ -72,6 +87,32 @@ open class KeyPreviewView @JvmOverloads constructor(
         val background = background ?: return
         val hasPopupKeysState = if (hasPopupKeys) STATE_HAS_POPUPKEYS else STATE_NORMAL
         background.state = KEY_PREVIEW_BACKGROUND_STATE_TABLE[position][hasPopupKeysState]
+    }
+
+    fun setPreviewGeometry(
+        width: Int,
+        height: Int,
+        bottomPadding: Int,
+        radiusDp: Float,
+        colors: helium314.keyboard.latin.common.Colors
+    ) {
+        val hPad = 4.dpToPx(resources)
+        val tPad = 4.dpToPx(resources)
+        setPadding(hPad, tPad, hPad, bottomPadding)
+
+        val radiusPx = if (radiusDp >= 0f) {
+            radiusDp * resources.displayMetrics.density
+        } else {
+            5f * resources.displayMetrics.density
+        }
+        val bg = background
+        if (bg != null) {
+            colors.applyKeyBorderRadius(bg, radiusPx)
+        }
+
+        val widthSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY)
+        val heightSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY)
+        measure(widthSpec, heightSpec)
     }
 
     companion object {

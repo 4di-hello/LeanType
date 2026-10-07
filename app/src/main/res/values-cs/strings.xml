@@ -896,6 +896,9 @@
     <string name="key_border_radius">Poloměr rohů kláves</string>
     <string name="key_border_radius_functional">Poloměr rohů funkčních kláves</string>
     <string name="key_border_radius_action">Poloměr rohů akční klávesy</string>
+    <string name="key_preview_width_scale">Šířka vyskakovacího okna klávesy</string>
+    <string name="key_preview_height_scale">Výška vyskakovacího okna klávesy</string>
+    <string name="key_preview_radius">Poloměr rohů vyskakovacího okna klávesy</string>
     <string name="theme_name_mint_and_pink">Mátová a růžová</string>
     <string name="theme_name_leanbitlab_light">LeanBitLab Light</string>
     <string name="theme_name_leanbitlab_dark">LeanBitLab Dark</string>

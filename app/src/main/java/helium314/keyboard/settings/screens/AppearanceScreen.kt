@@ -89,6 +89,12 @@ fun AppearanceScreen(
         Settings.PREF_POPUP_KEYS_VERTICAL_OFFSET_PERCENT,
         Settings.PREF_ANIMATION_SPEED_SCALE,
         Settings.PREF_POPUP_ON,
+        if (prefs.getBoolean(Settings.PREF_POPUP_ON, Defaults.PREF_POPUP_ON))
+            Settings.PREF_KEY_PREVIEW_WIDTH_SCALE else null,
+        if (prefs.getBoolean(Settings.PREF_POPUP_ON, Defaults.PREF_POPUP_ON))
+            Settings.PREF_KEY_PREVIEW_HEIGHT_SCALE else null,
+        if (prefs.getBoolean(Settings.PREF_POPUP_ON, Defaults.PREF_POPUP_ON))
+            Settings.PREF_KEY_PREVIEW_RADIUS else null,
         R.string.settings_category_miscellaneous,
         Settings.PREF_ENABLE_SPLIT_KEYBOARD,
         Settings.PREF_FOLDABLE_MODE,
@@ -385,6 +391,38 @@ fun createAppearanceSettings(context: Context) = listOf(
     },
     Setting(context, Settings.PREF_POPUP_ON, R.string.popup_on_keypress) {
         SwitchPreference(it, Defaults.PREF_POPUP_ON) { KeyboardSwitcher.getInstance().reloadKeyboard() }
+    },
+    Setting(context, Settings.PREF_KEY_PREVIEW_WIDTH_SCALE, R.string.key_preview_width_scale) { setting ->
+        SliderPreference(
+            name = setting.title,
+            key = setting.key,
+            default = Defaults.PREF_KEY_PREVIEW_WIDTH_SCALE,
+            range = 0.5f..1.5f,
+            description = { "${(100 * it).toInt()}%" }
+        ) { KeyboardSwitcher.getInstance().reloadKeyboard() }
+    },
+    Setting(context, Settings.PREF_KEY_PREVIEW_HEIGHT_SCALE, R.string.key_preview_height_scale) { setting ->
+        SliderPreference(
+            name = setting.title,
+            key = setting.key,
+            default = Defaults.PREF_KEY_PREVIEW_HEIGHT_SCALE,
+            range = 0.5f..1.5f,
+            description = { "${(100 * it).toInt()}%" }
+        ) { KeyboardSwitcher.getInstance().reloadKeyboard() }
+    },
+    Setting(context, Settings.PREF_KEY_PREVIEW_RADIUS, R.string.key_preview_radius) { setting ->
+        SliderPreference(
+            name = setting.title,
+            key = setting.key,
+            default = Defaults.PREF_KEY_PREVIEW_RADIUS,
+            range = 0f..25f,
+            stepSize = 1,
+            description = { radius ->
+                val isDef = radius.toInt() == Defaults.PREF_KEY_PREVIEW_RADIUS.toInt()
+                if (isDef) "${Defaults.PREF_KEY_PREVIEW_RADIUS.toInt()}dp (${stringResource(R.string.button_default)})"
+                else "${radius.toInt()}dp"
+            }
+        ) { KeyboardSwitcher.getInstance().reloadKeyboard() }
     },
     Setting(context, Settings.PREF_SPLIT_SPACER_SCALE_PREFIX, R.string.split_spacer_scale) { setting ->
         MultiSliderPreference(

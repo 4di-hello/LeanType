@@ -1003,6 +1003,9 @@ Uyarı: Harici kod yüklemek güvenlik riski oluşturabilir. Yalnızca güvendi�
     <string name="key_border_radius">Tuş köşe yuvarlaklığı</string>
     <string name="key_border_radius_functional">İşlevsel tuş köşe yuvarlaklığı</string>
     <string name="key_border_radius_action">Eylem tuşu köşe yuvarlaklığı</string>
+    <string name="key_preview_width_scale">Tuş açılır pencere genişliği</string>
+    <string name="key_preview_height_scale">Tuş açılır pencere yüksekliği</string>
+    <string name="key_preview_radius">Tuş açılır pencere köşe yuvarlaklığı</string>
     <string name="settings_screen_updates">Güncellemeler</string>
     <string name="updates_check_title">Güncellemeleri denetle</string>
     <string name="updates_checking">Güncellemeler denetleniyor…</string>

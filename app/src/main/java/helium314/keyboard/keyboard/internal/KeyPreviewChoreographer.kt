@@ -14,8 +14,10 @@ import helium314.keyboard.latin.common.ColorType
 import helium314.keyboard.latin.common.CoordinateUtils
 import helium314.keyboard.latin.settings.Settings
 import helium314.keyboard.latin.utils.ViewLayoutUtils
+import helium314.keyboard.latin.utils.dpToPx
 import java.util.ArrayDeque
 import java.util.HashMap
+import kotlin.math.roundToInt
 
 private val PREVIEW_ENTER_INTERPOLATOR = PathInterpolator(0.1f, 0.9f, 0.2f, 1.0f)
 private val PREVIEW_EXIT_INTERPOLATOR = PathInterpolator(0.3f, 0f, 0.8f, 0.15f)
@@ -105,13 +107,20 @@ class KeyPreviewChoreographer(private val mParams: KeyPreviewDrawParams) {
         fullKeyboardViewWidth: Int,
         originCoords: IntArray
     ) {
-        keyPreviewView.setPreviewVisual(key, iconsSet, drawParams)
-        keyPreviewView.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        mParams.setGeometry(keyPreviewView)
+        val settingsValues = Settings.getValues()
+        val widthScale = settingsValues.mKeyPreviewWidthScale
+        val heightScale = settingsValues.mKeyPreviewHeightScale
+        val radiusDp = settingsValues.mKeyPreviewRadius
 
-        val previewWidth = keyPreviewView.measuredWidth
-        val previewHeight = keyPreviewView.measuredHeight
         val keyDrawWidth = key.drawWidth
+        val keyHeight = key.height
+
+        val stemHeight = keyHeight
+        val bubbleHeight = (keyHeight * 0.85f * heightScale).roundToInt().coerceAtLeast(18.dpToPx(keyPreviewView.resources))
+        val previewHeight = stemHeight + bubbleHeight
+        val previewWidth = (keyDrawWidth * widthScale).roundToInt().coerceAtLeast(24.dpToPx(keyPreviewView.resources))
+
+        keyPreviewView.setPreviewVisual(key, iconsSet, drawParams, previewWidth, bubbleHeight)
 
         val minX = CoordinateUtils.x(originCoords)
         val maxX = minX + fullKeyboardViewWidth - previewWidth
@@ -129,8 +138,10 @@ class KeyPreviewChoreographer(private val mParams: KeyPreviewDrawParams) {
 
         val hasPopupKeys = key.popupKeys != null
         keyPreviewView.setPreviewBackground(hasPopupKeys, keyPreviewPosition)
-        val colors = Settings.getValues().mColors
+        val colors = settingsValues.mColors
         colors.setBackground(keyPreviewView, ColorType.KEY_PREVIEW_BACKGROUND)
+        keyPreviewView.setPreviewGeometry(previewWidth, previewHeight, stemHeight, radiusDp, colors)
+        mParams.setGeometry(keyPreviewView)
 
         val previewY = key.y - previewHeight + key.height - mParams.mPreviewOffset + CoordinateUtils.y(originCoords)
 
