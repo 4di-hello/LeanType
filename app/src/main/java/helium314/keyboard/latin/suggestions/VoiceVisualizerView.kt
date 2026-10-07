@@ -4,6 +4,7 @@ package helium314.keyboard.latin.suggestions
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
@@ -28,8 +29,10 @@ class VoiceVisualizerView @JvmOverloads constructor(
     }
 
     private var mode = Mode.IDLE
+    private var baseColor = 0xFF4285F4.toInt()
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
+        color = baseColor
     }
 
     private val barRect = RectF()
@@ -43,16 +46,18 @@ class VoiceVisualizerView @JvmOverloads constructor(
     private val barSpacing = 3.dpToPx(resources).toFloat()
     private val slotWidth = barWidth + barSpacing
     private val minHeight = barWidth
+    private val processingBarHeight = 5.dpToPx(resources).toFloat()
     private val idleBreathingExtra = 2.dpToPx(resources).toFloat()
     private val minHeightExtra = 8.dpToPx(resources).toFloat()
     private val sidePadding = 6.dpToPx(resources).toFloat()
 
     init {
         val defaultColor = 0xFF4285F4.toInt()
-        paint.color = defaultColor
+        setColor(defaultColor)
     }
 
     fun setColor(color: Int) {
+        baseColor = color
         paint.color = color
         invalidate()
     }
@@ -146,6 +151,8 @@ class VoiceVisualizerView @JvmOverloads constructor(
         val centerIndex = (barCount - 1) / 2f
         val radius = barWidth / 2f
 
+        val parsedAlpha = Color.alpha(baseColor)
+        val baseAlpha = if (parsedAlpha > 0) parsedAlpha else 255
         val piHalf = (Math.PI / 2).toFloat()
         val level = smoothedLevel
 
@@ -154,6 +161,7 @@ class VoiceVisualizerView @JvmOverloads constructor(
 
             val barHeight = when (mode) {
                 Mode.RECORDING -> {
+                    paint.alpha = baseAlpha
                     val envelope = 0.15f + 0.85f * cos(normDist * piHalf)
                     if (level < 0.03f) {
                         val idleWave = (sin(phase * 1.5f + i * 0.25f) + 1f) / 2f
@@ -168,16 +176,22 @@ class VoiceVisualizerView @JvmOverloads constructor(
                     }
                 }
                 Mode.PROCESSING -> {
-                    val procEnvelope = 0.35f + 0.65f * cos(normDist * piHalf)
-                    val travelWave = (sin(phase * 2.5f - i * 0.28f) + 1f) / 2f
-                    minHeight + travelWave * procEnvelope * (maxHeight - minHeight) * 0.7f
+                    // Minimal uniform single-height bars with a soft traveling light shimmer
+                    val shimmer = (sin(phase * 2.0f - i * 0.22f) + 1f) / 2f
+                    val barAlpha = 0.25f + 0.75f * shimmer
+                    paint.alpha = (baseAlpha * barAlpha).toInt()
+                    processingBarHeight
                 }
                 Mode.CONNECTING -> {
-                    val connEnvelope = 0.3f + 0.7f * cos(normDist * piHalf)
-                    val pulse = (sin(phase * 1.5f + i * 0.2f) + 1f) / 2f
-                    minHeight + pulse * connEnvelope * (maxHeight - minHeight) * 0.35f
+                    val shimmer = (sin(phase * 1.5f - i * 0.2f) + 1f) / 2f
+                    val barAlpha = 0.3f + 0.7f * shimmer
+                    paint.alpha = (baseAlpha * barAlpha).toInt()
+                    processingBarHeight
                 }
-                Mode.IDLE -> minHeight
+                Mode.IDLE -> {
+                    paint.alpha = baseAlpha
+                    minHeight
+                }
             }
 
             val top = centerY - barHeight / 2f
