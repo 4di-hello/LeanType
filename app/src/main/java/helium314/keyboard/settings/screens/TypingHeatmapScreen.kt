@@ -39,11 +39,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import helium314.keyboard.latin.R
 import helium314.keyboard.latin.heatmap.TypingHeatmap
+import helium314.keyboard.latin.settings.Defaults
+import helium314.keyboard.latin.settings.Settings
+import helium314.keyboard.latin.utils.prefs
 import helium314.keyboard.settings.SearchSettingsScreen
 import helium314.keyboard.settings.dialogs.ConfirmationDialog
 
 /** Number of samples a key needs before its average offset is shown */
 private const val MIN_SAMPLES_FOR_AVERAGE = 15
+/** Number of samples before and after enabling adaptation needed to compare them */
+private const val MIN_SAMPLES_FOR_COMPARISON = 200
 
 @Composable
 fun TypingHeatmapScreen(onClickBack: () -> Unit) {
@@ -54,6 +59,10 @@ fun TypingHeatmapScreen(onClickBack: () -> Unit) {
     var onlyMisses by remember { mutableStateOf(false) }
     var showClearDialog by remember { mutableStateOf(false) }
     val layout = layouts.firstOrNull { it.id == selectedLayoutId } ?: layouts.firstOrNull()
+    val otherDevice = remember(refresh) { TypingHeatmap.getOtherLearnedOnDevice(context) }
+    val prefs = context.prefs()
+    val adaptEnabled = prefs.getBoolean(Settings.PREF_TYPING_ADAPT, Defaults.PREF_TYPING_ADAPT)
+    val strength = prefs.getInt(Settings.PREF_TYPING_ADAPT_STRENGTH, Defaults.PREF_TYPING_ADAPT_STRENGTH)
 
     SearchSettingsScreen(
         onClickBack = onClickBack,
@@ -64,8 +73,28 @@ fun TypingHeatmapScreen(onClickBack: () -> Unit) {
             Modifier.verticalScroll(rememberScrollState()).padding(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            if (otherDevice != null) {
+                Card(
+                    Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
+                ) {
+                    Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(stringResource(R.string.typing_heatmap_other_device, otherDevice, TypingHeatmap.currentDevice),
+                            style = MaterialTheme.typography.bodyMedium)
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            OutlinedButton(onClick = { TypingHeatmap.clear(context); refresh++ }) {
+                                Text(stringResource(R.string.typing_heatmap_start_over))
+                            }
+                            OutlinedButton(onClick = { TypingHeatmap.acceptDataFromOtherDevice(context); refresh++ }) {
+                                Text(stringResource(R.string.typing_heatmap_keep))
+                            }
+                        }
+                    }
+                }
+            }
             if (layout == null) {
                 InfoCard(stringResource(R.string.typing_heatmap_no_data))
+                InfoCard(stringResource(R.string.typing_heatmap_privacy))
                 return@Column
             }
             if (layouts.size > 1) {
@@ -86,7 +115,10 @@ fun TypingHeatmapScreen(onClickBack: () -> Unit) {
                     label = { Text(stringResource(R.string.typing_heatmap_only_misses)) })
             }
 
-            HeatmapCanvas(layout, onlyMisses)
+            val offsets = remember(layout, strength, adaptEnabled) {
+                if (adaptEnabled) TypingHeatmap.getOffsets(context, layout.id, strength) else emptyMap()
+            }
+            HeatmapCanvas(layout, onlyMisses, offsets)
 
             val total = layout.sampleCount
             val misses = layout.samples.entries.sumOf { (code, list) -> list.count { it.touchedCode != code } }
@@ -94,6 +126,31 @@ fun TypingHeatmapScreen(onClickBack: () -> Unit) {
             Text(stringResource(R.string.typing_heatmap_stats, total, misses, percent), style = MaterialTheme.typography.bodyMedium)
             Text(stringResource(R.string.typing_heatmap_legend), style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(
+                when {
+                    !adaptEnabled -> stringResource(R.string.typing_heatmap_adapt_off)
+                    offsets.isEmpty() -> stringResource(R.string.typing_heatmap_adapt_waiting, TypingHeatmap.MIN_SAMPLES_FOR_ADAPTATION)
+                    else -> stringResource(R.string.typing_heatmap_adapt_on, offsets.size)
+                },
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            // miss rate before and after enabling adaptation
+            val allSamples = layout.samples.entries.flatMap { (code, list) -> list.map { code to it } }
+            val before = allSamples.filter { !it.second.adapted }
+            val after = allSamples.filter { it.second.adapted }
+            if (after.isNotEmpty()) {
+                Text(stringResource(R.string.typing_heatmap_before_after), style = MaterialTheme.typography.titleSmall)
+                if (before.size < MIN_SAMPLES_FOR_COMPARISON || after.size < MIN_SAMPLES_FOR_COMPARISON) {
+                    Text(stringResource(R.string.typing_heatmap_before_after_not_enough, MIN_SAMPLES_FOR_COMPARISON),
+                        style = MaterialTheme.typography.bodyMedium)
+                } else {
+                    fun rate(list: List<Pair<Int, TypingHeatmap.Sample>>) = list.count { it.first != it.second.touchedCode } * 100f / list.size
+                    Text(stringResource(R.string.typing_heatmap_before_after_values, rate(before), before.size, rate(after), after.size),
+                        style = MaterialTheme.typography.bodyMedium)
+                }
+            }
 
             val confusions = layout.samples.entries
                 .flatMap { (code, list) -> list.filter { it.touchedCode != code }.map { code to it.touchedCode } }
@@ -138,17 +195,20 @@ private fun InfoCard(text: String) {
 }
 
 @Composable
-private fun HeatmapCanvas(layout: TypingHeatmap.LayoutData, onlyMisses: Boolean) {
+private fun HeatmapCanvas(layout: TypingHeatmap.LayoutData, onlyMisses: Boolean, offsets: Map<Int, FloatArray>) {
     val keyColor = MaterialTheme.colorScheme.surfaceContainerHighest
     val keyBorder = MaterialTheme.colorScheme.outlineVariant
     val labelColor = MaterialTheme.colorScheme.onSurface
-    val hitColor = MaterialTheme.colorScheme.primary
+    val hitColor = Color(0xFF1E88E5)
     val missColor = Color(0xFFE53935)
     val averageColor = MaterialTheme.colorScheme.tertiary
     val textMeasurer = rememberTextMeasurer()
     val labelStyle = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.Medium, color = labelColor)
     val shapesByCode = remember(layout) { layout.shapes.associateBy { it.code } }
     val aspect = layout.aspectRatio.takeIf { it > 0.05f } ?: 0.35f
+    val changedAreaColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.3f)
+    // areas where adaptation picks another key than plain detection, in normalized coordinates
+    val changedAreas = remember(layout, offsets) { computeChangedAreas(layout, offsets, aspect) }
 
     Canvas(Modifier.fillMaxWidth().aspectRatio(1f / aspect)) {
         val w = size.width
@@ -168,6 +228,10 @@ private fun HeatmapCanvas(layout: TypingHeatmap.LayoutData, onlyMisses: Boolean)
                     key.centerY * h - measured.size.height / 2f
                 ))
             }
+        }
+        // areas assigned to another key by adaptation
+        changedAreas.forEach { cell ->
+            drawRect(changedAreaColor, Offset(cell[0] * w, cell[1] * h), Size(cell[2] * w, cell[3] * h))
         }
         // touches
         val dotRadius = 2.5.dp.toPx()
@@ -191,4 +255,29 @@ private fun HeatmapCanvas(layout: TypingHeatmap.LayoutData, onlyMisses: Boolean)
             }
         }
     }
+}
+
+/** Grid cells (x, y, width, height normalized) where adaptation assigns touches to another key */
+private fun computeChangedAreas(layout: TypingHeatmap.LayoutData, offsets: Map<Int, FloatArray>, aspect: Float): List<FloatArray> {
+    if (offsets.isEmpty()) return emptyList()
+    val letters = layout.shapes.filter { Character.isLetter(it.code) && it.width > 0 && it.height > 0 }
+    if (letters.size < 2) return emptyList()
+    // use keyboard-proportional units, so distances are like on the real keyboard
+    val candidates = letters.map { TypingHeatmap.Candidate(it.code, it.x, it.y * aspect, it.width, it.height * aspect) }
+    val columns = 120
+    val cellWidth = 1f / columns
+    val rows = (columns * aspect).toInt().coerceAtLeast(1)
+    val cellHeight = 1f / rows
+    val result = ArrayList<FloatArray>()
+    for (row in 0 until rows) {
+        val y = (row + 0.5f) * cellHeight
+        for (column in 0 until columns) {
+            val x = (column + 0.5f) * cellWidth
+            // only inside the letter area
+            if (letters.none { x >= it.x && x < it.x + it.width && y >= it.y && y < it.y + it.height }) continue
+            if (TypingHeatmap.adaptedKeyCode(x, y * aspect, candidates, offsets) != null)
+                result.add(floatArrayOf(column * cellWidth, row * cellHeight, cellWidth, cellHeight))
+        }
+    }
+    return result
 }

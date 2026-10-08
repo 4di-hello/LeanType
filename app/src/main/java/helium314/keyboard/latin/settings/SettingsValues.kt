@@ -221,6 +221,8 @@ open class SettingsValues(
     val mBackspaceRevertsAutocorrect: Boolean
     val mBackspaceRepeatDeletesWords: Boolean
     val mTypingHeatmapEnabled: Boolean
+    val mTypingAdaptEnabled: Boolean
+    val mTypingAdaptStrength: Int
     val mDisableMultiWordSuggestions: Boolean
     val mPrioritizePersonalSuggestions: Boolean
     val mSuggestionBalance: Int
@@ -362,6 +364,8 @@ open class SettingsValues(
         mBackspaceRevertsAutocorrect = prefs.getBoolean(Settings.PREF_BACKSPACE_REVERTS_AUTOCORRECT, Defaults.PREF_BACKSPACE_REVERTS_AUTOCORRECT)
         mBackspaceRepeatDeletesWords = prefs.getBoolean(Settings.PREF_BACKSPACE_REPEAT_DELETES_WORDS, Defaults.PREF_BACKSPACE_REPEAT_DELETES_WORDS)
         mTypingHeatmapEnabled = prefs.getBoolean(Settings.PREF_TYPING_HEATMAP, Defaults.PREF_TYPING_HEATMAP)
+        mTypingAdaptEnabled = prefs.getBoolean(Settings.PREF_TYPING_ADAPT, Defaults.PREF_TYPING_ADAPT)
+        mTypingAdaptStrength = prefs.getInt(Settings.PREF_TYPING_ADAPT_STRENGTH, Defaults.PREF_TYPING_ADAPT_STRENGTH)
         mDisableMultiWordSuggestions = prefs.getBoolean(Settings.PREF_DISABLE_MULTI_WORD_SUGGESTIONS, Defaults.PREF_DISABLE_MULTI_WORD_SUGGESTIONS)
         mBigramPredictionEnabled = prefs.getBoolean(Settings.PREF_BIGRAM_PREDICTIONS, Defaults.PREF_BIGRAM_PREDICTIONS)
         mPrioritizePersonalSuggestions = prefs.getBoolean(Settings.PREF_PRIORITIZE_PERSONAL_SUGGESTIONS, Defaults.PREF_PRIORITIZE_PERSONAL_SUGGESTIONS)

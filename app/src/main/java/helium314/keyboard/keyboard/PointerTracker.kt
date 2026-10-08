@@ -28,6 +28,8 @@ import helium314.keyboard.latin.common.Constants
 import helium314.keyboard.latin.common.CoordinateUtils
 import helium314.keyboard.latin.common.InputPointers
 import helium314.keyboard.latin.define.DebugFlags
+import helium314.keyboard.latin.heatmap.KeyboardGeometry
+import helium314.keyboard.latin.heatmap.TypingHeatmap
 import helium314.keyboard.latin.settings.Settings
 import helium314.keyboard.latin.settings.SettingsValues
 import helium314.keyboard.latin.utils.Log
@@ -184,7 +186,8 @@ class PointerTracker private constructor(
                 sListener.onTextInput(key.outputText)
             } else if (code != KeyCode.NOT_SPECIFIED) {
                 if (mKeyboard?.hasProximityCharsCorrection(code) == true) {
-                    sListener.onCodeInput(code, x, y, isKeyRepeat)
+                    val adjusted = adjustForLearnedOffsets(key, code, x, y)
+                    sListener.onCodeInput(code, adjusted[0], adjusted[1], isKeyRepeat)
                 } else {
                     sListener.onCodeInput(code, Constants.NOT_A_COORDINATE, Constants.NOT_A_COORDINATE, isKeyRepeat)
                 }
@@ -1142,6 +1145,17 @@ class PointerTracker private constructor(
             mIsInSlidingKeyInput -> longpressTimeout * 3
             else -> longpressTimeout
         }
+    }
+
+    /** Move the touch by the learned offset of the key, so the dictionary sees a typical touch. See [TypingHeatmap]. */
+    private fun adjustForLearnedOffsets(key: Key, code: Int, x: Int, y: Int): IntArray {
+        val keyboard = mKeyboard ?: return intArrayOf(x, y)
+        val settingsValues = Settings.getValues()
+        if (!settingsValues.mTypingAdaptEnabled || !Character.isLetter(code) || !keyboard.mId.isAlphabetKeyboard)
+            return intArrayOf(x, y)
+        val offsets = TypingHeatmap.getOffsets(null, KeyboardGeometry.layoutId(keyboard), settingsValues.mTypingAdaptStrength)
+        val offset = offsets[Character.toLowerCase(code)] ?: return intArrayOf(x, y)
+        return TypingHeatmap.adjustForDictionary(x, y, key.x, key.y, key.width, key.height, offset)
     }
 
     private fun isClearlyInsideKey(key: Key, x: Int, y: Int): Boolean {
