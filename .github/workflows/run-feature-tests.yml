@@ -29,6 +29,7 @@ jobs:
           ./gradlew testStandardRunTestsUnitTest
           --tests "helium314.keyboard.latin.InputLogicTest"
           --tests "helium314.keyboard.latin.suggestions.SuggestionStripLayoutHelperTest"
+          --tests "helium314.keyboard.latin.heatmap.TypingHeatmapTest"
 
       - name: Report failures as annotations
         if: ${{ failure() }}
