@@ -63,15 +63,15 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 private val currentChangelogItems = listOf(
-    "• Composing Region Stability: Fixed StringIndexOutOfBoundsException crash during cursor space-swipe in hybrid and custom editors",
-    "• Pasting Long Text: Fixed failures and crashes when pasting clipboard items exceeding 1000 characters",
-    "• Suggestion Strip Close Button: Enlarged dismiss touch targets to 44dp across clipboard, screenshot, and OTP suggestions",
-    "• Key Detector Touch Alignment: Dynamically update coordinate corrections on keyboard padding changes",
-    "• 100% Translation Coverage: Achieved complete translation coverage across all 30 supported languages",
-    "• Voice Settings Localization: Fully localized voice settings, permissions, and download status badges",
-    "• Emoji Dictionary Localization: Localized dictionary types and translated embedded dictionary descriptions",
-    "• Clipboard Visual Polish: Refined long-press scale animations, theme ripples, and removed redundant border strokes",
-    "• Rendering Performance: Optimized char and string width measurements using Paint.measureText"
+    "• Web Suggestion Replacement: Fixed word replacement on suggestion tap in web and browser fields",
+    "• 2D Backspace Gesture: Added 2D swipe gesture to backspace for word and line selection delete",
+    "• Voice Wave Visualizer: Added full-width dynamic sound wave visualizer and processing shimmer effect",
+    "• Text Expander Custom Dates: Supported custom date formatting patterns in %date% placeholder",
+    "• Per-App Profiles: Added toggles for always-on suggestions, strip visibility, and toolbar per app",
+    "• Proportional Key Popups: Scaled key previews proportionally with custom size and corner radius sliders",
+    "• Subtype Suggestion Reset: Fixed suggestion strip failing to clear when switching subtypes or languages",
+    "• Touch Reliability: Prevented touch event dropping on rapid taps and fixed popup dismissal states",
+    "• Performance Optimizations: Pre-compiled regex instances across dictionaries, importers, and text expander"
 )
 
 @Composable

@@ -1,8 +1,7 @@
-- Fixed cursor space-swipe crash in hybrid and custom editors.
-- Fixed pasting long clipboard text exceeding 1000 characters.
-- Enlarged suggestion strip dismiss touch targets to 44dp.
-- Dynamically update touch coordinate corrections on padding changes.
-- Achieved 100% translation coverage across all 30 languages.
-- Fully localized voice settings, permissions, and download badges.
-- Localized emoji dictionary type labels and descriptions.
-- Refined clipboard item long-press animation and styling.
+- Fixed word replacement on suggestion tap in web and browser fields.
+- Added 2D swipe gesture to backspace for word and line deletion.
+- Added full-width dynamic sound wave visualizer and shimmer effect.
+- Added custom date formatting for %date% text expander placeholder.
+- Added per-app toggles for always-on suggestions, strip, and toolbar.
+- Added proportional key popup scaling and custom size/radius sliders.
+- Fixed suggestion strip reset when switching subtypes and languages.
