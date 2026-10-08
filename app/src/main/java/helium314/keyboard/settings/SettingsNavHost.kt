@@ -213,6 +213,9 @@ fun SettingsNavHost(
         composable(SettingsDestination.AppQuirks) {
             helium314.keyboard.settings.screens.AppQuirksScreen(onClickBack = ::goBack)
         }
+        composable(SettingsDestination.TypingHeatmap) {
+            helium314.keyboard.settings.screens.TypingHeatmapScreen(onClickBack = ::goBack)
+        }
         composable(SettingsDestination.Storage) {
             helium314.keyboard.settings.screens.StorageScreen(onClickBack = ::goBack)
         }
@@ -262,6 +265,7 @@ object SettingsDestination {
     const val AppQuirks = "app_quirks"
     const val Gif = "gif"
     const val Cjk = "cjk"
+    const val TypingHeatmap = "typing_heatmap"
 
     private val navChannel = Channel<String>(Channel.BUFFERED)
     val navEvents = navChannel.receiveAsFlow()
