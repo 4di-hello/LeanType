@@ -2347,7 +2347,7 @@ New dictionary:
     <string name="typing_heatmap_category">Typing heatmap</string>
     <string name="typing_heatmap_title">Typing heatmap</string>
     <string name="typing_heatmap_collect">Collect typing data</string>
-    <string name="typing_heatmap_collect_summary">Record where you touch the keys, to show which keys you miss. Data stays on the device</string>
+    <string name="typing_heatmap_collect_summary">Record where you touch the keys, to show which keys you miss. Stored only locally on this device, no cloud, no transfer</string>
     <string name="typing_heatmap_no_data">No data yet. Enable \"Collect typing data\" and type a few sentences as usual. Words typed with gestures or in incognito mode are not recorded.</string>
     <string name="typing_heatmap_all_touches">All touches</string>
     <string name="typing_heatmap_only_misses">Only misses</string>
@@ -2355,7 +2355,25 @@ New dictionary:
     <string name="typing_heatmap_legend">Blue: touches that hit the intended key. Red: touches that hit another key. Line and dot: average touch position for the key.</string>
     <string name="typing_heatmap_top_misses">Most frequent misses</string>
     <string name="typing_heatmap_miss_line">%1$s meant, %2$s hit: %3$d×</string>
-    <string name="typing_heatmap_privacy">The intended key is taken from the text you finally used: the autocorrected word or picked suggestion, or what you typed if you reverted the correction. Touches are stored per key without their order, so your text cannot be reconstructed from them.</string>
+    <string name="typing_heatmap_privacy">Stored only locally on this device: no cloud, no transfer, and not included in Android cloud backups. The data only leaves the device if you export a backup yourself. The intended key is taken from the text you finally used: the autocorrected word or picked suggestion, what you typed if you reverted the correction, or the letter you typed after deleting a neighboring one. Touches are stored per key without their order, so your text cannot be reconstructed from them.</string>
     <string name="typing_heatmap_clear">Delete typing data</string>
     <string name="typing_heatmap_clear_confirm">Delete all recorded typing data?</string>
+    <string name="typing_adapt">Adapt key zones</string>
+    <string name="typing_adapt_summary">Use the collected typing data to recognize which key you meant, also for autocorrection. Keys are adapted once they have enough data</string>
+    <string name="typing_adapt_strength">Strength of adaptation</string>
+    <string name="typing_adapt_strength_1">Light</string>
+    <string name="typing_adapt_strength_2">Moderate</string>
+    <string name="typing_adapt_strength_3">Recommended</string>
+    <string name="typing_adapt_strength_4">Strong</string>
+    <string name="typing_adapt_strength_5">Very strong</string>
+    <string name="typing_heatmap_adapt_off">Key zone adaptation is off.</string>
+    <string name="typing_heatmap_adapt_waiting">Key zones are adapted as soon as a key has %1$d touches.</string>
+    <string name="typing_heatmap_adapt_on">%1$d keys are adapted. Tinted areas: here a touch is now assigned to a neighboring key.</string>
+    <string name="typing_heatmap_before_after">Misses before and after adaptation</string>
+    <string name="typing_heatmap_before_after_not_enough">Not enough data yet for a comparison (at least %1$d touches each).</string>
+    <string name="typing_heatmap_before_after_values">Before: %1$.1f %% (%2$d touches), after: %3$.1f %% (%4$d touches)</string>
+    <string name="typing_heatmap_other_device">This typing data was learned on another device (%1$s), this is %2$s. It may not fit here. The keyboard continues learning either way and replaces old touches over time.</string>
+    <string name="typing_heatmap_start_over">Start over</string>
+    <string name="typing_heatmap_keep">Keep</string>
+    <string name="backup_category_typing_profile">Typing profile (key zones)</string>
 </resources>

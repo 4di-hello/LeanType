@@ -95,6 +95,8 @@ object Defaults {
     const val PREF_AUTOCORRECT_SHORTCUTS = true
     const val PREF_BACKSPACE_REVERTS_AUTOCORRECT = true
     const val PREF_TYPING_HEATMAP = false
+    const val PREF_TYPING_ADAPT = false
+    const val PREF_TYPING_ADAPT_STRENGTH = 3
     const val PREF_CENTER_SUGGESTION_TEXT_TO_ENTER = false
     const val PREF_CENTER_TYPED_WORD = false
     const val PREF_SHOW_SUGGESTIONS = true

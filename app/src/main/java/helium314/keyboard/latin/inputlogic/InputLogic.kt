@@ -6,7 +6,6 @@
 
 package helium314.keyboard.latin.inputlogic
 
-import android.content.res.Configuration
 import android.graphics.Color
 import android.os.SystemClock
 import android.text.InputType
@@ -123,6 +122,8 @@ class InputLogic(
         get() = mSuggestedWords
 
     fun startInput(combiningSpec: String?, settingsValues: SettingsValues) {
+        TypingHeatmap.init(mLatinIME)
+        mDeletedLetterIndex = -1
         mEnteredText = null
         mWordBeingCorrectedByCursor = null
         mConnection.onStartInput()
@@ -371,6 +372,7 @@ class InputLogic(
         mWordBeingCorrectedByCursor = null
         mJustRevertedACommit = false
         if (event.keyCode != KeyCode.DELETE) TypingHeatmap.finalizePending()
+        trackLetterRetype(event, settingsValues)
         val processedEvent = mWordComposer.processEvent(event)
         val inputTransaction = InputTransaction(
             settingsValues,
@@ -2425,10 +2427,49 @@ class InputLogic(
         if (!keyboard.mId.isAlphabetKeyboard) return
         val pointers = mWordComposer.getInputPointers()
         val size = pointers.pointerSize
-        val landscape = mLatinIME.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        val landscape = KeyboardGeometry.isLandscape()
         TypingHeatmap.onWordCommitted(
             mLatinIME, KeyboardGeometry(keyboard, landscape), mWordComposer.getTypedWord(), finalWord,
-            pointers.xCoordinates.copyOf(size), pointers.yCoordinates.copyOf(size)
+            pointers.xCoordinates.copyOf(size), pointers.yCoordinates.copyOf(size), settingsValues.mTypingAdaptEnabled
+        )
+    }
+
+    // last letter of the composing word deleted with a single backspace press, for learning from self-corrections
+    private var mDeletedLetterIndex = -1
+    private var mDeletedLetter = 0
+    private var mDeletedLetterX = 0
+    private var mDeletedLetterY = 0
+
+    /**
+     * If the user deletes the last letter and types a neighboring letter instead, the touch of the
+     * deleted letter was meant for the new one. See [TypingHeatmap.onLetterRetyped].
+     */
+    private fun trackLetterRetype(event: Event, settingsValues: SettingsValues) {
+        val deletedIndex = mDeletedLetterIndex
+        mDeletedLetterIndex = -1
+        if (!settingsValues.mTypingHeatmapEnabled || settingsValues.mIncognitoModeEnabled) return
+        if (mWordComposer.isBatchMode() || mWordComposer.isResumed()) return
+        if (event.keyCode == KeyCode.DELETE) {
+            if (event.isKeyRepeat || !mWordComposer.isComposingWord() || mWordComposer.isCursorFrontOrMiddleOfComposingWord()) return
+            val codePoints = StringUtils.toCodePointArray(mWordComposer.getTypedWord())
+            val index = codePoints.size - 1
+            val pointers = mWordComposer.getInputPointers()
+            if (index < 0 || index >= pointers.pointerSize) return
+            mDeletedLetterIndex = index
+            mDeletedLetter = codePoints[index]
+            mDeletedLetterX = pointers.xCoordinates[index]
+            mDeletedLetterY = pointers.yCoordinates[index]
+            return
+        }
+        if (deletedIndex < 0) return
+        val codePoint = event.codePoint
+        if (codePoint <= 0 || !Character.isLetter(codePoint) || event.x < 0 || event.y < 0) return
+        if (mWordComposer.size() != deletedIndex) return
+        val keyboard = mLatinIME.keyboardSwitcher.keyboard ?: return
+        if (!keyboard.mId.isAlphabetKeyboard) return
+        TypingHeatmap.onLetterRetyped(
+            mLatinIME, KeyboardGeometry(keyboard), mDeletedLetter, mDeletedLetterX, mDeletedLetterY,
+            codePoint, settingsValues.mTypingAdaptEnabled
         )
     }
 
