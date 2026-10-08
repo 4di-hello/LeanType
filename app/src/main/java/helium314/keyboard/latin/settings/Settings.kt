@@ -345,6 +345,8 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
         const val PREF_BACKSPACE_REVERTS_AUTOCORRECT = "backspace_reverts_autocorrect"
         const val PREF_BACKSPACE_REPEAT_DELETES_WORDS = "backspace_repeat_deletes_words"
         const val PREF_TYPING_HEATMAP = "typing_heatmap"
+        const val PREF_TYPING_ADAPT = "typing_adapt"
+        const val PREF_TYPING_ADAPT_STRENGTH = "typing_adapt_strength"
         const val PREF_CENTER_SUGGESTION_TEXT_TO_ENTER = "center_suggestion_text_to_enter"
         const val PREF_CENTER_TYPED_WORD = "center_typed_word"
         const val PREF_SHOW_SUGGESTIONS = "show_suggestions"

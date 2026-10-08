@@ -61,6 +61,7 @@ import java.util.Locale
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
+import helium314.keyboard.latin.heatmap.TypingHeatmap
 import helium314.keyboard.settings.FeedbackManager
 
 @Composable
@@ -75,7 +76,8 @@ fun BackupRestorePreference(setting: Setting) {
                 BackupCategory.THEME_APPEARANCE,
                 BackupCategory.DICTIONARY_HISTORY,
                 BackupCategory.CLIPBOARD,
-                BackupCategory.GENERAL_SETTINGS
+                BackupCategory.GENERAL_SETTINGS,
+                BackupCategory.TYPING_PROFILE
             )
         )
     }
@@ -97,6 +99,7 @@ fun BackupRestorePreference(setting: Setting) {
                         BackupCategory.THEME_APPEARANCE to R.string.backup_category_theme,
                         BackupCategory.DICTIONARY_HISTORY to R.string.backup_category_dictionary,
                         BackupCategory.CLIPBOARD to R.string.backup_category_clipboard,
+                        BackupCategory.TYPING_PROFILE to R.string.backup_category_typing_profile,
                         BackupCategory.GENERAL_SETTINGS to R.string.backup_category_general
                     )
                     categories.forEach { (category, stringResId) ->
@@ -303,6 +306,9 @@ private fun restoreLauncher(
                                 if (it.name.startsWith("custom_background_image")) it.delete()
                             }
                         }
+                        if (selectedCategories.contains(BackupCategory.TYPING_PROFILE)) {
+                            File(deviceProtectedFilesDir, TypingHeatmap.FILE_NAME).delete()
+                        }
                         if (selectedCategories.contains(BackupCategory.CLIPBOARD)) {
                             ClipboardDao.closeInstance()
                             Database.closeInstance()
@@ -361,6 +367,9 @@ private fun restoreLauncher(
                 }
                 if (selectedCategories.contains(BackupCategory.CLIPBOARD)) {
                     Database.copyFromDb(restoredDb, ctx)
+                }
+                if (selectedCategories.contains(BackupCategory.TYPING_PROFILE)) {
+                    TypingHeatmap.reload()
                 }
                 Handler(Looper.getMainLooper()).post {
                     FeedbackManager.message(ctx, R.string.backup_restored)
@@ -509,6 +518,7 @@ private val historyDictRegex = "UserHistoryDictionary.*${File.separator}UserHist
 private val bgImgRegex = "custom_background_image.*".toRegex()
 private val fontRegex = "custom_font".toRegex()
 private val emojiFontRegex = "custom_emoji_font".toRegex()
+private val typingProfileRegex = Regex.escape(TypingHeatmap.FILE_NAME).toRegex()
 
 private val backupFilePatterns by lazy { listOf(
     blacklistsRegex,
@@ -518,6 +528,7 @@ private val backupFilePatterns by lazy { listOf(
     bgImgRegex,
     fontRegex,
     emojiFontRegex,
+    typingProfileRegex,
 ) }
 
 enum class BackupCategory {
@@ -525,7 +536,8 @@ enum class BackupCategory {
     THEME_APPEARANCE,
     DICTIONARY_HISTORY,
     CLIPBOARD,
-    GENERAL_SETTINGS
+    GENERAL_SETTINGS,
+    TYPING_PROFILE
 }
 
 private fun getCategoryForPrefKey(key: String): BackupCategory {
@@ -584,6 +596,9 @@ private fun getCategoryForFilePath(path: String): BackupCategory? {
     }
     if (path == Database.NAME) {
         return BackupCategory.CLIPBOARD
+    }
+    if (path == TypingHeatmap.FILE_NAME) {
+        return BackupCategory.TYPING_PROFILE
     }
     return null
 }
