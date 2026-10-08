@@ -218,6 +218,7 @@ open class SettingsValues(
     val mRememberFloatingKeyboard: Boolean
     val mPersistTextEditMode: Boolean
     val mBackspaceRevertsAutocorrect: Boolean
+    val mTypingHeatmapEnabled: Boolean
     val mDisableMultiWordSuggestions: Boolean
     val mPrioritizePersonalSuggestions: Boolean
     val mSuggestionBalance: Int
@@ -357,6 +358,7 @@ open class SettingsValues(
         mRememberFloatingKeyboard = prefs.getBoolean(Settings.PREF_REMEMBER_FLOATING_KEYBOARD, Defaults.PREF_REMEMBER_FLOATING_KEYBOARD)
         mPersistTextEditMode = prefs.getBoolean(Settings.PREF_PERSIST_TEXT_EDIT_MODE, Defaults.PREF_PERSIST_TEXT_EDIT_MODE)
         mBackspaceRevertsAutocorrect = prefs.getBoolean(Settings.PREF_BACKSPACE_REVERTS_AUTOCORRECT, Defaults.PREF_BACKSPACE_REVERTS_AUTOCORRECT)
+        mTypingHeatmapEnabled = prefs.getBoolean(Settings.PREF_TYPING_HEATMAP, Defaults.PREF_TYPING_HEATMAP)
         mDisableMultiWordSuggestions = prefs.getBoolean(Settings.PREF_DISABLE_MULTI_WORD_SUGGESTIONS, Defaults.PREF_DISABLE_MULTI_WORD_SUGGESTIONS)
         mBigramPredictionEnabled = prefs.getBoolean(Settings.PREF_BIGRAM_PREDICTIONS, Defaults.PREF_BIGRAM_PREDICTIONS)
         mPrioritizePersonalSuggestions = prefs.getBoolean(Settings.PREF_PRIORITIZE_PERSONAL_SUGGESTIONS, Defaults.PREF_PRIORITIZE_PERSONAL_SUGGESTIONS)

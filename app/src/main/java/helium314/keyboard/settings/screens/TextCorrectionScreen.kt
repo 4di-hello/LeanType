@@ -28,6 +28,7 @@ import helium314.keyboard.latin.utils.getActivity
 import helium314.keyboard.latin.utils.prefs
 import helium314.keyboard.settings.SearchSettingsScreen
 import helium314.keyboard.settings.Setting
+import helium314.keyboard.settings.SettingsWithoutKey
 import helium314.keyboard.settings.SettingsActivity
 import helium314.keyboard.settings.Theme
 import helium314.keyboard.settings.initPreview
@@ -84,7 +85,12 @@ fun TextCorrectionScreen(
             Settings.PREF_ABC_AFTER_SYMBOL_SPACE,
             Settings.PREF_ABC_AFTER_NUMPAD_SPACE,
             Settings.PREF_ABC_AFTER_EMOJI,
-            Settings.PREF_ABC_AFTER_CLIP
+            Settings.PREF_ABC_AFTER_CLIP,
+
+            // Typing heatmap
+            R.string.typing_heatmap_category,
+            Settings.PREF_TYPING_HEATMAP,
+            SettingsWithoutKey.SCREEN_NAV_TYPING_HEATMAP
         )
     }
 
@@ -96,6 +102,9 @@ fun TextCorrectionScreen(
 }
 
 fun createCorrectionSettings(context: Context) = listOf(
+    Setting(context, Settings.PREF_TYPING_HEATMAP, R.string.typing_heatmap_collect, R.string.typing_heatmap_collect_summary) {
+        SwitchPreference(it, Defaults.PREF_TYPING_HEATMAP)
+    },
 
     Setting(context, Settings.PREF_BLOCK_POTENTIALLY_OFFENSIVE,
         R.string.prefs_block_potentially_offensive_title, R.string.prefs_block_potentially_offensive_summary
