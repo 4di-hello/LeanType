@@ -107,6 +107,7 @@ object Defaults {
     const val PREF_BACKSPACE_REVERTS_AUTOCORRECT = true
     const val PREF_AUTO_CORRECT_INDICATOR_UNDERLINE = true
     const val PREF_BACKSPACE_REPEAT_DELETES_WORDS = false
+    const val PREF_TYPING_HEATMAP = false
     const val PREF_CENTER_SUGGESTION_TEXT_TO_ENTER = false
     const val PREF_CENTER_TYPED_WORD = false
     const val PREF_SHOW_SUGGESTIONS = true
