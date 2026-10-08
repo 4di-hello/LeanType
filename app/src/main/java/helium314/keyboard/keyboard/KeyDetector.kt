@@ -6,6 +6,10 @@
 
 package helium314.keyboard.keyboard
 
+import helium314.keyboard.latin.heatmap.KeyboardGeometry
+import helium314.keyboard.latin.heatmap.TypingHeatmap
+import helium314.keyboard.latin.settings.Settings
+
 /**
  * This class handles key detection.
  */
@@ -110,6 +114,25 @@ open class KeyDetector {
                 primaryKey = key
             }
         }
-        return primaryKey
+        return adaptedKey(keyboard, x, y, touchX, touchY, primaryKey) ?: primaryKey
+    }
+
+    /**
+     * Key chosen with the learned typing offsets of the user, if it differs from [primaryKey].
+     * Only letter keys on alphabet keyboards are affected. See [TypingHeatmap].
+     */
+    private fun adaptedKey(keyboard: Keyboard, x: Int, y: Int, touchX: Int, touchY: Int, primaryKey: Key?): Key? {
+        if (primaryKey == null || !Character.isLetter(primaryKey.code)) return null
+        val settingsValues = Settings.getValues()
+        if (!settingsValues.mTypingAdaptEnabled) return null
+        if (!keyboard.mId.isAlphabetKeyboard) return null
+        val offsets = TypingHeatmap.getOffsets(null, KeyboardGeometry.layoutId(keyboard), settingsValues.mTypingAdaptStrength)
+        if (offsets.isEmpty()) return null
+        val keys = keyboard.getNearestKeys(touchX, touchY).filter { Character.isLetter(it.code) && it.width > 0 && it.height > 0 }
+        val candidates = keys.map {
+            TypingHeatmap.Candidate(Character.toLowerCase(it.code), it.x.toFloat(), it.y.toFloat(), it.width.toFloat(), it.height.toFloat())
+        }
+        val code = TypingHeatmap.adaptedKeyCode(x.toFloat(), y.toFloat(), candidates, offsets) ?: return null
+        return keys.firstOrNull { Character.toLowerCase(it.code) == code }
     }
 }

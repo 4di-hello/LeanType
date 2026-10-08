@@ -46,7 +46,7 @@ class TypingHeatmapTest {
         // "tir" typed, "tor" meant: the i touch is a miss for o
         val xs = intArrayOf(center('t') + 10, center('i') + 30, center('r'))
         val ys = intArrayOf(75, 75 + 15, 0)
-        val samples = TypingHeatmap.computeSamples("tir", "tor", xs, ys, ::rect)
+        val samples = TypingHeatmap.computeSamples("tir", "tor", xs, ys, keyRect = ::rect)
         assertEquals(3, samples.size)
         val (code, miss) = samples[1]
         assertEquals('o'.code, code)
@@ -60,13 +60,13 @@ class TypingHeatmapTest {
     @Test fun `unrelated words and far touches are ignored`() {
         val xs = intArrayOf(center('q'), center('w'), center('e'))
         val ys = intArrayOf(75, 75, 75)
-        assertTrue(TypingHeatmap.computeSamples("qwe", "pou", xs, ys, ::rect).isEmpty())
+        assertTrue(TypingHeatmap.computeSamples("qwe", "pou", xs, ys, keyRect = ::rect).isEmpty())
         // touch 3 keys away from intended key
-        val far = TypingHeatmap.computeSamples("ie", "te", intArrayOf(center('i'), center('e')), intArrayOf(75, 75), ::rect)
+        val far = TypingHeatmap.computeSamples("ie", "te", intArrayOf(center('i'), center('e')), intArrayOf(75, 75), keyRect = ::rect)
         assertEquals(1, far.size)
         assertEquals('e'.code, far[0].first)
         // no coordinates
-        assertTrue(TypingHeatmap.computeSamples("we", "we", intArrayOf(-1, -1), intArrayOf(-1, -1), ::rect).isEmpty())
+        assertTrue(TypingHeatmap.computeSamples("we", "we", intArrayOf(-1, -1), intArrayOf(-1, -1), keyRect = ::rect).isEmpty())
     }
 
     @Test fun `committed word is recorded when the next input follows`() {
@@ -93,5 +93,55 @@ class TypingHeatmapTest {
         TypingHeatmap.discardPending()
         TypingHeatmap.finalizePending()
         assertNull(TypingHeatmap.layoutForTest("test"))
+    }
+
+    private fun samples(n: Int, dx: Float, dy: Float = 0f) = List(n) { TypingHeatmap.Sample(dx, dy, 'o'.code) }
+
+    @Test fun `offsets need enough data and are limited`() {
+        assertNull(TypingHeatmap.effectiveOffset(samples(29, 0.4f), 0.33f))
+        val full = TypingHeatmap.effectiveOffset(samples(100, 0.4f), 0.33f)!!
+        assertEquals(0.33f, full[0], 0.001f) // limited to max shift
+        val small = TypingHeatmap.effectiveOffset(samples(100, 0.1f, -0.1f), 0.33f)!!
+        assertEquals(0.1f, small[0], 0.001f)
+        assertEquals(-0.1f, small[1], 0.001f)
+        // less weight with less data
+        val half = TypingHeatmap.effectiveOffset(samples(65, 0.2f), 0.33f)!!
+        assertTrue(half[0] > 0.05f && half[0] < 0.15f)
+    }
+
+    @Test fun `adapted detection picks the key the user means`() {
+        val i = TypingHeatmap.Candidate('i'.code, 700f, 0f, 100f, 150f)
+        val o = TypingHeatmap.Candidate('o'.code, 800f, 0f, 100f, 150f)
+        // user hits o on average 30 % too far left
+        val offsets = mapOf('o'.code to floatArrayOf(-0.3f, 0f))
+        // touch on i, close to the border: now meant for o
+        assertEquals('o'.code, TypingHeatmap.adaptedKeyCode(790f, 75f, listOf(i, o), offsets))
+        // touch clearly on i: unchanged
+        assertNull(TypingHeatmap.adaptedKeyCode(760f, 75f, listOf(i, o), offsets))
+        // no offsets: unchanged
+        assertNull(TypingHeatmap.adaptedKeyCode(790f, 75f, listOf(i, o), emptyMap()))
+    }
+
+    @Test fun `retyped neighbor letter is a miss for the new letter`() {
+        // p deleted, o typed: the p touch was meant for o
+        val sample = TypingHeatmap.selfCorrectionSample('p'.code, center('p') - 40, 75, 'o'.code, keyRect = ::rect)!!
+        assertEquals('o'.code, sample.first)
+        assertEquals('p'.code, sample.second.touchedCode)
+        assertEquals(0.6f, sample.second.dx, 0.001f)
+        // keys far apart: not a typo
+        assertNull(TypingHeatmap.selfCorrectionSample('q'.code, center('q'), 75, 'p'.code, keyRect = ::rect))
+        // same letter
+        assertNull(TypingHeatmap.selfCorrectionSample('o'.code, center('o'), 75, 'o'.code, keyRect = ::rect))
+    }
+
+    @Test fun `learning uses raw touches, not coordinates adjusted for the dictionary`() {
+        val raw = center('o') - 30
+        val adjusted = TypingHeatmap.adjustForDictionary(raw, 75, 800, 0, 100, 150, floatArrayOf(-0.3f, 0f))
+        assertEquals(center('o'), adjusted[0])
+        TypingHeatmap.onWordCommitted(context, geometry, "wo", "wo", intArrayOf(center('w'), adjusted[0]), intArrayOf(75, adjusted[1]), true)
+        TypingHeatmap.finalizePending()
+        val sample = TypingHeatmap.layoutForTest("test")!!.samples['o'.code]!!.first()
+        assertEquals(-0.3f, sample.dx, 0.001f)
+        assertTrue(sample.adapted)
     }
 }
