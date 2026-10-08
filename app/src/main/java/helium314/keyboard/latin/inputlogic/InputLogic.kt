@@ -2032,8 +2032,7 @@ class InputLogic(
                 }
             }
         }
-        val isWeb = InputTypeUtils.isWebEditor(getCurrentInputEditorInfo())
-        if (!TextUtils.isDigitsOnly(typedWordString) && !isWeb) {
+        if (!TextUtils.isDigitsOnly(typedWordString)) {
             val codePoints = StringUtils.toCodePointArray(typedWordString)
             mWordComposer.setComposingWord(codePoints, mLatinIME.getCoordinatesForCurrentKeyboard(codePoints))
             mWordComposer.setCursorPositionWithinWord(typedWordString.codePointCount(0, numberOfCharsInWordBeforeCursor))

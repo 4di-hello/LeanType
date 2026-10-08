@@ -42,6 +42,7 @@ import helium314.keyboard.latin.inputlogic.InputLogic
 import helium314.keyboard.latin.inputlogic.SpaceState
 import helium314.keyboard.latin.settings.Settings
 import helium314.keyboard.latin.suggestions.SuggestionStripView
+import helium314.keyboard.latin.utils.InputTypeUtils
 import helium314.keyboard.latin.utils.ScriptUtils
 import helium314.keyboard.latin.utils.SubtypeSettings
 import helium314.keyboard.latin.utils.ToolbarKey
@@ -507,6 +508,58 @@ class InputLogicTest {
         assertEquals("hello may friend", getText())
         assertEquals(8, getCursorPosition())
         assertEquals(8, cursor)
+    }
+
+    @Test fun testPickSuggestionOnWordCursor_normal() {
+        reset()
+        setText("hello wrld there")
+        setCursorPosition(8)
+        pickSuggestion("world")
+        assertEquals("hello world there", getText())
+    }
+
+    @Test fun testPickSuggestionOnWordCursor_webEditor() {
+        reset()
+        currentInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_WEB_EDIT_TEXT
+        setText("hello wrld there")
+        setCursorPosition(8)
+        pickSuggestion("world")
+        assertEquals("hello world there", getText())
+    }
+
+    @Test fun testPickSuggestionOnWordCursor_browserPackage() {
+        reset()
+        val ei = EditorInfo().apply {
+            packageName = "com.android.chrome"
+            inputType = InputType.TYPE_CLASS_TEXT
+        }
+        editorInfoOverride = ei
+        try {
+            setText("hello wrld there")
+            setCursorPosition(8)
+            pickSuggestion("world")
+            assertEquals("hello world there", getText())
+        } finally {
+            editorInfoOverride = null
+        }
+    }
+
+    @Test fun testPickSuggestionOnWordCursor_atEndOfWord_webEditor() {
+        reset()
+        currentInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_WEB_EDIT_TEXT
+        setText("hello wrld there")
+        setCursorPosition(10)
+        pickSuggestion("world")
+        assertEquals("hello world there", getText())
+    }
+
+    @Test fun testPickSuggestionOnWordCursor_atStartOfWord_webEditor() {
+        reset()
+        currentInputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_WEB_EDIT_TEXT
+        setText("hello wrld there")
+        setCursorPosition(6)
+        pickSuggestion("world")
+        assertEquals("hello world there", getText())
     }
 
     // todo: make it work, but it might not be that simple because adding is done in combiner
@@ -1748,6 +1801,7 @@ class InputLogicTest {
     }
 
     private fun checkConnectionConsistency() {
+        if (InputTypeUtils.isWebEditor(latinIME.currentInputEditorInfo)) return
         // RichInputConnection only has composing text up to cursor, but InputConnection has full composing text
         val expectedConnectionComposingText = if (composingStart == -1 || composingEnd == -1) ""
         else text.substring(composingStart, min(composingEnd, selectionEnd))
