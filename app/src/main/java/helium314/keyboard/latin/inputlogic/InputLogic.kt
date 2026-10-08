@@ -6,6 +6,7 @@
 
 package helium314.keyboard.latin.inputlogic
 
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.SystemClock
 import android.text.InputType
@@ -18,6 +19,8 @@ import android.view.KeyEvent
 import android.view.inputmethod.CorrectionInfo
 import android.view.inputmethod.EditorInfo
 import helium314.keyboard.event.Event
+import helium314.keyboard.latin.heatmap.KeyboardGeometry
+import helium314.keyboard.latin.heatmap.TypingHeatmap
 import helium314.keyboard.event.InputTransaction
 import helium314.keyboard.keyboard.Keyboard
 import helium314.keyboard.keyboard.KeyboardActionListenerImpl
@@ -158,6 +161,7 @@ class InputLogic(
     }
 
     fun finishInput() {
+        TypingHeatmap.onFinishInput()
         if (mWordComposer.isComposingWord()) {
             mConnection.finishComposingText()
             StatsUtils.onWordCommitUserTyped(mWordComposer.getTypedWord(), mWordComposer.isBatchMode())
@@ -370,6 +374,7 @@ class InputLogic(
     ): InputTransaction {
         mWordBeingCorrectedByCursor = null
         mJustRevertedACommit = false
+        if (event.keyCode != KeyCode.DELETE) TypingHeatmap.finalizePending()
         val processedEvent = mWordComposer.processEvent(event)
         val inputTransaction = InputTransaction(
             settingsValues,
@@ -1394,6 +1399,8 @@ class InputLogic(
     }
 
     private fun handleBackspaceEvent(event: Event, inputTransaction: InputTransaction) {
+        // deleting into the last committed word: we don't know which word was finally used
+        if (!mLastComposedWord.canRevertCommit()) TypingHeatmap.discardPending()
         val currentKeyboardScript = inputTransaction.settingsValues.mCurrentKeyboardScript
         mSpaceState = SpaceState.NONE
         mDeleteCount++
@@ -2120,6 +2127,7 @@ class InputLogic(
     }
 
     private fun revertCommit(inputTransaction: InputTransaction) {
+        TypingHeatmap.onCommitReverted()
         val originallyTypedWord = mLastComposedWord.mTypedWord
         val committedWord = mLastComposedWord.mCommittedWord
         val committedWordString = committedWord.toString()
@@ -2261,6 +2269,7 @@ class InputLogic(
             val typedWord = mWordComposer.getTypedWord()
             val ngramContext = mConnection.getNgramContextFromNthPreviousWord(settingsValues.mSpacingAndPunctuations, 1)
             performAdditionToUserHistoryDictionary(settingsValues, typedWord, ngramContext)
+            recordForTypingHeatmap(settingsValues, typedWord)
             mLastComposedWord = mWordComposer.commitWord(
                 LastComposedWord.COMMIT_TYPE_USER_TYPED_WORD, typedWord,
                 LastComposedWord.NOT_A_SEPARATOR, ngramContext
@@ -2457,6 +2466,22 @@ class InputLogic(
         }
     }
 
+    /** Remember where the keys of the typed word were touched, see [TypingHeatmap] */
+    private fun recordForTypingHeatmap(settingsValues: SettingsValues, finalWord: String) {
+        if (!settingsValues.mTypingHeatmapEnabled || settingsValues.mIncognitoModeEnabled) return
+        // no real touch positions for gestures or words restarted from existing text
+        if (mWordComposer.isBatchMode() || mWordComposer.isResumed()) return
+        val keyboard = mLatinIME.keyboardSwitcher.keyboard ?: return
+        if (!keyboard.mId.isAlphabetKeyboard) return
+        val pointers = mWordComposer.getInputPointers()
+        val size = pointers.pointerSize
+        val landscape = mLatinIME.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        TypingHeatmap.onWordCommitted(
+            mLatinIME, KeyboardGeometry(keyboard, landscape), mWordComposer.getTypedWord(), finalWord,
+            pointers.xCoordinates.copyOf(size), pointers.yCoordinates.copyOf(size)
+        )
+    }
+
     private fun commitChosenWord(
         settingsValues: SettingsValues,
         chosenWord: String,
@@ -2518,6 +2543,7 @@ class InputLogic(
             Log.d(TAG, "commitChosenWord() : $runTimeMillis ms to run performAdditionToUserHistoryDictionary()")
             startTimeMillis = System.currentTimeMillis()
         }
+        recordForTypingHeatmap(settingsValues, chosenWord)
         mLastComposedWord = mWordComposer.commitWord(commitType, chosenWord, separatorString, ngramContext)
         if (DebugFlags.DEBUG_ENABLED) {
             val runTimeMillis = System.currentTimeMillis() - startTimeMillis

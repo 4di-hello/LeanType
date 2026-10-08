@@ -2349,4 +2349,19 @@ New dictionary:
     <string name="voice_whisper_import_dispatched">Whisper model import dispatched</string>
     <string name="voice_model_import_failed_format">Model import failed: %s</string>
     <string name="voice_model_multilingual">Multilingual</string>
+    <!-- Typing heatmap: records where keys are touched, labelled by the finally used text -->
+    <string name="typing_heatmap_category">Typing heatmap</string>
+    <string name="typing_heatmap_title">Typing heatmap</string>
+    <string name="typing_heatmap_collect">Collect typing data</string>
+    <string name="typing_heatmap_collect_summary">Record where you touch the keys, to show which keys you miss. Data stays on the device</string>
+    <string name="typing_heatmap_no_data">No data yet. Enable \"Collect typing data\" and type a few sentences as usual. Words typed with gestures or in incognito mode are not recorded.</string>
+    <string name="typing_heatmap_all_touches">All touches</string>
+    <string name="typing_heatmap_only_misses">Only misses</string>
+    <string name="typing_heatmap_stats">%1$d touches, %2$d misses (%3$.1f %%)</string>
+    <string name="typing_heatmap_legend">Blue: touches that hit the intended key. Red: touches that hit another key. Line and dot: average touch position for the key.</string>
+    <string name="typing_heatmap_top_misses">Most frequent misses</string>
+    <string name="typing_heatmap_miss_line">%1$s meant, %2$s hit: %3$d×</string>
+    <string name="typing_heatmap_privacy">The intended key is taken from the text you finally used: the autocorrected word or picked suggestion, or what you typed if you reverted the correction. Touches are stored per key without their order, so your text cannot be reconstructed from them.</string>
+    <string name="typing_heatmap_clear">Delete typing data</string>
+    <string name="typing_heatmap_clear_confirm">Delete all recorded typing data?</string>
 </resources>
