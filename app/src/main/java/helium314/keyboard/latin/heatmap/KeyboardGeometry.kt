@@ -1,13 +1,21 @@
 // SPDX-License-Identifier: GPL-3.0-only
 package helium314.keyboard.latin.heatmap
 
+import android.content.res.Configuration
+import android.content.res.Resources
 import helium314.keyboard.keyboard.Keyboard
 import helium314.keyboard.keyboard.internal.keyboard_parser.floris.KeyCode
 import helium314.keyboard.latin.common.Constants
 
 /** [TypingHeatmap.KeyGeometry] for a [Keyboard] */
-class KeyboardGeometry(private val keyboard: Keyboard, landscape: Boolean) : TypingHeatmap.KeyGeometry {
-    override val layoutId = keyboard.mId.mSubtype.mainLayoutName + if (landscape) " (landscape)" else ""
+class KeyboardGeometry(private val keyboard: Keyboard, landscape: Boolean = isLandscape()) : TypingHeatmap.KeyGeometry {
+    override val layoutId = layoutId(keyboard, landscape)
+
+    companion object {
+        fun isLandscape() = Resources.getSystem().configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        fun layoutId(keyboard: Keyboard, landscape: Boolean = isLandscape()) =
+            keyboard.mId.mSubtype.mainLayoutName + if (landscape) " (landscape)" else ""
+    }
 
     override val source: Any get() = keyboard
 
