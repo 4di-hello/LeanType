@@ -147,6 +147,7 @@ private val modules = listOf(
     SettingsModule(SettingsWithoutKey.SCREEN_NAV_VOICE, SettingsDestination.OfflineVoice, R.string.voice_input_title, iconRes = R.drawable.sym_keyboard_voice_holo, provider = ::createVoiceSettings),
     SettingsModule(SettingsWithoutKey.SCREEN_NAV_TRANSLATION, SettingsDestination.Translation, R.string.translation_settings_title, iconRes = R.drawable.ic_translate),
     SettingsModule(SettingsWithoutKey.SCREEN_NAV_HANDWRITING, SettingsDestination.Handwriting, R.string.libraries_hub_handwriting_title, iconRes = R.drawable.ic_edit),
+    SettingsModule(SettingsWithoutKey.SCREEN_NAV_TYPING_HEATMAP, SettingsDestination.TypingHeatmap, R.string.typing_heatmap_title, iconRes = R.drawable.ic_settings_gesture),
     SettingsModule(SettingsWithoutKey.SCREEN_NAV_UPDATES, SettingsDestination.Updates, R.string.settings_screen_updates, iconRes = R.drawable.ic_settings_updates)
 )
 
@@ -225,6 +226,7 @@ object SettingsWithoutKey {
     const val SCREEN_NAV_TRANSLATION = "screen_nav_translation"
     const val SCREEN_NAV_HANDWRITING = "screen_nav_handwriting"
     const val SCREEN_NAV_UPDATES = "screen_nav_updates"
+    const val SCREEN_NAV_TYPING_HEATMAP = "screen_nav_typing_heatmap"
     const val SCREEN_NAV_PERSONAL_DICTIONARIES = "screen_nav_personal_dictionaries"
     const val SCREEN_NAV_BLOCKED_WORDS = "screen_nav_blocked_words"
 }
