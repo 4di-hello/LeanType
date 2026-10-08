@@ -1530,6 +1530,49 @@ class InputLogicTest {
         assertEquals("", composingText)
     }
 
+    @Test fun `held backspace deletes whole words when enabled`() {
+        reset()
+        latinIME.prefs().edit { putBoolean(Settings.PREF_BACKSPACE_REPEAT_DELETES_WORDS, true) }
+        setText("eins zwei drei vier fuenf sechs sieben")
+        functionalKeyPress(KeyCode.DELETE) // a single press deletes one character
+        assertEquals("eins zwei drei vier fuenf sechs siebe", text)
+        // the first key repeat deletes the rest of the word
+        functionalKeyPress(KeyCode.DELETE, isKeyRepeat = true)
+        assertEquals("eins zwei drei vier fuenf sechs ", text)
+        // some repeats pass without deleting before the next word
+        for (i in 1..6) {
+            functionalKeyPress(KeyCode.DELETE, isKeyRepeat = true)
+        }
+        assertEquals("eins zwei drei vier fuenf sechs ", text)
+        functionalKeyPress(KeyCode.DELETE, isKeyRepeat = true)
+        assertEquals("eins zwei drei vier fuenf ", text)
+        // keep holding: everything gets deleted word by word
+        for (i in 1..30) {
+            functionalKeyPress(KeyCode.DELETE, isKeyRepeat = true)
+        }
+        assertEquals("", text)
+    }
+
+    @Test fun `start of previous word keeps whitespace before the word`() {
+        fun remaining(text: String) = text.substring(0, InputLogic.getStartOfPreviousWord(text))
+        assertEquals("Hallo, ", remaining("Hallo, Welt! "))
+        assertEquals("", remaining("Hallo, "))
+        assertEquals("", remaining("Hallo"))
+        assertEquals("eins ", remaining("eins zwei"))
+        assertEquals("", remaining("   "))
+    }
+
+    @Test fun `held backspace deletes characters only when word deletion is disabled`() {
+        reset()
+        latinIME.prefs().edit { putBoolean(Settings.PREF_BACKSPACE_REPEAT_DELETES_WORDS, false) }
+        setText("eins zwei drei vier")
+        functionalKeyPress(KeyCode.DELETE)
+        for (i in 1..15) {
+            functionalKeyPress(KeyCode.DELETE, isKeyRepeat = true)
+        }
+        assertEquals("ein", text) // with word deletion, "eins" would be gone completely
+    }
+
     @Test fun timestamp() {
         reset()
         chainInput("hello")

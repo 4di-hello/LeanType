@@ -88,6 +88,10 @@ class InputLogic(
     private var mTypedWordOnShiftPress: String? = null
 
     private var mDeleteCount = 0
+    // for "backspace repeat deletes words": repeat ticks in the current hold, and words deleted so far
+    private var mBackspaceRepeatTicks = 0
+    private var mBackspaceWordsDeleted = 0
+    private var mBackspaceNextWordTick = 0
     private var mLastKeyTime = 0L
     private var mEnteredText: String? = null
     private var mIsAutoCorrectionIndicatorOn = false
@@ -1345,6 +1349,50 @@ class InputLogic(
         }
     }
 
+    /**
+     * When the option is enabled and the delete key is held down, switch from deleting characters
+     * to deleting whole words after a short while. Words are deleted with increasing speed.
+     * Returns true if the event was consumed (a word was deleted, or this repeat tick is skipped).
+     */
+    private fun handleBackspaceRepeatWordDeletion(event: Event, settingsValues: SettingsValues): Boolean {
+        if (!event.isKeyRepeat || mDeleteCount <= 1) {
+            // new press of the delete key
+            mBackspaceRepeatTicks = 0
+            mBackspaceWordsDeleted = 0
+            mBackspaceNextWordTick = 0
+        }
+        if (!event.isKeyRepeat) return false
+        mBackspaceRepeatTicks++
+        if (!settingsValues.mBackspaceRepeatDeletesWords) return false
+        if (mBackspaceRepeatTicks < BACKSPACE_WORD_MODE_START_TICK) return false
+        if (mBackspaceRepeatTicks < mBackspaceNextWordTick) return true // wait between words
+
+        if (mWordComposer.isComposingWord()) {
+            mConnection.finishComposingText()
+            resetComposingState(true)
+        }
+        val textBefore = mConnection.getTextBeforeCursor(BACKSPACE_WORD_LOOKBACK, 0)?.toString()
+        if (textBefore == null) return false // fall back to normal deletion
+        if (textBefore.isEmpty()) return true
+        val length = textBefore.length - getStartOfPreviousWord(textBefore)
+        if (InputTypeUtils.isWebEditor(getCurrentInputEditorInfo())) {
+            repeat(length) { sendDownUpKeyEvent(KeyEvent.KEYCODE_DEL) }
+        } else {
+            mConnection.deleteTextBeforeCursor(length)
+        }
+        StatsUtils.onBackspaceWordDelete(length)
+        mSuggestionStripViewAccessor.setNeutralSuggestionStrip()
+
+        mBackspaceWordsDeleted++
+        mBackspaceNextWordTick = mBackspaceRepeatTicks + when {
+            mBackspaceWordsDeleted < 2 -> 7 // 350 ms
+            mBackspaceWordsDeleted < 5 -> 5 // 250 ms
+            mBackspaceWordsDeleted < 10 -> 3 // 150 ms
+            else -> 2 // 100 ms
+        }
+        return true
+    }
+
     private fun handleBackspaceEvent(event: Event, inputTransaction: InputTransaction) {
         val currentKeyboardScript = inputTransaction.settingsValues.mCurrentKeyboardScript
         mSpaceState = SpaceState.NONE
@@ -1404,6 +1452,8 @@ class InputLogic(
             InputTransaction.SHIFT_UPDATE_NOW
         }
         inputTransaction.requireShiftUpdate(shiftUpdateKind)
+
+        if (handleBackspaceRepeatWordDeletion(event, inputTransaction.settingsValues)) return
 
         if (mWordComposer.isCursorFrontOrMiddleOfComposingWord()) {
             unlearnWord(mWordComposer.getTypedWord(), inputTransaction.settingsValues, Constants.EVENT_BACKSPACE)
@@ -2929,9 +2979,31 @@ class InputLogic(
     companion object {
         private const val TAG = "InputLogic"
         private const val INLINE_EMOJI_SEARCH_MARKER = ':'
+        /** Key repeat tick (50 ms each, after the initial 400 ms) at which held backspace switches to deleting words */
+        private const val BACKSPACE_WORD_MODE_START_TICK = 1
+        private const val BACKSPACE_WORD_LOOKBACK = 200
         private val THAI_LOCALE = Locale.forLanguageTag("th")
         private val THAI_WORD_BREAK_ITERATOR = ThreadLocal.withInitial { BreakIterator.getWordInstance(THAI_LOCALE) }
         private val CURSOR_PATTERN = java.util.regex.Pattern.compile("%cursor(\\d+)%")
+
+        /**
+         * Index where the word before the end of [text] starts, including whitespace and punctuation
+         * after it, but keeping the whitespace before it (so "one two " -> "one ").
+         */
+        internal fun getStartOfPreviousWord(text: String): Int {
+            var i = text.length
+            fun skipWhile(predicate: (Int) -> Boolean) {
+                while (i > 0) {
+                    val cp = Character.codePointBefore(text, i)
+                    if (!predicate(cp)) break
+                    i -= Character.charCount(cp)
+                }
+            }
+            skipWhile { Character.isWhitespace(it) }
+            skipWhile { !Character.isLetterOrDigit(it) && !Character.isWhitespace(it) }
+            skipWhile { Character.isLetterOrDigit(it) }
+            return i
+        }
 
         fun isSpaceStrippingPunctuation(codePoint: Int): Boolean {
             return codePoint == '.'.code

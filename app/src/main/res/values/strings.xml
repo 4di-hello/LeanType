@@ -184,6 +184,10 @@
     <string name="large_screen_layout_note">Settings on this screen apply to large-screen layout</string>
     <!-- Option to undo auto correction with backspace -->
     <string name="backspace_reverts_autocorrect">Backspace reverts autocorrect</string>
+    <!-- Option to delete whole words when holding the delete key -->
+    <string name="backspace_repeat_deletes_words">Holding delete removes whole words</string>
+    <!-- Description for "backspace_repeat_deletes_words" option -->
+    <string name="backspace_repeat_deletes_words_summary">After holding the delete key for a moment, delete word by word with increasing speed</string>
     <!-- Option to disable auto correction. -->
     <string name="auto_correction_threshold_mode_off">Off</string> <!-- todo: use it or remove it -->
     <!-- Option to suggest auto correction suggestions modestly. Auto-corrects only to a word which has small edit distance from typed word. -->
