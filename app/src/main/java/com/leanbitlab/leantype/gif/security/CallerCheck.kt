@@ -2,6 +2,7 @@ package com.leanbitlab.leantype.gif.security
 
 import android.content.Context
 import android.os.Binder
+import android.os.Process
 import com.leanbitlab.leantype.gif.BuildConfig
 import com.leanbitlab.leantype.gif.SigningCerts
 
@@ -21,6 +22,9 @@ object CallerCheck {
 
     fun enforceHost(context: Context) {
         val uid = Binder.getCallingUid()
+        if (uid == Process.myUid()) {
+            return
+        }
         val pm = context.packageManager
         val packages = pm.getPackagesForUid(uid) ?: throw SecurityException("Caller UID has no packages")
         

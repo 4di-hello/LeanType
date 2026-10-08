@@ -50,7 +50,6 @@ class GifEngineService : Service() {
     }
 
     override fun onBind(intent: Intent?): IBinder {
-        CallerCheck.enforceHost(this)
         return binder
     }
 
@@ -60,7 +59,10 @@ class GifEngineService : Service() {
     }
 
     private val binder = object : IGifEngine.Stub() {
-        override fun getContractVersion(): Int = Contract.VERSION
+        override fun getContractVersion(): Int {
+            CallerCheck.enforceHost(this@GifEngineService)
+            return Contract.VERSION
+        }
 
         override fun listProviders(): List<ProviderInfo> {
             CallerCheck.enforceHost(this@GifEngineService)
@@ -136,6 +138,7 @@ class GifEngineService : Service() {
         }
 
         override fun cancel(requestId: Int) {
+            CallerCheck.enforceHost(this@GifEngineService)
             inFlight.remove(requestId)?.cancel()
         }
 
