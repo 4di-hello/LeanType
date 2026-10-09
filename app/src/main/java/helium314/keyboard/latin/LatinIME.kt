@@ -1622,10 +1622,21 @@ class LatinIME : InputMethodService(),
         }
     }
 
+    /** Haptic and audio feedback when holding delete removed a word */
+    fun feedbackForDeletedWord() {
+        try {
+            hapticAndAudioFeedback(KeyCode.DELETE, 0, HapticEvent.KEY_PRESS)
+        } catch (e: Exception) {
+            Log.w(TAG, "no feedback for deleted word", e)
+        }
+    }
+
     fun hapticAndAudioFeedback(code: Int, repeatCount: Int, hapticEvent: HapticEvent) {
         val keyboardView = keyboardSwitcher.mainKeyboardView
         if (keyboardView != null && keyboardView.isInDraggingFinger()) return
         
+        // holding delete removes whole words: feedback comes per word, see feedbackForDeletedWord
+        if (repeatCount > 0 && code == KeyCode.DELETE && mSettings.current.mBackspaceRepeatDeletesWords) return
         if (repeatCount > 0) {
             when (code) {
                 KeyCode.DELETE, KeyCode.ARROW_LEFT, KeyCode.ARROW_UP, KeyCode.WORD_LEFT, KeyCode.PAGE_UP -> if (!inputLogic.connection.canDeleteCharacters()) return

@@ -1665,4 +1665,16 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="app_quirks_always_show_suggestions">Vorschläge immer anzeigen</string>
     <string name="app_quirks_always_show_suggestions_summary">Ignorieren Sie die Aufforderungen dieser App, Vorschläge zu deaktivieren</string>
     <string name="app_quirks_badge_always_suggestions">Immer Vorschläge</string>
+    <string name="backspace_word_speed">Tempo beim wortweisen Löschen</string>
+    <string name="backspace_word_speed_1">Sehr langsam</string>
+    <string name="backspace_word_speed_2">Langsam</string>
+    <string name="backspace_word_speed_3">Empfohlen</string>
+    <string name="backspace_word_speed_4">Schnell</string>
+    <string name="backspace_word_speed_5">Sehr schnell</string>
+    <string name="backspace_word_acceleration">Beschleunigung beim wortweisen Löschen</string>
+    <string name="backspace_word_acceleration_1">Aus</string>
+    <string name="backspace_word_acceleration_2">Leicht</string>
+    <string name="backspace_word_acceleration_3">Empfohlen</string>
+    <string name="backspace_word_acceleration_4">Stark</string>
+    <string name="backspace_word_acceleration_5">Sehr stark</string>
 </resources>

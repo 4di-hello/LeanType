@@ -60,6 +60,8 @@ fun TextCorrectionScreen(
             if (autocorrectEnabled) Settings.PREF_AUTO_CORRECT_TRIGGER else null,
             if (autocorrectEnabled) Settings.PREF_BACKSPACE_REVERTS_AUTOCORRECT else null,
             Settings.PREF_BACKSPACE_REPEAT_DELETES_WORDS,
+            Settings.PREF_BACKSPACE_WORD_SPEED,
+            Settings.PREF_BACKSPACE_WORD_ACCELERATION,
             if (autocorrectEnabled) Settings.PREF_EXPAND_FINE_TUNE_AUTOCORRECT else null,
             if (autocorrectEnabled && fineTuneAutocorrectExpanded) Settings.PREF_AUTO_CORRECT_THRESHOLD else null,
             if (autocorrectEnabled && fineTuneAutocorrectExpanded) Settings.PREF_MORE_AUTO_CORRECTION else null,
@@ -220,6 +222,42 @@ fun createCorrectionSettings(context: Context) = listOf(
         R.string.backspace_repeat_deletes_words, R.string.backspace_repeat_deletes_words_summary
     ) {
         SwitchPreference(it, Defaults.PREF_BACKSPACE_REPEAT_DELETES_WORDS)
+    },
+    Setting(context, Settings.PREF_BACKSPACE_WORD_SPEED, R.string.backspace_word_speed) { setting ->
+        SliderPreference(
+            name = setting.title,
+            key = setting.key,
+            default = Defaults.PREF_BACKSPACE_WORD_SPEED,
+            range = 1f..5f,
+            stepSize = 1,
+            description = { value ->
+                when (value) {
+                    1 -> stringResource(R.string.backspace_word_speed_1)
+                    2 -> stringResource(R.string.backspace_word_speed_2)
+                    3 -> stringResource(R.string.backspace_word_speed_3)
+                    4 -> stringResource(R.string.backspace_word_speed_4)
+                    else -> stringResource(R.string.backspace_word_speed_5)
+                }
+            }
+        )
+    },
+    Setting(context, Settings.PREF_BACKSPACE_WORD_ACCELERATION, R.string.backspace_word_acceleration) { setting ->
+        SliderPreference(
+            name = setting.title,
+            key = setting.key,
+            default = Defaults.PREF_BACKSPACE_WORD_ACCELERATION,
+            range = 1f..5f,
+            stepSize = 1,
+            description = { value ->
+                when (value) {
+                    1 -> stringResource(R.string.backspace_word_acceleration_1)
+                    2 -> stringResource(R.string.backspace_word_acceleration_2)
+                    3 -> stringResource(R.string.backspace_word_acceleration_3)
+                    4 -> stringResource(R.string.backspace_word_acceleration_4)
+                    else -> stringResource(R.string.backspace_word_acceleration_5)
+                }
+            }
+        )
     },
     Setting(context, Settings.PREF_AUTO_CAP,
         R.string.auto_cap, R.string.auto_cap_summary
