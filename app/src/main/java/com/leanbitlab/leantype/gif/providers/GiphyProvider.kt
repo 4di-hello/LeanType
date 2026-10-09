@@ -12,53 +12,57 @@ import kotlinx.coroutines.coroutineScope
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.json.JSONObject
 
-class TenorProvider(
+class GiphyProvider(
     private val credentials: CredentialStore,
     private val registry: ThumbRegistry
 ) : GifProvider {
     companion object {
-        const val ID = "tenor"
-        private const val BASE_URL = "https://tenor.googleapis.com/v2"
+        const val ID = "giphy"
+        private const val BASE_URL = "https://api.giphy.com/v1/gifs"
+        private const val DEFAULT_LIMIT = 20
     }
 
     override val info: ProviderInfo
         get() = ProviderInfo(
             id = ID,
-            displayName = "Tenor",
+            displayName = "GIPHY",
             kinds = Contract.KIND_GIF,
             capabilities = Contract.CAP_TRENDING or Contract.CAP_SEARCH,
             credentialFields = listOf("api_key"),
             configured = credentials.get(ID, "api_key")?.isNotBlank() == true,
             needsNetwork = true,
-            attribution = "Powered by Tenor"
+            attribution = "Powered by GIPHY"
         )
 
     private fun getApiKey(): String? = credentials.get(ID, "api_key")?.takeIf { it.isNotBlank() }
 
     override suspend fun search(query: String, offset: String?): ProviderResult {
-        val key = getApiKey() ?: return ProviderResult.Error(Contract.ERR_NOT_CONFIGURED, "Tenor API key required")
+        val key = getApiKey() ?: return ProviderResult.Error(Contract.ERR_NOT_CONFIGURED, "GIPHY API key required")
         val urlBuilder = "$BASE_URL/search".toHttpUrlOrNull()?.newBuilder() ?: return ProviderResult.Error(Contract.ERR_OTHER, "Malformed URL")
-        urlBuilder.addQueryParameter("key", key)
+        urlBuilder.addQueryParameter("api_key", key)
         urlBuilder.addQueryParameter("q", query)
-        urlBuilder.addQueryParameter("limit", "20")
-        urlBuilder.addQueryParameter("media_filter", "tinygif,gif,tinywebp")
-        if (offset != null) urlBuilder.addQueryParameter("pos", offset)
+        urlBuilder.addQueryParameter("limit", DEFAULT_LIMIT.toString())
+        urlBuilder.addQueryParameter("rating", "pg-13")
+        urlBuilder.addQueryParameter("lang", "en")
+        val offsetInt = offset?.toIntOrNull() ?: 0
+        urlBuilder.addQueryParameter("offset", offsetInt.toString())
 
-        return executeRequest(urlBuilder.build())
+        return executeRequest(urlBuilder.build(), offsetInt)
     }
 
     override suspend fun trending(offset: String?): ProviderResult {
-        val key = getApiKey() ?: return ProviderResult.Error(Contract.ERR_NOT_CONFIGURED, "Tenor API key required")
-        val urlBuilder = "$BASE_URL/featured".toHttpUrlOrNull()?.newBuilder() ?: return ProviderResult.Error(Contract.ERR_OTHER, "Malformed URL")
-        urlBuilder.addQueryParameter("key", key)
-        urlBuilder.addQueryParameter("limit", "20")
-        urlBuilder.addQueryParameter("media_filter", "tinygif,gif,tinywebp")
-        if (offset != null) urlBuilder.addQueryParameter("pos", offset)
+        val key = getApiKey() ?: return ProviderResult.Error(Contract.ERR_NOT_CONFIGURED, "GIPHY API key required")
+        val urlBuilder = "$BASE_URL/trending".toHttpUrlOrNull()?.newBuilder() ?: return ProviderResult.Error(Contract.ERR_OTHER, "Malformed URL")
+        urlBuilder.addQueryParameter("api_key", key)
+        urlBuilder.addQueryParameter("limit", DEFAULT_LIMIT.toString())
+        urlBuilder.addQueryParameter("rating", "pg-13")
+        val offsetInt = offset?.toIntOrNull() ?: 0
+        urlBuilder.addQueryParameter("offset", offsetInt.toString())
 
-        return executeRequest(urlBuilder.build())
+        return executeRequest(urlBuilder.build(), offsetInt)
     }
 
-    private suspend fun executeRequest(httpUrl: okhttp3.HttpUrl): ProviderResult {
+    private suspend fun executeRequest(httpUrl: okhttp3.HttpUrl, currentOffset: Int): ProviderResult {
         return try {
             val response = Downloader.get(httpUrl)
             if (!response.isSuccessful) {
@@ -70,24 +74,38 @@ class TenorProvider(
             }
             val bodyString = response.body?.string() ?: return ProviderResult.Error(Contract.ERR_NETWORK, "Empty response")
             val json = JSONObject(bodyString)
-            val results = json.optJSONArray("results") ?: return ProviderResult.Success(emptyList(), null)
-            val nextOffset = json.optString("next").takeIf { it.isNotEmpty() }
+            val data = json.optJSONArray("data") ?: return ProviderResult.Success(emptyList(), null)
+            val pagination = json.optJSONObject("pagination")
+            val count = pagination?.optInt("count", data.length()) ?: data.length()
+            val totalCount = pagination?.optInt("total_count", 0) ?: 0
+            val nextOffset = if (currentOffset + count < totalCount && count > 0) {
+                (currentOffset + count).toString()
+            } else {
+                null
+            }
 
             val parsedItems = mutableListOf<ParsedItem>()
-            for (i in 0 until results.length()) {
-                val itemObj = results.getJSONObject(i)
+            for (i in 0 until data.length()) {
+                val itemObj = data.getJSONObject(i)
                 val id = itemObj.optString("id")
-                val mediaFormats = itemObj.optJSONObject("media_formats") ?: continue
-                val previewObj = mediaFormats.optJSONObject("tinywebp")
-                    ?: mediaFormats.optJSONObject("tinygif")
-                    ?: mediaFormats.optJSONObject("gif")
+                if (id.isEmpty()) continue
+
+                val images = itemObj.optJSONObject("images") ?: continue
+
+                // Preferred preview: fixed_height_small or preview_gif or fixed_width_small
+                val previewObj = images.optJSONObject("fixed_height_small")
+                    ?: images.optJSONObject("preview_gif")
+                    ?: images.optJSONObject("fixed_width_small")
+                    ?: images.optJSONObject("downsized")
                     ?: continue
                 val previewUrl = previewObj.optString("url")
-                val dims = previewObj.optJSONArray("dims")
-                val w = if (dims != null && dims.length() >= 2) dims.getInt(0) else 200
-                val h = if (dims != null && dims.length() >= 2) dims.getInt(1) else 200
+                val w = previewObj.optInt("width", 200)
+                val h = previewObj.optInt("height", 200)
 
-                val fullObj = mediaFormats.optJSONObject("gif") ?: previewObj
+                // Full media: original or downsized_medium
+                val fullObj = images.optJSONObject("original")
+                    ?: images.optJSONObject("downsized_medium")
+                    ?: previewObj
                 val fullUrl = fullObj.optString("url")
 
                 if (previewUrl.isNotEmpty() && fullUrl.isNotEmpty()) {
@@ -108,10 +126,12 @@ class TenorProvider(
                                 width = parsed.w,
                                 height = parsed.h,
                                 isPack = false,
-                                attribution = "Tenor",
+                                attribution = "Powered by GIPHY",
                                 extra = parsed.fullUrl
                             )
-                        } else null
+                        } else {
+                            null
+                        }
                     }
                 }.awaitAll().filterNotNull()
             }
@@ -122,7 +142,9 @@ class TenorProvider(
         }
     }
 
-    override suspend fun resolveFullMediaUrl(item: GifItem): String? = item.extra
+    override suspend fun resolveFullMediaUrl(item: GifItem): String? {
+        return item.extra?.takeIf { it.isNotBlank() }
+    }
 
     private data class ParsedItem(
         val id: String,

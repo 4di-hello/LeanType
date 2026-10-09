@@ -19,7 +19,7 @@ class KlipyProvider(
     companion object {
         const val ID = "klipy"
         private const val BASE_URL = "https://api.klipy.com/v1"
-        private const val FALLBACK_PUBLIC_KEY = "klipy_public_v1"
+        private const val DEFAULT_LIMIT = 20
     }
 
     override val info: ProviderInfo
@@ -29,27 +29,27 @@ class KlipyProvider(
             kinds = Contract.KIND_GIF,
             capabilities = Contract.CAP_TRENDING or Contract.CAP_SEARCH,
             credentialFields = listOf("api_key"),
-            configured = true,
+            configured = credentials.get(ID, "api_key")?.isNotBlank() == true,
             needsNetwork = true,
             attribution = "Powered by Klipy"
         )
 
-    private fun getApiKey(): String = credentials.get(ID, "api_key")?.takeIf { it.isNotBlank() } ?: FALLBACK_PUBLIC_KEY
+    private fun getApiKey(): String? = credentials.get(ID, "api_key")?.takeIf { it.isNotBlank() }
 
     override suspend fun search(query: String, offset: String?): ProviderResult {
-        val urlBuilder = "$BASE_URL/gifs/search".toHttpUrlOrNull()?.newBuilder() ?: return ProviderResult.Error(Contract.ERR_OTHER, "Malformed URL")
-        urlBuilder.addQueryParameter("key", getApiKey())
+        val key = getApiKey() ?: return ProviderResult.Error(Contract.ERR_NOT_CONFIGURED, "Klipy API key required")
+        val urlBuilder = "$BASE_URL/$key/gifs/search".toHttpUrlOrNull()?.newBuilder() ?: return ProviderResult.Error(Contract.ERR_OTHER, "Malformed URL")
         urlBuilder.addQueryParameter("q", query)
-        urlBuilder.addQueryParameter("limit", "20")
+        urlBuilder.addQueryParameter("limit", DEFAULT_LIMIT.toString())
         if (offset != null) urlBuilder.addQueryParameter("offset", offset)
 
         return executeRequest(urlBuilder.build())
     }
 
     override suspend fun trending(offset: String?): ProviderResult {
-        val urlBuilder = "$BASE_URL/gifs/trending".toHttpUrlOrNull()?.newBuilder() ?: return ProviderResult.Error(Contract.ERR_OTHER, "Malformed URL")
-        urlBuilder.addQueryParameter("key", getApiKey())
-        urlBuilder.addQueryParameter("limit", "20")
+        val key = getApiKey() ?: return ProviderResult.Error(Contract.ERR_NOT_CONFIGURED, "Klipy API key required")
+        val urlBuilder = "$BASE_URL/$key/gifs/trending".toHttpUrlOrNull()?.newBuilder() ?: return ProviderResult.Error(Contract.ERR_OTHER, "Malformed URL")
+        urlBuilder.addQueryParameter("limit", DEFAULT_LIMIT.toString())
         if (offset != null) urlBuilder.addQueryParameter("offset", offset)
 
         return executeRequest(urlBuilder.build())
@@ -74,7 +74,11 @@ class KlipyProvider(
             val parsedItems = mutableListOf<ParsedItem>()
             for (i in 0 until data.length()) {
                 val itemObj = data.getJSONObject(i)
+                if (itemObj.optBoolean("is_ad", false) || itemObj.optString("type") == "ad" || itemObj.optString("content_type") == "ad") {
+                    continue
+                }
                 val id = itemObj.optString("id")
+                if (id.isEmpty()) continue
                 val images = itemObj.optJSONObject("images") ?: continue
                 val previewObj = images.optJSONObject("fixed_height_small")
                     ?: images.optJSONObject("preview_gif")

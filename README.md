@@ -13,7 +13,7 @@ This plugin runs out-of-process in a separate sandbox (`com.leanbitlab.leantype.
 - **Magic byte validation**: Thumbnails and media files are verified for genuine GIF, WebP, PNG, or JPEG file headers.
 
 ## Supported Providers
-- **Google Tenor** (v2 API)
+- **GIPHY** (v1 API)
 - **Klipy** (v1 API)
 
 ## Building

@@ -5,9 +5,9 @@ import android.content.Intent
 import android.os.IBinder
 import android.util.Log
 import com.leanbitlab.leantype.gif.providers.GifProvider
+import com.leanbitlab.leantype.gif.providers.GiphyProvider
 import com.leanbitlab.leantype.gif.providers.KlipyProvider
 import com.leanbitlab.leantype.gif.providers.ProviderResult
-import com.leanbitlab.leantype.gif.providers.TenorProvider
 import com.leanbitlab.leantype.gif.security.CallerCheck
 import com.leanbitlab.leantype.gif.storage.CredentialStore
 import com.leanbitlab.leantype.gif.storage.FetchCache
@@ -43,9 +43,9 @@ class GifEngineService : Service() {
         thumbRegistry = ThumbRegistry(applicationContext)
         fetchCache = FetchCache(applicationContext)
 
-        val tenor = TenorProvider(credentials, thumbRegistry)
+        val giphy = GiphyProvider(credentials, thumbRegistry)
         val klipy = KlipyProvider(credentials, thumbRegistry)
-        providers[tenor.info.id] = tenor
+        providers[giphy.info.id] = giphy
         providers[klipy.info.id] = klipy
     }
 
