@@ -347,6 +347,8 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
         const val PREF_TYPING_HEATMAP = "typing_heatmap"
         const val PREF_TYPING_ADAPT = "typing_adapt"
         const val PREF_TYPING_ADAPT_STRENGTH = "typing_adapt_strength"
+        const val PREF_BACKSPACE_WORD_SPEED = "backspace_word_speed"
+        const val PREF_BACKSPACE_WORD_ACCELERATION = "backspace_word_acceleration"
         const val PREF_CENTER_SUGGESTION_TEXT_TO_ENTER = "center_suggestion_text_to_enter"
         const val PREF_CENTER_TYPED_WORD = "center_typed_word"
         const val PREF_SHOW_SUGGESTIONS = "show_suggestions"

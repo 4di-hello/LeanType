@@ -93,7 +93,8 @@ class InputLogic(
     // for "backspace repeat deletes words": repeat ticks in the current hold, and words deleted so far
     private var mBackspaceRepeatTicks = 0
     private var mBackspaceWordsDeleted = 0
-    private var mBackspaceNextWordTick = 0
+    /** time (ms after the first key repeat) when the next word is deleted */
+    private var mBackspaceNextWordTime = 0f
     private var mLastKeyTime = 0L
     private var mEnteredText: String? = null
     private var mIsAutoCorrectionIndicatorOn = false
@@ -1366,37 +1367,41 @@ class InputLogic(
             // new press of the delete key
             mBackspaceRepeatTicks = 0
             mBackspaceWordsDeleted = 0
-            mBackspaceNextWordTick = 0
+            mBackspaceNextWordTime = 0f
         }
         if (!event.isKeyRepeat) return false
         mBackspaceRepeatTicks++
         if (!settingsValues.mBackspaceRepeatDeletesWords) return false
-        if (mBackspaceRepeatTicks < BACKSPACE_WORD_MODE_START_TICK) return false
-        if (mBackspaceRepeatTicks < mBackspaceNextWordTick) return true // wait between words
+        // key repeats come in fixed intervals, so we can count time in repeats
+        val time = (mBackspaceRepeatTicks - 1) * KEY_REPEAT_INTERVAL_MS
+        if (time < mBackspaceNextWordTime) return true // wait between words
 
         if (mWordComposer.isComposingWord()) {
             mConnection.finishComposingText()
             resetComposingState(true)
         }
-        val textBefore = mConnection.getTextBeforeCursor(BACKSPACE_WORD_LOOKBACK, 0)?.toString()
-        if (textBefore == null) return false // fall back to normal deletion
-        if (textBefore.isEmpty()) return true
-        val length = textBefore.length - getStartOfPreviousWord(textBefore)
-        if (InputTypeUtils.isWebEditor(getCurrentInputEditorInfo())) {
-            repeat(length) { sendDownUpKeyEvent(KeyEvent.KEYCODE_DEL) }
-        } else {
-            mConnection.deleteTextBeforeCursor(length)
+        // with very short intervals, more than one word may be due per key repeat
+        var deletedWords = 0
+        while (time >= mBackspaceNextWordTime && deletedWords < 2) {
+            val textBefore = mConnection.getTextBeforeCursor(BACKSPACE_WORD_LOOKBACK, 0)?.toString()
+            if (textBefore == null) return deletedWords > 0 // fall back to normal deletion
+            if (textBefore.isEmpty()) return true
+            val length = textBefore.length - getStartOfPreviousWord(textBefore)
+            if (InputTypeUtils.isWebEditor(getCurrentInputEditorInfo())) {
+                repeat(length) { sendDownUpKeyEvent(KeyEvent.KEYCODE_DEL) }
+            } else {
+                mConnection.deleteTextBeforeCursor(length)
+            }
+            StatsUtils.onBackspaceWordDelete(length)
+            mBackspaceNextWordTime += getBackspaceWordInterval(
+                mBackspaceWordsDeleted, settingsValues.mBackspaceWordSpeed, settingsValues.mBackspaceWordAcceleration
+            )
+            mBackspaceWordsDeleted++
+            deletedWords++
         }
-        StatsUtils.onBackspaceWordDelete(length)
         mSuggestionStripViewAccessor.setNeutralSuggestionStrip()
-
-        mBackspaceWordsDeleted++
-        mBackspaceNextWordTick = mBackspaceRepeatTicks + when {
-            mBackspaceWordsDeleted < 2 -> 7 // 350 ms
-            mBackspaceWordsDeleted < 5 -> 5 // 250 ms
-            mBackspaceWordsDeleted < 10 -> 3 // 150 ms
-            else -> 2 // 100 ms
-        }
+        // one feedback per deleted word, key repeat feedback is suppressed in word mode
+        mLatinIME.feedbackForDeletedWord()
         return true
     }
 
@@ -3046,8 +3051,21 @@ class InputLogic(
     companion object {
         private const val TAG = "InputLogic"
         private const val INLINE_EMOJI_SEARCH_MARKER = ':'
-        /** Key repeat tick (50 ms each, after the initial 400 ms) at which held backspace switches to deleting words */
-        private const val BACKSPACE_WORD_MODE_START_TICK = 1
+        private const val KEY_REPEAT_INTERVAL_MS = 50
+        /** interval between the first words for speed 1..5 */
+        private val BACKSPACE_WORD_START_INTERVALS = floatArrayOf(600f, 450f, 350f, 250f, 175f)
+        /** factor for the interval after each word, for acceleration 1 (off) .. 5 */
+        private val BACKSPACE_WORD_ACCELERATION = floatArrayOf(1f, 0.9f, 0.8f, 0.7f, 0.6f)
+        private const val BACKSPACE_WORD_MIN_INTERVAL = 80f
+
+        /** Time until the next word is deleted, after [wordsDeleted] words were deleted already */
+        fun getBackspaceWordInterval(wordsDeleted: Int, speed: Int, acceleration: Int): Float {
+            val start = BACKSPACE_WORD_START_INTERVALS[(speed - 1).coerceIn(0, 4)]
+            val factor = BACKSPACE_WORD_ACCELERATION[(acceleration - 1).coerceIn(0, 4)]
+            var interval = start
+            repeat(wordsDeleted.coerceAtMost(30)) { interval *= factor }
+            return interval.coerceAtLeast(minOf(start, BACKSPACE_WORD_MIN_INTERVAL))
+        }
         private const val BACKSPACE_WORD_LOOKBACK = 200
         private val THAI_LOCALE = Locale.forLanguageTag("th")
         private val THAI_WORD_BREAK_ITERATOR = ThreadLocal.withInitial { BreakIterator.getWordInstance(THAI_LOCALE) }

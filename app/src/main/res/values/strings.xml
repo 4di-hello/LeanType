@@ -2382,4 +2382,16 @@ New dictionary:
     <string name="typing_heatmap_start_over">Start over</string>
     <string name="typing_heatmap_keep">Keep</string>
     <string name="backup_category_typing_profile">Typing profile (key zones)</string>
+    <string name="backspace_word_speed">Speed of word deletion</string>
+    <string name="backspace_word_speed_1">Very slow</string>
+    <string name="backspace_word_speed_2">Slow</string>
+    <string name="backspace_word_speed_3">Recommended</string>
+    <string name="backspace_word_speed_4">Fast</string>
+    <string name="backspace_word_speed_5">Very fast</string>
+    <string name="backspace_word_acceleration">Acceleration of word deletion</string>
+    <string name="backspace_word_acceleration_1">Off</string>
+    <string name="backspace_word_acceleration_2">Light</string>
+    <string name="backspace_word_acceleration_3">Recommended</string>
+    <string name="backspace_word_acceleration_4">Strong</string>
+    <string name="backspace_word_acceleration_5">Very strong</string>
 </resources>
