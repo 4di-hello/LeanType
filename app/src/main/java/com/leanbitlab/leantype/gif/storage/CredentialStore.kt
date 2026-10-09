@@ -185,10 +185,13 @@ class CredentialStore(private val context: Context) {
                 fos.write(ciphertext)
                 fos.fd.sync()
             }
-            if (!tmpFile.renameTo(file)) {
-                tmpFile.delete()
+            if (file.exists()) {
                 file.delete()
-                if (!tmpFile.renameTo(file)) return false
+            }
+            val renamed = tmpFile.renameTo(file)
+            if (!renamed) {
+                tmpFile.copyTo(file, overwrite = true)
+                tmpFile.delete()
             }
             true
         } catch (e: Exception) {

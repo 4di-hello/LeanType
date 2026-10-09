@@ -74,7 +74,12 @@ class GifEngineService : Service() {
             CallerCheck.enforceHost(this@GifEngineService)
             if (callback == null) return
             launchRequest(requestId, callback) {
-                val provider = providers[providerId] ?: providers.values.firstOrNull()
+                val requested = providers[providerId]
+                val provider = if (requested?.info?.configured == true) {
+                    requested
+                } else {
+                    providers.values.firstOrNull { it.info.configured } ?: requested ?: providers.values.firstOrNull()
+                }
                 if (provider == null) {
                     callback.onError(requestId, Contract.ERR_BAD_REQUEST, "Provider '$providerId' not found")
                     return@launchRequest
@@ -90,7 +95,12 @@ class GifEngineService : Service() {
             CallerCheck.enforceHost(this@GifEngineService)
             if (callback == null) return
             launchRequest(requestId, callback) {
-                val provider = providers[providerId] ?: providers.values.firstOrNull()
+                val requested = providers[providerId]
+                val provider = if (requested?.info?.configured == true) {
+                    requested
+                } else {
+                    providers.values.firstOrNull { it.info.configured } ?: requested ?: providers.values.firstOrNull()
+                }
                 if (provider == null) {
                     callback.onError(requestId, Contract.ERR_BAD_REQUEST, "Provider '$providerId' not found")
                     return@launchRequest
