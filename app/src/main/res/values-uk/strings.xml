@@ -1672,4 +1672,6 @@
     <string name="gif_disabled_message">Пошук GIF вимкнено</string>
     <string name="app_quirks_filter_all">Показати всі програми</string>
     <string name="app_quirks_badge_custom">Власний</string>
+    <string name="label_forward_delete_key">Видалити вперед</string>
+    <string name="forward_delete">Видалити вперед</string>
 </resources>

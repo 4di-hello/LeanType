@@ -1752,4 +1752,6 @@
     <string name="gif_disabled_message">Търсенето на GIF е деактивирано</string>
     <string name="app_quirks_filter_all">Показване на всички приложения</string>
     <string name="app_quirks_badge_custom">Персонализиран</string>
+    <string name="label_forward_delete_key">Изтриване напред</string>
+    <string name="forward_delete">Изтриване напред</string>
 </resources>

@@ -1714,4 +1714,6 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="gif_disabled_message">Die GIF-Suche ist deaktiviert</string>
     <string name="app_quirks_filter_all">Alle Apps anzeigen</string>
     <string name="app_quirks_badge_custom">Benutzerdefiniert</string>
+    <string name="label_forward_delete_key">Vorwärts löschen</string>
+    <string name="forward_delete">Vorwärts löschen</string>
 </resources>

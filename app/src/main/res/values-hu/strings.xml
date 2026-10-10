@@ -1708,4 +1708,6 @@ Lehetővé teszi az eszközön futó GGUF / llama.cpp következtetést a javít�
     <string name="gif_disabled_message">A GIF-keresés le van tiltva</string>
     <string name="app_quirks_filter_all">Összes alkalmazás megjelenítése</string>
     <string name="app_quirks_badge_custom">Egyéni</string>
+    <string name="label_forward_delete_key">Törlés előre</string>
+    <string name="forward_delete">Törlés előre</string>
 </resources>

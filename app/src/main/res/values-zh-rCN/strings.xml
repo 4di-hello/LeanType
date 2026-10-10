@@ -1718,4 +1718,6 @@
     <string name="gif_disabled_message">GIF 搜索已禁用</string>
     <string name="app_quirks_filter_all">显示所有应用</string>
     <string name="app_quirks_badge_custom">自定义</string>
+    <string name="label_forward_delete_key">向前删除</string>
+    <string name="forward_delete">向前删除</string>
 </resources>

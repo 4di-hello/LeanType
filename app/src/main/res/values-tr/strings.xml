@@ -1700,4 +1700,6 @@ Metin düzeltme ve yeniden yazma için cihaz üzerinde GGUF / llama.cpp çıkar�
     <string name="gif_disabled_message">GIF araması devre dışı bırakıldı</string>
     <string name="app_quirks_filter_all">Tüm uygulamaları göster</string>
     <string name="app_quirks_badge_custom">Özel</string>
+    <string name="label_forward_delete_key">İleriye doğru sil</string>
+    <string name="forward_delete">İleriye doğru sil</string>
 </resources>

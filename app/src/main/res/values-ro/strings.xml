@@ -1699,4 +1699,6 @@ Activează inferența GGUF / llama.cpp pe dispozitiv pentru corectură și refor
     <string name="gif_disabled_message">Căutarea GIF este dezactivată</string>
     <string name="app_quirks_filter_all">Afișează toate aplicațiile</string>
     <string name="app_quirks_badge_custom">Personalizat</string>
+    <string name="label_forward_delete_key">Ștergere înainte</string>
+    <string name="forward_delete">Ștergere înainte</string>
 </resources>

@@ -1711,4 +1711,6 @@ Habilita inferência GGUF / llama.cpp no dispositivo para revisão e reescrita.<
     <string name="gif_disabled_message">A pesquisa de GIF está desativada</string>
     <string name="app_quirks_filter_all">Mostrar todos os apps</string>
     <string name="app_quirks_badge_custom">Personalizado</string>
+    <string name="label_forward_delete_key">Excluir para frente</string>
+    <string name="forward_delete">Excluir para frente</string>
 </resources>

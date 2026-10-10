@@ -1699,4 +1699,6 @@ Võimaldab seadmesisese GGUF / llama.cpp järelduse korrektuuri ja ümbersõnast
     <string name="gif_disabled_message">GIF-otsing on keelatud</string>
     <string name="app_quirks_filter_all">Kuva kõik rakendused</string>
     <string name="app_quirks_badge_custom">Kohandatud</string>
+    <string name="label_forward_delete_key">Kustuta edasi</string>
+    <string name="forward_delete">Kustuta edasi</string>
 </resources>

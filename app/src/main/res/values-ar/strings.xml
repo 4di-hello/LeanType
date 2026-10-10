@@ -1775,4 +1775,6 @@
     <string name="gif_disabled_message">تم تعطيل بحث GIF</string>
     <string name="app_quirks_filter_all">عرض كل التطبيقات</string>
     <string name="app_quirks_badge_custom">مخصص</string>
+    <string name="label_forward_delete_key">حذف للأمام</string>
+    <string name="forward_delete">حذف للأمام</string>
 </resources>

@@ -1777,4 +1777,6 @@
     <string name="gif_disabled_message">Поиск GIF отключен</string>
     <string name="app_quirks_filter_all">Показать все приложения</string>
     <string name="app_quirks_badge_custom">Пользовательский</string>
+    <string name="label_forward_delete_key">Удалить вперед</string>
+    <string name="forward_delete">Удалить вперед</string>
 </resources>

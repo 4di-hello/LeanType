@@ -1777,4 +1777,6 @@ Abilita l\'inferenza GGUF / llama.cpp sul dispositivo per correzione e riscrittu
     <string name="gif_disabled_message">La ricerca GIF è disattivata</string>
     <string name="app_quirks_filter_all">Mostra tutte le app</string>
     <string name="app_quirks_badge_custom">Personalizzato</string>
+    <string name="label_forward_delete_key">Elimina in avanti</string>
+    <string name="forward_delete">Elimina in avanti</string>
 </resources>

@@ -1770,4 +1770,6 @@
     <string name="gif_disabled_message">GIF തിരയൽ പ്രവർത്തനരഹിതമാക്കി</string>
     <string name="app_quirks_filter_all">എല്ലാ ആപ്പുകളും കാണിക്കുക</string>
     <string name="app_quirks_badge_custom">ഇഷ്‌ടാനുസൃതം</string>
+    <string name="label_forward_delete_key">മുന്നോട്ട് ഇല്ലാതാക്കുക</string>
+    <string name="forward_delete">മുന്നോട്ട് ഇല്ലാതാക്കുക</string>
 </resources>

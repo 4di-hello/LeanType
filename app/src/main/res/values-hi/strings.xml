@@ -1696,4 +1696,6 @@
     <string name="gif_disabled_message">GIF खोज अक्षम है</string>
     <string name="app_quirks_filter_all">सभी ऐप्स दिखाएं</string>
     <string name="app_quirks_badge_custom">कस्टम</string>
+    <string name="label_forward_delete_key">आगे से मिटाएं</string>
+    <string name="forward_delete">आगे से मिटाएं</string>
 </resources>

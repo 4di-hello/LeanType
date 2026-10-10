@@ -1754,4 +1754,6 @@ Umożliwia lokalne wnioskowanie GGUF / llama.cpp na urządzeniu w celu korekty i
     <string name="gif_disabled_message">Wyszukiwanie GIF jest wyłączone</string>
     <string name="app_quirks_filter_all">Pokaż wszystkie aplikacje</string>
     <string name="app_quirks_badge_custom">Niestandardowy</string>
+    <string name="label_forward_delete_key">Usuwanie w przód</string>
+    <string name="forward_delete">Usuwanie w przód</string>
 </resources>

@@ -1719,4 +1719,6 @@
     <string name="gif_disabled_message">חיפוש GIF מושבת</string>
     <string name="app_quirks_filter_all">הצג את כל האפליקציות</string>
     <string name="app_quirks_badge_custom">מותאם אישית</string>
+    <string name="label_forward_delete_key">מחיקה קдиמה</string>
+    <string name="forward_delete">מחיקה קдиמה</string>
 </resources>

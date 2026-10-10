@@ -1766,4 +1766,6 @@ Permet l\'inférence GGUF / llama.cpp sur l\'appareil pour la correction et la r
     <string name="gif_disabled_message">La recherche GIF est désactivée</string>
     <string name="app_quirks_filter_all">Afficher toutes les applis</string>
     <string name="app_quirks_badge_custom">Personnalisé</string>
+    <string name="label_forward_delete_key">Supprimer vers l\'avant</string>
+    <string name="forward_delete">Supprimer vers l\'avant</string>
 </resources>

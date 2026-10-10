@@ -1761,4 +1761,6 @@
     <string name="gif_disabled_message">GIF تلاش غیر فعال ہے</string>
     <string name="app_quirks_filter_all">تمام ایپس دکھائیں</string>
     <string name="app_quirks_badge_custom">حسب ضرورت</string>
+    <string name="label_forward_delete_key">آگے حذف کریں</string>
+    <string name="forward_delete">آگے حذف کریں</string>
 </resources>

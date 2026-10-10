@@ -1717,4 +1717,6 @@ Umožňuje lokální inferenci GGUF / llama.cpp na zařízení pro korektury a p
     <string name="gif_disabled_message">Vyhledávání GIF je zakázáno</string>
     <string name="app_quirks_filter_all">Zobrazit všechny aplikace</string>
     <string name="app_quirks_badge_custom">Vlastní</string>
+    <string name="label_forward_delete_key">Smazat vpřed</string>
+    <string name="forward_delete">Smazat vpřed</string>
 </resources>

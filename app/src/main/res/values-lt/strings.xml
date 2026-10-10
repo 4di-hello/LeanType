@@ -1700,4 +1700,6 @@ Ar norite atnaujinti?</string>
     <string name="gif_disabled_message">GIF paieška išjungta</string>
     <string name="app_quirks_filter_all">Rodyti visas programas</string>
     <string name="app_quirks_badge_custom">Tinkintas</string>
+    <string name="label_forward_delete_key">Šalinti į priekį</string>
+    <string name="forward_delete">Šalinti į priekį</string>
 </resources>

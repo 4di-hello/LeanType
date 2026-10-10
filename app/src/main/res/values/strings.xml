@@ -1549,6 +1549,9 @@ New dictionary:
     <string name="label_tab_key" tools:keep="@string/label_tab_key">Tab</string>
     <!-- Label for delete key, currently used only for showing the icon name -->
     <string name="label_delete_key" tools:keep="@string/label_delete_key">Delete</string>
+    <!-- Label for forward delete key, currently used only for showing the icon name -->
+    <string name="label_forward_delete_key" tools:keep="@string/label_forward_delete_key">Forward delete</string>
+    <string name="forward_delete" tools:keep="@string/forward_delete">Forward delete</string>
     <!-- Label for shift key, currently used only for showing the icon name -->
     <string name="label_shift_key" tools:keep="@string/label_shift_key">Shift</string>
     <!-- Label for shift key when active, currently used only for showing the icon name -->

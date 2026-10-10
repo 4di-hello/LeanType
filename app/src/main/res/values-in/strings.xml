@@ -1667,4 +1667,6 @@ Memungkinkan inferensi GGUF / llama.cpp di perangkat untuk koreksi teks dan penu
     <string name="gif_disabled_message">Pencarian GIF dinonaktifkan</string>
     <string name="app_quirks_filter_all">Tampilkan semua aplikasi</string>
     <string name="app_quirks_badge_custom">Kustom</string>
+    <string name="label_forward_delete_key">Hapus maju</string>
+    <string name="forward_delete">Hapus maju</string>
 </resources>

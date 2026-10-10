@@ -1770,4 +1770,6 @@
     <string name="gif_disabled_message">Η αναζήτηση GIF είναι απενεργοποιημένη</string>
     <string name="app_quirks_filter_all">Εμφάνιση όλων των εφαρμογών</string>
     <string name="app_quirks_badge_custom">Προσαρμοσμένο</string>
+    <string name="label_forward_delete_key">Διαγραφή προς τα εμπρός</string>
+    <string name="forward_delete">Διαγραφή προς τα εμπρός</string>
 </resources>

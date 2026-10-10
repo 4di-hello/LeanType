@@ -1692,4 +1692,6 @@ Omogućuje lokalno GGUF / llama.cpp zaključivanje na uređaju za lekturu i prep
     <string name="gif_disabled_message">Pretraživanje GIF-ova je onemogućeno</string>
     <string name="app_quirks_filter_all">Prikaži sve aplikacije</string>
     <string name="app_quirks_badge_custom">Prilagođeno</string>
+    <string name="label_forward_delete_key">Izbriši naprijed</string>
+    <string name="forward_delete">Izbriši naprijed</string>
 </resources>

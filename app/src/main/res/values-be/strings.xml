@@ -1704,4 +1704,6 @@
     <string name="gif_disabled_message">Пошук GIF адключаны</string>
     <string name="app_quirks_filter_all">Паказаць усе праграмы</string>
     <string name="app_quirks_badge_custom">Карыстальніцкі</string>
+    <string name="label_forward_delete_key">Выдаліць наперад</string>
+    <string name="forward_delete">Выдаліць наперад</string>
 </resources>
