@@ -162,6 +162,9 @@ class ClipboardHistoryView @JvmOverloads constructor(
         // Search & Empty View init
         searchOverlay = findViewById(R.id.clipboard_search_overlay)
         searchBar = findViewById(R.id.clipboard_search_bar)
+        searchBar.isFocusable = false
+        searchBar.isFocusableInTouchMode = false
+        searchBar.showSoftInputOnFocus = false
         clearSearch = findViewById(R.id.clipboard_clear_search)
         backSearch = findViewById(R.id.clipboard_search_back)
         emptyViewContainer = findViewById(R.id.clipboard_empty_view)

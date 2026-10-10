@@ -1055,7 +1055,13 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         }
 
     val isShowingClipboardHistory: Boolean
-        get() = mClipboardHistoryView?.isShown == true
+        get() {
+            val clipView = mClipboardHistoryView ?: return false
+            return clipView.isShown || clipView.visibility == View.VISIBLE
+        }
+
+    val isSecondaryViewShowing: Boolean
+        get() = isGifPickerShowing || isShowingEmojiPalettes || isShowingClipboardHistory || isOcrShowing || isHandwritingShowing
 
     val isShowingPopupKeysPanel: Boolean
         get() {
@@ -1104,6 +1110,10 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
     fun updateStripVisibility(settingsValues: SettingsValues = Settings.getValues()) {
         if (isGifPickerShowing) {
             mStripContainer?.visibility = View.GONE
+            return
+        }
+        if (isShowingClipboardHistory || isShowingEmojiPalettes) {
+            mStripContainer?.visibility = getSecondaryStripVisibility()
             return
         }
         mStripContainer?.visibility = if (settingsValues.mToolbarMode == ToolbarMode.HIDDEN) View.GONE else View.VISIBLE

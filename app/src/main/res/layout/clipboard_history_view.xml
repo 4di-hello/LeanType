@@ -48,6 +48,8 @@
                 android:imeOptions="actionSearch|flagNoExtractUi"
                 android:inputType="text"
                 android:maxLines="1"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
                 android:background="@android:color/transparent"
                 android:padding="6dp"
                 android:textSize="16sp"

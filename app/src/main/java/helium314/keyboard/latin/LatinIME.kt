@@ -803,7 +803,7 @@ class LatinIME : InputMethodService(),
             switcher.reloadMainKeyboard()
             if (needToCallLoadKeyboardLater) switcher.saveKeyboardState()
         } else if (restarting) {
-            if (!switcher.isGifPickerShowing) {
+            if (!switcher.isSecondaryViewShowing) {
                 switcher.resetKeyboardStateToAlphabet(currentAutoCapsState, currentRecapitalizeState)
                 switcher.requestUpdatingShiftState(currentAutoCapsState, currentRecapitalizeState)
             }
