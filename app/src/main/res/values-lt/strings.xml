@@ -1702,4 +1702,6 @@ Ar norite atnaujinti?</string>
     <string name="app_quirks_badge_custom">Tinkintas</string>
     <string name="label_forward_delete_key">Šalinti į priekį</string>
     <string name="forward_delete">Šalinti į priekį</string>
+    <string name="openai_use_max_completion_tokens_title">Naudoti max_completion_tokens</string>
+    <string name="openai_use_max_completion_tokens_summary">Siųsti max_completion_tokens vietoj max_tokens naujesniems modeliams (pvz., o1, o3, GPT-5/6)</string>
 </resources>

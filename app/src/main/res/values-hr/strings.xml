@@ -1694,4 +1694,6 @@ Omogućuje lokalno GGUF / llama.cpp zaključivanje na uređaju za lekturu i prep
     <string name="app_quirks_badge_custom">Prilagođeno</string>
     <string name="label_forward_delete_key">Izbriši naprijed</string>
     <string name="forward_delete">Izbriši naprijed</string>
+    <string name="openai_use_max_completion_tokens_title">Koristi max_completion_tokens</string>
+    <string name="openai_use_max_completion_tokens_summary">Šalji max_completion_tokens umjesto max_tokens za novije modele (npr. o1, o3, GPT-5/6)</string>
 </resources>

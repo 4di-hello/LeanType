@@ -1777,4 +1777,6 @@
     <string name="app_quirks_badge_custom">مخصص</string>
     <string name="label_forward_delete_key">حذف للأمام</string>
     <string name="forward_delete">حذف للأمام</string>
+    <string name="openai_use_max_completion_tokens_title">استخدام max_completion_tokens</string>
+    <string name="openai_use_max_completion_tokens_summary">إرسال max_completion_tokens بدلاً من max_tokens للنماذج الأحدث (مثل o1 و o3 و GPT-5/6)</string>
 </resources>

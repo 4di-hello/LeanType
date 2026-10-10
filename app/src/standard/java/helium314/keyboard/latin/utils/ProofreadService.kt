@@ -31,6 +31,7 @@ import java.io.BufferedReader
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.Locale
 
 /**
  * Service for proofreading text using Google's Gemini AI API or HuggingFace Inference API.
@@ -333,8 +334,17 @@ class ProofreadService(private val context: Context) {
             helium314.keyboard.latin.settings.Defaults.PREF_CLOUD_AI_MAX_TOKENS
         )
 
-    fun setCloudMaxTokens(tokens: Int) {
-        context.prefs().edit().putInt(helium314.keyboard.latin.settings.Settings.PREF_CLOUD_AI_MAX_TOKENS, tokens).apply()
+    fun isOpenAiUseMaxCompletionTokens(): Boolean =
+        context.prefs().getBoolean(
+            helium314.keyboard.latin.settings.Settings.PREF_OPENAI_USE_MAX_COMPLETION_TOKENS,
+            helium314.keyboard.latin.settings.Defaults.PREF_OPENAI_USE_MAX_COMPLETION_TOKENS
+        )
+
+    fun setOpenAiUseMaxCompletionTokens(use: Boolean) {
+        context.prefs().edit().putBoolean(
+            helium314.keyboard.latin.settings.Settings.PREF_OPENAI_USE_MAX_COMPLETION_TOKENS,
+            use
+        ).apply()
     }
 
 
@@ -595,57 +605,119 @@ class ProofreadService(private val context: Context) {
             )
         }
 
-        val url = URL(endpoint)
-        val connection = url.openConnection() as HttpURLConnection
-        if (allowInsecure && connection is javax.net.ssl.HttpsURLConnection) {
-            bypassSSLVerification(connection)
-        }
-
         return try {
-            connection.requestMethod = "POST"
-            connection.setRequestProperty("Content-Type", "application/json")
-            connection.setRequestProperty("Authorization", "Bearer $token")
-            connection.setRequestProperty("User-Agent", "LeanType/1.0")
-            
-            connection.doOutput = true
-            connection.connectTimeout = 30000
-            connection.readTimeout = 60000
-
-            // Build OpenAI-compatible request body (works with Groq, OpenRouter, etc.)
             val messagesArray = JSONArray().apply {
                 put(JSONObject().apply {
                     put("role", "user")
                     put("content", prompt)
                 })
             }
-            
+
             val maxTokens = getCloudMaxTokens()
-            val requestBody = JSONObject().apply {
-                put("model", modelName)
-                put("messages", messagesArray)
+            var useMaxCompletion = shouldUseMaxCompletionTokens(modelName, isGroq)
+            var requestBody = buildOpenAiRequestBody(modelName, messagesArray, maxTokens, useMaxCompletion)
+
+            var (responseCode, responseText) = executeOpenAiRequest(endpoint, token, allowInsecure, requestBody)
+
+            // Auto-recovery fallback if the endpoint explicitly requires the alternate parameter
+            if (responseCode == 400) {
+                if (!useMaxCompletion && (responseText.contains("max_completion_tokens", ignoreCase = true) ||
+                        responseText.contains("max_tokens is not supported", ignoreCase = true))) {
+                    Log.i("ProofreadService", "Retrying with max_completion_tokens parameter")
+                    useMaxCompletion = true
+                    requestBody = buildOpenAiRequestBody(modelName, messagesArray, maxTokens, true)
+                    val retryResult = executeOpenAiRequest(endpoint, token, allowInsecure, requestBody)
+                    responseCode = retryResult.first
+                    responseText = retryResult.second
+                } else if (useMaxCompletion && responseText.contains("max_tokens", ignoreCase = true) &&
+                        responseText.contains("unrecognized", ignoreCase = true)) {
+                    Log.i("ProofreadService", "Retrying with legacy max_tokens parameter")
+                    useMaxCompletion = false
+                    requestBody = buildOpenAiRequestBody(modelName, messagesArray, maxTokens, false)
+                    val retryResult = executeOpenAiRequest(endpoint, token, allowInsecure, requestBody)
+                    responseCode = retryResult.first
+                    responseText = retryResult.second
+                }
+            }
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                parseOpenAIResponse(responseText, showThinking)
+            } else if (responseCode == 429) {
+                Result.failure(ProofreadException(context.getString(R.string.api_error_rate_limit)))
+            } else if (responseCode == HttpURLConnection.HTTP_UNAVAILABLE) {
+                Result.failure(ProofreadException(context.getString(R.string.api_error_service_unavailable)))
+            } else {
+                Result.failure(ProofreadException("API error ($responseCode): $responseText"))
+            }
+        } catch (e: Exception) {
+            Log.e("ProofreadService", "Request failed", e)
+            Result.failure(ProofreadException("Request failed: ${e.message}"))
+        }
+    }
+
+    private fun isReasoningOrNewerModel(model: String): Boolean {
+        val m = model.lowercase(Locale.US)
+        return m.startsWith("o1") || m.startsWith("o3") || m.contains("gpt-5") || m.contains("gpt-6") ||
+                m.contains("reasoner") || m.contains("reasoning")
+    }
+
+    private fun shouldUseMaxCompletionTokens(modelName: String, isGroq: Boolean): Boolean {
+        if (isGroq) return false
+        return isOpenAiUseMaxCompletionTokens() || isReasoningOrNewerModel(modelName)
+    }
+
+    private fun buildOpenAiRequestBody(
+        modelName: String,
+        messagesArray: JSONArray,
+        maxTokens: Int,
+        useMaxCompletionTokens: Boolean
+    ): JSONObject {
+        return JSONObject().apply {
+            put("model", modelName)
+            put("messages", messagesArray)
+            val isReasoning = isReasoningOrNewerModel(modelName)
+            if (!isReasoning) {
                 put("temperature", 0.1)
+            }
+            if (useMaxCompletionTokens) {
+                put("max_completion_tokens", maxTokens)
+            } else {
                 put("max_tokens", maxTokens)
             }
+        }
+    }
+
+    private fun executeOpenAiRequest(
+        endpoint: String,
+        token: String,
+        allowInsecure: Boolean,
+        requestBody: JSONObject
+    ): Pair<Int, String> {
+        val url = URL(endpoint)
+        val connection = url.openConnection() as HttpURLConnection
+        if (allowInsecure && connection is javax.net.ssl.HttpsURLConnection) {
+            bypassSSLVerification(connection)
+        }
+        try {
+            connection.requestMethod = "POST"
+            connection.setRequestProperty("Content-Type", "application/json")
+            connection.setRequestProperty("Authorization", "Bearer $token")
+            connection.setRequestProperty("User-Agent", "LeanType/1.0")
+            connection.doOutput = true
+            connection.connectTimeout = 30000
+            connection.readTimeout = 60000
 
             OutputStreamWriter(connection.outputStream).use { writer ->
                 writer.write(requestBody.toString())
             }
 
             val responseCode = connection.responseCode
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                val response = connection.inputStream.bufferedReader().use(BufferedReader::readText)
-                parseOpenAIResponse(response, showThinking)
-            } else if (responseCode == 429) {
-                Result.failure(ProofreadException(context.getString(R.string.api_error_rate_limit)))
-            } else if (responseCode == HttpURLConnection.HTTP_UNAVAILABLE) {
-                Result.failure(ProofreadException(context.getString(R.string.api_error_service_unavailable)))
+            val body = if (responseCode == HttpURLConnection.HTTP_OK) {
+                connection.inputStream.bufferedReader().use(BufferedReader::readText)
             } else {
-                val errorBody = connection.errorStream?.bufferedReader()?.use(BufferedReader::readText) ?: "Unknown error"
-                Result.failure(ProofreadException("API error ($responseCode): $errorBody"))
+                connection.errorStream?.bufferedReader()?.use(BufferedReader::readText) ?: "Unknown error"
             }
-        } catch (e: Exception) {
-            Log.e("ProofreadService", "Request failed", e)
-            Result.failure(ProofreadException("Request failed: ${e.message}"))
+            return Pair(responseCode, body)
         } finally {
             connection.disconnect()
         }

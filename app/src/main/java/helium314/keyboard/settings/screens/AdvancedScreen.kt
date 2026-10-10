@@ -434,6 +434,9 @@ fun createAdvancedSettings(context: Context) = listOfNotNull(
             )
         }
     },
+    Setting(context, SettingsWithoutKey.OPENAI_USE_MAX_COMPLETION_TOKENS, R.string.openai_use_max_completion_tokens_title, R.string.openai_use_max_completion_tokens_summary) { setting ->
+        SwitchPreference(setting, Defaults.PREF_OPENAI_USE_MAX_COMPLETION_TOKENS)
+    },
     Setting(context, SettingsWithoutKey.AI_ALLOW_INSECURE_CONNECTIONS, R.string.ai_allow_insecure_connections_title, R.string.ai_allow_insecure_connections_summary) { setting ->
         SwitchPreference(setting, Defaults.PREF_AI_ALLOW_INSECURE_CONNECTIONS)
     },

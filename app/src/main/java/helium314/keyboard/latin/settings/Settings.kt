@@ -485,6 +485,7 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
         const val PREF_OFFLINE_MAX_TOKENS = "offline_max_tokens"
         const val PREF_OFFLINE_KEEP_MODEL_LOADED = "offline_keep_model_loaded"
         const val PREF_AI_ALLOW_INSECURE_CONNECTIONS = "ai_allow_insecure_connections"
+        const val PREF_OPENAI_USE_MAX_COMPLETION_TOKENS = "openai_use_max_completion_tokens"
         const val PREF_CLOUD_AI_MAX_TOKENS = "cloud_ai_max_tokens"
 
         const val PREF_ENABLE_CLIPBOARD_HISTORY = "enable_clipboard_history"

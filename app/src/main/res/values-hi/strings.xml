@@ -1698,4 +1698,6 @@
     <string name="app_quirks_badge_custom">कस्टम</string>
     <string name="label_forward_delete_key">आगे से मिटाएं</string>
     <string name="forward_delete">आगे से मिटाएं</string>
+    <string name="openai_use_max_completion_tokens_title">max_completion_tokens का उपयोग करें</string>
+    <string name="openai_use_max_completion_tokens_summary">नए मॉडलों (जैसे o1, o3, GPT-5/6) के लिए max_tokens के बजाय max_completion_tokens भेजें</string>
 </resources>

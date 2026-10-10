@@ -1710,4 +1710,6 @@ Lehetővé teszi az eszközön futó GGUF / llama.cpp következtetést a javít�
     <string name="app_quirks_badge_custom">Egyéni</string>
     <string name="label_forward_delete_key">Törlés előre</string>
     <string name="forward_delete">Törlés előre</string>
+    <string name="openai_use_max_completion_tokens_title">max_completion_tokens használata</string>
+    <string name="openai_use_max_completion_tokens_summary">max_completion_tokens küldése max_tokens helyett az újabb modelleknél (pl. o1, o3, GPT-5/6)</string>
 </resources>

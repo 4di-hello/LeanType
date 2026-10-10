@@ -196,6 +196,7 @@ object SettingsWithoutKey {
     const val CUSTOM_AI_KEYS = "custom_ai_keys"
     const val OFFLINE_KEEP_MODEL_LOADED = "offline_keep_model_loaded"
     const val AI_ALLOW_INSECURE_CONNECTIONS = "ai_allow_insecure_connections"
+    const val OPENAI_USE_MAX_COMPLETION_TOKENS = "openai_use_max_completion_tokens"
     const val TRANSLATION_ENGINE = "pref_translation_method"
     const val LOAD_OFFLINE_AI_PLUGIN = "load_offline_ai_plugin"
     const val BACKGROUND_SERVICES = "background_services"

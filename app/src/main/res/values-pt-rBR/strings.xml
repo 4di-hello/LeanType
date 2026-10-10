@@ -1713,4 +1713,6 @@ Habilita inferência GGUF / llama.cpp no dispositivo para revisão e reescrita.<
     <string name="app_quirks_badge_custom">Personalizado</string>
     <string name="label_forward_delete_key">Excluir para frente</string>
     <string name="forward_delete">Excluir para frente</string>
+    <string name="openai_use_max_completion_tokens_title">Usar max_completion_tokens</string>
+    <string name="openai_use_max_completion_tokens_summary">Enviar max_completion_tokens em vez de max_tokens para modelos mais novos (ex.: o1, o3, GPT-5/6)</string>
 </resources>

@@ -1711,6 +1711,8 @@ New dictionary:
     <string name="cloud_ai_max_tokens_summary">Maximum length of AI generated responses</string>
     <string name="cloud_ai_max_tokens_custom_option">Custom…</string>
     <string name="cloud_ai_max_tokens_custom_desc">Custom (%1$d tokens)</string>
+    <string name="openai_use_max_completion_tokens_title">Use max_completion_tokens</string>
+    <string name="openai_use_max_completion_tokens_summary">Send max_completion_tokens instead of max_tokens for newer models (e.g. o1, o3, GPT-5/6)</string>
     <string-array name="cloud_ai_max_tokens_entries">
         <item>Compact (1024 tokens)</item>
         <item>Standard (2048 tokens)</item>

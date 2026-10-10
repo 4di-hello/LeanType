@@ -1674,4 +1674,6 @@
     <string name="app_quirks_badge_custom">Власний</string>
     <string name="label_forward_delete_key">Видалити вперед</string>
     <string name="forward_delete">Видалити вперед</string>
+    <string name="openai_use_max_completion_tokens_title">Використовувати max_completion_tokens</string>
+    <string name="openai_use_max_completion_tokens_summary">Надсилати max_completion_tokens замість max_tokens для новіших моделей (наприклад, o1, o3, GPT-5/6)</string>
 </resources>
