@@ -1758,4 +1758,6 @@ Umożliwia lokalne wnioskowanie GGUF / llama.cpp na urządzeniu w celu korekty i
     <string name="forward_delete">Usuwanie w przód</string>
     <string name="openai_use_max_completion_tokens_title">Użyj max_completion_tokens</string>
     <string name="openai_use_max_completion_tokens_summary">Wysyłaj max_completion_tokens zamiast max_tokens dla nowszych modeli (np. o1, o3, GPT-5/6)</string>
+    <string name="voice_keep_screen_on_title">Pozostaw ekran włączony</string>
+    <string name="voice_keep_screen_on_summary">Zapobiegaj wygasaniu ekranu, gdy aktywne jest pisanie głosowe</string>
 </resources>

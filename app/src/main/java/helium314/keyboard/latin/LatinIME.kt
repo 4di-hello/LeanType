@@ -383,6 +383,7 @@ class LatinIME : InputMethodService(),
 
     override fun onDestroy() {
         if (sInstance === this) sInstance = null
+        updateVoiceKeepScreenOn(VoiceInputManager.VoiceState.IDLE)
         if (isShowingOptionDialog()) {
             optionsDialog?.dismiss()
             optionsDialog = null
@@ -535,6 +536,7 @@ class LatinIME : InputMethodService(),
         handler.post {
             if (state == lastVoiceState) return@post
             lastVoiceState = state
+            updateVoiceKeepScreenOn(state)
             suggestionStripView?.let { strip ->
                 when (state) {
                     VoiceInputManager.VoiceState.CONNECTING_PLUGIN, VoiceInputManager.VoiceState.STARTING_SESSION -> {
@@ -571,6 +573,31 @@ class LatinIME : InputMethodService(),
                 }
             }
         }
+    }
+
+    private fun updateVoiceKeepScreenOn(state: VoiceInputManager.VoiceState) {
+        val isVoiceActive = state == VoiceInputManager.VoiceState.RECORDING
+            || state == VoiceInputManager.VoiceState.CONNECTING_PLUGIN
+            || state == VoiceInputManager.VoiceState.STARTING_SESSION
+            || state == VoiceInputManager.VoiceState.PROCESSING_FINAL
+
+        val shouldKeepScreenOn = isVoiceActive && prefs().getBoolean(
+            VoiceConstants.PREF_VOICE_KEEP_SCREEN_ON,
+            true
+        )
+
+        try {
+            val win = window?.window
+            if (shouldKeepScreenOn) {
+                win?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            } else {
+                win?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to update keepScreenOn flags on window", e)
+        }
+        keyboardSwitcher.mainKeyboardView?.keepScreenOn = shouldKeepScreenOn
+        inputView?.keepScreenOn = shouldKeepScreenOn
     }
 
     fun requestInsetsUpdate() {
@@ -881,6 +908,7 @@ class LatinIME : InputMethodService(),
     override fun onWindowHidden() {
         super.onWindowHidden()
         Log.i(TAG, "onWindowHidden")
+        updateVoiceKeepScreenOn(VoiceInputManager.VoiceState.IDLE)
         keyboardSwitcher.hideGifPicker()
         val fkm = floatingKeyboardManager
         if (fkm != null) {
@@ -912,6 +940,7 @@ class LatinIME : InputMethodService(),
             keyboardSwitcher.hideOcrPanels()
         }
         voiceInputManager?.takeIf { it.isRecording() }?.stopVoice()
+        updateVoiceKeepScreenOn(VoiceInputManager.VoiceState.IDLE)
         otpSuggestionManager.stop()
         clipboardHistoryManager.onFinishInputView()
         AudioAndHapticFeedbackManager.getInstance().onFinishInputView()

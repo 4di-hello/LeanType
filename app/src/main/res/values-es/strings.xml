@@ -1707,4 +1707,6 @@ Permite la inferencia GGUF / llama.cpp en el dispositivo para corrección y rees
     <string name="forward_delete">Eliminar hacia adelante</string>
     <string name="openai_use_max_completion_tokens_title">Usar max_completion_tokens</string>
     <string name="openai_use_max_completion_tokens_summary">Enviar max_completion_tokens en lugar de max_tokens para modelos más nuevos (p. ej., o1, o3, GPT-5/6)</string>
+    <string name="voice_keep_screen_on_title">Mantener la pantalla encendida</string>
+    <string name="voice_keep_screen_on_summary">Evite el tiempo de espera de la pantalla mientras la escritura por voz está activa</string>
 </resources>

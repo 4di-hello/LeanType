@@ -1723,4 +1723,6 @@
     <string name="forward_delete">מחיקה קдиמה</string>
     <string name="openai_use_max_completion_tokens_title">השתמש ב-max_completion_tokens</string>
     <string name="openai_use_max_completion_tokens_summary">שלח max_completion_tokens במקום max_tokens עבור דגמים חדשים יותר (כגון o1, o3, GPT-5/6)</string>
+    <string name="voice_keep_screen_on_title">השאר את המסך דולק</string>
+    <string name="voice_keep_screen_on_summary">מנע פסק זמן של מסך בזמן שהקלדה קולית פעילה</string>
 </resources>

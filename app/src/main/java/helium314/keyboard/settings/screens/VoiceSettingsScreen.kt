@@ -429,6 +429,20 @@ fun VoiceSettingsScreen(
         }
     }
 
+    val keepScreenOnSetting = remember(context) {
+        Setting(
+            key = VoiceConstants.PREF_VOICE_KEEP_SCREEN_ON,
+            title = context.getString(R.string.voice_keep_screen_on_title),
+            description = context.getString(R.string.voice_keep_screen_on_summary)
+        ) {
+            SwitchPreference(
+                setting = it,
+                default = true,
+                icon = R.drawable.ic_settings_preferences
+            )
+        }
+    }
+
     val autoRetrySetting = remember {
         Setting(
             key = VoiceConstants.PREF_VOICE_AUTO_RETRY,
@@ -763,6 +777,7 @@ fun VoiceSettingsScreen(
                             PreferenceCategory(stringResource(R.string.voice_dictation_behavior_category))
 
                             smartPunctuationSetting.Preference()
+                            keepScreenOnSetting.Preference()
                             silenceTimeoutSetting.Preference()
                             micSensitivitySetting.Preference()
                             maxDurationSetting.Preference()
