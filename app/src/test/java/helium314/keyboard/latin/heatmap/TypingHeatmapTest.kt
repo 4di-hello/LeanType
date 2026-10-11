@@ -99,6 +99,20 @@ class TypingHeatmapTest {
 
     private fun samples(n: Int, dx: Float, dy: Float = 0f) = List(n) { TypingHeatmap.Sample(dx, dy, 'o'.code) }
 
+    @Test fun `backspace without revert drops the committed word`() {
+        TypingHeatmap.onWordCommitted(context, geometry, "wi", "wo", intArrayOf(center('w'), center('i')), intArrayOf(75, 75))
+        TypingHeatmap.onBackspace() // e.g. deleting the space and editing the word
+        TypingHeatmap.finalizePending()
+        assertNull(TypingHeatmap.layoutForTest("test"))
+    }
+
+    @Test fun `backspace that reverts the autocorrection uses the typed word`() {
+        TypingHeatmap.onWordCommitted(context, geometry, "wi", "wo", intArrayOf(center('w'), center('i')), intArrayOf(75, 75))
+        TypingHeatmap.onBackspace()
+        TypingHeatmap.onCommitReverted()
+        assertEquals('i'.code, TypingHeatmap.layoutForTest("test")!!.samples['i'.code]!!.first().touchedCode)
+    }
+
     @Test fun `offsets need enough data and are limited`() {
         assertNull(TypingHeatmap.effectiveOffset(samples(29, 0.4f), 0.33f))
         val full = TypingHeatmap.effectiveOffset(samples(100, 0.4f), 0.33f)!!
