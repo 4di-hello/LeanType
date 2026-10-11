@@ -1779,4 +1779,7 @@
     <string name="gif_category_recent">സമീപകാലം</string>
     <string name="gif_no_recent_items">സമീപകാല ഇനങ്ങൾ ഒന്നുമില്ല</string>
     <string name="gif_manage_local_media">ലോക്കൽ മീഡിയ കൈകാര്യം ചെയ്യുക</string>
+
+    <string name="full_swipe_switch_language">കീബോർഡിൽ പൂർണ്ണമായി സ്വൈപ്പ് ചെയ്ത് ഭാഷ മാറ്റുക</string>
+    <string name="full_swipe_switch_language_summary">സജീവമാക്കിയ ഭാഷകൾക്കിടയിൽ മാറാൻ കീബോർഡിൽ തിരശ്ചീനമായി സ്വൈപ്പ് ചെയ്യുക (ജെസ്റ്റർ ടൈപ്പിംഗ് സ്വയമേവ ഓഫാക്കും)</string>
 </resources>

@@ -1713,4 +1713,7 @@
     <string name="gif_category_recent">Нядаўнія</string>
     <string name="gif_no_recent_items">Няма нядаўніх элементаў</string>
     <string name="gif_manage_local_media">Кіраванне лакальнымі медыя</string>
+
+    <string name="full_swipe_switch_language">Змена мовы поўным свайпам па клавіятуры</string>
+    <string name="full_swipe_switch_language_summary">Правядзіце гарызантальна па клавіятуры для пераключэння паміж уключанымі мовамі (аўтаматычна адключае ўвод жэстамі)</string>
 </resources>

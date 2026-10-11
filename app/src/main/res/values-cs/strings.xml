@@ -1726,4 +1726,7 @@ Umožňuje lokální inferenci GGUF / llama.cpp na zařízení pro korektury a p
     <string name="gif_category_recent">Nedávné</string>
     <string name="gif_no_recent_items">Žádné nedávné položky</string>
     <string name="gif_manage_local_media">Spravovat místní média</string>
+
+    <string name="full_swipe_switch_language">Změna jazyka přejetím přes celou klávesnici</string>
+    <string name="full_swipe_switch_language_summary">Přejeďte vodorovně přes klávesnici pro přepínání mezi povolenými jazyky (automaticky vypne psaní gesty)</string>
 </resources>

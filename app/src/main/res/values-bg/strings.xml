@@ -1761,4 +1761,7 @@
     <string name="gif_category_recent">Скорошни</string>
     <string name="gif_no_recent_items">Няма скорошни елементи</string>
     <string name="gif_manage_local_media">Управление на локални медии</string>
+
+    <string name="full_swipe_switch_language">Смяна на езика чрез плъзгане по цялата клавиатура</string>
+    <string name="full_swipe_switch_language_summary">Плъзнете хоризонтално по клавиатурата, за да превключвате между активираните езици (автоматично изключва писането с жестове)</string>
 </resources>

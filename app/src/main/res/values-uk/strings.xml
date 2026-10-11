@@ -1681,4 +1681,7 @@
     <string name="gif_category_recent">Нещодавні</string>
     <string name="gif_no_recent_items">Немає нещодавніх елементів</string>
     <string name="gif_manage_local_media">Керування локальними медіа</string>
+
+    <string name="full_swipe_switch_language">Зміна мови повним свайпом клавіатури</string>
+    <string name="full_swipe_switch_language_summary">Проведіть горизонтально по клавіатурі для перемикання між увімкненими мовами (автоматично вимикає введення жестами)</string>
 </resources>

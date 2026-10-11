@@ -1712,4 +1712,7 @@ Permite la inferencia GGUF / llama.cpp en el dispositivo para corrección y rees
     <string name="gif_category_recent">Recientes</string>
     <string name="gif_no_recent_items">No hay elementos recientes</string>
     <string name="gif_manage_local_media">Administrar archivos locales</string>
+
+    <string name="full_swipe_switch_language">Cambiar de idioma deslizando por todo el teclado</string>
+    <string name="full_swipe_switch_language_summary">Desliza horizontalmente por el teclado para cambiar entre los idiomas habilitados (desactiva automáticamente la escritura gestual)</string>
 </resources>

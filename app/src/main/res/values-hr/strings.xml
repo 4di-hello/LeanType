@@ -1701,4 +1701,7 @@ Omogućuje lokalno GGUF / llama.cpp zaključivanje na uređaju za lekturu i prep
     <string name="gif_category_recent">Nedavno</string>
     <string name="gif_no_recent_items">Nema nedavnih stavki</string>
     <string name="gif_manage_local_media">Upravljanje lokalnim medijima</string>
+
+    <string name="full_swipe_switch_language">Promjena jezika prelaskom preko cijele tipkovnice</string>
+    <string name="full_swipe_switch_language_summary">Povucite vodoravno preko tipkovnice za prebacivanje između omogućenih jezika (automatski isključuje tipkanje gestama)</string>
 </resources>

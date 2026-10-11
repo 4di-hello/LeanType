@@ -1705,4 +1705,7 @@
     <string name="gif_category_recent">हाल ही में</string>
     <string name="gif_no_recent_items">कोई हालिया आइटम नहीं</string>
     <string name="gif_manage_local_media">स्थानीय मीडिया प्रबंधित करें</string>
+
+    <string name="full_swipe_switch_language">पूरे कीबोर्ड पर स्वाइप करके भाषा बदलें</string>
+    <string name="full_swipe_switch_language_summary">सक्षम भाषाओं के बीच स्विच करने के लिए कीबोर्ड पर क्षैतिज रूप से स्वाइप करें (जेस्चर टाइपिंग स्वचालित रूप से बंद हो जाती है)</string>
 </resources>

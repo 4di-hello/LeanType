@@ -1723,4 +1723,7 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="gif_category_recent">Zuletzt verwendet</string>
     <string name="gif_no_recent_items">Keine zuletzt verwendeten Elemente</string>
     <string name="gif_manage_local_media">Lokale Medien verwalten</string>
+
+    <string name="full_swipe_switch_language">Sprache durch Wischen über die gesamte Tastatur wechseln</string>
+    <string name="full_swipe_switch_language_summary">Wischen Sie horizontal über die Tastatur, um zwischen aktivierten Sprachen zu wechseln (deaktiviert Gesteneingabe automatisch)</string>
 </resources>

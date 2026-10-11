@@ -1779,4 +1779,7 @@
     <string name="gif_category_recent">Πρόσφατα</string>
     <string name="gif_no_recent_items">Δεν υπάρχουν πρόσφατα στοιχεία</string>
     <string name="gif_manage_local_media">Διαχείριση τοπικών πολυμέσων</string>
+
+    <string name="full_swipe_switch_language">Αλλαγή γλώσσας με πλήρη σάρωση στο πληκτρολόγιο</string>
+    <string name="full_swipe_switch_language_summary">Σύρετε οριζόντια στο πληκτρολόγιο για εναλλαγή μεταξύ ενεργοποιημένων γλωσσών (απενεργοποιεί αυτόματα την πληκτρολόγηση με χειρονομίες)</string>
 </resources>

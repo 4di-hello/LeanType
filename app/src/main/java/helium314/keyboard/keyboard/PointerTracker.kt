@@ -10,6 +10,8 @@ import android.content.res.Resources
 import android.content.res.TypedArray
 import android.os.SystemClock
 import android.view.MotionEvent
+import android.view.View
+import android.view.ViewConfiguration
 import helium314.keyboard.event.HapticEvent
 import helium314.keyboard.keyboard.internal.BatchInputArbiter
 import helium314.keyboard.keyboard.internal.BatchInputArbiter.BatchInputArbiterListener
@@ -575,13 +577,17 @@ class PointerTracker private constructor(
 
     private fun isSwiper(code: Int): Boolean {
         val sv = Settings.getValues()
-        return when (code) {
-            Constants.CODE_SPACE -> sv.mSpaceSwipeHorizontal != KeyboardActionListener.SWIPE_NO_ACTION ||
-                    sv.mSpaceSwipeVertical != KeyboardActionListener.SWIPE_NO_ACTION ||
-                    sv.mSpaceSwipeVerticalDown != KeyboardActionListener.SWIPE_NO_ACTION
-            KeyCode.DELETE -> sv.mDeleteSwipeEnabled
-            else -> false
+        if (code == KeyCode.DELETE && sv.mDeleteSwipeEnabled) return true
+        if (code == Constants.CODE_SPACE && (
+            sv.mSpaceSwipeHorizontal != KeyboardActionListener.SWIPE_NO_ACTION ||
+            sv.mSpaceSwipeVertical != KeyboardActionListener.SWIPE_NO_ACTION ||
+            sv.mSpaceSwipeVerticalDown != KeyboardActionListener.SWIPE_NO_ACTION
+        )) return true
+        if (sv.mFullSwipeSwitchLanguage) {
+            val key = mCurrentKey
+            return key != null && !key.isModifier()
         }
+        return false
     }
 
     private fun onGestureMoveEvent(
@@ -747,7 +753,10 @@ class PointerTracker private constructor(
             sTypingTimeRecorder?.isInFastTyping(eventTime) == true) {
             return
         }
-        if (code == Constants.CODE_SPACE) {
+        val hasSpaceSwipeAction = sv.mSpaceSwipeHorizontal != KeyboardActionListener.SWIPE_NO_ACTION ||
+                sv.mSpaceSwipeVertical != KeyboardActionListener.SWIPE_NO_ACTION ||
+                sv.mSpaceSwipeVerticalDown != KeyboardActionListener.SWIPE_NO_ACTION
+        if (code == Constants.CODE_SPACE && hasSpaceSwipeAction) {
             val dX = x - mStartX
             val dY = y - mStartY
 
@@ -874,6 +883,46 @@ class PointerTracker private constructor(
                     mDeleteRunY = y
                 }
                 sListener.onMoveDeletePointer(stepsX, stepsY)
+            }
+        } else if (sv.mFullSwipeSwitchLanguage) {
+            val dX = x - mStartX
+            val dY = y - mStartY
+            val absDx = abs(dX)
+            val absDy = abs(dY)
+
+            val context = (sDrawingProxy as? View)?.context
+            val density = Resources.getSystem().displayMetrics.density
+            val touchSlop = context?.let { ViewConfiguration.get(it).scaledTouchSlop } ?: (8 * density).toInt()
+
+            if (absDy > touchSlop * 2 && absDy >= absDx) {
+                cancelTrackingForAction()
+                mCurrentKey?.let { setReleasedKeyGraphics(it, true) }
+                return
+            }
+
+            if (absDx < absDy * 1.2f) {
+                return
+            }
+
+            if (mInHorizontalSwipe) {
+                return
+            }
+
+            val minFlingVelocity = context?.let { ViewConfiguration.get(it).scaledMinimumFlingVelocity.toFloat() } ?: (50 * density)
+            val dt = eventTime - mStartTime
+            val vx = if (dt > 0) absDx * 1000f / dt else 0f
+            val minDistance = max(touchSlop * 2, sv.mLanguageSwipeDistance * sPointerStep)
+
+            val isFling = vx > minFlingVelocity && absDx > touchSlop * 2
+            val isDrag = absDx >= minDistance
+
+            if (isFling || isDrag) {
+                getTimerProxy().cancelKeyTimersOf(this)
+                mCurrentKey?.let { setReleasedKeyGraphics(it, true) }
+                cancelTrackingForAction()
+                mInHorizontalSwipe = true
+                val steps = if (dX > 0) 1 else -1
+                sListener.onFullKeyboardSwipe(steps)
             }
         }
     }

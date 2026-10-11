@@ -462,6 +462,16 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
         }
     }
 
+    override fun onFullKeyboardSwipe(steps: Int): Boolean {
+        val switched = onLanguageSlide(steps, isVertical = true)
+        if (switched) {
+            audioAndHapticFeedbackManager.performHapticAndAudioFeedback(
+                KeyCode.NOT_SPECIFIED, keyboardSwitcher.mainKeyboardView, HapticEvent.KEY_PRESS
+            )
+        }
+        return switched
+    }
+
     override fun toggleNumpad(withSliding: Boolean, forceReturnToAlpha: Boolean): Boolean {
         keyboardSwitcher.toggleNumpad(withSliding, latinIME.currentAutoCapsState, latinIME.currentRecapitalizeState, forceReturnToAlpha)
         return true

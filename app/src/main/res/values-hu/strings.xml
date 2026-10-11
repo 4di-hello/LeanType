@@ -1717,4 +1717,7 @@ Lehetővé teszi az eszközön futó GGUF / llama.cpp következtetést a javít�
     <string name="gif_category_recent">Legutóbbiak</string>
     <string name="gif_no_recent_items">Nincsenek legutóbbi elemek</string>
     <string name="gif_manage_local_media">Helyi média kezelése</string>
+
+    <string name="full_swipe_switch_language">Nyelvváltás a teljes billentyűzeten való végighúzással</string>
+    <string name="full_swipe_switch_language_summary">Húzza el az ujját vízszintesen a billentyűzeten az engedélyezett nyelvek közötti váltáshoz (automatikusan kikapcsolja a kézmozdulatos gépelést)</string>
 </resources>

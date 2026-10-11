@@ -1708,4 +1708,7 @@ Võimaldab seadmesisese GGUF / llama.cpp järelduse korrektuuri ja ümbersõnast
     <string name="gif_category_recent">Hiljutised</string>
     <string name="gif_no_recent_items">Hiljutisi üksusi pole</string>
     <string name="gif_manage_local_media">Halda kohalikku meediat</string>
+
+    <string name="full_swipe_switch_language">Keele vahetamine üle kogu klaviatuuri libistades</string>
+    <string name="full_swipe_switch_language_summary">Libistage horisontaalselt üle klaviatuuri, et lülituda lubatud keelte vahel (lülitab viipega sisestuse automaatselt välja)</string>
 </resources>

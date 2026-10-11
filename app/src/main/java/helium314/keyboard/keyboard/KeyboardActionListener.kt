@@ -94,6 +94,8 @@ interface KeyboardActionListener {
 
     fun onEndSpaceSwipe()
 
+    fun onFullKeyboardSwipe(steps: Int): Boolean = false
+
     fun toggleNumpad(withSliding: Boolean, forceReturnToAlpha: Boolean): Boolean
 
     fun onMoveDeletePointer(steps: Int)

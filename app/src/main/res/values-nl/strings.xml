@@ -1761,4 +1761,7 @@ Maakt GGUF / llama.cpp-inferentie op het apparaat mogelijk voor proeflezen en he
     <string name="gif_category_recent">Recent</string>
     <string name="gif_no_recent_items">Geen recente items</string>
     <string name="gif_manage_local_media">Lokale media beheren</string>
+
+    <string name="full_swipe_switch_language">Taal wisselen door over het hele toetsenbord te vegen</string>
+    <string name="full_swipe_switch_language_summary">Veeg horizontaal over het toetsenbord om te schakelen tussen ingeschakelde talen (schakelt typen met gebaren automatisch uit)</string>
 </resources>

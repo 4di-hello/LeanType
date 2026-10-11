@@ -8,6 +8,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import helium314.keyboard.keyboard.KeyboardActionListener
 import helium314.keyboard.keyboard.KeyboardSwitcher
 import helium314.keyboard.latin.R
 import helium314.keyboard.latin.settings.Defaults
@@ -92,6 +93,11 @@ fun GestureTypingScreen(
         }
 
         add(R.string.settings_category_gestures_advanced)
+        add(Settings.PREF_FULL_SWIPE_SWITCH_LANGUAGE)
+        if (prefs.getBoolean(Settings.PREF_FULL_SWIPE_SWITCH_LANGUAGE, Defaults.PREF_FULL_SWIPE_SWITCH_LANGUAGE)
+            || Settings.readHorizontalSpaceSwipe(prefs) == KeyboardActionListener.SWIPE_SWITCH_LANGUAGE) {
+            add(Settings.PREF_LANGUAGE_SWIPE_DISTANCE)
+        }
         add(Settings.PREF_SPACE_HORIZONTAL_SWIPE)
         add(Settings.PREF_SPACE_VERTICAL_SWIPE)
         add(Settings.PREF_SPACE_VERTICAL_DOWN_SWIPE)
@@ -159,7 +165,12 @@ fun GestureTypingScreen(
 
 fun createGestureTypingSettings(context: Context) = listOf(
     Setting(context, Settings.PREF_GESTURE_INPUT, R.string.gesture_input, R.string.gesture_input_summary) {
-        SwitchPreference(it, Defaults.PREF_GESTURE_INPUT)
+        val ctx = LocalContext.current
+        SwitchPreference(it, Defaults.PREF_GESTURE_INPUT) { enabled ->
+            if (enabled) {
+                ctx.prefs().edit { putBoolean(Settings.PREF_FULL_SWIPE_SWITCH_LANGUAGE, false) }
+            }
+        }
     },
     Setting(context, Settings.PREF_GESTURE_PREVIEW_TRAIL, R.string.gesture_preview_trail) {
         SwitchPreference(it, Defaults.PREF_GESTURE_PREVIEW_TRAIL)
@@ -216,6 +227,23 @@ fun createGestureTypingSettings(context: Context) = listOf(
     },
     Setting(context, SettingsWithoutKey.LOAD_GESTURE_LIB, R.string.load_gesture_library, R.string.load_gesture_library_summary) {
         LoadGestureLibPreference(it.title)
+    },
+    Setting(context, Settings.PREF_FULL_SWIPE_SWITCH_LANGUAGE, R.string.full_swipe_switch_language, R.string.full_swipe_switch_language_summary) {
+        val ctx = LocalContext.current
+        SwitchPreference(it, Defaults.PREF_FULL_SWIPE_SWITCH_LANGUAGE) { enabled ->
+            if (enabled) {
+                ctx.prefs().edit { putBoolean(Settings.PREF_GESTURE_INPUT, false) }
+            }
+        }
+    },
+    Setting(context, Settings.PREF_LANGUAGE_SWIPE_DISTANCE, R.string.prefs_language_swipe_distance) { setting ->
+        SliderPreference(
+            name = setting.title,
+            key = setting.key,
+            default = Defaults.PREF_LANGUAGE_SWIPE_DISTANCE,
+            range = 2f..18f,
+            description = { it.toString() }
+        )
     },
     Setting(context, Settings.PREF_SPACE_HORIZONTAL_SWIPE, R.string.show_horizontal_space_swipe) {
         val items = listOf(

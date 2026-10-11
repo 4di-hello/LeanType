@@ -1770,4 +1770,7 @@
     <string name="gif_category_recent">حالیہ</string>
     <string name="gif_no_recent_items">کوئی حالیہ آئٹم نہیں</string>
     <string name="gif_manage_local_media">مقامی میڈیا کا انتظام کریں</string>
+
+    <string name="full_swipe_switch_language">پورے کی بورڈ پر سوائپ کرکے زبان تبدیل کریں</string>
+    <string name="full_swipe_switch_language_summary">فعال زبانوں کے درمیان سوئچ کرنے کے لیے کی بورڈ پر افقی طور پر سوائپ کریں (اشاروں کی ٹائپنگ خودکار طور پر بند ہو جاتی ہے)</string>
 </resources>

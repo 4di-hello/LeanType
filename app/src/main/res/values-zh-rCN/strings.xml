@@ -1727,4 +1727,7 @@
     <string name="gif_category_recent">最近</string>
     <string name="gif_no_recent_items">没有最近的项目</string>
     <string name="gif_manage_local_media">管理本地媒体</string>
+
+    <string name="full_swipe_switch_language">滑动整个键盘切换语言</string>
+    <string name="full_swipe_switch_language_summary">在键盘上水平滑动可在已启用的语言之间切换（自动关闭滑行输入）</string>
 </resources>

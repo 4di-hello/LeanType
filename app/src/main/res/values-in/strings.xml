@@ -1676,4 +1676,7 @@ Memungkinkan inferensi GGUF / llama.cpp di perangkat untuk koreksi teks dan penu
     <string name="gif_category_recent">Terbaru</string>
     <string name="gif_no_recent_items">Tidak ada item terbaru</string>
     <string name="gif_manage_local_media">Kelola media lokal</string>
+
+    <string name="full_swipe_switch_language">Ganti bahasa dengan mengusap penuh keyboard</string>
+    <string name="full_swipe_switch_language_summary">Usap secara horizontal melintasi keyboard untuk beralih antar bahasa yang aktif (otomatis mematikan pengetikan gestur)</string>
 </resources>
