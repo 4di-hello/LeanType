@@ -9,3 +9,7 @@
 ## 2025-02-17 - Unit tests for ScriptUtils
 **Learning:** Testing string utility logic involving scripts requires careful consideration of unsupported or invalid fallback scripts. For instance, testing `Locale("ja").script()` reveals that `ScriptUtils` gracefully falls back to `SCRIPT_LATIN` rather than breaking, even though Japanese is unsupported.
 **Action:** When creating tests for locale scripts or handling unknown/fallback contexts, include assertions to verify that invalid configurations gracefully fallback or throw exactly the expected exception without leaking framework level crashes.
+
+## 2025-02-17 - Unit tests for InputTypeUtils
+**Learning:** Utilities that parse input type flags often depend on standard constants in `InputType` and `EditorInfo`. Furthermore, checking states often requires understanding package quirks loaded through `AppQuirksManager`. Running these tests efficiently without manually setting up the entire mock context is possible by relying on Robolectric, as it correctly handles `android.view.inputmethod.EditorInfo` instantiation and flag masking for text parsing.
+**Action:** When adding unit tests for utilities handling input frameworks (such as `InputTypeUtils`), explicitly use `@RunWith(RobolectricTestRunner::class)` to handle dependencies on `EditorInfo` and framework constants, and ensure you cover edge cases involving bits masked out by classes (e.g. `TYPE_MASK_CLASS` vs `TYPE_MASK_VARIATION`).
