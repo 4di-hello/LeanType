@@ -1776,6 +1776,6 @@ Permet l\'inférence GGUF / llama.cpp sur l\'appareil pour la correction et la r
     <string name="gif_no_recent_items">Aucun élément récent</string>
     <string name="gif_manage_local_media">Gérer les médias locaux</string>
 
-    <string name="full_swipe_switch_language">Changer de langue en glissant sur tout le clavier</string>
-    <string name="full_swipe_switch_language_summary">Glissez horizontalement sur le clavier pour basculer entre les langues activées (désactive automatiquement la saisie gestuelle)</string>
+    <string name="full_keyboard_swipe_gesture">Geste de glissement sur tout le clavier</string>
+    <string name="full_keyboard_swipe_gesture_summary">Balayez horizontalement le clavier pour effectuer une action (désactive automatiquement la saisie gestuelle)</string>
 </resources>

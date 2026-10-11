@@ -1780,6 +1780,6 @@
     <string name="gif_no_recent_items">Δεν υπάρχουν πρόσφατα στοιχεία</string>
     <string name="gif_manage_local_media">Διαχείριση τοπικών πολυμέσων</string>
 
-    <string name="full_swipe_switch_language">Αλλαγή γλώσσας με πλήρη σάρωση στο πληκτρολόγιο</string>
-    <string name="full_swipe_switch_language_summary">Σύρετε οριζόντια στο πληκτρολόγιο για εναλλαγή μεταξύ ενεργοποιημένων γλωσσών (απενεργοποιεί αυτόματα την πληκτρολόγηση με χειρονομίες)</string>
+    <string name="full_keyboard_swipe_gesture">Χειρονομία σάρωσης σε ολόκληρο το πληκτρολόγιο</string>
+    <string name="full_keyboard_swipe_gesture_summary">Σύρετε οριζόντια στο πληκτρολόγιο για να εκτελέσετε μια ενέργεια (απενεργοποιεί αυτόματα την πληκτρολόγηση με χειρονομίες)</string>
 </resources>

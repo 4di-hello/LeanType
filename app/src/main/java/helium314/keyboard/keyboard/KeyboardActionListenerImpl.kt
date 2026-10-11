@@ -462,14 +462,42 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
         }
     }
 
-    override fun onFullKeyboardSwipe(steps: Int): Boolean {
-        val switched = onLanguageSlide(steps, isVertical = true)
-        if (switched) {
+    override fun onFullKeyboardSwipe(steps: Int, action: Int): Boolean = when (action) {
+        KeyboardActionListener.SWIPE_MOVE_CURSOR -> onMoveCursorHorizontally(steps)
+        KeyboardActionListener.SWIPE_SWITCH_LANGUAGE -> {
+            val switched = onLanguageSlide(steps, isVertical = true)
+            if (switched) {
+                audioAndHapticFeedbackManager.performHapticAndAudioFeedback(
+                    KeyCode.NOT_SPECIFIED, keyboardSwitcher.mainKeyboardView, HapticEvent.KEY_PRESS
+                )
+            }
+            switched
+        }
+        KeyboardActionListener.SWIPE_TOGGLE_NUMPAD -> {
             audioAndHapticFeedbackManager.performHapticAndAudioFeedback(
                 KeyCode.NOT_SPECIFIED, keyboardSwitcher.mainKeyboardView, HapticEvent.KEY_PRESS
             )
+            toggleNumpad(false, false)
         }
-        return switched
+        KeyboardActionListener.SWIPE_HIDE_KEYBOARD -> {
+            audioAndHapticFeedbackManager.performHapticAndAudioFeedback(
+                KeyCode.NOT_SPECIFIED, keyboardSwitcher.mainKeyboardView, HapticEvent.KEY_PRESS
+            )
+            latinIME.requestHideSelf(0)
+            true
+        }
+        KeyboardActionListener.SWIPE_TOUCHPAD_MODE -> {
+            audioAndHapticFeedbackManager.performHapticAndAudioFeedback(
+                KeyCode.NOT_SPECIFIED, keyboardSwitcher.mainKeyboardView, HapticEvent.KEY_PRESS
+            )
+            isSpaceSwipeActive = true
+            latinIME.isCursorGestureActive = true
+            latinIME.mHandler.cancelResumeSuggestions()
+            inputLogic.finishInput()
+            PointerTracker.setTouchpadModeActive(true)
+            true
+        }
+        else -> false
     }
 
     override fun toggleNumpad(withSliding: Boolean, forceReturnToAlpha: Boolean): Boolean {

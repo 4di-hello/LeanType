@@ -1721,6 +1721,6 @@ Habilita inferência GGUF / llama.cpp no dispositivo para revisão e reescrita.<
     <string name="gif_no_recent_items">Nenhum item recente</string>
     <string name="gif_manage_local_media">Gerenciar mídia local</string>
 
-    <string name="full_swipe_switch_language">Mudar de idioma deslizando pelo teclado inteiro</string>
-    <string name="full_swipe_switch_language_summary">Deslize horizontalmente pelo teclado para alternar entre os idiomas ativados (desativa automaticamente a digitação por gestos)</string>
+    <string name="full_keyboard_swipe_gesture">Gesto de deslize em todo o teclado</string>
+    <string name="full_keyboard_swipe_gesture_summary">Deslize horizontalmente pelo teclado para executar uma ação (desativa automaticamente a digitação por gestos)</string>
 </resources>

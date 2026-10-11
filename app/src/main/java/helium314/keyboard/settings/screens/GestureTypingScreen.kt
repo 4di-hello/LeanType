@@ -93,8 +93,8 @@ fun GestureTypingScreen(
         }
 
         add(R.string.settings_category_gestures_advanced)
-        add(Settings.PREF_FULL_SWIPE_SWITCH_LANGUAGE)
-        if (prefs.getBoolean(Settings.PREF_FULL_SWIPE_SWITCH_LANGUAGE, Defaults.PREF_FULL_SWIPE_SWITCH_LANGUAGE)
+        add(Settings.PREF_FULL_KEYBOARD_SWIPE)
+        if (Settings.readFullKeyboardSwipe(prefs) == KeyboardActionListener.SWIPE_SWITCH_LANGUAGE
             || Settings.readHorizontalSpaceSwipe(prefs) == KeyboardActionListener.SWIPE_SWITCH_LANGUAGE) {
             add(Settings.PREF_LANGUAGE_SWIPE_DISTANCE)
         }
@@ -168,7 +168,10 @@ fun createGestureTypingSettings(context: Context) = listOf(
         val ctx = LocalContext.current
         SwitchPreference(it, Defaults.PREF_GESTURE_INPUT) { enabled ->
             if (enabled) {
-                ctx.prefs().edit { putBoolean(Settings.PREF_FULL_SWIPE_SWITCH_LANGUAGE, false) }
+                ctx.prefs().edit {
+                    putString(Settings.PREF_FULL_KEYBOARD_SWIPE, "none")
+                    putBoolean(Settings.PREF_FULL_SWIPE_SWITCH_LANGUAGE, false)
+                }
             }
         }
     },
@@ -228,10 +231,18 @@ fun createGestureTypingSettings(context: Context) = listOf(
     Setting(context, SettingsWithoutKey.LOAD_GESTURE_LIB, R.string.load_gesture_library, R.string.load_gesture_library_summary) {
         LoadGestureLibPreference(it.title)
     },
-    Setting(context, Settings.PREF_FULL_SWIPE_SWITCH_LANGUAGE, R.string.full_swipe_switch_language, R.string.full_swipe_switch_language_summary) {
+    Setting(context, Settings.PREF_FULL_KEYBOARD_SWIPE, R.string.full_keyboard_swipe_gesture, R.string.full_keyboard_swipe_gesture_summary) {
+        val items = listOf(
+            stringResource(R.string.switch_language) to "switch_language",
+            stringResource(R.string.space_swipe_move_cursor_entry) to "move_cursor",
+            stringResource(R.string.space_swipe_toggle_numpad_entry) to "toggle_numpad",
+            stringResource(R.string.space_swipe_hide_keyboard_entry) to "hide_keyboard",
+            stringResource(R.string.space_swipe_touchpad_mode_entry) to "touchpad_mode",
+            stringResource(R.string.action_none) to "none",
+        )
         val ctx = LocalContext.current
-        SwitchPreference(it, Defaults.PREF_FULL_SWIPE_SWITCH_LANGUAGE) { enabled ->
-            if (enabled) {
+        ListPreference(it, items, Defaults.PREF_FULL_KEYBOARD_SWIPE) { selected ->
+            if (selected != "none") {
                 ctx.prefs().edit { putBoolean(Settings.PREF_GESTURE_INPUT, false) }
             }
         }

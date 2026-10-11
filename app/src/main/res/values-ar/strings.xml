@@ -1785,6 +1785,6 @@
     <string name="gif_no_recent_items">لا توجد عناصر حديثة</string>
     <string name="gif_manage_local_media">إدارة الوسائط المحلية</string>
 
-    <string name="full_swipe_switch_language">تبديل اللغة بالتمرير الكامل على لوحة المفاتيح</string>
-    <string name="full_swipe_switch_language_summary">مرر أفقيًا عبر لوحة المفاتيح للتبديل بين اللغات الممكنة (يوقف الكتابة بالسحب تلقائيًا)</string>
+    <string name="full_keyboard_swipe_gesture">إيماءة التمرير السريع على لوحة المفاتيح بالكامل</string>
+    <string name="full_keyboard_swipe_gesture_summary">مرر سريعًا أفقيًا عبر لوحة المفاتيح لتنفيذ إجراء (يوقف الكتابة بالإيماءات تلقائيًا)</string>
 </resources>

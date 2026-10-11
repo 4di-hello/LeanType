@@ -84,7 +84,7 @@ fun AdvancedSettingsScreen(
         Settings.PREF_ALWAYS_INCOGNITO_MODE,
         Settings.PREF_DISABLE_NETWORK,
         if (Settings.readHorizontalSpaceSwipe(prefs) == KeyboardActionListener.SWIPE_SWITCH_LANGUAGE
-            || prefs.getBoolean(Settings.PREF_FULL_SWIPE_SWITCH_LANGUAGE, Defaults.PREF_FULL_SWIPE_SWITCH_LANGUAGE))
+            || Settings.readFullKeyboardSwipe(prefs) == KeyboardActionListener.SWIPE_SWITCH_LANGUAGE)
             Settings.PREF_LANGUAGE_SWIPE_DISTANCE else null,
         Settings.PREF_PHYSICAL_KEYBOARD_LAYOUT,
         Settings.PREF_ENABLE_EMOJI_ALT_PHYSICAL_KEY,

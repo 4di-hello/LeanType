@@ -1709,6 +1709,6 @@ Activează inferența GGUF / llama.cpp pe dispozitiv pentru corectură și refor
     <string name="gif_no_recent_items">Niciun element recent</string>
     <string name="gif_manage_local_media">Gestionați fișierele media locale</string>
 
-    <string name="full_swipe_switch_language">Schimbare limbă prin glisare completă pe tastatură</string>
-    <string name="full_swipe_switch_language_summary">Glisați orizontal peste tastatură pentru a comuta între limbile activate (dezactivează automat tastarea prin gesturi)</string>
+    <string name="full_keyboard_swipe_gesture">Gest de glisare pe întreaga tastatură</string>
+    <string name="full_keyboard_swipe_gesture_summary">Glisați orizontal pe tastatură pentru a efectua o acțiune (dezactivează automat scrierea prin glisare)</string>
 </resources>

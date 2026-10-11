@@ -385,6 +385,7 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
         const val PREF_VERTICAL_SWIPE_THRESHOLD = "vertical_swipe_threshold"
         const val PREF_DELETE_SWIPE = "delete_swipe"
         const val PREF_DELETE_SWIPE_WORD_BY_WORD = "delete_swipe_word_by_word"
+        const val PREF_FULL_KEYBOARD_SWIPE = "full_keyboard_swipe"
         const val PREF_FULL_SWIPE_SWITCH_LANGUAGE = "full_swipe_switch_language"
         const val PREF_AUTOSPACE_AFTER_PUNCTUATION = "autospace_after_punctuation"
         const val PREF_AUTOSPACE_AFTER_EMOJI = "autospace_after_emoji"
@@ -638,6 +639,22 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
 
         fun readVerticalDownSpaceSwipe(prefs: SharedPreferences): Int {
             return when (prefs.getString(PREF_SPACE_VERTICAL_DOWN_SWIPE, Defaults.PREF_SPACE_VERTICAL_DOWN_SWIPE)) {
+                "move_cursor" -> KeyboardActionListener.SWIPE_MOVE_CURSOR
+                "switch_language" -> KeyboardActionListener.SWIPE_SWITCH_LANGUAGE
+                "toggle_numpad" -> KeyboardActionListener.SWIPE_TOGGLE_NUMPAD
+                "hide_keyboard" -> KeyboardActionListener.SWIPE_HIDE_KEYBOARD
+                "touchpad_mode" -> KeyboardActionListener.SWIPE_TOUCHPAD_MODE
+                else -> KeyboardActionListener.SWIPE_NO_ACTION
+            }
+        }
+
+        fun readFullKeyboardSwipe(prefs: SharedPreferences): Int {
+            if (!prefs.contains(PREF_FULL_KEYBOARD_SWIPE) && prefs.contains(PREF_FULL_SWIPE_SWITCH_LANGUAGE)) {
+                if (prefs.getBoolean(PREF_FULL_SWIPE_SWITCH_LANGUAGE, false)) {
+                    return KeyboardActionListener.SWIPE_SWITCH_LANGUAGE
+                }
+            }
+            return when (prefs.getString(PREF_FULL_KEYBOARD_SWIPE, Defaults.PREF_FULL_KEYBOARD_SWIPE)) {
                 "move_cursor" -> KeyboardActionListener.SWIPE_MOVE_CURSOR
                 "switch_language" -> KeyboardActionListener.SWIPE_SWITCH_LANGUAGE
                 "toggle_numpad" -> KeyboardActionListener.SWIPE_TOGGLE_NUMPAD

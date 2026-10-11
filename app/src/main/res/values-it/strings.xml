@@ -1787,6 +1787,6 @@ Abilita l\'inferenza GGUF / llama.cpp sul dispositivo per correzione e riscrittu
     <string name="gif_no_recent_items">Nessun elemento recente</string>
     <string name="gif_manage_local_media">Gestisci file multimediali locali</string>
 
-    <string name="full_swipe_switch_language">Cambia lingua scorrendo su tutta la tastiera</string>
-    <string name="full_swipe_switch_language_summary">Scorri orizzontalmente sulla tastiera per passare da una lingua abilitata all\'altra (disattiva automaticamente la digitazione gestuale)</string>
+    <string name="full_keyboard_swipe_gesture">Gesto di scorrimento su tutta la tastiera</string>
+    <string name="full_keyboard_swipe_gesture_summary">Scorri orizzontalmente sulla tastiera per eseguire un\'azione (disattiva automaticamente la digitazione a scorrimento)</string>
 </resources>

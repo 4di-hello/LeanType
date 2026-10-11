@@ -1787,6 +1787,6 @@
     <string name="gif_no_recent_items">Нет недавних элементов</string>
     <string name="gif_manage_local_media">Управление локальными медиа</string>
 
-    <string name="full_swipe_switch_language">Смена языка полным свайпом по клавиатуре</string>
-    <string name="full_swipe_switch_language_summary">Проведите горизонтально по клавиатуре для переключения между включенными языками (автоматически отключает непрерывный ввод)</string>
+    <string name="full_keyboard_swipe_gesture">Жест смахивания по всей клавиатуре</string>
+    <string name="full_keyboard_swipe_gesture_summary">Проведите горизонтально по клавиатуре для выполнения действия (автоматически отключает непрерывный ввод)</string>
 </resources>

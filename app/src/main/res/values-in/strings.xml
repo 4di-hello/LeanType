@@ -1677,6 +1677,6 @@ Memungkinkan inferensi GGUF / llama.cpp di perangkat untuk koreksi teks dan penu
     <string name="gif_no_recent_items">Tidak ada item terbaru</string>
     <string name="gif_manage_local_media">Kelola media lokal</string>
 
-    <string name="full_swipe_switch_language">Ganti bahasa dengan mengusap penuh keyboard</string>
-    <string name="full_swipe_switch_language_summary">Usap secara horizontal melintasi keyboard untuk beralih antar bahasa yang aktif (otomatis mematikan pengetikan gestur)</string>
+    <string name="full_keyboard_swipe_gesture">Gestur usap seluruh keyboard</string>
+    <string name="full_keyboard_swipe_gesture_summary">Usap horizontal di keyboard untuk menjalankan tindakan (otomatis menonaktifkan pengetikan gestur)</string>
 </resources>

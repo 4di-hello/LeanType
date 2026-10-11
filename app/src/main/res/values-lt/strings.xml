@@ -1710,6 +1710,6 @@ Ar norite atnaujinti?</string>
     <string name="gif_no_recent_items">Nėra paskutinių elementų</string>
     <string name="gif_manage_local_media">Tvarkyti vietinę mediją</string>
 
-    <string name="full_swipe_switch_language">Keisti kalbą braukiant per visą klaviatūrą</string>
-    <string name="full_swipe_switch_language_summary">Braukite horizontaliai per klaviatūrą, kad perjungtumėte įjungtas kalbas (automatiškai išjungia rašymą gestais)</string>
+    <string name="full_keyboard_swipe_gesture">Visos klaviatūros braukimo gestas</string>
+    <string name="full_keyboard_swipe_gesture_summary">Braukite horizontaliai per klaviatūrą, kad atliktumėte veiksmą (automatiškai išjungia rašymą braukiant)</string>
 </resources>

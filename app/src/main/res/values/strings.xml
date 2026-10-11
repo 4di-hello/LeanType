@@ -1578,10 +1578,10 @@ New dictionary:
     <string name="label_zwnj_key" tools:keep="@string/label_zwnj_key">Zero-width non-joiner</string>
     <!-- Label for bin (delete) key, currently used only for showing the icon name -->
     <string name="label_bin" tools:keep="@string/label_bin">Bin</string>
-    <!-- Title of the setting for switching language by full keyboard swipe -->
-    <string name="full_swipe_switch_language">Switch language by full keyboard swipe</string>
-    <!-- Description of the setting for switching language by full keyboard swipe -->
-    <string name="full_swipe_switch_language_summary">Swipe horizontally across the keyboard to switch between enabled languages (auto turns off gesture typing)</string>
+    <!-- Title of the setting for full keyboard swipe gesture -->
+    <string name="full_keyboard_swipe_gesture">Full keyboard swipe gesture</string>
+    <!-- Description of the setting for full keyboard swipe gesture -->
+    <string name="full_keyboard_swipe_gesture_summary">Swipe horizontally across the keyboard to perform an action (auto turns off gesture typing)</string>
     <!-- Title of the setting for horizontal spacebar swipe gesture -->
     <string name="show_horizontal_space_swipe">Horizontal spacebar swipe gesture</string>
     <!-- Title of the setting for vertical up spacebar swipe gesture -->

@@ -138,7 +138,7 @@ open class SettingsValues(
     val mCenterSuggestionTextToEnter: Boolean
     val mCenterTypedWord: Boolean
     val mGestureMethod: String
-    val mFullSwipeSwitchLanguage: Boolean
+    val mFullKeyboardSwipe: Int
     val mGestureInputEnabled: Boolean
     val mGestureTrailEnabled: Boolean
     val mGestureFloatingPreviewTextEnabled: Boolean
@@ -412,8 +412,8 @@ open class SettingsValues(
         mSoundVolModifiers = prefs.getFloat(Settings.PREF_SOUND_VOL_MODIFIERS, Defaults.PREF_SOUND_VOL_MODIFIERS)
         mEnableEmojiAltPhysicalKey = prefs.getBoolean(Settings.PREF_ENABLE_EMOJI_ALT_PHYSICAL_KEY, Defaults.PREF_ENABLE_EMOJI_ALT_PHYSICAL_KEY)
         mGestureMethod = prefs.getString(Settings.PREF_GESTURE_METHOD, "fallback") ?: "fallback"
-        mFullSwipeSwitchLanguage = prefs.getBoolean(Settings.PREF_FULL_SWIPE_SWITCH_LANGUAGE, Defaults.PREF_FULL_SWIPE_SWITCH_LANGUAGE)
-        mGestureInputEnabled = JniUtils.sHaveGestureLib && !mFullSwipeSwitchLanguage && prefs.getBoolean(Settings.PREF_GESTURE_INPUT, Defaults.PREF_GESTURE_INPUT)
+        mFullKeyboardSwipe = Settings.readFullKeyboardSwipe(prefs)
+        mGestureInputEnabled = JniUtils.sHaveGestureLib && mFullKeyboardSwipe == KeyboardActionListener.SWIPE_NO_ACTION && prefs.getBoolean(Settings.PREF_GESTURE_INPUT, Defaults.PREF_GESTURE_INPUT)
         mGestureTrailEnabled = prefs.getBoolean(Settings.PREF_GESTURE_PREVIEW_TRAIL, Defaults.PREF_GESTURE_PREVIEW_TRAIL)
         mGestureFloatingPreviewTextEnabled = !mInputAttributes.mDisableGestureFloatingPreviewText && prefs.getBoolean(Settings.PREF_GESTURE_FLOATING_PREVIEW_TEXT, Defaults.PREF_GESTURE_FLOATING_PREVIEW_TEXT)
         mGestureFloatingPreviewDynamicEnabled = Settings.readGestureDynamicPreviewEnabled(prefs)
@@ -589,7 +589,7 @@ Current settings :
    mBlockPotentiallyOffensive = $mBlockPotentiallyOffensive
    mBigramPredictionEnabled = $mBigramPredictionEnabled
    mFirstWordPredictionEnabled = $mFirstWordPredictionEnabled
-   mFullSwipeSwitchLanguage = $mFullSwipeSwitchLanguage
+   mFullKeyboardSwipe = $mFullKeyboardSwipe
    mGestureInputEnabled = $mGestureInputEnabled
    mGestureTrailEnabled = $mGestureTrailEnabled
    mGestureFloatingPreviewTextEnabled = $mGestureFloatingPreviewTextEnabled

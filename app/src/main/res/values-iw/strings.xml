@@ -1729,6 +1729,6 @@
     <string name="gif_no_recent_items">אין פריטים אחרונים</string>
     <string name="gif_manage_local_media">ניהול מדיה מקומית</string>
 
-    <string name="full_swipe_switch_language">החלפת שפה בהחלקה מלאה על המקלדת</string>
-    <string name="full_swipe_switch_language_summary">החלק אופקית על פני המקלדת כדי לעבור בין שפות מופעלות (מכבה אוטומטית הקلדה במחוות)</string>
+    <string name="full_keyboard_swipe_gesture">מחוות החלקה על כל המקלדת</string>
+    <string name="full_keyboard_swipe_gesture_summary">החלק אופקית על פני המקלדת לביצוע פעולה (מכבה אוטומטית הקלדה בהחלקה)</string>
 </resources>

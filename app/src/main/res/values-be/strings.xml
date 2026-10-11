@@ -1714,6 +1714,6 @@
     <string name="gif_no_recent_items">Няма нядаўніх элементаў</string>
     <string name="gif_manage_local_media">Кіраванне лакальнымі медыя</string>
 
-    <string name="full_swipe_switch_language">Змена мовы поўным свайпам па клавіятуры</string>
-    <string name="full_swipe_switch_language_summary">Правядзіце гарызантальна па клавіятуры для пераключэння паміж уключанымі мовамі (аўтаматычна адключае ўвод жэстамі)</string>
+    <string name="full_keyboard_swipe_gesture">Жэст правядзення па ўсёй клавіятуры</string>
+    <string name="full_keyboard_swipe_gesture_summary">Правядзіце гарызантальна па клавіятуры для выканання дзеяння (аўтаматычна выключае бесперапынны ўвод)</string>
 </resources>
