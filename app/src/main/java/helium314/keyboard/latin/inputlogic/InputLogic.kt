@@ -1522,18 +1522,10 @@ class InputLogic(
         return true
     }
 
-    /** Whether this backspace reverts the last commit (autocorrection), same conditions as in [handleBackspaceEvent] */
-    private fun willRevertCommit(settingsValues: SettingsValues): Boolean =
-        !mWordComposer.isComposingWord()
-            && !mConnection.hasSelection()
-            && mLastComposedWord.canRevertCommit()
-            && settingsValues.mBackspaceRevertsAutocorrect
-            && !TextUtils.isDigitsOnly(mLastComposedWord.mCommittedWord)
-
     private fun handleBackspaceEvent(event: Event, inputTransaction: InputTransaction) {
         // typing heatmap: unless this backspace reverts the autocorrection (see revertCommit),
         // the user edits the committed word, so we don't know which word was finally used
-        if (!willRevertCommit(inputTransaction.settingsValues)) TypingHeatmap.discardPending()
+        TypingHeatmap.onBackspace()
         val currentKeyboardScript = inputTransaction.settingsValues.mCurrentKeyboardScript
         mSpaceState = SpaceState.NONE
         mDeleteCount++
