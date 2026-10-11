@@ -4,6 +4,8 @@ package helium314.keyboard.latin.heatmap
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
+import org.json.JSONArray
+import org.json.JSONObject
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -136,12 +138,57 @@ class TypingHeatmapTest {
 
     @Test fun `learning uses raw touches, not coordinates adjusted for the dictionary`() {
         val raw = center('o') - 30
-        val adjusted = TypingHeatmap.adjustForDictionary(raw, 75, 800, 0, 100, 150, floatArrayOf(-0.3f, 0f))
+        val adjusted = TypingHeatmap.adjustForDictionary(raw, 75, 0, 0, 100, 150, floatArrayOf(-0.3f, 0f))
         assertEquals(center('o'), adjusted[0])
         TypingHeatmap.onWordCommitted(context, geometry, "wo", "wo", intArrayOf(center('w'), adjusted[0]), intArrayOf(75, adjusted[1]), true)
         TypingHeatmap.finalizePending()
         val sample = TypingHeatmap.layoutForTest("test")!!.samples['o'.code]!!.first()
         assertEquals(-0.3f, sample.dx, 0.001f)
         assertTrue(sample.adapted)
+    }
+
+    @Test fun `raw touches are found with view padding`() {
+        // view coordinates are keyboard coordinates + 20 px padding; the word composer has keyboard coordinates
+        val padding = 20
+        val rawKeyboardX = center('o') - 30
+        val adjustedView = TypingHeatmap.adjustForDictionary(rawKeyboardX + padding, 75 + padding, -padding, -padding, 100, 150, floatArrayOf(-0.3f, 0f))
+        val adjustedKeyboardX = adjustedView[0] - padding
+        val adjustedKeyboardY = adjustedView[1] - padding
+        TypingHeatmap.onWordCommitted(context, geometry, "wo", "wo", intArrayOf(center('w'), adjustedKeyboardX), intArrayOf(75, adjustedKeyboardY))
+        TypingHeatmap.finalizePending()
+        assertEquals(-0.3f, TypingHeatmap.layoutForTest("test")!!.samples['o'.code]!!.first().dx, 0.001f)
+    }
+
+    @Test fun `only letters are learned`() {
+        // "1" may have been typed on the symbols keyboard, its position says nothing about the letters
+        val samples = TypingHeatmap.computeSamples("a1", "a1", intArrayOf(10, 20), intArrayOf(75, 75)) { intArrayOf(0, 0, 100, 150) }
+        assertEquals(1, samples.size)
+    }
+
+    @Test fun `broken or malicious data is ignored when reading`() {
+        val json = JSONObject("""
+            {"version": 2, "device": "Test",
+             "layouts": [{"id": "qwertz", "aspect": "NaN",
+               "keys": [[111, "o", 0.8, 0, 0.1, 0.25], [112, "p", "NaN", 0, 0.1, 0.25], [113, "q", 0, 0, -1, 0.25]],
+               "samples": {"111": [0.1, 0.2, 111, 0, "NaN", 0, 105, 0, "Infinity", 0, 105, 0, 99, 0, 105, 0, 0.3, 0.1, -5, 0],
+                           "-3": [0.1, 0.1, 111, 0], "abc": [0.1, 0.1, 111, 0]}}]}
+        """.trimIndent())
+        val parsed = TypingHeatmap.parse(json)
+        val layout = parsed.layouts["qwertz"]!!
+        assertEquals(0.35f, layout.aspectRatio, 0.001f)
+        assertEquals(1, layout.shapes.size) // only the valid key
+        assertEquals(setOf('o'.code), layout.samples.keys) // invalid codes ignored
+        assertEquals(1, layout.samples['o'.code]!!.size) // NaN, Infinity, too far, invalid code point ignored
+        assertEquals("Test", parsed.device)
+    }
+
+    @Test fun `too many samples are limited when reading`() {
+        val flat = JSONArray()
+        repeat(1000) { flat.put(0.1).put(0.1).put('o'.code).put(0) }
+        val layouts = JSONArray()
+        repeat(30) { layouts.put(JSONObject().put("id", "l$it").put("samples", JSONObject().put("111", flat))) }
+        val parsed = TypingHeatmap.parse(JSONObject().put("version", 2).put("layouts", layouts))
+        assertTrue(parsed.layouts.size <= 16)
+        assertEquals(400, parsed.layouts.values.first().samples['o'.code]!!.size)
     }
 }

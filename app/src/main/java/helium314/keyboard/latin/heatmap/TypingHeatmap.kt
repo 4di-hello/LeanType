@@ -3,16 +3,18 @@ package helium314.keyboard.latin.heatmap
 
 import android.content.Context
 import android.os.Build
+import helium314.keyboard.compat.isUserLocked
 import helium314.keyboard.latin.common.StringUtils
 import helium314.keyboard.latin.utils.DeviceProtectedUtils
 import helium314.keyboard.latin.utils.Log
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
-import java.util.Locale
+import java.io.InputStream
 import java.util.concurrent.Executors
 import kotlin.math.abs
 import kotlin.math.hypot
+import kotlin.math.roundToLong
 
 /**
  * Learns where the user actually touches keys, and adapts key detection to it.
@@ -25,11 +27,18 @@ import kotlin.math.hypot
  * From the touches, each key gets an average offset, which is used to decide which key a touch
  * was meant for ([adaptedKeyCode]) and to move the touch coordinates passed to the dictionary
  * ([adjustForDictionary]). Learning always uses the raw touch positions, so adaptation does not
- * feed back into what is learned.
+ * feed back into what is learned. All coordinates are keyboard coordinates (view coordinates
+ * corrected by the key detector, like the coordinates in the word composer).
  *
- * Privacy: data stays on the device (no network, excluded from Android cloud backup), and
- * samples are stored grouped by key without any order across keys, so the typed text cannot be
- * reconstructed from the stored data.
+ * Privacy and security:
+ *  - data stays on the device: no network access, stored in credential encrypted storage in the
+ *    no-backup folder (excluded from Android cloud backup and device-to-device transfer), only
+ *    available after the user unlocked the device
+ *  - samples are stored grouped by key without any order across keys, so the typed text cannot
+ *    be reconstructed from the stored data
+ *  - nothing is recorded in password fields and incognito mode, and adaptation is not used in
+ *    password fields
+ *  - stored data and restored backups are validated, broken data is ignored
  */
 object TypingHeatmap {
     private const val TAG = "TypingHeatmap"
@@ -38,6 +47,12 @@ object TypingHeatmap {
     /** Touches further away from the intended key center than this (in key sizes) are ignored */
     private const val MAX_OFFSET = 1.6f
     private const val SAVE_EVERY_SAMPLES = 40
+    /** Limits for reading stored or restored data */
+    private const val MAX_FILE_SIZE = 3L * 1024 * 1024
+    private const val MAX_LAYOUTS = 16
+    private const val MAX_KEY_SHAPES = 300
+    private const val MAX_SAMPLE_KEYS = 150
+    private const val MAX_LABEL_LENGTH = 8
     /** a key is adapted only with at least this many samples ... */
     const val MIN_SAMPLES_FOR_ADAPTATION = 30
     /** ... and fully from this number of samples on */
@@ -91,6 +106,9 @@ object TypingHeatmap {
         val adapted: Boolean,
     )
 
+    /** Result of reading stored data */
+    class ParsedData(val layouts: Map<String, LayoutData>, val device: String?)
+
     private val layouts = HashMap<String, LayoutData>()
     private var loaded = false
     private var pending: PendingWord? = null
@@ -101,18 +119,19 @@ object TypingHeatmap {
     private var learnedOnDevice: String? = null
     val currentDevice: String = "${Build.MANUFACTURER} ${Build.MODEL}".trim()
 
-    /** cache: layout id + strength -> offsets per code as [dx, dy] */
+    /** cache: layout id + strength -> offsets per code as [dx, dy]; invalidated when data is saved or replaced */
     @Volatile private var offsetCache = HashMap<String, Map<Int, FloatArray>>()
 
-    /** adjusted dictionary coordinates -> raw touch coordinates, for the last touches */
+    /** adjusted dictionary coordinates -> raw touch coordinates (keyboard coordinates), for the last touches */
     private val rawTouches = object : LinkedHashMap<Long, Long>(64, 0.75f, true) {
         override fun removeEldestEntry(eldest: MutableMap.MutableEntry<Long, Long>?) = size > 128
     }
 
-    /** Make sure stored data can be loaded, e.g. for adapting key detection */
+    /** Make sure stored data can be loaded, e.g. for adapting key detection. Loads in background. */
     @Synchronized
     fun init(context: Context) {
         if (appContext == null) appContext = context.applicationContext
+        if (!loaded) ioExecutor.execute { synchronized(this) { ensureLoaded() } }
     }
 
     // ---------------- recording ----------------
@@ -176,6 +195,7 @@ object TypingHeatmap {
     private fun addSamples(geometry: KeyGeometry, newSamples: List<Pair<Int, Sample>>) {
         if (newSamples.isEmpty()) return
         ensureLoaded()
+        if (!loaded) return // user storage not available (device not unlocked yet)
         if (learnedOnDevice == null) learnedOnDevice = currentDevice
         val layout = layouts.getOrPut(geometry.layoutId) { LayoutData(geometry.layoutId) }
         if (layout.shapesSource !== geometry.source) {
@@ -188,7 +208,6 @@ object TypingHeatmap {
             list.addLast(sample)
             while (list.size > MAX_SAMPLES_PER_KEY) list.removeFirst()
         }
-        offsetCache = HashMap()
         unsavedSamples += newSamples.size
         if (unsavedSamples >= SAVE_EVERY_SAMPLES) save()
     }
@@ -204,12 +223,12 @@ object TypingHeatmap {
 
     /** Effective offsets per key code for a layout, empty if there is not enough data */
     fun getOffsets(context: Context?, layoutId: String, strength: Int): Map<Int, FloatArray> {
-        val cacheKey = "$layoutId|$strength"
+        val cacheKey = cacheKey(layoutId, strength)
         offsetCache[cacheKey]?.let { return it }
         synchronized(this) {
             if (context != null && appContext == null) appContext = context.applicationContext
             ensureLoaded()
-            if (!loaded) return emptyMap() // no context yet, try again later
+            if (!loaded) return emptyMap() // not available yet, try again later
             val maxShift = maxShift(strength)
             val result = HashMap<Int, FloatArray>()
             layouts[layoutId]?.samples?.forEach { (code, list) ->
@@ -220,6 +239,17 @@ object TypingHeatmap {
             offsetCache = newCache
             return result
         }
+    }
+
+    // avoids building a new string for every touch event (layout ids are cached per keyboard)
+    private class CacheKey(val layoutId: String, val strength: Int, val key: String)
+    @Volatile private var lastCacheKey = CacheKey("", 0, "")
+    private fun cacheKey(layoutId: String, strength: Int): String {
+        val last = lastCacheKey
+        if (last.layoutId == layoutId && last.strength == strength) return last.key
+        val key = CacheKey(layoutId, strength, "$layoutId|$strength")
+        lastCacheKey = key
+        return key.key
     }
 
     fun maxShift(strength: Int) = MAX_SHIFT_FOR_STRENGTH[(strength - 1).coerceIn(0, MAX_SHIFT_FOR_STRENGTH.size - 1)]
@@ -236,6 +266,7 @@ object TypingHeatmap {
         // limit single outliers
         var dx = samples.sumOf { it.dx.coerceIn(-1f, 1f).toDouble() }.toFloat() / n * weight
         var dy = samples.sumOf { it.dy.coerceIn(-1f, 1f).toDouble() }.toFloat() / n * weight
+        if (!dx.isFinite() || !dy.isFinite()) return null
         val length = hypot(dx, dy)
         if (length > maxShift) {
             dx *= maxShift / length
@@ -274,14 +305,16 @@ object TypingHeatmap {
     /**
      * Touch coordinates for the dictionary: moved by the learned offset of the detected key, so
      * the spatial model of the dictionary sees the touch where an average touch for the key is.
-     * Remembers the raw position, so learning is not affected.
+     * [x] and [y] are view coordinates, [correctionX] and [correctionY] convert them to keyboard
+     * coordinates. Remembers the raw position (keyboard coordinates), so learning is not affected.
      */
     @Synchronized
-    fun adjustForDictionary(x: Int, y: Int, keyX: Int, keyY: Int, keyWidth: Int, keyHeight: Int, offset: FloatArray?): IntArray {
-        if (offset == null) return intArrayOf(x, y)
+    fun adjustForDictionary(x: Int, y: Int, correctionX: Int, correctionY: Int,
+                            keyWidth: Int, keyHeight: Int, offset: FloatArray?): IntArray {
+        if (offset == null || !offset[0].isFinite() || !offset[1].isFinite()) return intArrayOf(x, y)
         val ax = (x - offset[0] * keyWidth).toInt().coerceAtLeast(0)
         val ay = (y - offset[1] * keyHeight).toInt().coerceAtLeast(0)
-        if (ax != x || ay != y) rawTouches[pack(ax, ay)] = pack(x, y)
+        if (ax != x || ay != y) rawTouches[pack(ax + correctionX, ay + correctionY)] = pack(x + correctionX, y + correctionY)
         return intArrayOf(ax, ay)
     }
 
@@ -322,11 +355,16 @@ object TypingHeatmap {
         layouts.clear()
         pending = null
         unsavedSamples = 0
-        loaded = true
+        loaded = !isUserLocked(context)
         learnedOnDevice = null
         offsetCache = HashMap()
+        rawTouches.clear()
         val file = getFile(context)
-        ioExecutor.execute { file.delete() }
+        val legacyFile = getLegacyFile(context)
+        ioExecutor.execute {
+            file.delete()
+            legacyFile.delete()
+        }
     }
 
     /** Data file was replaced, e.g. by restoring a backup */
@@ -338,6 +376,71 @@ object TypingHeatmap {
         loaded = false
         learnedOnDevice = null
         offsetCache = HashMap()
+    }
+
+    // ---------------- backup ----------------
+
+    /** File to put into a backup, null if there is no data. Must not be called on the main thread. */
+    fun getFileForBackup(context: Context): File? {
+        synchronized(this) {
+            appContext = context.applicationContext
+            if (isUserLocked(context)) return null
+            ensureLoaded()
+            onFinishInput() // write unsaved data...
+        }
+        // ... and wait until it is written (without holding the lock, background tasks may need it)
+        try { ioExecutor.submit(Runnable { }).get() } catch (_: Exception) { }
+        return getFile(context).takeIf { it.isFile }
+    }
+
+    /**
+     * Restore data from a backup. The data is validated and written in a clean form, invalid data
+     * is rejected. Returns whether data was restored.
+     */
+    fun restore(context: Context, input: InputStream): Boolean {
+        val text = readLimited(input) ?: return false
+        val parsed = try {
+            parse(JSONObject(text))
+        } catch (t: Throwable) { // also catch errors like StackOverflowError from malicious input
+            Log.w(TAG, "could not restore typing heatmap: ${t.javaClass.simpleName}")
+            return false
+        }
+        val json = toJson(parsed.layouts.values.map { it.copyForSaving() }, parsed.device ?: currentDevice).toString()
+        val file = getFile(context)
+        try {
+            // written in the same queue as normal saves, so earlier saves can't overwrite it
+            ioExecutor.submit(Runnable { writeAtomically(file, json) }).get()
+        } catch (e: Exception) {
+            Log.w(TAG, "could not restore typing heatmap: ${e.javaClass.simpleName}")
+            return false
+        }
+        synchronized(this) {
+            getLegacyFile(context).delete()
+            reload()
+        }
+        return true
+    }
+
+    private fun readLimited(input: InputStream): String? {
+        val bytes = input.readNBytesCompat(MAX_FILE_SIZE + 1)
+        if (bytes.size > MAX_FILE_SIZE) {
+            Log.w(TAG, "typing heatmap too large, ignoring it")
+            return null
+        }
+        return String(bytes, Charsets.UTF_8)
+    }
+
+    private fun InputStream.readNBytesCompat(limit: Long): ByteArray {
+        val out = java.io.ByteArrayOutputStream()
+        val buffer = ByteArray(8192)
+        var total = 0L
+        while (total < limit) {
+            val read = read(buffer, 0, minOf(buffer.size.toLong(), limit - total).toInt())
+            if (read < 0) break
+            out.write(buffer, 0, read)
+            total += read
+        }
+        return out.toByteArray()
     }
 
     // ---------------- pure logic (tested) ----------------
@@ -386,6 +489,8 @@ object TypingHeatmap {
         val result = ArrayList<Pair<Int, Sample>>()
         for ((ti, fi) in pairs) {
             if (ti >= xs.size || ti >= ys.size) continue
+            // only letters: digits and symbols may have been typed on another keyboard (symbols)
+            if (!Character.isLetter(typed[ti])) continue
             val sample = sampleFor(lower(final[fi]), lower(typed[ti]), xs[ti], ys[ti], adapted, keyRect) ?: continue
             result.add(sample)
         }
@@ -397,7 +502,7 @@ object TypingHeatmap {
                              keyRect: (Int) -> IntArray?): Pair<Int, Sample>? {
         val deleted = lower(deletedCodePoint)
         val intended = lower(newCodePoint)
-        if (deleted == intended) return null
+        if (deleted == intended || !Character.isLetter(deleted)) return null
         val deletedRect = keyRect(deleted) ?: return null
         val intendedRect = keyRect(intended) ?: return null
         // neighbor keys: centers at most about one key apart (also diagonally)
@@ -409,7 +514,7 @@ object TypingHeatmap {
 
     private fun sampleFor(intended: Int, touched: Int, x: Int, y: Int, adapted: Boolean, keyRect: (Int) -> IntArray?): Pair<Int, Sample>? {
         if (x < 0 || y < 0) return null // no coordinates
-        if (!Character.isLetterOrDigit(intended)) return null
+        if (!Character.isLetter(intended)) return null
         val rect = keyRect(intended) ?: return null
         if (rect[2] <= 0 || rect[3] <= 0) return null
         val dx = (x - (rect[0] + rect[2] / 2f)) / rect[2]
@@ -423,55 +528,101 @@ object TypingHeatmap {
 
     // ---------------- persistence ----------------
 
-    private fun getFile(context: Context) = File(DeviceProtectedUtils.getFilesDir(context), FILE_NAME)
+    /** credential encrypted storage, excluded from Android backup and device-to-device transfer */
+    private fun getFile(context: Context) = File(context.applicationContext.noBackupFilesDir, FILE_NAME)
+
+    /** location used by earlier versions (device protected storage) */
+    private fun getLegacyFile(context: Context) = File(DeviceProtectedUtils.getFilesDir(context), FILE_NAME)
 
     private fun ensureLoaded() {
         if (loaded) return
         val context = appContext ?: return
+        if (isUserLocked(context)) return // credential encrypted storage is not available yet
         loaded = true
         val file = getFile(context)
-        if (!file.exists()) return
+        migrateLegacyFile(context, file)
+        if (!file.isFile) return
         try {
-            fromJson(JSONObject(file.readText()))
+            if (file.length() > MAX_FILE_SIZE) throw IllegalStateException("file too large")
+            val parsed = parse(JSONObject(file.readText()))
+            layouts.clear()
+            layouts.putAll(parsed.layouts)
+            learnedOnDevice = parsed.device
+            offsetCache = HashMap()
+        } catch (t: Throwable) { // also catch errors like StackOverflowError from broken data
+            // log only the type: the message may contain the file content
+            Log.w(TAG, "could not read typing heatmap: ${t.javaClass.simpleName}")
+            layouts.clear()
+            learnedOnDevice = null
+        }
+    }
+
+    private fun migrateLegacyFile(context: Context, file: File) {
+        val legacyFile = getLegacyFile(context)
+        if (!legacyFile.isFile) return
+        try {
+            if (!file.exists()) legacyFile.copyTo(file)
+            legacyFile.delete()
         } catch (e: Exception) {
-            Log.w(TAG, "could not read typing heatmap", e)
+            Log.w(TAG, "could not move typing heatmap: ${e.javaClass.simpleName}")
         }
     }
 
     private fun save() {
         val context = appContext ?: return
+        if (!loaded) return // never overwrite data that was not loaded
         unsavedSamples = 0
-        val text = toJson().toString()
+        offsetCache = HashMap() // new data is used for adaptation from now on
+        // copy the data, and do the expensive conversion in background
+        val copy = layouts.values.map { it.copyForSaving() }
+        val device = learnedOnDevice ?: currentDevice
         val file = getFile(context)
         ioExecutor.execute {
             try {
-                val tmp = File(file.parentFile, "$FILE_NAME.tmp")
-                tmp.writeText(text)
-                tmp.renameTo(file)
-            } catch (e: Exception) {
-                Log.w(TAG, "could not write typing heatmap", e)
+                writeAtomically(file, toJson(copy, device).toString())
+            } catch (t: Throwable) {
+                Log.w(TAG, "could not write typing heatmap: ${t.javaClass.simpleName}")
             }
         }
     }
 
-    private fun toJson(): JSONObject {
+    private fun writeAtomically(file: File, text: String) {
+        file.parentFile?.mkdirs()
+        val tmp = File(file.parentFile, "$FILE_NAME.tmp")
+        tmp.writeText(text)
+        if (!tmp.renameTo(file)) {
+            tmp.delete()
+            throw IllegalStateException("rename failed")
+        }
+    }
+
+    /** Copy whose lists are not changed while writing in background */
+    private class LayoutCopy(val id: String, val aspectRatio: Float, val shapes: List<KeyShape>, val samples: Map<Int, List<Sample>>)
+
+    private fun LayoutData.copyForSaving() = LayoutCopy(id, aspectRatio, shapes, samples.mapValues { it.value.toList() })
+
+    private fun toJson(layouts: List<LayoutCopy>, device: String): JSONObject {
         val root = JSONObject()
         root.put("version", 2)
-        root.put("device", learnedOnDevice ?: currentDevice)
+        root.put("device", device)
         val layoutArray = JSONArray()
-        for (layout in layouts.values) {
+        for (layout in layouts) {
             val l = JSONObject()
             l.put("id", layout.id)
-            l.put("aspect", layout.aspectRatio.toDouble())
+            l.put("aspect", r(if (layout.aspectRatio.isFinite()) layout.aspectRatio else 0.35f))
             val shapes = JSONArray()
             layout.shapes.forEach {
+                if (!it.x.isFinite() || !it.y.isFinite() || !it.width.isFinite() || !it.height.isFinite()) return@forEach
                 shapes.put(JSONArray().put(it.code).put(it.label).put(r(it.x)).put(r(it.y)).put(r(it.width)).put(r(it.height)))
             }
             l.put("keys", shapes)
             val samples = JSONObject()
             for ((code, list) in layout.samples) {
                 val flat = JSONArray()
-                list.forEach { flat.put(r(it.dx)).put(r(it.dy)).put(it.touchedCode).put(if (it.adapted) 1 else 0) }
+                list.forEach {
+                    if (!it.dx.isFinite() || !it.dy.isFinite()) return@forEach
+                    flat.put(r(it.dx)).put(r(it.dy)).put(it.touchedCode).put(if (it.adapted) 1 else 0)
+                }
                 samples.put(code.toString(), flat)
             }
             l.put("samples", samples)
@@ -481,38 +632,60 @@ object TypingHeatmap {
         return root
     }
 
-    private fun fromJson(root: JSONObject) {
+    /** Read stored data, ignoring anything invalid or out of range */
+    fun parse(root: JSONObject): ParsedData {
         val version = root.optInt("version", 1)
         val valuesPerSample = if (version >= 2) 4 else 3
-        learnedOnDevice = root.optString("device", "").ifEmpty { null }
-        val layoutArray = root.optJSONArray("layouts") ?: return
-        for (i in 0 until layoutArray.length()) {
-            val l = layoutArray.getJSONObject(i)
-            val layout = LayoutData(l.getString("id"))
-            layout.aspectRatio = l.optDouble("aspect", 0.35).toFloat()
+        val device = root.optString("device", "").take(100).ifEmpty { null }
+        val result = LinkedHashMap<String, LayoutData>()
+        val layoutArray = root.optJSONArray("layouts") ?: return ParsedData(result, device)
+        for (i in 0 until minOf(layoutArray.length(), MAX_LAYOUTS)) {
+            val l = layoutArray.optJSONObject(i) ?: continue
+            val id = l.optString("id", "").take(100)
+            if (id.isEmpty()) continue
+            val layout = LayoutData(id)
+            val aspect = l.optDouble("aspect", 0.35).toFloat()
+            layout.aspectRatio = if (aspect.isFinite() && aspect in 0.05f..3f) aspect else 0.35f
             val shapes = l.optJSONArray("keys") ?: JSONArray()
-            layout.shapes = (0 until shapes.length()).map {
-                val s = shapes.getJSONArray(it)
-                KeyShape(s.getInt(0), s.getString(1), s.getDouble(2).toFloat(), s.getDouble(3).toFloat(),
-                    s.getDouble(4).toFloat(), s.getDouble(5).toFloat())
+            layout.shapes = (0 until minOf(shapes.length(), MAX_KEY_SHAPES)).mapNotNull {
+                val s = shapes.optJSONArray(it) ?: return@mapNotNull null
+                if (s.length() < 6) return@mapNotNull null
+                val values = (2..5).map { index -> s.optDouble(index, Double.NaN).toFloat() }
+                if (values.any { v -> !v.isFinite() || v < -1f || v > 2f } || values[2] <= 0f || values[3] <= 0f)
+                    return@mapNotNull null
+                KeyShape(s.optInt(0), s.optString(1, "").take(MAX_LABEL_LENGTH), values[0], values[1], values[2], values[3])
             }
             val samples = l.optJSONObject("samples") ?: JSONObject()
+            var keyCount = 0
             for (key in samples.keys()) {
-                val flat = samples.getJSONArray(key)
+                if (keyCount >= MAX_SAMPLE_KEYS) break
+                val code = key.toIntOrNull() ?: continue
+                if (!Character.isValidCodePoint(code) || !Character.isLetter(code)) continue
+                val flat = samples.optJSONArray(key) ?: continue
+                val count = flat.length() / valuesPerSample
                 val list = ArrayDeque<Sample>()
-                var j = 0
-                while (j + valuesPerSample - 1 < flat.length()) {
-                    val adapted = valuesPerSample == 4 && flat.getInt(j + 3) == 1
-                    list.addLast(Sample(flat.getDouble(j).toFloat(), flat.getDouble(j + 1).toFloat(), flat.getInt(j + 2), adapted))
-                    j += valuesPerSample
+                // keep only the newest samples
+                for (index in maxOf(0, count - MAX_SAMPLES_PER_KEY) until count) {
+                    val j = index * valuesPerSample
+                    val dx = flat.optDouble(j, Double.NaN).toFloat()
+                    val dy = flat.optDouble(j + 1, Double.NaN).toFloat()
+                    val touched = flat.optInt(j + 2, -1)
+                    if (!dx.isFinite() || !dy.isFinite() || abs(dx) > MAX_OFFSET || abs(dy) > MAX_OFFSET) continue
+                    if (!Character.isValidCodePoint(touched) || touched == 0) continue
+                    val adapted = valuesPerSample == 4 && flat.optInt(j + 3, 0) == 1
+                    list.addLast(Sample(dx, dy, touched, adapted))
                 }
-                layout.samples[key.toInt()] = list
+                if (list.isNotEmpty()) {
+                    layout.samples[code] = list
+                    keyCount++
+                }
             }
-            layouts[layout.id] = layout
+            result[layout.id] = layout
         }
+        return ParsedData(result, device)
     }
 
-    private fun r(f: Float): Double = String.format(Locale.US, "%.3f", f).toDouble()
+    private fun r(f: Float): Double = (f * 1000.0).roundToLong() / 1000.0
 
     /** for tests */
     @Synchronized
@@ -529,4 +702,10 @@ object TypingHeatmap {
 
     @Synchronized
     internal fun layoutForTest(id: String): LayoutData? = layouts[id]
+
+    /** for tests: invalidate cached offsets without saving */
+    @Synchronized
+    internal fun clearOffsetCacheForTest() {
+        offsetCache = HashMap()
+    }
 }
