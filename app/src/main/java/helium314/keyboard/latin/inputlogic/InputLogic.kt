@@ -89,6 +89,8 @@ class InputLogic(
     // the composing word at the time the shift key was pressed down, null if there was none
     // used to tell a tap on shift from typing a letter while holding shift
     private var mTypedWordOnShiftPress: String? = null
+    /** caps lock was enabled by [recapitalizeComposingWord], it is released when the word is finished */
+    private var mCapsLockFromRecapitalize = false
 
     private var mDeleteCount = 0
     // for "backspace repeat deletes words": repeat ticks in the current hold, and words deleted so far
@@ -134,6 +136,7 @@ class InputLogic(
     fun startInput(combiningSpec: String?, settingsValues: SettingsValues) {
         TypingHeatmap.init(mLatinIME)
         mDeletedLetterIndex = -1
+        mCapsLockFromRecapitalize = false
         mEnteredText = null
         mWordBeingCorrectedByCursor = null
         mConnection.onStartInput()
@@ -446,6 +449,12 @@ class InputLogic(
         }
         if (KeyCode.DELETE != processedEvent.keyCode) {
             mEnteredText = null
+        }
+        // caps lock only for the word that was changed to upper case with shift, the next word is normal again
+        if (mCapsLockFromRecapitalize && !mWordComposer.isComposingWord()) {
+            mCapsLockFromRecapitalize = false
+            KeyboardSwitcher.getInstance().setCapsLock(false)
+            inputTransaction.requireShiftUpdate(InputTransaction.SHIFT_UPDATE_NOW)
         }
         mConnection.endBatchEdit()
         return inputTransaction
@@ -1912,7 +1921,8 @@ class InputLogic(
         setComposingTextInternal(replacement, 1)
         mConnection.endBatchEdit()
         // typing should continue in the same case: caps lock for an upper case word, lower case otherwise
-        KeyboardSwitcher.getInstance().setCapsLock(mRecapitalizeStatus.getCurrentMode() == RecapitalizeMode.ALL_UPPER)
+        mCapsLockFromRecapitalize = mRecapitalizeStatus.getCurrentMode() == RecapitalizeMode.ALL_UPPER
+        KeyboardSwitcher.getInstance().setCapsLock(mCapsLockFromRecapitalize)
         return true
     }
 
