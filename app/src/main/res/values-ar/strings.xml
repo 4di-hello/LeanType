@@ -1033,7 +1033,6 @@
     <string name="plugins_title">الإضافات</string>
     <string name="translation_settings_title">إعدادات الترجمة</string>
     <string name="pref_translation_mode_title">وضع الترجمة</string>
-    <string name="pref_translation_mode_summary">اختر بين الترجمة بلا إنترنت على الجهاز والترجمة عبر الإنترنت</string>
     <string name="pref_translation_mode_auto">تلقائي (بلا إنترنت أولا، وعبر الإنترنت كخطة احتياطية)</string>
     <string name="pref_translation_mode_offline_only">بلا إنترنت فقط (نماذج ML Kit المحلية)</string>
     <string name="pref_translation_mode_online_only">عبر الإنترنت فقط (Google Web)</string>

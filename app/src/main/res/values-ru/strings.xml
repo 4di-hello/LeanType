@@ -1026,7 +1026,6 @@
     <string name="plugins_title">Плагины</string>
     <string name="translation_settings_title">Настройки перевода</string>
     <string name="pref_translation_mode_title">Режим перевода</string>
-    <string name="pref_translation_mode_summary">Выбор между офлайн-переводом на устройстве и онлайн-переводом</string>
     <string name="pref_translation_mode_auto">Авто (Сначала офлайн, онлайн как запасной)</string>
     <string name="pref_translation_mode_offline_only">Только офлайн (Локальные модели ML Kit)</string>
     <string name="pref_translation_mode_online_only">Только онлайн (Google Web)</string>

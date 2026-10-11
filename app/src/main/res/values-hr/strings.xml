@@ -799,7 +799,6 @@
     <string name="translation_engine_title">Mehanizam za prevođenje</string>
     <string name="translation_engine_summary">Odaberite pozadinski sustav za prevođenje (Dodatak ili AI)</string>
     <string name="pref_translation_mode_title">Način prevođenja</string>
-    <string name="pref_translation_mode_summary">Odaberite između offline prevođenja na uređaju i online prevođenja</string>
     <string name="pref_translation_mode_auto">Automatski (Prvo offline, online kao rezerva)</string>
     <string name="pref_translation_mode_offline_only">Samo offline (ML Kit modeli na uređaju)</string>
     <string name="pref_translation_mode_online_only">Samo online (Google Web)</string>

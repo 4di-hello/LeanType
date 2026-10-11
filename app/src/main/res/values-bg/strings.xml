@@ -859,7 +859,6 @@
     <string name="translation_engine_title">Двигател за превод</string>
     <string name="translation_engine_summary">Изберете бекенд за превод (Плъгин или AI)</string>
     <string name="pref_translation_mode_title">Режим на превод</string>
-    <string name="pref_translation_mode_summary">Изберете между офлайн превод на устройството и онлайн превод</string>
     <string name="pref_translation_mode_auto">Автоматичен (Първо офлайн, онлайн като резерва)</string>
     <string name="pref_translation_mode_offline_only">Само офлайн (ML Kit модели на устройството)</string>
     <string name="pref_translation_mode_online_only">Само онлайн (Google Web)</string>

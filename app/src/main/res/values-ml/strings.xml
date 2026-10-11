@@ -1018,7 +1018,6 @@
     <string name="plugins_title">പ്ലഗിനുകൾ</string>
     <string name="translation_settings_title">വിവർത്തന ക്രമീകരണങ്ങൾ</string>
     <string name="pref_translation_mode_title">വിവർത്തന മോഡ്</string>
-    <string name="pref_translation_mode_summary">ഉപകരണത്തിലെ ഓഫ്‌ലൈൻ വിവർത്തനവും ഓൺലൈൻ വിവർത്തനവും തമ്മിൽ തിരഞ്ഞെടുക്കുക</string>
     <string name="pref_translation_mode_auto">ഓട്ടോ (ഓഫ്‌ലൈൻ ആദ്യം, ഓൺലൈൻ രണ്ടാമത്)</string>
     <string name="pref_translation_mode_offline_only">ഓഫ്‌ലൈൻ മാത്രം (ഉപകരണത്തിലെ ML Kit മോഡലുകൾ)</string>
     <string name="pref_translation_mode_online_only">ഓൺലൈൻ മാത്രം (Google Web)</string>

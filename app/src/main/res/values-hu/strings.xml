@@ -822,7 +822,6 @@
     <string name="translation_engine_title">Fordítási motor</string>
     <string name="translation_engine_summary">Válasszon backend-et a fordításhoz (Bővítmény vagy AI)</string>
     <string name="pref_translation_mode_title">Fordítási mód</string>
-    <string name="pref_translation_mode_summary">Válasszon az eszközön futó offline fordítás és az online fordítás között</string>
     <string name="pref_translation_mode_auto">Automatikus (Először offline, online tartalékként)</string>
     <string name="pref_translation_mode_offline_only">Csak offline (Eszközön lévő ML Kit modellek)</string>
     <string name="pref_translation_mode_online_only">Csak online (Google Web)</string>

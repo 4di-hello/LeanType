@@ -825,7 +825,6 @@
     <string name="translation_engine_title">翻译引擎</string>
     <string name="translation_engine_summary">选择翻译后端 (插件或 AI)</string>
     <string name="pref_translation_mode_title">翻译模式</string>
-    <string name="pref_translation_mode_summary">在设备端离线翻译和在线翻译之间选择</string>
     <string name="pref_translation_mode_auto">自动 (优先离线，在线作为备用)</string>
     <string name="pref_translation_mode_offline_only">仅离线 (设备端 ML Kit 模型)</string>
     <string name="pref_translation_mode_online_only">仅在线 (Google Web)</string>

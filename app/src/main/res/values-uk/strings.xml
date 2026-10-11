@@ -773,7 +773,6 @@
     <string name="translation_engine_title">Рушій перекладу</string>
     <string name="translation_engine_summary">Виберіть бекенд для перекладу (Плагін або AI)</string>
     <string name="pref_translation_mode_title">Режим перекладу</string>
-    <string name="pref_translation_mode_summary">Виберіть між офлайн перекладом на пристрої та онлайн перекладом</string>
     <string name="pref_translation_mode_auto">Авто (спочатку офлайн, потім онлайн)</string>
     <string name="pref_translation_mode_offline_only">Тільки офлайн (моделі ML Kit на пристрої)</string>
     <string name="pref_translation_mode_online_only">Тільки онлайн (Google Web)</string>

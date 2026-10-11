@@ -768,7 +768,6 @@
     <string name="translation_engine_title">Motor de traducere</string>
     <string name="translation_engine_summary">Selectează backend-ul pentru traducere (Plugin sau AI)</string>
     <string name="pref_translation_mode_title">Mod de traducere</string>
-    <string name="pref_translation_mode_summary">Alege între traducerea offline pe dispozitiv și traducerea online</string>
     <string name="pref_translation_mode_auto">Automat (Offline mai întâi, Online ca rezervă)</string>
     <string name="pref_translation_mode_offline_only">Doar Offline (Modele ML Kit pe dispozitiv)</string>
     <string name="pref_translation_mode_online_only">Doar Online (Google Web)</string>

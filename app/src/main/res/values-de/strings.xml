@@ -983,7 +983,6 @@
     <string name="plugins_title">Plugins</string>
     <string name="translation_settings_title">Übersetzungs-Einstellungen</string>
     <string name="pref_translation_mode_title">Übersetzungsmodus</string>
-    <string name="pref_translation_mode_summary">Wählen Sie zwischen lokaler Offline-Übersetzung auf dem Gerät und Online-Übersetzung</string>
     <string name="pref_translation_mode_auto">Auto (Offline zuerst, Online als Ausweichlösung)</string>
     <string name="pref_translation_mode_offline_only">Nur Offline (ML-Kit-Modelle auf dem Gerät)</string>
     <string name="pref_translation_mode_online_only">Nur Online (Google Web)</string>

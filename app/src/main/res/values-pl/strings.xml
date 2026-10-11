@@ -861,7 +861,6 @@
     <string name="translation_engine_title">Silnik tłumaczeń</string>
     <string name="translation_engine_summary">Wybierz mechanizm tłumaczenia (wtyczka lub AI)</string>
     <string name="pref_translation_mode_title">Tryb tłumaczenia</string>
-    <string name="pref_translation_mode_summary">Wybierz między tłumaczeniem offline na urządzeniu a tłumaczeniem online</string>
     <string name="pref_translation_mode_auto">Auto (najpierw offline, potem online)</string>
     <string name="pref_translation_mode_offline_only">Tylko offline (modele ML Kit na urządzeniu)</string>
     <string name="pref_translation_mode_online_only">Tylko online (Google Web)</string>

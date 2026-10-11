@@ -650,7 +650,6 @@
     <string name="plugins_title">Plugins</string>
     <string name="translation_settings_title">Ajustes de traducción</string>
     <string name="pref_translation_mode_title">Modo de traducción</string>
-    <string name="pref_translation_mode_summary">Elija entre traducción sin conexión en el dispositivo y traducción en línea</string>
     <string name="pref_translation_mode_auto">Auto (Sin conexión primero, en línea como respaldo)</string>
     <string name="pref_translation_mode_offline_only">Solo sin conexión (Modelos ML Kit locales)</string>
     <string name="pref_translation_mode_online_only">Solo en línea (Google Web)</string>

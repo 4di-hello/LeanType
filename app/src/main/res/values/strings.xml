@@ -766,7 +766,6 @@
     <string name="translation_engine_title">Translation Engine</string>
     <string name="translation_engine_summary">Select backend for translation (Plugin or AI)</string>
     <string name="pref_translation_mode_title">Translation Mode</string>
-    <string name="pref_translation_mode_summary">Choose between on-device offline translation and online translation</string>
     <string name="pref_translation_mode_auto">Auto (Offline first, Online fallback)</string>
     <string name="pref_translation_mode_offline_only">Offline Only (On-device ML Kit models)</string>
     <string name="pref_translation_mode_online_only">Online Only (Google Web)</string>

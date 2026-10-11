@@ -1019,7 +1019,6 @@
     <string name="plugins_title">Πρόσθετα</string>
     <string name="translation_settings_title">Ρυθμίσεις μετάφρασης</string>
     <string name="pref_translation_mode_title">Λειτουργία μετάφρασης</string>
-    <string name="pref_translation_mode_summary">Επιλέξτε μεταξύ μετάφρασης εκτός σύνδεσης στη συσκευή και online μετάφρασης</string>
     <string name="pref_translation_mode_auto">Αυτόματη (Εκτός σύνδεσης πρώτα, online ως εναλλακτική)</string>
     <string name="pref_translation_mode_offline_only">Μόνο εκτός σύνδεσης (Τοπικά μοντέλα ML Kit)</string>
     <string name="pref_translation_mode_online_only">Μόνο online (Google Web)</string>

@@ -824,7 +824,6 @@
     <string name="translation_engine_title">Engine překladu</string>
     <string name="translation_engine_summary">Vyberte backend pro překlad (Plugin nebo AI)</string>
     <string name="pref_translation_mode_title">Režim překladu</string>
-    <string name="pref_translation_mode_summary">Vyberte mezi offline překladem na zařízení a online překladem</string>
     <string name="pref_translation_mode_auto">Auto (nejprve offline, online jako záloha)</string>
     <string name="pref_translation_mode_offline_only">Pouze offline (modely ML Kit na zařízení)</string>
     <string name="pref_translation_mode_online_only">Pouze online (Google Web)</string>

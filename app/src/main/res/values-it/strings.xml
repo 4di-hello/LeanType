@@ -1033,7 +1033,6 @@
     <string name="plugins_title">Plugin</string>
     <string name="translation_settings_title">Impostazioni traduzione</string>
     <string name="pref_translation_mode_title">Modalità traduzione</string>
-    <string name="pref_translation_mode_summary">Scegli tra traduzione offline sul dispositivo e traduzione online</string>
     <string name="pref_translation_mode_auto">Auto (Prima offline, online come riserva)</string>
     <string name="pref_translation_mode_offline_only">Solo offline (Modelli ML Kit locali)</string>
     <string name="pref_translation_mode_online_only">Solo online (Google Web)</string>
