@@ -1244,11 +1244,15 @@ class PointerTracker private constructor(
     private fun adjustForLearnedOffsets(key: Key, code: Int, x: Int, y: Int): IntArray {
         val keyboard = mKeyboard ?: return intArrayOf(x, y)
         val settingsValues = Settings.getValues()
-        if (!settingsValues.mTypingAdaptEnabled || !Character.isLetter(code) || !keyboard.mId.isAlphabetKeyboard)
+        if (!settingsValues.mTypingAdaptEnabled || settingsValues.mInputAttributes.mIsPasswordField
+            || !Character.isLetter(code) || !keyboard.mId.isAlphabetKeyboard)
             return intArrayOf(x, y)
         val offsets = TypingHeatmap.getOffsets(null, KeyboardGeometry.layoutId(keyboard), settingsValues.mTypingAdaptStrength)
         val offset = offsets[Character.toLowerCase(code)] ?: return intArrayOf(x, y)
-        return TypingHeatmap.adjustForDictionary(x, y, key.x, key.y, key.width, key.height, offset)
+        // x and y are view coordinates, learned data and word composer use keyboard coordinates
+        val correctionX = mKeyDetector.getTouchX(0)
+        val correctionY = mKeyDetector.getTouchY(0)
+        return TypingHeatmap.adjustForDictionary(x, y, correctionX, correctionY, key.width, key.height, offset)
     }
 
     private fun isClearlyInsideKey(key: Key, x: Int, y: Int): Boolean {

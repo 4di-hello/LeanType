@@ -96,6 +96,8 @@ class InputLogic(
     private var mBackspaceWordsDeleted = 0
     /** time (ms after the first key repeat) when the next word is deleted */
     private var mBackspaceNextWordTime = 0f
+    /** word deletion not possible in the current hold (no text available), normal deletion is used */
+    private var mBackspaceWordModeFailed = false
     private var mLastKeyTime = 0L
     private var mEnteredText: String? = null
     private var mIsAutoCorrectionIndicatorOn = false
@@ -1363,6 +1365,15 @@ class InputLogic(
     }
 
     /**
+     * Whether holding delete currently removes whole words. Not for languages without spaces, where
+     * a "word" may be a whole sentence. Also used to give feedback per word instead of per key repeat.
+     */
+    fun isBackspaceWordModeActive(settingsValues: SettingsValues): Boolean =
+        settingsValues.mBackspaceRepeatDeletesWords
+            && settingsValues.mSpacingAndPunctuations.mCurrentLanguageHasSpaces
+            && !mBackspaceWordModeFailed
+
+    /**
      * When the option is enabled and the delete key is held down, switch from deleting characters
      * to deleting whole words after a short while. Words are deleted with increasing speed.
      * Returns true if the event was consumed (a word was deleted, or this repeat tick is skipped).
@@ -1373,10 +1384,11 @@ class InputLogic(
             mBackspaceRepeatTicks = 0
             mBackspaceWordsDeleted = 0
             mBackspaceNextWordTime = 0f
+            mBackspaceWordModeFailed = false
         }
         if (!event.isKeyRepeat) return false
         mBackspaceRepeatTicks++
-        if (!settingsValues.mBackspaceRepeatDeletesWords) return false
+        if (!isBackspaceWordModeActive(settingsValues)) return false
         // key repeats come in fixed intervals, so we can count time in repeats
         val time = (mBackspaceRepeatTicks - 1) * KEY_REPEAT_INTERVAL_MS
         if (time < mBackspaceNextWordTime) return true // wait between words
@@ -1389,7 +1401,10 @@ class InputLogic(
         var deletedWords = 0
         while (time >= mBackspaceNextWordTime && deletedWords < 2) {
             val textBefore = mConnection.getTextBeforeCursor(BACKSPACE_WORD_LOOKBACK, 0)?.toString()
-            if (textBefore == null) return deletedWords > 0 // fall back to normal deletion
+            if (textBefore == null) { // fall back to normal deletion
+                mBackspaceWordModeFailed = true
+                return deletedWords > 0
+            }
             if (textBefore.isEmpty()) return true
             val length = textBefore.length - getStartOfPreviousWord(textBefore)
             if (InputTypeUtils.isWebEditor(getCurrentInputEditorInfo())) {
@@ -1410,9 +1425,18 @@ class InputLogic(
         return true
     }
 
+    /** Whether this backspace reverts the last commit (autocorrection), same conditions as in [handleBackspaceEvent] */
+    private fun willRevertCommit(settingsValues: SettingsValues): Boolean =
+        !mWordComposer.isComposingWord()
+            && !mConnection.hasSelection()
+            && mLastComposedWord.canRevertCommit()
+            && settingsValues.mBackspaceRevertsAutocorrect
+            && !TextUtils.isDigitsOnly(mLastComposedWord.mCommittedWord)
+
     private fun handleBackspaceEvent(event: Event, inputTransaction: InputTransaction) {
-        // deleting into the last committed word: we don't know which word was finally used
-        if (!mLastComposedWord.canRevertCommit()) TypingHeatmap.discardPending()
+        // typing heatmap: unless this backspace reverts the autocorrection (see revertCommit),
+        // the user edits the committed word, so we don't know which word was finally used
+        if (!willRevertCommit(inputTransaction.settingsValues)) TypingHeatmap.discardPending()
         val currentKeyboardScript = inputTransaction.settingsValues.mCurrentKeyboardScript
         mSpaceState = SpaceState.NONE
         mDeleteCount++
