@@ -2511,11 +2511,11 @@ New dictionary:
     <string name="typing_heatmap_legend">Blue: touches that hit the intended key. Red: touches that hit another key. Line and dot: average touch position for the key.</string>
     <string name="typing_heatmap_top_misses">Most frequent misses</string>
     <string name="typing_heatmap_miss_line">%1$s meant, %2$s hit: %3$d×</string>
-    <string name="typing_heatmap_privacy">Stored only locally on this device: no cloud, no transfer, and not included in Android cloud backups. The data only leaves the device if you export a backup yourself. The intended key is taken from the text you finally used: the autocorrected word or picked suggestion, what you typed if you reverted the correction, or the letter you typed after deleting a neighboring one. Touches are stored per key without their order, so your text cannot be reconstructed from them.</string>
+    <string name="typing_heatmap_privacy">Stored only locally on this device: no cloud, no transfer, not included in Android backups or when moving to a new device, and only readable after unlocking the device. The data only leaves the device if you export a backup of the keyboard yourself. Nothing is recorded in password fields and incognito mode. The intended key is taken from the text you finally used: the autocorrected word or picked suggestion, what you typed if you reverted the correction, or the letter you typed after deleting a neighboring one. Touches are stored per key without their order, so your text cannot be reconstructed from them. Turning off \"Collect typing data\" only stops collecting, learned data stays until you delete it here.</string>
     <string name="typing_heatmap_clear">Delete typing data</string>
     <string name="typing_heatmap_clear_confirm">Delete all recorded typing data?</string>
     <string name="typing_adapt">Adapt key zones</string>
-    <string name="typing_adapt_summary">Use the collected typing data to recognize which key you meant, also for autocorrection. Keys are adapted once they have enough data</string>
+    <string name="typing_adapt_summary">Use the collected typing data to recognize which key you meant, also for autocorrection. Keys are adapted once they have enough data. Not used in password fields</string>
     <string name="typing_adapt_strength">Strength of adaptation</string>
     <string name="typing_adapt_strength_1">Light</string>
     <string name="typing_adapt_strength_2">Moderate</string>
