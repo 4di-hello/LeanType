@@ -1698,4 +1698,7 @@ Omogućuje lokalno GGUF / llama.cpp zaključivanje na uređaju za lekturu i prep
     <string name="openai_use_max_completion_tokens_summary">Šalji max_completion_tokens umjesto max_tokens za novije modele (npr. o1, o3, GPT-5/6)</string>
     <string name="voice_keep_screen_on_title">Držite zaslon uključenim</string>
     <string name="voice_keep_screen_on_summary">Spriječite vremensko ograničenje zaslona dok je aktivno tipkanje glasom</string>
+    <string name="gif_category_recent">Nedavno</string>
+    <string name="gif_no_recent_items">Nema nedavnih stavki</string>
+    <string name="gif_manage_local_media">Upravljanje lokalnim medijima</string>
 </resources>

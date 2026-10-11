@@ -1705,4 +1705,7 @@ Võimaldab seadmesisese GGUF / llama.cpp järelduse korrektuuri ja ümbersõnast
     <string name="openai_use_max_completion_tokens_summary">Saada uuemate mudelite puhul max_completion_tokens asemel max_tokens (nt o1, o3, GPT-5/6)</string>
     <string name="voice_keep_screen_on_title">Hoidke ekraan sees</string>
     <string name="voice_keep_screen_on_summary">Vältige ekraani ajalõppu, kui häälsisestus on aktiivne</string>
+    <string name="gif_category_recent">Hiljutised</string>
+    <string name="gif_no_recent_items">Hiljutisi üksusi pole</string>
+    <string name="gif_manage_local_media">Halda kohalikku meediat</string>
 </resources>

@@ -1781,4 +1781,7 @@
     <string name="openai_use_max_completion_tokens_summary">إرسال max_completion_tokens بدلاً من max_tokens للنماذج الأحدث (مثل o1 و o3 و GPT-5/6)</string>
     <string name="voice_keep_screen_on_title">إبقاء الشاشة قيد التشغيل</string>
     <string name="voice_keep_screen_on_summary">منع مهلة الشاشة أثناء تنشيط الكتابة الصوتية</string>
+    <string name="gif_category_recent">حديثة</string>
+    <string name="gif_no_recent_items">لا توجد عناصر حديثة</string>
+    <string name="gif_manage_local_media">إدارة الوسائط المحلية</string>
 </resources>

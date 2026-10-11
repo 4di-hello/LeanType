@@ -1723,4 +1723,7 @@ Umožňuje lokální inferenci GGUF / llama.cpp na zařízení pro korektury a p
     <string name="openai_use_max_completion_tokens_summary">Odesílat max_completion_tokens místo max_tokens pro novější modely (např. o1, o3, GPT-5/6)</string>
     <string name="voice_keep_screen_on_title">Nechte obrazovku zapnutou</string>
     <string name="voice_keep_screen_on_summary">Zabránit vypršení časového limitu obrazovky, když je aktivní hlasové zadávání</string>
+    <string name="gif_category_recent">Nedávné</string>
+    <string name="gif_no_recent_items">Žádné nedávné položky</string>
+    <string name="gif_manage_local_media">Spravovat místní média</string>
 </resources>

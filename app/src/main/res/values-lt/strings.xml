@@ -1706,4 +1706,7 @@ Ar norite atnaujinti?</string>
     <string name="openai_use_max_completion_tokens_summary">Siųsti max_completion_tokens vietoj max_tokens naujesniems modeliams (pvz., o1, o3, GPT-5/6)</string>
     <string name="voice_keep_screen_on_title">Laikykite ekraną įjungtą</string>
     <string name="voice_keep_screen_on_summary">Užkirsti kelią ekrano skirtajam laikui, kai aktyvus įvesties balsu</string>
+    <string name="gif_category_recent">Paskutiniai</string>
+    <string name="gif_no_recent_items">Nėra paskutinių elementų</string>
+    <string name="gif_manage_local_media">Tvarkyti vietinę mediją</string>
 </resources>

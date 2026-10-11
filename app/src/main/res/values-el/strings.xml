@@ -1776,4 +1776,7 @@
     <string name="openai_use_max_completion_tokens_summary">Αποστολή max_completion_tokens αντί για max_tokens για νεότερα μοντέλα (π.χ. o1, o3, GPT-5/6)</string>
     <string name="voice_keep_screen_on_title">Διατηρήστε την οθόνη ενεργοποιημένη</string>
     <string name="voice_keep_screen_on_summary">Αποτρέψτε το χρονικό όριο λήξης της οθόνης ενώ η φωνητική πληκτρολόγηση είναι ενεργή</string>
+    <string name="gif_category_recent">Πρόσφατα</string>
+    <string name="gif_no_recent_items">Δεν υπάρχουν πρόσφατα στοιχεία</string>
+    <string name="gif_manage_local_media">Διαχείριση τοπικών πολυμέσων</string>
 </resources>

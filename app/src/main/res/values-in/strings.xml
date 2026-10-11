@@ -1673,4 +1673,7 @@ Memungkinkan inferensi GGUF / llama.cpp di perangkat untuk koreksi teks dan penu
     <string name="openai_use_max_completion_tokens_summary">Kirim max_completion_tokens alih-alih max_tokens untuk model yang lebih baru (mis. o1, o3, GPT-5/6)</string>
     <string name="voice_keep_screen_on_title">Tetap nyalakan layar</string>
     <string name="voice_keep_screen_on_summary">Cegah batas waktu layar saat pengetikan suara aktif</string>
+    <string name="gif_category_recent">Terbaru</string>
+    <string name="gif_no_recent_items">Tidak ada item terbaru</string>
+    <string name="gif_manage_local_media">Kelola media lokal</string>
 </resources>

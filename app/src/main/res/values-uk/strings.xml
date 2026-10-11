@@ -1678,4 +1678,7 @@
     <string name="openai_use_max_completion_tokens_summary">Надсилати max_completion_tokens замість max_tokens для новіших моделей (наприклад, o1, o3, GPT-5/6)</string>
     <string name="voice_keep_screen_on_title">Тримайте екран увімкненим</string>
     <string name="voice_keep_screen_on_summary">Запобігання тайм-ауту екрана під час голосового введення</string>
+    <string name="gif_category_recent">Нещодавні</string>
+    <string name="gif_no_recent_items">Немає нещодавніх елементів</string>
+    <string name="gif_manage_local_media">Керування локальними медіа</string>
 </resources>

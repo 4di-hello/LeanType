@@ -1706,4 +1706,7 @@ Metin düzeltme ve yeniden yazma için cihaz üzerinde GGUF / llama.cpp çıkar�
     <string name="openai_use_max_completion_tokens_summary">Daha yeni modeller (örn. o1, o3, GPT-5/6) için max_tokens yerine max_completion_tokens gönderin</string>
     <string name="voice_keep_screen_on_title">Ekranı açık tut</string>
     <string name="voice_keep_screen_on_summary">Sesle yazma etkinken ekran zaman aşımını önleyin</string>
+    <string name="gif_category_recent">Son kullanılanlar</string>
+    <string name="gif_no_recent_items">Son kullanılan öğe yok</string>
+    <string name="gif_manage_local_media">Yerel medyayı yönet</string>
 </resources>

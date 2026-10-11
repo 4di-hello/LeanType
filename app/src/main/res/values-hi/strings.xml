@@ -1702,4 +1702,7 @@
     <string name="openai_use_max_completion_tokens_summary">नए मॉडलों (जैसे o1, o3, GPT-5/6) के लिए max_tokens के बजाय max_completion_tokens भेजें</string>
     <string name="voice_keep_screen_on_title">स्क्रीन ऑन करो</string>
     <string name="voice_keep_screen_on_summary">वॉयस टाइपिंग सक्रिय होने पर स्क्रीन टाइमआउट रोकें</string>
+    <string name="gif_category_recent">हाल ही में</string>
+    <string name="gif_no_recent_items">कोई हालिया आइटम नहीं</string>
+    <string name="gif_manage_local_media">स्थानीय मीडिया प्रबंधित करें</string>
 </resources>

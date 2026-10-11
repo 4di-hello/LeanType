@@ -1772,4 +1772,7 @@ Permet l\'inférence GGUF / llama.cpp sur l\'appareil pour la correction et la r
     <string name="openai_use_max_completion_tokens_summary">Envoyer max_completion_tokens au lieu de max_tokens pour les modèles plus récents (ex. o1, o3, GPT-5/6)</string>
     <string name="voice_keep_screen_on_title">Garder l\'écran allumé</string>
     <string name="voice_keep_screen_on_summary">Empêcher l\'expiration de l\'écran lorsque la saisie vocale est active</string>
+    <string name="gif_category_recent">Récents</string>
+    <string name="gif_no_recent_items">Aucun élément récent</string>
+    <string name="gif_manage_local_media">Gérer les médias locaux</string>
 </resources>

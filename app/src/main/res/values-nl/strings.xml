@@ -1758,4 +1758,7 @@ Maakt GGUF / llama.cpp-inferentie op het apparaat mogelijk voor proeflezen en he
     <string name="openai_use_max_completion_tokens_summary">max_completion_tokens verzenden in plaats van max_tokens voor nieuwere modellen (bijv. o1, o3, GPT-5/6)</string>
     <string name="voice_keep_screen_on_title">Houd het scherm ingeschakeld</string>
     <string name="voice_keep_screen_on_summary">Voorkom een ​​time-out van het scherm terwijl spraakgestuurd typen actief is</string>
+    <string name="gif_category_recent">Recent</string>
+    <string name="gif_no_recent_items">Geen recente items</string>
+    <string name="gif_manage_local_media">Lokale media beheren</string>
 </resources>
