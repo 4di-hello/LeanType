@@ -156,4 +156,5 @@
 
 # Keep GIF plugin IPC contract and parcelable models
 -keep class com.leanbitlab.leantype.gif.** { *; }
+-keep interface com.leanbitlab.leantype.gif.** { *; }
 
