@@ -1,4 +1,8 @@
-# Proguard rules for LeanType Handwriting Plugin
+# Keep all plugin classes, interfaces, and shared host contracts across the dynamic ClassLoader boundary
+-keep class helium314.keyboard.handwriting.plugin.** { *; }
+-keep interface helium314.keyboard.handwriting.plugin.** { *; }
+-keep class helium314.keyboard.latin.handwriting.** { *; }
+-keep interface helium314.keyboard.latin.handwriting.** { *; }
 
 # Keep the entry point class, its constructor, and all public methods,
 # as it is loaded dynamically by class name reflection.
@@ -18,6 +22,9 @@
 -keep interface helium314.keyboard.latin.handwriting.ModelDownloadListener {
     <methods>;
 }
+
+# Keep reflection attributes and generic signatures
+-keepattributes *Annotation*,Signature,InnerClasses,EnclosingMethod
 
 -keep class * extends androidx.work.ListenableWorker {
     public <init>(android.content.Context, androidx.work.WorkerParameters);
