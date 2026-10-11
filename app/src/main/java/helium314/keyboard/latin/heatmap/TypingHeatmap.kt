@@ -48,7 +48,8 @@ object TypingHeatmap {
     private const val MAX_OFFSET = 1.6f
     private const val SAVE_EVERY_SAMPLES = 40
     /** Limits for reading stored or restored data */
-    private const val MAX_FILE_SIZE = 3L * 1024 * 1024
+    /** must be larger than the largest file we write: 16 layouts * ~40 keys * 400 samples * ~25 bytes */
+    private const val MAX_FILE_SIZE = 10L * 1024 * 1024
     private const val MAX_LAYOUTS = 16
     private const val MAX_KEY_SHAPES = 300
     private const val MAX_SAMPLE_KEYS = 150
@@ -109,9 +110,11 @@ object TypingHeatmap {
     /** Result of reading stored data */
     class ParsedData(val layouts: Map<String, LayoutData>, val device: String?)
 
-    private val layouts = HashMap<String, LayoutData>()
-    private var loaded = false
+    private val layouts = LinkedHashMap<String, LayoutData>()
+    @Volatile private var loaded = false
     private var pending: PendingWord? = null
+    /** committed word at the time of a backspace press, only kept for reverting the autocorrection */
+    private var revertCandidate: PendingWord? = null
     private var unsavedSamples = 0
     private var appContext: Context? = null
     private val ioExecutor = Executors.newSingleThreadExecutor()
@@ -142,6 +145,7 @@ object TypingHeatmap {
                         xs: IntArray, ys: IntArray, adapted: Boolean = false) {
         appContext = context.applicationContext
         finalizePending()
+        revertCandidate = null
         if (typedWord.isEmpty() || finalWord.isEmpty()) return
         val rawXs = xs.copyOf()
         val rawYs = ys.copyOf()
@@ -154,10 +158,21 @@ object TypingHeatmap {
         pending = PendingWord(geometry, typedWord, finalWord, rawXs, rawYs, adapted)
     }
 
+    /**
+     * Backspace was pressed. Unless it reverts the autocorrection ([onCommitReverted]), the user
+     * edits the committed word, so we don't know which word was finally used: it is dropped.
+     */
+    @Synchronized
+    fun onBackspace() {
+        revertCandidate = pending
+        pending = null
+    }
+
     /** The user reverted the autocorrection: the typed word was what they wanted */
     @Synchronized
     fun onCommitReverted() {
-        val p = pending ?: return
+        val p = revertCandidate ?: pending ?: return
+        revertCandidate = null
         pending = PendingWord(p.geometry, p.typedWord, p.typedWord, p.xs, p.ys, p.adapted)
         finalizePending()
     }
@@ -171,6 +186,7 @@ object TypingHeatmap {
     /** Called when other input follows, i.e. the last committed word is final */
     @Synchronized
     fun finalizePending() {
+        revertCandidate = null
         val p = pending ?: return
         pending = null
         val newSamples = computeSamples(p.typedWord, p.finalWord, p.xs, p.ys, p.adapted) { p.geometry.keyRect(it) }
@@ -198,6 +214,11 @@ object TypingHeatmap {
         if (!loaded) return // user storage not available (device not unlocked yet)
         if (learnedOnDevice == null) learnedOnDevice = currentDevice
         val layout = layouts.getOrPut(geometry.layoutId) { LayoutData(geometry.layoutId) }
+        // same limit as when reading, so nothing is lost when reading again: drop the layout with least data
+        while (layouts.size > MAX_LAYOUTS) {
+            val smallest = layouts.values.filter { it !== layout }.minByOrNull { it.sampleCount } ?: break
+            layouts.remove(smallest.id)
+        }
         if (layout.shapesSource !== geometry.source) {
             layout.shapes = geometry.snapshot()
             layout.aspectRatio = geometry.aspectRatio
@@ -225,10 +246,11 @@ object TypingHeatmap {
     fun getOffsets(context: Context?, layoutId: String, strength: Int): Map<Int, FloatArray> {
         val cacheKey = cacheKey(layoutId, strength)
         offsetCache[cacheKey]?.let { return it }
+        if (context == null && !loaded) return emptyMap() // touch events: don't wait for loading (started by init)
         synchronized(this) {
             if (context != null && appContext == null) appContext = context.applicationContext
             ensureLoaded()
-            if (!loaded) return emptyMap() // not available yet, try again later
+            if (!loaded) return emptyMap() // not available yet
             val maxShift = maxShift(strength)
             val result = HashMap<Int, FloatArray>()
             layouts[layoutId]?.samples?.forEach { (code, list) ->
@@ -354,6 +376,7 @@ object TypingHeatmap {
         appContext = context.applicationContext
         layouts.clear()
         pending = null
+        revertCandidate = null
         unsavedSamples = 0
         loaded = !isUserLocked(context)
         learnedOnDevice = null
@@ -372,6 +395,7 @@ object TypingHeatmap {
     fun reload() {
         layouts.clear()
         pending = null
+        revertCandidate = null
         unsavedSamples = 0
         loaded = false
         learnedOnDevice = null
@@ -407,6 +431,8 @@ object TypingHeatmap {
         }
         val json = toJson(parsed.layouts.values.map { it.copyForSaving() }, parsed.device ?: currentDevice).toString()
         val file = getFile(context)
+        // forget the current data first, so it can't be saved over the restored data
+        synchronized(this) { reload() }
         try {
             // written in the same queue as normal saves, so earlier saves can't overwrite it
             ioExecutor.submit(Runnable { writeAtomically(file, json) }).get()
@@ -554,14 +580,22 @@ object TypingHeatmap {
             Log.w(TAG, "could not read typing heatmap: ${t.javaClass.simpleName}")
             layouts.clear()
             learnedOnDevice = null
+            // keep the unreadable file instead of overwriting it with new data
+            file.renameTo(File(file.parentFile, "$FILE_NAME.broken"))
         }
     }
 
+    /** Move the file from the location of earlier versions, without risking to lose it */
     private fun migrateLegacyFile(context: Context, file: File) {
         val legacyFile = getLegacyFile(context)
         if (!legacyFile.isFile) return
         try {
-            if (!file.exists()) legacyFile.copyTo(file)
+            if (!file.exists()) {
+                file.parentFile?.mkdirs()
+                val tmp = File(file.parentFile, "$FILE_NAME.tmp")
+                legacyFile.copyTo(tmp, overwrite = true)
+                if (!tmp.renameTo(file)) return // keep the old file, try again next time
+            }
             legacyFile.delete()
         } catch (e: Exception) {
             Log.w(TAG, "could not move typing heatmap: ${e.javaClass.simpleName}")
@@ -692,6 +726,7 @@ object TypingHeatmap {
     internal fun resetForTest() {
         layouts.clear()
         pending = null
+        revertCandidate = null
         unsavedSamples = 0
         loaded = true
         appContext = null
