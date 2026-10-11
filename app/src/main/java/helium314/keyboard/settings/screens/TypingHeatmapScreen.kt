@@ -242,7 +242,7 @@ private fun HeatmapCanvas(layout: TypingHeatmap.LayoutData, onlyMisses: Boolean,
                 if (onlyMisses && !miss) return@forEach
                 val x = (key.centerX + sample.dx * key.width) * w
                 val y = (key.centerY + sample.dy * key.height) * h
-                drawCircle(if (miss) missColor.copy(alpha = 0.8f) else hitColor.copy(alpha = 0.3f), dotRadius, Offset(x, y))
+                drawCircle(if (miss) missColor.copy(alpha = 0.8f) else hitColor.copy(alpha = 0.45f), dotRadius, Offset(x, y))
             }
             // average offset of all touches meant for this key
             if (!onlyMisses && list.size >= MIN_SAMPLES_FOR_AVERAGE) {
