@@ -826,7 +826,6 @@
     <string name="translation_engine_title">מנוע תרגום</string>
     <string name="translation_engine_summary">בחר מנגנון רקע לתרגום (תוסף או AI)</string>
     <string name="pref_translation_mode_title">מצב תרגום</string>
-    <string name="pref_translation_mode_summary">בחר בין תרגום לא מקוון במכשיר לתרגום מקוון</string>
     <string name="pref_translation_mode_auto">אוטומטי (לא מקוון תחילה, מקוון כגיבוי)</string>
     <string name="pref_translation_mode_offline_only">לא מקוון בלבד (מודלי ML Kit במכשיר)</string>
     <string name="pref_translation_mode_online_only">מקוון בלבד (Google Web)</string>

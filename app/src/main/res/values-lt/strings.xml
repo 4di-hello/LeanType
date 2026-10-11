@@ -766,7 +766,6 @@
     <string name="translation_engine_title">Vertimo variklis</string>
     <string name="translation_engine_summary">Pasirinkti vertimo posistemę (Papildinys arba AI)</string>
     <string name="pref_translation_mode_title">Vertimo režimas</string>
-    <string name="pref_translation_mode_summary">Pasirinkti tarp vertimo neprisijungus įrenginyje ir vertimo internete</string>
     <string name="pref_translation_mode_auto">Automatinis (Pirmiausia neprisijungus, tada internete)</string>
     <string name="pref_translation_mode_offline_only">Tik neprisijungus (ML Kit modeliai įrenginyje)</string>
     <string name="pref_translation_mode_online_only">Tik internete (Google Web)</string>

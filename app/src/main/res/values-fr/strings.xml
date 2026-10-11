@@ -1031,7 +1031,6 @@ Nouveau dictionnaire:
     <string name="plugins_title">Plugins</string>
     <string name="translation_settings_title">Paramètres de traduction</string>
     <string name="pref_translation_mode_title">Mode de traduction</string>
-    <string name="pref_translation_mode_summary">Choisir entre traduction hors ligne sur l\'appareil et traduction en ligne</string>
     <string name="pref_translation_mode_auto">Auto (Hors ligne d\'abord, en ligne si indisponible)</string>
     <string name="pref_translation_mode_offline_only">Hors ligne uniquement (Modèles ML Kit locaux)</string>
     <string name="pref_translation_mode_online_only">En ligne uniquement (Google Web)</string>

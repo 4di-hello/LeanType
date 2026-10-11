@@ -269,7 +269,6 @@
     <string name="plugins_title">प्लगइन्स</string>
     <string name="translation_settings_title">अनुवाद सेटिंग्स</string>
     <string name="pref_translation_mode_title">अनुवाद मोड</string>
-    <string name="pref_translation_mode_summary">डिवाइस पर ऑफ़लाइन अनुवाद और ऑनलाइन अनुवाद के बीच चुनें</string>
     <string name="pref_translation_mode_auto">स्वचालित (पहले ऑफ़लाइन, फ़ॉलबैक ऑनलाइन)</string>
     <string name="pref_translation_mode_offline_only">केवल ऑफ़लाइन (स्थानीय ML Kit मॉडल)</string>
     <string name="pref_translation_mode_online_only">केवल ऑनलाइन (Google Web)</string>

@@ -1018,7 +1018,6 @@
     <string name="plugins_title">پلگ انز</string>
     <string name="translation_settings_title">ترجمہ کی ترتیبات</string>
     <string name="pref_translation_mode_title">ترجمہ کا موڈ</string>
-    <string name="pref_translation_mode_summary">ڈیوائس پر آف لائن ترجمہ اور آن لائن ترجمہ کے درمیان انتخاب کریں</string>
     <string name="pref_translation_mode_auto">خودکار (پہلے آف لائن، فال بیک آن لائن)</string>
     <string name="pref_translation_mode_offline_only">صرف آف لائن (مقامی ML Kit ماڈلز)</string>
     <string name="pref_translation_mode_online_only">صرف آن لائن (گوگل ویب)</string>

@@ -767,7 +767,6 @@
     <string name="translation_engine_title">Рухавік перакладу</string>
     <string name="translation_engine_summary">Выберыце бэкэнд для перакладу (Плагін або AI)</string>
     <string name="pref_translation_mode_title">Рэжым перакладу</string>
-    <string name="pref_translation_mode_summary">Выберыце паміж аўтаномным перакладам на прыладзе і анлайн-перакладам</string>
     <string name="pref_translation_mode_auto">Аўта (Спачатку аўтаномны, затым анлайн)</string>
     <string name="pref_translation_mode_offline_only">Толькі аўтаномны (Мадэлі ML Kit на прыладзе)</string>
     <string name="pref_translation_mode_online_only">Толькі анлайн (Google Web)</string>

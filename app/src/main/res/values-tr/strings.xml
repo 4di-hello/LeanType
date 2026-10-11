@@ -949,7 +949,6 @@ Uyarı: Harici kod yüklemek güvenlik riski oluşturabilir. Yalnızca güvendi�
     <string name="plugins_title">Eklentiler</string>
     <string name="translation_settings_title">Çeviri ayarları</string>
     <string name="pref_translation_mode_title">Çeviri modu</string>
-    <string name="pref_translation_mode_summary">Cihaz üzerinde çevrimdışı çeviri ile çevrimiçi çeviri arasında seçim yapın</string>
     <string name="pref_translation_mode_auto">Otomatik (Önce çevrimdışı, yedek olarak çevrimiçi)</string>
     <string name="pref_translation_mode_offline_only">Yalnızca çevrimdışı (Yerel ML Kit modelleri)</string>
     <string name="pref_translation_mode_online_only">Yalnızca çevrimiçi (Google Web)</string>

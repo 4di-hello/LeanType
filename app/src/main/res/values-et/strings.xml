@@ -813,7 +813,6 @@
     <string name="translation_engine_title">Tõlkemootor</string>
     <string name="translation_engine_summary">Valige tõlke taustsüsteem (plugin või AI)</string>
     <string name="pref_translation_mode_title">Tõlkerežiim</string>
-    <string name="pref_translation_mode_summary">Valige seadmes toimuva offlain tõlke ja veebipõhise tõlke vahel</string>
     <string name="pref_translation_mode_auto">Automaatne (Esmalt offlain, varuvariandina veebipõhine)</string>
     <string name="pref_translation_mode_offline_only">Ainult offlain (seadmes olevad ML Kit mudelid)</string>
     <string name="pref_translation_mode_online_only">Ainult veebipõhine (Google Web)</string>

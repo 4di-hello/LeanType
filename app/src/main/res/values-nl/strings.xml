@@ -814,7 +814,6 @@
     <string name="translation_engine_title">Vertaalengine</string>
     <string name="translation_engine_summary">Selecteer backend voor vertaling (Plugin of AI)</string>
     <string name="pref_translation_mode_title">Vertaalmodus</string>
-    <string name="pref_translation_mode_summary">Kies tussen offline vertaling op het apparaat en online vertaling</string>
     <string name="pref_translation_mode_auto">Auto (Offline eerst, Online als terugval)</string>
     <string name="pref_translation_mode_offline_only">Alleen Offline (ML Kit-modellen op apparaat)</string>
     <string name="pref_translation_mode_online_only">Alleen Online (Google Web)</string>

@@ -773,7 +773,6 @@
     <string name="translation_engine_title">Mesin Terjemahan</string>
     <string name="translation_engine_summary">Pilih backend untuk terjemahan (Plugin atau AI)</string>
     <string name="pref_translation_mode_title">Mode Terjemahan</string>
-    <string name="pref_translation_mode_summary">Pilih antara terjemahan offline di perangkat dan terjemahan online</string>
     <string name="pref_translation_mode_auto">Otomatis (Offline lebih dulu, Online sebagai cadangan)</string>
     <string name="pref_translation_mode_offline_only">Hanya Offline (Model ML Kit di perangkat)</string>
     <string name="pref_translation_mode_online_only">Hanya Online (Google Web)</string>
