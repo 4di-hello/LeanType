@@ -222,6 +222,16 @@ private fun backupLauncher(
                         fileStream.close()
                         zipStream.closeEntry()
                     }
+                    if (selectedCategories.contains(BackupCategory.TYPING_PROFILE)) {
+                        // stored outside the normal folders (excluded from Android backup), see TypingHeatmap
+                        TypingHeatmap.getFileForBackup(ctx)?.let { file ->
+                            val fileStream = FileInputStream(file).buffered()
+                            zipStream.putNextEntry(ZipEntry(TypingHeatmap.FILE_NAME))
+                            fileStream.copyTo(zipStream, 1024)
+                            fileStream.close()
+                            zipStream.closeEntry()
+                        }
+                    }
                     if (selectedCategories.contains(BackupCategory.CLIPBOARD)) {
                         val dbFile = ctx.getDatabasePath(Database.NAME)
                         if (dbFile.exists()) {
@@ -306,9 +316,6 @@ private fun restoreLauncher(
                                 if (it.name.startsWith("custom_background_image")) it.delete()
                             }
                         }
-                        if (selectedCategories.contains(BackupCategory.TYPING_PROFILE)) {
-                            File(deviceProtectedFilesDir, TypingHeatmap.FILE_NAME).delete()
-                        }
                         if (selectedCategories.contains(BackupCategory.CLIPBOARD)) {
                             ClipboardDao.closeInstance()
                             Database.closeInstance()
@@ -318,7 +325,12 @@ private fun restoreLauncher(
                         LayoutUtilsCustom.onLayoutFileChanged()
                         Settings.getInstance().stopListener()
                         while (entry != null) {
-                            if (entry.name.startsWith("unprotected${File.separator}")) {
+                            if (entry.name == TypingHeatmap.FILE_NAME || entry.name == "unprotected${File.separator}${TypingHeatmap.FILE_NAME}") {
+                                // validated and only replaced if the backup contains it; older backups have it in "unprotected"
+                                if (selectedCategories.contains(BackupCategory.TYPING_PROFILE)) {
+                                    TypingHeatmap.restore(ctx, zip)
+                                }
+                            } else if (entry.name.startsWith("unprotected${File.separator}")) {
                                 val adjustedName = entry.name.substringAfter("unprotected${File.separator}")
                                 if (backupFilePatterns.any { adjustedName.matches(it) }) {
                                     val cat = getCategoryForFilePath(adjustedName)
@@ -367,9 +379,6 @@ private fun restoreLauncher(
                 }
                 if (selectedCategories.contains(BackupCategory.CLIPBOARD)) {
                     Database.copyFromDb(restoredDb, ctx)
-                }
-                if (selectedCategories.contains(BackupCategory.TYPING_PROFILE)) {
-                    TypingHeatmap.reload()
                 }
                 Handler(Looper.getMainLooper()).post {
                     FeedbackManager.message(ctx, R.string.backup_restored)
@@ -518,7 +527,6 @@ private val historyDictRegex = "UserHistoryDictionary.*${File.separator}UserHist
 private val bgImgRegex = "custom_background_image.*".toRegex()
 private val fontRegex = "custom_font".toRegex()
 private val emojiFontRegex = "custom_emoji_font".toRegex()
-private val typingProfileRegex = Regex.escape(TypingHeatmap.FILE_NAME).toRegex()
 
 private val backupFilePatterns by lazy { listOf(
     blacklistsRegex,
@@ -528,7 +536,6 @@ private val backupFilePatterns by lazy { listOf(
     bgImgRegex,
     fontRegex,
     emojiFontRegex,
-    typingProfileRegex,
 ) }
 
 enum class BackupCategory {
