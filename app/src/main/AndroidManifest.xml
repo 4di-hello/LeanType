@@ -10,6 +10,8 @@
 
     <application
         android:allowBackup="false"
+        android:icon="@mipmap/ic_plugin_voice"
+        android:roundIcon="@mipmap/ic_plugin_voice_round"
         android:label="LeanType Voice Plugin">
 
         <service
