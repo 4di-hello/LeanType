@@ -92,10 +92,24 @@ android {
         }
     }
 
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            include("arm64-v8a", "armeabi-v7a", "x86_64")
+            isUniversalApk = true
+        }
+    }
+
     applicationVariants.all {
         outputs.all {
             val output = this as? com.android.build.gradle.api.ApkVariantOutput
-            output?.outputFileName = "voice_plugin.apk"
+            val abi = output?.filters?.find { it.filterType == "ABI" }?.identifier
+            if (abi != null) {
+                output.outputFileName = "voice_plugin-$abi.apk"
+            } else {
+                output?.outputFileName = "voice_plugin.apk"
+            }
         }
     }
 }
