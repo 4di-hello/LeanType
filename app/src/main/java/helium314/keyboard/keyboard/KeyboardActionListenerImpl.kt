@@ -465,7 +465,11 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
     override fun onFullKeyboardSwipe(steps: Int, action: Int): Boolean = when (action) {
         KeyboardActionListener.SWIPE_MOVE_CURSOR -> onMoveCursorHorizontally(steps)
         KeyboardActionListener.SWIPE_SWITCH_LANGUAGE -> {
-            val switched = onLanguageSlide(steps, isVertical = true)
+            var switched = onLanguageSlide(steps, isVertical = true)
+            if (!switched) {
+                latinIME.switchToNextSubtype()
+                switched = true
+            }
             if (switched) {
                 audioAndHapticFeedbackManager.performHapticAndAudioFeedback(
                     KeyCode.NOT_SPECIFIED, keyboardSwitcher.mainKeyboardView, HapticEvent.KEY_PRESS

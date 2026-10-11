@@ -120,6 +120,7 @@ class PointerTracker private constructor(
     private var mIsAllowedDraggingFinger = false
     // true if a keyswipe gesture is enabled and warranted.
     private var mKeySwipeAllowed = false
+    private var mFullSwipeStarted = false
 
     private var mInTouchpadMode = false
     private var mTouchpadLastX = 0
@@ -522,7 +523,8 @@ class PointerTracker private constructor(
         mIsAllowedDraggingFinger = (sParams?.mKeySelectionByDraggingFinger == true) ||
                 (key != null && key.isModifier() && !(isEmojiClipBottomRow && key.code == KeyCode.ALPHA)) ||
                 mKeyDetector.alwaysAllowsKeySelectionByDraggingFinger()
-        if (key != null && isSwiper(key.code) && !sInGesture) {
+        mFullSwipeStarted = false
+        if (key != null && isSwiper(key) && !sInGesture) {
             mKeySwipeAllowed = true
             sInKeySwipe = true
         }
@@ -575,16 +577,16 @@ class PointerTracker private constructor(
         sDrawingProxy?.showSlidingKeyInputPreview(null)
     }
 
-    private fun isSwiper(code: Int): Boolean {
+    private fun isSwiper(key: Key?): Boolean {
+        if (key == null) return false
         val sv = Settings.getValues()
-        if (code == KeyCode.DELETE && sv.mDeleteSwipeEnabled) return true
+        if (key.code == KeyCode.DELETE && sv.mDeleteSwipeEnabled) return true
         val hasSpaceSwipeAction = sv.mSpaceSwipeHorizontal != KeyboardActionListener.SWIPE_NO_ACTION ||
                 sv.mSpaceSwipeVertical != KeyboardActionListener.SWIPE_NO_ACTION ||
                 sv.mSpaceSwipeVerticalDown != KeyboardActionListener.SWIPE_NO_ACTION
-        if (code == Constants.CODE_SPACE && hasSpaceSwipeAction) return true
+        if (key.code == Constants.CODE_SPACE && hasSpaceSwipeAction) return true
         if (sv.mFullKeyboardSwipe != KeyboardActionListener.SWIPE_NO_ACTION) {
-            val key = mCurrentKey
-            return key != null && !key.isModifier() && key.code != KeyCode.DELETE
+            return !key.isModifier() && key.code != KeyCode.DELETE
         }
         return false
     }
@@ -748,7 +750,7 @@ class PointerTracker private constructor(
     private fun onKeySwipe(code: Int, x: Int, y: Int, eventTime: Long) {
         val sv = Settings.getValues()
         val fastTypingTimeout = 2 * sv.mKeyLongpressTimeout / 3
-        if (code != KeyCode.DELETE && System.currentTimeMillis() < mStartTime + fastTypingTimeout &&
+        if (code == Constants.CODE_SPACE && System.currentTimeMillis() < mStartTime + fastTypingTimeout &&
             sTypingTimeRecorder?.isInFastTyping(eventTime) == true) {
             return
         }
@@ -895,10 +897,12 @@ class PointerTracker private constructor(
             val touchSlop = context?.let { ViewConfiguration.get(it).scaledTouchSlop } ?: (8 * density).toInt()
 
             if (absDx > touchSlop || absDy > touchSlop) {
-                getTimerProxy().cancelKeyTimersOf(this)
-                dismissPopupKeysPanel()
-                mCurrentKey?.let { setReleasedKeyGraphics(it, false) }
-                cancelTrackingForAction()
+                if (!mFullSwipeStarted) {
+                    mFullSwipeStarted = true
+                    getTimerProxy().cancelKeyTimersOf(this)
+                    dismissPopupKeysPanel()
+                    mCurrentKey?.let { setReleasedKeyGraphics(it, false) }
+                }
             }
 
             if (absDy > touchSlop * 2 && absDy >= absDx) {
@@ -1058,7 +1062,8 @@ class PointerTracker private constructor(
                 }
             }
 
-            if (mInHorizontalSwipe || mInVerticalSwipe || wasTouchpad) {
+            if (mInHorizontalSwipe || mInVerticalSwipe || wasTouchpad || mFullSwipeStarted) {
+                mFullSwipeStarted = false
                 mInHorizontalSwipe = false
                 mInVerticalSwipe = false
                 mVerticalSwipeAction = KeyboardActionListener.SWIPE_NO_ACTION
@@ -1164,6 +1169,7 @@ class PointerTracker private constructor(
     }
 
     private fun onCancelEventInternal() {
+        mFullSwipeStarted = false
         mInHorizontalSwipe = false
         mInVerticalSwipe = false
         mVerticalSwipeAction = KeyboardActionListener.SWIPE_NO_ACTION
