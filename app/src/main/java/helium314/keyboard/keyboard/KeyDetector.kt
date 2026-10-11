@@ -114,17 +114,18 @@ open class KeyDetector {
                 primaryKey = key
             }
         }
-        return adaptedKey(keyboard, x, y, touchX, touchY, primaryKey) ?: primaryKey
+        return adaptedKey(keyboard, touchX, touchY, primaryKey) ?: primaryKey
     }
 
     /**
      * Key chosen with the learned typing offsets of the user, if it differs from [primaryKey].
-     * Only letter keys on alphabet keyboards are affected. See [TypingHeatmap].
+     * Only letter keys on alphabet keyboards are affected, never in password fields.
+     * [touchX] and [touchY] are keyboard coordinates, like the learned data. See [TypingHeatmap].
      */
-    private fun adaptedKey(keyboard: Keyboard, x: Int, y: Int, touchX: Int, touchY: Int, primaryKey: Key?): Key? {
+    private fun adaptedKey(keyboard: Keyboard, touchX: Int, touchY: Int, primaryKey: Key?): Key? {
         if (primaryKey == null || !Character.isLetter(primaryKey.code)) return null
         val settingsValues = Settings.getValues()
-        if (!settingsValues.mTypingAdaptEnabled) return null
+        if (!settingsValues.mTypingAdaptEnabled || settingsValues.mInputAttributes.mIsPasswordField) return null
         if (!keyboard.mId.isAlphabetKeyboard) return null
         val offsets = TypingHeatmap.getOffsets(null, KeyboardGeometry.layoutId(keyboard), settingsValues.mTypingAdaptStrength)
         if (offsets.isEmpty()) return null
@@ -132,7 +133,7 @@ open class KeyDetector {
         val candidates = keys.map {
             TypingHeatmap.Candidate(Character.toLowerCase(it.code), it.x.toFloat(), it.y.toFloat(), it.width.toFloat(), it.height.toFloat())
         }
-        val code = TypingHeatmap.adaptedKeyCode(x.toFloat(), y.toFloat(), candidates, offsets) ?: return null
+        val code = TypingHeatmap.adaptedKeyCode(touchX.toFloat(), touchY.toFloat(), candidates, offsets) ?: return null
         return keys.firstOrNull { Character.toLowerCase(it.code) == code }
     }
 }
