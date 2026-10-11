@@ -386,6 +386,21 @@ class InputLogicTest {
         assertEquals("hello ", text)
     }
 
+    @Test fun `caps lock from shift on a word ends with the word`() {
+        reset()
+        latinIME.prefs().edit { putBoolean(Settings.PREF_SHIFT_RECAPITALIZES_WORD, true) }
+        val capsLockFromRecapitalize = InputLogic::class.java.getDeclaredField("mCapsLockFromRecapitalize").apply { isAccessible = true }
+        chainInput("hello")
+        shiftTap()
+        shiftTap()
+        assertEquals("HELLO", composingText)
+        assertEquals(true, capsLockFromRecapitalize.getBoolean(inputLogic))
+        input('X') // still the same word: caps lock stays
+        assertEquals(true, capsLockFromRecapitalize.getBoolean(inputLogic))
+        input(' ') // word finished: caps lock is released
+        assertEquals(false, capsLockFromRecapitalize.getBoolean(inputLogic))
+    }
+
     @Test fun `shift at end of word does not change the word by default`() {
         reset()
         chainInput("hello")
