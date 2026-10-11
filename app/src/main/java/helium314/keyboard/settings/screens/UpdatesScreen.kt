@@ -63,15 +63,15 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 private val currentChangelogItems = listOf(
-    "• Web Suggestion Replacement: Fixed word replacement on suggestion tap in web and browser fields",
-    "• 2D Backspace Gesture: Added 2D swipe gesture to backspace for word and line selection delete",
-    "• Voice Wave Visualizer: Added full-width dynamic sound wave visualizer and processing shimmer effect",
-    "• Text Expander Custom Dates: Supported custom date formatting patterns in %date% placeholder",
-    "• Per-App Profiles: Added toggles for always-on suggestions, strip visibility, and toolbar per app",
-    "• Proportional Key Popups: Scaled key previews proportionally with custom size and corner radius sliders",
-    "• Subtype Suggestion Reset: Fixed suggestion strip failing to clear when switching subtypes or languages",
-    "• Touch Reliability: Prevented touch event dropping on rapid taps and fixed popup dismissal states",
-    "• Performance Optimizations: Pre-compiled regex instances across dictionaries, importers, and text expander"
+    "• GIF Plugin Integration: Added full external GIF search plugin integration with GIPHY & Tenor and direct content pasting",
+    "• Modern GIF Picker: Added category tabs (Recent, GIFs, Stickers, Memes, Emojis), card layout, and long-press live preview",
+    "• Chromium Suggestion Fix: Implemented selection-based word replacement for Chrome, Brave, and Edge browser fields",
+    "• Voice Screen Wake Lock: Keep screen awake during speech-to-text recording with automatic release on idle",
+    "• Harmonic Voice Visualizer: Refined voice visualizer with organic harmonics and adaptive frame pacing to save battery",
+    "• Secondary View Preservation: Prevented clipboard, emoji, and GIF views from resetting when restarting input in Compose apps",
+    "• AI Proofreading Tokens: Supported max_completion_tokens for OpenAI reasoning models with auto-recovery fallback",
+    "• 2D Backspace Gesture Drift: Filtered accidental upward drift during rightward swipe deselect",
+    "• Performance Optimizations: Pre-compiled regex instances across spellchecker and voice input hot paths"
 )
 
 @Composable

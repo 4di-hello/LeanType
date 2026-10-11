@@ -1,7 +1,7 @@
-- Fixed word replacement on suggestion tap in web and browser fields.
-- Added 2D swipe gesture to backspace for word and line deletion.
-- Added full-width dynamic sound wave visualizer and shimmer effect.
-- Added custom date formatting for %date% text expander placeholder.
-- Added per-app toggles for always-on suggestions, strip, and toolbar.
-- Added proportional key popup scaling and custom size/radius sliders.
-- Fixed suggestion strip reset when switching subtypes and languages.
+- Integrated GIF search plugin with categories, provider toggles, and live preview.
+- Added selection-based word replacement for Chromium-based browser editors.
+- Added voice screen wake lock and harmonic visualizer with adaptive pacing.
+- Preserved secondary views (clipboard, emojis, GIF) on restarting input.
+- Added support for max_completion_tokens in AI proofreading for reasoning models.
+- Refined 2D backspace gesture with trajectory angle filtering for deselect drift.
+- Pre-compiled regex patterns in spellchecker and voice input hot paths.
