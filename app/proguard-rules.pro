@@ -26,3 +26,7 @@
     public static ** valueOf(java.lang.String);
 }
 
+# Keep reflection attributes and generic signatures
+-keepattributes *Annotation*,Signature,InnerClasses,EnclosingMethod
+
+
