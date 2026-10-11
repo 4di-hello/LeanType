@@ -182,7 +182,7 @@ fun TypingHeatmapScreen(onClickBack: () -> Unit) {
     }
 }
 
-private fun cp(code: Int) = String(Character.toChars(code))
+private fun cp(code: Int) = if (Character.isValidCodePoint(code)) String(Character.toChars(code)) else "?"
 
 @Composable
 private fun InfoCard(text: String) {
