@@ -8,6 +8,7 @@ object UrlFilter {
         "tenor.com",
         "giphy.com",
         "klipy.com",
+        "klipy.co",
         "google.com",
         "gstatic.com"
     )

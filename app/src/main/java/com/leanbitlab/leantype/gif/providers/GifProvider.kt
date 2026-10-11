@@ -1,5 +1,6 @@
 package com.leanbitlab.leantype.gif.providers
 
+import com.leanbitlab.leantype.gif.Contract
 import com.leanbitlab.leantype.gif.GifItem
 import com.leanbitlab.leantype.gif.ProviderInfo
 
@@ -10,7 +11,7 @@ sealed class ProviderResult {
 
 interface GifProvider {
     val info: ProviderInfo
-    suspend fun search(query: String, offset: String?): ProviderResult
-    suspend fun trending(offset: String?): ProviderResult
+    suspend fun search(query: String, offset: String?, kind: Int = Contract.KIND_GIF): ProviderResult
+    suspend fun trending(offset: String?, kind: Int = Contract.KIND_GIF): ProviderResult
     suspend fun resolveFullMediaUrl(item: GifItem): String?
 }

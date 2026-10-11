@@ -38,6 +38,15 @@ class ThumbnailProvider : ContentProvider() {
 
         val file = registry.getFile(lastSegment)
         if (!file.exists() || file.length() < 32) {
+            val registeredUrl = registry.getUrl(lastSegment)
+            if (registeredUrl != null && registeredUrl.startsWith("file://")) {
+                val srcFile = File(registeredUrl.removePrefix("file://"))
+                if (srcFile.exists() && srcFile.length() >= 32) {
+                    runCatching { srcFile.copyTo(file, overwrite = true) }
+                }
+            }
+        }
+        if (!file.exists() || file.length() < 32) {
             throw FileNotFoundException("File not found: $lastSegment")
         }
 

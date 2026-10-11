@@ -3,6 +3,7 @@ package com.leanbitlab.leantype.gif
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
+import android.os.ParcelFileDescriptor
 import android.util.Log
 import com.leanbitlab.leantype.gif.providers.GifProvider
 import com.leanbitlab.leantype.gif.providers.GiphyProvider
@@ -45,8 +46,10 @@ class GifEngineService : Service() {
 
         val giphy = GiphyProvider(credentials, thumbRegistry)
         val klipy = KlipyProvider(credentials, thumbRegistry)
+        val local = com.leanbitlab.leantype.gif.providers.LocalMediaProvider(applicationContext, thumbRegistry)
         providers[giphy.info.id] = giphy
         providers[klipy.info.id] = klipy
+        providers[local.info.id] = local
     }
 
     override fun onBind(intent: Intent?): IBinder {
@@ -71,6 +74,14 @@ class GifEngineService : Service() {
         }
 
         override fun search(requestId: Int, providerId: String?, query: String?, offset: String?, limit: Int, callback: IGifCallback?) {
+            searchKind(requestId, providerId, Contract.KIND_GIF, query, offset, limit, callback)
+        }
+
+        override fun trending(requestId: Int, providerId: String?, offset: String?, limit: Int, callback: IGifCallback?) {
+            trendingKind(requestId, providerId, Contract.KIND_GIF, offset, limit, callback)
+        }
+
+        override fun searchKind(requestId: Int, providerId: String?, kind: Int, query: String?, offset: String?, limit: Int, callback: IGifCallback?) {
             CallerCheck.enforceHost(this@GifEngineService)
             if (callback == null) return
             launchRequest(requestId, callback) {
@@ -84,14 +95,14 @@ class GifEngineService : Service() {
                     callback.onError(requestId, Contract.ERR_BAD_REQUEST, "Provider '$providerId' not found")
                     return@launchRequest
                 }
-                when (val result = provider.search(query ?: "", offset)) {
+                when (val result = provider.search(query ?: "", offset, kind)) {
                     is ProviderResult.Success -> callback.onItems(requestId, result.items, result.nextOffset)
                     is ProviderResult.Error -> callback.onError(requestId, result.errorCode, result.message)
                 }
             }
         }
 
-        override fun trending(requestId: Int, providerId: String?, offset: String?, limit: Int, callback: IGifCallback?) {
+        override fun trendingKind(requestId: Int, providerId: String?, kind: Int, offset: String?, limit: Int, callback: IGifCallback?) {
             CallerCheck.enforceHost(this@GifEngineService)
             if (callback == null) return
             launchRequest(requestId, callback) {
@@ -105,7 +116,7 @@ class GifEngineService : Service() {
                     callback.onError(requestId, Contract.ERR_BAD_REQUEST, "Provider '$providerId' not found")
                     return@launchRequest
                 }
-                when (val result = provider.trending(offset)) {
+                when (val result = provider.trending(offset, kind)) {
                     is ProviderResult.Success -> callback.onItems(requestId, result.items, result.nextOffset)
                     is ProviderResult.Error -> callback.onError(requestId, result.errorCode, result.message)
                 }
@@ -131,6 +142,20 @@ class GifEngineService : Service() {
                 if (mediaUrl.isNullOrEmpty()) {
                     callback.onError(requestId, Contract.ERR_OTHER, "Missing media URL")
                     return@launchRequest
+                }
+
+                if (mediaUrl.startsWith("/") || mediaUrl.startsWith("file://")) {
+                    val filePath = mediaUrl.removePrefix("file://")
+                    val localFile = java.io.File(filePath)
+                    if (localFile.exists() && localFile.length() >= 32) {
+                        val mime = fetchCache.sniffMime(localFile) ?: "image/gif"
+                        val pfd = ParcelFileDescriptor.open(localFile, ParcelFileDescriptor.MODE_READ_ONLY)
+                        callback.onFetched(requestId, pfd, mime, item.width, item.height)
+                        return@launchRequest
+                    } else {
+                        callback.onError(requestId, Contract.ERR_OTHER, "Local media file not found")
+                        return@launchRequest
+                    }
                 }
 
                 if (fetchCache.hasLowStorage()) {

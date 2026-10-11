@@ -15,9 +15,9 @@ import java.util.concurrent.ConcurrentHashMap
 class FetchCache(private val context: Context) {
     companion object {
         private const val TAG = "FetchCache"
-        private const val MAX_CACHE_BYTES = 40 * 1024 * 1024L // 40 MB
+        private const val MAX_CACHE_BYTES = 20 * 1024 * 1024L // 20 MB
         private const val MIN_STORAGE_FREE_BYTES = 50 * 1024 * 1024L // 50 MB
-        private const val MAX_FILE_SIZE = 15 * 1024 * 1024L // 15 MB max per GIF
+        private const val MAX_FILE_SIZE = 8 * 1024 * 1024L // 8 MB max per GIF
     }
 
     private val cacheDir = File(context.cacheDir, "full_media").apply { mkdirs() }
@@ -75,7 +75,7 @@ class FetchCache(private val context: Context) {
         }
     }
 
-    private fun sniffMime(file: File): String? {
+    fun sniffMime(file: File): String? {
         return try {
             val header = ByteArray(12)
             FileInputStream(file).use { it.read(header) }

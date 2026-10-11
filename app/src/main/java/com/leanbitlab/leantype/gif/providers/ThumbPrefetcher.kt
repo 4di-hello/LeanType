@@ -10,7 +10,7 @@ import java.io.File
 import java.io.FileInputStream
 
 object ThumbPrefetcher {
-    private const val MAX_THUMB_BYTES = 150 * 1024L // 150 KB
+    private const val MAX_THUMB_BYTES = 512 * 1024L // 512 KB
     private val semaphore = Semaphore(3) // Bounded concurrency of 3
 
     suspend fun prefetchAndRegister(
@@ -21,6 +21,7 @@ object ThumbPrefetcher {
         val httpUrl = UrlFilter.validateUrl(previewRawUrl) ?: return null
         val hash = sha256Hex(previewRawUrl).take(16)
         val ext = when {
+            previewRawUrl.contains(".gif", ignoreCase = true) -> "gif"
             previewRawUrl.contains(".webp", ignoreCase = true) -> "webp"
             previewRawUrl.contains(".png", ignoreCase = true) -> "png"
             previewRawUrl.contains(".jpg", ignoreCase = true) || previewRawUrl.contains(".jpeg", ignoreCase = true) -> "jpg"

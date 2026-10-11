@@ -18,7 +18,9 @@ class GiphyProvider(
 ) : GifProvider {
     companion object {
         const val ID = "giphy"
-        private const val BASE_URL = "https://api.giphy.com/v1/gifs"
+        private const val BASE_URL_GIFS = "https://api.giphy.com/v1/gifs"
+        private const val BASE_URL_STICKERS = "https://api.giphy.com/v1/stickers"
+        private const val BASE_URL_EMOJIS = "https://api.giphy.com/v2/emoji"
         private const val DEFAULT_LIMIT = 20
     }
 
@@ -26,7 +28,7 @@ class GiphyProvider(
         get() = ProviderInfo(
             id = ID,
             displayName = "GIPHY",
-            kinds = Contract.KIND_GIF,
+            kinds = Contract.KINDS_GIF or Contract.KINDS_STICKER or Contract.KINDS_ANIMATED_EMOJI,
             capabilities = Contract.CAP_TRENDING or Contract.CAP_SEARCH,
             credentialFields = listOf("api_key"),
             configured = credentials.get(ID, "api_key")?.isNotBlank() == true,
@@ -36,33 +38,61 @@ class GiphyProvider(
 
     private fun getApiKey(): String? = credentials.get(ID, "api_key")?.takeIf { it.isNotBlank() }
 
-    override suspend fun search(query: String, offset: String?): ProviderResult {
+    override suspend fun search(query: String, offset: String?, kind: Int): ProviderResult {
         val key = getApiKey() ?: return ProviderResult.Error(Contract.ERR_NOT_CONFIGURED, "GIPHY API key required")
-        val urlBuilder = "$BASE_URL/search".toHttpUrlOrNull()?.newBuilder() ?: return ProviderResult.Error(Contract.ERR_OTHER, "Malformed URL")
-        urlBuilder.addQueryParameter("api_key", key)
-        urlBuilder.addQueryParameter("q", query)
-        urlBuilder.addQueryParameter("limit", DEFAULT_LIMIT.toString())
-        urlBuilder.addQueryParameter("rating", "pg-13")
-        urlBuilder.addQueryParameter("lang", "en")
         val offsetInt = offset?.toIntOrNull() ?: 0
-        urlBuilder.addQueryParameter("offset", offsetInt.toString())
 
-        return executeRequest(urlBuilder.build(), offsetInt)
+        val targetUrl = when (kind) {
+            Contract.KIND_STICKER -> "$BASE_URL_STICKERS/search"
+            Contract.KIND_ANIMATED_EMOJI -> {
+                if (query.isBlank()) BASE_URL_EMOJIS else "$BASE_URL_STICKERS/search"
+            }
+            else -> "$BASE_URL_GIFS/search"
+        }
+
+        val urlBuilder = targetUrl.toHttpUrlOrNull()?.newBuilder() ?: return ProviderResult.Error(Contract.ERR_OTHER, "Malformed URL")
+        urlBuilder.addQueryParameter("api_key", key)
+        if (kind == Contract.KIND_ANIMATED_EMOJI && query.isBlank()) {
+            urlBuilder.addQueryParameter("limit", DEFAULT_LIMIT.toString())
+            urlBuilder.addQueryParameter("offset", offsetInt.toString())
+        } else {
+            val q = if (kind == Contract.KIND_ANIMATED_EMOJI && !query.contains("emoji", ignoreCase = true)) {
+                "$query emoji"
+            } else {
+                query
+            }
+            urlBuilder.addQueryParameter("q", q)
+            urlBuilder.addQueryParameter("limit", DEFAULT_LIMIT.toString())
+            urlBuilder.addQueryParameter("rating", "pg-13")
+            urlBuilder.addQueryParameter("lang", "en")
+            urlBuilder.addQueryParameter("offset", offsetInt.toString())
+        }
+
+        return executeRequest(urlBuilder.build(), offsetInt, kind)
     }
 
-    override suspend fun trending(offset: String?): ProviderResult {
+    override suspend fun trending(offset: String?, kind: Int): ProviderResult {
         val key = getApiKey() ?: return ProviderResult.Error(Contract.ERR_NOT_CONFIGURED, "GIPHY API key required")
-        val urlBuilder = "$BASE_URL/trending".toHttpUrlOrNull()?.newBuilder() ?: return ProviderResult.Error(Contract.ERR_OTHER, "Malformed URL")
+        val offsetInt = offset?.toIntOrNull() ?: 0
+
+        val targetUrl = when (kind) {
+            Contract.KIND_STICKER -> "$BASE_URL_STICKERS/trending"
+            Contract.KIND_ANIMATED_EMOJI -> BASE_URL_EMOJIS
+            else -> "$BASE_URL_GIFS/trending"
+        }
+
+        val urlBuilder = targetUrl.toHttpUrlOrNull()?.newBuilder() ?: return ProviderResult.Error(Contract.ERR_OTHER, "Malformed URL")
         urlBuilder.addQueryParameter("api_key", key)
         urlBuilder.addQueryParameter("limit", DEFAULT_LIMIT.toString())
-        urlBuilder.addQueryParameter("rating", "pg-13")
-        val offsetInt = offset?.toIntOrNull() ?: 0
+        if (kind != Contract.KIND_ANIMATED_EMOJI) {
+            urlBuilder.addQueryParameter("rating", "pg-13")
+        }
         urlBuilder.addQueryParameter("offset", offsetInt.toString())
 
-        return executeRequest(urlBuilder.build(), offsetInt)
+        return executeRequest(urlBuilder.build(), offsetInt, kind)
     }
 
-    private suspend fun executeRequest(httpUrl: okhttp3.HttpUrl, currentOffset: Int): ProviderResult {
+    private suspend fun executeRequest(httpUrl: okhttp3.HttpUrl, currentOffset: Int, kind: Int = Contract.KIND_GIF): ProviderResult {
         return try {
             val response = Downloader.get(httpUrl)
             if (!response.isSuccessful) {
@@ -121,7 +151,7 @@ class GiphyProvider(
                             GifItem(
                                 id = parsed.id,
                                 provider = ID,
-                                kind = Contract.KIND_GIF,
+                                kind = kind,
                                 previewUri = contentUri,
                                 width = parsed.w,
                                 height = parsed.h,

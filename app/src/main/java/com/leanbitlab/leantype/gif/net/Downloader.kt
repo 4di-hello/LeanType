@@ -18,13 +18,28 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 object Downloader {
+    private const val USER_AGENT = "Mozilla/5.0 (Linux; Android 14; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36 LeanTypeGifPlugin/1.0"
+
     val client: OkHttpClient = OkHttpClient.Builder()
         .connectTimeout(12, TimeUnit.SECONDS)
         .readTimeout(12, TimeUnit.SECONDS)
         .writeTimeout(12, TimeUnit.SECONDS)
         .callTimeout(12, TimeUnit.SECONDS)
-        .followRedirects(false)
-        .followSslRedirects(false)
+        .followRedirects(true)
+        .followSslRedirects(true)
+        .addInterceptor { chain ->
+            val request = chain.request().newBuilder()
+                .header("User-Agent", USER_AGENT)
+                .build()
+            chain.proceed(request)
+        }
+        .addNetworkInterceptor { chain ->
+            val requestUrl = chain.request().url.toString()
+            if (UrlFilter.validateUrl(requestUrl) == null) {
+                throw IOException("Access to unapproved host is blocked: ${chain.request().url.host}")
+            }
+            chain.proceed(chain.request())
+        }
         .connectionPool(ConnectionPool(5, 5, TimeUnit.MINUTES))
         .build()
 

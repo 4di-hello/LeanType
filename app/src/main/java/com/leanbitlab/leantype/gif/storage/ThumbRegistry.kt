@@ -12,7 +12,8 @@ class ThumbRegistry(context: Context) : SQLiteOpenHelper(context, "thumbs.db", n
     companion object {
         const val AUTHORITY = "com.leanbitlab.leantype.gif.thumbs"
         private const val TABLE_NAME = "thumbs"
-        private const val MAX_ROWS = 2000
+        private const val MAX_ROWS = 150
+        private const val MAX_BYTES = 20 * 1024 * 1024L // 20 MB
         private const val PIN_DURATION_MS = 2 * 60 * 1000L // 2 minutes
     }
 
@@ -52,6 +53,14 @@ class ThumbRegistry(context: Context) : SQLiteOpenHelper(context, "thumbs.db", n
 
     fun getFile(name: String): File = File(thumbDir, name)
 
+    fun getUrl(name: String): String? {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT url FROM $TABLE_NAME WHERE name = ?", arrayOf(name))
+        return cursor.use {
+            if (it.moveToFirst()) it.getString(0) else null
+        }
+    }
+
     fun register(name: String, url: String, provider: String) {
         val db = writableDatabase
         val cv = ContentValues().apply {
@@ -72,8 +81,11 @@ class ThumbRegistry(context: Context) : SQLiteOpenHelper(context, "thumbs.db", n
         db.update(TABLE_NAME, cv, "name = ?", arrayOf(name))
     }
 
-    private fun trimIfNeeded() {
+    fun trimIfNeeded() {
         val db = writableDatabase
+        val files = thumbDir.listFiles() ?: emptyArray()
+        var totalBytes = files.sumOf { it.length() }
+
         val cursor = db.rawQuery("SELECT COUNT(*) FROM $TABLE_NAME", null)
         var count = 0
         if (cursor.moveToFirst()) {
@@ -81,23 +93,40 @@ class ThumbRegistry(context: Context) : SQLiteOpenHelper(context, "thumbs.db", n
         }
         cursor.close()
 
-        if (count > MAX_ROWS) {
-            val toDelete = count - MAX_ROWS
+        if (count > MAX_ROWS || totalBytes > MAX_BYTES) {
             val queryCursor = db.rawQuery(
                 "SELECT name FROM $TABLE_NAME ORDER BY lastAccess ASC",
                 null
             )
-            var deleted = 0
-            while (queryCursor.moveToNext() && deleted < toDelete) {
+            while (queryCursor.moveToNext()) {
+                if (count <= MAX_ROWS && totalBytes <= MAX_BYTES) break
                 val name = queryCursor.getString(0)
                 if (!isPinned(name)) {
                     val file = getFile(name)
-                    if (file.exists()) file.delete()
+                    val len = if (file.exists()) file.length() else 0L
+                    if (file.exists() && file.delete()) {
+                        totalBytes -= len
+                    }
                     db.delete(TABLE_NAME, "name = ?", arrayOf(name))
-                    deleted++
+                    count--
                 }
             }
             queryCursor.close()
+        }
+
+        // Clean up untracked or orphan files if directory still exceeds byte limit
+        if (totalBytes > MAX_BYTES) {
+            val remaining = thumbDir.listFiles() ?: return
+            for (f in remaining.sortedBy { it.lastModified() }) {
+                if (totalBytes <= MAX_BYTES) break
+                if (!isPinned(f.name)) {
+                    val len = f.length()
+                    if (f.delete()) {
+                        totalBytes -= len
+                        db.delete(TABLE_NAME, "name = ?", arrayOf(f.name))
+                    }
+                }
+            }
         }
     }
 }
