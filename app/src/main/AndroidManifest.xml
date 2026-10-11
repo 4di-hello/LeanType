@@ -12,8 +12,11 @@
 
     <application
         android:allowBackup="false"
+        android:icon="@mipmap/ic_plugin_gif"
+        android:roundIcon="@mipmap/ic_plugin_gif_round"
         android:label="@string/app_name"
-        android:supportsRtl="true">
+        android:supportsRtl="true"
+        android:theme="@style/Theme.LeanTypeGif">
 
         <activity
             android:name=".MainActivity"
