@@ -5,7 +5,9 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import helium314.keyboard.keyboard.Keyboard
 import helium314.keyboard.keyboard.internal.keyboard_parser.floris.KeyCode
+import helium314.keyboard.latin.LatinIME
 import helium314.keyboard.latin.common.Constants
+import helium314.keyboard.latin.settings.Settings
 
 /** [TypingHeatmap.KeyGeometry] for a [Keyboard] */
 class KeyboardGeometry(private val keyboard: Keyboard, landscape: Boolean = isLandscape()) : TypingHeatmap.KeyGeometry {
@@ -13,8 +15,27 @@ class KeyboardGeometry(private val keyboard: Keyboard, landscape: Boolean = isLa
 
     companion object {
         fun isLandscape() = Resources.getSystem().configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-        fun layoutId(keyboard: Keyboard, landscape: Boolean = isLandscape()) =
-            keyboard.mId.mSubtype.mainLayoutName + if (landscape) " (landscape)" else ""
+
+        /** floating and one-handed keyboards are held differently, so they get their own data */
+        private fun modeSuffix(): String = when {
+            LatinIME.getInstance()?.floatingKeyboardManager?.isFloating == true -> " (floating)"
+            Settings.getValues().mOneHandedModeEnabled -> " (one-handed)"
+            else -> ""
+        }
+
+        private class IdCache(val keyboard: Keyboard, val landscape: Boolean, val mode: String, val id: String)
+        @Volatile private var idCache: IdCache? = null
+
+        /** Id for the data of this keyboard; cached, as it is used for every touch event */
+        fun layoutId(keyboard: Keyboard, landscape: Boolean = isLandscape()): String {
+            val mode = modeSuffix()
+            val cache = idCache
+            if (cache != null && cache.keyboard === keyboard && cache.landscape == landscape && cache.mode == mode)
+                return cache.id
+            val id = keyboard.mId.mSubtype.mainLayoutName + (if (landscape) " (landscape)" else "") + mode
+            idCache = IdCache(keyboard, landscape, mode, id)
+            return id
+        }
     }
 
     override val source: Any get() = keyboard
