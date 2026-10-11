@@ -79,6 +79,7 @@ class GifPickerView @JvmOverloads constructor(
     private lateinit var clearQueryButton: ImageButton
     private lateinit var closeButton: ImageButton
     private lateinit var categoryTabsScroll: HorizontalScrollView
+    private lateinit var tabRecent: TextView
     private lateinit var tabGifs: TextView
     private lateinit var tabStickers: TextView
     private lateinit var tabMemes: TextView
@@ -105,6 +106,7 @@ class GifPickerView @JvmOverloads constructor(
         clearQueryButton = findViewById(R.id.clearQueryButton)
         closeButton = findViewById(R.id.closeButton)
         categoryTabsScroll = findViewById(R.id.categoryTabsScroll)
+        tabRecent = findViewById(R.id.tabRecent)
         tabGifs = findViewById(R.id.tabGifs)
         tabStickers = findViewById(R.id.tabStickers)
         tabMemes = findViewById(R.id.tabMemes)
@@ -115,6 +117,7 @@ class GifPickerView @JvmOverloads constructor(
         statusText = findViewById(R.id.statusText)
         statusAction = findViewById(R.id.statusAction)
 
+        tabRecent.setOnClickListener { selectKind(KIND_RECENT) }
         tabGifs.setOnClickListener { selectKind(Contract.KIND_GIF) }
         tabStickers.setOnClickListener { selectKind(Contract.KIND_STICKER) }
         tabMemes.setOnClickListener { selectKind(Contract.KIND_MEME) }
@@ -294,10 +297,11 @@ class GifPickerView @JvmOverloads constructor(
         tabMemes.visibility = if (hasMemes) View.VISIBLE else View.GONE
         tabEmojis.visibility = if (hasEmojis) View.VISIBLE else View.GONE
 
-        if (selectedKind == Contract.KIND_STICKER && !hasStickers ||
+        if (selectedKind != KIND_RECENT && (
+            selectedKind == Contract.KIND_STICKER && !hasStickers ||
             selectedKind == Contract.KIND_MEME && !hasMemes ||
             selectedKind == Contract.KIND_ANIMATED_EMOJI && !hasEmojis
-        ) {
+        )) {
             selectedKind = Contract.KIND_GIF
         }
         updateCategoryTabsUI()
@@ -310,6 +314,7 @@ class GifPickerView @JvmOverloads constructor(
         val inactiveText = colors?.get(ColorType.KEY_HINT_TEXT) ?: 0x88FFFFFF.toInt()
 
         val tabs = listOf(
+            tabRecent to KIND_RECENT,
             tabGifs to Contract.KIND_GIF,
             tabStickers to Contract.KIND_STICKER,
             tabMemes to Contract.KIND_MEME,
@@ -331,15 +336,22 @@ class GifPickerView @JvmOverloads constructor(
 
     private fun updateSearchHint() {
         val categoryName = when (selectedKind) {
+            KIND_RECENT -> context.getString(R.string.gif_category_recent)
             Contract.KIND_STICKER -> context.getString(R.string.gif_category_stickers)
             Contract.KIND_MEME -> context.getString(R.string.gif_category_memes)
             Contract.KIND_ANIMATED_EMOJI -> context.getString(R.string.gif_category_emojis)
             else -> context.getString(R.string.gif_category_gifs)
         }
-        if (activeProviderName.isNotEmpty()) {
-            searchText.hint = "Search $categoryName ($activeProviderName)"
-        } else {
-            searchText.hint = "Search $categoryName"
+        val isKlipy = activeProviderId == "klipy"
+        val isGiphy = activeProviderId == "giphy"
+        val isLocal = activeProviderId == "local"
+        searchText.hint = when {
+            selectedKind == KIND_RECENT -> "Filter recent items"
+            isKlipy -> "Search KLIPY $categoryName"
+            isGiphy -> "Search GIPHY $categoryName"
+            isLocal -> "Search local $categoryName"
+            activeProviderName.isNotEmpty() -> "Search $categoryName ($activeProviderName)"
+            else -> "Search $categoryName"
         }
     }
 
@@ -462,6 +474,32 @@ class GifPickerView @JvmOverloads constructor(
         statusContainer.visibility = View.GONE
         if (activeProviderId == "disabled") return
 
+        if (selectedKind == KIND_RECENT) {
+            queryJob = scope.launch {
+                if (debounce) delay(150)
+                if (!isActive || seq != loadSeq) return@launch
+                cancelCurrent()
+                progress.visibility = View.GONE
+                val recents = GifRecentManager.getRecents(context)
+                val q = query.toString().trim()
+                val filtered = if (q.isNotEmpty()) {
+                    recents.filter {
+                        (it.attribution ?: "").contains(q, ignoreCase = true) ||
+                        it.id.contains(q, ignoreCase = true)
+                    }
+                } else {
+                    recents
+                }
+                adapter.submit(filtered)
+                if (filtered.isEmpty()) {
+                    showStatus(context.getString(R.string.gif_no_recent_items))
+                } else {
+                    statusContainer.visibility = View.GONE
+                }
+            }
+            return
+        }
+
         queryJob = scope.launch {
             if (debounce) delay(300)
             if (!isActive || seq != loadSeq) return@launch
@@ -487,6 +525,7 @@ class GifPickerView @JvmOverloads constructor(
     }
 
     private fun loadNextPage() {
+        if (selectedKind == KIND_RECENT) return
         if (isPaging || !hasMore) return
         val pos = nextPos ?: return
         if (pos.isEmpty()) return
@@ -741,6 +780,7 @@ class GifPickerView @JvmOverloads constructor(
                 }
 
                 GifInserter.commit(context.applicationContext, pfd, mime, ic, ei)
+                GifRecentManager.addRecent(context.applicationContext, item)
             } finally {
                 adapter.setInsertingId(null)
                 manager.release("insert")
@@ -877,6 +917,7 @@ class GifPickerView @JvmOverloads constructor(
     }
 
     companion object {
+        private const val KIND_RECENT = -1
         private const val PAGE_SIZE = 24
         private const val MAX_QUERY_CODE_POINTS = 80
         private const val THUMB_AUTHORITY = "com.leanbitlab.leantype.gif.thumbs"

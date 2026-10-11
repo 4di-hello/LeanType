@@ -2403,4 +2403,7 @@ New dictionary:
     <string name="gif_disable">Disable</string>
     <string name="gif_switched_to">Switched to %s</string>
     <string name="gif_disabled_message">GIF search is disabled</string>
+    <string name="gif_category_recent">Recent</string>
+    <string name="gif_no_recent_items">No recent items</string>
+    <string name="gif_manage_local_media">Manage Local Media</string>
 </resources>

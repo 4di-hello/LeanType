@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -31,6 +32,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,6 +41,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.leanbitlab.leantype.gif.ProviderInfo
 import helium314.keyboard.latin.R
+import helium314.keyboard.latin.common.Links
 import helium314.keyboard.latin.gif.GifPluginManager
 import helium314.keyboard.latin.settings.Settings
 import helium314.keyboard.latin.utils.Log
@@ -50,7 +53,6 @@ import helium314.keyboard.settings.preferences.PreferenceCategory
 import kotlinx.coroutines.launch
 
 private const val TAG = "GifSettingsScreen"
-private const val PLUGIN_RELEASES_URL = "https://github.com/LeanBitLab/LeanType/releases"
 
 @Composable
 fun GifSettingsScreen(
@@ -98,6 +100,79 @@ fun GifSettingsScreen(
         }
     }
 
+    var showGifPluginDialog by rememberSaveable { mutableStateOf(false) }
+
+    if (showGifPluginDialog) {
+        PreferenceDialog(
+            onDismissRequest = { showGifPluginDialog = false },
+            title = stringResource(R.string.gif_plugin_status_title),
+            showCloseButton = true,
+            buttons = {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    if (connectionState == GifPluginManager.State.NOT_INSTALLED) {
+                        Button(
+                            onClick = {
+                                showGifPluginDialog = false
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Links.GIF_PLUGIN_REPO)).apply {
+                                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                }
+                                context.startActivity(intent)
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(stringResource(R.string.gif_download_plugin))
+                        }
+                    } else {
+                        if (connectionState != GifPluginManager.State.CONNECTED && connectionState != GifPluginManager.State.CONNECTING) {
+                            Button(
+                                onClick = {
+                                    manager.retry()
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(stringResource(R.string.gif_retry))
+                            }
+                        }
+                        Button(
+                            onClick = {
+                                showGifPluginDialog = false
+                                val appInfoIntent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                    data = Uri.parse("package:${GifPluginManager.PLUGIN_PACKAGE}")
+                                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                }
+                                context.startActivity(appInfoIntent)
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.error,
+                                contentColor = MaterialTheme.colorScheme.onError
+                            ),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(stringResource(R.string.voice_plugin_uninstall))
+                        }
+                    }
+                }
+            }
+        ) {
+            val message = when (connectionState) {
+                GifPluginManager.State.NOT_INSTALLED -> stringResource(R.string.gif_plugin_not_installed_desc)
+                GifPluginManager.State.UNTRUSTED_PLUGIN -> stringResource(R.string.gif_plugin_untrusted_desc)
+                GifPluginManager.State.CONNECTED -> stringResource(R.string.libraries_status_active)
+                GifPluginManager.State.CONNECTING -> stringResource(R.string.gif_connecting)
+                GifPluginManager.State.UNAVAILABLE -> stringResource(R.string.gif_plugin_unavailable_desc)
+                GifPluginManager.State.PLUGIN_TOO_OLD -> stringResource(R.string.gif_error_plugin_too_old)
+                GifPluginManager.State.HOST_TOO_OLD -> stringResource(R.string.gif_error_host_too_old)
+                else -> connectionState.name
+            }
+            Text(message)
+        }
+    }
+
     SearchSettingsScreen(
         onClickBack = onClickBack,
         title = stringResource(R.string.gif_settings_title),
@@ -116,84 +191,26 @@ fun GifSettingsScreen(
                     containerColor = MaterialTheme.colorScheme.surfaceContainer
                 )
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = stringResource(R.string.gif_plugin_status_title),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
+                Column {
+                    PreferenceCategory(stringResource(R.string.gif_plugin_status_title))
 
-                    when (connectionState) {
-                        GifPluginManager.State.NOT_INSTALLED -> {
-                            Text(
-                                text = stringResource(R.string.gif_plugin_not_installed_desc),
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                            Spacer(modifier = Modifier.height(12.dp))
-                            Button(
-                                onClick = {
-                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(PLUGIN_RELEASES_URL)).apply {
-                                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                    }
-                                    context.startActivity(intent)
-                                }
-                            ) {
-                                Text(stringResource(R.string.gif_download_plugin))
-                            }
-                        }
-                        GifPluginManager.State.UNTRUSTED_PLUGIN -> {
-                            Text(
-                                text = stringResource(R.string.gif_plugin_untrusted_desc),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.error
-                            )
-                        }
-                        GifPluginManager.State.CONNECTED -> {
-                            Text(
-                                text = stringResource(R.string.libraries_status_active),
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
-                        GifPluginManager.State.CONNECTING -> {
-                            Text(
-                                text = stringResource(R.string.gif_connecting),
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
-                        GifPluginManager.State.UNAVAILABLE -> {
-                            Text(
-                                text = stringResource(R.string.gif_error_unavailable),
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = stringResource(R.string.gif_plugin_unavailable_desc),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                        GifPluginManager.State.PLUGIN_TOO_OLD -> {
-                            Text(
-                                text = stringResource(R.string.gif_error_plugin_too_old),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.error
-                            )
-                        }
-                        GifPluginManager.State.HOST_TOO_OLD -> {
-                            Text(
-                                text = stringResource(R.string.gif_error_host_too_old),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.error
-                            )
-                        }
-                        else -> {
-                            Text(
-                                text = connectionState.name,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
+                    val gifPluginSummary = when (connectionState) {
+                        GifPluginManager.State.CONNECTED -> stringResource(R.string.libraries_status_active)
+                        GifPluginManager.State.CONNECTING -> stringResource(R.string.gif_connecting)
+                        GifPluginManager.State.NOT_INSTALLED -> stringResource(R.string.libraries_status_not_installed)
+                        GifPluginManager.State.UNTRUSTED_PLUGIN -> stringResource(R.string.gif_error_untrusted)
+                        GifPluginManager.State.PLUGIN_TOO_OLD -> stringResource(R.string.gif_error_plugin_too_old)
+                        GifPluginManager.State.HOST_TOO_OLD -> stringResource(R.string.gif_error_host_too_old)
+                        GifPluginManager.State.UNAVAILABLE -> stringResource(R.string.gif_error_unavailable)
+                        else -> connectionState.name
                     }
+
+                    Preference(
+                        name = stringResource(R.string.gif_settings_title),
+                        description = gifPluginSummary,
+                        icon = R.drawable.ic_gif,
+                        onClick = { showGifPluginDialog = true }
+                    )
                 }
             }
 
@@ -272,7 +289,7 @@ fun GifSettingsScreen(
                     horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    if (provider.configured) {
+                    if (provider.configured && provider.credentialFields.isNotEmpty()) {
                         OutlinedButton(
                             onClick = {
                                 scope.launch {
@@ -319,30 +336,34 @@ fun GifSettingsScreen(
                                 Text(stringResource(R.string.gif_enable))
                             }
                         }
-                        Spacer(modifier = Modifier.width(8.dp))
+                        if (provider.credentialFields.isNotEmpty()) {
+                            Spacer(modifier = Modifier.width(8.dp))
+                        }
                     }
-                    Button(
-                        onClick = {
-                            if (credentialInput.isNotBlank()) {
-                                scope.launch {
-                                    val result = manager.call { engine ->
-                                        engine.setCredential(provider.id, targetField, credentialInput.trim())
-                                    }
-                                    result.onSuccess {
-                                        prefs.edit().putString(Settings.PREF_GIF_PROVIDER, provider.id).apply()
-                                        activeProviderId = provider.id
-                                        Toast.makeText(context, R.string.gif_api_key_saved, Toast.LENGTH_SHORT).show()
-                                        selectedProviderForConfig = null
-                                        refreshProviders()
-                                    }.onFailure {
-                                        Toast.makeText(context, R.string.gif_error_generic, Toast.LENGTH_SHORT).show()
+                    if (provider.credentialFields.isNotEmpty()) {
+                        Button(
+                            onClick = {
+                                if (credentialInput.isNotBlank()) {
+                                    scope.launch {
+                                        val result = manager.call { engine ->
+                                            engine.setCredential(provider.id, targetField, credentialInput.trim())
+                                        }
+                                        result.onSuccess {
+                                            prefs.edit().putString(Settings.PREF_GIF_PROVIDER, provider.id).apply()
+                                            activeProviderId = provider.id
+                                            Toast.makeText(context, R.string.gif_api_key_saved, Toast.LENGTH_SHORT).show()
+                                            selectedProviderForConfig = null
+                                            refreshProviders()
+                                        }.onFailure {
+                                            Toast.makeText(context, R.string.gif_error_generic, Toast.LENGTH_SHORT).show()
+                                        }
                                     }
                                 }
-                            }
-                        },
-                        enabled = credentialInput.isNotBlank()
-                    ) {
-                        Text(stringResource(R.string.gif_save))
+                            },
+                            enabled = credentialInput.isNotBlank()
+                        ) {
+                            Text(stringResource(R.string.gif_save))
+                        }
                     }
                 }
             }
@@ -368,14 +389,34 @@ fun GifSettingsScreen(
                         color = if (isCurrentActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                Spacer(modifier = Modifier.height(12.dp))
-                OutlinedTextField(
-                    value = credentialInput,
-                    onValueChange = { credentialInput = it },
-                    label = { Text(stringResource(R.string.gif_enter_api_key)) },
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                if (provider.id == "local") {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Button(
+                        onClick = {
+                            val intent = Intent().apply {
+                                component = android.content.ComponentName("com.leanbitlab.leantype.gif", "com.leanbitlab.leantype.gif.MainActivity")
+                                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            }
+                            try {
+                                context.startActivity(intent)
+                            } catch (_: Exception) {
+                                Toast.makeText(context, R.string.gif_error_unavailable, Toast.LENGTH_SHORT).show()
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(stringResource(R.string.gif_manage_local_media))
+                    }
+                } else if (provider.credentialFields.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    OutlinedTextField(
+                        value = credentialInput,
+                        onValueChange = { credentialInput = it },
+                        label = { Text(stringResource(R.string.gif_enter_api_key)) },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
         }
     }
