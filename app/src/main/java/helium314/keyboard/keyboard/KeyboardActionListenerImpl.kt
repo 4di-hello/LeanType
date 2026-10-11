@@ -411,6 +411,7 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
             latinIME.isCursorGestureActive = true
             latinIME.mHandler.cancelResumeSuggestions()
             inputLogic.finishInput()
+            keyboardSwitcher.mainKeyboardView?.animate()?.cancel()
             keyboardSwitcher.mainKeyboardView?.alpha = 0.5f
             return true
         }
@@ -418,6 +419,7 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
             isSpaceSwipeActive = false
             latinIME.isCursorGestureActive = false
             inputLogic.restartSuggestionsOnWordTouchedByCursor(settings.current)
+            keyboardSwitcher.mainKeyboardView?.animate()?.cancel()
             keyboardSwitcher.mainKeyboardView?.alpha = 1.0f
             return true
         }

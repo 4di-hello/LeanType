@@ -757,7 +757,7 @@ class PointerTracker private constructor(
         val hasSpaceSwipeAction = sv.mSpaceSwipeHorizontal != KeyboardActionListener.SWIPE_NO_ACTION ||
                 sv.mSpaceSwipeVertical != KeyboardActionListener.SWIPE_NO_ACTION ||
                 sv.mSpaceSwipeVerticalDown != KeyboardActionListener.SWIPE_NO_ACTION
-        if (code == Constants.CODE_SPACE && hasSpaceSwipeAction) {
+        if ((code == Constants.CODE_SPACE && hasSpaceSwipeAction) || sTouchpadModeActive || sPersistentTouchpadModeActive) {
             val dX = x - mStartX
             val dY = y - mStartY
 
@@ -768,6 +768,8 @@ class PointerTracker private constructor(
                 mTouchpadLastY = y
                 mTouchpadAccX = 0
                 mTouchpadAccY = 0
+                getTimerProxy().cancelKeyTimersOf(this)
+                dismissPopupKeysPanel()
                 if (!sPersistentTouchpadModeActive) {
                     sListener.onCustomRequest(KeyboardActionListener.CODE_TOUCHPAD_ON)
                 }
@@ -958,7 +960,7 @@ class PointerTracker private constructor(
     private fun onMoveEventInternal(x: Int, y: Int, eventTime: Long) {
         val oldKey = mCurrentKey
 
-        if (mKeySwipeAllowed) {
+        if (mKeySwipeAllowed || sTouchpadModeActive || sPersistentTouchpadModeActive) {
             onKeySwipe(oldKey?.code ?: 0, x, y, eventTime)
             return
         }
@@ -1049,12 +1051,12 @@ class PointerTracker private constructor(
             return
         }
 
-        if (mKeySwipeAllowed) {
+        if (mKeySwipeAllowed || mInTouchpadMode || sTouchpadModeActive) {
             mKeySwipeAllowed = false
             sInKeySwipe = false
 
             val wasTouchpad = mInTouchpadMode
-            if (mInTouchpadMode) {
+            if (mInTouchpadMode || sTouchpadModeActive) {
                 mInTouchpadMode = false
                 if (!sPersistentTouchpadModeActive) {
                     sTouchpadModeActive = false

@@ -195,6 +195,10 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
     }
 
     fun onHideWindow() {
+        if (PointerTracker.isTouchpadModeActive()) {
+            PointerTracker.setTouchpadModeActive(false)
+            mKeyboardView?.alpha = 1f
+        }
         mKeyboardView?.onHideWindow()
         if (isOcrShowing) {
             hideOcrPanels()
@@ -387,7 +391,8 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
             return
         }
         val visibility = if (isImeSuppressedByHardwareKeyboard(settingsValues, toggleState)) View.GONE else View.VISIBLE
-        val stripVisibility = if (settingsValues.mToolbarMode == ToolbarMode.HIDDEN) View.GONE else View.VISIBLE
+        val stripVisibility = if (settingsValues.mToolbarMode == ToolbarMode.HIDDEN
+            || (PointerTracker.sPersistentTouchpadModeActive && settingsValues.mTouchpadFullscreen)) View.GONE else View.VISIBLE
         mStripContainer?.visibility = stripVisibility
         val wasSecondaryShowing = (mEmojiPalettesView?.visibility == View.VISIBLE)
             || (mClipboardHistoryView?.visibility == View.VISIBLE)
@@ -398,13 +403,18 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         } else {
             mKeyboardView?.visibility = visibility
             if (visibility == View.VISIBLE) {
-                val duration = Settings.getAnimationDuration(100)
-                if (duration > 0L && wasSecondaryShowing) {
-                    mKeyboardView?.alpha = 0.25f
+                if (PointerTracker.isTouchpadModeActive()) {
                     mKeyboardView?.animate()?.cancel()
-                    mKeyboardView?.animate()?.alpha(1f)?.setDuration(duration)?.setInterpolator(VIEW_SWITCH_ENTER_INTERPOLATOR)?.start()
+                    mKeyboardView?.alpha = 0.5f
                 } else {
-                    mKeyboardView?.alpha = 1f
+                    val duration = Settings.getAnimationDuration(100)
+                    if (duration > 0L && wasSecondaryShowing) {
+                        mKeyboardView?.alpha = 0.25f
+                        mKeyboardView?.animate()?.cancel()
+                        mKeyboardView?.animate()?.alpha(1f)?.setDuration(duration)?.setInterpolator(VIEW_SWITCH_ENTER_INTERPOLATOR)?.start()
+                    } else {
+                        mKeyboardView?.alpha = 1f
+                    }
                 }
             }
         }
@@ -901,6 +911,7 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
             touchpad.alpha = 1f
         }
         mMainKeyboardFrame?.visibility = View.VISIBLE
+        mKeyboardViewWrapper?.requestLayout()
     }
 
     fun hideTouchpadView() {
@@ -931,6 +942,7 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
                 wrapper.findViewById<View>(R.id.btn_switch_one_handed_mode)?.visibility = View.VISIBLE
                 wrapper.findViewById<View>(R.id.btn_resize_one_handed_mode)?.visibility = View.VISIBLE
             }
+            wrapper.requestLayout()
         }
     }
 
@@ -1060,8 +1072,11 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
             return clipView.isShown || clipView.visibility == View.VISIBLE
         }
 
+    val isTouchpadShowing: Boolean
+        get() = mTouchpadView?.let { it.isShown || it.visibility == View.VISIBLE } == true
+
     val isSecondaryViewShowing: Boolean
-        get() = isGifPickerShowing || isShowingEmojiPalettes || isShowingClipboardHistory || isOcrShowing || isHandwritingShowing
+        get() = isGifPickerShowing || isShowingEmojiPalettes || isShowingClipboardHistory || isOcrShowing || isHandwritingShowing || isTouchpadShowing
 
     val isShowingPopupKeysPanel: Boolean
         get() {
@@ -1079,12 +1094,14 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
     val visibleKeyboardView: View?
         get() {
             val ocrResult = mOcrResultView
+            val touchpad = mTouchpadView
             return when {
                 isOcrCameraShowing -> mOcrCameraView
                 ocrResult != null && (ocrResult.isShown || ocrResult.visibility == View.VISIBLE) -> ocrResult
                 isShowingEmojiPalettes -> mEmojiPalettesView
                 isShowingClipboardHistory -> mClipboardHistoryView
                 isHandwritingShowing -> mHandwritingView
+                touchpad != null && (touchpad.isShown || touchpad.visibility == View.VISIBLE) -> touchpad
                 else -> mKeyboardView
             }
         }
@@ -1114,6 +1131,10 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         }
         if (isShowingClipboardHistory || isShowingEmojiPalettes) {
             mStripContainer?.visibility = getSecondaryStripVisibility()
+            return
+        }
+        if (PointerTracker.sPersistentTouchpadModeActive && settingsValues.mTouchpadFullscreen) {
+            mStripContainer?.visibility = View.GONE
             return
         }
         mStripContainer?.visibility = if (settingsValues.mToolbarMode == ToolbarMode.HIDDEN) View.GONE else View.VISIBLE

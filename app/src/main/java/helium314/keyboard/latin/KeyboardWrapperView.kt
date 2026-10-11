@@ -141,7 +141,8 @@ class KeyboardWrapperView @JvmOverloads constructor(
                 it.visibility == VISIBLE &&
                 it.id != R.id.btn_stop_one_handed_mode &&
                 it.id != R.id.btn_switch_one_handed_mode &&
-                it.id != R.id.btn_resize_one_handed_mode
+                it.id != R.id.btn_resize_one_handed_mode &&
+                it.id != R.id.touchpad_view
             }
             if (activeChild != null) {
                 activeChild.measure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED))
@@ -164,10 +165,12 @@ class KeyboardWrapperView @JvmOverloads constructor(
         val settingsValues = Settings.getValues()
         val ocrCameraView = findViewById<View?>(R.id.ocr_camera_view)
         val isOcrCameraVisible = ocrCameraView != null && (ocrCameraView.isShown || ocrCameraView.visibility == VISIBLE)
-        val baseHeight = if (isOcrCameraVisible) {
-            ResourceUtils.getOcrCameraHeight(context.resources, settingsValues)
-        } else {
-            ResourceUtils.getKeyboardHeight(context.resources, settingsValues)
+        val touchpadView = findViewById<View?>(R.id.touchpad_view)
+        val isTouchpadFullscreen = touchpadView != null && (touchpadView.isShown || touchpadView.visibility == VISIBLE) && settingsValues.mTouchpadFullscreen
+        val baseHeight = when {
+            isOcrCameraVisible -> ResourceUtils.getOcrCameraHeight(context.resources, settingsValues)
+            isTouchpadFullscreen -> ResourceUtils.getKeyboardHeight(context.resources, settingsValues) + ResourceUtils.getSuggestionsStripHeight(context.resources)
+            else -> ResourceUtils.getKeyboardHeight(context.resources, settingsValues)
         }
         val keyboardView = findViewById<View>(R.id.keyboard_view)
         val padding = if (keyboardView != null && !isFloating) keyboardView.paddingTop + keyboardView.paddingBottom else 0
