@@ -7,6 +7,7 @@ import helium314.keyboard.latin.utils.Log
 import helium314.keyboard.keyboard.Key
 import helium314.keyboard.keyboard.Key.KeyParams
 import helium314.keyboard.keyboard.KeyboardId
+import helium314.keyboard.keyboard.internal.KeyboardBottomRowGeometry
 import helium314.keyboard.keyboard.internal.KeyboardParams
 import helium314.keyboard.keyboard.internal.keyboard_parser.floris.KeyCode
 import helium314.keyboard.keyboard.internal.keyboard_parser.floris.KeyData
@@ -71,23 +72,22 @@ class KeyboardParser(private val params: KeyboardParams, private val context: Co
         val keysInRows = createRows(baseKeys)
         val heightRescale: Float
         if (params.mId.isEmojiClipBottomRow) {
+            val dims = KeyboardBottomRowGeometry.getDimensions(context, Settings.getValues())
+            params.mOccupiedHeight = dims.bottomRowAreaHeight
+            params.mTopPadding = 0
+            params.mBottomPadding = dims.bottomPadding
+            params.mBaseHeight = dims.bottomRowKeyHeight + params.mVerticalGap
             heightRescale = 4f
-            // params rescale is not perfect, especially mTopPadding may cause 1 pixel offsets because it's already been converted to int once
-            if (Settings.getValues().mShowsNumberRow) {
-                params.mOccupiedHeight /= 5
-                params.mBaseHeight /= 5
-                params.mTopPadding = (params.mTopPadding / 5.0).roundToInt()
-            } else {
-                params.mOccupiedHeight /= 4
-                params.mBaseHeight /= 4
-                params.mTopPadding = (params.mTopPadding / 4.0).roundToInt()
-            }
         } else if (params.isHexagonal) {
             // Hex rows keep FULL height (1/4 of mBaseHeight each).
             // The interlocking 0.75-pitch is handled in KeyboardBuilder.
             // 5 rows × 0.75 pitch + 1 full row = 4.0 × rowHeight = mBaseHeight
             heightRescale = 1f
         } else {
+            if ((params.mId.mElementId == KeyboardId.ELEMENT_NUMPAD || params.mId.mElementId == KeyboardId.ELEMENT_TEXT_EDIT)
+                && Settings.getValues().mShowsNumberRow && keysInRows.size == 4) {
+                keysInRows.add(0, arrayListOf(KeyParams.newSpacer(params, 1f)))
+            }
             // rescale height if we have anything but the usual 4 rows
             heightRescale = if (keysInRows.size != 4) 4f / keysInRows.size else 1f
         }

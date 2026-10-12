@@ -6,7 +6,7 @@ import android.content.Context
 import android.view.View
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.RecyclerView
-import helium314.keyboard.keyboard.internal.KeyboardParams
+import helium314.keyboard.keyboard.internal.KeyboardBottomRowGeometry
 import helium314.keyboard.latin.R
 import helium314.keyboard.latin.settings.Settings
 import helium314.keyboard.latin.utils.ResourceUtils
@@ -15,8 +15,12 @@ class ClipboardLayoutParams(ctx: Context) {
 
     private val keyVerticalGap: Int
     private val keyHorizontalGap: Int
-    private val listHeight: Int
-    val bottomRowKeyboardHeight: Int
+    var listHeight: Int = 0
+        private set
+    var bottomRowKeyboardHeight: Int = 0
+        private set
+    var bottomRowKeyHeight: Int = 0
+        private set
 
     init {
         val res = ctx.resources
@@ -56,30 +60,26 @@ class ClipboardLayoutParams(ctx: Context) {
             keyVerticalGap = verticalGapStandard.toInt()
             keyHorizontalGap = horizontalGapStandard.toInt()
         }
-        val isFloating = helium314.keyboard.latin.utils.ResourceUtils.getFloatingKeyboardWidth() > 0 || (helium314.keyboard.latin.LatinIME.getInstance()?.floatingKeyboardManager?.let {
-            it.isFloating || (sv.mRememberFloatingKeyboard && it.wasFloatingLastTime())
-        } == true)
-        val bottomPadding = if (isFloating) 0 else (res.getFraction(R.fraction.config_keyboard_bottom_padding_holo,
-                defaultKeyboardHeight, defaultKeyboardHeight) * sv.mBottomPaddingScale).toInt()
-        val topPadding = res.getFraction(R.fraction.config_keyboard_top_padding_holo,
-                defaultKeyboardHeight, defaultKeyboardHeight).toInt()
 
-        val rowCount = KeyboardParams.DEFAULT_KEYBOARD_ROWS + if (sv.mShowsNumberRow) 1 else 0
-        bottomRowKeyboardHeight = (defaultKeyboardHeight - bottomPadding - topPadding) / rowCount - keyVerticalGap / 2
-        // height calculation is not good enough, probably also because keyboard top padding might be off by a pixel (see KeyboardParser)
-        val offset = 1.25f * res.displayMetrics.density * sv.mKeyboardHeightScale
-        listHeight = defaultKeyboardHeight - bottomRowKeyboardHeight - bottomPadding + offset.toInt()
+        updateDimensions(ctx)
+    }
+
+    fun updateDimensions(ctx: Context) {
+        val dims = KeyboardBottomRowGeometry.getDimensions(ctx, Settings.getValues())
+        listHeight = dims.bottomRowY
+        bottomRowKeyboardHeight = dims.bottomRowAreaHeight
+        bottomRowKeyHeight = dims.bottomRowKeyHeight
     }
 
     fun setListProperties(recycler: RecyclerView) {
-        (recycler.layoutParams as FrameLayout.LayoutParams).apply {
-            height = listHeight
+        (recycler.layoutParams as? FrameLayout.LayoutParams)?.apply {
+            height = FrameLayout.LayoutParams.MATCH_PARENT
             recycler.layoutParams = this
         }
     }
 
     fun setItemProperties(view: View) {
-        (view.layoutParams as RecyclerView.LayoutParams).apply {
+        (view.layoutParams as? RecyclerView.LayoutParams)?.apply {
             topMargin = keyHorizontalGap / 2
             bottomMargin = keyVerticalGap / 2
             marginStart = keyHorizontalGap / 2

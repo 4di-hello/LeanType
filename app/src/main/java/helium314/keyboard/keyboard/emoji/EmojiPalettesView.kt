@@ -213,8 +213,7 @@ class EmojiPalettesView @JvmOverloads constructor(
     init {
         mColors = Settings.getValues().mColors
         val builder = KeyboardLayoutSet.Builder(context, null)
-        val res = context.resources
-        mEmojiLayoutParams = EmojiLayoutParams(res)
+        mEmojiLayoutParams = EmojiLayoutParams(context)
         builder.setSubtype(RichInputMethodSubtype.emojiSubtype)
         builder.setKeyboardGeometry(
             ResourceUtils.getKeyboardWidth(context, Settings.getValues()),
@@ -230,6 +229,14 @@ class EmojiPalettesView @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        if (!mInSearchMode && mPager != null) {
+            mEmojiLayoutParams.updateDimensions(context)
+            val lp = mPager?.layoutParams as? LinearLayout.LayoutParams
+            if (lp != null && lp.height != mEmojiLayoutParams.emojiKeyboardHeight) {
+                lp.height = mEmojiLayoutParams.emojiKeyboardHeight
+                mPager?.layoutParams = lp
+            }
+        }
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         val res = context.resources
         val isFloating = ResourceUtils.getFloatingKeyboardWidth() > 0 ||
@@ -656,7 +663,7 @@ class EmojiPalettesView @JvmOverloads constructor(
         builder.setKeyboardOptions(Settings.getValues())
         builder.setKeyboardGeometry(
             ResourceUtils.getKeyboardWidth(ctx, Settings.getValues()),
-            ResourceUtils.getSecondaryKeyboardHeight(resources, Settings.getValues())
+            ResourceUtils.getKeyboardHeight(resources, Settings.getValues())
         )
 
         val searchKeyboardLayoutSet = builder.build()
@@ -749,6 +756,8 @@ class EmojiPalettesView @JvmOverloads constructor(
         mEditorInfo = editorInfo
         mKeyboardActionListener = keyboardActionListener ?: KeyboardActionListener.EMPTY_LISTENER
         initialize()
+        mEmojiLayoutParams.updateDimensions(context)
+        mPager?.let { mEmojiLayoutParams.setEmojiListProperties(it) }
         val splitToolbar = Settings.getValues().mSplitToolbar
         val isRecentsShown = mEmojiCategory.getShownCategories().any { it.mCategoryId == EmojiCategory.ID_RECENTS }
         if (splitToolbar == isRecentsShown) {
@@ -762,7 +771,7 @@ class EmojiPalettesView @JvmOverloads constructor(
         updateColors()
         setupBottomRowKeyboard(editorInfo, mKeyboardActionListener)
         val params = KeyDrawParams()
-        params.updateParams(mEmojiLayoutParams.bottomRowKeyboardHeight, keyVisualAttr)
+        params.updateParams(mEmojiLayoutParams.bottomRowKeyHeight, keyVisualAttr)
         setupSidePadding()
         initDictionaryFacilitator()
 

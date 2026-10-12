@@ -88,6 +88,16 @@ class ClipboardHistoryView @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val clipboardStrip = KeyboardSwitcher.getInstance().clipboardStrip
+        val inSearchOrEdit = (this::searchBarTextView.isInitialized && searchBarTextView.parent == clipboardStrip) || inEditMode
+        val container = findViewById<View>(R.id.clipboard_content_container)
+        if (!inSearchOrEdit && container != null) {
+            clipboardLayoutParams.updateDimensions(context)
+            val targetHeight = clipboardLayoutParams.listHeight
+            if (container.layoutParams.height != targetHeight) {
+                container.layoutParams.height = targetHeight
+            }
+        }
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         val res = context.resources
         val isFloating = ResourceUtils.getFloatingKeyboardWidth() > 0 ||
@@ -148,6 +158,14 @@ class ClipboardHistoryView @JvmOverloads constructor(
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initialize() { // needs to be delayed for access to ClipboardStrip, which is not a child of this view
+        clipboardLayoutParams.updateDimensions(context)
+        findViewById<View>(R.id.clipboard_content_container)?.let { container ->
+            val lp = container.layoutParams
+            if (lp != null && lp.height != clipboardLayoutParams.listHeight) {
+                lp.height = clipboardLayoutParams.listHeight
+                container.layoutParams = lp
+            }
+        }
         if (this::clipboardAdapter.isInitialized) return
         val colors = Settings.getValues().mColors
         clipboardAdapter = ClipboardAdapter(clipboardLayoutParams, this).apply {
@@ -329,6 +347,7 @@ class ClipboardHistoryView @JvmOverloads constructor(
 
         setBottomRowLayout(KeyboardId.ELEMENT_ALPHABET)
         
+        findViewById<View>(R.id.clipboard_content_container)?.visibility = View.GONE
         clipboardRecyclerView.visibility = View.GONE
         emptyViewContainer.visibility = View.GONE
         updateClipboardGestureSuppression()
@@ -349,6 +368,15 @@ class ClipboardHistoryView @JvmOverloads constructor(
         
         setBottomRowLayout(KeyboardId.ELEMENT_CLIPBOARD_BOTTOM_ROW)
         
+        clipboardLayoutParams.updateDimensions(context)
+        findViewById<View>(R.id.clipboard_content_container)?.let { container ->
+            container.visibility = View.VISIBLE
+            val lp = container.layoutParams
+            if (lp != null && lp.height != clipboardLayoutParams.listHeight) {
+                lp.height = clipboardLayoutParams.listHeight
+                container.layoutParams = lp
+            }
+        }
         clipboardRecyclerView.visibility = View.VISIBLE
         updateEmptyView(clipboardAdapter.isFiltering)
         updateClipboardGestureSuppression()
@@ -437,6 +465,7 @@ class ClipboardHistoryView @JvmOverloads constructor(
         }
         clipboardStrip.addView(cancelButton)
 
+        findViewById<View>(R.id.clipboard_content_container)?.visibility = View.GONE
         clipboardRecyclerView.visibility = View.GONE
         emptyViewContainer.visibility = View.GONE
 
@@ -468,6 +497,15 @@ class ClipboardHistoryView @JvmOverloads constructor(
 
         setBottomRowLayout(KeyboardId.ELEMENT_CLIPBOARD_BOTTOM_ROW)
 
+        clipboardLayoutParams.updateDimensions(context)
+        findViewById<View>(R.id.clipboard_content_container)?.let { container ->
+            container.visibility = View.VISIBLE
+            val lp = container.layoutParams
+            if (lp != null && lp.height != clipboardLayoutParams.listHeight) {
+                lp.height = clipboardLayoutParams.listHeight
+                container.layoutParams = lp
+            }
+        }
         clipboardRecyclerView.visibility = View.VISIBLE
         updateEmptyView(clipboardAdapter.isFiltering)
         updateClipboardGestureSuppression()
@@ -1254,8 +1292,17 @@ class ClipboardHistoryView @JvmOverloads constructor(
         updateEmptyView(false)
         stopSearchMode()
 
+        clipboardLayoutParams.updateDimensions(context)
+        findViewById<View>(R.id.clipboard_content_container)?.let { container ->
+            val lp = container.layoutParams
+            if (lp != null && lp.height != clipboardLayoutParams.listHeight) {
+                lp.height = clipboardLayoutParams.listHeight
+                container.layoutParams = lp
+            }
+        }
+
         val params = KeyDrawParams()
-        params.updateParams(clipboardLayoutParams.bottomRowKeyboardHeight, keyVisualAttr)
+        params.updateParams(clipboardLayoutParams.bottomRowKeyHeight, keyVisualAttr)
         val settings = Settings.getInstance()
         settings.getCustomTypeface()?.let { params.mTypeface = it }
         setupClipKey(params)

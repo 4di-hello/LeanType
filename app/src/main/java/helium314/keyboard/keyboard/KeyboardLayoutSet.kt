@@ -250,7 +250,7 @@ class KeyboardLayoutSet internal constructor(
                 val builder = Builder(context, ei)
                 builder.mParams.mMode = KeyboardId.MODE_TEXT
                 val width = ResourceUtils.getKeyboardWidth(context, Settings.getValues())
-                val height = ResourceUtils.getKeyboardHeight(context.resources, Settings.getValues())
+                val height = ResourceUtils.getSecondaryKeyboardHeight(context.resources, Settings.getValues())
                 builder.setKeyboardGeometry(width, height)
                 builder.setSubtype(RichInputMethodManager.getInstance().currentSubtype)
                 builder.setSplitLayoutEnabled(Settings.getValues().mIsSplitKeyboardEnabled)

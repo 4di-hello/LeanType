@@ -5,77 +5,42 @@
  */
 package helium314.keyboard.keyboard.emoji
 
-import android.content.res.Resources
+import android.content.Context
 import android.view.View
 import android.widget.LinearLayout
 import androidx.viewpager2.widget.ViewPager2
-import helium314.keyboard.keyboard.internal.KeyboardParams
-import helium314.keyboard.latin.R
+import helium314.keyboard.keyboard.internal.KeyboardBottomRowGeometry
 import helium314.keyboard.latin.settings.Settings
-import helium314.keyboard.latin.utils.ResourceUtils
 
-internal class EmojiLayoutParams(res: Resources) {
-    private val emojiListBottomMargin: Int
-    val emojiKeyboardHeight: Int
-    private val emojiCategoryPageIdViewHeight: Int
-    val bottomRowKeyboardHeight: Int
+internal class EmojiLayoutParams(context: Context) {
+    var emojiKeyboardHeight: Int = 0
+        private set
+    var bottomRowKeyboardHeight: Int = 0
+        private set
+    var bottomRowKeyHeight: Int = 0
+        private set
 
     init {
-        val sv = Settings.getValues()
-        val defaultKeyboardHeight = ResourceUtils.getSecondaryKeyboardHeight(res, sv)
+        updateDimensions(context)
+    }
 
-        val keyVerticalGap = if (sv.mNarrowKeyGaps) {
-            val level = sv.mNarrowKeyGapsLevel
-            val hasBorders = sv.mThemeKeyBorders
-            if (level <= 0) {
-                res.getFraction(R.fraction.config_key_vertical_gap_holo,
-                    defaultKeyboardHeight, defaultKeyboardHeight).toInt()
-            } else if (level == 1) {
-                val verticalGapNarrow = res.getFraction(R.fraction.config_key_vertical_gap_holo_narrow,
-                    defaultKeyboardHeight, defaultKeyboardHeight)
-                verticalGapNarrow.toInt()
-            } else {
-                val verticalGapNarrow = res.getFraction(R.fraction.config_key_vertical_gap_holo_narrow,
-                    defaultKeyboardHeight, defaultKeyboardHeight)
-                var factor = ((10 - level).coerceIn(0, 9)) / 9f
-                if (!hasBorders && factor < 0.1f) {
-                    factor = 0.1f
-                }
-                (verticalGapNarrow * factor).toInt()
-            }
-        } else {
-            res.getFraction(R.fraction.config_key_vertical_gap_holo,
-                defaultKeyboardHeight, defaultKeyboardHeight).toInt()
-        }
-        val isFloating = helium314.keyboard.latin.utils.ResourceUtils.getFloatingKeyboardWidth() > 0 || (helium314.keyboard.latin.LatinIME.getInstance()?.floatingKeyboardManager?.let {
-            it.isFloating || (sv.mRememberFloatingKeyboard && it.wasFloatingLastTime())
-        } == true)
-        val bottomPadding = if (isFloating) 0 else (res.getFraction(R.fraction.config_keyboard_bottom_padding_holo,
-            defaultKeyboardHeight, defaultKeyboardHeight) * sv.mBottomPaddingScale).toInt()
-        val topPadding = res.getFraction(R.fraction.config_keyboard_top_padding_holo,
-            defaultKeyboardHeight, defaultKeyboardHeight).toInt()
-
-        val rowCount = KeyboardParams.DEFAULT_KEYBOARD_ROWS + if (sv.mShowsNumberRow) 1 else 0
-        bottomRowKeyboardHeight = (defaultKeyboardHeight - bottomPadding - topPadding) / rowCount - keyVerticalGap / 2
-
-        val pageIdHeight = res.getDimension(R.dimen.config_emoji_category_page_id_height)
-        emojiCategoryPageIdViewHeight = pageIdHeight.toInt()
-        val offset = 1.25f * res.displayMetrics.density * sv.mKeyboardHeightScale // like ClipboardLayoutParams
-        val emojiListHeight = defaultKeyboardHeight - bottomRowKeyboardHeight - bottomPadding + (offset.toInt())
-        emojiListBottomMargin = 0
-        emojiKeyboardHeight = emojiListHeight - emojiCategoryPageIdViewHeight - emojiListBottomMargin
+    fun updateDimensions(context: Context) {
+        val dims = KeyboardBottomRowGeometry.getDimensions(context, Settings.getValues())
+        emojiKeyboardHeight = dims.bottomRowY
+        bottomRowKeyboardHeight = dims.bottomRowAreaHeight
+        bottomRowKeyHeight = dims.bottomRowKeyHeight
     }
 
     fun setEmojiListProperties(vp: ViewPager2) {
-        val lp = vp.layoutParams as LinearLayout.LayoutParams
+        val lp = vp.layoutParams as? LinearLayout.LayoutParams ?: return
         lp.height = emojiKeyboardHeight
-        lp.bottomMargin = emojiListBottomMargin
+        lp.bottomMargin = 0
         vp.layoutParams = lp
     }
 
     fun setCategoryPageIdViewProperties(v: View) {
-        val lp = v.layoutParams as LinearLayout.LayoutParams
-        lp.height = emojiCategoryPageIdViewHeight
+        val lp = v.layoutParams as? LinearLayout.LayoutParams ?: return
+        lp.height = 0
         v.layoutParams = lp
     }
 }
