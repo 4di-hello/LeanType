@@ -6,6 +6,7 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -258,8 +259,9 @@ fun GifSettingsScreen(
                             )
                         } else {
                             val effectiveActiveId = when {
+                                activeProviderId == "disabled" -> ""
                                 activeProviderId.isNotEmpty() -> activeProviderId
-                                else -> providers.firstOrNull { it.configured }?.id ?: "giphy"
+                                else -> providers.firstOrNull { it.configured }?.id ?: "local"
                             }
                             providers.forEach { provider ->
                                 val isActive = provider.configured && provider.id == effectiveActiveId
@@ -301,22 +303,27 @@ fun GifSettingsScreen(
         }
 
         val effectiveActiveId = when {
+            activeProviderId == "disabled" -> ""
             activeProviderId.isNotEmpty() -> activeProviderId
-            else -> providers.firstOrNull { it.configured }?.id ?: "giphy"
+            else -> providers.firstOrNull { it.configured }?.id ?: "local"
         }
         val isCurrentActive = provider.configured && provider.id == effectiveActiveId
 
         PreferenceDialog(
             onDismissRequest = { selectedProviderForConfig = null },
-            title = stringResource(R.string.gif_dialog_title),
+            title = if (provider.credentialFields.isNotEmpty()) {
+                stringResource(R.string.gif_dialog_title)
+            } else {
+                stringResource(R.string.gif_settings_title)
+            },
             buttons = {
-                Row(
+                FlowRow(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     if (provider.configured && provider.credentialFields.isNotEmpty()) {
-                        OutlinedButton(
+                        TextButton(
                             onClick = {
                                 scope.launch {
                                     val result = manager.call { engine ->
@@ -336,33 +343,38 @@ fun GifSettingsScreen(
                                         Toast.makeText(context, R.string.gif_error_generic, Toast.LENGTH_SHORT).show()
                                     }
                                 }
-                            }
+                            },
+                            colors = ButtonDefaults.textButtonColors(
+                                contentColor = MaterialTheme.colorScheme.error
+                            )
                         ) {
                             Text(stringResource(R.string.gif_clear_key))
                         }
                     }
-                    Spacer(modifier = Modifier.weight(1f))
                     if (provider.configured) {
-                        if (isCurrentActive) {
-                            OutlinedButton(
-                                onClick = {},
-                                enabled = false
-                            ) {
-                                Text(stringResource(R.string.gif_provider_active))
-                            }
-                        } else {
+                        val isDisableAction = isCurrentActive
+                        if (provider.credentialFields.isEmpty()) {
                             Button(
                                 onClick = {
-                                    prefs.edit().putString(Settings.PREF_GIF_PROVIDER, provider.id).apply()
-                                    activeProviderId = provider.id
+                                    val newId = if (isDisableAction) "disabled" else provider.id
+                                    prefs.edit().putString(Settings.PREF_GIF_PROVIDER, newId).apply()
+                                    activeProviderId = newId
                                     selectedProviderForConfig = null
                                 }
                             ) {
-                                Text(stringResource(R.string.gif_set_as_active))
+                                Text(stringResource(if (isDisableAction) R.string.gif_disable else R.string.gif_enable))
                             }
-                        }
-                        if (provider.credentialFields.isNotEmpty()) {
-                            Spacer(modifier = Modifier.width(8.dp))
+                        } else {
+                            TextButton(
+                                onClick = {
+                                    val newId = if (isDisableAction) "disabled" else provider.id
+                                    prefs.edit().putString(Settings.PREF_GIF_PROVIDER, newId).apply()
+                                    activeProviderId = newId
+                                    selectedProviderForConfig = null
+                                }
+                            ) {
+                                Text(stringResource(if (isDisableAction) R.string.gif_disable else R.string.gif_enable))
+                            }
                         }
                     }
                     if (provider.credentialFields.isNotEmpty()) {

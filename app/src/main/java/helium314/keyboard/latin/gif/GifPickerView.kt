@@ -8,12 +8,10 @@ import android.graphics.Color
 import android.graphics.ImageDecoder
 import android.graphics.Typeface
 import android.graphics.drawable.AnimatedImageDrawable
-import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.ParcelFileDescriptor
 import android.util.AttributeSet
-import androidx.core.graphics.ColorUtils
 import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
@@ -398,17 +396,36 @@ class GifPickerView @JvmOverloads constructor(
 
     private fun resolveProvider(engine: IGifEngine): String {
         val rawPref = context.prefs().getString(Settings.PREF_GIF_PROVIDER, "") ?: Settings.getValues().mGifProvider
-        val prefProvider = if (rawPref == "disabled") "" else rawPref
         val list = try { engine.listProviders() } catch (_: Exception) { emptyList() }
         cachedProviders = list
 
+        if (rawPref == "disabled") {
+            activeProviderId = "disabled"
+            val fallback = list.firstOrNull { it.configured } ?: list.firstOrNull()
+            activeProviderName = fallback?.displayName ?: ""
+            activeProviderKinds = fallback?.kinds ?: Contract.KINDS_GIF
+            post {
+                updateCategoryTabsVisibility()
+                updateSearchHint()
+                if (activeProviderName.isNotEmpty()) {
+                    providerBadge.text = activeProviderName.uppercase()
+                    providerBadge.visibility = View.VISIBLE
+                }
+                showStatus(context.getString(R.string.gif_disabled_message), context.getString(R.string.gif_open_settings)) {
+                    openGifSettings()
+                }
+            }
+            return ""
+        }
+
+        val prefProvider = rawPref
         val configured = list.firstOrNull { it.id == prefProvider && it.configured }
             ?: list.firstOrNull { it.configured }
             ?: list.firstOrNull { it.id == prefProvider }
             ?: list.firstOrNull()
 
-        val id = configured?.id ?: "giphy"
-        val name = configured?.displayName ?: "GIPHY"
+        val id = configured?.id ?: "local"
+        val name = configured?.displayName ?: "LOCAL"
         val kinds = configured?.kinds ?: 0
         activeProviderId = id
         activeProviderName = name
@@ -440,7 +457,7 @@ class GifPickerView @JvmOverloads constructor(
             val nextProvider = if (currentIndex >= 0) {
                 candidates[(currentIndex + 1) % candidates.size]
             } else {
-                candidates[0]
+                candidates.firstOrNull { it.configured } ?: candidates[0]
             }
             if (nextProvider.id == activeProviderId) return@launch
 
@@ -480,18 +497,7 @@ class GifPickerView @JvmOverloads constructor(
         val textCol = colors.get(ColorType.KEY_TEXT)
         setBackgroundColor(stripBg)
 
-        // Differentiated search container background with subtle contrast and outline
-        val blendedFill = ColorUtils.compositeColors(
-            (textCol and 0x00FFFFFF) or 0x1F000000,
-            stripBg
-        )
-        val strokeColor = (textCol and 0x00FFFFFF) or 0x33000000
-        val searchBg = GradientDrawable().apply {
-            cornerRadius = 18.dpToPx(resources).toFloat()
-            setColor(blendedFill)
-            setStroke(1.dpToPx(resources), strokeColor)
-        }
-        searchContainer.background = searchBg
+        searchContainer.background = null
         cursorIndicator.setBackgroundColor(textCol)
         statusAction.backgroundTintList = ColorStateList.valueOf(colors.get(ColorType.ACTION_KEY_BACKGROUND))
 
@@ -519,8 +525,13 @@ class GifPickerView @JvmOverloads constructor(
         isPaging = false
         nextPos = null
         hasMore = true
+        if (activeProviderId == "disabled") {
+            showStatus(context.getString(R.string.gif_disabled_message), context.getString(R.string.gif_open_settings)) {
+                openGifSettings()
+            }
+            return
+        }
         statusContainer.visibility = View.GONE
-        if (activeProviderId == "disabled") return
 
         if (selectedKind == KIND_RECENT) {
             queryJob = scope.launch {
