@@ -202,7 +202,9 @@ internal class SuggestionStripLayoutHelper(
         )
         return getPositionInSuggestionStrip(
             indexInSuggestedWords, suggestedWords.mWillAutoCorrect,
-            shouldOmitTypedWord, mCenterPositionInStrip, mTypedWordPositionWhenAutocorrect, mCenterTypedWord
+            shouldOmitTypedWord, mCenterPositionInStrip, mTypedWordPositionWhenAutocorrect, mCenterTypedWord,
+            mCenterTypedWord && settingsValues.mAutoCorrectionRightOfTypedWord
+                && mSuggestionsCountInStrip > mCenterPositionInStrip + 1 // there must be a position on the right
         )
     }
 
@@ -543,7 +545,7 @@ internal class SuggestionStripLayoutHelper(
             indexInSuggestedWords: Int,
             willAutoCorrect: Boolean, omitTypedWord: Boolean,
             centerPositionInStrip: Int, typedWordPositionWhenAutoCorrect: Int,
-            centerTypedWord: Boolean = false
+            centerTypedWord: Boolean = false, autoCorrectionRight: Boolean = false
         ): Int {
             if (omitTypedWord) {
                 if (indexInSuggestedWords == SuggestedWords.INDEX_OF_TYPED_WORD) {
@@ -555,6 +557,10 @@ internal class SuggestionStripLayoutHelper(
                         return centerPositionInStrip
                     }
                     if (indexInSuggestedWords == SuggestedWords.INDEX_OF_AUTO_CORRECTION) {
+                        return if (autoCorrectionRight) centerPositionInStrip + 1 else typedWordPositionWhenAutoCorrect
+                    }
+                    // the suggestion that is usually right of the center goes to the left instead
+                    if (autoCorrectionRight && indexInSuggestedWords == INDEX_OF_TYPED_WORD_WHEN_AUTOCORRECT + 1) {
                         return typedWordPositionWhenAutoCorrect
                     }
                 }
