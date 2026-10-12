@@ -449,7 +449,6 @@ fun GifSettingsScreen(
                     val uriHandler = LocalUriHandler.current
                     val apiKeyUrl = when (provider.id) {
                         "giphy" -> "https://developers.giphy.com/dashboard/"
-                        "tenor" -> "https://developers.google.com/tenor/guides/quickstart"
                         "klipy" -> "https://developer.klipy.co/"
                         else -> null
                     }
