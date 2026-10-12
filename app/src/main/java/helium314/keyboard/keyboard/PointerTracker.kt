@@ -898,20 +898,25 @@ class PointerTracker private constructor(
             val density = Resources.getSystem().displayMetrics.density
             val touchSlop = context?.let { ViewConfiguration.get(it).scaledTouchSlop } ?: (8 * density).toInt()
 
-            if (absDx > touchSlop || absDy > touchSlop) {
+            // Directional filter: reject vertical or diagonal inter-row movement (ratio 2.0)
+            if (absDy > touchSlop * 2 && absDy >= absDx) {
+                return
+            }
+            if (absDx < absDy * 2.0f) {
+                return
+            }
+
+            // Only enter swipe mode when movement is clearly a swipe (> 24 dp)
+            // Below 24 dp, normal typing, key highlights, and single-click popups are 100% preserved
+            val swipeStartThreshold = 24.dpToPx(Resources.getSystem())
+            if (absDx > swipeStartThreshold) {
                 if (!mFullSwipeStarted) {
                     mFullSwipeStarted = true
                     getTimerProxy().cancelKeyTimersOf(this)
                     dismissPopupKeysPanel()
                     mCurrentKey?.let { setReleasedKeyGraphics(it, false) }
                 }
-            }
-
-            if (absDy > touchSlop * 2 && absDy >= absDx) {
-                return
-            }
-
-            if (absDx < absDy * 1.2f) {
+            } else if (!mInHorizontalSwipe) {
                 return
             }
 
@@ -929,15 +934,15 @@ class PointerTracker private constructor(
                 }
 
                 val minFlingVelocity = context?.let { ViewConfiguration.get(it).scaledMinimumFlingVelocity.toFloat() } ?: (50 * density)
-                val dt = eventTime - mStartTime
+                val dt = eventTime - mDownTime
                 val vx = if (dt > 0) absDx * 1000f / dt else 0f
                 val minDistance = if (action == KeyboardActionListener.SWIPE_SWITCH_LANGUAGE) {
-                    max(touchSlop * 2, sv.mLanguageSwipeDistance * sPointerStep)
+                    max(30.dpToPx(Resources.getSystem()), sv.mLanguageSwipeDistance * sPointerStep)
                 } else {
-                    max(touchSlop * 3, 5 * sPointerStep)
+                    max(40.dpToPx(Resources.getSystem()), 5 * sPointerStep)
                 }
 
-                val isFling = vx > minFlingVelocity && absDx > touchSlop * 2
+                val isFling = vx > minFlingVelocity * 3f && absDx > 30.dpToPx(Resources.getSystem())
                 val isDrag = absDx >= minDistance
 
                 if (isFling || isDrag) {
