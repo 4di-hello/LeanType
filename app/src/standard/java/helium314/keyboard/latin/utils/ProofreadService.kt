@@ -100,6 +100,30 @@ class ProofreadService(private val context: Context) {
 
     fun hasApiKey(): Boolean = !getApiKey().isNullOrBlank()
 
+    fun getSecureSettings(): Map<String, Any?> = securePrefs.all
+
+    fun restoreSecureSettings(map: Map<String, Any?>) {
+        val editor = securePrefs.edit()
+        map.forEach { (key, value) ->
+            when (value) {
+                is String -> editor.putString(key, value)
+                is Boolean -> editor.putBoolean(key, value)
+                is Int -> editor.putInt(key, value)
+                is Long -> editor.putLong(key, value)
+                is Float -> editor.putFloat(key, value)
+                is Set<*> -> {
+                    @Suppress("UNCHECKED_CAST")
+                    editor.putStringSet(key, value as Set<String>)
+                }
+            }
+        }
+        editor.apply()
+    }
+
+    fun clearSecureSettings() {
+        securePrefs.edit().clear().apply()
+    }
+
     suspend fun fetchAvailableModels(provider: AIProvider): List<String> = withContext(Dispatchers.IO) {
         when (provider) {
             AIProvider.GEMINI -> fetchGeminiModels()

@@ -145,6 +145,9 @@ class ProofreadService(private val context: Context) {
     fun getApiKey(): String? = null
     fun setApiKey(apiKey: String?) { /* No-op */ }
     fun hasApiKey(): Boolean = false
+    fun getSecureSettings(): Map<String, Any?> = emptyMap()
+    fun restoreSecureSettings(map: Map<String, Any?>) { /* No-op */ }
+    fun clearSecureSettings() { /* No-op */ }
     
     // HuggingFace stubs
     fun getHuggingFaceToken(): String? = null

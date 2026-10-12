@@ -1712,4 +1712,10 @@ Ar norite atnaujinti?</string>
 
     <string name="full_keyboard_swipe_gesture">Visos klaviatūros braukimo gestas</string>
     <string name="full_keyboard_swipe_gesture_summary">Braukite horizontaliai per klaviatūrą, kad atliktumėte veiksmą (automatiškai išjungia rašymą braukiant)</string>
+    <string name="backup_category_dictionaries">Žodynai</string>
+    <string name="backup_category_typing_history">Rašymo istorija</string>
+    <string name="backup_category_api_keys">API raktai</string>
+    <string name="backup_api_keys_warning_title">Saugumo įspėjimas</string>
+    <string name="backup_api_keys_warning_message">API raktai yra jautrūs kredencialai. Įtraukus juos atsarginės kopijos faile jie bus saugomi kaip nešifruotas paprastas tekstas. Kiekvienas, turintis prieigą prie šio failo, turės prieigą prie jūsų API raktų.</string>
+    <string name="backup_api_keys_warning_confirm">Įtraukti API raktus</string>
 </resources>

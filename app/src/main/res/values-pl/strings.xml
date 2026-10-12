@@ -1766,4 +1766,10 @@ Umożliwia lokalne wnioskowanie GGUF / llama.cpp na urządzeniu w celu korekty i
 
     <string name="full_keyboard_swipe_gesture">Gest przesunięcia po całej klawiaturze</string>
     <string name="full_keyboard_swipe_gesture_summary">Przesuń palcem poziomo po klawiaturze, aby wykonać czynność (automatycznie wyłącza pisanie gestami)</string>
+    <string name="backup_category_dictionaries">Słowniki</string>
+    <string name="backup_category_typing_history">Historia pisania</string>
+    <string name="backup_category_api_keys">Klucze API</string>
+    <string name="backup_api_keys_warning_title">Ostrzeżenie dotyczące bezpieczeństwa</string>
+    <string name="backup_api_keys_warning_message">Klucze API to poufne dane uwierzytelniające. Dołączenie ich spowoduje zapisanie ich jako niezaszyfrowanego zwykłego tekstu w pliku kopii zapasowej. Każda osoba mająca dostęp do tego pliku będzie miała dostęp do Twoich kluczy API.</string>
+    <string name="backup_api_keys_warning_confirm">Dołącz klucze API</string>
 </resources>

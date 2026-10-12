@@ -1789,4 +1789,10 @@
 
     <string name="full_keyboard_swipe_gesture">Жест смахивания по всей клавиатуре</string>
     <string name="full_keyboard_swipe_gesture_summary">Проведите горизонтально по клавиатуре для выполнения действия (автоматически отключает непрерывный ввод)</string>
+    <string name="backup_category_dictionaries">Словари</string>
+    <string name="backup_category_typing_history">История ввода</string>
+    <string name="backup_category_api_keys">API-ключи</string>
+    <string name="backup_api_keys_warning_title">Предупреждение безопасности</string>
+    <string name="backup_api_keys_warning_message">Ключи API  -  это конфиденциальные учетные данные. Включение их сохранит их в виде незашифрованного обычного текста в файле резервной копии. Любой, у кого есть доступ к этому файлу, будет иметь доступ к вашим ключам API.</string>
+    <string name="backup_api_keys_warning_confirm">Включить ключи API</string>
 </resources>

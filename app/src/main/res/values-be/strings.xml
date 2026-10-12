@@ -1716,4 +1716,10 @@
 
     <string name="full_keyboard_swipe_gesture">Жэст правядзення па ўсёй клавіятуры</string>
     <string name="full_keyboard_swipe_gesture_summary">Правядзіце гарызантальна па клавіятуры для выканання дзеяння (аўтаматычна выключае бесперапынны ўвод)</string>
+    <string name="backup_category_dictionaries">Слоўнікі</string>
+    <string name="backup_category_typing_history">Гісторыя набору тэксту</string>
+    <string name="backup_category_api_keys">Ключы API</string>
+    <string name="backup_api_keys_warning_title">Папярэджанне бяспекі</string>
+    <string name="backup_api_keys_warning_message">Ключы API з\'яўляюцца канфідэнцыйнымі ўліковымі дадзенымі. Калі вы ўключыце іх, яны захаваюцца ў выглядзе незашыфраванага тэксту ў файле рэзервовай копіі. Любы, хто мае доступ да гэтага файла, будзе мець доступ да вашых ключоў API.</string>
+    <string name="backup_api_keys_warning_confirm">Уключыць ключы API</string>
 </resources>

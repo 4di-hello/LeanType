@@ -1684,4 +1684,10 @@
 
     <string name="full_keyboard_swipe_gesture">Жест проведення по всій клавіатурі</string>
     <string name="full_keyboard_swipe_gesture_summary">Проведіть горизонтально по клавіатурі для виконання дії (автоматично вимикає введення розчерком)</string>
+    <string name="backup_category_dictionaries">словники</string>
+    <string name="backup_category_typing_history">Історія введення</string>
+    <string name="backup_category_api_keys">Ключі API</string>
+    <string name="backup_api_keys_warning_title">Попередження безпеки</string>
+    <string name="backup_api_keys_warning_message">Ключі API є конфіденційними обліковими даними. Якщо додати їх, вони збережуться як незашифрований звичайний текст у файлі резервної копії. Кожен, хто має доступ до цього файлу, матиме доступ до ваших ключів API.</string>
+    <string name="backup_api_keys_warning_confirm">Включити ключі API</string>
 </resources>

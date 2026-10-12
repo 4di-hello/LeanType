@@ -1789,4 +1789,10 @@ Abilita l\'inferenza GGUF / llama.cpp sul dispositivo per correzione e riscrittu
 
     <string name="full_keyboard_swipe_gesture">Gesto di scorrimento su tutta la tastiera</string>
     <string name="full_keyboard_swipe_gesture_summary">Scorri orizzontalmente sulla tastiera per eseguire un\'azione (disattiva automaticamente la digitazione a scorrimento)</string>
+    <string name="backup_category_dictionaries">Dizionari</string>
+    <string name="backup_category_typing_history">Storia della digitazione</string>
+    <string name="backup_category_api_keys">Chiavi API</string>
+    <string name="backup_api_keys_warning_title">Avviso di sicurezza</string>
+    <string name="backup_api_keys_warning_message">Le chiavi API sono credenziali sensibili. Includerli li memorizzerà come testo normale non crittografato nel file di backup. Chiunque abbia accesso a questo file avrà accesso alle tue chiavi API.</string>
+    <string name="backup_api_keys_warning_confirm">Includi chiavi API</string>
 </resources>

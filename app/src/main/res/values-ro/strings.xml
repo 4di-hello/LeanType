@@ -1711,4 +1711,10 @@ Activează inferența GGUF / llama.cpp pe dispozitiv pentru corectură și refor
 
     <string name="full_keyboard_swipe_gesture">Gest de glisare pe întreaga tastatură</string>
     <string name="full_keyboard_swipe_gesture_summary">Glisați orizontal pe tastatură pentru a efectua o acțiune (dezactivează automat scrierea prin glisare)</string>
+    <string name="backup_category_dictionaries">Dicționare</string>
+    <string name="backup_category_typing_history">Istoricul tastării</string>
+    <string name="backup_category_api_keys">Chei API</string>
+    <string name="backup_api_keys_warning_title">Avertisment de securitate</string>
+    <string name="backup_api_keys_warning_message">Cheile API sunt acreditări sensibile. Includerea acestora le va stoca ca text simplu necriptat în fișierul de rezervă. Oricine are acces la acest fișier va avea acces la cheile dvs. API.</string>
+    <string name="backup_api_keys_warning_confirm">Includeți cheile API</string>
 </resources>

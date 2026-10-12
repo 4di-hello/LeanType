@@ -1679,4 +1679,10 @@ Memungkinkan inferensi GGUF / llama.cpp di perangkat untuk koreksi teks dan penu
 
     <string name="full_keyboard_swipe_gesture">Gestur usap seluruh keyboard</string>
     <string name="full_keyboard_swipe_gesture_summary">Usap horizontal di keyboard untuk menjalankan tindakan (otomatis menonaktifkan pengetikan gestur)</string>
+    <string name="backup_category_dictionaries">Kamus</string>
+    <string name="backup_category_typing_history">Mengetik Sejarah</string>
+    <string name="backup_category_api_keys">Kunci API</string>
+    <string name="backup_api_keys_warning_title">Peringatan Keamanan</string>
+    <string name="backup_api_keys_warning_message">Kunci API adalah kredensial sensitif. Menyertakannya akan menyimpannya sebagai teks biasa yang tidak terenkripsi di file cadangan. Siapa pun yang memiliki akses ke file ini akan memiliki akses ke kunci API Anda.</string>
+    <string name="backup_api_keys_warning_confirm">Sertakan Kunci API</string>
 </resources>

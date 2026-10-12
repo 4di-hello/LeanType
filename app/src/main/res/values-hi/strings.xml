@@ -1708,4 +1708,10 @@
 
     <string name="full_keyboard_swipe_gesture">पूरे कीबोर्ड पर स्वाइप जेस्चर</string>
     <string name="full_keyboard_swipe_gesture_summary">कोई क्रिया करने के लिए कीबोर्ड पर क्षैतिज रूप से स्वाइप करें (जेस्चर टाइपिंग स्वतः बंद हो जाती है)</string>
+    <string name="backup_category_dictionaries">शब्दकोश:</string>
+    <string name="backup_category_typing_history">टाइपिंग इतिहास</string>
+    <string name="backup_category_api_keys">एपीआई कुंजी</string>
+    <string name="backup_api_keys_warning_title">सुरक्षा चेतावनी</string>
+    <string name="backup_api_keys_warning_message">एपीआई कुंजियाँ संवेदनशील क्रेडेंशियल हैं। उन्हें शामिल करने से वे बैकअप फ़ाइल में अनएन्क्रिप्टेड सादे पाठ के रूप में संग्रहीत हो जाएंगे। इस फ़ाइल तक पहुंच रखने वाले किसी भी व्यक्ति के पास आपकी एपीआई कुंजियों तक पहुंच होगी।</string>
+    <string name="backup_api_keys_warning_confirm">एपीआई कुंजियाँ शामिल करें</string>
 </resources>

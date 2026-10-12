@@ -42,6 +42,7 @@ import helium314.keyboard.latin.utils.DeviceProtectedUtils
 import helium314.keyboard.latin.utils.ExecutorUtils
 import helium314.keyboard.latin.utils.LayoutUtilsCustom
 import helium314.keyboard.latin.utils.Log
+import helium314.keyboard.latin.utils.ProofreadService
 import helium314.keyboard.latin.utils.SubtypeSettings
 import helium314.keyboard.latin.utils.getActivity
 import helium314.keyboard.latin.utils.prefs
@@ -66,6 +67,7 @@ import helium314.keyboard.settings.FeedbackManager
 @Composable
 fun BackupRestorePreference(setting: Setting) {
     var showDialog by rememberSaveable { mutableStateOf(false) }
+    var showApiKeyWarningDialog by rememberSaveable { mutableStateOf(false) }
     val ctx = LocalContext.current
     var error: String? by rememberSaveable { mutableStateOf(null) }
     var selectedCategories by remember {
@@ -73,7 +75,8 @@ fun BackupRestorePreference(setting: Setting) {
             setOf(
                 BackupCategory.LAYOUTS,
                 BackupCategory.THEME_APPEARANCE,
-                BackupCategory.DICTIONARY_HISTORY,
+                BackupCategory.DICTIONARIES,
+                BackupCategory.TYPING_HISTORY,
                 BackupCategory.CLIPBOARD,
                 BackupCategory.GENERAL_SETTINGS
             )
@@ -95,8 +98,10 @@ fun BackupRestorePreference(setting: Setting) {
                     val categories = listOf(
                         BackupCategory.LAYOUTS to R.string.backup_category_layouts,
                         BackupCategory.THEME_APPEARANCE to R.string.backup_category_theme,
-                        BackupCategory.DICTIONARY_HISTORY to R.string.backup_category_dictionary,
+                        BackupCategory.DICTIONARIES to R.string.backup_category_dictionaries,
+                        BackupCategory.TYPING_HISTORY to R.string.backup_category_typing_history,
                         BackupCategory.CLIPBOARD to R.string.backup_category_clipboard,
+                        BackupCategory.API_KEYS to R.string.backup_category_api_keys,
                         BackupCategory.GENERAL_SETTINGS to R.string.backup_category_general
                     )
                     categories.forEach { (category, stringResId) ->
@@ -106,10 +111,14 @@ fun BackupRestorePreference(setting: Setting) {
                                 .toggleable(
                                     value = selectedCategories.contains(category),
                                     onValueChange = { checked ->
-                                        selectedCategories = if (checked) {
-                                            selectedCategories + category
+                                        if (category == BackupCategory.API_KEYS && checked) {
+                                            showApiKeyWarningDialog = true
                                         } else {
-                                            selectedCategories - category
+                                            selectedCategories = if (checked) {
+                                                selectedCategories + category
+                                            } else {
+                                                selectedCategories - category
+                                            }
                                         }
                                     }
                                 )
@@ -157,6 +166,20 @@ fun BackupRestorePreference(setting: Setting) {
                     )
                     .setType("application/zip")
                 backupLauncher.launch(intent)
+            }
+        )
+    }
+    if (showApiKeyWarningDialog) {
+        ConfirmationDialog(
+            onDismissRequest = { showApiKeyWarningDialog = false },
+            title = { Text(stringResource(R.string.backup_api_keys_warning_title)) },
+            content = {
+                Text(text = stringResource(R.string.backup_api_keys_warning_message))
+            },
+            confirmButtonText = stringResource(R.string.backup_api_keys_warning_confirm),
+            onConfirmed = {
+                showApiKeyWarningDialog = false
+                selectedCategories = selectedCategories + BackupCategory.API_KEYS
             }
         )
     }
@@ -229,6 +252,14 @@ private fun backupLauncher(
                             zipStream.closeEntry()
                         }
                     }
+                    if (selectedCategories.contains(BackupCategory.API_KEYS)) {
+                        val secureSettings = ProofreadService(ctx).getSecureSettings()
+                        if (secureSettings.isNotEmpty()) {
+                            zipStream.putNextEntry(ZipEntry(API_KEYS_FILE_NAME))
+                            settingsToJsonStream(secureSettings, zipStream)
+                            zipStream.closeEntry()
+                        }
+                    }
                     val filteredPrefs = ctx.prefs().all.filter {
                         selectedCategories.contains(getCategoryForPrefKey(it.key))
                     }
@@ -288,13 +319,18 @@ private fun restoreLauncher(
                         if (selectedCategories.contains(BackupCategory.LAYOUTS)) {
                             File(filesDir, "layouts").deleteRecursively()
                         }
-                        if (selectedCategories.contains(BackupCategory.DICTIONARY_HISTORY)) {
+                        if (selectedCategories.contains(BackupCategory.DICTIONARIES)) {
                             File(filesDir, "dicts").deleteRecursively()
                             File(filesDir, "blacklists").deleteRecursively()
                             File(deviceProtectedFilesDir, "blacklists").deleteRecursively()
+                        }
+                        if (selectedCategories.contains(BackupCategory.TYPING_HISTORY)) {
                             filesDir.listFiles()?.forEach {
                                 if (it.name.startsWith("UserHistoryDictionary")) it.delete()
                             }
+                        }
+                        if (selectedCategories.contains(BackupCategory.API_KEYS)) {
+                            ProofreadService(ctx).clearSecureSettings()
                         }
                         if (selectedCategories.contains(BackupCategory.THEME_APPEARANCE)) {
                             File(filesDir, "custom_font").delete()
@@ -334,6 +370,12 @@ private fun restoreLauncher(
                             } else if (entry.name == Database.NAME) {
                                 if (selectedCategories.contains(BackupCategory.CLIPBOARD)) {
                                     FileUtils.copyStreamToNewFile(zip, restoredDb)
+                                }
+                            } else if (entry.name == API_KEYS_FILE_NAME) {
+                                if (selectedCategories.contains(BackupCategory.API_KEYS)) {
+                                    val apiKeyLines = String(zip.readBytes()).split("\n")
+                                    val restoredMap = readJsonLinesToMap(apiKeyLines)
+                                    ProofreadService(ctx).restoreSecureSettings(restoredMap)
                                 }
                             } else if (entry.name == PREFS_FILE_NAME) {
                                 preferenceLines = String(zip.readBytes()).split("\n")
@@ -416,7 +458,7 @@ internal fun restoreMainPreferences(
 }
 
 @Suppress("UNCHECKED_CAST") // it is checked... but whatever (except string set, because can't check for that))
-private fun settingsToJsonStream(settings: Map<String?, Any?>, out: OutputStream) {
+private fun settingsToJsonStream(settings: Map<*, Any?>, out: OutputStream) {
     val booleans = settings.filter { it.key is String && it.value is Boolean } as Map<String, Boolean>
     val ints = settings.filter { it.key is String && it.value is Int } as Map<String, Int>
     val longs = settings.filter { it.key is String && it.value is Long } as Map<String, Long>
@@ -471,15 +513,29 @@ private fun readJsonLinesToSettings(list: List<String>, prefs: SharedPreferences
     }
 }
 
+private fun readJsonLinesToMap(list: List<String>): Map<String, Any> {
+    val result = mutableMapOf<String, Any>()
+    val i = list.iterator()
+    while (i.hasNext()) {
+        when (i.next()) {
+            "boolean settings" -> if (i.hasNext()) result.putAll(Json.decodeFromString<Map<String, Boolean>>(i.next()))
+            "int settings" -> if (i.hasNext()) result.putAll(Json.decodeFromString<Map<String, Int>>(i.next()))
+            "long settings" -> if (i.hasNext()) result.putAll(Json.decodeFromString<Map<String, Long>>(i.next()))
+            "float settings" -> if (i.hasNext()) result.putAll(Json.decodeFromString<Map<String, Float>>(i.next()))
+            "string settings" -> if (i.hasNext()) result.putAll(Json.decodeFromString<Map<String, String>>(i.next()))
+            "string set settings" -> if (i.hasNext()) result.putAll(Json.decodeFromString<Map<String, Set<String>>>(i.next()))
+        }
+    }
+    return result
+}
+
 /**
  * Auxiliary SharedPreferences files (other than the main prefs and protectedPrefs) that
  * should be included in backups. The key is the zip entry name to use, and the value
  * is the SharedPreferences instance to read from / write back into on restore.
  *
- * NOTE: This must NOT include EncryptedSharedPreferences (e.g. "gemini_prefs"), because
- * those values are encrypted with a device-bound master key and would be unreadable on
- * any other device. Plus they typically hold credentials, which we don't want in a plain
- * backup zip.
+ * NOTE: EncryptedSharedPreferences (e.g. "gemini_prefs") credentials are exported to
+ * api_keys.json when the API_KEYS category is explicitly selected by the user.
  */
 private fun auxiliaryPrefsToBackUp(ctx: android.content.Context): Map<String, SharedPreferences> =
     mapOf(
@@ -501,10 +557,11 @@ private fun restoreEntryToDir(zip: ZipInputStream, baseDir: File, entryName: Str
 private const val PREFS_FILE_NAME = "preferences.json"
 private const val PROTECTED_PREFS_FILE_NAME = "protected_preferences.json"
 private const val FLOATING_KEYBOARD_PREFS_FILE_NAME = "floating_keyboard_preferences.json"
+private const val API_KEYS_FILE_NAME = "api_keys.json"
 
 private val blacklistsRegex = "blacklists${File.separator}.*\\.txt".toRegex()
 private val layoutsRegex = "layouts${File.separator}.*${LayoutUtilsCustom.CUSTOM_LAYOUT_PREFIX}+\\..{0,4}".toRegex()
-private val dictsRegex = "dicts${File.separator}.*${File.separator}.*user\\.dict".toRegex()
+private val dictsRegex = "dicts${File.separator}.*${File.separator}.*\\.dict".toRegex()
 private val historyDictRegex = "UserHistoryDictionary.*${File.separator}UserHistoryDictionary.*\\.(body|header)".toRegex()
 private val bgImgRegex = "custom_background_image.*".toRegex()
 private val fontRegex = "custom_font".toRegex()
@@ -523,8 +580,10 @@ private val backupFilePatterns by lazy { listOf(
 enum class BackupCategory {
     LAYOUTS,
     THEME_APPEARANCE,
-    DICTIONARY_HISTORY,
+    DICTIONARIES,
+    TYPING_HISTORY,
     CLIPBOARD,
+    API_KEYS,
     GENERAL_SETTINGS
 }
 
@@ -557,7 +616,7 @@ private fun getCategoryForPrefKey(key: String): BackupCategory {
         "add_to_personal_dictionary", "add_to_personal_dict_threshold",
         "auto_correct_aggressiveness"
     )
-    if (dictKeys.contains(key) || key.startsWith("pref_text_expander_")) return BackupCategory.DICTIONARY_HISTORY
+    if (dictKeys.contains(key) || key.startsWith("pref_text_expander_")) return BackupCategory.DICTIONARIES
     
     val clipboardKeys = setOf(
         "enable_clipboard_history", "suggest_screenshots", "compress_screenshots",
@@ -578,12 +637,17 @@ private fun getCategoryForFilePath(path: String): BackupCategory? {
     }
     if (path.startsWith("dicts${File.separator}") || path.startsWith("dicts/")
         || path.startsWith("blacklists${File.separator}") || path.startsWith("blacklists/")
-        || path.startsWith("UserHistoryDictionary")
     ) {
-        return BackupCategory.DICTIONARY_HISTORY
+        return BackupCategory.DICTIONARIES
+    }
+    if (path.startsWith("UserHistoryDictionary")) {
+        return BackupCategory.TYPING_HISTORY
     }
     if (path == Database.NAME) {
         return BackupCategory.CLIPBOARD
+    }
+    if (path == API_KEYS_FILE_NAME) {
+        return BackupCategory.API_KEYS
     }
     return null
 }

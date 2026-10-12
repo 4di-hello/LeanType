@@ -1778,4 +1778,10 @@ Permet l\'inférence GGUF / llama.cpp sur l\'appareil pour la correction et la r
 
     <string name="full_keyboard_swipe_gesture">Geste de glissement sur tout le clavier</string>
     <string name="full_keyboard_swipe_gesture_summary">Balayez horizontalement le clavier pour effectuer une action (désactive automatiquement la saisie gestuelle)</string>
+    <string name="backup_category_dictionaries">Dictionnaires</string>
+    <string name="backup_category_typing_history">Historique de saisie</string>
+    <string name="backup_category_api_keys">Clés API</string>
+    <string name="backup_api_keys_warning_title">Avertissement de sécurité</string>
+    <string name="backup_api_keys_warning_message">Les clés API sont des informations d\'identification sensibles. Les inclure les stockera sous forme de texte brut non crypté dans le fichier de sauvegarde. Toute personne ayant accès à ce fichier aura accès à vos clés API.</string>
+    <string name="backup_api_keys_warning_confirm">Inclure les clés API</string>
 </resources>

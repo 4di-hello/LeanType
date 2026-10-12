@@ -1726,4 +1726,10 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
 
     <string name="full_keyboard_swipe_gesture">Wischgeste über die gesamte Tastatur</string>
     <string name="full_keyboard_swipe_gesture_summary">Wischen Sie horizontal über die Tastatur, um eine Aktion auszuführen (schaltet die Gesteneingabe automatisch aus)</string>
+    <string name="backup_category_dictionaries">Wörterbücher</string>
+    <string name="backup_category_typing_history">Tippverlauf</string>
+    <string name="backup_category_api_keys">API-Schlüssel</string>
+    <string name="backup_api_keys_warning_title">Sicherheitswarnung</string>
+    <string name="backup_api_keys_warning_message">API-Schlüssel sind vertrauliche Anmeldeinformationen. Wenn Sie sie einbeziehen, werden sie als unverschlüsselter Klartext in der Sicherungsdatei gespeichert. Jeder, der Zugriff auf diese Datei hat, hat Zugriff auf Ihre API-Schlüssel.</string>
+    <string name="backup_api_keys_warning_confirm">API-Schlüssel einschließen</string>
 </resources>

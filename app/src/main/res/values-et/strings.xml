@@ -1711,4 +1711,10 @@ Võimaldab seadmesisese GGUF / llama.cpp järelduse korrektuuri ja ümbersõnast
 
     <string name="full_keyboard_swipe_gesture">Terve klaviatuuri pühkimise žest</string>
     <string name="full_keyboard_swipe_gesture_summary">Toimingu tegemiseks pühkige horisontaalselt üle klaviatuuri (lülitab viipega sisestamise automaatselt välja)</string>
+    <string name="backup_category_dictionaries">Sõnaraamatud</string>
+    <string name="backup_category_typing_history">Tippimisajalugu</string>
+    <string name="backup_category_api_keys">API võtmed</string>
+    <string name="backup_api_keys_warning_title">Turvahoiatus</string>
+    <string name="backup_api_keys_warning_message">API-võtmed on tundlikud mandaadid. Nende kaasamine salvestab need varukoopiafaili krüptimata lihttekstina. Kõigil, kellel on sellele failile juurdepääs, on juurdepääs teie API võtmetele.</string>
+    <string name="backup_api_keys_warning_confirm">Kaasake API võtmed</string>
 </resources>

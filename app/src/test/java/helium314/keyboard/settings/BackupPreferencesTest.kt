@@ -81,7 +81,7 @@ class BackupPreferencesTest {
         assertTrue(prefs.edit().putString("theme_style", "keep").putString("pref_text_expander_data", "old").commit())
         restoreMainPreferences(context,
             lines(mapOf("pref_text_expander_data" to "{}")), lines(emptyMap()),
-            setOf(BackupCategory.DICTIONARY_HISTORY))
+            setOf(BackupCategory.DICTIONARIES))
         assertEquals("keep", prefs.getString("theme_style", null))
         assertEquals("{}", prefs.getString(TextExpanderUtils.PREF_DATA, null))
     }

@@ -1734,4 +1734,10 @@ Habilita inferência GGUF / llama.cpp no dispositivo para revisão e reescrita.<
 
     <string name="full_keyboard_swipe_gesture">Gesto de deslize em todo o teclado</string>
     <string name="full_keyboard_swipe_gesture_summary">Deslize horizontalmente pelo teclado para executar uma ação (desativa automaticamente a digitação por gestos)</string>
+    <string name="backup_category_dictionaries">Dicionários</string>
+    <string name="backup_category_typing_history">Histórico de digitação</string>
+    <string name="backup_category_api_keys">Chaves de API</string>
+    <string name="backup_api_keys_warning_title">Aviso de segurança</string>
+    <string name="backup_api_keys_warning_message">As chaves de API são credenciais confidenciais. Incluí-los irá armazená-los como texto simples não criptografado no arquivo de backup. Qualquer pessoa com acesso a este arquivo terá acesso às suas chaves de API.</string>
+    <string name="backup_api_keys_warning_confirm">Incluir chaves de API</string>
 </resources>

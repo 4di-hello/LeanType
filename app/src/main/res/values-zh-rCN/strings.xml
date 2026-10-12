@@ -1730,4 +1730,10 @@
 
     <string name="full_keyboard_swipe_gesture">全键盘滑动手势</string>
     <string name="full_keyboard_swipe_gesture_summary">在键盘上水平滑动以执行操作（自动关闭手势输入）</string>
+    <string name="backup_category_dictionaries">词典</string>
+    <string name="backup_category_typing_history">打字历史</string>
+    <string name="backup_category_api_keys">API 密钥</string>
+    <string name="backup_api_keys_warning_title">安全警告</string>
+    <string name="backup_api_keys_warning_message">API 密钥是敏感凭证。包含它们会将它们作为未加密的纯文本存储在备份文件中。任何有权访问此文件的人都可以访问您的 API 密钥。</string>
+    <string name="backup_api_keys_warning_confirm">包括 API 密钥</string>
 </resources>

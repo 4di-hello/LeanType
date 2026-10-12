@@ -1782,4 +1782,10 @@
 
     <string name="full_keyboard_swipe_gesture">പൂർണ്ണ കീബോർഡ് സ്വൈപ്പ് ജെസ്റ്റർ</string>
     <string name="full_keyboard_swipe_gesture_summary">ഒരു പ്രവർത്തനം നടത്താൻ കീബോർഡിലൂടെ തിരശ്ചീനമായി സ്വൈപ്പ് ചെയ്യുക (ജെസ്റ്റർ ടൈപ്പിംഗ് സ്വയമേവ ഓഫാകും)</string>
+    <string name="backup_category_dictionaries">നിഘണ്ടുക്കൾ</string>
+    <string name="backup_category_typing_history">ടൈപ്പിംഗ് ചരിത്രം</string>
+    <string name="backup_category_api_keys">API കീകൾ</string>
+    <string name="backup_api_keys_warning_title">സുരക്ഷാ മുന്നറിയിപ്പ്</string>
+    <string name="backup_api_keys_warning_message">API കീകൾ സെൻസിറ്റീവ് ക്രെഡൻഷ്യലുകളാണ്. അവ ഉൾപ്പെടുത്തുന്നത് ബാക്കപ്പ് ഫയലിൽ അവയെ എൻക്രിപ്റ്റ് ചെയ്യാത്ത പ്ലെയിൻ ടെക്സ്റ്റായി സംഭരിക്കും. ഈ ഫയലിലേക്ക് ആക്‌സസ് ഉള്ള ആർക്കും നിങ്ങളുടെ API കീകളിലേക്ക് ആക്‌സസ് ഉണ്ടായിരിക്കും.</string>
+    <string name="backup_api_keys_warning_confirm">API കീകൾ ഉൾപ്പെടുത്തുക</string>
 </resources>

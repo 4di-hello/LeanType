@@ -1704,4 +1704,10 @@ Omogućuje lokalno GGUF / llama.cpp zaključivanje na uređaju za lekturu i prep
 
     <string name="full_keyboard_swipe_gesture">Potez prelaska preko cijele tipkovnice</string>
     <string name="full_keyboard_swipe_gesture_summary">Prijeđite vodoravno preko tipkovnice za izvršavanje radnje (automatski isključuje unos potezom)</string>
+    <string name="backup_category_dictionaries">Rječnici</string>
+    <string name="backup_category_typing_history">Povijest tipkanja</string>
+    <string name="backup_category_api_keys">API ključevi</string>
+    <string name="backup_api_keys_warning_title">Sigurnosno upozorenje</string>
+    <string name="backup_api_keys_warning_message">API ključevi su osjetljive vjerodajnice. Ako ih uključite, pohranit ćete ih kao nešifrirani čisti tekst u datoteku sigurnosne kopije. Svatko s pristupom ovoj datoteci imat će pristup vašim API ključevima.</string>
+    <string name="backup_api_keys_warning_confirm">Uključi API ključeve</string>
 </resources>

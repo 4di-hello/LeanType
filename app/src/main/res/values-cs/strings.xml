@@ -1729,4 +1729,10 @@ Umožňuje lokální inferenci GGUF / llama.cpp na zařízení pro korektury a p
 
     <string name="full_keyboard_swipe_gesture">Gesto přejetí přes celou klávesnici</string>
     <string name="full_keyboard_swipe_gesture_summary">Přejeďte vodorovně přes klávesnici pro provedení akce (automaticky vypne psaní tahem)</string>
+    <string name="backup_category_dictionaries">Slovníky</string>
+    <string name="backup_category_typing_history">Historie psaní</string>
+    <string name="backup_category_api_keys">Klíče API</string>
+    <string name="backup_api_keys_warning_title">Bezpečnostní varování</string>
+    <string name="backup_api_keys_warning_message">Klíče API jsou citlivé přihlašovací údaje. Jejich zahrnutím je uložíte jako nezašifrovaný prostý text do záložního souboru. Kdokoli s přístupem k tomuto souboru bude mít přístup k vašim klíčům API.</string>
+    <string name="backup_api_keys_warning_confirm">Zahrnout klíče API</string>
 </resources>

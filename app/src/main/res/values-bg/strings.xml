@@ -1764,4 +1764,10 @@
 
     <string name="full_keyboard_swipe_gesture">Жест с плъзгане по цялата клавиатура</string>
     <string name="full_keyboard_swipe_gesture_summary">Плъзнете хоризонтално по клавиатурата за изпълнение на действие (автоматично изключва писането с жестове)</string>
+    <string name="backup_category_dictionaries">Речници</string>
+    <string name="backup_category_typing_history">История на писане</string>
+    <string name="backup_category_api_keys">API ключове</string>
+    <string name="backup_api_keys_warning_title">Предупреждение за сигурност</string>
+    <string name="backup_api_keys_warning_message">API ключовете са чувствителни идентификационни данни. Включването им ще ги съхрани като некриптиран обикновен текст в архивния файл. Всеки с достъп до този файл ще има достъп до вашите API ключове.</string>
+    <string name="backup_api_keys_warning_confirm">Включете API ключове</string>
 </resources>

@@ -1764,4 +1764,10 @@ Maakt GGUF / llama.cpp-inferentie op het apparaat mogelijk voor proeflezen en he
 
     <string name="full_keyboard_swipe_gesture">Veeggebaar over het hele toetsenbord</string>
     <string name="full_keyboard_swipe_gesture_summary">Veeg horizontaal over het toetsenbord om een actie uit te voeren (schakelt veegtypen automatisch uit)</string>
+    <string name="backup_category_dictionaries">Woordenboeken</string>
+    <string name="backup_category_typing_history">Geschiedenis typen</string>
+    <string name="backup_category_api_keys">API-sleutels</string>
+    <string name="backup_api_keys_warning_title">Beveiligingswaarschuwing</string>
+    <string name="backup_api_keys_warning_message">API-sleutels zijn gevoelige inloggegevens. Als u ze opneemt, worden ze als niet-gecodeerde platte tekst in het back-upbestand opgeslagen. Iedereen met toegang tot dit bestand heeft toegang tot uw API-sleutels.</string>
+    <string name="backup_api_keys_warning_confirm">Inclusief API-sleutels</string>
 </resources>

@@ -1720,4 +1720,10 @@ Lehetővé teszi az eszközön futó GGUF / llama.cpp következtetést a javít�
 
     <string name="full_keyboard_swipe_gesture">Teljes billentyűzetes csúsztatási kézmozdulat</string>
     <string name="full_keyboard_swipe_gesture_summary">Csúsztassa el ujját vízszintesen a billentyűzeten egy művelet végrehajtásához (automatikusan kikapcsolja a csúsztatásos gépelést)</string>
+    <string name="backup_category_dictionaries">Szótárak</string>
+    <string name="backup_category_typing_history">Gépelési előzmények</string>
+    <string name="backup_category_api_keys">API kulcsok</string>
+    <string name="backup_api_keys_warning_title">Biztonsági figyelmeztetés</string>
+    <string name="backup_api_keys_warning_message">Az API-kulcsok érzékeny hitelesítő adatok. Belefoglalásuk titkosítatlan egyszerű szövegként tárolja őket a biztonsági mentési fájlban. Bárki, aki hozzáfér ehhez a fájlhoz, hozzáférhet az API-kulcsokhoz.</string>
+    <string name="backup_api_keys_warning_confirm">Tartalmazza az API kulcsokat</string>
 </resources>

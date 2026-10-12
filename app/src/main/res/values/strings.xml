@@ -737,9 +737,15 @@
     <string name="backup_category_layouts">Layouts</string>
     <string name="backup_category_theme">Theme &amp; Custom Backgrounds</string>
     <string name="backup_category_dictionary">Dictionaries &amp; Typing History</string>
+    <string name="backup_category_dictionaries">Dictionaries</string>
+    <string name="backup_category_typing_history">Typing History</string>
+    <string name="backup_category_api_keys">API Keys</string>
     <string name="backup_category_clipboard">Clipboard History</string>
     <string name="backup_category_general">General Settings</string>
     <string name="backup_select_items">Select items to include:</string>
+    <string name="backup_api_keys_warning_title">Security Warning</string>
+    <string name="backup_api_keys_warning_message">API keys are sensitive credentials. Including them will store them as unencrypted plain text in the backup file. Anyone with access to this file will have access to your API keys.</string>
+    <string name="backup_api_keys_warning_confirm">Include API Keys</string>
 
     <string name="config_gemini_models_endpoint" translatable="false">https://generativelanguage.googleapis.com/v1beta/models?key=%1$s</string>
     <string name="config_groq_models_endpoint" translatable="false">https://api.groq.com/openai/v1/models</string>

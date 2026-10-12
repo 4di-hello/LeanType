@@ -1787,4 +1787,10 @@
 
     <string name="full_keyboard_swipe_gesture">إيماءة التمرير السريع على لوحة المفاتيح بالكامل</string>
     <string name="full_keyboard_swipe_gesture_summary">مرر سريعًا أفقيًا عبر لوحة المفاتيح لتنفيذ إجراء (يوقف الكتابة بالإيماءات تلقائيًا)</string>
+    <string name="backup_category_dictionaries">القواميس</string>
+    <string name="backup_category_typing_history">تاريخ الكتابة</string>
+    <string name="backup_category_api_keys">مفاتيح واجهة برمجة التطبيقات</string>
+    <string name="backup_api_keys_warning_title">تحذير أمني</string>
+    <string name="backup_api_keys_warning_message">مفاتيح API هي بيانات اعتماد حساسة. سيؤدي تضمينها إلى تخزينها كنص عادي غير مشفر في ملف النسخ الاحتياطي. سيتمكن أي شخص لديه حق الوصول إلى هذا الملف من الوصول إلى مفاتيح API الخاصة بك.</string>
+    <string name="backup_api_keys_warning_confirm">تضمين مفاتيح API</string>
 </resources>
