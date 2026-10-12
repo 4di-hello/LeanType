@@ -389,7 +389,7 @@
     <string name="delete_confirmation">هل تريد حذف %s حقًا؟</string>
     <string name="split" tools:keep="@string/split">تقسيم لوحة المفاتيح</string>
     <string name="number_row_hints">أظهِر التلميحات على صف الأرقام</string>
-    <string name="prefs_language_swipe_distance">بدّل مسافة التمرير للغة</string>
+    <string name="prefs_language_swipe_distance">حد السحب الأفقي</string>
     <string name="layout_functional_keys_tablet" tools:keep="@string/layout_functional_keys_tablet">المفاتيح الوظيفية (شاشة كبيرة)</string>
     <string name="name_invalid">اسم غير صالح</string>
     <string name="settings_screen_secondary_layouts">تخطيطات ثانوية</string>

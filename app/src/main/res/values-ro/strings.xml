@@ -388,7 +388,7 @@
     <string name="label_bin" tools:keep="@string/label_bin">Coș</string>
     <string name="prefs_side_padding_scale">Scală umplutură laterală</string>
     <string name="number_row_hints">Afișează indicii pe rândul cu numere</string>
-    <string name="prefs_language_swipe_distance">Distanța de deplasare pentru comutarea limbii</string>
+    <string name="prefs_language_swipe_distance">Prag de glisare orizontală</string>
     <string name="get_colors_message">Poți găsi și împărtăși culori în %s.</string>
     <string name="discussion_section_link">secțiunea de discuții</string>
     <string name="prefs_always_show_suggestions_except_web_text">Nu afișa întotdeauna sugestii pentru câmpurile de editare web</string>

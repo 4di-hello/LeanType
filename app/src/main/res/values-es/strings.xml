@@ -398,7 +398,7 @@
     <string name="settings_screen_secondary_layouts">Diseños secundarios</string>
     <string name="layout_functional_keys_tablet" tools:keep="@string/layout_functional_keys_tablet">Teclas funcionales (pantalla grande)</string>
     <string name="number_row_hints">Mostrar símbolos en la fila de números</string>
-    <string name="prefs_language_swipe_distance">Distancia de deslizamiento para cambiar de idioma</string>
+    <string name="prefs_language_swipe_distance">Umbral de deslizamiento horizontal</string>
     <string name="locales_with_dict">Idiomas con diccionarios</string>
     <string name="split" tools:keep="@string/split">Teclado dividido</string>
     <string name="layout_in_use">Advertencia: el diseño está en uso actualmente</string>

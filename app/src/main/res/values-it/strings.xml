@@ -391,7 +391,7 @@
     <string name="number_row_hints">Mostra suggerimenti sulla riga dei numeri</string>
     <string name="auto_correct_shortcuts">Scorciatoie correzione</string>
     <string name="name_invalid">Nome non valido</string>
-    <string name="prefs_language_swipe_distance">Distanza del trascinamento per il cambio lingua</string>
+    <string name="prefs_language_swipe_distance">Soglia di scorrimento orizzontale</string>
     <string name="custom_subtype">Sotto-tipo personalizzato</string>
     <string name="subtype_baishakhi_bn_IN">%s (Baishakhi)</string>
     <string name="layout_in_use">Attenzione: il layout è in uso</string>

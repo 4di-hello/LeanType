@@ -377,7 +377,7 @@
     <string name="prefs_font_scale">Маштаб шрыфта клавіятуры</string>
     <string name="prefs_emoji_font_scale">Маштаб шрыфта адлюстравання эмодзі</string>
     <string name="long_press_code">Код доўгага націску</string>
-    <string name="prefs_language_swipe_distance">Адлегласць змахвання для пераключэння мовы</string>
+    <string name="prefs_language_swipe_distance">Парог гарызантальнага свайпу</string>
     <string name="customize_toolbar_key_codes">Наладзіць коды клавіш панэлі інструментаў</string>
     <string name="prefs_space_bar_text">Карыстацкі тэкст на клавішы прабела</string>
     <string name="label_space_key_for_number_layout" tools:keep="@string/label_space_key_for_number_layout">Прабел (раскладка лічбаў)</string>

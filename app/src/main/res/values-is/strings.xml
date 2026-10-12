@@ -291,7 +291,7 @@
     <string name="customize_icons_reset_message">Viltu í alvörunni endurstilla allar sérsniðnar táknmyndir?</string>
     <string name="show_hints_summary">Birta ábendingar þegar ýtt er lengi</string>
     <string name="label_toolbar_key" tools:keep="@string/label_toolbar_key">Sýna / fela verkfærastiku</string>
-    <string name="prefs_language_swipe_distance">Lengd stroku til að skipta um tungumál</string>
+    <string name="prefs_language_swipe_distance">Þröskuldur fyrir lárétt strok</string>
     <string name="customize_toolbar_key_codes">Sérsníða lyklakóða verkfærastiku</string>
     <string name="auto_hide_toolbar">Fela verkfærastiku sjálfvirkt</string>
     <string name="clipboard_history_retention_time">Tími sem á að geyma breytingaferil</string>

@@ -383,7 +383,7 @@ Nouveau dictionnaire:
     <string name="prefs_emoji_font_scale">Échelle de police de la vue Emoji</string>
     <string name="prefs_side_padding_scale">Espacement latéral</string>
     <string name="number_row_hints">Afficher les symboles sur la rangée numérique</string>
-    <string name="prefs_language_swipe_distance">Distance de balayage pour changer de langue</string>
+    <string name="prefs_language_swipe_distance">Seuil de glissement horizontal</string>
     <string name="enable_split_keyboard_landscape">Activer le clavier divisé (paysage)</string>
     <string name="split" tools:keep="@string/split">Clavier divisé</string>
     <string name="delete_confirmation">Voulez-vous vraiment supprimer %s ?</string>

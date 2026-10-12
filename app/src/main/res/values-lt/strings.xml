@@ -423,7 +423,7 @@
     <string name="var_toolbar_direction">Pasirinktinė įrankių juostos kryptis</string>
     <string name="customize_toolbar_key_codes">Derinti įrankių juostos kodus</string>
     <string name="var_toolbar_direction_summary">Pakeisti kryptį kai pasirenkama klaviatūra iš dešinės į kairę</string>
-    <string name="prefs_language_swipe_distance">Kalbos perjungimo perbraukimo ilgis</string>
+    <string name="prefs_language_swipe_distance">Horizontalaus braukimo slenkstis</string>
     <string name="customize_toolbar_key_code_reset_message">Tikrai pašalinti visus pasirinktinius klavišų kodus?</string>
     <string name="key_code">Klavišų kodai</string>
     <string name="long_press_code">Ilgo paspaudimo kodas</string>

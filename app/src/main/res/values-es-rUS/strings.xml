@@ -735,7 +735,7 @@
     <string name="force_auto_caps_summary">Forzar mayúscula al inicio de oración en todos los campos de texto excepto contraseñas</string>
     <string name="toolbar_only_with_hw_keyboard">Mostrar solo barra de herramientas con teclado físico</string>
     <string name="toolbar_only_with_hw_keyboard_summary">Aún necesitas activar mostrar teclado virtual en los ajustes del sistema</string>
-    <string name="prefs_language_swipe_distance">Distancia de deslizamiento para cambiar idioma</string>
+    <string name="prefs_language_swipe_distance">Umbral de deslizamiento horizontal</string>
     <string name="customize_toolbar_key_code_reset_message">¿Realmente borrar todos los códigos de tecla personalizados?</string>
     <string name="auto_show_toolbar_open">Mostrar barra automáticamente al abrir</string>
     <string name="auto_show_toolbar_select">Mostrar barra automáticamente al seleccionar</string>

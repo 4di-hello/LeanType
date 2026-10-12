@@ -758,7 +758,7 @@
     <string name="var_toolbar_direction_summary">വലത്തുനിന്ന് ഇടത്തോട്ടുള്ള കീബോർഡ് ഉപവിഭാഗം തിരഞ്ഞെടുക്കുമ്പോൾ ദിശ വിപരീതമാക്കുക</string>
     <string name="toolbar_only_with_hw_keyboard">ഫിസിക്കൽ കീബോർഡ് ഉപയോഗിച്ച് ടൂൾബാർ മാത്രം കാണിക്കുക</string>
     <string name="toolbar_only_with_hw_keyboard_summary">സിസ്റ്റം ക്രമീകരണങ്ങളിൽ വെർച്വൽ കീബോർഡ് കാണിക്കൽ നിങ്ങൾ ഇപ്പോഴും പ്രവർത്തനക്ഷമമാക്കേണ്ടതുണ്ട്</string>
-    <string name="prefs_language_swipe_distance">ഭാഷ മാറ്റുക സ്വൈപ്പ് ദൂരം</string>
+    <string name="prefs_language_swipe_distance">തിരശ്ചീന സ്വൈപ്പ് പരിധി</string>
     <string name="customize_toolbar_key_codes">ടൂൾബാർ കീ കോഡുകൾ ഇഷ്ടാനുസൃതമാക്കുക</string>
     <string name="customize_toolbar_key_code_reset_message">എല്ലാ ഇഷ്ടാനുസൃത കീ കോഡുകളും ശരിക്കും മായ്ക്കണോ?</string>
     <string name="key_code">കീ കോഡ്</string>

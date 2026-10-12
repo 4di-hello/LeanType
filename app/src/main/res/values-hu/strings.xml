@@ -319,7 +319,7 @@
     <string name="toolbar_mode">Eszköztármód</string>
     <string name="subtype_dru">Dargwa (Urakhi)</string>
     <string name="label_switch_onehanded_key" tools:keep="@string/label_switch_onehanded_key">Egykezes mód oldalának átváltása</string>
-    <string name="prefs_language_swipe_distance">Nyelvváltás húzási távolsága</string>
+    <string name="prefs_language_swipe_distance">Vízszintes húzási küszöb</string>
     <string name="prefs_emoji_skin_tone">Alapértelmezett emodzsibőrszín</string>
     <string name="suggest_emojis">Emodzsik ajánlása</string>
     <string name="suggest_emojis_summary">Emodzsiszótár használata a normál javaslatokban</string>

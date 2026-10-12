@@ -758,7 +758,7 @@
     <string name="var_toolbar_direction_summary">جب دائیں سے بائیں کی بورڈ ذیلی قسم منتخب کی جائے تو سمت الٹ دیں</string>
     <string name="toolbar_only_with_hw_keyboard">صرف فزیکل کی بورڈ کے ساتھ ٹول بار دکھائیں</string>
     <string name="toolbar_only_with_hw_keyboard_summary">آپ کو اب بھی سسٹم کی ترتیبات میں ورچوئل کی بورڈ دکھانے کو فعال کرنے کی ضرورت ہے</string>
-    <string name="prefs_language_swipe_distance">زبان سوئچ کرنے کی سوائپ کی دوری</string>
+    <string name="prefs_language_swipe_distance">افقی سوائپ کی حد</string>
     <string name="customize_toolbar_key_codes">ٹول بار کی کوڈز حسب ضرورت بنائیں</string>
     <string name="customize_toolbar_key_code_reset_message">واقعی تمام حسب ضرورت کی کوڈز صاف کرنا ہے؟</string>
     <string name="key_code">کلید کا کوڈ</string>

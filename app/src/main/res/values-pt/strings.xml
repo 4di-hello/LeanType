@@ -415,7 +415,7 @@
     <string name="show_horizontal_space_swipe">Gesto de deslizar horizontalmente a barra de espaço</string>
     <string name="action_none">Nenhum</string>
     <string name="var_toolbar_direction_summary">Inverter a direção quando um teclado do subtipo direita para a esquerda é selecionado</string>
-    <string name="prefs_language_swipe_distance">Distância de deslizar para alterar idioma</string>
+    <string name="prefs_language_swipe_distance">Limite de deslizamento horizontal</string>
     <string name="customize_toolbar_key_code_reset_message">Apagar mesmo todos os códigos de teclas personalizados?</string>
     <string name="long_press_code">Pressionar código</string>
     <string name="toast_msg_clipboard_copy">Conteúdo copiado</string>

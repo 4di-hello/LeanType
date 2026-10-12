@@ -414,7 +414,7 @@
     <string name="prefs_emoji_font_scale">Emojide vaate kirjatüüpide mõõtkava</string>
     <string name="prefs_side_padding_scale">Külgmiste veeriste mõõtkava</string>
     <string name="number_row_hints">Näita numbrireas vihjeid</string>
-    <string name="prefs_language_swipe_distance">Vaheta keele viipamiskaugust</string>
+    <string name="prefs_language_swipe_distance">Horisontaalse viipe lävi</string>
     <string name="split" tools:keep="@string/split">Poolitatud klahvistik</string>
     <string name="enable_split_keyboard_landscape">Kasuta kaheks jaotatud klahvistikku (rõhtvaates)</string>
     <string name="delete_confirmation">Kas kindlasti kustutame „%s“?</string>

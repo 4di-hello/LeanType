@@ -377,7 +377,7 @@
     <string name="summary_customize_background_image_landscape">Если не установлено, будет использоваться портретное изображение</string>
     <string name="customize_background_image_landscape">Установить фоновое изображение (альбомный режим)</string>
     <string name="number_row_hints">Показывать подсказки в ряду с цифрами</string>
-    <string name="prefs_language_swipe_distance">Расстояние свайпа для смены языка</string>
+    <string name="prefs_language_swipe_distance">Порог горизонтального свайпа</string>
     <string name="enable_split_keyboard_landscape">Включить разделение клавиатуры (альбомный режим)</string>
     <string name="split" tools:keep="@string/split">Разделение клавиатуры</string>
     <string name="custom_subtype">Пользовательский подтип</string>

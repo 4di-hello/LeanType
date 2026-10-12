@@ -417,7 +417,7 @@
     <string name="label_shortcut_key_disabled" ns0:keep="@string/label_shortcut_key_disabled">Ses girişi devre dışı</string>
     <string name="label_bin" ns0:keep="@string/label_bin">Çöp kutusu</string>
     <string name="space_swipe_hide_keyboard_entry">Klavyeyi gizle</string>
-    <string name="prefs_language_swipe_distance">Dil değiştirme kaydırma mesafesi</string>
+    <string name="prefs_language_swipe_distance">Yatay kaydırma eşiği</string>
     <string name="customize_toolbar_key_codes">Araç çubuğu tuş kodlarını özelleştirin</string>
     <string name="customize_toolbar_key_code_reset_message">Tüm özelleştirilmiş anahtar kodlarını gerçekten silmek istiyor musunuz?</string>
     <string name="key_code">Anahtar kodu</string>

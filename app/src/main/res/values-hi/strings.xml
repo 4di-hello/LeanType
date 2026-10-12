@@ -1450,7 +1450,7 @@
     <string name="var_toolbar_direction_summary">जब दाएं से बाएं कीबोर्ड उपप्रकार का चयन किया जाता है तो दिशा उलट दें</string>
     <string name="toolbar_only_with_hw_keyboard">केवल भौतिक कीबोर्ड वाला टूलबार दिखाएं</string>
     <string name="toolbar_only_with_hw_keyboard_summary">आपको अभी भी सिस्टम सेटिंग्स में वर्चुअल कीबोर्ड दिखाना सक्षम करना होगा</string>
-    <string name="prefs_language_swipe_distance">भाषा स्विच करें स्वाइप दूरी</string>
+    <string name="prefs_language_swipe_distance">क्षैतिज स्वाइप सीमा</string>
     <string name="customize_toolbar_key_codes">टूलबार कुंजी कोड अनुकूलित करें</string>
     <string name="customize_toolbar_key_code_reset_message">वास्तव में सभी अनुकूलित कुंजी कोड साफ़ करें?</string>
     <string name="key_code">कुंजी कोड</string>

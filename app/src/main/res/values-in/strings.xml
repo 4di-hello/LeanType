@@ -395,7 +395,7 @@
     <string name="prefs_emoji_font_scale">Skala font tampilan emoji</string>
     <string name="prefs_side_padding_scale">Skala bantalan samping</string>
     <string name="number_row_hints">Tampilkan petunjuk pada baris nomor</string>
-    <string name="prefs_language_swipe_distance">Beralih Jarak Gesek Bahasa</string>
+    <string name="prefs_language_swipe_distance">Ambang batas geser horizontal</string>
     <string name="locales_with_dict">Bahasa dengan kamus</string>
     <string name="split" tools:keep="@string/split">Keyboard terpisah</string>
     <string name="get_colors_message">Anda dapat menemukan dan berbagi warna di %s.</string>

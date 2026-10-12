@@ -434,7 +434,7 @@
     <string name="label_zwnj_key" tools:keep="@string/label_zwnj_key">Ne-spojnica nulte širine</string>
     <string name="show_horizontal_space_swipe">Horizontalna gesta razmaknice</string>
     <string name="show_vertical_space_swipe">Vertikalna gesta razmaknice</string>
-    <string name="prefs_language_swipe_distance">Promijeni duljinu pomaka jezika</string>
+    <string name="prefs_language_swipe_distance">Prag vodoravnog prevlačenja</string>
     <string name="customize_toolbar_key_codes">Prilagodi kodove tipki alatne trake</string>
     <string name="customize_toolbar_key_code_reset_message">Zaista očistiti sve prilagođene kodove tipki?</string>
     <string name="key_code">Kôd tipke</string>

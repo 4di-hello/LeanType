@@ -759,7 +759,7 @@
     <string name="var_toolbar_direction_summary">Αντιστροφή κατεύθυνσης όταν επιλέγεται υποτύπος πληκτρολογίου από δεξιά προς τα αριστερά</string>
     <string name="toolbar_only_with_hw_keyboard">Εμφάνιση μόνο γραμμής εργαλείων με φυσικό πληκτρολόγιο</string>
     <string name="toolbar_only_with_hw_keyboard_summary">Πρέπει ακόμα να ενεργοποιήσετε την εμφάνιση εικονικού πληκτρολογίου στις ρυθμίσεις συστήματος</string>
-    <string name="prefs_language_swipe_distance">Απόσταση σάρωσης αλλαγής γλώσσας</string>
+    <string name="prefs_language_swipe_distance">Όριο οριζόντιας σάρωσης</string>
     <string name="customize_toolbar_key_codes">Προσαρμογή κωδικών πλήκτρων γραμμής εργαλείων</string>
     <string name="customize_toolbar_key_code_reset_message">Πραγματικά εκκαθάριση όλων των προσαρμοσμένων κωδικών πλήκτρων;</string>
     <string name="key_code">Κωδικός πλήκτρου</string>

@@ -186,7 +186,7 @@
     <string name="summary_customize_background_image_landscape">Se não for definido, será usada a imagem vertical</string>
     <string name="customize_toolbar_key_code_reset_message">Limpar mesmo todos os códigos de teclas personalizados?</string>
     <string name="number_row_hints">Mostrar dicas na linha de números</string>
-    <string name="prefs_language_swipe_distance">Mudar a distância de deslizamento do idioma</string>
+    <string name="prefs_language_swipe_distance">Limite de deslizamento horizontal</string>
     <string name="popup_keys_number" tools:keep="@string/popup_keys_number">Linha de números</string>
     <string name="popup_keys_layout" tools:keep="@string/popup_keys_layout">Esquema</string>
     <string name="show_popup_keys_more">Adicionar variantes comuns</string>

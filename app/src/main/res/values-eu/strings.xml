@@ -431,7 +431,7 @@
     <string name="landscape">Horizontala</string>
     <string name="label_zwj_key" tools:keep="@string/label_zwj_key">Zero zabalerako karakterea</string>
     <string name="customize_toolbar_key_code_reset_message">Benetan garbitu nahi duzu pertsonalizatutako tekla kodeak?</string>
-    <string name="prefs_language_swipe_distance">Aldatu hizkuntza lerratzeko distantzia</string>
+    <string name="prefs_language_swipe_distance">Arrastatze horizontalaren atalasea</string>
     <string name="toolbar_mode">Tresna-barra modua</string>
     <string name="space_swipe_hide_keyboard_entry">Ezkutatu teklatua</string>
     <string name="suggest_punctuation">Puntuazio iradokizunak</string>

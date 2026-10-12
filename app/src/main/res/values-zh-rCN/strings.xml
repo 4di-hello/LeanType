@@ -380,7 +380,7 @@
     <string name="prefs_emoji_font_scale">表情符号视图字体比例</string>
     <string name="prefs_side_padding_scale">侧边距比例</string>
     <string name="number_row_hints">在数字行显示提示</string>
-    <string name="prefs_language_swipe_distance">切换语言滑动距离</string>
+    <string name="prefs_language_swipe_distance">水平滑动阈值</string>
     <string name="split" tools:keep="@string/split">分离式键盘</string>
     <string name="enable_split_keyboard_landscape">启用分离式键盘（横屏）</string>
     <string name="delete_confirmation">确定要删除 %s？</string>

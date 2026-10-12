@@ -423,7 +423,7 @@
     <string name="space_swipe_hide_keyboard_entry">விசைப்பலகையை மறை</string>
     <string name="var_toolbar_direction">மாறி கருவிப்பட்டி திசை</string>
     <string name="var_toolbar_direction_summary">வலமிருந்து இடமாக விசைப்பலகை துணை வகை தேர்ந்தெடுக்கப்படும் போது தலைகீழ் திசை</string>
-    <string name="prefs_language_swipe_distance">மொழி ச்வைப் தூரத்தை மாற்றவும்</string>
+    <string name="prefs_language_swipe_distance">கிடைமட்ட ஸ்வைப் வரம்பு</string>
     <string name="customize_toolbar_key_codes">கருவிப்பட்டி முக்கிய குறியீடுகளைத் தனிப்பயனாக்குங்கள்</string>
     <string name="customize_toolbar_key_code_reset_message">அனைத்து தனிப்பயனாக்கப்பட்ட முக்கிய குறியீடுகளையும் அழிக்கவா?</string>
     <string name="key_code">முக்கிய குறியீடு</string>

@@ -378,7 +378,7 @@
     <string name="split" tools:keep="@string/split">Getrennte Tastatur</string>
     <string name="prefs_font_scale">Tastatur-Schriftgrad</string>
     <string name="prefs_emoji_font_scale">Emoji-Ansicht Schriftgrad</string>
-    <string name="prefs_language_swipe_distance">Sprache wechseln Wischabstand</string>
+    <string name="prefs_language_swipe_distance">Schwellenwert für horizontales Wischen</string>
     <string name="locales_with_dict">Sprachen mit Wörterbüchern</string>
     <string name="get_colors_message">Du kannst Farben im %s finden und teilen.</string>
     <string name="subtype_dru">Dargwa (Urakhi)</string>
