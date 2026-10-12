@@ -110,8 +110,11 @@ class EmojiCategory(
     }
 
     fun initialize() {
+        mShownCategories.clear()
         val defaultCategoryId = ID_SMILEYS_EMOTION
-        addShownCategoryId(ID_RECENTS)
+        if (!Settings.getValues().mSplitToolbar) {
+            addShownCategoryId(ID_RECENTS)
+        }
         addShownCategoryId(ID_SMILEYS_EMOTION)
         addShownCategoryId(ID_PEOPLE_BODY)
         addShownCategoryId(ID_ANIMALS_NATURE)
@@ -141,9 +144,7 @@ class EmojiCategory(
 
     fun clearKeyboardCache() {
         mCategoryKeyboardMap.clear()
-        for (props in mShownCategories) {
-            props.mPageCount = -1 // reset page count in case size (number of keys per row) changed
-        }
+        initialize()
     }
 
     private fun addShownCategoryId(categoryId: Int) {

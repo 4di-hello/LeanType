@@ -53,6 +53,7 @@ import helium314.keyboard.latin.SuggestedWords.SuggestedWordInfo
 import helium314.keyboard.latin.common.ColorType
 import helium314.keyboard.latin.common.Colors
 import helium314.keyboard.latin.common.Constants
+import helium314.keyboard.latin.common.isEmoji
 import helium314.keyboard.latin.common.LocaleUtils.localizedDisplayName
 import helium314.keyboard.latin.define.DebugFlags
 import helium314.keyboard.latin.settings.DebugSettings
@@ -1763,8 +1764,16 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
         for (emoji in emojis) {
             val emojiView = TextView(context)
             emojiView.text = emoji
-            emojiView.textSize = 22f
-            if (customTypeface != null) emojiView.typeface = customTypeface
+            val isEmojiItem = isEmoji(emoji)
+            if (isEmojiItem) {
+                emojiView.textSize = 22f
+                if (customTypeface != null) emojiView.typeface = customTypeface
+            } else {
+                val emoticonTextSize = if (emoji.length > 8) 11f else if (emoji.length > 4) 12f else 13f
+                emojiView.textSize = emoticonTextSize
+                emojiView.setTextColor(colors.get(ColorType.KEY_TEXT))
+            }
+            emojiView.setSingleLine(true)
             emojiView.gravity = android.view.Gravity.CENTER
             emojiView.setPadding(
                 8.dpToPx(resources), 2.dpToPx(resources), 

@@ -254,14 +254,7 @@ class EmojiPalettesView @JvmOverloads constructor(
         val tabStrip = KeyboardSwitcher.getInstance().emojiTabStrip as LinearLayout?
         mTabStrip = tabStrip
 
-        if (tabStrip != null && Settings.getValues().mSecondaryStripVisible) {
-            addTab(tabStrip, ID_SEARCH_TAB)
-            val splitToolbar = Settings.getValues().mSplitToolbar
-            for (properties in mEmojiCategory.getShownCategories()) {
-                if (splitToolbar && properties.mCategoryId == EmojiCategory.ID_RECENTS) continue
-                addTab(tabStrip, properties.mCategoryId)
-            }
-        }
+        setupCategoryTabs()
 
         val pager: ViewPager2 = findViewById(R.id.emoji_pager)
         mPager = pager
@@ -756,6 +749,16 @@ class EmojiPalettesView @JvmOverloads constructor(
         mEditorInfo = editorInfo
         mKeyboardActionListener = keyboardActionListener ?: KeyboardActionListener.EMPTY_LISTENER
         initialize()
+        val splitToolbar = Settings.getValues().mSplitToolbar
+        val isRecentsShown = mEmojiCategory.getShownCategories().any { it.mCategoryId == EmojiCategory.ID_RECENTS }
+        if (splitToolbar == isRecentsShown) {
+            mEmojiCategory.initialize()
+            setupCategoryTabs()
+            mPager?.adapter?.notifyDataSetChanged()
+        }
+        if (splitToolbar && mEmojiCategory.getCurrentCategoryId() == EmojiCategory.ID_RECENTS) {
+            setCurrentCategoryId(EmojiCategory.ID_SMILEYS_EMOTION, true)
+        }
         updateColors()
         setupBottomRowKeyboard(editorInfo, mKeyboardActionListener)
         val params = KeyDrawParams()
@@ -763,7 +766,7 @@ class EmojiPalettesView @JvmOverloads constructor(
         setupSidePadding()
         initDictionaryFacilitator()
 
-        if (Settings.getValues().mSplitToolbar) {
+        if (splitToolbar) {
             populateSuggestionBarWithRecents()
         }
     }
@@ -843,14 +846,16 @@ class EmojiPalettesView @JvmOverloads constructor(
             return
         }
         getRecentsKeyboard().addKeyFirst(key)
-        mPager?.adapter?.notifyItemChanged(mEmojiCategory.getRecentTabId())
+        if (!split) {
+            mPager?.adapter?.notifyItemChanged(mEmojiCategory.getRecentTabId())
+        }
         if (split && isShown) {
             populateSuggestionBarWithRecents()
         }
     }
 
     fun addRecentKey(emoji: String?) {
-        if (Settings.getValues().mIncognitoModeEnabled || emoji.isNullOrEmpty() || !StringUtils.mightBeEmoji(emoji.codePointAt(0))) {
+        if (Settings.getValues().mIncognitoModeEnabled || emoji.isNullOrEmpty()) {
             return
         }
         val split = Settings.getValues().mSplitToolbar
@@ -859,7 +864,9 @@ class EmojiPalettesView @JvmOverloads constructor(
             return
         }
         getRecentsKeyboard().addStringKeyFirst(emoji)
-        mPager?.adapter?.notifyItemChanged(mEmojiCategory.getRecentTabId())
+        if (!split) {
+            mPager?.adapter?.notifyItemChanged(mEmojiCategory.getRecentTabId())
+        }
         if (split && isShown) {
             populateSuggestionBarWithRecents()
         }
@@ -1158,6 +1165,7 @@ class EmojiPalettesView @JvmOverloads constructor(
         if (!initialized) return
 
         mEmojiCategory.clearKeyboardCache()
+        setupCategoryTabs()
         updateColors()
         mDownloadBtn?.let { btn ->
             if (!mIsDownloadingEmojiDict) {
