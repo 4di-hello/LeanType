@@ -81,6 +81,7 @@ fun SuggestionsScreen(
             if (suggestionsEnabled) Settings.PREF_SUGGESTIONS_COUNT_IN_STRIP else null,
             if (suggestionsEnabled) Settings.PREF_CENTER_SUGGESTION_TEXT_TO_ENTER else null,
             if (suggestionsEnabled) Settings.PREF_CENTER_TYPED_WORD else null,
+            if (suggestionsEnabled) Settings.PREF_AUTOCORRECTION_RIGHT_OF_TYPED_WORD else null,
             Settings.PREF_SUGGEST_PUNCTUATION,
 
             // Prediction & learning
@@ -229,6 +230,13 @@ fun createSuggestionsSettings(context: Context) = listOf(
         R.string.center_typed_word, R.string.center_typed_word_summary
     ) {
         SwitchPreference(it, Defaults.PREF_CENTER_TYPED_WORD)
+    },
+    Setting(context, Settings.PREF_AUTOCORRECTION_RIGHT_OF_TYPED_WORD,
+        R.string.autocorrection_right_of_typed_word, R.string.autocorrection_right_of_typed_word_summary
+    ) {
+        val prefs = LocalContext.current.prefs()
+        SwitchPreference(it, Defaults.PREF_AUTOCORRECTION_RIGHT_OF_TYPED_WORD,
+            enabled = prefs.getBoolean(Settings.PREF_CENTER_TYPED_WORD, Defaults.PREF_CENTER_TYPED_WORD))
     },
     Setting(context, Settings.PREF_SUGGEST_CLIPBOARD_CONTENT,
         R.string.suggest_clipboard_content, R.string.suggest_clipboard_content_summary

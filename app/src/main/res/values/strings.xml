@@ -2543,4 +2543,15 @@ New dictionary:
     <string name="typing_heatmap_start_over">Start over</string>
     <string name="typing_heatmap_keep">Keep</string>
     <string name="backup_category_typing_profile">Typing profile (key zones)</string>
+    <string name="autocorrection_right_of_typed_word">Auto-correction right of the typed word</string>
+    <string name="autocorrection_right_of_typed_word_summary">When the typed word is in the middle, show the auto-correction on its right instead of its left</string>
+    <string name="learn_casing">Remember capitalization</string>
+    <string name="learn_casing_summary">When you change a word with shift the same way twice (e.g. du → Du, nasa → NASA), it is written like this automatically. Backspace right after it reverts and forgets it</string>
+    <string name="learned_casing">Remembered capitalization</string>
+    <string name="learned_casing_summary">%1$d in use, %2$d learning</string>
+    <string name="learned_casing_empty">Nothing remembered yet.</string>
+    <string name="learned_casing_not_yet">Learning: used automatically after one more time</string>
+    <string name="learned_casing_forget_all">Forget all</string>
+    <string name="typing_heatmap_history">Misses per week</string>
+    <string name="typing_heatmap_history_value">%1$.1f %% (%2$d)</string>
 </resources>
