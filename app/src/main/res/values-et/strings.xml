@@ -1718,4 +1718,5 @@ Võimaldab seadmesisese GGUF / llama.cpp järelduse korrektuuri ja ümbersõnast
     <string name="backup_api_keys_warning_message">API-võtmed on tundlikud mandaadid. Nende kaasamine salvestab need varukoopiafaili krüptimata lihttekstina. Kõigil, kellel on sellele failile juurdepääs, on juurdepääs teie API võtmetele.</string>
     <string name="backup_api_keys_warning_confirm">Kaasake API võtmed</string>
     <string name="gif_get_api_key">Hankige API võti</string>
+    <string name="gif_provider_disabled">Välja lülitatud</string>
 </resources>

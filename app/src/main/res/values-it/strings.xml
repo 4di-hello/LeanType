@@ -1796,4 +1796,5 @@ Abilita l\'inferenza GGUF / llama.cpp sul dispositivo per correzione e riscrittu
     <string name="backup_api_keys_warning_message">Le chiavi API sono credenziali sensibili. Includerli li memorizzerà come testo normale non crittografato nel file di backup. Chiunque abbia accesso a questo file avrà accesso alle tue chiavi API.</string>
     <string name="backup_api_keys_warning_confirm">Includi chiavi API</string>
     <string name="gif_get_api_key">Ottieni la chiave API</string>
+    <string name="gif_provider_disabled">Disabilitato</string>
 </resources>

@@ -1741,4 +1741,5 @@ Habilita inferência GGUF / llama.cpp no dispositivo para revisão e reescrita.<
     <string name="backup_api_keys_warning_message">As chaves de API são credenciais confidenciais. Incluí-los irá armazená-los como texto simples não criptografado no arquivo de backup. Qualquer pessoa com acesso a este arquivo terá acesso às suas chaves de API.</string>
     <string name="backup_api_keys_warning_confirm">Incluir chaves de API</string>
     <string name="gif_get_api_key">Obtenha a chave API</string>
+    <string name="gif_provider_disabled">Desativado</string>
 </resources>

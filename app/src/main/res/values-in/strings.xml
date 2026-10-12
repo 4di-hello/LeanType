@@ -1686,4 +1686,5 @@ Memungkinkan inferensi GGUF / llama.cpp di perangkat untuk koreksi teks dan penu
     <string name="backup_api_keys_warning_message">Kunci API adalah kredensial sensitif. Menyertakannya akan menyimpannya sebagai teks biasa yang tidak terenkripsi di file cadangan. Siapa pun yang memiliki akses ke file ini akan memiliki akses ke kunci API Anda.</string>
     <string name="backup_api_keys_warning_confirm">Sertakan Kunci API</string>
     <string name="gif_get_api_key">Dapatkan kunci API</string>
+    <string name="gif_provider_disabled">Dinonaktifkan</string>
 </resources>

@@ -65,8 +65,7 @@ fun GifSettingsScreen(
     val scope = rememberCoroutineScope()
     val prefs = remember { context.prefs() }
     var activeProviderId by remember {
-        val raw = prefs.getString(Settings.PREF_GIF_PROVIDER, "") ?: ""
-        mutableStateOf(if (raw == "disabled") "" else raw)
+        mutableStateOf(prefs.getString(Settings.PREF_GIF_PROVIDER, "") ?: "")
     }
 
     DisposableEffect(manager) {
@@ -260,13 +259,19 @@ fun GifSettingsScreen(
                         } else {
                             val effectiveActiveId = when {
                                 activeProviderId == "disabled" -> ""
-                                activeProviderId.isNotEmpty() -> activeProviderId
-                                else -> providers.firstOrNull { it.configured }?.id ?: "local"
+                                activeProviderId.isNotEmpty() -> {
+                                    if (Settings.isGifProviderEnabled(prefs, activeProviderId)) activeProviderId else ""
+                                }
+                                else -> {
+                                    providers.firstOrNull { it.configured && Settings.isGifProviderEnabled(prefs, it.id) }?.id ?: ""
+                                }
                             }
                             providers.forEach { provider ->
-                                val isActive = provider.configured && provider.id == effectiveActiveId
+                                val isEnabled = Settings.isGifProviderEnabled(prefs, provider.id)
+                                val isActive = provider.configured && isEnabled && provider.id == effectiveActiveId
                                 val statusText = when {
                                     isActive -> "${stringResource(R.string.gif_provider_configured)} • ${stringResource(R.string.gif_provider_active)}"
+                                    !isEnabled -> stringResource(R.string.gif_provider_disabled)
                                     provider.configured -> stringResource(R.string.gif_provider_configured)
                                     else -> stringResource(R.string.gif_provider_not_configured)
                                 }
@@ -304,10 +309,15 @@ fun GifSettingsScreen(
 
         val effectiveActiveId = when {
             activeProviderId == "disabled" -> ""
-            activeProviderId.isNotEmpty() -> activeProviderId
-            else -> providers.firstOrNull { it.configured }?.id ?: "local"
+            activeProviderId.isNotEmpty() -> {
+                if (Settings.isGifProviderEnabled(prefs, activeProviderId)) activeProviderId else ""
+            }
+            else -> {
+                providers.firstOrNull { it.configured && Settings.isGifProviderEnabled(prefs, it.id) }?.id ?: ""
+            }
         }
-        val isCurrentActive = provider.configured && provider.id == effectiveActiveId
+        val isEnabled = Settings.isGifProviderEnabled(prefs, provider.id)
+        val isCurrentActive = provider.configured && isEnabled && provider.id == effectiveActiveId
 
         PreferenceDialog(
             onDismissRequest = { selectedProviderForConfig = null },
@@ -319,7 +329,7 @@ fun GifSettingsScreen(
             buttons = {
                 FlowRow(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     if (provider.configured && provider.credentialFields.isNotEmpty()) {
@@ -331,8 +341,9 @@ fun GifSettingsScreen(
                                     }
                                     result.onSuccess {
                                         prefs.edit().remove(prefKey).apply()
+                                        Settings.setGifProviderEnabled(prefs, provider.id, false)
                                         if (activeProviderId == provider.id) {
-                                            val fallback = providers.firstOrNull { it.id != provider.id && it.configured }?.id ?: "local"
+                                            val fallback = providers.firstOrNull { it.id != provider.id && it.configured && Settings.isGifProviderEnabled(prefs, it.id) }?.id ?: "disabled"
                                             prefs.edit().putString(Settings.PREF_GIF_PROVIDER, fallback).apply()
                                             activeProviderId = fallback
                                         }
@@ -352,29 +363,25 @@ fun GifSettingsScreen(
                         }
                     }
                     if (provider.configured) {
-                        val isDisableAction = isCurrentActive
-                        if (provider.credentialFields.isEmpty()) {
-                            Button(
-                                onClick = {
-                                    val newId = if (isDisableAction) "disabled" else provider.id
-                                    prefs.edit().putString(Settings.PREF_GIF_PROVIDER, newId).apply()
-                                    activeProviderId = newId
-                                    selectedProviderForConfig = null
+                        Button(
+                            onClick = {
+                                val willBeEnabled = !isEnabled
+                                Settings.setGifProviderEnabled(prefs, provider.id, willBeEnabled)
+                                if (willBeEnabled) {
+                                    prefs.edit().putString(Settings.PREF_GIF_PROVIDER, provider.id).apply()
+                                    activeProviderId = provider.id
+                                } else {
+                                    if (activeProviderId == provider.id || effectiveActiveId == provider.id) {
+                                        val nextActive = providers.firstOrNull { it.id != provider.id && it.configured && Settings.isGifProviderEnabled(prefs, it.id) }?.id
+                                        val newActive = nextActive ?: "disabled"
+                                        prefs.edit().putString(Settings.PREF_GIF_PROVIDER, newActive).apply()
+                                        activeProviderId = newActive
+                                    }
                                 }
-                            ) {
-                                Text(stringResource(if (isDisableAction) R.string.gif_disable else R.string.gif_enable))
+                                selectedProviderForConfig = null
                             }
-                        } else {
-                            TextButton(
-                                onClick = {
-                                    val newId = if (isDisableAction) "disabled" else provider.id
-                                    prefs.edit().putString(Settings.PREF_GIF_PROVIDER, newId).apply()
-                                    activeProviderId = newId
-                                    selectedProviderForConfig = null
-                                }
-                            ) {
-                                Text(stringResource(if (isDisableAction) R.string.gif_disable else R.string.gif_enable))
-                            }
+                        ) {
+                            Text(stringResource(if (isEnabled) R.string.gif_disable else R.string.gif_enable))
                         }
                     }
                     if (provider.credentialFields.isNotEmpty()) {
@@ -387,6 +394,7 @@ fun GifSettingsScreen(
                                             engine.setCredential(provider.id, targetField, trimmed)
                                         }
                                         result.onSuccess {
+                                            Settings.setGifProviderEnabled(prefs, provider.id, true)
                                             prefs.edit()
                                                 .putString(prefKey, trimmed)
                                                 .putString(Settings.PREF_GIF_PROVIDER, provider.id)
@@ -421,13 +429,17 @@ fun GifSettingsScreen(
                 if (provider.configured) {
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = if (isCurrentActive) {
-                            "${stringResource(R.string.gif_provider_configured)} • ${stringResource(R.string.gif_provider_active)}"
-                        } else {
-                            stringResource(R.string.gif_provider_configured)
+                        text = when {
+                            isCurrentActive -> "${stringResource(R.string.gif_provider_configured)} • ${stringResource(R.string.gif_provider_active)}"
+                            !isEnabled -> stringResource(R.string.gif_provider_disabled)
+                            else -> stringResource(R.string.gif_provider_configured)
                         },
                         style = MaterialTheme.typography.bodySmall,
-                        color = if (isCurrentActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                        color = when {
+                            isCurrentActive -> MaterialTheme.colorScheme.primary
+                            !isEnabled -> MaterialTheme.colorScheme.error
+                            else -> MaterialTheme.colorScheme.onSurfaceVariant
+                        }
                     )
                 }
                 if (provider.id == "local") {

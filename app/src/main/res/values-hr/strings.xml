@@ -1711,4 +1711,5 @@ Omogućuje lokalno GGUF / llama.cpp zaključivanje na uređaju za lekturu i prep
     <string name="backup_api_keys_warning_message">API ključevi su osjetljive vjerodajnice. Ako ih uključite, pohranit ćete ih kao nešifrirani čisti tekst u datoteku sigurnosne kopije. Svatko s pristupom ovoj datoteci imat će pristup vašim API ključevima.</string>
     <string name="backup_api_keys_warning_confirm">Uključi API ključeve</string>
     <string name="gif_get_api_key">Nabavite API ključ</string>
+    <string name="gif_provider_disabled">Isključeno</string>
 </resources>

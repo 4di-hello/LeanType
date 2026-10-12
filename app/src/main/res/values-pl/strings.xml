@@ -1773,4 +1773,5 @@ Umożliwia lokalne wnioskowanie GGUF / llama.cpp na urządzeniu w celu korekty i
     <string name="backup_api_keys_warning_message">Klucze API to poufne dane uwierzytelniające. Dołączenie ich spowoduje zapisanie ich jako niezaszyfrowanego zwykłego tekstu w pliku kopii zapasowej. Każda osoba mająca dostęp do tego pliku będzie miała dostęp do Twoich kluczy API.</string>
     <string name="backup_api_keys_warning_confirm">Dołącz klucze API</string>
     <string name="gif_get_api_key">Zdobądź klucz API</string>
+    <string name="gif_provider_disabled">Wyłączone</string>
 </resources>

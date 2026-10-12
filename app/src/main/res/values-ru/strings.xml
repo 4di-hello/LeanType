@@ -1796,4 +1796,5 @@
     <string name="backup_api_keys_warning_message">Ключи API  -  это конфиденциальные учетные данные. Включение их сохранит их в виде незашифрованного обычного текста в файле резервной копии. Любой, у кого есть доступ к этому файлу, будет иметь доступ к вашим ключам API.</string>
     <string name="backup_api_keys_warning_confirm">Включить ключи API</string>
     <string name="gif_get_api_key">Получить ключ API</string>
+    <string name="gif_provider_disabled">Отключено</string>
 </resources>

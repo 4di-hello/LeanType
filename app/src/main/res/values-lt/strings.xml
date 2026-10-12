@@ -1719,4 +1719,5 @@ Ar norite atnaujinti?</string>
     <string name="backup_api_keys_warning_message">API raktai yra jautrūs kredencialai. Įtraukus juos atsarginės kopijos faile jie bus saugomi kaip nešifruotas paprastas tekstas. Kiekvienas, turintis prieigą prie šio failo, turės prieigą prie jūsų API raktų.</string>
     <string name="backup_api_keys_warning_confirm">Įtraukti API raktus</string>
     <string name="gif_get_api_key">Gaukite API raktą</string>
+    <string name="gif_provider_disabled">Išjungta</string>
 </resources>

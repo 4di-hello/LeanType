@@ -1737,4 +1737,5 @@
     <string name="backup_api_keys_warning_message">API 密钥是敏感凭证。包含它们会将它们作为未加密的纯文本存储在备份文件中。任何有权访问此文件的人都可以访问您的 API 密钥。</string>
     <string name="backup_api_keys_warning_confirm">包括 API 密钥</string>
     <string name="gif_get_api_key">获取API密钥</string>
+    <string name="gif_provider_disabled">已禁用</string>
 </resources>

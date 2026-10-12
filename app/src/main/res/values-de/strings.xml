@@ -1733,4 +1733,5 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="backup_api_keys_warning_message">API-Schlüssel sind vertrauliche Anmeldeinformationen. Wenn Sie sie einbeziehen, werden sie als unverschlüsselter Klartext in der Sicherungsdatei gespeichert. Jeder, der Zugriff auf diese Datei hat, hat Zugriff auf Ihre API-Schlüssel.</string>
     <string name="backup_api_keys_warning_confirm">API-Schlüssel einschließen</string>
     <string name="gif_get_api_key">Holen Sie sich den API-Schlüssel</string>
+    <string name="gif_provider_disabled">Deaktiviert</string>
 </resources>

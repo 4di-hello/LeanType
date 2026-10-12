@@ -1785,4 +1785,5 @@ Permet l\'inférence GGUF / llama.cpp sur l\'appareil pour la correction et la r
     <string name="backup_api_keys_warning_message">Les clés API sont des informations d\'identification sensibles. Les inclure les stockera sous forme de texte brut non crypté dans le fichier de sauvegarde. Toute personne ayant accès à ce fichier aura accès à vos clés API.</string>
     <string name="backup_api_keys_warning_confirm">Inclure les clés API</string>
     <string name="gif_get_api_key">Obtenir la clé API</string>
+    <string name="gif_provider_disabled">Désactivé</string>
 </resources>

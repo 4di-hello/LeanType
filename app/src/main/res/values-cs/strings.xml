@@ -1736,4 +1736,5 @@ Umožňuje lokální inferenci GGUF / llama.cpp na zařízení pro korektury a p
     <string name="backup_api_keys_warning_message">Klíče API jsou citlivé přihlašovací údaje. Jejich zahrnutím je uložíte jako nezašifrovaný prostý text do záložního souboru. Kdokoli s přístupem k tomuto souboru bude mít přístup k vašim klíčům API.</string>
     <string name="backup_api_keys_warning_confirm">Zahrnout klíče API</string>
     <string name="gif_get_api_key">Získejte API klíč</string>
+    <string name="gif_provider_disabled">Zakázáno</string>
 </resources>

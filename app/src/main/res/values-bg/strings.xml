@@ -1771,4 +1771,5 @@
     <string name="backup_api_keys_warning_message">API ключовете са чувствителни идентификационни данни. Включването им ще ги съхрани като некриптиран обикновен текст в архивния файл. Всеки с достъп до този файл ще има достъп до вашите API ключове.</string>
     <string name="backup_api_keys_warning_confirm">Включете API ключове</string>
     <string name="gif_get_api_key">Вземете API ключ</string>
+    <string name="gif_provider_disabled">Изключено</string>
 </resources>

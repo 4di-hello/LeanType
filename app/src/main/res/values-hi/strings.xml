@@ -1715,4 +1715,5 @@
     <string name="backup_api_keys_warning_message">एपीआई कुंजियाँ संवेदनशील क्रेडेंशियल हैं। उन्हें शामिल करने से वे बैकअप फ़ाइल में अनएन्क्रिप्टेड सादे पाठ के रूप में संग्रहीत हो जाएंगे। इस फ़ाइल तक पहुंच रखने वाले किसी भी व्यक्ति के पास आपकी एपीआई कुंजियों तक पहुंच होगी।</string>
     <string name="backup_api_keys_warning_confirm">एपीआई कुंजियाँ शामिल करें</string>
     <string name="gif_get_api_key">एपीआई कुंजी प्राप्त करें</string>
+    <string name="gif_provider_disabled">अक्षम</string>
 </resources>

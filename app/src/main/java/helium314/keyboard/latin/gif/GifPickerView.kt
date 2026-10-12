@@ -165,6 +165,7 @@ class GifPickerView @JvmOverloads constructor(
         selectedKind = Contract.KIND_GIF
         renderQuery()
         statusContainer.visibility = View.GONE
+        providerBadge.visibility = View.GONE
         adapter.submit(emptyList())
         applyTheme()
         manager.acquire("picker")
@@ -219,6 +220,7 @@ class GifPickerView @JvmOverloads constructor(
         removeCallbacks(cursorBlinkRunnable)
         activeProviderId = ""
         activeProviderName = ""
+        providerBadge.visibility = View.GONE
         loadSeq++
         queryJob?.cancel()
         pagingJob?.cancel()
@@ -374,6 +376,10 @@ class GifPickerView @JvmOverloads constructor(
     }
 
     private fun updateSearchHint() {
+        if (activeProviderId == "disabled") {
+            searchText.hint = context.getString(R.string.gif_search_hint)
+            return
+        }
         val categoryName = when (selectedKind) {
             KIND_RECENT -> context.getString(R.string.gif_category_recent)
             Contract.KIND_STICKER -> context.getString(R.string.gif_category_stickers)
@@ -399,18 +405,17 @@ class GifPickerView @JvmOverloads constructor(
         val list = try { engine.listProviders() } catch (_: Exception) { emptyList() }
         cachedProviders = list
 
-        if (rawPref == "disabled") {
+        val prefs = context.prefs()
+        val enabledConfigured = list.filter { it.configured && Settings.isGifProviderEnabled(prefs, it.id) }
+
+        if (rawPref == "disabled" || enabledConfigured.isEmpty()) {
             activeProviderId = "disabled"
-            val fallback = list.firstOrNull { it.configured } ?: list.firstOrNull()
-            activeProviderName = fallback?.displayName ?: ""
-            activeProviderKinds = fallback?.kinds ?: Contract.KINDS_GIF
+            activeProviderName = ""
+            activeProviderKinds = 0
             post {
+                providerBadge.visibility = View.GONE
                 updateCategoryTabsVisibility()
                 updateSearchHint()
-                if (activeProviderName.isNotEmpty()) {
-                    providerBadge.text = activeProviderName.uppercase()
-                    providerBadge.visibility = View.VISIBLE
-                }
                 showStatus(context.getString(R.string.gif_disabled_message), context.getString(R.string.gif_open_settings)) {
                     openGifSettings()
                 }
@@ -418,15 +423,26 @@ class GifPickerView @JvmOverloads constructor(
             return ""
         }
 
-        val prefProvider = rawPref
-        val configured = list.firstOrNull { it.id == prefProvider && it.configured }
-            ?: list.firstOrNull { it.configured }
-            ?: list.firstOrNull { it.id == prefProvider }
-            ?: list.firstOrNull()
+        val target = enabledConfigured.firstOrNull { it.id == rawPref }
+        if (rawPref.isNotEmpty() && target == null) {
+            activeProviderId = "disabled"
+            activeProviderName = ""
+            activeProviderKinds = 0
+            post {
+                providerBadge.visibility = View.GONE
+                updateCategoryTabsVisibility()
+                updateSearchHint()
+                showStatus(context.getString(R.string.gif_disabled_message), context.getString(R.string.gif_open_settings)) {
+                    openGifSettings()
+                }
+            }
+            return ""
+        }
 
-        val id = configured?.id ?: "local"
-        val name = configured?.displayName ?: "LOCAL"
-        val kinds = configured?.kinds ?: 0
+        val chosen = target ?: enabledConfigured.first()
+        val id = chosen.id
+        val name = chosen.displayName
+        val kinds = chosen.kinds
         activeProviderId = id
         activeProviderName = name
         activeProviderKinds = if (kinds != 0) kinds else Contract.KINDS_GIF
@@ -450,14 +466,27 @@ class GifPickerView @JvmOverloads constructor(
                 ?: cachedProviders
             if (list.isEmpty()) return@launch
 
-            val candidates = list
-            if (candidates.size <= 1) return@launch
+            val prefs = context.prefs()
+            val candidates = list.filter { it.configured && Settings.isGifProviderEnabled(prefs, it.id) }
+            if (candidates.isEmpty()) {
+                activeProviderId = "disabled"
+                activeProviderName = ""
+                activeProviderKinds = 0
+                providerBadge.visibility = View.GONE
+                updateCategoryTabsVisibility()
+                updateSearchHint()
+                showStatus(context.getString(R.string.gif_disabled_message), context.getString(R.string.gif_open_settings)) {
+                    openGifSettings()
+                }
+                return@launch
+            }
 
             val currentIndex = candidates.indexOfFirst { it.id == activeProviderId }
             val nextProvider = if (currentIndex >= 0) {
+                if (candidates.size <= 1) return@launch
                 candidates[(currentIndex + 1) % candidates.size]
             } else {
-                candidates.firstOrNull { it.configured } ?: candidates[0]
+                candidates[0]
             }
             if (nextProvider.id == activeProviderId) return@launch
 
@@ -465,7 +494,7 @@ class GifPickerView @JvmOverloads constructor(
             activeProviderName = nextProvider.displayName
             val kinds = nextProvider.kinds
             activeProviderKinds = if (kinds != 0) kinds else Contract.KINDS_GIF
-            context.prefs().edit().putString(Settings.PREF_GIF_PROVIDER, nextProvider.id).apply()
+            prefs.edit().putString(Settings.PREF_GIF_PROVIDER, nextProvider.id).apply()
 
             providerBadge.text = activeProviderName.uppercase()
             providerBadge.visibility = View.VISIBLE
@@ -478,16 +507,7 @@ class GifPickerView @JvmOverloads constructor(
                 Toast.LENGTH_SHORT
             ).show()
 
-            if (!nextProvider.configured && nextProvider.credentialFields.isNotEmpty()) {
-                showStatus(
-                    context.getString(R.string.gif_provider_not_configured),
-                    context.getString(R.string.gif_open_settings)
-                ) {
-                    openGifSettings()
-                }
-            } else {
-                reload(debounce = false)
-            }
+            reload(debounce = false)
         }
     }
 

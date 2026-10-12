@@ -1719,4 +1719,5 @@ Metin düzeltme ve yeniden yazma için cihaz üzerinde GGUF / llama.cpp çıkar�
     <string name="backup_api_keys_warning_message">API anahtarları hassas kimlik bilgileridir. Bunları dahil ettiğinizde, bunlar yedekleme dosyasında şifrelenmemiş düz metin olarak depolanır. Bu dosyaya erişimi olan herkes API anahtarlarınıza da erişebilecek.</string>
     <string name="backup_api_keys_warning_confirm">API Anahtarlarını Ekle</string>
     <string name="gif_get_api_key">API anahtarını alın</string>
+    <string name="gif_provider_disabled">Devre dışı</string>
 </resources>

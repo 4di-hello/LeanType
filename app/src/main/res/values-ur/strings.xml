@@ -1780,4 +1780,5 @@
     <string name="backup_api_keys_warning_message">API کیز حساس اسناد ہیں۔ ان کو شامل کرنے سے انہیں بیک اپ فائل میں غیر خفیہ کردہ سادہ متن کے طور پر محفوظ کیا جائے گا۔ اس فائل تک رسائی رکھنے والے کسی کو بھی آپ کی API کلیدوں تک رسائی حاصل ہوگی۔</string>
     <string name="backup_api_keys_warning_confirm">API کیز شامل کریں۔</string>
     <string name="gif_get_api_key">API کلید حاصل کریں۔</string>
+    <string name="gif_provider_disabled">غیر فعال</string>
 </resources>
