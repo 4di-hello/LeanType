@@ -20,4 +20,5 @@ interface IGifEngine {
     oneway void cancel(int requestId);
     oneway void searchKind(int requestId, String provider, int kind, String query, String pos, int limit, IGifCallback cb);
     oneway void trendingKind(int requestId, String provider, int kind, String pos, int limit, IGifCallback cb);
+    String getCredential(String provider, String field);
 }

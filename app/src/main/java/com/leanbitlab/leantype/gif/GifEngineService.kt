@@ -197,6 +197,13 @@ class GifEngineService : Service() {
             runBlocking { credentials.awaitWarm(2000L) }
             credentials.clear(providerId)
         }
+
+        override fun getCredential(providerId: String?, field: String?): String? {
+            CallerCheck.enforceHost(this@GifEngineService)
+            if (providerId.isNullOrEmpty() || field.isNullOrEmpty()) return null
+            runBlocking { credentials.awaitWarm(2000L) }
+            return credentials.get(providerId, field)
+        }
     }
 
     private fun launchRequest(requestId: Int, callback: IGifCallback, block: suspend () -> Unit) {
