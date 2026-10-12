@@ -26,10 +26,17 @@ jobs:
 
       - name: Run unit tests
         run: >
+          set -o pipefail &&
           ./gradlew testStandardRunTestsUnitTest
           --tests "helium314.keyboard.latin.InputLogicTest"
           --tests "helium314.keyboard.latin.suggestions.SuggestionStripLayoutHelperTest"
           --tests "helium314.keyboard.latin.heatmap.TypingHeatmapTest"
+          2>&1 | tee gradle.log
+
+      - name: Report compile errors as annotations
+        if: ${{ failure() }}
+        run: |
+          grep -E "^e: " gradle.log | head -20 | sed 's/^/::error::/' || true
 
       - name: Report failures as annotations
         if: ${{ failure() }}
