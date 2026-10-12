@@ -20,6 +20,7 @@ import helium314.keyboard.keyboard.internal.keyboard_parser.floris.KeyCode
 import helium314.keyboard.keyboard.internal.keyboard_parser.floris.PopupSet
 import helium314.keyboard.latin.common.Constants
 import helium314.keyboard.latin.common.StringUtils
+import helium314.keyboard.latin.common.isEmoji
 import helium314.keyboard.latin.utils.ToolbarKey
 import helium314.keyboard.latin.utils.toolbarKeyStrings
 import java.util.Arrays
@@ -1112,12 +1113,8 @@ open class Key : Comparable<Key> {
         }
 
         private fun isEmoticon(text: String?): Boolean {
-            if (text == null || text.length < 2) return false
-            for (i in 0 until text.length) {
-                val c = text[i]
-                if (c in '!'..'~') return true
-            }
-            return false
+            if (text.isNullOrEmpty()) return false
+            return !isEmoji(text)
         }
 
         private fun getDisabledIconName(iconName: String): String? {

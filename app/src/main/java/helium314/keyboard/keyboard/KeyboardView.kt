@@ -484,7 +484,13 @@ open class KeyboardView @JvmOverloads constructor(
         if (label != null) {
             val typeface = if (mEmojiTypeface != null && isEmoji(label)) mEmojiTypeface else mTypeface
             paint.typeface = typeface ?: key.selectTypeface(params)
-            paint.textSize = key.selectTextSize(params) * mFontSizeMultiplier
+            val isEmoticonInEmojiKeyboard = this is EmojiPageKeyboardView && !isEmoji(label)
+            val fontMultiplier = if (isEmoticonInEmojiKeyboard) {
+                Settings.getValues().mFontSizeMultiplierEmoji * 0.55f
+            } else {
+                mFontSizeMultiplier
+            }
+            paint.textSize = key.selectTextSize(params) * fontMultiplier
             val labelCharHeight = TypefaceUtils.getReferenceCharHeight(paint)
             val labelCharWidth = TypefaceUtils.getReferenceCharWidth(paint)
             labelBaseline = centerY + labelCharHeight / 2.0f
@@ -497,13 +503,13 @@ open class KeyboardView @JvmOverloads constructor(
                 paint.textAlign = Paint.Align.CENTER
             }
             
-            if (key.needsAutoXScale() || (isEmoji(label) && Settings.getValues().mEmojiKeyFit)) {
+            if (key.needsAutoXScale() || (isEmoji(label) && Settings.getValues().mEmojiKeyFit) || isEmoticonInEmojiKeyboard) {
                 val width = if (key.needsToKeepBackgroundAspectRatio(mDefaultKeyLabelFlags) && !(KeyboardActionListenerImpl.sPersistentTextEditModeActive || (kb != null && kb.mId.mElementId == KeyboardId.ELEMENT_TEXT_EDIT))) {
                     val bg = key.selectBackgroundDrawable(mKeyBackground, mFunctionalKeyBackground, mSpacebarBackground, mActionKeyBackground)
                     min(bg.bounds.bottom, bg.bounds.right)
                 } else keyWidth
                 val ratio = min(1.0f, (width * 0.90f) / TypefaceUtils.getStringWidth(label, paint))
-                if (key.needsAutoScale() || (isEmoji(label) && Settings.getValues().mEmojiKeyFit)) {
+                if (key.needsAutoScale() || (isEmoji(label) && Settings.getValues().mEmojiKeyFit) || isEmoticonInEmojiKeyboard) {
                     paint.textSize = paint.textSize * ratio
                 } else {
                     paint.textScaleX = ratio

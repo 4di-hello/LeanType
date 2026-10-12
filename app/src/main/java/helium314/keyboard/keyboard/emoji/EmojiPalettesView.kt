@@ -974,7 +974,7 @@ class EmojiPalettesView @JvmOverloads constructor(
             if (pager != null && pager.scrollState != ViewPager2.SCROLL_STATE_DRAGGING) {
                 pager.setCurrentItem(
                     mEmojiCategory.getTabIdFromCategoryId(mEmojiCategory.getCurrentCategoryId()),
-                    !initial && !isAnimationsDisabled()
+                    false
                 )
             }
 
