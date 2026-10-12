@@ -7,6 +7,8 @@ import java.util.Locale
 
 object OcrTextFormatter {
 
+    private val BULLET_REGEX = Regex("""^(\s*[-*•–—►▪▫]|\[[ xX]?\]|\d+[\.\)]|[a-zA-Z][\.\)])\s*""")
+
     fun format(context: Context, rawLines: List<String>): List<String> {
         val prefs = context.prefs()
         val keepLineBreaks = prefs.getBoolean(OcrPluginLoader.PREF_OCR_KEEP_LINE_BREAKS, true)
@@ -51,8 +53,7 @@ object OcrTextFormatter {
             }
         }
         if (stripBullets) {
-            val bulletRegex = Regex("""^(\s*[-*•–—►▪▫]|\[[ xX]?\]|\d+[\.\)]|[a-zA-Z][\.\)])\s*""")
-            lines = lines.map { it.replace(bulletRegex, "") }
+            lines = lines.map { it.replace(BULLET_REGEX, "") }
         }
         if (trimWhitespace) {
             lines = lines.map { it.trim() }.filter { it.isNotEmpty() }
