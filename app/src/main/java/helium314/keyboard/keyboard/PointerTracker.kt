@@ -933,19 +933,8 @@ class PointerTracker private constructor(
                     return
                 }
 
-                val minFlingVelocity = context?.let { ViewConfiguration.get(it).scaledMinimumFlingVelocity.toFloat() } ?: (50 * density)
-                val dt = eventTime - mDownTime
-                val vx = if (dt > 0) absDx * 1000f / dt else 0f
-                val minDistance = if (action == KeyboardActionListener.SWIPE_SWITCH_LANGUAGE) {
-                    max(30.dpToPx(Resources.getSystem()), sv.mLanguageSwipeDistance * sPointerStep)
-                } else {
-                    max(40.dpToPx(Resources.getSystem()), 5 * sPointerStep)
-                }
-
-                val isFling = vx > minFlingVelocity * 3f && absDx > 30.dpToPx(Resources.getSystem())
-                val isDrag = absDx >= minDistance
-
-                if (isFling || isDrag) {
+                val minDistance = max(swipeStartThreshold, sv.mLanguageSwipeDistance * sPointerStep)
+                if (absDx >= minDistance) {
                     mInHorizontalSwipe = true
                     val steps = if (dX > 0) 1 else -1
                     sListener.onFullKeyboardSwipe(steps, action)

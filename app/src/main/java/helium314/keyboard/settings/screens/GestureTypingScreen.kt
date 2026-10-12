@@ -94,7 +94,7 @@ fun GestureTypingScreen(
 
         add(R.string.settings_category_gestures_advanced)
         add(Settings.PREF_FULL_KEYBOARD_SWIPE)
-        if (Settings.readFullKeyboardSwipe(prefs) == KeyboardActionListener.SWIPE_SWITCH_LANGUAGE
+        if (Settings.readFullKeyboardSwipe(prefs) != KeyboardActionListener.SWIPE_NO_ACTION
             || Settings.readHorizontalSpaceSwipe(prefs) == KeyboardActionListener.SWIPE_SWITCH_LANGUAGE) {
             add(Settings.PREF_LANGUAGE_SWIPE_DISTANCE)
         }
