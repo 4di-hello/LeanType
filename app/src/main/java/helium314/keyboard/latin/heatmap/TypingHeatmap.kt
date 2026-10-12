@@ -108,9 +108,15 @@ object TypingHeatmap {
     )
 
     /** Result of reading stored data */
-    class ParsedData(val layouts: Map<String, LayoutData>, val device: String?)
+    class ParsedData(val layouts: Map<String, LayoutData>, val device: String?, val weeks: Map<Int, IntArray> = emptyMap())
+
+    /** touches and misses of one week, for showing whether typing gets better */
+    class WeekStats(val week: Int, val touches: Int, val misses: Int)
 
     private val layouts = LinkedHashMap<String, LayoutData>()
+    /** week (days since 1970 / 7) -> [touches, misses]; only counts, nothing about the text */
+    private val weeks = java.util.TreeMap<Int, IntArray>()
+    private const val MAX_WEEKS = 26
     @Volatile private var loaded = false
     private var pending: PendingWord? = null
     /** committed word at the time of a backspace press, only kept for reverting the autocorrection */
@@ -229,6 +235,11 @@ object TypingHeatmap {
             list.addLast(sample)
             while (list.size > MAX_SAMPLES_PER_KEY) list.removeFirst()
         }
+        val week = currentWeek()
+        val stats = weeks.getOrPut(week) { IntArray(2) }
+        stats[0] += newSamples.size
+        stats[1] += newSamples.count { (code, sample) -> sample.touchedCode != code }
+        while (weeks.size > MAX_WEEKS) weeks.remove(weeks.firstKey())
         unsavedSamples += newSamples.size
         if (unsavedSamples >= SAVE_EVERY_SAMPLES) save()
     }
@@ -354,6 +365,16 @@ object TypingHeatmap {
         return layouts.values.filter { it.sampleCount > 0 }.sortedByDescending { it.sampleCount }
     }
 
+    /** Touches and misses per week, oldest first */
+    @Synchronized
+    fun getWeeklyStats(context: Context): List<WeekStats> {
+        appContext = context.applicationContext
+        ensureLoaded()
+        return weeks.map { (week, stats) -> WeekStats(week, stats[0], stats[1]) }
+    }
+
+    private fun currentWeek() = (System.currentTimeMillis() / 86_400_000L / 7).toInt()
+
     /** Device the data was learned on, if it is not this device */
     @Synchronized
     fun getOtherLearnedOnDevice(context: Context): String? {
@@ -375,6 +396,7 @@ object TypingHeatmap {
     fun clear(context: Context) {
         appContext = context.applicationContext
         layouts.clear()
+        weeks.clear()
         pending = null
         revertCandidate = null
         unsavedSamples = 0
@@ -394,6 +416,7 @@ object TypingHeatmap {
     @Synchronized
     fun reload() {
         layouts.clear()
+        weeks.clear()
         pending = null
         revertCandidate = null
         unsavedSamples = 0
@@ -429,7 +452,7 @@ object TypingHeatmap {
             Log.w(TAG, "could not restore typing heatmap: ${t.javaClass.simpleName}")
             return false
         }
-        val json = toJson(parsed.layouts.values.map { it.copyForSaving() }, parsed.device ?: currentDevice).toString()
+        val json = toJson(parsed.layouts.values.map { it.copyForSaving() }, parsed.device ?: currentDevice, parsed.weeks).toString()
         val file = getFile(context)
         // forget the current data first, so it can't be saved over the restored data
         synchronized(this) { reload() }
@@ -573,12 +596,15 @@ object TypingHeatmap {
             val parsed = parse(JSONObject(file.readText()))
             layouts.clear()
             layouts.putAll(parsed.layouts)
+            weeks.clear()
+            weeks.putAll(parsed.weeks)
             learnedOnDevice = parsed.device
             offsetCache = HashMap()
         } catch (t: Throwable) { // also catch errors like StackOverflowError from broken data
             // log only the type: the message may contain the file content
             Log.w(TAG, "could not read typing heatmap: ${t.javaClass.simpleName}")
             layouts.clear()
+            weeks.clear()
             learnedOnDevice = null
             // keep the unreadable file instead of overwriting it with new data
             file.renameTo(File(file.parentFile, "$FILE_NAME.broken"))
@@ -609,11 +635,12 @@ object TypingHeatmap {
         offsetCache = HashMap() // new data is used for adaptation from now on
         // copy the data, and do the expensive conversion in background
         val copy = layouts.values.map { it.copyForSaving() }
+        val weeksCopy = weeks.mapValues { it.value.copyOf() }
         val device = learnedOnDevice ?: currentDevice
         val file = getFile(context)
         ioExecutor.execute {
             try {
-                writeAtomically(file, toJson(copy, device).toString())
+                writeAtomically(file, toJson(copy, device, weeksCopy).toString())
             } catch (t: Throwable) {
                 Log.w(TAG, "could not write typing heatmap: ${t.javaClass.simpleName}")
             }
@@ -635,7 +662,7 @@ object TypingHeatmap {
 
     private fun LayoutData.copyForSaving() = LayoutCopy(id, aspectRatio, shapes, samples.mapValues { it.value.toList() })
 
-    private fun toJson(layouts: List<LayoutCopy>, device: String): JSONObject {
+    private fun toJson(layouts: List<LayoutCopy>, device: String, weeks: Map<Int, IntArray>): JSONObject {
         val root = JSONObject()
         root.put("version", 2)
         root.put("device", device)
@@ -663,6 +690,9 @@ object TypingHeatmap {
             layoutArray.put(l)
         }
         root.put("layouts", layoutArray)
+        val weeksJson = JSONObject()
+        weeks.forEach { (week, stats) -> weeksJson.put(week.toString(), JSONArray().put(stats[0]).put(stats[1])) }
+        root.put("weeks", weeksJson)
         return root
     }
 
@@ -672,7 +702,19 @@ object TypingHeatmap {
         val valuesPerSample = if (version >= 2) 4 else 3
         val device = root.optString("device", "").take(100).ifEmpty { null }
         val result = LinkedHashMap<String, LayoutData>()
-        val layoutArray = root.optJSONArray("layouts") ?: return ParsedData(result, device)
+        val weeks = java.util.TreeMap<Int, IntArray>()
+        root.optJSONObject("weeks")?.let { w ->
+            for (key in w.keys()) {
+                val week = key.toIntOrNull() ?: continue
+                val a = w.optJSONArray(key) ?: continue
+                val touches = a.optInt(0, -1)
+                val misses = a.optInt(1, -1)
+                if (week < 0 || touches < 0 || misses < 0 || misses > touches) continue
+                weeks[week] = intArrayOf(touches, misses)
+            }
+            while (weeks.size > MAX_WEEKS) weeks.remove(weeks.firstKey())
+        }
+        val layoutArray = root.optJSONArray("layouts") ?: return ParsedData(result, device, weeks)
         for (i in 0 until minOf(layoutArray.length(), MAX_LAYOUTS)) {
             val l = layoutArray.optJSONObject(i) ?: continue
             val id = l.optString("id", "").take(100)
@@ -716,7 +758,7 @@ object TypingHeatmap {
             }
             result[layout.id] = layout
         }
-        return ParsedData(result, device)
+        return ParsedData(result, device, weeks)
     }
 
     private fun r(f: Float): Double = (f * 1000.0).roundToLong() / 1000.0
@@ -725,6 +767,7 @@ object TypingHeatmap {
     @Synchronized
     internal fun resetForTest() {
         layouts.clear()
+        weeks.clear()
         pending = null
         revertCandidate = null
         unsavedSamples = 0

@@ -32,6 +32,7 @@ import helium314.keyboard.settings.SettingsWithoutKey
 import helium314.keyboard.settings.SettingsActivity
 import helium314.keyboard.settings.Theme
 import helium314.keyboard.settings.initPreview
+import helium314.keyboard.settings.preferences.LearnedCasingPreference
 import helium314.keyboard.settings.preferences.ListPreference
 import helium314.keyboard.settings.preferences.Preference
 import helium314.keyboard.settings.preferences.SliderPreference
@@ -71,6 +72,8 @@ fun TextCorrectionScreen(
             Settings.PREF_AUTO_CAP,
             Settings.PREF_FORCE_AUTO_CAPS,
             Settings.PREF_SHIFT_RECAPITALIZES_WORD,
+            Settings.PREF_LEARN_CASING,
+            Settings.PREF_LEARNED_CASING,
 
             // Space
             R.string.settings_category_space,
@@ -266,6 +269,14 @@ fun createCorrectionSettings(context: Context) = listOf(
         R.string.shift_recapitalizes_word, R.string.shift_recapitalizes_word_summary
     ) {
         SwitchPreference(it, Defaults.PREF_SHIFT_RECAPITALIZES_WORD)
+    },
+    Setting(context, Settings.PREF_LEARN_CASING, R.string.learn_casing, R.string.learn_casing_summary) {
+        val prefs = LocalContext.current.prefs()
+        SwitchPreference(it, Defaults.PREF_LEARN_CASING,
+            enabled = prefs.getBoolean(Settings.PREF_SHIFT_RECAPITALIZES_WORD, Defaults.PREF_SHIFT_RECAPITALIZES_WORD))
+    },
+    Setting(context, Settings.PREF_LEARNED_CASING, R.string.learned_casing) {
+        LearnedCasingPreference(it)
     },
     Setting(context, Settings.PREF_KEY_USE_DOUBLE_SPACE_PERIOD,
         R.string.use_double_space_period, R.string.use_double_space_period_summary
