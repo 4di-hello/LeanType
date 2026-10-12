@@ -2,6 +2,13 @@
 package helium314.keyboard.settings.screens
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.ui.Alignment
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -49,6 +56,8 @@ import helium314.keyboard.settings.dialogs.ConfirmationDialog
 private const val MIN_SAMPLES_FOR_AVERAGE = 15
 /** Number of samples before and after enabling adaptation needed to compare them */
 private const val MIN_SAMPLES_FOR_COMPARISON = 200
+/** weeks with fewer touches are not shown in the history */
+private const val MIN_TOUCHES_PER_WEEK = 50
 
 @Composable
 fun TypingHeatmapScreen(onClickBack: () -> Unit) {
@@ -149,6 +158,29 @@ fun TypingHeatmapScreen(onClickBack: () -> Unit) {
                     fun rate(list: List<Pair<Int, TypingHeatmap.Sample>>) = list.count { it.first != it.second.touchedCode } * 100f / list.size
                     Text(stringResource(R.string.typing_heatmap_before_after_values, rate(before), before.size, rate(after), after.size),
                         style = MaterialTheme.typography.bodyMedium)
+                }
+            }
+
+            // miss rate per week, to see whether typing gets better
+            val weekly = remember(refresh) {
+                TypingHeatmap.getWeeklyStats(context).filter { it.touches >= MIN_TOUCHES_PER_WEEK }.takeLast(8)
+            }
+            if (weekly.isNotEmpty()) {
+                Text(stringResource(R.string.typing_heatmap_history), style = MaterialTheme.typography.titleSmall)
+                val maxRate = weekly.maxOf { it.misses * 100f / it.touches }.coerceAtLeast(1f)
+                val dateFormat = remember { java.text.SimpleDateFormat("dd.MM.", java.util.Locale.getDefault()) }
+                weekly.forEach { week ->
+                    val rate = week.misses * 100f / week.touches
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(dateFormat.format(java.util.Date(week.week * 7L * 86_400_000L)),
+                            Modifier.width(52.dp), style = MaterialTheme.typography.bodySmall)
+                        Box(Modifier.weight(1f).height(10.dp)) {
+                            Box(Modifier.fillMaxWidth(rate / maxRate).fillMaxHeight()
+                                .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(5.dp)))
+                        }
+                        Text(stringResource(R.string.typing_heatmap_history_value, rate, week.touches),
+                            Modifier.width(120.dp), style = MaterialTheme.typography.bodySmall)
+                    }
                 }
             }
 
