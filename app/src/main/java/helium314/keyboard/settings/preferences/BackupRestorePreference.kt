@@ -581,7 +581,7 @@ private fun getCategoryForPrefKey(key: String): BackupCategory {
     val clipboardKeys = setOf(
         "enable_clipboard_history", "suggest_screenshots", "compress_screenshots",
         "clipboard_history_retention_time", "clipboard_history_pinned_first",
-        "clipboard_fold_pinned", "clear_clipboard_icon"
+        "clipboard_fold_pinned", "clear_clipboard_icon", "clipboard_skip_sensitive"
     )
     if (clipboardKeys.contains(key)) return BackupCategory.CLIPBOARD
     
