@@ -401,6 +401,34 @@ class InputLogicTest {
         assertEquals(false, capsLockFromRecapitalize.getBoolean(inputLogic))
     }
 
+    @Test fun `capitalization changed with shift is remembered`() {
+        reset()
+        latinIME.prefs().edit {
+            putBoolean(Settings.PREF_SHIFT_RECAPITALIZES_WORD, true)
+            putBoolean(Settings.PREF_LEARN_CASING, true)
+        }
+        fun rawInput(c: Char) {
+            latinIME.onEvent(Event.createEventForCodePointFromUnknownSource(c.code))
+            handleMessages()
+        }
+        repeat(2) {
+            chainInput("nasa")
+            shiftTap()
+            shiftTap()
+            input(' ')
+        }
+        assertEquals("NASA NASA ", text)
+        assertEquals("NASA", LearnedCasing.learnedFormFor(latinIME.prefs(), "nasa"))
+        // now typed normally, it is written in the learned form
+        chainInput("nasa")
+        rawInput(' ')
+        assertEquals("NASA NASA NASA ", text)
+        // backspace reverts it and forgets it
+        functionalKeyPress(KeyCode.DELETE)
+        assertEquals("NASA NASA nasa", text)
+        assertEquals(null, LearnedCasing.learnedFormFor(latinIME.prefs(), "nasa"))
+    }
+
     @Test fun `one-time codes are detected for the clipboard history`() {
         assertEquals(true, ClipboardHistoryManager.isOneTimeCode("123456"))
         assertEquals(true, ClipboardHistoryManager.isOneTimeCode(" 4821 "))

@@ -100,6 +100,7 @@ object Defaults {
     const val PREF_TYPING_ADAPT_STRENGTH = 3
     const val PREF_CENTER_SUGGESTION_TEXT_TO_ENTER = false
     const val PREF_CENTER_TYPED_WORD = false
+    const val PREF_AUTOCORRECTION_RIGHT_OF_TYPED_WORD = false
     const val PREF_SHOW_SUGGESTIONS = true
     const val PREF_ALWAYS_SHOW_SUGGESTIONS = false
     const val PREF_ALWAYS_SHOW_SUGGESTIONS_EXCEPT_WEB_TEXT = true
@@ -221,6 +222,7 @@ object Defaults {
     const val PREF_TOUCHPAD_FULLSCREEN = false
     const val PREF_FORCE_AUTO_CAPS = false
     const val PREF_SHIFT_RECAPITALIZES_WORD = false
+    const val PREF_LEARN_CASING = false
     const val PREF_CLIPBOARD_SKIP_SENSITIVE = false
     const val PREF_OFFLINE_TEMP = 0.1f  // Lower for faster, more deterministic proofreading
     const val PREF_OFFLINE_TOP_P = 0.5f  // Lower for faster token sampling
