@@ -18,3 +18,6 @@
 ## 2024-05-18 - Pre-compile Regex in VoiceInputManager
 **Learning:** `VoiceInputManager.syncRecognizedText` instantiates `Regex("[,.?!;:]")` inside a frequent method call, increasing allocation pressure on voice typing hot paths.
 **Action:** Extract repeated `Regex` instantiations in input hot paths (such as `syncRecognizedText`) into companion object private constants to reduce memory allocation and compilation overhead.
+## 2024-05-18 - Pre-compile Regex in OCR formatting
+**Learning:** `OcrTextFormatter.formatLines` instantiated `Regex` for bullet removal inline every time it was called when `stripBullets` was true. This causes unnecessary allocation and compilation overhead when parsing OCR lines.
+**Action:** Extract frequently used formatting regexes (such as `bulletRegex`) into `object` or companion object private constants (`private val BULLET_REGEX`) to optimize regex reuse and eliminate unnecessary compilation per text parsing operation.
