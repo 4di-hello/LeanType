@@ -13,3 +13,7 @@
 ## 2025-02-17 - Unit tests for InputTypeUtils
 **Learning:** Utilities that parse input type flags often depend on standard constants in `InputType` and `EditorInfo`. Furthermore, checking states often requires understanding package quirks loaded through `AppQuirksManager`. Running these tests efficiently without manually setting up the entire mock context is possible by relying on Robolectric, as it correctly handles `android.view.inputmethod.EditorInfo` instantiation and flag masking for text parsing.
 **Action:** When adding unit tests for utilities handling input frameworks (such as `InputTypeUtils`), explicitly use `@RunWith(RobolectricTestRunner::class)` to handle dependencies on `EditorInfo` and framework constants, and ensure you cover edge cases involving bits masked out by classes (e.g. `TYPE_MASK_CLASS` vs `TYPE_MASK_VARIATION`).
+
+## 2025-02-18 - Unit tests for TextRange
+**Learning:** Testing classes that manipulate or read from Android `Spanned` texts and `SuggestionSpan` objects (such as `TextRange.getSuggestionSpansAtWord()`) requires dependencies from the Android Framework. These dependencies handle bounds tracking, flag masking, and class resolutions dynamically within the spannable object.
+**Action:** When adding tests for text and span manipulation logic, use `@RunWith(RobolectricTestRunner::class)` to provide a complete and functional implementation of the `Spanned` interface and avoid `NoClassDefFoundError` or `NullPointerException` errors during span retrieval operations.
