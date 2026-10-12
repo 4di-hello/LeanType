@@ -237,7 +237,6 @@ fun createGestureTypingSettings(context: Context) = listOf(
             stringResource(R.string.space_swipe_move_cursor_entry) to "move_cursor",
             stringResource(R.string.space_swipe_toggle_numpad_entry) to "toggle_numpad",
             stringResource(R.string.space_swipe_hide_keyboard_entry) to "hide_keyboard",
-            stringResource(R.string.space_swipe_touchpad_mode_entry) to "touchpad_mode",
             stringResource(R.string.action_none) to "none",
         )
         val ctx = LocalContext.current

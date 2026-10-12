@@ -659,7 +659,6 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
                 "switch_language" -> KeyboardActionListener.SWIPE_SWITCH_LANGUAGE
                 "toggle_numpad" -> KeyboardActionListener.SWIPE_TOGGLE_NUMPAD
                 "hide_keyboard" -> KeyboardActionListener.SWIPE_HIDE_KEYBOARD
-                "touchpad_mode" -> KeyboardActionListener.SWIPE_TOUCHPAD_MODE
                 else -> KeyboardActionListener.SWIPE_NO_ACTION
             }
         }

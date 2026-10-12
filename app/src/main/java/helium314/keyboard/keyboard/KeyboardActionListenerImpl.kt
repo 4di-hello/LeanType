@@ -492,17 +492,6 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
             latinIME.requestHideSelf(0)
             true
         }
-        KeyboardActionListener.SWIPE_TOUCHPAD_MODE -> {
-            audioAndHapticFeedbackManager.performHapticAndAudioFeedback(
-                KeyCode.NOT_SPECIFIED, keyboardSwitcher.mainKeyboardView, HapticEvent.KEY_PRESS
-            )
-            isSpaceSwipeActive = true
-            latinIME.isCursorGestureActive = true
-            latinIME.mHandler.cancelResumeSuggestions()
-            inputLogic.finishInput()
-            PointerTracker.setTouchpadModeActive(true)
-            true
-        }
         else -> false
     }
 
