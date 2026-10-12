@@ -82,11 +82,11 @@
     <string name="dictionary_category_title">"Dicionários complementares"</string>
     <string name="dictionary_available">"Dicionário disponível"</string>
     <string name="settings">"Configurações"</string>
-    <string name="delete">"Excluir"</string>
+    <string name="delete">Excluir</string>
     <string name="version_text">Versão %s</string>
     <string name="user_dict_settings_add_shortcut_option_name">"Atalho:"</string>
     <string name="user_dict_settings_add_locale_option_name">"Idioma:"</string>
-    <string name="user_dict_settings_add_word_hint">"Digite uma palavra"</string>
+    <string name="user_dict_settings_add_word_hint">Escreva uma palavra</string>
     <string name="user_dict_settings_add_shortcut_hint">"Atalho opcional"</string>
     <string name="user_dict_settings_edit_dialog_title">"Editar palavra"</string>
     <string name="user_dict_settings_all_languages">"Para todos os idiomas"</string>
@@ -1109,10 +1109,10 @@
     <string name="app_quirks_disable_auto_space_summary">Nunca inserir espaços automáticos antes ou depois de pontuação e símbolos</string>
     <string name="app_quirks_badge_direct_commit">Envio direto</string>
     <string name="app_quirks_badge_symbol_composing">Compor símbolos</string>
-    <string name="app_quirks_badge_no_auto_space">Sem autoespaço</string>
+    <string name="app_quirks_badge_no_auto_space">Sem auto espaço</string>
     <string name="app_quirks_allow_type_null">Permitir em campos não editáveis</string>
     <string name="app_quirks_allow_type_null_summary">Manter teclado acessível mesmo se o app especificar InputType.TYPE_NULL</string>
-    <string name="app_quirks_badge_allow_type_null">TYPE_NULL</string>
+    <string name="app_quirks_badge_allow_type_null">Não editáveis</string>
     <string name="app_quirks_autocorrect_title">Autocorreção</string>
     <string name="app_quirks_autocorrect_default">Seguir configurações globais</string>
     <string name="app_quirks_autocorrect_enable">Sempre ativada</string>

@@ -281,7 +281,7 @@ private fun EditBlockedWordDialog(
                     onValueChange = { wordText = it },
                     modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
                     singleLine = true,
-                    label = { Text("Word") },
+                    label = { Text(stringResource(R.string.user_dict_settings_add_word_hint)) },
                     keyboardActions = KeyboardActions {
                         if (isSaveEnabled) {
                             save()
