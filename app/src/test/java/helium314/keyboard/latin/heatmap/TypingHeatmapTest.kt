@@ -113,6 +113,15 @@ class TypingHeatmapTest {
         assertEquals('i'.code, TypingHeatmap.layoutForTest("test")!!.samples['i'.code]!!.first().touchedCode)
     }
 
+    @Test fun `touches and misses are counted per week`() {
+        TypingHeatmap.onWordCommitted(context, geometry, "wi", "wo", intArrayOf(center('w'), center('i')), intArrayOf(75, 75))
+        TypingHeatmap.finalizePending()
+        val weeks = TypingHeatmap.getWeeklyStats(context)
+        assertEquals(1, weeks.size)
+        assertEquals(2, weeks[0].touches)
+        assertEquals(1, weeks[0].misses)
+    }
+
     @Test fun `offsets need enough data and are limited`() {
         assertNull(TypingHeatmap.effectiveOffset(samples(29, 0.4f), 0.33f))
         val full = TypingHeatmap.effectiveOffset(samples(100, 0.4f), 0.33f)!!
