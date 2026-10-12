@@ -63,15 +63,15 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 private val currentChangelogItems = listOf(
-    "• GIF Plugin Integration: Added full external GIF search plugin integration with GIPHY & Tenor and direct content pasting",
-    "• Modern GIF Picker: Added category tabs (Recent, GIFs, Stickers, Memes, Emojis), card layout, and long-press live preview",
-    "• Chromium Suggestion Fix: Implemented selection-based word replacement for Chrome, Brave, and Edge browser fields",
-    "• Voice Screen Wake Lock: Keep screen awake during speech-to-text recording with automatic release on idle",
-    "• Harmonic Voice Visualizer: Refined voice visualizer with organic harmonics and adaptive frame pacing to save battery",
-    "• Secondary View Preservation: Prevented clipboard, emoji, and GIF views from resetting when restarting input in Compose apps",
-    "• AI Proofreading Tokens: Supported max_completion_tokens for OpenAI reasoning models with auto-recovery fallback",
-    "• 2D Backspace Gesture Drift: Filtered accidental upward drift during rightward swipe deselect",
-    "• Performance Optimizations: Pre-compiled regex instances across spellchecker and voice input hot paths"
+    "• Full Keyboard Swipe: Switch languages or move cursor by swiping horizontally across any part of the keyboard",
+    "• Mutual Gesture Exclusion: Automatically disables gesture typing when full keyboard swipe actions are active",
+    "• Unified Bottom Row Geometry: Synchronized key heights and bottom row alignment across all keyboard layouts and modes",
+    "• Granular Backup & Restore: Separate Dictionaries from Typing History, with optional encrypted API key export",
+    "• Emoji & Emoticon Improvements: Scaled emoticon recents, removed redundant pages, and prevented tab transition freezes",
+    "• Arabic Layout Refinement: Restored familiar 5-letter layout for Alif popup keys to preserve muscle memory",
+    "• GIF Picker & Settings Polish: Streamlined enable/disable toggles, removed redundant backgrounds, and fixed layout overflow",
+    "• Swipe Sensitivity Threshold: Added custom slider to fine-tune horizontal swipe sensitivity",
+    "• Performance & Regex: Pre-compiled regex in OCR formatting and added comprehensive test coverage"
 )
 
 @Composable

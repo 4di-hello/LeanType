@@ -1,7 +1,7 @@
-- Integrated GIF search plugin with categories, provider toggles, and live preview.
-- Added selection-based word replacement for Chromium-based browser editors.
-- Added voice screen wake lock and harmonic visualizer with adaptive pacing.
-- Preserved secondary views (clipboard, emojis, GIF) on restarting input.
-- Added support for max_completion_tokens in AI proofreading for reasoning models.
-- Refined 2D backspace gesture with trajectory angle filtering for deselect drift.
-- Pre-compiled regex patterns in spellchecker and voice input hot paths.
+- Added full keyboard horizontal swipe gesture to switch languages or move cursor.
+- Automatically turn off gesture typing when full keyboard swipe is enabled.
+- Unified bottom row geometry and key heights across all keyboard views.
+- Separated Dictionaries and Typing History in Backup & Restore, with optional API key export.
+- Refined Arabic Alif popup letter ordering and scaled emoticon recents.
+- Polished GIF picker search bar styling and simplified provider toggles.
+- Added custom slider for horizontal swipe threshold sensitivity.
