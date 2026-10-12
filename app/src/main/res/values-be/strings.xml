@@ -1722,4 +1722,5 @@
     <string name="backup_api_keys_warning_title">Папярэджанне бяспекі</string>
     <string name="backup_api_keys_warning_message">Ключы API з\'яўляюцца канфідэнцыйнымі ўліковымі дадзенымі. Калі вы ўключыце іх, яны захаваюцца ў выглядзе незашыфраванага тэксту ў файле рэзервовай копіі. Любы, хто мае доступ да гэтага файла, будзе мець доступ да вашых ключоў API.</string>
     <string name="backup_api_keys_warning_confirm">Уключыць ключы API</string>
+    <string name="gif_get_api_key">Атрымаць ключ API</string>
 </resources>

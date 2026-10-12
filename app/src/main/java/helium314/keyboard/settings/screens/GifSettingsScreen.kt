@@ -37,6 +37,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.leanbitlab.leantype.gif.ProviderInfo
@@ -62,7 +63,10 @@ fun GifSettingsScreen(
     val manager = remember { GifPluginManager.get(context) }
     val scope = rememberCoroutineScope()
     val prefs = remember { context.prefs() }
-    var activeProviderId by remember { mutableStateOf(prefs.getString(Settings.PREF_GIF_PROVIDER, "") ?: "") }
+    var activeProviderId by remember {
+        val raw = prefs.getString(Settings.PREF_GIF_PROVIDER, "") ?: ""
+        mutableStateOf(if (raw == "disabled") "" else raw)
+    }
 
     DisposableEffect(manager) {
         manager.acquire("settings")
@@ -73,17 +77,20 @@ fun GifSettingsScreen(
 
     val connectionState by manager.state.collectAsState()
 
-    var providers by remember { mutableStateOf<List<ProviderInfo>>(emptyList()) }
+    var providers by remember { mutableStateOf<List<ProviderInfo>>(manager.cachedProviders) }
     var isLoadingProviders by remember { mutableStateOf(false) }
     var selectedProviderForConfig by remember { mutableStateOf<ProviderInfo?>(null) }
 
     fun refreshProviders() {
         if (connectionState == GifPluginManager.State.CONNECTED) {
             scope.launch {
-                isLoadingProviders = true
+                if (providers.isEmpty()) {
+                    isLoadingProviders = true
+                }
                 val result = manager.call { engine -> engine.listProviders() }
                 result.onSuccess { list ->
                     providers = list
+                    manager.updateCachedProviders(list)
                 }.onFailure { e ->
                     Log.w(TAG, "Failed to list providers", e)
                 }
@@ -95,7 +102,7 @@ fun GifSettingsScreen(
     LaunchedEffect(connectionState) {
         if (connectionState == GifPluginManager.State.CONNECTED) {
             refreshProviders()
-        } else {
+        } else if (connectionState == GifPluginManager.State.NOT_INSTALLED || connectionState == GifPluginManager.State.UNTRUSTED_PLUGIN) {
             providers = emptyList()
         }
     }
@@ -214,7 +221,9 @@ fun GifSettingsScreen(
                 }
             }
 
-            if (connectionState == GifPluginManager.State.CONNECTED || providers.isNotEmpty()) {
+            val showProvidersCard = connectionState != GifPluginManager.State.NOT_INSTALLED &&
+                connectionState != GifPluginManager.State.UNTRUSTED_PLUGIN
+            if (showProvidersCard) {
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -226,7 +235,7 @@ fun GifSettingsScreen(
                     Column {
                         PreferenceCategory(stringResource(R.string.gif_providers_title))
 
-                        if (isLoadingProviders) {
+                        if (isLoadingProviders && providers.isEmpty()) {
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -236,17 +245,21 @@ fun GifSettingsScreen(
                                 CircularProgressIndicator()
                             }
                         } else if (providers.isEmpty()) {
+                            val emptyText = if (connectionState == GifPluginManager.State.CONNECTING) {
+                                stringResource(R.string.gif_connecting)
+                            } else {
+                                stringResource(R.string.gif_no_results)
+                            }
                             Text(
-                                text = stringResource(R.string.gif_no_results),
+                                text = emptyText,
                                 modifier = Modifier.padding(16.dp),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         } else {
                             val effectiveActiveId = when {
-                                activeProviderId == "disabled" -> ""
                                 activeProviderId.isNotEmpty() -> activeProviderId
-                                else -> providers.firstOrNull { it.configured }?.id ?: ""
+                                else -> providers.firstOrNull { it.configured }?.id ?: "giphy"
                             }
                             providers.forEach { provider ->
                                 val isActive = provider.configured && provider.id == effectiveActiveId
@@ -271,12 +284,25 @@ fun GifSettingsScreen(
     }
 
     selectedProviderForConfig?.let { provider ->
-        var credentialInput by remember { mutableStateOf("") }
         val targetField = provider.credentialFields.firstOrNull() ?: "api_key"
+        val prefKey = "gif_cred_${provider.id}_${targetField}"
+        var credentialInput by remember(provider.id) {
+            mutableStateOf(prefs.getString(prefKey, "") ?: "")
+        }
+
+        LaunchedEffect(provider.id) {
+            val result = manager.call { engine -> engine.getCredential(provider.id, targetField) }
+            result.onSuccess { savedKey ->
+                if (!savedKey.isNullOrEmpty()) {
+                    credentialInput = savedKey
+                    prefs.edit().putString(prefKey, savedKey).apply()
+                }
+            }
+        }
+
         val effectiveActiveId = when {
-            activeProviderId == "disabled" -> ""
             activeProviderId.isNotEmpty() -> activeProviderId
-            else -> providers.firstOrNull { it.configured }?.id ?: ""
+            else -> providers.firstOrNull { it.configured }?.id ?: "giphy"
         }
         val isCurrentActive = provider.configured && provider.id == effectiveActiveId
 
@@ -297,9 +323,11 @@ fun GifSettingsScreen(
                                         engine.clearCredential(provider.id)
                                     }
                                     result.onSuccess {
+                                        prefs.edit().remove(prefKey).apply()
                                         if (activeProviderId == provider.id) {
-                                            prefs.edit().remove(Settings.PREF_GIF_PROVIDER).apply()
-                                            activeProviderId = ""
+                                            val fallback = providers.firstOrNull { it.id != provider.id && it.configured }?.id ?: "local"
+                                            prefs.edit().putString(Settings.PREF_GIF_PROVIDER, fallback).apply()
+                                            activeProviderId = fallback
                                         }
                                         Toast.makeText(context, R.string.gif_api_key_cleared, Toast.LENGTH_SHORT).show()
                                         selectedProviderForConfig = null
@@ -317,13 +345,10 @@ fun GifSettingsScreen(
                     if (provider.configured) {
                         if (isCurrentActive) {
                             OutlinedButton(
-                                onClick = {
-                                    prefs.edit().putString(Settings.PREF_GIF_PROVIDER, "disabled").apply()
-                                    activeProviderId = "disabled"
-                                    selectedProviderForConfig = null
-                                }
+                                onClick = {},
+                                enabled = false
                             ) {
-                                Text(stringResource(R.string.gif_disable))
+                                Text(stringResource(R.string.gif_provider_active))
                             }
                         } else {
                             Button(
@@ -333,7 +358,7 @@ fun GifSettingsScreen(
                                     selectedProviderForConfig = null
                                 }
                             ) {
-                                Text(stringResource(R.string.gif_enable))
+                                Text(stringResource(R.string.gif_set_as_active))
                             }
                         }
                         if (provider.credentialFields.isNotEmpty()) {
@@ -345,11 +370,15 @@ fun GifSettingsScreen(
                             onClick = {
                                 if (credentialInput.isNotBlank()) {
                                     scope.launch {
+                                        val trimmed = credentialInput.trim()
                                         val result = manager.call { engine ->
-                                            engine.setCredential(provider.id, targetField, credentialInput.trim())
+                                            engine.setCredential(provider.id, targetField, trimmed)
                                         }
                                         result.onSuccess {
-                                            prefs.edit().putString(Settings.PREF_GIF_PROVIDER, provider.id).apply()
+                                            prefs.edit()
+                                                .putString(prefKey, trimmed)
+                                                .putString(Settings.PREF_GIF_PROVIDER, provider.id)
+                                                .apply()
                                             activeProviderId = provider.id
                                             Toast.makeText(context, R.string.gif_api_key_saved, Toast.LENGTH_SHORT).show()
                                             selectedProviderForConfig = null
@@ -416,6 +445,23 @@ fun GifSettingsScreen(
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
+
+                    val uriHandler = LocalUriHandler.current
+                    val apiKeyUrl = when (provider.id) {
+                        "giphy" -> "https://developers.giphy.com/dashboard/"
+                        "tenor" -> "https://developers.google.com/tenor/guides/quickstart"
+                        "klipy" -> "https://developer.klipy.co/"
+                        else -> null
+                    }
+                    if (apiKeyUrl != null) {
+                        Spacer(modifier = Modifier.height(4.dp))
+                        TextButton(
+                            onClick = { uriHandler.openUri(apiKeyUrl) },
+                            modifier = Modifier.align(Alignment.End)
+                        ) {
+                            Text(stringResource(R.string.gif_get_api_key))
+                        }
+                    }
                 }
             }
         }

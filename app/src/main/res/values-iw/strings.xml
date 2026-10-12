@@ -1737,4 +1737,5 @@
     <string name="backup_api_keys_warning_title">אזהרת אבטחה</string>
     <string name="backup_api_keys_warning_message">מפתחות API הם אישורים רגישים. הכללתם תשמור אותם כטקסט רגיל לא מוצפן בקובץ הגיבוי. לכל מי שיש לו גישה לקובץ הזה תהיה גישה למפתחות ה-API שלך.</string>
     <string name="backup_api_keys_warning_confirm">כלול מפתחות API</string>
+    <string name="gif_get_api_key">קבל מפתח API</string>
 </resources>

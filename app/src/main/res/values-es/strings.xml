@@ -1721,4 +1721,5 @@ Permite la inferencia GGUF / llama.cpp en el dispositivo para corrección y rees
     <string name="backup_api_keys_warning_title">Advertencia de seguridad</string>
     <string name="backup_api_keys_warning_message">Las claves API son credenciales confidenciales. Incluirlos los almacenará como texto sin cifrar en el archivo de respaldo. Cualquiera que tenga acceso a este archivo tendrá acceso a sus claves API.</string>
     <string name="backup_api_keys_warning_confirm">Incluir claves API</string>
+    <string name="gif_get_api_key">Obtener clave API</string>
 </resources>

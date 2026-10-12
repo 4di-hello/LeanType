@@ -1690,4 +1690,5 @@
     <string name="backup_api_keys_warning_title">Попередження безпеки</string>
     <string name="backup_api_keys_warning_message">Ключі API є конфіденційними обліковими даними. Якщо додати їх, вони збережуться як незашифрований звичайний текст у файлі резервної копії. Кожен, хто має доступ до цього файлу, матиме доступ до ваших ключів API.</string>
     <string name="backup_api_keys_warning_confirm">Включити ключі API</string>
+    <string name="gif_get_api_key">Отримайте ключ API</string>
 </resources>

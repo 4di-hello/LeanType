@@ -1726,4 +1726,5 @@ Lehetővé teszi az eszközön futó GGUF / llama.cpp következtetést a javít�
     <string name="backup_api_keys_warning_title">Biztonsági figyelmeztetés</string>
     <string name="backup_api_keys_warning_message">Az API-kulcsok érzékeny hitelesítő adatok. Belefoglalásuk titkosítatlan egyszerű szövegként tárolja őket a biztonsági mentési fájlban. Bárki, aki hozzáfér ehhez a fájlhoz, hozzáférhet az API-kulcsokhoz.</string>
     <string name="backup_api_keys_warning_confirm">Tartalmazza az API kulcsokat</string>
+    <string name="gif_get_api_key">Szerezze be az API-kulcsot</string>
 </resources>

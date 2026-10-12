@@ -85,7 +85,15 @@ class GifPluginManager private constructor(private val appContext: Context) {
 
     @Volatile
     private var engineRef: IGifEngine? = null
-    val engine: IGifEngine? get() = engineRef
+    @Volatile
+    var cachedProviders: List<com.leanbitlab.leantype.gif.ProviderInfo> = emptyList()
+        private set
+
+    fun updateCachedProviders(list: List<com.leanbitlab.leantype.gif.ProviderInfo>) {
+        if (list.isNotEmpty()) {
+            cachedProviders = list
+        }
+    }
 
     @Volatile
     private var currentContractVersion = 1
@@ -162,6 +170,14 @@ class GifPluginManager private constructor(private val appContext: Context) {
                             generation++
                             _connectionGeneration.value = generation
                             _state.value = State.CONNECTED
+                            pluginScope.launch {
+                                runCatching {
+                                    val list = candidate.listProviders()
+                                    if (list.isNotEmpty()) {
+                                        cachedProviders = list
+                                    }
+                                }
+                            }
                         }
                     }
                 }

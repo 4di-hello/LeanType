@@ -8,10 +8,12 @@ import android.graphics.Color
 import android.graphics.ImageDecoder
 import android.graphics.Typeface
 import android.graphics.drawable.AnimatedImageDrawable
+import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.ParcelFileDescriptor
 import android.util.AttributeSet
+import androidx.core.graphics.ColorUtils
 import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
@@ -39,6 +41,7 @@ import helium314.keyboard.latin.R
 import helium314.keyboard.latin.common.ColorType
 import helium314.keyboard.latin.common.Constants
 import helium314.keyboard.latin.settings.Settings
+import helium314.keyboard.latin.utils.dpToPx
 import helium314.keyboard.latin.utils.prefs
 import helium314.keyboard.settings.SettingsActivity
 import helium314.keyboard.settings.SettingsDestination
@@ -75,6 +78,7 @@ class GifPickerView @JvmOverloads constructor(
     private lateinit var searchContainer: LinearLayout
     private lateinit var searchIcon: ImageView
     private lateinit var searchText: TextView
+    private lateinit var cursorIndicator: View
     private lateinit var providerBadge: TextView
     private lateinit var clearQueryButton: ImageButton
     private lateinit var closeButton: ImageButton
@@ -102,6 +106,8 @@ class GifPickerView @JvmOverloads constructor(
         searchContainer = findViewById(R.id.searchContainer)
         searchIcon = findViewById(R.id.searchIcon)
         searchText = findViewById(R.id.searchText)
+        cursorIndicator = findViewById(R.id.cursorIndicator)
+        searchText.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ -> updateCursorPosition() }
         providerBadge = findViewById(R.id.providerBadge)
         clearQueryButton = findViewById(R.id.clearQueryButton)
         closeButton = findViewById(R.id.closeButton)
@@ -212,6 +218,7 @@ class GifPickerView @JvmOverloads constructor(
     fun close() {
         if (!opened) return
         opened = false
+        removeCallbacks(cursorBlinkRunnable)
         activeProviderId = ""
         activeProviderName = ""
         loadSeq++
@@ -224,6 +231,7 @@ class GifPickerView @JvmOverloads constructor(
     }
 
     override fun onDetachedFromWindow() {
+        removeCallbacks(cursorBlinkRunnable)
         close()
         scope.coroutineContext.cancelChildren()
         super.onDetachedFromWindow()
@@ -274,10 +282,43 @@ class GifPickerView @JvmOverloads constructor(
         return true
     }
 
+    private var isCursorVisible = true
+    private val cursorBlinkRunnable = object : Runnable {
+        override fun run() {
+            if (!opened || !isAttachedToWindow) return
+            isCursorVisible = !isCursorVisible
+            cursorIndicator.visibility = if (isCursorVisible) View.VISIBLE else View.INVISIBLE
+            postDelayed(this, 500)
+        }
+    }
+
+    private fun resetCursorBlink() {
+        isCursorVisible = true
+        cursorIndicator.visibility = View.VISIBLE
+        removeCallbacks(cursorBlinkRunnable)
+        if (opened && isAttachedToWindow) {
+            postDelayed(cursorBlinkRunnable, 500)
+        }
+    }
+
+    private fun updateCursorPosition() {
+        val text = query.toString()
+        if (text.isEmpty()) {
+            cursorIndicator.translationX = 0f
+        } else {
+            val textWidth = searchText.paint.measureText(text)
+            val delta = 4.dpToPx(resources).toFloat()
+            val maxTranslation = (searchText.width - 20.dpToPx(resources)).toFloat().coerceAtLeast(0f)
+            cursorIndicator.translationX = (textWidth + delta).coerceAtMost(maxTranslation)
+        }
+    }
+
     private fun renderQuery() {
         val text = query.toString()
         searchText.text = text
         clearQueryButton.visibility = if (text.isNotEmpty()) View.VISIBLE else View.GONE
+        resetCursorBlink()
+        updateCursorPosition()
     }
 
     private fun selectKind(kind: Int) {
@@ -356,23 +397,10 @@ class GifPickerView @JvmOverloads constructor(
     }
 
     private fun resolveProvider(engine: IGifEngine): String {
-        val prefProvider = context.prefs().getString(Settings.PREF_GIF_PROVIDER, "") ?: Settings.getValues().mGifProvider
+        val rawPref = context.prefs().getString(Settings.PREF_GIF_PROVIDER, "") ?: Settings.getValues().mGifProvider
+        val prefProvider = if (rawPref == "disabled") "" else rawPref
         val list = try { engine.listProviders() } catch (_: Exception) { emptyList() }
         cachedProviders = list
-
-        if (prefProvider == "disabled") {
-            activeProviderId = "disabled"
-            activeProviderName = ""
-            activeProviderKinds = 0
-            post {
-                providerBadge.visibility = View.GONE
-                updateCategoryTabsVisibility()
-                showStatus(context.getString(R.string.gif_disabled_message), context.getString(R.string.gif_open_settings)) {
-                    openGifSettings()
-                }
-            }
-            return ""
-        }
 
         val configured = list.firstOrNull { it.id == prefProvider && it.configured }
             ?: list.firstOrNull { it.configured }
@@ -405,11 +433,7 @@ class GifPickerView @JvmOverloads constructor(
                 ?: cachedProviders
             if (list.isEmpty()) return@launch
 
-            val candidates = if (list.count { it.configured } >= 2) {
-                list.filter { it.configured }
-            } else {
-                list
-            }
+            val candidates = list
             if (candidates.size <= 1) return@launch
 
             val currentIndex = candidates.indexOfFirst { it.id == activeProviderId }
@@ -437,14 +461,38 @@ class GifPickerView @JvmOverloads constructor(
                 Toast.LENGTH_SHORT
             ).show()
 
-            reload(debounce = false)
+            if (!nextProvider.configured && nextProvider.credentialFields.isNotEmpty()) {
+                showStatus(
+                    context.getString(R.string.gif_provider_not_configured),
+                    context.getString(R.string.gif_open_settings)
+                ) {
+                    openGifSettings()
+                }
+            } else {
+                reload(debounce = false)
+            }
         }
     }
 
     private fun applyTheme() {
         val colors = Settings.getValues().mColors ?: return
-        setBackgroundColor(colors.get(ColorType.STRIP_BACKGROUND))
-        searchContainer.backgroundTintList = ColorStateList.valueOf(colors.get(ColorType.KEY_BACKGROUND))
+        val stripBg = colors.get(ColorType.STRIP_BACKGROUND)
+        val textCol = colors.get(ColorType.KEY_TEXT)
+        setBackgroundColor(stripBg)
+
+        // Differentiated search container background with subtle contrast and outline
+        val blendedFill = ColorUtils.compositeColors(
+            (textCol and 0x00FFFFFF) or 0x1F000000,
+            stripBg
+        )
+        val strokeColor = (textCol and 0x00FFFFFF) or 0x33000000
+        val searchBg = GradientDrawable().apply {
+            cornerRadius = 18.dpToPx(resources).toFloat()
+            setColor(blendedFill)
+            setStroke(1.dpToPx(resources), strokeColor)
+        }
+        searchContainer.background = searchBg
+        cursorIndicator.setBackgroundColor(textCol)
         statusAction.backgroundTintList = ColorStateList.valueOf(colors.get(ColorType.ACTION_KEY_BACKGROUND))
 
         val iconColor = colors.get(ColorType.KEY_ICON)

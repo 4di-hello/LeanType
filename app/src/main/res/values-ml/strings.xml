@@ -1788,4 +1788,5 @@
     <string name="backup_api_keys_warning_title">സുരക്ഷാ മുന്നറിയിപ്പ്</string>
     <string name="backup_api_keys_warning_message">API കീകൾ സെൻസിറ്റീവ് ക്രെഡൻഷ്യലുകളാണ്. അവ ഉൾപ്പെടുത്തുന്നത് ബാക്കപ്പ് ഫയലിൽ അവയെ എൻക്രിപ്റ്റ് ചെയ്യാത്ത പ്ലെയിൻ ടെക്സ്റ്റായി സംഭരിക്കും. ഈ ഫയലിലേക്ക് ആക്‌സസ് ഉള്ള ആർക്കും നിങ്ങളുടെ API കീകളിലേക്ക് ആക്‌സസ് ഉണ്ടായിരിക്കും.</string>
     <string name="backup_api_keys_warning_confirm">API കീകൾ ഉൾപ്പെടുത്തുക</string>
+    <string name="gif_get_api_key">API കീ നേടുക</string>
 </resources>

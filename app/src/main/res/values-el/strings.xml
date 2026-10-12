@@ -1788,4 +1788,5 @@
     <string name="backup_api_keys_warning_title">Προειδοποίηση ασφαλείας</string>
     <string name="backup_api_keys_warning_message">Τα κλειδιά API είναι ευαίσθητα διαπιστευτήρια. Η συμπερίληψή τους θα τα αποθηκεύσει ως μη κρυπτογραφημένο απλό κείμενο στο αρχείο αντιγράφου ασφαλείας. Οποιοσδήποτε έχει πρόσβαση σε αυτό το αρχείο θα έχει πρόσβαση στα κλειδιά API σας.</string>
     <string name="backup_api_keys_warning_confirm">Συμπεριλάβετε κλειδιά API</string>
+    <string name="gif_get_api_key">Λήψη κλειδιού API</string>
 </resources>

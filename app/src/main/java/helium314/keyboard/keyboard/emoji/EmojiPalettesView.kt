@@ -496,9 +496,9 @@ class EmojiPalettesView @JvmOverloads constructor(
                 if (primaryCode == KeyCode.DELETE) {
                     val text = searchBar?.text ?: return
                     if (text.isNotEmpty()) {
-                        val selStart = searchBar.selectionStart
-                        val selEnd = searchBar.selectionEnd
-                        if (selStart >= 0 && selEnd > selStart) {
+                        val selStart = if (searchBar.selectionStart >= 0) searchBar.selectionStart else text.length
+                        val selEnd = if (searchBar.selectionEnd >= 0) searchBar.selectionEnd else text.length
+                        if (selEnd > selStart) {
                             text.delete(selStart, selEnd)
                         } else if (selStart > 0) {
                             text.delete(selStart - 1, selStart)
@@ -566,8 +566,6 @@ class EmojiPalettesView @JvmOverloads constructor(
             }
 
             override fun onReleaseKey(p: Int, w: Boolean) {
-                mDeleteSwipeStartSel = -1
-                mCurrentDeleteSwipeStart = -1
                 if (p != KeyCode.SYMBOL && p != KeyCode.ALPHA && p != KeyCode.NUMPAD &&
                     p != KeyCode.SYMBOL_ALPHA && p != KeyCode.SHIFT && p != KeyCode.EMOJI &&
                     p != KeyCode.CLIPBOARD && p != KeyCode.LANGUAGE_SWITCH &&
@@ -630,13 +628,18 @@ class EmojiPalettesView @JvmOverloads constructor(
             override fun onMoveDeletePointer(s: Int) {
                 val searchBar = mSearchBar ?: return
                 val text = searchBar.text ?: return
+                if (text.isEmpty()) return
+
                 if (mDeleteSwipeStartSel == -1) {
-                    mDeleteSwipeStartSel = searchBar.selectionEnd
+                    val end = searchBar.selectionEnd
+                    mDeleteSwipeStartSel = if (end >= 0) end else text.length
                     mCurrentDeleteSwipeStart = mDeleteSwipeStartSel
                 }
-                if (mDeleteSwipeStartSel < 0) return
 
-                mCurrentDeleteSwipeStart += s
+                val rtl = RichInputMethodManager.getInstance().currentSubtype.isRtlSubtype
+                val steps = if (rtl) -s else s
+
+                mCurrentDeleteSwipeStart += steps
                 if (mCurrentDeleteSwipeStart < 0) mCurrentDeleteSwipeStart = 0
                 if (mCurrentDeleteSwipeStart > mDeleteSwipeStartSel) mCurrentDeleteSwipeStart = mDeleteSwipeStartSel
 

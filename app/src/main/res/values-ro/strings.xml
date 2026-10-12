@@ -1717,4 +1717,5 @@ Activează inferența GGUF / llama.cpp pe dispozitiv pentru corectură și refor
     <string name="backup_api_keys_warning_title">Avertisment de securitate</string>
     <string name="backup_api_keys_warning_message">Cheile API sunt acreditări sensibile. Includerea acestora le va stoca ca text simplu necriptat în fișierul de rezervă. Oricine are acces la acest fișier va avea acces la cheile dvs. API.</string>
     <string name="backup_api_keys_warning_confirm">Includeți cheile API</string>
+    <string name="gif_get_api_key">Obțineți cheia API</string>
 </resources>

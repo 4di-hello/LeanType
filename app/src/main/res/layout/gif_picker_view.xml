@@ -43,19 +43,33 @@
                 android:tint="?android:attr/textColorSecondary"
                 android:contentDescription="@null" />
 
-            <TextView
-                android:id="@+id/searchText"
+            <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:paddingHorizontal="6dp"
-                android:singleLine="true"
-                android:ellipsize="start"
-                android:textSize="13sp"
-                android:hint="@string/gif_search_hint"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textColorHint="?android:attr/textColorSecondary" />
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/searchText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="6dp"
+                    android:singleLine="true"
+                    android:ellipsize="start"
+                    android:textSize="13sp"
+                    android:hint="@string/gif_search_hint"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textColorHint="?android:attr/textColorSecondary" />
+
+                <View
+                    android:id="@+id/cursorIndicator"
+                    android:layout_width="1.5dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="8dp"
+                    android:background="?android:attr/textColorPrimary" />
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/providerBadge"
