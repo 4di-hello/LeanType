@@ -19,6 +19,8 @@ import android.view.inputmethod.CorrectionInfo
 import android.view.inputmethod.EditorInfo
 import helium314.keyboard.compat.AppQuirksManager
 import helium314.keyboard.event.Event
+import helium314.keyboard.latin.LearnedCasing
+import helium314.keyboard.latin.utils.prefs
 import helium314.keyboard.latin.heatmap.KeyboardGeometry
 import helium314.keyboard.latin.heatmap.TypingHeatmap
 import helium314.keyboard.event.InputTransaction
@@ -91,6 +93,8 @@ class InputLogic(
     private var mTypedWordOnShiftPress: String? = null
     /** caps lock was enabled by [recapitalizeComposingWord], it is released when the word is finished */
     private var mCapsLockFromRecapitalize = false
+    /** word as changed by [recapitalizeComposingWord] (not lower case), for [LearnedCasing] */
+    private var mRecapitalizedWord: String? = null
 
     private var mDeleteCount = 0
     // for "backspace repeat deletes words": repeat ticks in the current hold, and words deleted so far
@@ -137,6 +141,7 @@ class InputLogic(
         TypingHeatmap.init(mLatinIME)
         mDeletedLetterIndex = -1
         mCapsLockFromRecapitalize = false
+        mRecapitalizedWord = null
         mEnteredText = null
         mWordBeingCorrectedByCursor = null
         mConnection.onStartInput()
@@ -1268,7 +1273,9 @@ class InputLogic(
                 commitCurrentAutoCorrection(settingsValues, separator, handler)
                 inputTransaction.setDidAutoCorrect()
             } else {
-                commitTyped(settingsValues, StringUtils.newSingleCodePointString(codePoint))
+                // like an auto-correction, a learned capitalization can be reverted with backspace
+                if (commitTyped(settingsValues, StringUtils.newSingleCodePointString(codePoint), useLearnedCasing = true))
+                    inputTransaction.setDidAutoCorrect()
             }
         } else if (TextExpanderUtils.isEnabled(mLatinIME)) {
             val textBefore = mConnection.getTextBeforeCursor(50, 0)
@@ -1923,6 +1930,7 @@ class InputLogic(
         // typing should continue in the same case: caps lock for an upper case word, lower case otherwise
         mCapsLockFromRecapitalize = mRecapitalizeStatus.getCurrentMode() == RecapitalizeMode.ALL_UPPER
         KeyboardSwitcher.getInstance().setCapsLock(mCapsLockFromRecapitalize)
+        mRecapitalizedWord = if (mRecapitalizeStatus.getCurrentMode() == RecapitalizeMode.ALL_LOWER) null else replacement
         return true
     }
 
@@ -2172,6 +2180,11 @@ class InputLogic(
         val originallyTypedWord = mLastComposedWord.mTypedWord
         val committedWord = mLastComposedWord.mCommittedWord
         val committedWordString = committedWord.toString()
+        // the user doesn't want the learned case here: forget it
+        if (inputTransaction.settingsValues.mLearnCasing
+            && LearnedCasing.learnedFormFor(mLatinIME.prefs(), originallyTypedWord) == committedWordString) {
+            LearnedCasing.forget(mLatinIME.prefs(), originallyTypedWord)
+        }
         val cancelLength = committedWord.length
         val separatorString = mLastComposedWord.mSeparatorString
         val usePhantomSpace = separatorString == Constants.STRING_SPACE
@@ -2465,14 +2478,34 @@ class InputLogic(
         }
     }
 
-    fun commitTyped(settingsValues: SettingsValues, separatorString: String) {
-        if (!mWordComposer.isComposingWord()) return
+    /** @return whether the word was changed to a learned capitalization (like an auto-correction) */
+    fun commitTyped(settingsValues: SettingsValues, separatorString: String, useLearnedCasing: Boolean = false): Boolean {
+        if (!mWordComposer.isComposingWord()) return false
         val typedWord = mWordComposer.getTypedWord()
+        var changed = false
         if (typedWord.isNotEmpty()) {
             val isBatchMode = mWordComposer.isBatchMode()
-            commitChosenWord(settingsValues, typedWord, LastComposedWord.COMMIT_TYPE_USER_TYPED_WORD, separatorString)
+            val learned = if (useLearnedCasing) applyLearnedCasing(settingsValues, typedWord) else typedWord
+            if (learned != typedWord) {
+                // like an auto-correction, so it can be reverted with backspace
+                commitChosenWord(settingsValues, learned, LastComposedWord.COMMIT_TYPE_DECIDED_WORD, separatorString)
+                mConnection.commitCorrection(
+                    CorrectionInfo(mConnection.expectedSelectionEnd - learned.length, typedWord, learned)
+                )
+                changed = true
+            } else {
+                commitChosenWord(settingsValues, typedWord, LastComposedWord.COMMIT_TYPE_USER_TYPED_WORD, separatorString)
+            }
             StatsUtils.onWordCommitUserTyped(typedWord, isBatchMode)
         }
+        return changed
+    }
+
+    /** [word] in the form learned by [LearnedCasing], if enabled and the user did not just change its case */
+    private fun applyLearnedCasing(settingsValues: SettingsValues, word: String): String {
+        if (!settingsValues.mLearnCasing || settingsValues.mInputAttributes.mIsPasswordField) return word
+        if (isRecapitalizingComposingWord()) return word
+        return LearnedCasing.learnedFormFor(mLatinIME.prefs(), word) ?: word
     }
 
     private fun commitCurrentAutoCorrection(
@@ -2486,7 +2519,7 @@ class InputLogic(
         }
         val autoCorrectionOrNull = mWordComposer.getAutoCorrectionOrNull()
         val typedWord = mWordComposer.getTypedWord()
-        val stringToCommit = autoCorrectionOrNull?.mWord ?: typedWord
+        val stringToCommit = applyLearnedCasing(settingsValues, autoCorrectionOrNull?.mWord ?: typedWord)
         if (stringToCommit != null) {
             val isBatchMode = mWordComposer.isBatchMode()
             commitChosenWord(settingsValues, stringToCommit, LastComposedWord.COMMIT_TYPE_DECIDED_WORD, separator)
@@ -2634,6 +2667,11 @@ class InputLogic(
             startTimeMillis = System.currentTimeMillis()
         }
         recordForTypingHeatmap(settingsValues, chosenWord)
+        // the user changed the case of this word with shift: remember it
+        if (settingsValues.mLearnCasing && !settingsValues.mIncognitoModeEnabled && chosenWord == mRecapitalizedWord) {
+            LearnedCasing.onRecapitalizedWordUsed(mLatinIME.prefs(), chosenWord)
+        }
+        mRecapitalizedWord = null
         mLastComposedWord = mWordComposer.commitWord(commitType, chosenWord, separatorString, ngramContext)
         if (DebugFlags.DEBUG_ENABLED) {
             val runTimeMillis = System.currentTimeMillis() - startTimeMillis

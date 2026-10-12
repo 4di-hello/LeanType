@@ -42,6 +42,13 @@ class SuggestionStripLayoutHelperTest {
         }
     }
 
+    @Test fun autoCorrectionCanBeRightOfTypedWord() {
+        fun right(index: Int, center: Int = 1, left: Int = 0) =
+            getPositionInSuggestionStrip(index, true, true, center, left, centerTypedWord = true, autoCorrectionRight = true)
+        assertEquals(listOf(2, 1, 0), (1..3).map { right(it) })
+        assertEquals(listOf(3, 2, 1, 0, 4), (1..5).map { right(it, center = 2, left = 1) })
+    }
+
     @Test fun typedWordIsInCenterWithFiveSuggestions() {
         val positions = (1..5).map { position(it, willAutoCorrect = true, centerTypedWord = true, center = 2, left = 1) }
         assertEquals(listOf(1, 2, 3, 0, 4), positions)

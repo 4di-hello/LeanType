@@ -1781,4 +1781,17 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="backspace_word_acceleration_3">Empfohlen</string>
     <string name="backspace_word_acceleration_4">Stark</string>
     <string name="backspace_word_acceleration_5">Sehr stark</string>
+    <string name="autocorrection_right_of_typed_word">Autokorrektur rechts vom getippten Wort</string>
+    <string name="autocorrection_right_of_typed_word_summary">Wenn das getippte Wort in der Mitte steht, erscheint die Autokorrektur rechts daneben statt links</string>
+    <string name="learn_casing">Schreibweisen merken</string>
+    <string name="learn_casing_summary">Wenn Du ein Wort zweimal gleich per Shift änderst (z. B. du → Du, hzd → HZD), wird es künftig automatisch so geschrieben. Die Rücktaste direkt danach macht es rückgängig und vergisst es</string>
+    <string name="learned_casing">Gemerkte Schreibweisen</string>
+    <string name="learned_casing_summary">%1$d aktiv, %2$d im Lernen</string>
+    <string name="learned_casing_empty">Noch nichts gemerkt.</string>
+    <string name="learned_casing_not_yet">Im Lernen: wird nach einem weiteren Mal automatisch verwendet</string>
+    <string name="learned_casing_forget_all">Alle vergessen</string>
+    <string name="clipboard_skip_sensitive">Passwörter und Codes nicht speichern</string>
+    <string name="clipboard_skip_sensitive_summary">Als vertraulich markierte Einträge (z. B. aus Passwort-Managern) und Einmalcodes mit 4 bis 8 Ziffern landen nicht im Verlauf. Einfügen funktioniert weiterhin</string>
+    <string name="typing_heatmap_history">Fehltreffer pro Woche</string>
+    <string name="typing_heatmap_history_value">%1$.1f %% (%2$d)</string>
 </resources>

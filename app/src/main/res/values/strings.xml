@@ -2469,4 +2469,17 @@ New dictionary:
     <string name="backspace_word_acceleration_3">Recommended</string>
     <string name="backspace_word_acceleration_4">Strong</string>
     <string name="backspace_word_acceleration_5">Very strong</string>
+    <string name="autocorrection_right_of_typed_word">Auto-correction right of the typed word</string>
+    <string name="autocorrection_right_of_typed_word_summary">When the typed word is in the middle, show the auto-correction on its right instead of its left</string>
+    <string name="learn_casing">Remember capitalization</string>
+    <string name="learn_casing_summary">When you change a word with shift the same way twice (e.g. du → Du, hzd → HZD), it is written like this automatically. Backspace right after it reverts and forgets it</string>
+    <string name="learned_casing">Remembered capitalization</string>
+    <string name="learned_casing_summary">%1$d in use, %2$d learning</string>
+    <string name="learned_casing_empty">Nothing remembered yet.</string>
+    <string name="learned_casing_not_yet">Learning: used automatically after one more time</string>
+    <string name="learned_casing_forget_all">Forget all</string>
+    <string name="clipboard_skip_sensitive">Don\'t keep passwords and codes</string>
+    <string name="clipboard_skip_sensitive_summary">Entries marked as confidential (e.g. from password managers) and one-time codes with 4 to 8 digits are not added to the history. Pasting still works</string>
+    <string name="typing_heatmap_history">Misses per week</string>
+    <string name="typing_heatmap_history_value">%1$.1f %% (%2$d)</string>
 </resources>
