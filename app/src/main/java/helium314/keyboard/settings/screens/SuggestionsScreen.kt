@@ -41,6 +41,7 @@ import helium314.keyboard.latin.utils.Log
 import helium314.keyboard.latin.utils.ToolbarMode
 import helium314.keyboard.latin.utils.getActivity
 import helium314.keyboard.latin.utils.prefs
+import helium314.keyboard.settings.KeyboardTestField
 import helium314.keyboard.settings.SearchSettingsScreen
 import helium314.keyboard.settings.Setting
 import helium314.keyboard.settings.SettingsActivity
@@ -110,7 +111,8 @@ fun SuggestionsScreen(
     SearchSettingsScreen(
         onClickBack = onClickBack,
         title = stringResource(R.string.settings_screen_suggestions),
-        settings = items
+        settings = items,
+        headerContent = { KeyboardTestField() },
     )
 }
 

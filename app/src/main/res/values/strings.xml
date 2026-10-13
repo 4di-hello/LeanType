@@ -1358,6 +1358,20 @@ New dictionary:
     <string name="theme_name_leanbitlab_light" tools:keep="@string/theme_name_leanbitlab_light">LeanBitLab Light</string>
     <!-- Theme name for LeanBitLab Dark theme -->
     <string name="theme_name_leanbitlab_dark" tools:keep="@string/theme_name_leanbitlab_dark">LeanBitLab Dark</string>
+    <string name="theme_name_dynamic_subtle" tools:keep="@string/theme_name_dynamic_subtle">Dynamic colors (subtle)</string>
+    <string name="theme_name_dynamic_vivid" tools:keep="@string/theme_name_dynamic_vivid">Dynamic colors (vivid)</string>
+    <string name="theme_name_clean_light" tools:keep="@string/theme_name_clean_light">Clean Light</string>
+    <string name="theme_name_clean_dark" tools:keep="@string/theme_name_clean_dark">Clean Dark</string>
+    <string name="theme_name_pure_black" tools:keep="@string/theme_name_pure_black">Pure Black (dimmed)</string>
+    <string name="theme_name_warm_night" tools:keep="@string/theme_name_warm_night">Warm Night</string>
+    <string name="theme_name_high_contrast_light" tools:keep="@string/theme_name_high_contrast_light">High Contrast Light</string>
+    <string name="theme_name_high_contrast_dark" tools:keep="@string/theme_name_high_contrast_dark">High Contrast Dark</string>
+    <string name="theme_name_arctic" tools:keep="@string/theme_name_arctic">Arctic</string>
+    <string name="theme_name_solar_light" tools:keep="@string/theme_name_solar_light">Solar Light</string>
+    <string name="theme_name_solar_dark" tools:keep="@string/theme_name_solar_dark">Solar Dark</string>
+    <string name="theme_name_ocean" tools:keep="@string/theme_name_ocean">Ocean</string>
+    <string name="theme_name_deep_sea" tools:keep="@string/theme_name_deep_sea">Deep Sea</string>
+    <string name="theme_name_pastel" tools:keep="@string/theme_name_pastel">Pastel</string>
     <!-- Theme name for user-defined theme night mode theme -->
     <!-- Text when determining color automatically -->
     <string name="auto_user_color">Choose color automatically</string>
@@ -2418,4 +2432,50 @@ New dictionary:
     <string name="gif_no_recent_items">No recent items</string>
     <string name="gif_manage_local_media">Manage Local Media</string>
     <string name="gif_get_api_key">Get API key</string>
+    <!-- Short descriptions of the entries in the main settings menu, and the keyboard test field -->
+    <string name="main_summary_ai">Proofreading, AI keys and models</string>
+    <string name="main_summary_plugins">Voice input, handwriting, translation, GIFs, sounds</string>
+    <string name="main_summary_preferences">Vibration and sound, extra keys, clipboard, one-handed and floating mode</string>
+    <string name="main_summary_appearance">Theme, colors, key size, fonts</string>
+    <string name="main_summary_toolbar">Buttons above the keyboard</string>
+    <string name="main_summary_gesture">Swipe typing, gestures, touchpad</string>
+    <string name="main_summary_correction">Auto-correction, capitalization, space and punctuation</string>
+    <string name="main_summary_suggestions">Suggestion strip and word prediction</string>
+    <string name="main_summary_text_expander">Shortcuts that expand to longer text</string>
+    <string name="main_summary_advanced">Backup, privacy, physical keyboard, experimental</string>
+    <string name="keyboard_test_field">Try the keyboard here</string>
+    <string name="keyboard_test_field_hint">Changes are shown the next time the keyboard opens</string>
+    <string name="settings_category_collapse">Collapse or expand section</string>
+    <!-- Additional search words for settings: "setting key|words separated by spaces". Translate only the words. -->
+    <string-array name="settings_search_keywords">
+        <item>theme_colors|theme design color colour dark light look skin</item>
+        <item>theme_colors_night|theme design color colour dark night look skin</item>
+        <item>theme_style|design look shape rounded</item>
+        <item>theme_key_borders|outline frame look</item>
+        <item>keyboard_height_scale|size big small tall</item>
+        <item>font_scale|text size letters big small</item>
+        <item>vibrate_on|haptic feedback vibration buzz</item>
+        <item>vibration_duration_settings|haptic feedback strength</item>
+        <item>sound_on|click audio tone noise</item>
+        <item>popup_on|preview bubble magnify</item>
+        <item>auto_correction|autocorrect typo spelling fix mistake</item>
+        <item>auto_cap|capital uppercase shift</item>
+        <item>show_suggestions|prediction word bar strip</item>
+        <item>next_word_prediction|suggestion predict next</item>
+        <item>gesture_input|swipe glide slide typing</item>
+        <item>show_number_row|digits numbers</item>
+        <item>show_emoji_key|smiley emoticon</item>
+        <item>use_double_space_period|full stop dot</item>
+        <item>split_keyboard|tablet landscape thumbs</item>
+        <item>enable_clipboard_history|copy paste</item>
+        <item>always_incognito_mode|private privacy history learning</item>
+        <item>backup_restore|export import save transfer phone</item>
+        <item>horizontal_space_swipe|cursor move arrow</item>
+        <item>delete_swipe|erase remove backspace</item>
+        <item>key_longpress_timeout|hold delay long press</item>
+        <item>show_hints|popup characters accents umlauts</item>
+        <item>use_system_wallpaper|background image picture photo</item>
+        <item>background_image|picture photo wallpaper</item>
+        <item>navbar_color|navigation bar buttons</item>
+    </string-array>
 </resources>
