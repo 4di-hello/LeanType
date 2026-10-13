@@ -484,6 +484,8 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
         const val PREF_PERSIST_TEXT_EDIT_MODE = "persist_text_edit_mode"
         const val PREF_FORCE_AUTO_CAPS = "force_auto_caps"
         const val PREF_SHIFT_RECAPITALIZES_WORD = "shift_recapitalizes_word"
+        const val PREF_LEARN_CASING = "learn_casing"
+        const val PREF_LEARNED_CASING = "learned_casing"
         const val PREF_OFFLINE_TEMP = "offline_temp"
         const val PREF_OFFLINE_TOP_P = "offline_top_p"
         const val PREF_OFFLINE_TOP_K = "offline_top_k"
