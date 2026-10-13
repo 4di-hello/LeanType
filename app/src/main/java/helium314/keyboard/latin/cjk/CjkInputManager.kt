@@ -21,7 +21,8 @@ class CjkInputManager private constructor(private val context: Context) {
     }
 
     private var uiListener: CjkUiListener? = null
-    private var isComposing = false
+    var isComposing: Boolean = false
+        internal set
 
     fun setUiListener(listener: CjkUiListener?) {
         this.uiListener = listener
@@ -87,8 +88,12 @@ class CjkInputManager private constructor(private val context: Context) {
             uiListener?.onSetCandidateStripVisibility(true)
             uiListener?.onUpdateCandidates(ctx.candidates, ctx.selectedIndex, ctx.preedit)
         } else {
+            val wasComposing = isComposing
             isComposing = false
-            if (commitText.isNullOrEmpty()) {
+            if (commitText.isNullOrEmpty() && wasComposing) {
+                ic?.setComposingText("", 1)
+                ic?.finishComposingText()
+            } else if (!commitText.isNullOrEmpty()) {
                 ic?.finishComposingText()
             }
             uiListener?.onClearCandidates()
@@ -115,8 +120,10 @@ class CjkInputManager private constructor(private val context: Context) {
     fun clearComposition(ic: InputConnection? = null) {
         val engine = CjkPluginLoader.getEngine(context)
         engine?.clearComposition()
+        if (isComposing) {
+            ic?.finishComposingText()
+        }
         isComposing = false
-        ic?.finishComposingText()
         uiListener?.onClearCandidates()
         uiListener?.onSetCandidateStripVisibility(false)
     }
@@ -130,10 +137,21 @@ class CjkInputManager private constructor(private val context: Context) {
         composingSpanStart: Int, composingSpanEnd: Int,
         ic: InputConnection? = null
     ) {
-        // If the composing span was discarded by the target app or cursor moved away, clear engine composition
-        if (isComposing && (composingSpanStart < 0 || composingSpanEnd < 0)) {
-            Log.d(TAG, "Cursor moved outside composing span; clearing CJK composition")
+        if (!isComposing) return
+
+        // If user made a range selection, clear active composition
+        if (newSelStart != newSelEnd) {
+            Log.d(TAG, "Selection range active ($newSelStart, $newSelEnd); clearing CJK composition")
             clearComposition(ic)
+            return
+        }
+
+        // Only validate cursor bounds if editor accurately reports the composing span
+        if (composingSpanStart >= 0 && composingSpanEnd >= composingSpanStart) {
+            if (newSelStart < composingSpanStart || newSelEnd > composingSpanEnd) {
+                Log.d(TAG, "Cursor moved outside composing span ($newSelStart not in [$composingSpanStart, $composingSpanEnd]); clearing CJK composition")
+                clearComposition(ic)
+            }
         }
     }
 

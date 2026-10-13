@@ -106,4 +106,49 @@ class CjkEngineTest {
         assertEquals(secondCandidate, engine.getCommit())
         assertNull(engine.getContext())
     }
+
+    @Test
+    fun testOnUpdateSelectionRetainsCompositionOnNegativeSpan() {
+        val context = androidx.test.core.app.ApplicationProvider.getApplicationContext<android.content.Context>()
+        val manager = CjkInputManager.getInstance(context)
+        manager.isComposing = true
+
+        // Intermediate Android IME update with -1 composing bounds should NOT clear composition
+        manager.onUpdateSelection(
+            oldSelStart = 2, oldSelEnd = 2,
+            newSelStart = 2, newSelEnd = 2,
+            composingSpanStart = -1, composingSpanEnd = -1
+        )
+        assertTrue(manager.isComposing)
+    }
+
+    @Test
+    fun testOnUpdateSelectionClearsWhenCursorMovesOutsideSpan() {
+        val context = androidx.test.core.app.ApplicationProvider.getApplicationContext<android.content.Context>()
+        val manager = CjkInputManager.getInstance(context)
+        manager.isComposing = true
+
+        // Cursor moved outside valid composing span [0, 5] to position 10
+        manager.onUpdateSelection(
+            oldSelStart = 2, oldSelEnd = 2,
+            newSelStart = 10, newSelEnd = 10,
+            composingSpanStart = 0, composingSpanEnd = 5
+        )
+        assertFalse(manager.isComposing)
+    }
+
+    @Test
+    fun testOnUpdateSelectionClearsOnActiveSelectionRange() {
+        val context = androidx.test.core.app.ApplicationProvider.getApplicationContext<android.content.Context>()
+        val manager = CjkInputManager.getInstance(context)
+        manager.isComposing = true
+
+        // Text selection range created by user
+        manager.onUpdateSelection(
+            oldSelStart = 2, oldSelEnd = 2,
+            newSelStart = 2, newSelEnd = 5,
+            composingSpanStart = 2, composingSpanEnd = 5
+        )
+        assertFalse(manager.isComposing)
+    }
 }

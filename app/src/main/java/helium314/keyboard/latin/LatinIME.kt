@@ -1007,10 +1007,15 @@ class LatinIME : InputMethodService(),
     ) {
         super.onUpdateSelection(oldSelStart, oldSelEnd, newSelStart, newSelEnd, composingSpanStart, composingSpanEnd)
         voiceInputManager?.onUpdateSelection(oldSelStart, oldSelEnd, newSelStart, newSelEnd, composingSpanStart, composingSpanEnd)
-        CjkInputManager.getInstance(this).onUpdateSelection(
-            oldSelStart, oldSelEnd, newSelStart, newSelEnd,
-            composingSpanStart, composingSpanEnd, currentInputConnection
-        )
+        val cjkManager = CjkInputManager.getInstance(this)
+        if (cjkManager.isCjkSubtypeActive(richImm.currentSubtype)) {
+            cjkManager.onUpdateSelection(
+                oldSelStart, oldSelEnd, newSelStart, newSelEnd,
+                composingSpanStart, composingSpanEnd, currentInputConnection
+            )
+            keyboardSwitcher.requestUpdatingShiftState(currentAutoCapsState, currentRecapitalizeState)
+            return
+        }
         
         if (DebugFlags.DEBUG_ENABLED) {
             Log.i(TAG, "onUpdateSelection: oss=$oldSelStart, ose=$oldSelEnd, nss=$newSelStart, nse=$newSelEnd, cs=$composingSpanStart, ce=$composingSpanEnd")
@@ -1559,6 +1564,9 @@ class LatinIME : InputMethodService(),
     }
 
     override fun setSuggestions(suggestedWords: SuggestedWords) {
+        if (CjkInputManager.getInstance(this).isCjkSubtypeActive(richImm.currentSubtype)) {
+            return
+        }
         if (tryShowMathSuggestion()) return
         if (suggestedWords.isEmpty) {
             if (keyboardSwitcher.isHandwritingShowing) {
@@ -1630,9 +1638,15 @@ class LatinIME : InputMethodService(),
 
     fun setNeutralSuggestionStrip(skipExternalSuggestions: Boolean) {
         if (keyboardSwitcher.isHandwritingShowing) return
+        val cjkManager = CjkInputManager.getInstance(this)
+        if (cjkManager.isComposing) return
         val currentSettings = settings.current
         if (!skipExternalSuggestions && tryShowExternalSuggestion()) {
             if (currentSettings.mAutoHideToolbar) suggestionStripView?.setToolbarVisibility(false)
+            return
+        }
+        if (cjkManager.isCjkSubtypeActive(richImm.currentSubtype)) {
+            suggestionStripView?.setToolbarVisibility(!currentSettings.mAutoHideToolbar)
             return
         }
         
