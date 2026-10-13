@@ -197,6 +197,8 @@ private fun SubtypeRow(subtype: InputMethodSubtype, isEnabled: Boolean) {
 }
 
 private fun dictsAvailable(locale: Locale, context: Context): Boolean {
+    val lang = locale.language.lowercase()
+    if (lang == "zh" || lang == "ja") return true
     val (dicts, hasInternal) = getUserAndInternalDictionaries(context, locale)
     return hasInternal || dicts.isNotEmpty()
 }
