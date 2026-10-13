@@ -3,6 +3,8 @@ package com.leanbitlab.leantype.cjk.plugin
 
 import android.content.Context
 import android.util.Log
+import com.leanbitlab.leantype.cjk.plugin.japanese.JapaneseDictionary
+import com.leanbitlab.leantype.cjk.plugin.japanese.JapaneseEngine
 import helium314.keyboard.latin.cjk.CjkCandidate
 import helium314.keyboard.latin.cjk.CjkContextData
 import helium314.keyboard.latin.cjk.ICjkEngine
@@ -11,83 +13,107 @@ import java.io.FileOutputStream
 
 class CjkEngineImpl : ICjkEngine {
 
-    private var isInitialized = false
-    private val buffer = StringBuilder()
-    private var pendingCommit: String? = null
-    private var cachedContext: CjkContextData? = null
+    private var activeLanguage = "zh"
+    private var isPinyinReady = false
+    private var isJapaneseReady = false
 
-    override fun getInterfaceVersion(): Int = 1
+    // Chinese Pinyin Engine state
+    private val pinyinBuffer = StringBuilder()
+    private var pendingPinyinCommit: String? = null
+    private var cachedPinyinContext: CjkContextData? = null
+
+    // Japanese Engine
+    private var japaneseDictionary: JapaneseDictionary? = null
+    private var japaneseEngine: JapaneseEngine? = null
+
+    override fun getInterfaceVersion(): Int = 2
+
+    override fun setLocale(locale: String): Boolean {
+        val lang = locale.lowercase().split("_", "-")[0]
+        if (lang == "ja" || lang == "zh") {
+            if (activeLanguage != lang) {
+                clearComposition()
+                activeLanguage = lang
+                Log.d(TAG, "Switched CJK engine active language to $activeLanguage")
+            }
+            return true
+        }
+        return false
+    }
+
+    override fun supportsLanguage(language: String): Boolean {
+        val lang = language.lowercase().split("_", "-")[0]
+        return lang == "zh" || lang == "ja"
+    }
 
     override fun init(context: Context, sharedDir: String, userDir: String): Boolean {
-        if (!PinyinDecoderJni.isNativeLoaded()) {
-            Log.e(TAG, "Native library jni_pinyin is not loaded")
-            return false
-        }
-
         try {
             val sharedFolder = File(sharedDir).apply { mkdirs() }
             val userFolder = File(userDir).apply { mkdirs() }
 
-            val dictFile = File(sharedFolder, DICT_FILENAME)
-            if (!dictFile.exists() || dictFile.length() == 0L) {
-                Log.i(TAG, "Extracting $DICT_FILENAME to ${dictFile.absolutePath}")
-                val inputStream = javaClass.classLoader?.getResourceAsStream("assets/$DICT_FILENAME")
-                    ?: try {
-                        context.createPackageContext("com.leanbitlab.leantype.cjk.plugin", 0).assets.open(DICT_FILENAME)
-                    } catch (_: Exception) {
-                        null
+            // 1. Initialize Chinese Pinyin Engine
+            if (PinyinDecoderJni.isNativeLoaded()) {
+                val pinyinDictFile = File(sharedFolder, DICT_PINYIN_FILENAME)
+                if (extractAsset(context, DICT_PINYIN_FILENAME, pinyinDictFile)) {
+                    val userDictFile = File(userFolder, USER_PINYIN_FILENAME)
+                    val success = PinyinDecoderJni.nativeOpenDecoder(
+                        pinyinDictFile.absolutePath,
+                        userDictFile.absolutePath
+                    )
+                    if (success) {
+                        isPinyinReady = true
+                        Log.i(TAG, "Pinyin decoder engine initialized successfully")
+                    } else {
+                        Log.e(TAG, "Failed to open Pinyin decoder: ${pinyinDictFile.absolutePath}")
                     }
-                    ?: try {
-                        context.assets.open(DICT_FILENAME)
-                    } catch (_: Exception) {
-                        null
-                    }
+                }
+            } else {
+                Log.w(TAG, "Native library jni_pinyin is not loaded")
+            }
 
-                if (inputStream != null) {
-                    inputStream.use { input ->
-                        FileOutputStream(dictFile).use { output ->
-                            input.copyTo(output)
-                        }
-                    }
+            // 2. Initialize Japanese Engine
+            val jaDictFile = File(sharedFolder, DICT_JAPANESE_FILENAME)
+            if (extractAsset(context, DICT_JAPANESE_FILENAME, jaDictFile)) {
+                val jaUserDictFile = File(userFolder, USER_JAPANESE_FILENAME)
+                val jaDict = JapaneseDictionary()
+                if (jaDict.init(jaDictFile, jaUserDictFile)) {
+                    japaneseDictionary = jaDict
+                    japaneseEngine = JapaneseEngine(jaDict)
+                    isJapaneseReady = true
+                    Log.i(TAG, "Japanese engine initialized successfully")
                 } else {
-                    Log.e(TAG, "Could not locate $DICT_FILENAME in plugin bundle")
-                    return false
+                    Log.e(TAG, "Failed to initialize Japanese dictionary: ${jaDictFile.absolutePath}")
                 }
             }
 
-            val userDictFile = File(userFolder, USER_DICT_FILENAME)
-            val success = PinyinDecoderJni.nativeOpenDecoder(
-                dictFile.absolutePath,
-                userDictFile.absolutePath
-            )
-
-            if (success) {
-                isInitialized = true
-                Log.i(TAG, "Pinyin decoder engine initialized successfully")
-            } else {
-                Log.e(TAG, "Failed to open Pinyin decoder with dictionary: ${dictFile.absolutePath}")
-            }
-            return success
+            return isPinyinReady || isJapaneseReady
         } catch (e: Exception) {
-            Log.e(TAG, "Exception during Pinyin decoder initialization", e)
+            Log.e(TAG, "Exception during CJK engine initialization", e)
             return false
         }
     }
 
-    override fun isAvailable(): Boolean = isInitialized
+    override fun isAvailable(): Boolean {
+        return if (activeLanguage == "ja") isJapaneseReady else isPinyinReady
+    }
 
     override fun processKey(keysym: Int, mask: Int): Boolean {
-        if (!isInitialized) return false
+        if (!isAvailable()) return false
 
+        if (activeLanguage == "ja") {
+            return japaneseEngine?.processKey(keysym, mask) ?: false
+        }
+
+        // Chinese Pinyin processing
         when (keysym) {
             XK_BACKSPACE -> {
-                if (buffer.isNotEmpty()) {
-                    buffer.deleteCharAt(buffer.length - 1)
-                    if (buffer.isEmpty()) {
+                if (pinyinBuffer.isNotEmpty()) {
+                    pinyinBuffer.deleteCharAt(pinyinBuffer.length - 1)
+                    if (pinyinBuffer.isEmpty()) {
                         clearComposition()
                     } else {
-                        val count = PinyinDecoderJni.nativeSearch(buffer.toString())
-                        updateContext(count)
+                        val count = PinyinDecoderJni.nativeSearch(pinyinBuffer.toString())
+                        updatePinyinContext(count)
                     }
                     return true
                 }
@@ -95,8 +121,8 @@ class CjkEngineImpl : ICjkEngine {
             }
 
             XK_RETURN -> {
-                if (buffer.isNotEmpty()) {
-                    pendingCommit = buffer.toString()
+                if (pinyinBuffer.isNotEmpty()) {
+                    pendingPinyinCommit = pinyinBuffer.toString()
                     clearComposition()
                     return true
                 }
@@ -104,7 +130,7 @@ class CjkEngineImpl : ICjkEngine {
             }
 
             XK_SPACE -> {
-                if (buffer.isNotEmpty()) {
+                if (pinyinBuffer.isNotEmpty()) {
                     return selectCandidate(0)
                 }
                 return false
@@ -112,7 +138,7 @@ class CjkEngineImpl : ICjkEngine {
 
             // Quick selection with numeric keys 1..9
             in '1'.code..'9'.code -> {
-                if (buffer.isNotEmpty()) {
+                if (pinyinBuffer.isNotEmpty()) {
                     val index = keysym - '1'.code
                     return selectCandidate(index)
                 }
@@ -122,9 +148,9 @@ class CjkEngineImpl : ICjkEngine {
             // Letters 'a'..'z', 'A'..'Z', or single quote '\'' delimiter
             in 'a'.code..'z'.code, in 'A'.code..'Z'.code, '\''.code -> {
                 val ch = if (keysym in 'A'.code..'Z'.code) (keysym + 32).toByte() else keysym.toByte()
-                buffer.append(ch.toInt().toChar())
-                val count = PinyinDecoderJni.nativeSearch(buffer.toString())
-                updateContext(count)
+                pinyinBuffer.append(ch.toInt().toChar())
+                val count = PinyinDecoderJni.nativeSearch(pinyinBuffer.toString())
+                updatePinyinContext(count)
                 return true
             }
         }
@@ -132,18 +158,34 @@ class CjkEngineImpl : ICjkEngine {
         return false
     }
 
-    override fun getContext(): CjkContextData? = cachedContext
+    override fun getContext(): CjkContextData? {
+        return if (activeLanguage == "ja") {
+            japaneseEngine?.getContext()
+        } else {
+            cachedPinyinContext
+        }
+    }
 
     override fun getCommit(): String? {
-        val commit = pendingCommit
-        pendingCommit = null
-        return commit
+        return if (activeLanguage == "ja") {
+            japaneseEngine?.getCommit()
+        } else {
+            val commit = pendingPinyinCommit
+            pendingPinyinCommit = null
+            commit
+        }
     }
 
     override fun selectCandidate(index: Int): Boolean {
-        if (!isInitialized || buffer.isEmpty()) return false
+        if (!isAvailable()) return false
 
-        val candidates = cachedContext?.candidates ?: return false
+        if (activeLanguage == "ja") {
+            return japaneseEngine?.selectCandidate(index) ?: false
+        }
+
+        // Chinese Pinyin candidate selection
+        if (pinyinBuffer.isEmpty()) return false
+        val candidates = cachedPinyinContext?.candidates ?: return false
         if (index !in candidates.indices) return false
 
         val chosenText = candidates[index].text
@@ -157,42 +199,81 @@ class CjkEngineImpl : ICjkEngine {
             } else {
                 chosenText
             }
-            pendingCommit = fullText
+            pendingPinyinCommit = fullText
             clearComposition()
             return true
         }
 
-        // Partial selection (e.g. prefix match in multi-syllable word); update context for remaining syllables
-        updateContext(newCandCount)
+        updatePinyinContext(newCandCount)
         return true
     }
 
     override fun clearComposition() {
-        buffer.clear()
-        cachedContext = null
-        if (isInitialized) {
-            PinyinDecoderJni.nativeResetSearch()
+        if (activeLanguage == "ja") {
+            japaneseEngine?.clearComposition()
+        } else {
+            pinyinBuffer.clear()
+            cachedPinyinContext = null
+            if (isPinyinReady) {
+                PinyinDecoderJni.nativeResetSearch()
+            }
         }
     }
 
     override fun destroySession() {
         clearComposition()
-        if (isInitialized) {
+        if (isPinyinReady) {
             PinyinDecoderJni.nativeFlushCache()
         }
+        japaneseDictionary?.flush()
     }
 
     override fun cleanup() {
         clearComposition()
-        if (isInitialized) {
+        if (isPinyinReady) {
             PinyinDecoderJni.nativeCloseDecoder()
-            isInitialized = false
+            isPinyinReady = false
+        }
+        japaneseDictionary?.close()
+        japaneseDictionary = null
+        japaneseEngine = null
+        isJapaneseReady = false
+    }
+
+    private fun extractAsset(context: Context, filename: String, destinationFile: File): Boolean {
+        if (destinationFile.exists() && destinationFile.length() > 0L) {
+            return true
+        }
+
+        Log.i(TAG, "Extracting $filename to ${destinationFile.absolutePath}")
+        val inputStream = javaClass.classLoader?.getResourceAsStream("assets/$filename")
+            ?: try {
+                context.createPackageContext("com.leanbitlab.leantype.cjk.plugin", 0).assets.open(filename)
+            } catch (_: Exception) {
+                null
+            }
+            ?: try {
+                context.assets.open(filename)
+            } catch (_: Exception) {
+                null
+            }
+
+        if (inputStream != null) {
+            inputStream.use { input ->
+                FileOutputStream(destinationFile).use { output ->
+                    input.copyTo(output)
+                }
+            }
+            return true
+        } else {
+            Log.e(TAG, "Could not locate $filename in plugin bundle")
+            return false
         }
     }
 
-    private fun updateContext(candidateCount: Int) {
-        if (buffer.isEmpty()) {
-            cachedContext = null
+    private fun updatePinyinContext(candidateCount: Int) {
+        if (pinyinBuffer.isEmpty()) {
+            cachedPinyinContext = null
             return
         }
 
@@ -207,8 +288,8 @@ class CjkEngineImpl : ICjkEngine {
             }
         }
 
-        cachedContext = CjkContextData(
-            preedit = if (pyStr.isNotEmpty()) pyStr else buffer.toString(),
+        cachedPinyinContext = CjkContextData(
+            preedit = if (pyStr.isNotEmpty()) pyStr else pinyinBuffer.toString(),
             candidates = candidateList,
             selectedIndex = 0,
             hasPrevPage = false,
@@ -218,8 +299,10 @@ class CjkEngineImpl : ICjkEngine {
 
     companion object {
         private const val TAG = "CjkEngineImpl"
-        private const val DICT_FILENAME = "dict_pinyin.dat"
-        private const val USER_DICT_FILENAME = "usr_pinyin.dat"
+        private const val DICT_PINYIN_FILENAME = "dict_pinyin.dat"
+        private const val USER_PINYIN_FILENAME = "usr_pinyin.dat"
+        private const val DICT_JAPANESE_FILENAME = "dict_japanese.dat"
+        private const val USER_JAPANESE_FILENAME = "usr_japanese.dat"
         private const val MAX_CANDIDATES_PER_PAGE = 30
 
         private const val XK_BACKSPACE = 0xff08
