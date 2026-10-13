@@ -26,6 +26,7 @@ object CjkPluginLoader {
     private const val TAG = "CjkPluginLoader"
 
     private var activeEngine: ICjkEngine? = null
+    private var lastApkModified: Long = 0L
 
     fun getTargetAbi(): String {
         for (abi in Build.SUPPORTED_ABIS) {
@@ -67,16 +68,25 @@ object CjkPluginLoader {
     }
 
     fun getEngine(context: Context): ICjkEngine? {
+        val installedApk = getInstalledPluginApk(context)
+        val apkModified = installedApk?.lastModified() ?: 0L
         val cached = activeEngine
-        if (cached != null && cached.isAvailable()) return cached
+        if (cached != null && cached.isAvailable() && (installedApk == null || apkModified == lastApkModified)) {
+            return cached
+        }
+        if (cached != null && installedApk != null && apkModified != lastApkModified) {
+            Log.i(TAG, "Companion plugin APK updated on disk (timestamp changed), reloading engine")
+            try { cached.cleanup() } catch (_: Exception) {}
+            activeEngine = null
+        }
 
         // 1. Try loading companion plugin from installed package
-        val installedApk = getInstalledPluginApk(context)
         if (installedApk != null) {
             Log.i(TAG, "Attempting to load CJK engine from installed app package: ${installedApk.absolutePath}")
             val engine = loadEngineInternal(context, installedApk)
             if (engine != null && engine.isAvailable()) {
                 activeEngine = engine
+                lastApkModified = apkModified
                 return engine
             }
         }

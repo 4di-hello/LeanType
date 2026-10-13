@@ -48,12 +48,17 @@ class CjkInputManager private constructor(private val context: Context) {
     fun onEvent(event: Event, ic: InputConnection?, subtype: RichInputMethodSubtype?): Boolean {
         if (!isCjkSubtypeActive(subtype)) return false
 
-        val engine = CjkPluginLoader.getEngine(context) ?: return false
+        val engine = CjkPluginLoader.getEngine(context)
+        if (engine == null) {
+            Log.w(TAG, "onEvent: CJK subtype active (${subtype?.locale}) but engine is not available")
+            return false
+        }
         val keysym = KeycodeTranslator.toKeysym(event)
         if (keysym == 0) return false
 
         val mask = KeycodeTranslator.getModifierMask(event.metaState)
         val consumed = engine.processKey(keysym, mask)
+        Log.d(TAG, "onEvent: keysym=0x${Integer.toHexString(keysym)}, consumed=$consumed, isComposing=$isComposing")
 
         if (consumed) {
             syncStateWithInputConnection(engine, ic)
