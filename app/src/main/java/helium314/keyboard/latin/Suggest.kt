@@ -603,11 +603,30 @@ class Suggest(private val mDictionaryFacilitator: DictionaryFacilitator) {
             return false
         }
 
-        private val DIACRITIC_REGEX = "\\p{M}+".toRegex()
+        private fun stripAccents(s: String): String {
+            var hasAccents = false
+            for (i in s.indices) {
+                if (s[i].code > 127) {
+                    hasAccents = true
+                    break
+                }
+            }
+            if (!hasAccents) return s
+
+            val norm = java.text.Normalizer.normalize(s, java.text.Normalizer.Form.NFD)
+            val clean = java.lang.StringBuilder(norm.length)
+            for (i in norm.indices) {
+                val c = norm[i]
+                if (Character.getType(c) != Character.NON_SPACING_MARK.toInt()) {
+                    clean.append(c)
+                }
+            }
+            return clean.toString()
+        }
+
         private fun isSameIgnoringAccents(a: String, b: String): Boolean {
-            val normA = java.text.Normalizer.normalize(a, java.text.Normalizer.Form.NFD).replace(DIACRITIC_REGEX, "")
-            val normB = java.text.Normalizer.normalize(b, java.text.Normalizer.Form.NFD).replace(DIACRITIC_REGEX, "")
-            return normA.equals(normB, ignoreCase = true)
+            if (a.equals(b, ignoreCase = true)) return true
+            return stripAccents(a).equals(stripAccents(b), ignoreCase = true)
         }
 
         private fun getTransformedSuggestedWordInfoList(
