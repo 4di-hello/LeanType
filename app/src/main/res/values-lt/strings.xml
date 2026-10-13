@@ -1724,4 +1724,6 @@ Ar norite atnaujinti?</string>
     <string name="translation_custom_target_language_title">Tinkinta tikslinė kalba</string>
     <string name="offline_system_instruction_title">Sistemos instrukcija</string>
     <string name="offline_translate_system_instruction_title">Išversti sistemos instrukcijas</string>
+    <string name="cjk_candidate_prev_page">Ankstesni kandidatai</string>
+    <string name="cjk_candidate_next_page">Kiti kandidatai</string>
 </resources>

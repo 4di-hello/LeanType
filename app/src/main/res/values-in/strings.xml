@@ -1691,4 +1691,6 @@ Memungkinkan inferensi GGUF / llama.cpp di perangkat untuk koreksi teks dan penu
     <string name="translation_custom_target_language_title">Bahasa Target Khusus</string>
     <string name="offline_system_instruction_title">Instruksi Sistem</string>
     <string name="offline_translate_system_instruction_title">Terjemahkan Instruksi Sistem</string>
+    <string name="cjk_candidate_prev_page">Kandidat sebelumnya</string>
+    <string name="cjk_candidate_next_page">Kandidat selanjutnya</string>
 </resources>

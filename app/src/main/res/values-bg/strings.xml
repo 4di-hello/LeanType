@@ -1776,4 +1776,6 @@
     <string name="translation_custom_target_language_title">Персонализиран целеви език</string>
     <string name="offline_system_instruction_title">Системна инструкция</string>
     <string name="offline_translate_system_instruction_title">Преведете системните инструкции</string>
+    <string name="cjk_candidate_prev_page">Предишни кандидати</string>
+    <string name="cjk_candidate_next_page">Следващи кандидати</string>
 </resources>

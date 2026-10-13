@@ -1728,4 +1728,6 @@
     <string name="translation_custom_target_language_title">Карыстальніцкая мэтавая мова</string>
     <string name="offline_system_instruction_title">Сістэмная інструкцыя</string>
     <string name="offline_translate_system_instruction_title">Перакласці сістэмныя інструкцыі</string>
+    <string name="cjk_candidate_prev_page">Папярэднія кандыдаты</string>
+    <string name="cjk_candidate_next_page">Наступныя кандыдаты</string>
 </resources>

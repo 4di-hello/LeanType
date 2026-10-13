@@ -1790,4 +1790,6 @@ Permet l\'inférence GGUF / llama.cpp sur l\'appareil pour la correction et la r
     <string name="translation_custom_target_language_title">Langue cible personnalisée</string>
     <string name="offline_system_instruction_title">Instructions du système</string>
     <string name="offline_translate_system_instruction_title">Traduire les instructions système</string>
+    <string name="cjk_candidate_prev_page">Candidats précédents</string>
+    <string name="cjk_candidate_next_page">Prochains candidats</string>
 </resources>

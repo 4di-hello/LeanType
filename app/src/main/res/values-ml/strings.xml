@@ -1794,4 +1794,6 @@
     <string name="translation_custom_target_language_title">ഇഷ്‌ടാനുസൃത ടാർഗെറ്റ് ഭാഷ</string>
     <string name="offline_system_instruction_title">സിസ്റ്റം നിർദ്ദേശം</string>
     <string name="offline_translate_system_instruction_title">സിസ്റ്റം നിർദ്ദേശങ്ങൾ വിവർത്തനം ചെയ്യുക</string>
+    <string name="cjk_candidate_prev_page">മുൻ സ്ഥാനാർത്ഥികൾ</string>
+    <string name="cjk_candidate_next_page">അടുത്ത സ്ഥാനാർത്ഥികൾ</string>
 </resources>

@@ -1801,4 +1801,6 @@
     <string name="translation_custom_target_language_title">Пользовательский целевой язык</string>
     <string name="offline_system_instruction_title">Системная инструкция</string>
     <string name="offline_translate_system_instruction_title">Перевести системную инструкцию</string>
+    <string name="cjk_candidate_prev_page">Предыдущие кандидаты</string>
+    <string name="cjk_candidate_next_page">Следующие кандидаты</string>
 </resources>

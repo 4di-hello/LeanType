@@ -73,6 +73,8 @@ import helium314.keyboard.latin.common.Constants
 import helium314.keyboard.latin.common.CoordinateUtils
 import helium314.keyboard.latin.common.InputPointers
 import helium314.keyboard.latin.common.setInsetsOutlineProvider
+import helium314.keyboard.latin.cjk.CjkCandidate
+import helium314.keyboard.latin.cjk.CjkCandidateStripView
 import helium314.keyboard.latin.cjk.CjkInputManager
 import helium314.keyboard.latin.define.DebugFlags
 import helium314.keyboard.latin.inputlogic.InputLogic
@@ -160,6 +162,7 @@ class LatinIME : InputMethodService(),
 
     private var insetsUpdater: helium314.keyboard.latin.common.InsetsOutlineProvider? = null
     private var suggestionStripView: SuggestionStripView? = null
+    private var cjkCandidateStripView: CjkCandidateStripView? = null
     lateinit var richImm: RichInputMethodManager
         private set
 
@@ -496,6 +499,31 @@ class LatinIME : InputMethodService(),
             strip.setRtl(richImm.currentSubtype.isRtlSubtype)
             strip.setListener(this, view)
         }
+
+        cjkCandidateStripView = view.findViewById(R.id.cjk_candidate_strip_view)
+        cjkCandidateStripView?.onCandidateClickListener = { index ->
+            CjkInputManager.getInstance(this).selectCandidate(index, currentInputConnection)
+        }
+
+        CjkInputManager.getInstance(this).setUiListener(object : CjkInputManager.CjkUiListener {
+            override fun onUpdateCandidates(candidates: List<CjkCandidate>, selectedIndex: Int, preedit: String) {
+                cjkCandidateStripView?.update(candidates, selectedIndex, preedit)
+            }
+
+            override fun onClearCandidates() {
+                cjkCandidateStripView?.clear()
+            }
+
+            override fun onSetCandidateStripVisibility(visible: Boolean) {
+                if (visible) {
+                    suggestionStripView?.visibility = View.GONE
+                    cjkCandidateStripView?.visibility = View.VISIBLE
+                } else {
+                    cjkCandidateStripView?.visibility = View.GONE
+                    suggestionStripView?.visibility = View.VISIBLE
+                }
+            }
+        })
         
         floatingKeyboardManager?.takeIf { it.isFloating }?.onInputViewRecreated(view)
 
@@ -703,6 +731,10 @@ class LatinIME : InputMethodService(),
         
         suggestionStripView?.setRtl(richImm.currentSubtype.isRtlSubtype)
         settings.saveSubtypeForApp(richImm.currentSubtype, currentInputEditorInfo.packageName)
+        cjkCandidateStripView?.clear()
+        cjkCandidateStripView?.visibility = View.GONE
+        suggestionStripView?.visibility = View.VISIBLE
+        CjkInputManager.getInstance(this).clearComposition(currentInputConnection)
         handler.cancelUpdateSuggestionStrip()
         setNeutralSuggestionStrip()
     }
@@ -951,6 +983,9 @@ class LatinIME : InputMethodService(),
         otpSuggestionManager.stop()
         clipboardHistoryManager.onFinishInputView()
         AudioAndHapticFeedbackManager.getInstance().onFinishInputView()
+        cjkCandidateStripView?.clear()
+        cjkCandidateStripView?.visibility = View.GONE
+        suggestionStripView?.visibility = View.VISIBLE
         CjkInputManager.getInstance(this).onFinishInputView(finishingInput, currentInputConnection)
         cleanupInternalStateForFinishInput()
     }

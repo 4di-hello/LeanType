@@ -1778,4 +1778,6 @@ Umożliwia lokalne wnioskowanie GGUF / llama.cpp na urządzeniu w celu korekty i
     <string name="translation_custom_target_language_title">Niestandardowy język docelowy</string>
     <string name="offline_system_instruction_title">Instrukcja systemowa</string>
     <string name="offline_translate_system_instruction_title">Przetłumacz instrukcję systemową</string>
+    <string name="cjk_candidate_prev_page">Poprzedni kandydaci</string>
+    <string name="cjk_candidate_next_page">Kolejni kandydaci</string>
 </resources>

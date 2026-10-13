@@ -54,4 +54,10 @@
             android:orientation="horizontal"
             android:gravity="start|center_vertical" />
     </HorizontalScrollView>
+    <helium314.keyboard.latin.cjk.CjkCandidateStripView
+        android:id="@+id/cjk_candidate_strip_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/config_suggestions_strip_height"
+        android:visibility="gone"
+        style="?attr/suggestionStripViewStyle" />
 </LinearLayout>

@@ -1742,4 +1742,6 @@
     <string name="translation_custom_target_language_title">自定义目标语言</string>
     <string name="offline_system_instruction_title">系统说明</string>
     <string name="offline_translate_system_instruction_title">翻译系统指令</string>
+    <string name="cjk_candidate_prev_page">以前的候选人</string>
+    <string name="cjk_candidate_next_page">下一位候选人</string>
 </resources>

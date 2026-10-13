@@ -1799,4 +1799,6 @@
     <string name="translation_custom_target_language_title">لغة الهدف المخصصة</string>
     <string name="offline_system_instruction_title">تعليمات النظام</string>
     <string name="offline_translate_system_instruction_title">ترجمة تعليمات النظام</string>
+    <string name="cjk_candidate_prev_page">المرشحين السابقين</string>
+    <string name="cjk_candidate_next_page">المرشحين المقبلين</string>
 </resources>

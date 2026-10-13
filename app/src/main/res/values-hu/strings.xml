@@ -1732,4 +1732,6 @@ Lehetővé teszi az eszközön futó GGUF / llama.cpp következtetést a javít�
     <string name="translation_custom_target_language_title">Egyéni célnyelv</string>
     <string name="offline_system_instruction_title">Rendszer utasítás</string>
     <string name="offline_translate_system_instruction_title">Fordítsa le a rendszer utasításait</string>
+    <string name="cjk_candidate_prev_page">Korábbi jelöltek</string>
+    <string name="cjk_candidate_next_page">Következő jelöltek</string>
 </resources>

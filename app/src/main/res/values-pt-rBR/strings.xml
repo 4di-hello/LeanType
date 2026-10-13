@@ -1735,4 +1735,6 @@ Habilita inferência GGUF / llama.cpp no dispositivo para revisão e reescrita.<
     <string name="translation_custom_target_language_title">Idioma de destino personalizado</string>
     <string name="offline_system_instruction_title">Instrução do Sistema</string>
     <string name="offline_translate_system_instruction_title">Traduzir instruções do sistema</string>
+    <string name="cjk_candidate_prev_page">Candidatos anteriores</string>
+    <string name="cjk_candidate_next_page">Próximos candidatos</string>
 </resources>

@@ -1723,4 +1723,6 @@ Activează inferența GGUF / llama.cpp pe dispozitiv pentru corectură și refor
     <string name="translation_custom_target_language_title">Limba țintă personalizată</string>
     <string name="offline_system_instruction_title">Instrucțiuni de sistem</string>
     <string name="offline_translate_system_instruction_title">Traduceți instrucțiunile de sistem</string>
+    <string name="cjk_candidate_prev_page">Candidații anteriori</string>
+    <string name="cjk_candidate_next_page">Următorii candidați</string>
 </resources>

@@ -15,8 +15,9 @@ import helium314.keyboard.latin.utils.Log
 class CjkInputManager private constructor(private val context: Context) {
 
     interface CjkUiListener {
-        fun onCjkContextUpdated(contextData: CjkContextData)
-        fun onCjkCompositionCleared()
+        fun onUpdateCandidates(candidates: List<CjkCandidate>, selectedIndex: Int, preedit: String)
+        fun onClearCandidates()
+        fun onSetCandidateStripVisibility(visible: Boolean)
     }
 
     private var uiListener: CjkUiListener? = null
@@ -78,16 +79,20 @@ class CjkInputManager private constructor(private val context: Context) {
 
         // 2. Fetch Pre-edit and Candidates
         val ctx = engine.getContext()
-        if (ctx != null && ctx.preedit.isNotEmpty()) {
+        if (ctx != null && (ctx.preedit.isNotEmpty() || ctx.candidates.isNotEmpty())) {
             isComposing = true
-            ic?.setComposingText(ctx.preedit, 1)
-            uiListener?.onCjkContextUpdated(ctx)
+            if (ctx.preedit.isNotEmpty()) {
+                ic?.setComposingText(ctx.preedit, 1)
+            }
+            uiListener?.onSetCandidateStripVisibility(true)
+            uiListener?.onUpdateCandidates(ctx.candidates, ctx.selectedIndex, ctx.preedit)
         } else {
             isComposing = false
             if (commitText.isNullOrEmpty()) {
                 ic?.finishComposingText()
             }
-            uiListener?.onCjkCompositionCleared()
+            uiListener?.onClearCandidates()
+            uiListener?.onSetCandidateStripVisibility(false)
         }
     }
 
@@ -112,7 +117,8 @@ class CjkInputManager private constructor(private val context: Context) {
         engine?.clearComposition()
         isComposing = false
         ic?.finishComposingText()
-        uiListener?.onCjkCompositionCleared()
+        uiListener?.onClearCandidates()
+        uiListener?.onSetCandidateStripVisibility(false)
     }
 
     /**
@@ -139,6 +145,7 @@ class CjkInputManager private constructor(private val context: Context) {
         if (isComposing) {
             clearComposition(ic)
         }
+        uiListener?.onSetCandidateStripVisibility(false)
         CjkPluginLoader.getEngine(context)?.destroySession()
     }
 

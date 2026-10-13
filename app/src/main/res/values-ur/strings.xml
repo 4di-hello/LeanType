@@ -1785,4 +1785,6 @@
     <string name="translation_custom_target_language_title">حسب ضرورت ہدف کی زبان</string>
     <string name="offline_system_instruction_title">سسٹم کی ہدایات</string>
     <string name="offline_translate_system_instruction_title">سسٹم کی ہدایات کا ترجمہ کریں۔</string>
+    <string name="cjk_candidate_prev_page">سابقہ ​​امیدوار</string>
+    <string name="cjk_candidate_next_page">اگلے امیدوار</string>
 </resources>

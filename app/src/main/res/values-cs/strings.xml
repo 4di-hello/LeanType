@@ -1741,4 +1741,6 @@ Umožňuje lokální inferenci GGUF / llama.cpp na zařízení pro korektury a p
     <string name="translation_custom_target_language_title">Vlastní cílový jazyk</string>
     <string name="offline_system_instruction_title">Systémová instrukce</string>
     <string name="offline_translate_system_instruction_title">Přeložit systémové instrukce</string>
+    <string name="cjk_candidate_prev_page">Předchozí kandidáti</string>
+    <string name="cjk_candidate_next_page">Další kandidáti</string>
 </resources>

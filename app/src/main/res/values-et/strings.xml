@@ -1723,4 +1723,6 @@ Võimaldab seadmesisese GGUF / llama.cpp järelduse korrektuuri ja ümbersõnast
     <string name="translation_custom_target_language_title">Kohandatud sihtkeel</string>
     <string name="offline_system_instruction_title">Süsteemi juhised</string>
     <string name="offline_translate_system_instruction_title">Tõlgi süsteemijuhised</string>
+    <string name="cjk_candidate_prev_page">Varasemad kandidaadid</string>
+    <string name="cjk_candidate_next_page">Järgmised kandidaadid</string>
 </resources>

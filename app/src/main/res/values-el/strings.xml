@@ -1794,4 +1794,6 @@
     <string name="translation_custom_target_language_title">Προσαρμοσμένη γλώσσα προορισμού</string>
     <string name="offline_system_instruction_title">Οδηγίες συστήματος</string>
     <string name="offline_translate_system_instruction_title">Μετάφραση Οδηγιών Συστήματος</string>
+    <string name="cjk_candidate_prev_page">Προηγούμενοι υποψήφιοι</string>
+    <string name="cjk_candidate_next_page">Επόμενοι υποψήφιοι</string>
 </resources>

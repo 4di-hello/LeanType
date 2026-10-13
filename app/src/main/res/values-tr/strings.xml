@@ -1724,4 +1724,6 @@ Metin düzeltme ve yeniden yazma için cihaz üzerinde GGUF / llama.cpp çıkar�
     <string name="translation_custom_target_language_title">Özel Hedef Dil</string>
     <string name="offline_system_instruction_title">Sistem Talimatı</string>
     <string name="offline_translate_system_instruction_title">Sistem Talimatını Çevir</string>
+    <string name="cjk_candidate_prev_page">Önceki adaylar</string>
+    <string name="cjk_candidate_next_page">Sonraki adaylar</string>
 </resources>

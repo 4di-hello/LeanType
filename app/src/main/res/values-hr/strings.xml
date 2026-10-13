@@ -1716,4 +1716,6 @@ Omogućuje lokalno GGUF / llama.cpp zaključivanje na uređaju za lekturu i prep
     <string name="translation_custom_target_language_title">Prilagođeni ciljni jezik</string>
     <string name="offline_system_instruction_title">Upute za sustav</string>
     <string name="offline_translate_system_instruction_title">Prevedite upute sustava</string>
+    <string name="cjk_candidate_prev_page">Prethodni kandidati</string>
+    <string name="cjk_candidate_next_page">Sljedeći kandidati</string>
 </resources>

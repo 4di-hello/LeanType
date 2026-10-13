@@ -2424,4 +2424,7 @@ New dictionary:
     <string name="offline_translate_system_instruction_title" tools:ignore="MissingTranslation">Translate System Instruction</string>
     <string name="clipboard_skip_sensitive">Don\'t keep passwords and codes</string>
     <string name="clipboard_skip_sensitive_summary">Entries marked as confidential (e.g. from password managers) and one-time codes with 4 to 8 digits are not added to the history. Pasting still works</string>
+    <!-- CJK Candidate Strip -->
+    <string name="cjk_candidate_prev_page" tools:ignore="MissingTranslation">Previous candidates</string>
+    <string name="cjk_candidate_next_page" tools:ignore="MissingTranslation">Next candidates</string>
 </resources>

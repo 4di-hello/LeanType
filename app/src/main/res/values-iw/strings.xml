@@ -1743,4 +1743,6 @@
     <string name="translation_custom_target_language_title">שפת יעד מותאמת אישית</string>
     <string name="offline_system_instruction_title">הוראת מערכת</string>
     <string name="offline_translate_system_instruction_title">תרגם הוראת מערכת</string>
+    <string name="cjk_candidate_prev_page">מועמדים קודמים</string>
+    <string name="cjk_candidate_next_page">המועמדים הבאים</string>
 </resources>

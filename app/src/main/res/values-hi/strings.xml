@@ -1720,4 +1720,6 @@
     <string name="translation_custom_target_language_title">कस्टम लक्ष्य भाषा</string>
     <string name="offline_system_instruction_title">सिस्टम अनुदेश</string>
     <string name="offline_translate_system_instruction_title">सिस्टम अनुदेश का अनुवाद करें</string>
+    <string name="cjk_candidate_prev_page">पिछले उम्मीदवार</string>
+    <string name="cjk_candidate_next_page">अगले उम्मीदवार</string>
 </resources>
