@@ -67,12 +67,30 @@ private constructor(val themeId: Int, val mStyleId: Int) {
         const val THEME_PINK = "pink"
         const val THEME_SAND = "sand"
         const val THEME_VIOLETTE = "violette"
+        const val THEME_DYNAMIC_SUBTLE = "dynamic_subtle"
+        const val THEME_DYNAMIC_VIVID = "dynamic_vivid"
+        const val THEME_CLEAN_LIGHT = "clean_light"
+        const val THEME_CLEAN_DARK = "clean_dark"
+        const val THEME_PURE_BLACK = "pure_black"
+        const val THEME_WARM_NIGHT = "warm_night"
+        const val THEME_HIGH_CONTRAST_LIGHT = "high_contrast_light"
+        const val THEME_HIGH_CONTRAST_DARK = "high_contrast_dark"
+        const val THEME_ARCTIC = "arctic"
+        const val THEME_SOLAR_LIGHT = "solar_light"
+        const val THEME_SOLAR_DARK = "solar_dark"
+        const val THEME_OCEAN = "ocean"
+        const val THEME_DEEP_SEA = "deep_sea"
+        const val THEME_PASTEL = "pastel"
         fun getAvailableDefaultColors(prefs: SharedPreferences, isNight: Boolean) = listOfNotNull(
             if (!isNight) THEME_LIGHT else null,
             if (!isNight) THEME_LEANBITLAB_LIGHT else null,
             THEME_LEANBITLAB_DARK,
             THEME_DARK,
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) THEME_DYNAMIC else null,
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) THEME_DYNAMIC_SUBTLE else null,
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) THEME_DYNAMIC_VIVID else null,
+            if (!isNight) THEME_CLEAN_LIGHT else null,
+            THEME_CLEAN_DARK,
             if (prefs.getString(Settings.PREF_THEME_STYLE, Defaults.PREF_THEME_STYLE) == STYLE_HOLO) THEME_HOLO_WHITE else null,
             THEME_DARKER,
             THEME_BLACK,
@@ -85,7 +103,19 @@ private constructor(val themeId: Int, val mStyleId: Int) {
             if (!isNight) THEME_PINK else null,
             THEME_MINT_AND_PINK,
             if (!isNight) THEME_SAND else null,
-            THEME_VIOLETTE
+            THEME_VIOLETTE,
+            // easy on the eyes
+            THEME_PURE_BLACK,
+            THEME_WARM_NIGHT,
+            if (!isNight) THEME_HIGH_CONTRAST_LIGHT else null,
+            THEME_HIGH_CONTRAST_DARK,
+            // colorful
+            THEME_ARCTIC,
+            if (!isNight) THEME_SOLAR_LIGHT else null,
+            THEME_SOLAR_DARK,
+            if (!isNight) THEME_OCEAN else null,
+            THEME_DEEP_SEA,
+            if (!isNight) THEME_PASTEL else null,
         )
         val STYLES = arrayOf(STYLE_MATERIAL, STYLE_HOLO, STYLE_ROUNDED)
 
@@ -158,6 +188,15 @@ private constructor(val themeId: Int, val mStyleId: Int) {
                 THEME_DYNAMIC -> {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) DynamicColors(context, themeStyle, hasBorders, backgroundImage)
                     else getThemeColors(THEME_LIGHT, themeStyle, context, prefs, isNight)
+                }
+                THEME_DYNAMIC_SUBTLE, THEME_DYNAMIC_VIVID -> {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) DynamicColors(context, themeStyle, hasBorders, backgroundImage,
+                        if (themeName == THEME_DYNAMIC_VIVID) DynamicColors.VARIANT_VIVID else DynamicColors.VARIANT_SUBTLE)
+                    else getThemeColors(if (isNight) THEME_DARK else THEME_LIGHT, themeStyle, context, prefs, isNight)
+                }
+                in simpleThemes -> simpleThemes.getValue(themeName).let { c ->
+                    DefaultColors(themeStyle, hasBorders, c.accent, c.background, c.key, c.functionalKey, c.key, c.text, c.hint,
+                        keyboardBackground = backgroundImage)
                 }
                 THEME_LEANBITLAB_LIGHT -> DefaultColors(
                     themeStyle,
@@ -378,6 +417,37 @@ private constructor(val themeId: Int, val mStyleId: Int) {
                 }
             }
         }
+
+        /** colors of a simple built-in theme: space bar like normal keys, suggestions like key text */
+        internal class SimpleTheme(val accent: Int, val background: Int, val key: Int, val functionalKey: Int, val text: Int, val hint: Int) {
+            constructor(accent: String, background: String, key: String, functionalKey: String, text: String, hint: String) :
+                this(accent.toColorInt(), background.toColorInt(), key.toColorInt(), functionalKey.toColorInt(), text.toColorInt(), hint.toColorInt())
+        }
+
+        internal val simpleThemes = mapOf(
+            // neutral, with blue accent
+            THEME_CLEAN_LIGHT to SimpleTheme("#3E7BFA", "#EEF0F3", "#FFFFFF", "#D8DCE2", "#1B1B1F", "#6B6F76"),
+            THEME_CLEAN_DARK to SimpleTheme("#5A9BFF", "#17181A", "#2A2B2E", "#3A3C40", "#F2F2F4", "#A0A3A8"),
+            // easy on the eyes: black for OLED with dimmed text, warm colors for the evening, high contrast
+            THEME_PURE_BLACK to SimpleTheme("#8AB4F8", "#000000", "#141414", "#222222", "#D6D6D6", "#8A8A8A"),
+            THEME_WARM_NIGHT to SimpleTheme("#E0954A", "#1C1712", "#2A231C", "#352C23", "#F1D9B5", "#A88F70"),
+            THEME_HIGH_CONTRAST_LIGHT to SimpleTheme("#0040DD", "#C8C8C8", "#FFFFFF", "#A0A0A0", "#000000", "#000000"),
+            THEME_HIGH_CONTRAST_DARK to SimpleTheme("#FFD400", "#000000", "#2A2A2A", "#4A4A4A", "#FFFFFF", "#FFD400"),
+            // colorful
+            THEME_ARCTIC to SimpleTheme("#88C0D0", "#2E3440", "#3B4252", "#434C5E", "#ECEFF4", "#A5ADBA"),
+            THEME_SOLAR_LIGHT to SimpleTheme("#268BD2", "#EEE8D5", "#FDF6E3", "#E2DBC6", "#073642", "#657B83"),
+            THEME_SOLAR_DARK to SimpleTheme("#2AA198", "#002B36", "#073642", "#0B4552", "#EEE8D5", "#93A1A1"),
+            THEME_OCEAN to SimpleTheme("#0277BD", "#D7ECF5", "#FFFFFF", "#A9D3E6", "#0B2E40", "#4A6B7C"),
+            THEME_DEEP_SEA to SimpleTheme("#4FC3F7", "#0A1A26", "#12283A", "#1A3549", "#E1F2FB", "#8BA9BC"),
+            THEME_PASTEL to SimpleTheme("#B57EDC", "#F3ECF7", "#FFFFFF", "#E3D3EE", "#3A2A45", "#7D6A8A"),
+        )
+
+        /** Colors of [themeName] for showing a small preview, e.g. in the theme list */
+        fun getThemeColorsForPreview(themeName: String, context: Context, isNight: Boolean): Colors? = runCatching {
+            val prefs = context.prefs()
+            val style = prefs.getString(Settings.PREF_THEME_STYLE, Defaults.PREF_THEME_STYLE) ?: Defaults.PREF_THEME_STYLE
+            getThemeColors(themeName, style, context, prefs, isNight)
+        }.getOrNull()
 
         fun readUserColorTheme(themeStyle: String, hasBorders: Boolean, colorSettings: List<ColorSetting>, context: Context, isNight: Boolean, backgroundImage: Drawable?): Colors {
             return DefaultColors(
