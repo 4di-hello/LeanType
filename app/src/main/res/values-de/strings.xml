@@ -1734,4 +1734,11 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="backup_api_keys_warning_confirm">API-Schlüssel einschließen</string>
     <string name="gif_get_api_key">Holen Sie sich den API-Schlüssel</string>
     <string name="gif_provider_disabled">Deaktiviert</string>
+    <string name="learn_casing">Schreibweisen merken</string>
+    <string name="learn_casing_summary">Wenn Du ein Wort zweimal gleich per Shift änderst (z. B. du → Du, nasa → NASA), wird es künftig automatisch so geschrieben. Die Rücktaste direkt danach macht es rückgängig und vergisst es</string>
+    <string name="learned_casing">Gemerkte Schreibweisen</string>
+    <string name="learned_casing_summary">%1$d aktiv, %2$d im Lernen</string>
+    <string name="learned_casing_empty">Noch nichts gemerkt.</string>
+    <string name="learned_casing_not_yet">Im Lernen: wird nach einem weiteren Mal automatisch verwendet</string>
+    <string name="learned_casing_forget_all">Alle vergessen</string>
 </resources>
