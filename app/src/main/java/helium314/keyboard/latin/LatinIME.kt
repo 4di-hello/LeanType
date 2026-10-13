@@ -73,6 +73,7 @@ import helium314.keyboard.latin.common.Constants
 import helium314.keyboard.latin.common.CoordinateUtils
 import helium314.keyboard.latin.common.InputPointers
 import helium314.keyboard.latin.common.setInsetsOutlineProvider
+import helium314.keyboard.latin.cjk.CjkInputManager
 import helium314.keyboard.latin.define.DebugFlags
 import helium314.keyboard.latin.inputlogic.InputLogic
 import helium314.keyboard.latin.personalization.PersonalizationHelper
@@ -738,6 +739,7 @@ class LatinIME : InputMethodService(),
         
         clipboardHistoryManager.onStartInputView()
         AudioAndHapticFeedbackManager.getInstance().onStartInputView()
+        CjkInputManager.getInstance(this).onStartInputView(editorInfo, restarting)
         dictionaryFacilitator.onStartInput()
         gestureConsumer = GestureConsumer.NULL_GESTURE_CONSUMER
         richImm.refreshSubtypeCaches()
@@ -949,6 +951,7 @@ class LatinIME : InputMethodService(),
         otpSuggestionManager.stop()
         clipboardHistoryManager.onFinishInputView()
         AudioAndHapticFeedbackManager.getInstance().onFinishInputView()
+        CjkInputManager.getInstance(this).onFinishInputView(finishingInput, currentInputConnection)
         cleanupInternalStateForFinishInput()
     }
 
@@ -969,6 +972,10 @@ class LatinIME : InputMethodService(),
     ) {
         super.onUpdateSelection(oldSelStart, oldSelEnd, newSelStart, newSelEnd, composingSpanStart, composingSpanEnd)
         voiceInputManager?.onUpdateSelection(oldSelStart, oldSelEnd, newSelStart, newSelEnd, composingSpanStart, composingSpanEnd)
+        CjkInputManager.getInstance(this).onUpdateSelection(
+            oldSelStart, oldSelEnd, newSelStart, newSelEnd,
+            composingSpanStart, composingSpanEnd, currentInputConnection
+        )
         
         if (DebugFlags.DEBUG_ENABLED) {
             Log.i(TAG, "onUpdateSelection: oss=$oldSelStart, ose=$oldSelEnd, nss=$newSelStart, nse=$newSelEnd, cs=$composingSpanStart, ce=$composingSpanEnd")
@@ -1392,6 +1399,12 @@ class LatinIME : InputMethodService(),
                     // Voice input is disabled
                 }
             }
+            return
+        }
+        
+        val cjkManager = CjkInputManager.getInstance(this)
+        if (cjkManager.onEvent(event, currentInputConnection, richImm.currentSubtype)) {
+            keyboardSwitcher.onEvent(event, currentAutoCapsState, currentRecapitalizeState)
             return
         }
         
