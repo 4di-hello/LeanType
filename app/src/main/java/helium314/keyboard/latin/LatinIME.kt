@@ -1014,6 +1014,7 @@ class LatinIME : InputMethodService(),
                 oldSelStart, oldSelEnd, newSelStart, newSelEnd,
                 composingSpanStart, composingSpanEnd, currentInputConnection
             )
+            inputLogic.connection.resetCachesUponCursorMoveAndReturnSuccess(newSelStart, newSelEnd, false)
             keyboardSwitcher.requestUpdatingShiftState(currentAutoCapsState, currentRecapitalizeState)
             return
         }
