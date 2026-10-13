@@ -8,7 +8,9 @@ data class CjkCandidate(
     val index: Int,
     val text: String,
     val comment: String? = null
-)
+) {
+    constructor(index: Int, text: String) : this(index, text, null)
+}
 
 /**
  * State snapshot of the composition engine holding pre-edit text and candidate options.

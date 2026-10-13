@@ -17,12 +17,12 @@ import java.util.zip.ZipFile
  * via DexClassLoader while strictly respecting Android 14 W^X security policies.
  */
 object CjkPluginLoader {
-    private const val CURRENT_INTERFACE_VERSION = 1
+    private const val CURRENT_INTERFACE_VERSION = 2
     private const val PLUGIN_PACKAGE_NAME = "com.leanbitlab.leantype.cjk.plugin"
     private const val PLUGIN_FILENAME = "cjk_plugin.apk"
     private const val PLUGIN_CLASS_NAME = "com.leanbitlab.leantype.cjk.plugin.CjkEngineImpl"
     private const val PREF_HAS_PLUGIN = "pref_cjk_has_plugin"
-    private const val PREF_ENABLE_MOCK = "pref_cjk_enable_mock"
+    const val PREF_ENABLE_MOCK = "pref_cjk_enable_mock"
     private const val TAG = "CjkPluginLoader"
 
     private var activeEngine: ICjkEngine? = null
@@ -34,9 +34,90 @@ object CjkPluginLoader {
                 "arm64-v8a" -> return "arm64-v8a"
                 "x86_64" -> return "x86_64"
                 "armeabi-v7a" -> return "armeabi-v7a"
+                "x86" -> return "x86"
             }
         }
         return "arm64-v8a"
+    }
+
+    fun getPluginDownloadUrl(tag: String? = null): String {
+        val abi = getTargetAbi()
+        val filename = "cjk_plugin-$abi.apk"
+        return if (tag == null || tag == "latest") {
+            "https://github.com/LeanBitLab/LeanType-CJK-Plugin/releases/latest/download/$filename"
+        } else {
+            "https://github.com/LeanBitLab/LeanType-CJK-Plugin/releases/download/$tag/$filename"
+        }
+    }
+
+    fun downloadPluginApk(
+        context: Context,
+        tag: String? = null,
+        tempFile: File,
+        onProgress: ((Float) -> Unit)? = null
+    ): Boolean {
+        val urlsToTry = listOf(
+            getPluginDownloadUrl(tag),
+            if (tag == null || tag == "latest") {
+                "https://github.com/LeanBitLab/LeanType-CJK-Plugin/releases/latest/download/cjk_plugin.apk"
+            } else {
+                "https://github.com/LeanBitLab/LeanType-CJK-Plugin/releases/download/$tag/cjk_plugin.apk"
+            }
+        ).distinct()
+
+        for (urlStr in urlsToTry) {
+            try {
+                val url = java.net.URL(urlStr)
+                val conn = url.openConnection() as java.net.HttpURLConnection
+                conn.instanceFollowRedirects = true
+                conn.setRequestProperty("User-Agent", "HeliboardL")
+                conn.connect()
+
+                var redirectConn = conn
+                var status = redirectConn.responseCode
+                var redirectCount = 0
+                while ((status == java.net.HttpURLConnection.HTTP_MOVED_TEMP ||
+                        status == java.net.HttpURLConnection.HTTP_MOVED_PERM ||
+                        status == java.net.HttpURLConnection.HTTP_SEE_OTHER) && redirectCount < 5) {
+                    val newUrl = redirectConn.getHeaderField("Location")
+                    redirectConn.disconnect()
+                    val nextUrl = java.net.URL(newUrl)
+                    redirectConn = nextUrl.openConnection() as java.net.HttpURLConnection
+                    redirectConn.setRequestProperty("User-Agent", "HeliboardL")
+                    redirectConn.connect()
+                    status = redirectConn.responseCode
+                    redirectCount++
+                }
+
+                if (status != java.net.HttpURLConnection.HTTP_OK) {
+                    redirectConn.disconnect()
+                    continue
+                }
+
+                val contentLength = redirectConn.contentLength.toFloat()
+                var bytesCopied = 0L
+
+                redirectConn.inputStream.use { input ->
+                    java.io.FileOutputStream(tempFile).use { output ->
+                        val buffer = ByteArray(8192)
+                        var read = input.read(buffer)
+                        while (read != -1) {
+                            output.write(buffer, 0, read)
+                            bytesCopied += read
+                            if (contentLength > 0 && onProgress != null) {
+                                onProgress(bytesCopied / contentLength)
+                            }
+                            read = input.read(buffer)
+                        }
+                    }
+                }
+                redirectConn.disconnect()
+                if (tempFile.length() > 0) return true
+            } catch (e: Exception) {
+                Log.w(TAG, "Download attempt failed for $urlStr", e)
+            }
+        }
+        return false
     }
 
     fun getInstalledPluginApk(context: Context): File? {
@@ -50,6 +131,24 @@ object CjkPluginLoader {
         } catch (_: Exception) {
             null
         }
+    }
+
+    fun getPluginVersion(context: Context): String? {
+        val installedApk = getInstalledPluginApk(context)
+        if (installedApk != null) {
+            try {
+                val pkgInfo = context.packageManager.getPackageInfo(PLUGIN_PACKAGE_NAME, 0)
+                if (!pkgInfo.versionName.isNullOrEmpty()) return pkgInfo.versionName
+            } catch (_: Exception) {}
+        }
+        val apkFile = File(context.filesDir, PLUGIN_FILENAME)
+        if (apkFile.exists() && apkFile.length() > 0L) {
+            try {
+                val info = context.packageManager.getPackageArchiveInfo(apkFile.absolutePath, 0)
+                if (!info?.versionName.isNullOrEmpty()) return info.versionName
+            } catch (_: Exception) {}
+        }
+        return null
     }
 
     fun hasPlugin(context: Context): Boolean {
@@ -249,6 +348,54 @@ object CjkPluginLoader {
         } catch (e: Throwable) {
             Log.e(TAG, "Failed to load CJK plugin from URI", e)
             false
+        }
+    }
+
+    fun importPluginFromTempFile(context: Context, tempFile: File): Boolean {
+        return try {
+            try {
+                context.codeCacheDir.deleteRecursively()
+            } catch (_: Exception) {}
+
+            val targetFile = File(context.filesDir, PLUGIN_FILENAME)
+            if (targetFile.exists()) targetFile.delete()
+
+            tempFile.copyTo(targetFile, overwrite = true)
+            tempFile.delete()
+
+            targetFile.setReadOnly()
+            activeEngine?.cleanup()
+            activeEngine = null
+
+            val engine = loadEngineInternal(context, targetFile)
+            val success = engine != null && engine.isAvailable()
+            if (success) {
+                activeEngine = engine
+                context.prefs().edit().putBoolean(PREF_HAS_PLUGIN, true).apply()
+                Log.i(TAG, "CJK plugin imported from temp file and verified successfully")
+            } else {
+                targetFile.delete()
+                context.prefs().edit().putBoolean(PREF_HAS_PLUGIN, false).apply()
+                Log.w(TAG, "CJK plugin verification failed")
+            }
+            success
+        } catch (e: Throwable) {
+            Log.e(TAG, "Failed to import CJK plugin from temp file", e)
+            false
+        }
+    }
+
+    fun clearUserDictionaries(context: Context) {
+        try {
+            val userDir = File(context.filesDir, "cjk/user")
+            if (userDir.exists()) {
+                userDir.listFiles()?.forEach { f ->
+                    try { f.delete() } catch (_: Exception) {}
+                }
+            }
+            Log.i(TAG, "Cleared CJK user dictionary directory")
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to clear CJK user dictionaries", e)
         }
     }
 

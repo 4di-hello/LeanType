@@ -2023,6 +2023,44 @@ New dictionary:
     <string name="storage_button_clear">Clear</string>
     <string name="storage_button_prune">Prune</string>
 
+    <!-- CJK Input Engine -->
+    <string name="cjk_settings_title">CJK Input</string>
+    <string name="cjk_settings_summary">Chinese, Japanese and Korean composition engine</string>
+    <string name="cjk_plugin_management">Plugin Management</string>
+    <string name="load_cjk_plugin">Load CJK companion plugin</string>
+    <string name="load_cjk_plugin_summary">Provides Chinese Pinyin and Japanese Romaji-Kana-Kanji conversion</string>
+    <string name="load_cjk_plugin_button_delete">Delete plugin</string>
+    <string name="load_cjk_plugin_success">CJK plugin imported successfully</string>
+    <string name="load_cjk_plugin_failed">Failed to load CJK plugin APK</string>
+    <string name="cjk_plugin_active_status">Plugin active</string>
+    <string name="cjk_plugin_active_version_status">Plugin active (v%s)</string>
+    <string name="cjk_plugin_not_installed">Plugin not installed</string>
+    <string name="cjk_plugin_downloading">Downloading CJK plugin…</string>
+    <string name="cjk_plugin_update_available_dialog">An update is available for the CJK plugin!\nLocal version: %1$s\nLatest version: %2$s\n\nDo you want to download and update?</string>
+    <string name="cjk_plugin_active_warning">CJK companion plugin is active (version %s).\n\nWarning: loading external code can be a security risk. Only use a plugin from a source you trust.</string>
+    <string name="cjk_plugin_download_dialog_msg">Download or load the official LeanType CJK companion plugin (APK) to enable Chinese Pinyin and Japanese Romaji-Kana-Kanji input.\n\nWarning: loading external code can be a security risk. Only use a plugin from a source you trust.</string>
+    <string name="cjk_plugin_download_dialog_version_msg">Download or load LeanType CJK plugin (%s) to enable Chinese Pinyin and Japanese Romaji-Kana-Kanji input.\n\nWarning: loading external code can be a security risk. Only use a plugin from a source you trust.</string>
+    <string name="cjk_plugin_button_download">Download &amp; Install</string>
+    <string name="cjk_plugin_button_download_version">Download &amp; Install (%s)</string>
+    <string name="cjk_plugin_button_update_version">Update to %s</string>
+    <string name="cjk_plugin_button_load_storage">Load from storage (APK)</string>
+    <string name="cjk_plugin_loaded_restarting">CJK plugin loaded. Restarting...</string>
+    <string name="cjk_plugin_removed_restarting">CJK plugin removed. Restarting...</string>
+    <string name="cjk_plugin_open_browser_toast">Opening GitHub releases in browser… download the APK and use \'Load from storage\'</string>
+    <string name="cjk_supported_languages_title">Supported Languages</string>
+    <string name="cjk_lang_chinese_title">Chinese (Pinyin)</string>
+    <string name="cjk_lang_chinese_summary">Full sentence Pinyin decoding with multi-character candidate resolution</string>
+    <string name="cjk_lang_japanese_title">Japanese (Romaji to Kana/Kanji)</string>
+    <string name="cjk_lang_japanese_summary">Hepburn/Kunrei Romaji transliteration with 297k word SKK dictionary</string>
+    <string name="cjk_lang_korean_title">Korean (Hangul)</string>
+    <string name="cjk_lang_korean_summary">Native Hangul combiner for 2-Bulshik and Sebeolsik layouts</string>
+    <string name="cjk_engine_options_title">Engine Utilities</string>
+    <string name="cjk_mock_engine_title">Enable Mock Engine (Debug)</string>
+    <string name="cjk_mock_engine_summary">Use built-in mock engine when companion plugin is not installed</string>
+    <string name="cjk_clear_user_dict_title">Clear CJK User History</string>
+    <string name="cjk_clear_user_dict_summary">Reset learned candidate rankings and user dictionary cache</string>
+    <string name="cjk_clear_user_dict_success">CJK user history cleared</string>
+
     <!-- Translation -->
     <string name="translation_plugin_management">Plugin Management</string>
     <string name="translation_offline_models">Offline Models</string>

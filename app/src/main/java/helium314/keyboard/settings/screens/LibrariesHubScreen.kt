@@ -19,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import helium314.keyboard.latin.BuildConfig
 import helium314.keyboard.latin.R
+import helium314.keyboard.latin.cjk.CjkPluginLoader
 import helium314.keyboard.latin.handwriting.HandwritingLoader
 import helium314.keyboard.latin.ocr.OcrPluginLoader
 import helium314.keyboard.latin.settings.Defaults
@@ -50,6 +51,7 @@ fun LibrariesHubScreen(
     onClickSound: () -> Unit = {},
     onClickAppProfiles: () -> Unit = { SettingsDestination.navigateTo(SettingsDestination.AppQuirks) },
     onClickGif: () -> Unit = { SettingsDestination.navigateTo(SettingsDestination.Gif) },
+    onClickCjk: () -> Unit = { SettingsDestination.navigateTo(SettingsDestination.Cjk) },
 ) {
     val context = LocalContext.current
     val prefs = remember { context.prefs() }
@@ -172,6 +174,23 @@ fun LibrariesHubScreen(
                             enabled = isTranslationSupported,
                             icon = R.drawable.ic_translate
                         ) { if (isTranslationSupported) NextScreenIcon() }
+
+                        // CJK Input Plugin (Chinese, Japanese, Korean)
+                        val cjkInstalled = CjkPluginLoader.hasPlugin(context)
+                        val cjkVersion = remember(cjkInstalled) { CjkPluginLoader.getPluginVersion(context) }
+                        val cjkSummary = when {
+                            cjkInstalled -> {
+                                if (cjkVersion != null) "${stringResource(R.string.libraries_status_active)} (v$cjkVersion)"
+                                else stringResource(R.string.libraries_status_active)
+                            }
+                            else -> stringResource(R.string.libraries_status_not_installed)
+                        }
+                        Preference(
+                            name = stringResource(R.string.cjk_settings_title),
+                            description = cjkSummary,
+                            onClick = onClickCjk,
+                            icon = R.drawable.ic_settings_languages
+                        ) { NextScreenIcon() }
 
                         // GIF Search Plugin
                         val gifManager = remember { helium314.keyboard.latin.gif.GifPluginManager.get(context) }

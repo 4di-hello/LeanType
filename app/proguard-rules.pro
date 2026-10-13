@@ -158,3 +158,11 @@
 -keep class com.leanbitlab.leantype.gif.** { *; }
 -keep interface com.leanbitlab.leantype.gif.** { *; }
 
+# Keep CJK plugin interface, data classes, and candidates across dynamic ClassLoader boundary
+-keep interface helium314.keyboard.latin.cjk.ICjkEngine {
+    <methods>;
+}
+-keep class helium314.keyboard.latin.cjk.** { *; }
+-keep interface helium314.keyboard.latin.cjk.** { *; }
+-keep class kotlin.jvm.internal.DefaultConstructorMarker { *; }
+
