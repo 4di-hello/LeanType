@@ -3,6 +3,7 @@ package helium314.keyboard.settings
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -125,14 +126,38 @@ fun SearchSettingsScreen(
                                  )
                             ) {
                                 Column {
+                                    // sections with a title can be collapsed, this is remembered
+                                    val sectionId = titleRes?.let { "$title/" + runCatching { context.resources.getResourceEntryName(it) }.getOrDefault(it.toString()) }
+                                    var collapsed by remember(sectionId) { mutableStateOf(sectionId != null && isSectionCollapsed(context, sectionId)) }
                                     if (titleRes != null) {
-                                        PreferenceCategory(stringResource(titleRes))
-                                    }
-                                    
-                                    keys.forEach { key ->
-                                        androidx.compose.runtime.key(key) {
-                                            SettingsActivity.settingsContainer[key]?.Preference()
+                                        androidx.compose.foundation.layout.Row(
+                                            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .clickable(onClickLabel = stringResource(R.string.settings_category_collapse)) {
+                                                    collapsed = !collapsed
+                                                    setSectionCollapsed(context, sectionId!!, collapsed)
+                                                }
+                                        ) {
+                                            Box(Modifier.weight(1f)) { PreferenceCategory(stringResource(titleRes)) }
+                                            Icon(
+                                                painterResource(R.drawable.ic_arrow_right),
+                                                null,
+                                                tint = MaterialTheme.colorScheme.primary,
+                                                modifier = Modifier
+                                                    .padding(top = 12.dp, end = 16.dp)
+                                                    .rotate(if (collapsed) 0f else 90f)
+                                            )
                                         }
+                                    }
+                                    if (!collapsed) {
+                                        keys.forEach { key ->
+                                            androidx.compose.runtime.key(key) {
+                                                SettingsActivity.settingsContainer[key]?.Preference()
+                                            }
+                                        }
+                                    } else {
+                                        androidx.compose.foundation.layout.Spacer(Modifier.padding(bottom = 8.dp))
                                     }
                                 }
                             }
@@ -280,6 +305,18 @@ fun <T: Any?> SearchScreen(
             }
         }
     }
+}
+
+private const val PREF_COLLAPSED_SECTIONS = "collapsed_settings_sections"
+
+private fun isSectionCollapsed(context: android.content.Context, id: String) =
+    context.prefs().getStringSet(PREF_COLLAPSED_SECTIONS, null)?.contains(id) == true
+
+private fun setSectionCollapsed(context: android.content.Context, id: String, collapsed: Boolean) {
+    val prefs = context.prefs()
+    val set = prefs.getStringSet(PREF_COLLAPSED_SECTIONS, null).orEmpty().toMutableSet()
+    if (collapsed) set.add(id) else set.remove(id)
+    prefs.edit().putStringSet(PREF_COLLAPSED_SECTIONS, set).apply()
 }
 
 // from StreetComplete
