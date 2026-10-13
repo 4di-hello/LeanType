@@ -21,6 +21,7 @@ object PinyinDecoderJni {
     external fun nativeOpenDecoder(sysDictPath: String, usrDictPath: String?): Boolean
     external fun nativeCloseDecoder()
     external fun nativeResetSearch()
+    external fun nativeSearch(pyStr: String): Int
     external fun nativeAddLetter(ch: Byte): Int
     external fun nativeDelSearch(): Int
     external fun nativeGetPyStr(decodedOnly: Boolean): String

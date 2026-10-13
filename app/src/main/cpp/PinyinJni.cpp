@@ -42,9 +42,31 @@ Java_com_leanbitlab_leantype_cjk_plugin_PinyinDecoderJni_nativeResetSearch(
 }
 
 JNIEXPORT jint JNICALL
+Java_com_leanbitlab_leantype_cjk_plugin_PinyinDecoderJni_nativeSearch(
+        JNIEnv *env, jclass clazz, jstring py_str) {
+    if (!py_str) return 0;
+    const char *py = env->GetStringUTFChars(py_str, nullptr);
+    size_t len = strlen(py);
+    size_t cand_count = im_search(py, len);
+    env->ReleaseStringUTFChars(py_str, py);
+    return static_cast<jint>(cand_count);
+}
+
+JNIEXPORT jint JNICALL
 Java_com_leanbitlab_leantype_cjk_plugin_PinyinDecoderJni_nativeAddLetter(
         JNIEnv *env, jclass clazz, jbyte ch) {
-    return static_cast<jint>(im_add_letter(static_cast<char>(ch)));
+    char c = static_cast<char>(ch);
+    size_t decoded_len = 0;
+    const char *current_py = im_get_sps_str(&decoded_len);
+    char new_buf[256];
+    size_t current_len = current_py ? strlen(current_py) : 0;
+    if (current_len + 1 >= sizeof(new_buf)) return 0;
+    if (current_len > 0) {
+        memcpy(new_buf, current_py, current_len);
+    }
+    new_buf[current_len] = c;
+    new_buf[current_len + 1] = '\0';
+    return static_cast<jint>(im_search(new_buf, current_len + 1));
 }
 
 JNIEXPORT jint JNICALL

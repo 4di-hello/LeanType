@@ -86,12 +86,8 @@ class CjkEngineImpl : ICjkEngine {
                     if (buffer.isEmpty()) {
                         clearComposition()
                     } else {
-                        val count = PinyinDecoderJni.nativeDelSearch()
-                        if (count <= 0) {
-                            clearComposition()
-                        } else {
-                            updateContext(count)
-                        }
+                        val count = PinyinDecoderJni.nativeSearch(buffer.toString())
+                        updateContext(count)
                     }
                     return true
                 }
@@ -127,7 +123,7 @@ class CjkEngineImpl : ICjkEngine {
             in 'a'.code..'z'.code, in 'A'.code..'Z'.code, '\''.code -> {
                 val ch = if (keysym in 'A'.code..'Z'.code) (keysym + 32).toByte() else keysym.toByte()
                 buffer.append(ch.toInt().toChar())
-                val count = PinyinDecoderJni.nativeAddLetter(ch)
+                val count = PinyinDecoderJni.nativeSearch(buffer.toString())
                 updateContext(count)
                 return true
             }
@@ -156,8 +152,12 @@ class CjkEngineImpl : ICjkEngine {
         val pyStr = PinyinDecoderJni.nativeGetPyStr(false)
 
         if (newCandCount <= 1 || fixedLen >= pyStr.length || newCandCount == 0) {
-            // Whole pinyin input resolved; commit chosen text
-            pendingCommit = chosenText
+            val fullText = if (newCandCount == 1) {
+                PinyinDecoderJni.nativeGetCandidate(0) ?: chosenText
+            } else {
+                chosenText
+            }
+            pendingCommit = fullText
             clearComposition()
             return true
         }
@@ -191,13 +191,13 @@ class CjkEngineImpl : ICjkEngine {
     }
 
     private fun updateContext(candidateCount: Int) {
-        if (buffer.isEmpty() || candidateCount <= 0) {
+        if (buffer.isEmpty()) {
             cachedContext = null
             return
         }
 
         val pyStr = PinyinDecoderJni.nativeGetPyStr(false)
-        val maxFetch = minOf(candidateCount, MAX_CANDIDATES_PER_PAGE)
+        val maxFetch = if (candidateCount > 0) minOf(candidateCount, MAX_CANDIDATES_PER_PAGE) else 0
         val candidateList = ArrayList<CjkCandidate>(maxFetch)
 
         for (i in 0 until maxFetch) {
