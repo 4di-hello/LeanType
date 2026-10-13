@@ -1738,4 +1738,6 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="translation_custom_target_language_title">Benutzerdefinierte Zielsprache</string>
     <string name="offline_system_instruction_title">Systemanweisung</string>
     <string name="offline_translate_system_instruction_title">Systemanweisung übersetzen</string>
+    <string name="clipboard_skip_sensitive">Passwörter und Codes nicht speichern</string>
+    <string name="clipboard_skip_sensitive_summary">Als vertraulich markierte Einträge (z. B. aus Passwort-Managern) und Einmalcodes mit 4 bis 8 Ziffern landen nicht im Verlauf. Einfügen funktioniert weiterhin</string>
 </resources>

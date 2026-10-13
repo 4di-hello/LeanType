@@ -2422,4 +2422,6 @@ New dictionary:
     <string name="translation_custom_target_language_title" tools:ignore="MissingTranslation">Custom Target Language</string>
     <string name="offline_system_instruction_title" tools:ignore="MissingTranslation">System Instruction</string>
     <string name="offline_translate_system_instruction_title" tools:ignore="MissingTranslation">Translate System Instruction</string>
+    <string name="clipboard_skip_sensitive">Don\'t keep passwords and codes</string>
+    <string name="clipboard_skip_sensitive_summary">Entries marked as confidential (e.g. from password managers) and one-time codes with 4 to 8 digits are not added to the history. Pasting still works</string>
 </resources>
