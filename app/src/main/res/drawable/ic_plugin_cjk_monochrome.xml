@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+
+    <!-- ══ MAIN HERO: Monochrome LeanType Keyboard Logo ══ -->
+    <group android:name="leantype_keyboard_hero">
+        <!-- Clip out badge area + 2.5dp halo so spacebar and key 6 don't intersect the badge -->
+        <clip-path
+            android:fillType="evenOdd"
+            android:pathData="M0,0 H108 V108 H0 Z M 67.5,55 a 12.5,12.5 0 1,0 0,25 a 12.5,12.5 0 1,0 0,-25 Z" />
+
+        <group
+            android:translateX="5.92" android:translateY="5.5"
+            android:scaleX="0.18" android:scaleY="0.18">
+
+            <!-- Row 1 -->
+            <!-- Key 1 -->
+            <path android:strokeColor="#FFFFFFFF" android:strokeWidth="11" android:fillColor="#00000000"
+                android:pathData="M152,130 h38 a16,16 0 0 1,16 16 v38 a16,16 0 0 1,-16 16 h-38 a16,16 0 0 1,-16 -16 v-38 a16,16 0 0 1,16 -16 z" />
+            <path android:fillColor="#FFFFFFFF"
+                android:pathData="M151,143 h10 v34 h30 v10 h-40 z" />
+
+            <!-- Key 2 -->
+            <path android:strokeColor="#FFFFFFFF" android:strokeWidth="11" android:fillColor="#00000000"
+                android:pathData="M237,130 h38 a16,16 0 0 1,16 16 v38 a16,16 0 0 1,-16 16 h-38 a16,16 0 0 1,-16 -16 v-38 a16,16 0 0 1,16 -16 z" />
+
+            <!-- Key 3 -->
+            <path android:strokeColor="#FFFFFFFF" android:strokeWidth="11" android:fillColor="#00000000"
+                android:pathData="M322,130 h38 a16,16 0 0 1,16 16 v38 a16,16 0 0 1,-16 16 h-38 a16,16 0 0 1,-16 -16 v-38 a16,16 0 0 1,16 -16 z" />
+            <group android:translateX="306" android:translateY="130">
+                <path android:fillColor="#FFFFFFFF"
+                    android:pathData="M35,15 L38,28 L51,31 L38,34 L35,47 L32,34 L19,31 L32,28 Z" />
+                <path android:fillColor="#FFFFFFFF"
+                    android:pathData="M50,20 m-3,0 a3,3 0 1,1 6,0 a3,3 0 1,1 -6,0" />
+                <path android:fillColor="#FFFFFFFF"
+                    android:pathData="M20,50 m-2,0 a2,2 0 1,1 4,0 a2,2 0 1,1 -4,0" />
+            </group>
+
+            <!-- Row 2 -->
+            <!-- Key 4 -->
+            <path android:strokeColor="#FFFFFFFF" android:strokeWidth="11" android:fillColor="#00000000"
+                android:pathData="M152,215 h38 a16,16 0 0 1,16 16 v38 a16,16 0 0 1,-16 16 h-38 a16,16 0 0 1,-16 -16 v-38 a16,16 0 0 1,16 -16 z" />
+
+            <!-- Key 5 -->
+            <path android:strokeColor="#FFFFFFFF" android:strokeWidth="11" android:fillColor="#00000000"
+                android:pathData="M237,215 h38 a16,16 0 0 1,16 16 v38 a16,16 0 0 1,-16 16 h-38 a16,16 0 0 1,-16 -16 v-38 a16,16 0 0 1,16 -16 z" />
+            <group android:translateX="236" android:translateY="225" android:scaleX="1.8" android:scaleY="1.8">
+                <path android:fillColor="#FFFFFFFF"
+                    android:pathData="M12.87,15.07l-2.54,-2.51 0.03,-0.03c1.74,-1.94 2.98,-4.17 3.71,-6.53L17,6L17,4h-7L10,2L8,2v2L1,4v1.99h11.17C11.5,7.92 10.44,9.75 9,11.35 8.07,10.32 7.3,9.19 6.69,8h-2c0.73,1.63 1.73,3.17 2.98,4.56l-5.09,5.02L4,19l5,-5 3.11,3.11 0.76,-2.04zM18.5,10h-2L12,22h2l1.12,-3h4.75L21,22h2l-4.5,-12zM15.88,17l1.62,-4.33L19.12,17h-3.24z" />
+            </group>
+
+            <!-- Key 6 -->
+            <path android:strokeColor="#FFFFFFFF" android:strokeWidth="11" android:fillColor="#00000000"
+                android:pathData="M322,215 h38 a16,16 0 0 1,16 16 v38 a16,16 0 0 1,-16 16 h-38 a16,16 0 0 1,-16 -16 v-38 a16,16 0 0 1,16 -16 z" />
+            <group android:translateX="319" android:translateY="215" android:scaleX="1.85" android:scaleY="1.85">
+                <path android:fillColor="#FFFFFFFF"
+                    android:pathData="M15.6,10.79c0.97,-0.67 1.65,-1.77 1.65,-2.79 0,-2.26 -1.75,-4 -4,-4H7v14h7.04c2.09,0 3.71,-1.7 3.71,-3.79 0,-1.52 -0.86,-2.82 -2.15,-3.42zM10,6.5h3c0.83,0 1.5,0.67 1.5,1.5s-0.67,1.5 -1.5,1.5h-3v-3zm3.5,9H10v-3h3.5c0.83,0 1.5,0.67 1.5,1.5s-0.67,1.5 -1.5,1.5z" />
+            </group>
+
+            <!-- Row 3: Spacebar / Incognito -->
+            <path android:strokeColor="#FFFFFFFF" android:strokeWidth="11" android:fillColor="#00000000"
+                android:pathData="M176,300 h160 a16,16 0 0 1,16 16 v38 a16,16 0 0 1,-16 16 h-160 a16,16 0 0 1,-16 -16 v-38 a16,16 0 0 1,16 -16 z" />
+            <group android:translateX="256" android:translateY="335" android:scaleX="0.9" android:scaleY="0.9">
+                <path android:fillColor="#FFFFFFFF"
+                    android:pathData="M-20,-10 L20,-10 L15,-25 L-15,-25 Z" />
+                <path android:fillColor="#FFFFFFFF"
+                    android:pathData="M-30,-10 L30,-10 L30,-5 L-30,-5 Z" />
+                <path android:strokeColor="#FFFFFFFF" android:strokeWidth="3"
+                    android:pathData="M-12,10 m-8,0 a8,8 0 1,1 16,0 a8,8 0 1,1 -16,0" />
+                <path android:strokeColor="#FFFFFFFF" android:strokeWidth="3"
+                    android:pathData="M12,10 m-8,0 a8,8 0 1,1 16,0 a8,8 0 1,1 -16,0" />
+                <path android:strokeColor="#FFFFFFFF" android:strokeWidth="2"
+                    android:pathData="M-4,10 Q0,5 4,10" />
+                <path android:strokeColor="#FFFFFFFF" android:strokeWidth="2"
+                    android:pathData="M-20,10 L-25,5" />
+                <path android:strokeColor="#FFFFFFFF" android:strokeWidth="2"
+                    android:pathData="M20,10 L25,5" />
+            </group>
+        </group>
+    </group>
+
+    <!-- ══ OVERLAPPING PURPOSE BADGE: Chinese / CJK Input Badge ══ -->
+    <group android:name="plugin_purpose_badge">
+        <!-- Badge circle outline -->
+        <path android:fillColor="#00000000"
+            android:strokeColor="#FFFFFFFF"
+            android:strokeWidth="2.0"
+            android:pathData="M 67.5,57.5 a 10,10 0 1,0 0,20 a 10,10 0 1,0 0,-20 Z" />
+
+        <!-- Chinese Character '中' Glyph -->
+        <group android:translateX="60.78" android:translateY="60.78"
+            android:scaleX="0.28" android:scaleY="0.28">
+            <!-- Center vertical through-stroke -->
+            <path android:fillColor="#FFFFFFFF"
+                android:pathData="M 21.25,1 C 21.25,0.4 21.65,0 22.25,0 H 25.75 C 26.35,0 26.75,0.4 26.75,1 V 46 C 26.75,46.6 26.35,47 25.75,47 H 22.25 C 21.65,47 21.25,46.6 21.25,46 Z" />
+            <!-- Box with window cutouts -->
+            <path android:fillColor="#FFFFFFFF"
+                android:fillType="evenOdd"
+                android:pathData="M 4,9.5 C 4,9.2 4.2,9 4.5,9 H 43 C 43.3,9 43.5,9.2 43.5,9.5 V 34 C 43.5,34.3 43.3,34.5 43,34.5 H 38.5 C 38.2,34.5 38,34.3 38,34 V 31 H 9.5 V 34 C 9.5,34.3 9.3,34.5 9,34.5 H 4.5 C 4.2,34.5 4,34.3 4,34 Z M 9.5,14.5 H 38 V 25.5 H 9.5 Z" />
+        </group>
+    </group>
+
+</vector>
