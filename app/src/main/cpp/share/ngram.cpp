@@ -164,7 +164,8 @@ bool NGram::save_ngram(FILE *fp) {
   if (0 == idx_num_ || NULL == freq_codes_ ||  NULL == lma_freq_idx_)
     return false;
 
-  if (fwrite(&idx_num_, sizeof(size_t), 1, fp) != 1)
+  uint32 idx_num_write = static_cast<uint32>(idx_num_);
+  if (fwrite(&idx_num_write, sizeof(uint32), 1, fp) != 1)
     return false;
 
   if (fwrite(freq_codes_, sizeof(LmaScoreType), kCodeBookSize, fp) !=
@@ -183,8 +184,10 @@ bool NGram::load_ngram(FILE *fp) {
 
   initialized_ = false;
 
-  if (fread(&idx_num_, sizeof(size_t), 1, fp) != 1 )
+  uint32 idx_num_read = 0;
+  if (fread(&idx_num_read, sizeof(uint32), 1, fp) != 1 )
     return false;
+  idx_num_ = idx_num_read;
 
   if (NULL != lma_freq_idx_)
     free(lma_freq_idx_);

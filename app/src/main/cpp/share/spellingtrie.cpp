@@ -640,10 +640,12 @@ bool SpellingTrie::save_spl_trie(FILE *fp) {
   if (NULL == fp || NULL == spelling_buf_)
     return false;
 
-  if (fwrite(&spelling_size_, sizeof(size_t), 1, fp) != 1)
+  uint32 sp_size_write = static_cast<uint32>(spelling_size_);
+  if (fwrite(&sp_size_write, sizeof(uint32), 1, fp) != 1)
     return false;
 
-  if (fwrite(&spelling_num_, sizeof(size_t), 1, fp) != 1)
+  uint32 sp_num_write = static_cast<uint32>(spelling_num_);
+  if (fwrite(&sp_num_write, sizeof(uint32), 1, fp) != 1)
     return false;
 
   if (fwrite(&score_amplifier_, sizeof(float), 1, fp) != 1)
@@ -663,11 +665,15 @@ bool SpellingTrie::load_spl_trie(FILE *fp) {
   if (NULL == fp)
     return false;
 
-  if (fread(&spelling_size_, sizeof(size_t), 1, fp) != 1)
+  uint32 sp_size_read = 0;
+  if (fread(&sp_size_read, sizeof(uint32), 1, fp) != 1)
     return false;
+  spelling_size_ = sp_size_read;
 
-  if (fread(&spelling_num_, sizeof(size_t), 1, fp) != 1)
+  uint32 sp_num_read = 0;
+  if (fread(&sp_num_read, sizeof(uint32), 1, fp) != 1)
     return false;
+  spelling_num_ = sp_num_read;
 
   if (fread(&score_amplifier_, sizeof(float), 1, fp) != 1)
     return false;

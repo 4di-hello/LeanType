@@ -113,16 +113,20 @@ bool DictTrie::save_dict(FILE *fp) {
   if (NULL == fp)
     return false;
 
-  if (fwrite(&lma_node_num_le0_, sizeof(size_t), 1, fp) != 1)
+  uint32 val_write = static_cast<uint32>(lma_node_num_le0_);
+  if (fwrite(&val_write, sizeof(uint32), 1, fp) != 1)
     return false;
 
-  if (fwrite(&lma_node_num_ge1_, sizeof(size_t), 1, fp) != 1)
+  val_write = static_cast<uint32>(lma_node_num_ge1_);
+  if (fwrite(&val_write, sizeof(uint32), 1, fp) != 1)
     return false;
 
-  if (fwrite(&lma_idx_buf_len_, sizeof(size_t), 1, fp) != 1)
+  val_write = static_cast<uint32>(lma_idx_buf_len_);
+  if (fwrite(&val_write, sizeof(uint32), 1, fp) != 1)
     return false;
 
-  if (fwrite(&top_lmas_num_, sizeof(size_t), 1, fp) != 1)
+  val_write = static_cast<uint32>(top_lmas_num_);
+  if (fwrite(&val_write, sizeof(uint32), 1, fp) != 1)
     return false;
 
   if (fwrite(root_, sizeof(LmaNodeLE0), lma_node_num_le0_, fp)
@@ -169,18 +173,23 @@ bool DictTrie::load_dict(FILE *fp) {
   if (NULL == fp)
     return false;
 
-  if (fread(&lma_node_num_le0_, sizeof(size_t), 1, fp) != 1)
+  uint32 val_read = 0;
+  if (fread(&val_read, sizeof(uint32), 1, fp) != 1)
     return false;
+  lma_node_num_le0_ = val_read;
 
-  if (fread(&lma_node_num_ge1_, sizeof(size_t), 1, fp) != 1)
+  if (fread(&val_read, sizeof(uint32), 1, fp) != 1)
     return false;
+  lma_node_num_ge1_ = val_read;
 
-  if (fread(&lma_idx_buf_len_, sizeof(size_t), 1, fp) != 1)
+  if (fread(&val_read, sizeof(uint32), 1, fp) != 1)
     return false;
+  lma_idx_buf_len_ = val_read;
 
-  if (fread(&top_lmas_num_, sizeof(size_t), 1, fp) != 1 ||
-      top_lmas_num_ >= lma_idx_buf_len_)
+  if (fread(&val_read, sizeof(uint32), 1, fp) != 1 ||
+      val_read >= lma_idx_buf_len_)
     return false;
+  top_lmas_num_ = val_read;
 
   free_resource(false);
 
