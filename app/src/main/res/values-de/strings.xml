@@ -698,6 +698,22 @@
     <string name="theme_name_mint_and_pink">Minze und Pink</string>
     <string name="theme_name_leanbitlab_light">LeanBitLab Hell</string>
     <string name="theme_name_leanbitlab_dark">LeanBitLab Dunkel</string>
+    <string name="theme_name_dynamic_subtle" tools:keep="@string/theme_name_dynamic_subtle">Dynamische Farben (dezent)</string>
+    <string name="theme_name_dynamic_vivid" tools:keep="@string/theme_name_dynamic_vivid">Dynamische Farben (kräftig)</string>
+    <string name="theme_name_clean_light" tools:keep="@string/theme_name_clean_light">Klar Hell</string>
+    <string name="theme_name_clean_dark" tools:keep="@string/theme_name_clean_dark">Klar Dunkel</string>
+    <string name="theme_name_pure_black" tools:keep="@string/theme_name_pure_black">Tiefschwarz (gedimmt)</string>
+    <string name="theme_name_warm_night" tools:keep="@string/theme_name_warm_night">Warme Nacht</string>
+    <string name="theme_name_high_contrast_light" tools:keep="@string/theme_name_high_contrast_light">Hoher Kontrast Hell</string>
+    <string name="theme_name_high_contrast_dark" tools:keep="@string/theme_name_high_contrast_dark">Hoher Kontrast Dunkel</string>
+    <string name="theme_name_arctic" tools:keep="@string/theme_name_arctic">Arktis</string>
+    <string name="theme_name_solar_light" tools:keep="@string/theme_name_solar_light">Solar Hell</string>
+    <string name="theme_name_solar_dark" tools:keep="@string/theme_name_solar_dark">Solar Dunkel</string>
+    <string name="theme_name_ocean" tools:keep="@string/theme_name_ocean">Ozean</string>
+    <string name="theme_name_deep_sea" tools:keep="@string/theme_name_deep_sea">Tiefsee</string>
+    <string name="theme_name_pastel" tools:keep="@string/theme_name_pastel">Pastell</string>
+    <string name="about_sponsor_link">Projekt sponsern</string>
+    <string name="about_sponsor_link_description">Unterstützen Sie die Entwicklung von LeanType</string>
     <string name="sponsor_dialog_title">Dieses Projekt sponsern</string>
     <string name="sponsor_dialog_message">Dieses Projekt ist vollständig community-getrieben und auf Spenden angewiesen, um die Entwicklung am Leben zu erhalten. Wenn Sie diese Tastatur nützlich finden, denken Sie bitte über eine Unterstützung nach!</string>
     <string name="sponsor_dialog_never_show_again">Nicht mehr anzeigen</string>
@@ -1831,4 +1847,49 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="learned_casing_forget_all">Alle vergessen</string>
     <string name="typing_heatmap_history">Fehltreffer pro Woche</string>
     <string name="typing_heatmap_history_value">%1$.1f %% (%2$d)</string>
+    <!-- Short descriptions of the entries in the main settings menu, and the keyboard test field -->
+    <string name="main_summary_ai">Korrekturlesen, KI-Tasten und Modelle</string>
+    <string name="main_summary_plugins">Spracheingabe, Handschrift, Übersetzung, GIFs, Töne</string>
+    <string name="main_summary_preferences">Vibration und Ton, Zusatztasten, Zwischenablage, Einhand- und Schwebemodus</string>
+    <string name="main_summary_appearance">Design, Farben, Tastengröße, Schrift</string>
+    <string name="main_summary_toolbar">Schaltflächen über der Tastatur</string>
+    <string name="main_summary_gesture">Wischen zum Schreiben, Gesten, Touchpad</string>
+    <string name="main_summary_correction">Autokorrektur, Großschreibung, Leerzeichen und Satzzeichen</string>
+    <string name="main_summary_suggestions">Vorschlagsleiste und Wortvorhersage</string>
+    <string name="main_summary_text_expander">Kürzel, die zu längerem Text werden</string>
+    <string name="main_summary_advanced">Sicherung, Privatsphäre, Hardware-Tastatur, Experimentelles</string>
+    <string name="keyboard_test_field">Tastatur hier ausprobieren</string>
+    <string name="keyboard_test_field_hint">Änderungen sind beim nächsten Öffnen der Tastatur sichtbar</string>
+    <string name="settings_category_collapse">Abschnitt ein- oder ausklappen</string>
+    <string-array name="settings_search_keywords">
+        <item>theme_colors|design farbe farben thema dunkel hell aussehen look</item>
+        <item>theme_colors_night|design farbe farben thema dunkel nacht aussehen</item>
+        <item>theme_style|design aussehen form rund</item>
+        <item>theme_key_borders|rahmen umrandung aussehen</item>
+        <item>keyboard_height_scale|größe groß klein höhe</item>
+        <item>font_scale|schrift schriftgröße buchstaben groß klein</item>
+        <item>vibrate_on|vibration vibrieren haptik rückmeldung</item>
+        <item>vibration_duration_settings|vibration stärke haptik</item>
+        <item>sound_on|ton klick klang geräusch</item>
+        <item>popup_on|vorschau lupe blase</item>
+        <item>auto_correction|autokorrektur korrektur tippfehler rechtschreibung fehler</item>
+        <item>auto_cap|großschreibung großbuchstaben groß umschalt</item>
+        <item>show_suggestions|vorschläge vorschlag wortvorschläge leiste</item>
+        <item>next_word_prediction|vorhersage vorschlag nächstes wort</item>
+        <item>gesture_input|wischen gleiten swipe gesten</item>
+        <item>show_number_row|zahlen ziffern zahlenreihe</item>
+        <item>show_emoji_key|smiley emoji emoticon</item>
+        <item>use_double_space_period|punkt leertaste</item>
+        <item>split_keyboard|geteilt teilen tablet querformat daumen</item>
+        <item>enable_clipboard_history|zwischenablage kopieren einfügen verlauf</item>
+        <item>always_incognito_mode|inkognito privat privatsphäre lernen verlauf</item>
+        <item>backup_restore|sicherung sichern wiederherstellen export import übertragen handy</item>
+        <item>horizontal_space_swipe|cursor bewegen pfeil leertaste</item>
+        <item>delete_swipe|löschen entfernen löschtaste</item>
+        <item>key_longpress_timeout|gedrückt halten verzögerung lange drücken</item>
+        <item>show_hints|akzente umlaute sonderzeichen</item>
+        <item>use_system_wallpaper|hintergrund bild foto hintergrundbild</item>
+        <item>background_image|hintergrund bild foto</item>
+        <item>navbar_color|navigationsleiste navigation</item>
+    </string-array>
 </resources>
