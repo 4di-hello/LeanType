@@ -169,7 +169,10 @@ object CjkPluginLoader {
                 if (entry.name.startsWith("lib/$targetAbi/") && entry.name.endsWith(".so")) {
                     val libName = entry.name.substringAfterLast("/")
                     val outFile = File(destLibDir, libName)
-                    if (!outFile.exists() || outFile.length() != entry.size) {
+                    if (outFile.exists() && outFile.length() != entry.size) {
+                        outFile.delete()
+                    }
+                    if (!outFile.exists()) {
                         zip.getInputStream(entry).use { input ->
                             java.io.FileOutputStream(outFile).use { output ->
                                 input.copyTo(output)
@@ -182,7 +185,10 @@ object CjkPluginLoader {
                 } else if (entry.name.endsWith(".dat") && entry.name.contains("dict")) {
                     val dictName = entry.name.substringAfterLast("/")
                     val outFile = File(destSharedDir, dictName)
-                    if (!outFile.exists() || outFile.length() != entry.size) {
+                    if (outFile.exists() && outFile.length() != entry.size) {
+                        outFile.delete()
+                    }
+                    if (!outFile.exists()) {
                         zip.getInputStream(entry).use { input ->
                             java.io.FileOutputStream(outFile).use { output ->
                                 input.copyTo(output)
