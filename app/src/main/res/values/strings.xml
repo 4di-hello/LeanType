@@ -2418,4 +2418,6 @@ New dictionary:
     <string name="gif_no_recent_items">No recent items</string>
     <string name="gif_manage_local_media">Manage Local Media</string>
     <string name="gif_get_api_key">Get API key</string>
+    <string name="autocorrection_right_of_typed_word">Auto-correction right of the typed word</string>
+    <string name="autocorrection_right_of_typed_word_summary">When the typed word is in the middle, show the auto-correction on its right instead of its left</string>
 </resources>

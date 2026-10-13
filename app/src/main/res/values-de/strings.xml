@@ -1734,4 +1734,6 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="backup_api_keys_warning_confirm">API-Schlüssel einschließen</string>
     <string name="gif_get_api_key">Holen Sie sich den API-Schlüssel</string>
     <string name="gif_provider_disabled">Deaktiviert</string>
+    <string name="autocorrection_right_of_typed_word">Autokorrektur rechts vom getippten Wort</string>
+    <string name="autocorrection_right_of_typed_word_summary">Wenn das getippte Wort in der Mitte steht, erscheint die Autokorrektur rechts daneben statt links</string>
 </resources>

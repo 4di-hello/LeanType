@@ -137,6 +137,7 @@ open class SettingsValues(
     val mSuggestPunctuation: Boolean
     val mCenterSuggestionTextToEnter: Boolean
     val mCenterTypedWord: Boolean
+    val mAutoCorrectionRightOfTypedWord: Boolean
     val mGestureMethod: String
     val mFullKeyboardSwipe: Int
     val mGestureInputEnabled: Boolean
@@ -349,6 +350,7 @@ open class SettingsValues(
         mAutoCorrectEnabled = mAutoCorrectionEnabledPerUserSettings && shouldAutoCorrectForField
         mCenterSuggestionTextToEnter = prefs.getBoolean(Settings.PREF_CENTER_SUGGESTION_TEXT_TO_ENTER, Defaults.PREF_CENTER_SUGGESTION_TEXT_TO_ENTER)
         mCenterTypedWord = prefs.getBoolean(Settings.PREF_CENTER_TYPED_WORD, Defaults.PREF_CENTER_TYPED_WORD)
+        mAutoCorrectionRightOfTypedWord = prefs.getBoolean(Settings.PREF_AUTOCORRECTION_RIGHT_OF_TYPED_WORD, Defaults.PREF_AUTOCORRECTION_RIGHT_OF_TYPED_WORD)
         mAutoCorrectionThreshold = if (mAutoCorrectEnabled) prefs.getFloat(Settings.PREF_AUTO_CORRECT_THRESHOLD, Defaults.PREF_AUTO_CORRECT_THRESHOLD) else Float.MAX_VALUE
         mScoreLimitForAutocorrect = if (mAutoCorrectionThreshold < 0) 600000 else (if (mAutoCorrectionThreshold < 0.07f) 800000 else 950000)
         mAutoCorrectShortcuts = prefs.getBoolean(Settings.PREF_AUTOCORRECT_SHORTCUTS, Defaults.PREF_AUTOCORRECT_SHORTCUTS)
