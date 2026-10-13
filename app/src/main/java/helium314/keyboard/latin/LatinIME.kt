@@ -517,6 +517,7 @@ class LatinIME : InputMethodService(),
             override fun onSetCandidateStripVisibility(visible: Boolean) {
                 if (visible) {
                     suggestionStripView?.visibility = View.GONE
+                    cjkCandidateStripView?.applyTheme()
                     cjkCandidateStripView?.visibility = View.VISIBLE
                 } else {
                     cjkCandidateStripView?.visibility = View.GONE

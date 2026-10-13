@@ -16,13 +16,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="12sp"
-        android:textColor="?android:attr/textColorSecondary"
         android:paddingEnd="4dp" />
 
     <TextView
         android:id="@+id/cjk_candidate_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="17sp"
-        android:textColor="?android:attr/textColorPrimary" />
+        android:textSize="17sp" />
 </LinearLayout>

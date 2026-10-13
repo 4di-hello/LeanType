@@ -12,7 +12,6 @@
         android:paddingEnd="12dp"
         android:textStyle="bold"
         android:textSize="14sp"
-        android:textColor="?android:attr/textColorPrimary"
         android:singleLine="true"
         android:visibility="gone" />
 
@@ -21,8 +20,6 @@
         android:layout_width="1dp"
         android:layout_height="22dp"
         android:layout_gravity="center_vertical"
-        android:background="?android:attr/textColorSecondary"
-        android:alpha="0.25"
         android:visibility="gone" />
 
     <!-- Horizontally scrollable candidate list -->
