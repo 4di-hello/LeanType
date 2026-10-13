@@ -18,6 +18,7 @@ import java.util.zip.ZipFile
  */
 object CjkPluginLoader {
     private const val CURRENT_INTERFACE_VERSION = 1
+    private const val PLUGIN_PACKAGE_NAME = "com.leanbitlab.leantype.cjk.plugin"
     private const val PLUGIN_FILENAME = "cjk_plugin.apk"
     private const val PLUGIN_CLASS_NAME = "com.leanbitlab.leantype.cjk.plugin.CjkEngineImpl"
     private const val PREF_HAS_PLUGIN = "pref_cjk_has_plugin"
@@ -37,11 +38,24 @@ object CjkPluginLoader {
         return "arm64-v8a"
     }
 
+    fun getInstalledPluginApk(context: Context): File? {
+        return try {
+            val pkgInfo = context.packageManager.getPackageInfo(PLUGIN_PACKAGE_NAME, 0)
+            val path = pkgInfo.applicationInfo?.sourceDir
+            if (!path.isNullOrEmpty()) {
+                val file = File(path)
+                if (file.exists() && file.length() > 0L) file else null
+            } else null
+        } catch (_: Exception) {
+            null
+        }
+    }
+
     fun hasPlugin(context: Context): Boolean {
-        val has = context.prefs().getBoolean(PREF_HAS_PLUGIN, false)
-        if (!has) return false
+        if (getInstalledPluginApk(context) != null) return true
         val apkFile = File(context.filesDir, PLUGIN_FILENAME)
-        return apkFile.exists() && apkFile.length() > 0
+        if (apkFile.exists() && apkFile.length() > 0L) return true
+        return context.prefs().getBoolean(PREF_HAS_PLUGIN, false)
     }
 
     fun isMockEnabled(context: Context): Boolean {
@@ -56,19 +70,29 @@ object CjkPluginLoader {
         val cached = activeEngine
         if (cached != null && cached.isAvailable()) return cached
 
-        // 1. Try loading companion plugin from storage
-        if (hasPlugin(context)) {
-            val apkFile = File(context.filesDir, PLUGIN_FILENAME)
-            if (apkFile.exists()) {
-                val engine = loadEngineInternal(context, apkFile)
-                if (engine != null && engine.isAvailable()) {
-                    activeEngine = engine
-                    return engine
-                }
+        // 1. Try loading companion plugin from installed package
+        val installedApk = getInstalledPluginApk(context)
+        if (installedApk != null) {
+            Log.i(TAG, "Attempting to load CJK engine from installed app package: ${installedApk.absolutePath}")
+            val engine = loadEngineInternal(context, installedApk)
+            if (engine != null && engine.isAvailable()) {
+                activeEngine = engine
+                return engine
             }
         }
 
-        // 2. Fall back to in-memory MockPinyinEngine if mock is enabled
+        // 2. Try loading companion plugin from storage
+        val internalApk = File(context.filesDir, PLUGIN_FILENAME)
+        if (internalApk.exists() && internalApk.length() > 0L) {
+            Log.i(TAG, "Attempting to load CJK engine from internal storage: ${internalApk.absolutePath}")
+            val engine = loadEngineInternal(context, internalApk)
+            if (engine != null && engine.isAvailable()) {
+                activeEngine = engine
+                return engine
+            }
+        }
+
+        // 3. Fall back to in-memory MockPinyinEngine if mock is enabled
         if (isMockEnabled(context)) {
             Log.i(TAG, "Using in-memory MockPinyinEngine fallback")
             val mock = MockPinyinEngine()
@@ -85,11 +109,11 @@ object CjkPluginLoader {
 
     private fun loadEngineInternal(context: Context, apkFile: File): ICjkEngine? {
         return try {
-            // Android 14 W^X compliance: strip write bits from APK before classloading
-            apkFile.setReadOnly()
-
+            val sharedDir = File(context.filesDir, "cjk/shared").apply { mkdirs() }
+            val userDir = File(context.filesDir, "cjk/user").apply { mkdirs() }
             val nativeLibDir = getNativeLibDir(context, apkFile)
-            extractNativeLibs(apkFile, nativeLibDir)
+
+            extractPluginAssetsAndLibs(apkFile, nativeLibDir, sharedDir)
 
             val classLoader = PluginClassLoader(
                 apkFile.absolutePath,
@@ -105,9 +129,6 @@ object CjkPluginLoader {
                 Log.w(TAG, "Plugin interface version ${engine.getInterfaceVersion()} newer than host $CURRENT_INTERFACE_VERSION")
                 return null
             }
-
-            val sharedDir = File(context.filesDir, "cjk/shared").apply { mkdirs() }
-            val userDir = File(context.filesDir, "cjk/user").apply { mkdirs() }
 
             if (!engine.init(context, sharedDir.absolutePath, userDir.absolutePath)) {
                 Log.w(TAG, "Engine initialization returned false")
@@ -135,8 +156,9 @@ object CjkPluginLoader {
         return targetDir
     }
 
-    private fun extractNativeLibs(apkFile: File, destDir: File) {
-        if (!destDir.exists()) destDir.mkdirs()
+    private fun extractPluginAssetsAndLibs(apkFile: File, destLibDir: File, destSharedDir: File) {
+        if (!destLibDir.exists()) destLibDir.mkdirs()
+        if (!destSharedDir.exists()) destSharedDir.mkdirs()
         try {
             val zip = ZipFile(apkFile)
             val targetAbi = getTargetAbi()
@@ -145,7 +167,7 @@ object CjkPluginLoader {
                 val entry = entries.nextElement()
                 if (entry.name.startsWith("lib/$targetAbi/") && entry.name.endsWith(".so")) {
                     val libName = entry.name.substringAfterLast("/")
-                    val outFile = File(destDir, libName)
+                    val outFile = File(destLibDir, libName)
                     if (!outFile.exists() || outFile.length() != entry.size) {
                         zip.getInputStream(entry).use { input ->
                             java.io.FileOutputStream(outFile).use { output ->
@@ -153,15 +175,26 @@ object CjkPluginLoader {
                             }
                         }
                     }
-                    // Android 14 W^X security: executable, readable, read-only
                     outFile.setReadable(true, false)
                     outFile.setExecutable(true, false)
                     outFile.setReadOnly()
+                } else if (entry.name.endsWith(".dat") && entry.name.contains("dict")) {
+                    val dictName = entry.name.substringAfterLast("/")
+                    val outFile = File(destSharedDir, dictName)
+                    if (!outFile.exists() || outFile.length() != entry.size) {
+                        zip.getInputStream(entry).use { input ->
+                            java.io.FileOutputStream(outFile).use { output ->
+                                input.copyTo(output)
+                            }
+                        }
+                        outFile.setReadable(true, false)
+                        outFile.setReadOnly()
+                    }
                 }
             }
             zip.close()
         } catch (e: Exception) {
-            Log.e(TAG, "Error extracting native libs from CJK plugin", e)
+            Log.e(TAG, "Error extracting native libs and assets from CJK plugin", e)
         }
     }
 
