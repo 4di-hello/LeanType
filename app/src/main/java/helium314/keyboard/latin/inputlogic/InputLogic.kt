@@ -20,6 +20,7 @@ import android.view.inputmethod.EditorInfo
 import helium314.keyboard.compat.AppQuirksManager
 import helium314.keyboard.event.Event
 import helium314.keyboard.event.InputTransaction
+import helium314.keyboard.latin.cjk.CjkInputManager
 import helium314.keyboard.keyboard.Keyboard
 import helium314.keyboard.keyboard.KeyboardActionListenerImpl
 import helium314.keyboard.keyboard.KeyboardId
@@ -1900,6 +1901,9 @@ class InputLogic(
     }
 
     fun performUpdateSuggestionStripSync(settingsValues: SettingsValues, inputStyle: Int) {
+        if (CjkInputManager.getInstance(mLatinIME).isCjkSubtypeActive(mLatinIME.richImm.currentSubtype)) {
+            return
+        }
         var startTimeMillis = 0L
         if (DebugFlags.DEBUG_ENABLED) {
             startTimeMillis = System.currentTimeMillis()
@@ -1968,6 +1972,9 @@ class InputLogic(
     }
 
     fun restartSuggestionsOnWordTouchedByCursor(settingsValues: SettingsValues) {
+        if (CjkInputManager.getInstance(mLatinIME).isCjkSubtypeActive(mLatinIME.richImm.currentSubtype)) {
+            return
+        }
         val currentKeyboardScript = settingsValues.mCurrentKeyboardScript
         if (!settingsValues.mSpacingAndPunctuations.mCurrentLanguageHasSpaces
             || !settingsValues.needsToLookupSuggestions()

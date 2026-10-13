@@ -521,7 +521,8 @@ class LatinIME : InputMethodService(),
                     cjkCandidateStripView?.visibility = View.VISIBLE
                 } else {
                     cjkCandidateStripView?.visibility = View.GONE
-                    suggestionStripView?.visibility = View.VISIBLE
+                    val hideSuggestionStrip = settings.current.mToolbarMode == ToolbarMode.HIDDEN
+                    suggestionStripView?.visibility = if (hideSuggestionStrip) View.GONE else View.VISIBLE
                 }
             }
         })
@@ -890,6 +891,12 @@ class LatinIME : InputMethodService(),
         }
         
         otpSuggestionManager.start()
+
+        if (CjkInputManager.getInstance(this).isCjkSubtypeActive(richImm.currentSubtype)) {
+            cjkCandidateStripView?.clear()
+            cjkCandidateStripView?.visibility = View.GONE
+            suggestionStripView?.setSuggestions(SuggestedWords.getEmptyInstance(), richImm.currentSubtype.isRtlSubtype)
+        }
 
         if (!handler.hasPendingResumeSuggestions()) {
             handler.cancelUpdateSuggestionStrip()
@@ -1539,8 +1546,12 @@ class LatinIME : InputMethodService(),
 
     private fun hasSuggestionStripView(): Boolean =
         suggestionStripView != null && settings.current.mToolbarMode != ToolbarMode.HIDDEN
+            && !CjkInputManager.getInstance(this).isComposing
 
     private fun setSuggestedWords(suggestedWords: SuggestedWords) {
+        if (CjkInputManager.getInstance(this).isCjkSubtypeActive(richImm.currentSubtype)) {
+            return
+        }
         val currentSettingsValues = settings.current
         inputLogic.setSuggestedWords(suggestedWords)
         if (keyboardSwitcher.isGifPickerShowing) return
@@ -1648,6 +1659,7 @@ class LatinIME : InputMethodService(),
             return
         }
         if (cjkManager.isCjkSubtypeActive(richImm.currentSubtype)) {
+            suggestionStripView?.setSuggestions(SuggestedWords.getEmptyInstance(), richImm.currentSubtype.isRtlSubtype)
             suggestionStripView?.setToolbarVisibility(!currentSettings.mAutoHideToolbar)
             return
         }
@@ -1693,6 +1705,7 @@ class LatinIME : InputMethodService(),
     }
 
     private fun shouldRequestInitialPredictions(settingsValues: SettingsValues): Boolean {
+        if (CjkInputManager.getInstance(this).isCjkSubtypeActive(richImm.currentSubtype)) return false
         if (!dictionaryFacilitator.hasAtLeastOneInitializedMainDictionary()) return false
         if (!settingsValues.needsToLookupSuggestions()) return false
         
@@ -1991,6 +2004,7 @@ class LatinIME : InputMethodService(),
         fun postUpdateSuggestionStrip(inputStyle: Int) {
             val latinIme = ownerInstance
             if (latinIme != null && latinIme.keyboardSwitcher.isHandwritingShowing) return
+            if (latinIme != null && CjkInputManager.getInstance(latinIme).isCjkSubtypeActive(latinIme.richImm.currentSubtype)) return
             sendMessageDelayed(obtainMessage(MSG_UPDATE_SUGGESTION_STRIP, inputStyle, 0), delayInMillisecondsToUpdateSuggestions.toLong())
         }
 
@@ -2000,6 +2014,7 @@ class LatinIME : InputMethodService(),
             val latinIme = ownerInstance ?: return
             if (latinIme.isCursorGestureActive) return
             if (latinIme.keyboardSwitcher.isHandwritingShowing) return
+            if (CjkInputManager.getInstance(latinIme).isCjkSubtypeActive(latinIme.richImm.currentSubtype)) return
             if (!latinIme.settings.current.needsToLookupSuggestions()) return
             removeMessages(MSG_RESUME_SUGGESTIONS)
             if (shouldDelay) sendMessageDelayed(obtainMessage(MSG_RESUME_SUGGESTIONS), delayInMillisecondsToUpdateSuggestions.toLong())

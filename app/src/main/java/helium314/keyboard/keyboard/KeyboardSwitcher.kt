@@ -47,6 +47,8 @@ import helium314.keyboard.latin.handwriting.HandwritingView
 import helium314.keyboard.latin.ocr.OcrCameraView
 import helium314.keyboard.latin.ocr.OcrResultView
 import helium314.keyboard.latin.settings.Settings
+import helium314.keyboard.latin.cjk.CjkCandidateStripView
+import helium314.keyboard.latin.cjk.CjkInputManager
 import helium314.keyboard.latin.settings.SettingsValues
 import helium314.keyboard.latin.suggestions.SuggestionStripView
 import helium314.keyboard.latin.utils.CapsModeUtils
@@ -76,6 +78,7 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
     private var mOcrStripView: LinearLayout? = null
     private var mOcrStripScrollView: HorizontalScrollView? = null
     private var mSuggestionStripView: SuggestionStripView? = null
+    private var mCjkCandidateStripView: CjkCandidateStripView? = null
     private var mStripContainer: LinearLayout? = null
     private var mClipboardHistoryView: ClipboardHistoryView? = null
     private var mHandwritingView: HandwritingView? = null
@@ -431,7 +434,14 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         mEmojiTabStripView?.visibility = View.GONE
         mClipboardStripScrollView?.visibility = View.GONE
         mOcrStripScrollView?.visibility = View.GONE
-        mSuggestionStripView?.visibility = stripVisibility
+        val isCjkComposing = mLatinIME?.let { CjkInputManager.getInstance(it).isComposing } == true
+        if (isCjkComposing) {
+            mSuggestionStripView?.visibility = View.GONE
+            mCjkCandidateStripView?.visibility = View.VISIBLE
+        } else {
+            mCjkCandidateStripView?.visibility = View.GONE
+            mSuggestionStripView?.visibility = stripVisibility
+        }
         mClipboardHistoryView?.let {
             it.animate()?.cancel()
             it.alpha = 1f
@@ -486,6 +496,7 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         mSuggestionStripView?.visibility = if (splitToolbar) View.VISIBLE else View.GONE
         mStripContainer?.visibility = getSecondaryStripVisibility()
         mClipboardStripScrollView?.visibility = View.GONE
+        mCjkCandidateStripView?.visibility = View.GONE
         mEmojiTabStripView?.visibility = View.VISIBLE
         mClipboardHistoryView?.let {
             it.animate()?.cancel()
@@ -533,6 +544,7 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         mKeyboardView?.animate()?.cancel()
         mKeyboardView?.visibility = View.GONE
         mEmojiTabStripView?.visibility = View.GONE
+        mCjkCandidateStripView?.visibility = View.GONE
         mSuggestionStripView?.visibility = View.GONE
         mStripContainer?.visibility = getSecondaryStripVisibility()
         mClipboardStripScrollView?.let { scrollView ->
@@ -589,6 +601,7 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         (mCurrentInputView as? InputView)?.updateBottomPadding()
         mKeyboardView?.visibility = View.GONE
         mEmojiTabStripView?.visibility = View.GONE
+        mCjkCandidateStripView?.visibility = View.GONE
         mSuggestionStripView?.visibility = View.VISIBLE
         mStripContainer?.visibility = View.VISIBLE
         mClipboardStripScrollView?.visibility = View.GONE
@@ -707,6 +720,7 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
 
     fun hideOcrPanels() {
         mOcrStripScrollView?.visibility = View.GONE
+        mCjkCandidateStripView?.visibility = View.GONE
         mSuggestionStripView?.visibility = View.VISIBLE
         mStripContainer?.visibility = View.VISIBLE
         mOcrCameraView?.let {
@@ -1230,6 +1244,7 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         mOcrStripView = inputView.findViewById(R.id.ocr_strip)
         mOcrStripScrollView = inputView.findViewById(R.id.ocr_strip_scroll_view)
         mSuggestionStripView = inputView.findViewById(R.id.suggestion_strip_view)
+        mCjkCandidateStripView = inputView.findViewById(R.id.cjk_candidate_strip_view)
         mStripContainer = inputView.findViewById(R.id.strip_container)
 
         prefs.registerOnSharedPreferenceChangeListener(mSuggestionStripView)
