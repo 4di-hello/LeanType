@@ -5,7 +5,14 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.heightIn
@@ -120,7 +127,7 @@ fun ColorThemePickerDialog(
                         if (item == "") {
                             AddColorRow(onDismissRequest, userColors, targetScreen, setting.key)
                         } else {
-                            ColorItemRow(onDismissRequest, item, item == selectedColor, item in userColors, targetScreen, setting.key)
+                            ColorItemRow(onDismissRequest, item, item == selectedColor, item in userColors, targetScreen, setting.key, isNight)
                         }
                     }
                 }
@@ -199,7 +206,7 @@ private fun AddColorRow(onDismissRequest: () -> Unit, userColors: Collection<Str
 }
 
 @Composable
-private fun ColorItemRow(onDismissRequest: () -> Unit, item: String, isSelected: Boolean, isUser: Boolean, targetScreen: String, prefKey: String) {
+private fun ColorItemRow(onDismissRequest: () -> Unit, item: String, isSelected: Boolean, isUser: Boolean, targetScreen: String, prefKey: String, isNight: Boolean) {
     val ctx = LocalContext.current
     val prefs = ctx.prefs()
     Row(
@@ -227,6 +234,7 @@ private fun ColorItemRow(onDismissRequest: () -> Unit, item: String, isSelected:
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.weight(1f),
         )
+        ThemeSwatch(item, isNight)
         if (isUser) {
             var showDialog by remember { mutableStateOf(false) }
             DeleteButton { showDialog = true }
@@ -250,6 +258,29 @@ private fun ColorItemRow(onDismissRequest: () -> Unit, item: String, isSelected:
                     }
                 )
         }
+    }
+}
+
+/** Small preview of a color theme: background with a key, a functional key and the accent color */
+@Composable
+private fun ThemeSwatch(themeName: String, isNight: Boolean) {
+    val ctx = LocalContext.current
+    val b = (ctx.getActivity() as? SettingsActivity)?.prefChanged?.collectAsState()
+    val colors = remember(themeName, isNight, b?.value) { KeyboardTheme.getThemeColorsForPreview(themeName, ctx, isNight) } ?: return
+    val shape = RoundedCornerShape(4.dp)
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(3.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .padding(end = 4.dp)
+            .clip(RoundedCornerShape(6.dp))
+            .background(Color(colors.get(ColorType.MAIN_BACKGROUND)))
+            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(6.dp))
+            .padding(5.dp)
+    ) {
+        Box(Modifier.size(width = 14.dp, height = 18.dp).clip(shape).background(Color(colors.get(ColorType.KEY_BACKGROUND))))
+        Box(Modifier.size(width = 14.dp, height = 18.dp).clip(shape).background(Color(colors.get(ColorType.FUNCTIONAL_KEY_BACKGROUND))))
+        Box(Modifier.size(width = 14.dp, height = 18.dp).clip(shape).background(Color(colors.get(ColorType.GESTURE_TRAIL))))
     }
 }
 
