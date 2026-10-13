@@ -151,4 +151,46 @@ class CjkEngineTest {
         )
         assertFalse(manager.isComposing)
     }
+
+    @Test
+    fun testIsCjkSubtypeActiveLanguageRouting() {
+        val context = androidx.test.core.app.ApplicationProvider.getApplicationContext<android.content.Context>()
+        val manager = CjkInputManager.getInstance(context)
+
+        // Chinese subtype should be active
+        val zhSubtype = helium314.keyboard.latin.RichInputMethodSubtype.get(
+            android.view.inputmethod.InputMethodSubtype.InputMethodSubtypeBuilder()
+                .setSubtypeLocale("zh_CN")
+                .setSubtypeExtraValue("KeyboardLayoutSet=MAIN:qwerty,CjkEngine")
+                .build()
+        )
+        assertTrue(manager.isCjkSubtypeActive(zhSubtype))
+
+        // Japanese subtype should be active
+        val jaSubtype = helium314.keyboard.latin.RichInputMethodSubtype.get(
+            android.view.inputmethod.InputMethodSubtype.InputMethodSubtypeBuilder()
+                .setSubtypeLocale("ja_JP")
+                .setSubtypeExtraValue("KeyboardLayoutSet=MAIN:qwerty,CjkEngine")
+                .build()
+        )
+        assertTrue(manager.isCjkSubtypeActive(jaSubtype))
+
+        // Standard Korean subtype without CjkEngine should NOT be captured by CJK manager
+        val koSubtype = helium314.keyboard.latin.RichInputMethodSubtype.get(
+            android.view.inputmethod.InputMethodSubtype.InputMethodSubtypeBuilder()
+                .setSubtypeLocale("ko_KR")
+                .setSubtypeExtraValue("KeyboardLayoutSet=MAIN:korean,CombiningRules=hangul")
+                .build()
+        )
+        assertFalse(manager.isCjkSubtypeActive(koSubtype))
+
+        // English subtype should not be active
+        val enSubtype = helium314.keyboard.latin.RichInputMethodSubtype.get(
+            android.view.inputmethod.InputMethodSubtype.InputMethodSubtypeBuilder()
+                .setSubtypeLocale("en_US")
+                .setSubtypeExtraValue("KeyboardLayoutSet=MAIN:qwerty")
+                .build()
+        )
+        assertFalse(manager.isCjkSubtypeActive(enSubtype))
+    }
 }

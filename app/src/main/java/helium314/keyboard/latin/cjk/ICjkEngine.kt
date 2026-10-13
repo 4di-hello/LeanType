@@ -11,7 +11,17 @@ interface ICjkEngine {
     /**
      * Interface version for backward and forward compatibility.
      */
-    fun getInterfaceVersion(): Int = 1
+    fun getInterfaceVersion(): Int = 2
+
+    /**
+     * Sets the active language or locale (e.g. "zh", "ja", "zh_CN").
+     */
+    fun setLocale(locale: String): Boolean = true
+
+    /**
+     * Returns true if the engine supports composition for the given language tag.
+     */
+    fun supportsLanguage(language: String): Boolean = language == "zh"
 
     /**
      * Initializes the composition engine with shared schemas and user data storage paths.

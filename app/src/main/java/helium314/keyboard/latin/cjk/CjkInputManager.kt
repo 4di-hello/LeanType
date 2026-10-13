@@ -21,6 +21,7 @@ class CjkInputManager private constructor(private val context: Context) {
     }
 
     private var uiListener: CjkUiListener? = null
+    private var activeLocale: String? = null
     var isComposing: Boolean = false
         internal set
 
@@ -29,16 +30,18 @@ class CjkInputManager private constructor(private val context: Context) {
     }
 
     /**
-     * Checks if the currently active subtype is a CJK subtype (Chinese, Japanese, or Korean),
+     * Checks if the currently active subtype is a CJK subtype (Chinese or Japanese),
      * or uses a layout specifically designed for CJK composition.
+     * Note: Korean (ko) uses native HangulCombiner unless an explicit CjkEngine extra value is present.
      */
     fun isCjkSubtypeActive(subtype: RichInputMethodSubtype?): Boolean {
         if (subtype == null) return false
+        if (subtype.hasExtraValue("CjkEngine")) return true
         val lang = subtype.locale.language.lowercase()
-        if (lang == "zh" || lang == "ja" || lang == "ko") return true
+        if (lang == "zh" || lang == "ja") return true
         val layout = subtype.mainLayoutName.lowercase()
         if (layout.contains("pinyin") || layout.contains("wubi") || layout.contains("romaji")) return true
-        return subtype.hasExtraValue("CjkEngine")
+        return false
     }
 
     /**
@@ -53,6 +56,13 @@ class CjkInputManager private constructor(private val context: Context) {
             Log.w(TAG, "onEvent: CJK subtype active (${subtype?.locale}) but engine is not available")
             return false
         }
+
+        val lang = subtype?.locale?.language?.lowercase() ?: "zh"
+        if (activeLocale != lang) {
+            engine.setLocale(lang)
+            activeLocale = lang
+        }
+
         val keysym = KeycodeTranslator.toKeysym(event)
         if (keysym == 0) return false
 
