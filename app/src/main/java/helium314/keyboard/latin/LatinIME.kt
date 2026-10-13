@@ -831,8 +831,13 @@ class LatinIME : InputMethodService(),
             if (needToCallLoadKeyboardLater) switcher.saveKeyboardState()
         } else if (restarting) {
             if (!switcher.isSecondaryViewShowing) {
-                switcher.resetKeyboardStateToAlphabet(currentAutoCapsState, currentRecapitalizeState)
-                switcher.requestUpdatingShiftState(currentAutoCapsState, currentRecapitalizeState)
+                if (isTransientFocusTypeNull(editorInfo)) {
+                    switcher.resetKeyboardStateToAlphabet(Constants.TextUtils.CAP_MODE_OFF, currentRecapitalizeState)
+                    switcher.requestUpdatingShiftState(Constants.TextUtils.CAP_MODE_OFF, currentRecapitalizeState)
+                } else {
+                    switcher.resetKeyboardStateToAlphabet(currentAutoCapsState, currentRecapitalizeState)
+                    switcher.requestUpdatingShiftState(currentAutoCapsState, currentRecapitalizeState)
+                }
             }
         }
         
