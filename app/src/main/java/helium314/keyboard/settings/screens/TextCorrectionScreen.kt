@@ -28,6 +28,7 @@ import helium314.keyboard.latin.utils.getActivity
 import helium314.keyboard.latin.utils.prefs
 import helium314.keyboard.settings.SearchSettingsScreen
 import helium314.keyboard.settings.Setting
+import helium314.keyboard.settings.SettingsWithoutKey
 import helium314.keyboard.settings.SettingsActivity
 import helium314.keyboard.settings.Theme
 import helium314.keyboard.settings.initPreview
@@ -84,7 +85,14 @@ fun TextCorrectionScreen(
             Settings.PREF_ABC_AFTER_SYMBOL_SPACE,
             Settings.PREF_ABC_AFTER_NUMPAD_SPACE,
             Settings.PREF_ABC_AFTER_EMOJI,
-            Settings.PREF_ABC_AFTER_CLIP
+            Settings.PREF_ABC_AFTER_CLIP,
+
+            // Typing heatmap
+            R.string.typing_heatmap_category,
+            Settings.PREF_TYPING_HEATMAP,
+            Settings.PREF_TYPING_ADAPT,
+            Settings.PREF_TYPING_ADAPT_STRENGTH,
+            SettingsWithoutKey.SCREEN_NAV_TYPING_HEATMAP
         )
     }
 
@@ -96,6 +104,30 @@ fun TextCorrectionScreen(
 }
 
 fun createCorrectionSettings(context: Context) = listOf(
+    Setting(context, Settings.PREF_TYPING_HEATMAP, R.string.typing_heatmap_collect, R.string.typing_heatmap_collect_summary) {
+        SwitchPreference(it, Defaults.PREF_TYPING_HEATMAP)
+    },
+    Setting(context, Settings.PREF_TYPING_ADAPT, R.string.typing_adapt, R.string.typing_adapt_summary) {
+        SwitchPreference(it, Defaults.PREF_TYPING_ADAPT)
+    },
+    Setting(context, Settings.PREF_TYPING_ADAPT_STRENGTH, R.string.typing_adapt_strength) { setting ->
+        SliderPreference(
+            name = setting.title,
+            key = setting.key,
+            default = Defaults.PREF_TYPING_ADAPT_STRENGTH,
+            range = 1f..5f,
+            stepSize = 1,
+            description = { value ->
+                when (value) {
+                    1 -> stringResource(R.string.typing_adapt_strength_1)
+                    2 -> stringResource(R.string.typing_adapt_strength_2)
+                    3 -> stringResource(R.string.typing_adapt_strength_3)
+                    4 -> stringResource(R.string.typing_adapt_strength_4)
+                    else -> stringResource(R.string.typing_adapt_strength_5)
+                }
+            }
+        )
+    },
 
     Setting(context, Settings.PREF_BLOCK_POTENTIALLY_OFFENSIVE,
         R.string.prefs_block_potentially_offensive_title, R.string.prefs_block_potentially_offensive_summary
