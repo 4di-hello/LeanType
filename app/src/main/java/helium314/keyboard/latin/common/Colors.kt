@@ -106,7 +106,19 @@ interface Colors {
 private val appliedRadii = java.util.WeakHashMap<Drawable, Float>()
 
 @RequiresApi(Build.VERSION_CODES.S)
-class DynamicColors(context: Context, override val themeStyle: String, override val hasKeyBorders: Boolean, private var keyboardBackground: Drawable? = null) : Colors {
+class DynamicColors(
+    context: Context,
+    override val themeStyle: String,
+    override val hasKeyBorders: Boolean,
+    private var keyboardBackground: Drawable? = null,
+    /** [VARIANT_DEFAULT], [VARIANT_SUBTLE] (neutral functional keys) or [VARIANT_VIVID] (tinted background and keys) */
+    private val variant: Int = VARIANT_DEFAULT,
+) : Colors {
+    companion object {
+        const val VARIANT_DEFAULT = 0
+        const val VARIANT_SUBTLE = 1
+        const val VARIANT_VIVID = 2
+    }
 
     companion object {
         fun getFreshContext(context: Context): Context =
@@ -137,12 +149,21 @@ class DynamicColors(context: Context, override val themeStyle: String, override 
         else ContextCompat.getColor(context, android.R.color.system_accent1_600)
     private fun getGesture(context: Context) = if (isNight(context)) accent
         else ContextCompat.getColor(context, android.R.color.system_accent1_600)
-    private fun getBackground(context: Context) = if (isNight(context)) ContextCompat.getColor(context, android.R.color.system_neutral1_900)
-        else ContextCompat.getColor(context, android.R.color.system_neutral1_100)
-    private fun getKeyBackground(context: Context) = if (isNight(context)) ContextCompat.getColor(context, android.R.color.system_neutral1_800)
-        else  ContextCompat.getColor(context, android.R.color.system_neutral1_0)
-    private fun getFunctionalKey(context: Context) = if (isNight(context)) ContextCompat.getColor(context, android.R.color.system_accent2_300)
-        else ContextCompat.getColor(context, android.R.color.system_accent2_200)
+    private fun getBackground(context: Context) = ContextCompat.getColor(context, when {
+        variant == VARIANT_VIVID -> if (isNight(context)) android.R.color.system_accent1_900 else android.R.color.system_accent1_100
+        isNight(context) -> android.R.color.system_neutral1_900
+        else -> android.R.color.system_neutral1_100
+    })
+    private fun getKeyBackground(context: Context) = ContextCompat.getColor(context, when {
+        variant == VARIANT_VIVID -> if (isNight(context)) android.R.color.system_accent1_800 else android.R.color.system_accent1_10
+        isNight(context) -> android.R.color.system_neutral1_800
+        else -> android.R.color.system_neutral1_0
+    })
+    private fun getFunctionalKey(context: Context) = ContextCompat.getColor(context, when (variant) {
+        VARIANT_SUBTLE -> if (isNight(context)) android.R.color.system_neutral2_700 else android.R.color.system_neutral2_200
+        VARIANT_VIVID -> if (isNight(context)) android.R.color.system_accent1_600 else android.R.color.system_accent1_300
+        else -> if (isNight(context)) android.R.color.system_accent2_300 else android.R.color.system_accent2_200
+    })
     private fun getKeyText(context: Context): Int {
         val keyBg = getKeyBackground(context)
         if (isNight(context)) {
