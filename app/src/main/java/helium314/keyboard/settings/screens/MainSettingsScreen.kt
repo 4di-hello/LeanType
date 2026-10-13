@@ -142,12 +142,14 @@ fun MainSettingsScreen(
                         if (BuildConfig.FLAVOR == "standard" || BuildConfig.FLAVOR == "standardfull") {
                             Preference(
                                 name = stringResource(R.string.settings_screen_ai_integration),
+                                description = stringResource(R.string.main_summary_ai),
                                 onClick = onClickAIIntegration,
                                 icon = R.drawable.ic_proofread
                             ) { NextScreenIcon() }
                         }
                         Preference(
                             name = stringResource(R.string.plugins_title),
+                            description = stringResource(R.string.main_summary_plugins),
                             onClick = onClickLibraries,
                             icon = R.drawable.ic_emoji_objects
                         ) { NextScreenIcon() }
@@ -159,16 +161,19 @@ fun MainSettingsScreen(
                         ) { NextScreenIcon() }
                         Preference(
                             name = stringResource(R.string.settings_screen_preferences),
+                            description = stringResource(R.string.main_summary_preferences),
                             onClick = onClickPreferences,
                             icon = R.drawable.ic_settings_preferences
                         ) { NextScreenIcon() }
                         Preference(
                             name = stringResource(R.string.settings_screen_appearance),
+                            description = stringResource(R.string.main_summary_appearance),
                             onClick = onClickAppearance,
                             icon = R.drawable.ic_settings_appearance
                         ) { NextScreenIcon() }
                         Preference(
                             name = stringResource(R.string.settings_screen_toolbar),
+                            description = stringResource(R.string.main_summary_toolbar),
                             onClick = onClickToolbar,
                             icon = R.drawable.ic_settings_toolbar
                         ) { NextScreenIcon() }
@@ -187,21 +192,25 @@ fun MainSettingsScreen(
                     Column {
                         Preference(
                             name = stringResource(R.string.settings_screen_gesture),
+                            description = stringResource(R.string.main_summary_gesture),
                             onClick = onClickGestureTyping,
                             icon = R.drawable.ic_settings_gesture
                         ) { NextScreenIcon() }
                         Preference(
                             name = stringResource(R.string.settings_screen_correction),
+                            description = stringResource(R.string.main_summary_correction),
                             onClick = onClickTextCorrection,
                             icon = R.drawable.ic_settings_correction
                         ) { NextScreenIcon() }
                         Preference(
                             name = stringResource(R.string.settings_screen_suggestions),
+                            description = stringResource(R.string.main_summary_suggestions),
                             onClick = onClickSuggestions,
                             icon = R.drawable.ic_settings_suggestions
                         ) { NextScreenIcon() }
                         Preference(
                             name = stringResource(R.string.text_expander_title),
+                            description = stringResource(R.string.main_summary_text_expander),
                             onClick = { helium314.keyboard.settings.SettingsDestination.navigateTo(helium314.keyboard.settings.SettingsDestination.TextExpander) },
                             icon = R.drawable.ic_edit
                         ) { NextScreenIcon() }
@@ -220,6 +229,7 @@ fun MainSettingsScreen(
                     Column {
                         Preference(
                             name = stringResource(R.string.settings_screen_advanced),
+                            description = stringResource(R.string.main_summary_advanced),
                             onClick = onClickAdvanced,
                             icon = R.drawable.ic_settings_advanced
                         ) { NextScreenIcon() }
