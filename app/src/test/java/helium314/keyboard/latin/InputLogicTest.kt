@@ -386,6 +386,34 @@ class InputLogicTest {
         assertEquals("hello ", text)
     }
 
+    @Test fun `capitalization changed with shift is remembered`() {
+        reset()
+        latinIME.prefs().edit {
+            putBoolean(Settings.PREF_SHIFT_RECAPITALIZES_WORD, true)
+            putBoolean(Settings.PREF_LEARN_CASING, true)
+        }
+        fun rawInput(c: Char) {
+            latinIME.onEvent(Event.createEventForCodePointFromUnknownSource(c.code))
+            handleMessages()
+        }
+        repeat(2) {
+            chainInput("hzd")
+            shiftTap()
+            shiftTap()
+            input(' ')
+        }
+        assertEquals("HZD HZD ", text)
+        assertEquals("HZD", LearnedCasing.learnedFormFor(latinIME.prefs(), "hzd"))
+        // now typed normally, it is written in the learned form
+        chainInput("hzd")
+        rawInput(' ')
+        assertEquals("HZD HZD HZD ", text)
+        // backspace reverts it and forgets it
+        functionalKeyPress(KeyCode.DELETE)
+        assertEquals("HZD HZD hzd", text)
+        assertEquals(null, LearnedCasing.learnedFormFor(latinIME.prefs(), "hzd"))
+    }
+
     @Test fun `shift at end of word does not change the word by default`() {
         reset()
         chainInput("hello")

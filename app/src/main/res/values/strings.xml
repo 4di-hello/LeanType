@@ -2418,4 +2418,11 @@ New dictionary:
     <string name="gif_no_recent_items">No recent items</string>
     <string name="gif_manage_local_media">Manage Local Media</string>
     <string name="gif_get_api_key">Get API key</string>
+    <string name="learn_casing">Remember capitalization</string>
+    <string name="learn_casing_summary">When you change a word with shift the same way twice (e.g. du → Du, hzd → HZD), it is written like this automatically. Backspace right after it reverts and forgets it</string>
+    <string name="learned_casing">Remembered capitalization</string>
+    <string name="learned_casing_summary">%1$d in use, %2$d learning</string>
+    <string name="learned_casing_empty">Nothing remembered yet.</string>
+    <string name="learned_casing_not_yet">Learning: used automatically after one more time</string>
+    <string name="learned_casing_forget_all">Forget all</string>
 </resources>
