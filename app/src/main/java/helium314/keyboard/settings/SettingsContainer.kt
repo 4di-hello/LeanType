@@ -41,11 +41,22 @@ class SettingsContainer(context: Context) {
     //  don't show disabled settings -> users confused
     //  show as disabled (i.e. no interaction possible) -> users confused
     //  show, but change will not do anything because another setting needs to be enabled first -> probably best
+    /** additional search words for some settings, e.g. "color" for the theme, see R.array.settings_search_keywords */
+    private val keywords: Map<String, List<String>> = runCatching {
+        context.resources.getStringArray(R.array.settings_search_keywords).mapNotNull { entry ->
+            val key = entry.substringBefore('|', "").trim()
+            if (key.isEmpty()) null
+            else key to entry.substringAfter('|').lowercase().split(' ', ',').filter { it.isNotBlank() }
+        }.groupBy({ it.first }, { it.second }).mapValues { (_, lists) -> lists.flatten() }
+    }.getOrDefault(emptyMap())
+
     fun filter(searchTerm: String): List<Setting> {
-        val term = searchTerm.lowercase()
+        val term = searchTerm.lowercase().trim()
         val titleMatch = mutableListOf<Setting>()
         val titleWordMatch = mutableListOf<Setting>()
         val descriptionMatch = mutableListOf<Setting>()
+        val keywordMatch = mutableListOf<Setting>()
+        val partialMatch = mutableListOf<Setting>()
 
         list.forEach { setting ->
             val titleLower = setting.titleLower
@@ -55,10 +66,15 @@ class SettingsContainer(context: Context) {
                 titleWordMatch.add(setting)
             } else if (setting.descriptionWords?.any { it.startsWith(term) } == true) {
                 descriptionMatch.add(setting)
+            } else if (keywords[setting.key]?.any { it.startsWith(term) } == true) {
+                keywordMatch.add(setting)
+            } else if (term.length >= 3 && (titleLower.contains(term) || setting.descriptionLower?.contains(term) == true)) {
+                // parts of compound words, e.g. "taste" in "Löschtaste"
+                partialMatch.add(setting)
             }
         }
 
-        return titleMatch + titleWordMatch + descriptionMatch
+        return titleMatch + titleWordMatch + descriptionMatch + keywordMatch + partialMatch
     }
 }
 
@@ -84,7 +100,8 @@ class Setting(
 
     val titleLower = title.lowercase()
     val titleWords = titleLower.split(' ')
-    val descriptionWords = description?.lowercase()?.split(' ')
+    val descriptionLower = description?.lowercase()
+    val descriptionWords = descriptionLower?.split(' ')
 
     @Composable
     fun Preference() {
