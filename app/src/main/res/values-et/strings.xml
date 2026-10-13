@@ -1719,4 +1719,8 @@ Võimaldab seadmesisese GGUF / llama.cpp järelduse korrektuuri ja ümbersõnast
     <string name="backup_api_keys_warning_confirm">Kaasake API võtmed</string>
     <string name="gif_get_api_key">Hankige API võti</string>
     <string name="gif_provider_disabled">Välja lülitatud</string>
+    <string name="translation_custom_language_label">Keele nimi või kood (nt esperanto, malajalami, de)</string>
+    <string name="translation_custom_target_language_title">Kohandatud sihtkeel</string>
+    <string name="offline_system_instruction_title">Süsteemi juhised</string>
+    <string name="offline_translate_system_instruction_title">Tõlgi süsteemijuhised</string>
 </resources>

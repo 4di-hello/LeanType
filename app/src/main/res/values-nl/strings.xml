@@ -1772,4 +1772,8 @@ Maakt GGUF / llama.cpp-inferentie op het apparaat mogelijk voor proeflezen en he
     <string name="backup_api_keys_warning_confirm">Inclusief API-sleutels</string>
     <string name="gif_get_api_key">API-sleutel ophalen</string>
     <string name="gif_provider_disabled">Uitgeschakeld</string>
+    <string name="translation_custom_language_label">Taalnaam of code (bijv. Esperanto, Malayalam, de)</string>
+    <string name="translation_custom_target_language_title">Aangepaste doeltaal</string>
+    <string name="offline_system_instruction_title">Systeeminstructie</string>
+    <string name="offline_translate_system_instruction_title">Vertaal systeeminstructie</string>
 </resources>

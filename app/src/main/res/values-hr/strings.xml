@@ -1712,4 +1712,8 @@ Omogućuje lokalno GGUF / llama.cpp zaključivanje na uređaju za lekturu i prep
     <string name="backup_api_keys_warning_confirm">Uključi API ključeve</string>
     <string name="gif_get_api_key">Nabavite API ključ</string>
     <string name="gif_provider_disabled">Isključeno</string>
+    <string name="translation_custom_language_label">Naziv ili kod jezika (npr. esperanto, malajalam, de)</string>
+    <string name="translation_custom_target_language_title">Prilagođeni ciljni jezik</string>
+    <string name="offline_system_instruction_title">Upute za sustav</string>
+    <string name="offline_translate_system_instruction_title">Prevedite upute sustava</string>
 </resources>

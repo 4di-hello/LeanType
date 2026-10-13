@@ -1790,4 +1790,8 @@
     <string name="backup_api_keys_warning_confirm">API കീകൾ ഉൾപ്പെടുത്തുക</string>
     <string name="gif_get_api_key">API കീ നേടുക</string>
     <string name="gif_provider_disabled">പ്രവർത്തനരഹിതമാക്കി</string>
+    <string name="translation_custom_language_label">ഭാഷയുടെ പേര് അല്ലെങ്കിൽ കോഡ് (ഉദാ. Esperanto, Malayalam, de)</string>
+    <string name="translation_custom_target_language_title">ഇഷ്‌ടാനുസൃത ടാർഗെറ്റ് ഭാഷ</string>
+    <string name="offline_system_instruction_title">സിസ്റ്റം നിർദ്ദേശം</string>
+    <string name="offline_translate_system_instruction_title">സിസ്റ്റം നിർദ്ദേശങ്ങൾ വിവർത്തനം ചെയ്യുക</string>
 </resources>

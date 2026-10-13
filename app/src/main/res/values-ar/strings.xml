@@ -1795,4 +1795,8 @@
     <string name="backup_api_keys_warning_confirm">تضمين مفاتيح API</string>
     <string name="gif_get_api_key">احصل على مفتاح API</string>
     <string name="gif_provider_disabled">معطّل</string>
+    <string name="translation_custom_language_label">اسم اللغة أو رمزها (مثل الإسبرانتو، المالايالامية، de)</string>
+    <string name="translation_custom_target_language_title">لغة الهدف المخصصة</string>
+    <string name="offline_system_instruction_title">تعليمات النظام</string>
+    <string name="offline_translate_system_instruction_title">ترجمة تعليمات النظام</string>
 </resources>

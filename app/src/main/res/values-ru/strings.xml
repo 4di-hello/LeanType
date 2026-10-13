@@ -1797,4 +1797,8 @@
     <string name="backup_api_keys_warning_confirm">Включить ключи API</string>
     <string name="gif_get_api_key">Получить ключ API</string>
     <string name="gif_provider_disabled">Отключено</string>
+    <string name="translation_custom_language_label">Название или код языка (например, эсперанто, малаялам, де)</string>
+    <string name="translation_custom_target_language_title">Пользовательский целевой язык</string>
+    <string name="offline_system_instruction_title">Системная инструкция</string>
+    <string name="offline_translate_system_instruction_title">Перевести системную инструкцию</string>
 </resources>

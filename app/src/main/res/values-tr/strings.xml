@@ -1720,4 +1720,8 @@ Metin düzeltme ve yeniden yazma için cihaz üzerinde GGUF / llama.cpp çıkar�
     <string name="backup_api_keys_warning_confirm">API Anahtarlarını Ekle</string>
     <string name="gif_get_api_key">API anahtarını alın</string>
     <string name="gif_provider_disabled">Devre dışı</string>
+    <string name="translation_custom_language_label">Dil adı veya kodu (örn. Esperanto, Malayalam, de)</string>
+    <string name="translation_custom_target_language_title">Özel Hedef Dil</string>
+    <string name="offline_system_instruction_title">Sistem Talimatı</string>
+    <string name="offline_translate_system_instruction_title">Sistem Talimatını Çevir</string>
 </resources>

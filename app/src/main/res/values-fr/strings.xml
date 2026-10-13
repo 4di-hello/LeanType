@@ -1786,4 +1786,8 @@ Permet l\'inférence GGUF / llama.cpp sur l\'appareil pour la correction et la r
     <string name="backup_api_keys_warning_confirm">Inclure les clés API</string>
     <string name="gif_get_api_key">Obtenir la clé API</string>
     <string name="gif_provider_disabled">Désactivé</string>
+    <string name="translation_custom_language_label">Nom ou code de la langue (par exemple, espéranto, malayalam, de)</string>
+    <string name="translation_custom_target_language_title">Langue cible personnalisée</string>
+    <string name="offline_system_instruction_title">Instructions du système</string>
+    <string name="offline_translate_system_instruction_title">Traduire les instructions système</string>
 </resources>

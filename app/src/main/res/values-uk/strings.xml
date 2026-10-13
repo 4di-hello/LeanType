@@ -1692,4 +1692,8 @@
     <string name="backup_api_keys_warning_confirm">Включити ключі API</string>
     <string name="gif_get_api_key">Отримайте ключ API</string>
     <string name="gif_provider_disabled">Вимкнено</string>
+    <string name="translation_custom_language_label">Назва або код мови (наприклад, есперанто, малаялам, de)</string>
+    <string name="translation_custom_target_language_title">Власна цільова мова</string>
+    <string name="offline_system_instruction_title">Системна інструкція</string>
+    <string name="offline_translate_system_instruction_title">Перекласти системну інструкцію</string>
 </resources>

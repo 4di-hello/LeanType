@@ -1797,4 +1797,8 @@ Abilita l\'inferenza GGUF / llama.cpp sul dispositivo per correzione e riscrittu
     <string name="backup_api_keys_warning_confirm">Includi chiavi API</string>
     <string name="gif_get_api_key">Ottieni la chiave API</string>
     <string name="gif_provider_disabled">Disabilitato</string>
+    <string name="translation_custom_language_label">Nome o codice della lingua (ad esempio Esperanto, Malayalam, de)</string>
+    <string name="translation_custom_target_language_title">Lingua di destinazione personalizzata</string>
+    <string name="offline_system_instruction_title">Istruzioni di sistema</string>
+    <string name="offline_translate_system_instruction_title">Tradurre le istruzioni di sistema</string>
 </resources>

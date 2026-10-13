@@ -1687,4 +1687,8 @@ Memungkinkan inferensi GGUF / llama.cpp di perangkat untuk koreksi teks dan penu
     <string name="backup_api_keys_warning_confirm">Sertakan Kunci API</string>
     <string name="gif_get_api_key">Dapatkan kunci API</string>
     <string name="gif_provider_disabled">Dinonaktifkan</string>
+    <string name="translation_custom_language_label">Nama atau kode bahasa (misalnya Esperanto, Malayalam, de)</string>
+    <string name="translation_custom_target_language_title">Bahasa Target Khusus</string>
+    <string name="offline_system_instruction_title">Instruksi Sistem</string>
+    <string name="offline_translate_system_instruction_title">Terjemahkan Instruksi Sistem</string>
 </resources>

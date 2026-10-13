@@ -1716,4 +1716,8 @@
     <string name="backup_api_keys_warning_confirm">एपीआई कुंजियाँ शामिल करें</string>
     <string name="gif_get_api_key">एपीआई कुंजी प्राप्त करें</string>
     <string name="gif_provider_disabled">अक्षम</string>
+    <string name="translation_custom_language_label">भाषा का नाम या कोड (जैसे एस्पेरान्तो, मलयालम, डी)</string>
+    <string name="translation_custom_target_language_title">कस्टम लक्ष्य भाषा</string>
+    <string name="offline_system_instruction_title">सिस्टम अनुदेश</string>
+    <string name="offline_translate_system_instruction_title">सिस्टम अनुदेश का अनुवाद करें</string>
 </resources>

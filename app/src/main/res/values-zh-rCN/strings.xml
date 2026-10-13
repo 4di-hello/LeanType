@@ -1738,4 +1738,8 @@
     <string name="backup_api_keys_warning_confirm">包括 API 密钥</string>
     <string name="gif_get_api_key">获取API密钥</string>
     <string name="gif_provider_disabled">已禁用</string>
+    <string name="translation_custom_language_label">语言名称或代码（例如世界语、马拉雅拉姆语、德语）</string>
+    <string name="translation_custom_target_language_title">自定义目标语言</string>
+    <string name="offline_system_instruction_title">系统说明</string>
+    <string name="offline_translate_system_instruction_title">翻译系统指令</string>
 </resources>

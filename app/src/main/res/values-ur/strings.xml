@@ -1781,4 +1781,8 @@
     <string name="backup_api_keys_warning_confirm">API کیز شامل کریں۔</string>
     <string name="gif_get_api_key">API کلید حاصل کریں۔</string>
     <string name="gif_provider_disabled">غیر فعال</string>
+    <string name="translation_custom_language_label">زبان کا نام یا کوڈ (جیسے ایسپرانٹو، ملیالم، ڈی)</string>
+    <string name="translation_custom_target_language_title">حسب ضرورت ہدف کی زبان</string>
+    <string name="offline_system_instruction_title">سسٹم کی ہدایات</string>
+    <string name="offline_translate_system_instruction_title">سسٹم کی ہدایات کا ترجمہ کریں۔</string>
 </resources>

@@ -1720,4 +1720,8 @@ Ar norite atnaujinti?</string>
     <string name="backup_api_keys_warning_confirm">Įtraukti API raktus</string>
     <string name="gif_get_api_key">Gaukite API raktą</string>
     <string name="gif_provider_disabled">Išjungta</string>
+    <string name="translation_custom_language_label">Kalbos pavadinimas arba kodas (pvz., esperanto, malajalių, de)</string>
+    <string name="translation_custom_target_language_title">Tinkinta tikslinė kalba</string>
+    <string name="offline_system_instruction_title">Sistemos instrukcija</string>
+    <string name="offline_translate_system_instruction_title">Išversti sistemos instrukcijas</string>
 </resources>

@@ -1790,4 +1790,8 @@
     <string name="backup_api_keys_warning_confirm">Συμπεριλάβετε κλειδιά API</string>
     <string name="gif_get_api_key">Λήψη κλειδιού API</string>
     <string name="gif_provider_disabled">Απενεργοποιημένο</string>
+    <string name="translation_custom_language_label">Όνομα ή κωδικός γλώσσας (π.χ. Εσπεράντο, Μαλαγιαλάμ, ντε)</string>
+    <string name="translation_custom_target_language_title">Προσαρμοσμένη γλώσσα προορισμού</string>
+    <string name="offline_system_instruction_title">Οδηγίες συστήματος</string>
+    <string name="offline_translate_system_instruction_title">Μετάφραση Οδηγιών Συστήματος</string>
 </resources>

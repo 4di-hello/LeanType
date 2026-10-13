@@ -1719,4 +1719,8 @@ Activează inferența GGUF / llama.cpp pe dispozitiv pentru corectură și refor
     <string name="backup_api_keys_warning_confirm">Includeți cheile API</string>
     <string name="gif_get_api_key">Obțineți cheia API</string>
     <string name="gif_provider_disabled">Dezactivat</string>
+    <string name="translation_custom_language_label">Numele sau codul limbii (de exemplu, Esperanto, Malayalam, de)</string>
+    <string name="translation_custom_target_language_title">Limba țintă personalizată</string>
+    <string name="offline_system_instruction_title">Instrucțiuni de sistem</string>
+    <string name="offline_translate_system_instruction_title">Traduceți instrucțiunile de sistem</string>
 </resources>

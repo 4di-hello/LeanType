@@ -1728,4 +1728,8 @@ Lehetővé teszi az eszközön futó GGUF / llama.cpp következtetést a javít�
     <string name="backup_api_keys_warning_confirm">Tartalmazza az API kulcsokat</string>
     <string name="gif_get_api_key">Szerezze be az API-kulcsot</string>
     <string name="gif_provider_disabled">Letiltva</string>
+    <string name="translation_custom_language_label">Nyelvnév vagy kód (pl. eszperantó, malajálam, de)</string>
+    <string name="translation_custom_target_language_title">Egyéni célnyelv</string>
+    <string name="offline_system_instruction_title">Rendszer utasítás</string>
+    <string name="offline_translate_system_instruction_title">Fordítsa le a rendszer utasításait</string>
 </resources>

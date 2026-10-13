@@ -1739,4 +1739,8 @@
     <string name="backup_api_keys_warning_confirm">כלול מפתחות API</string>
     <string name="gif_get_api_key">קבל מפתח API</string>
     <string name="gif_provider_disabled">מושבת</string>
+    <string name="translation_custom_language_label">שם שפה או קוד (למשל אספרנטו, מלאיאלאם, דה)</string>
+    <string name="translation_custom_target_language_title">שפת יעד מותאמת אישית</string>
+    <string name="offline_system_instruction_title">הוראת מערכת</string>
+    <string name="offline_translate_system_instruction_title">תרגם הוראת מערכת</string>
 </resources>

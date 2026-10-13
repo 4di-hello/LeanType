@@ -1737,4 +1737,8 @@ Umožňuje lokální inferenci GGUF / llama.cpp na zařízení pro korektury a p
     <string name="backup_api_keys_warning_confirm">Zahrnout klíče API</string>
     <string name="gif_get_api_key">Získejte API klíč</string>
     <string name="gif_provider_disabled">Zakázáno</string>
+    <string name="translation_custom_language_label">Název nebo kód jazyka (např. esperanto, malajálamština, de)</string>
+    <string name="translation_custom_target_language_title">Vlastní cílový jazyk</string>
+    <string name="offline_system_instruction_title">Systémová instrukce</string>
+    <string name="offline_translate_system_instruction_title">Přeložit systémové instrukce</string>
 </resources>
