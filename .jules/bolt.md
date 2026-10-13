@@ -21,3 +21,6 @@
 ## 2024-05-18 - Pre-compile Regex in OCR formatting
 **Learning:** `OcrTextFormatter.formatLines` instantiated `Regex` for bullet removal inline every time it was called when `stripBullets` was true. This causes unnecessary allocation and compilation overhead when parsing OCR lines.
 **Action:** Extract frequently used formatting regexes (such as `bulletRegex`) into `object` or companion object private constants (`private val BULLET_REGEX`) to optimize regex reuse and eliminate unnecessary compilation per text parsing operation.
+## 2024-05-18 - Optimize Diacritic Stripping in Suggest
+**Learning:** In `Suggest.isSameIgnoringAccents`, `val DIACRITIC_REGEX = "\\p{M}+".toRegex()` was being used in combination with `Normalizer.normalize` and `replace` to strip accents. This created string allocations via `Normalizer.normalize` and `Regex.replace` even for plain ASCII strings that lack accents, which is a hot path during typing and suggestion processing.
+**Action:** Replace `Regex.replace` with a manual character loop that avoids `Normalizer.normalize` entirely for pure ASCII strings and strips `Character.NON_SPACING_MARK` without regex allocation when normalizing.
