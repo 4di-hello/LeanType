@@ -1734,4 +1734,6 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="backup_api_keys_warning_confirm">API-Schlüssel einschließen</string>
     <string name="gif_get_api_key">Holen Sie sich den API-Schlüssel</string>
     <string name="gif_provider_disabled">Deaktiviert</string>
+    <string name="clipboard_skip_sensitive">Passwörter und Codes nicht speichern</string>
+    <string name="clipboard_skip_sensitive_summary">Als vertraulich markierte Einträge (z. B. aus Passwort-Managern) und Einmalcodes mit 4 bis 8 Ziffern landen nicht im Verlauf. Einfügen funktioniert weiterhin</string>
 </resources>

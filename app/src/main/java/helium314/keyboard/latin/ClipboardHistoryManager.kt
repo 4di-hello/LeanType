@@ -418,6 +418,9 @@ class ClipboardHistoryManager(
             }
             
             if (TextUtils.isEmpty(content) && imageUri == null) return
+            // passwords (marked as sensitive by the copying app) and one-time codes are not kept in the history
+            if (latinIME.mSettings.current.mClipboardSkipSensitive && imageUri == null
+                && isSensitiveForHistory(clipData.description, content)) return
             clipboardDao?.addClip(timeStamp, false, content, imageUri)
         }
     }
@@ -583,6 +586,10 @@ class ClipboardHistoryManager(
         if (clipData.itemCount == 0) return ""
         return clipData.getItemAt(0)?.coerceToText(latinIME) ?: ""
     }
+
+    /** Clip marked as sensitive (e.g. by password managers), or a one-time code (4 to 8 digits) */
+    private fun isSensitiveForHistory(description: android.content.ClipDescription?, content: String): Boolean =
+        ClipboardManagerCompat.getClipSensitivity(description) == true || isOneTimeCode(content)
 
     private fun isClipSensitive(inputType: Int): Boolean {
         ClipboardManagerCompat.getClipSensitivity(clipboardManager.primaryClip?.description)?.let { return it }
@@ -801,5 +808,8 @@ class ClipboardHistoryManager(
     companion object {
         const val RECENT_TIME_MILLIS = 1 * 60 * 1000L // 1 minute (for clipboard suggestions)
         const val RECENT_SCREENSHOT_TIME_MILLIS = 5 * 60 * 1000L // 5 minutes
+        private val ONE_TIME_CODE = Regex("\\d{4,8}")
+        fun isOneTimeCode(text: String) = ONE_TIME_CODE.matches(text.trim())
     }
+
 }
