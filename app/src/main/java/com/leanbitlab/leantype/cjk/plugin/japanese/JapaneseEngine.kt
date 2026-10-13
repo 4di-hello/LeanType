@@ -125,7 +125,7 @@ class JapaneseEngine(private val dictionary: JapaneseDictionary) {
             val dictCands = dictionary.lookup(queryReading, MAX_DICT_CANDIDATES)
             for (c in dictCands) {
                 if (candidateList.none { it.text == c }) {
-                    candidateList.add(CjkCandidate(candIndex++, c))
+                    candidateList.add(CjkCandidate(candIndex++, c, null))
                 }
             }
         }
@@ -133,33 +133,33 @@ class JapaneseEngine(private val dictionary: JapaneseDictionary) {
         // 2. Hiragana representation
         val hiraganaText = conv.kana + if (conv.pending == "n") "ん" else ""
         if (hiraganaText.isNotEmpty() && candidateList.none { it.text == hiraganaText }) {
-            candidateList.add(CjkCandidate(candIndex++, hiraganaText))
+            candidateList.add(CjkCandidate(candIndex++, hiraganaText, null))
         }
 
         // 3. Full-width Katakana
         if (hiraganaText.isNotEmpty()) {
             val katakanaText = KanaUtils.hiraganaToKatakana(hiraganaText)
             if (katakanaText.isNotEmpty() && candidateList.none { it.text == katakanaText }) {
-                candidateList.add(CjkCandidate(candIndex++, katakanaText))
+                candidateList.add(CjkCandidate(candIndex++, katakanaText, null))
             }
 
             // 4. Half-width Katakana
             val halfKatakana = KanaUtils.katakanaToHalfWidth(katakanaText)
             if (halfKatakana.isNotEmpty() && candidateList.none { it.text == halfKatakana }) {
-                candidateList.add(CjkCandidate(candIndex++, halfKatakana))
+                candidateList.add(CjkCandidate(candIndex++, halfKatakana, null))
             }
         }
 
         // 5. Raw Romaji
         val rawRomaji = rawBuffer.toString()
         if (candidateList.none { it.text == rawRomaji }) {
-            candidateList.add(CjkCandidate(candIndex++, rawRomaji))
+            candidateList.add(CjkCandidate(candIndex++, rawRomaji, null))
         }
 
         // 6. Uppercase Romaji
         val upperRomaji = rawRomaji.uppercase()
         if (upperRomaji != rawRomaji && candidateList.none { it.text == upperRomaji }) {
-            candidateList.add(CjkCandidate(candIndex++, upperRomaji))
+            candidateList.add(CjkCandidate(candIndex++, upperRomaji, null))
         }
 
         // 7. Predictive word completions
@@ -168,7 +168,7 @@ class JapaneseEngine(private val dictionary: JapaneseDictionary) {
             for (pred in predictions) {
                 val word = pred.second
                 if (word.isNotEmpty() && candidateList.none { it.text == word }) {
-                    candidateList.add(CjkCandidate(candIndex++, word))
+                    candidateList.add(CjkCandidate(candIndex++, word, null))
                     if (candidateList.size >= MAX_TOTAL_CANDIDATES) break
                 }
             }

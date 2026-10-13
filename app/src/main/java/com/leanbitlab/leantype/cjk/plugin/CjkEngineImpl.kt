@@ -284,7 +284,7 @@ class CjkEngineImpl : ICjkEngine {
         for (i in 0 until maxFetch) {
             val candText = PinyinDecoderJni.nativeGetCandidate(i)
             if (!candText.isNullOrEmpty()) {
-                candidateList.add(CjkCandidate(index = i, text = candText))
+                candidateList.add(CjkCandidate(index = i, text = candText, comment = null))
             }
         }
 

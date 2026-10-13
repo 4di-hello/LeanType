@@ -26,3 +26,5 @@
 
 # Prevent warnings for optional dependencies
 -dontwarn androidx.**
+
+-keep class kotlin.jvm.internal.DefaultConstructorMarker { *; }
