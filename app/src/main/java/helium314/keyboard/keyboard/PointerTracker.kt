@@ -100,6 +100,11 @@ class PointerTracker private constructor(
 
     // true if keyboard layout has been changed.
     private var mKeyboardLayoutHasBeenChanged = false
+
+    // True as long as every keyboard change since the flag above was last reset only dropped the one-shot
+    // (automatic or manual) shift of the same alphabet layout. Such a change must not make us
+    // re-detect the key on release, see detectAndSendKey.
+    private var mOnlyShiftStateHasChanged = true
     private var keyboardChangeOccupiedHeightDifference = 0
 
     // true if this pointer is no longer triggering any action because it has been canceled.
@@ -160,6 +165,7 @@ class PointerTracker private constructor(
             sListener.onPressKey(key.code, repeatCount, getActivePointerTrackerCount() == 1, HapticEvent.KEY_PRESS)
             val keyboardLayoutHasBeenChanged = mKeyboardLayoutHasBeenChanged
             mKeyboardLayoutHasBeenChanged = false
+            mOnlyShiftStateHasChanged = true
             getTimerProxy().startTypingStateTimer(key)
             return keyboardLayoutHasBeenChanged
         }
@@ -243,6 +249,9 @@ class PointerTracker private constructor(
             // since y is measured from top of view, this change needs to be considered in some places
             keyboardChangeOccupiedHeightDifference = keyboard.mOccupiedHeight - oldKeyboard.mOccupiedHeight
         }
+        val onlyShiftStateChanged = oldKeyboard != null && isOnlyShiftStateChange(oldKeyboard, keyboard)
+        mOnlyShiftStateHasChanged = if (mKeyboardLayoutHasBeenChanged) mOnlyShiftStateHasChanged && onlyShiftStateChanged
+                                    else onlyShiftStateChanged
         mKeyDetector = keyDetector
         mKeyboard = keyboard
         // Mark that keyboard layout has been changed.
@@ -251,6 +260,22 @@ class PointerTracker private constructor(
         val keyHeight = keyboard.mMostCommonKeyHeight
         mBatchInputArbiter.setKeyboardGeometry(keyWidth, keyboard.mOccupiedHeight)
         mBogusMoveEventDetector.setKeyboardGeometry(keyWidth, keyHeight)
+    }
+
+    /**
+     * True if [newKb] is the same alphabet keyboard as [oldKb], but the one-shot shift (automatic or manual)
+     * has been dropped. This happens when a second finger touches a key while the first one is still down.
+     * The opposite direction (e.g. chording with the shift key) is not matched, as re-detecting the key
+     * is intended there.
+     */
+    private fun isOnlyShiftStateChange(oldKb: Keyboard, newKb: Keyboard): Boolean {
+        val oldId = oldKb.mId
+        val newId = newKb.mId
+        return newId.mElementId == KeyboardId.ELEMENT_ALPHABET
+                && (oldId.mElementId == KeyboardId.ELEMENT_ALPHABET_AUTOMATIC_SHIFTED
+                    || oldId.mElementId == KeyboardId.ELEMENT_ALPHABET_MANUAL_SHIFTED)
+                && oldId.mSubtype == newId.mSubtype
+                && oldId.mHeight == newId.mHeight
     }
 
     override fun isInDraggingFinger(): Boolean = mIsInDraggingFinger
@@ -529,6 +554,7 @@ class PointerTracker private constructor(
             sInKeySwipe = true
         }
         mKeyboardLayoutHasBeenChanged = false
+        mOnlyShiftStateHasChanged = true
         mIsTrackingForActionDisabled = false
         resetKeySelectionByDraggingFinger()
         if (key != null) {
@@ -1248,7 +1274,10 @@ class PointerTracker private constructor(
             return
         }
 
-        val targetKey = if (mKeyboardLayoutHasBeenChanged && !key.isModifier()) {
+        // Don't re-detect the key if the layout only changed its shift state after this pointer went down.
+        // Otherwise typing fast (second key touched before the first one is released) resets the automatic
+        // shift, and the first key would then be re-detected on the unshifted layout and typed as lower case.
+        val targetKey = if (mKeyboardLayoutHasBeenChanged && !mOnlyShiftStateHasChanged && !key.isModifier()) {
             mKeyDetector.detectHitKey(x, y) ?: key
         } else {
             key
