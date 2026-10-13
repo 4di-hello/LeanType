@@ -25,6 +25,7 @@ SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-only
     <queries>
         <package android:name="com.leanbitlab.leantype.voice.offline" />
         <package android:name="com.leanbitlab.leantype.gif" />
+        <package android:name="com.leanbitlab.leantype.cjk.plugin" />
         <intent>
             <action android:name="android.intent.action.SENDTO" />
             <data android:scheme="sms" />

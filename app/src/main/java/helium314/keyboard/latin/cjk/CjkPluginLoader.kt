@@ -161,10 +161,11 @@ object CjkPluginLoader {
         if (!destSharedDir.exists()) destSharedDir.mkdirs()
         try {
             val zip = ZipFile(apkFile)
-            val targetAbi = getTargetAbi()
-            val entries = zip.entries()
-            while (entries.hasMoreElements()) {
-                val entry = entries.nextElement()
+            val allEntries = zip.entries().asSequence().toList()
+            val targetAbi = Build.SUPPORTED_ABIS.firstOrNull { abi ->
+                allEntries.any { it.name.startsWith("lib/$abi/") && it.name.endsWith(".so") }
+            } ?: getTargetAbi()
+            for (entry in allEntries) {
                 if (entry.name.startsWith("lib/$targetAbi/") && entry.name.endsWith(".so")) {
                     val libName = entry.name.substringAfterLast("/")
                     val outFile = File(destLibDir, libName)
