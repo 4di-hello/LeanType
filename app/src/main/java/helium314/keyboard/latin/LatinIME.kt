@@ -2173,7 +2173,6 @@ class LatinIME : InputMethodService(),
             val latinIme = ownerInstance
             if (latinIme != null && latinIme.keyboardSwitcher.isHandwritingShowing) return
             if (latinIme != null && CjkInputManager.getInstance(latinIme).isCjkSubtypeActive(latinIme.richImm.currentSubtype)) return
-            sendMessageDelayed(obtainMessage(MSG_UPDATE_SUGGESTION_STRIP, inputStyle, 0), delayInMillisecondsToUpdateSuggestions.toLong())
             val delay = latinIme?.settings?.current?.mSuggestionUpdateDelay ?: delayInMillisecondsToUpdateSuggestions
             sendMessageDelayed(obtainMessage(MSG_UPDATE_SUGGESTION_STRIP, inputStyle, 0), delay.toLong())
         }
