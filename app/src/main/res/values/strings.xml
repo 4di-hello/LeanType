@@ -2531,8 +2531,10 @@ New dictionary:
     <string name="learned_casing_empty">Nothing remembered yet.</string>
     <string name="learned_casing_not_yet">Learning: used automatically after one more time</string>
     <string name="learned_casing_forget_all">Forget all</string>
-    <string name="typing_heatmap_history">Misses per week</string>
+    <string name="typing_heatmap_history">Misses and typing speed per week</string>
     <string name="typing_heatmap_history_value">%1$.1f %% (%2$d)</string>
+    <string name="typing_heatmap_wpm">%1$.0f wpm</string>
+    <string name="typing_heatmap_wpm_explanation">Speed in words per minute (5 characters each), counted while typing without longer pauses. Words typed with gestures are not counted.</string>
     <!-- Short descriptions of the entries in the main settings menu, and the keyboard test field -->
     <string name="main_summary_ai">Proofreading, AI keys and models</string>
     <string name="main_summary_plugins">Voice input, handwriting, translation, GIFs, sounds</string>
@@ -2579,4 +2581,31 @@ New dictionary:
         <item>background_image|picture photo wallpaper</item>
         <item>navbar_color|navigation bar buttons</item>
     </string-array>
+    <string name="suggestion_update_delay">Suggestion delay</string>
+    <string name="suggestion_update_delay_summary">Waiting time after a key press before suggestions are updated. Shorter feels more direct, longer can be smoother when typing very fast.</string>
+    <string name="suggestion_update_delay_value">%1$d ms</string>
+    <string name="backup_password">Password (optional)</string>
+    <string name="backup_password_hint">Encrypts the backup. Without the password it cannot be restored.</string>
+    <string name="backup_encrypted_title">Encrypted backup</string>
+    <string name="backup_password_enter">Password of the backup</string>
+    <string name="backup_wrong_password">Wrong password, or the file is damaged. Nothing was changed.</string>
+    <string name="auto_backup_title">Automatic backup</string>
+    <string name="auto_backup_now">Back up now</string>
+    <string name="auto_backup_folder">Folder</string>
+    <string name="auto_backup_no_folder">No folder chosen</string>
+    <string name="auto_backup_choose_folder">Choose folder</string>
+    <string name="auto_backup_interval">How often</string>
+    <string name="auto_backup_off">Off</string>
+    <string name="auto_backup_daily">Daily</string>
+    <string name="auto_backup_weekly">Weekly</string>
+    <string name="auto_backup_keep">Keep the latest backups</string>
+    <string name="auto_backup_password">Password</string>
+    <string name="auto_backup_password_set">Backups are encrypted with your password.</string>
+    <string name="auto_backup_password_not_set">No password: backups are not encrypted and contain no clipboard history.</string>
+    <string name="auto_backup_password_save">Save password</string>
+    <string name="auto_backup_password_remove">Remove password</string>
+    <string name="auto_backup_encrypted">encrypted</string>
+    <string name="auto_backup_error">Last backup failed: %s</string>
+    <string name="auto_backup_last">Last backup: %s</string>
+    <string name="auto_backup_explanation">Backs up settings, layouts, dictionaries, learned words and the typing profile, with a password also the clipboard history. Downloaded models and plugins are not included. Remember the password: without it, backups can\'t be restored.</string>
 </resources>
