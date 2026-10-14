@@ -1566,7 +1566,7 @@ class LatinIME : InputMethodService(),
             noSuggestionsFromDictionaries
         ) {
             suggestionStripView?.setSuggestions(suggestedWords, richImm.currentSubtype.isRtlSubtype)
-            if (currentSettingsValues.mAutoHideToolbar && !noSuggestionsFromDictionaries) {
+            if (currentSettingsValues.mAutoHideToolbar && !noSuggestionsFromDictionaries && inputLogic.isComposingWord) {
                 suggestionStripView?.foldToolbar(!currentSettingsValues.mAutoShowToolbarNoSuggestions)
             } else if (currentSettingsValues.mAutoShowToolbarNoSuggestions && noSuggestionsFromDictionaries) {
                 if (suggestionStripView?.isExternalSuggestionVisible != true) {
@@ -1676,8 +1676,15 @@ class LatinIME : InputMethodService(),
                         suggestionStripView?.let { strip ->
                             if (currentSettings.mAutoShowToolbarOnSelect && inputLogic.connection.hasSelection()) {
                                 strip.setToolbarVisibility(true)
-                            } else if (currentSettings.mAutoShowToolbarOnSelect) {
-                                val shouldShow = if (currentSettings.mAutoHideToolbar) false else strip.isToolbarManuallyOpen
+                            } else {
+                                val shouldShow = when {
+                                    currentSettings.mToolbarMode == ToolbarMode.TOOLBAR_KEYS -> true
+                                    strip.isToolbarManuallyOpen -> true
+                                    currentSettings.mAutoShowToolbar -> true
+                                    currentSettings.mAutoShowToolbarNoSuggestions -> true
+                                    currentSettings.mAutoHideToolbar -> false
+                                    else -> false
+                                }
                                 strip.setToolbarVisibility(shouldShow)
                             }
                         }
@@ -1697,8 +1704,15 @@ class LatinIME : InputMethodService(),
         suggestionStripView?.let { strip ->
             if (currentSettings.mAutoShowToolbarOnSelect && inputLogic.connection.hasSelection()) {
                 strip.setToolbarVisibility(true)
-            } else if (currentSettings.mAutoShowToolbarOnSelect) {
-                val shouldShow = if (currentSettings.mAutoShowToolbarNoSuggestions) true else strip.isToolbarManuallyOpen
+            } else {
+                val shouldShow = when {
+                    currentSettings.mToolbarMode == ToolbarMode.TOOLBAR_KEYS -> true
+                    strip.isToolbarManuallyOpen -> true
+                    currentSettings.mAutoShowToolbar -> true
+                    currentSettings.mAutoShowToolbarNoSuggestions -> true
+                    currentSettings.mAutoHideToolbar -> false
+                    else -> false
+                }
                 strip.setToolbarVisibility(shouldShow)
             }
         }
@@ -1771,10 +1785,21 @@ class LatinIME : InputMethodService(),
         }
     }
 
+    /** Haptic and audio feedback when holding delete removed a word */
+    fun feedbackForDeletedWord() {
+        try {
+            hapticAndAudioFeedback(KeyCode.DELETE, 0, HapticEvent.KEY_PRESS)
+        } catch (e: Exception) {
+            Log.w(TAG, "no feedback for deleted word", e)
+        }
+    }
+
     fun hapticAndAudioFeedback(code: Int, repeatCount: Int, hapticEvent: HapticEvent) {
         val keyboardView = keyboardSwitcher.mainKeyboardView
         if (keyboardView != null && keyboardView.isInDraggingFinger()) return
         
+        // holding delete removes whole words: feedback comes per word, see feedbackForDeletedWord
+        if (repeatCount > 0 && code == KeyCode.DELETE && inputLogic.isBackspaceWordModeActive(mSettings.current)) return
         if (repeatCount > 0) {
             when (code) {
                 KeyCode.DELETE, KeyCode.ARROW_LEFT, KeyCode.ARROW_UP, KeyCode.WORD_LEFT, KeyCode.PAGE_UP -> if (!inputLogic.connection.canDeleteCharacters()) return

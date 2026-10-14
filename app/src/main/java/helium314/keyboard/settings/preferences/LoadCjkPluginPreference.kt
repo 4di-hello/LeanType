@@ -67,7 +67,17 @@ fun LoadCjkPluginPreference(
         ) == android.content.pm.PackageManager.PERMISSION_GRANTED
     }
 
-    val hasPlugin = CjkPluginLoader.hasPlugin(ctx)
+    var hasPlugin by remember { mutableStateOf(CjkPluginLoader.hasPlugin(ctx)) }
+    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+    androidx.compose.runtime.DisposableEffect(lifecycleOwner) {
+        val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+            if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
+                hasPlugin = CjkPluginLoader.hasPlugin(ctx)
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
     val localVersion = remember(hasPlugin) { CjkPluginLoader.getPluginVersion(ctx) }
     val updateAvailable = remember(localVersion, remoteVersion) {
         val remVersion = remoteVersion
@@ -107,6 +117,7 @@ fun LoadCjkPluginPreference(
         showDialog = false
         if (success) {
             FeedbackManager.message(ctx, R.string.cjk_plugin_loaded_restarting)
+            hasPlugin = true
             onSuccess?.invoke()
             if (restartOnSuccess) {
                 scope.launch {
@@ -237,19 +248,22 @@ fun LoadCjkPluginPreference(
                             }
                         }
 
-                        OutlinedButton(
-                            onClick = {
-                                showDialog = false
-                                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-                                    .addCategory(Intent.CATEGORY_OPENABLE)
-                                    .setType("*/*")
-                                try {
-                                    launcher.launch(intent)
-                                } catch (_: Exception) {}
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(stringResource(R.string.cjk_plugin_button_load_storage))
+
+                        if (!hasPlugin) {
+                            OutlinedButton(
+                                onClick = {
+                                    showDialog = false
+                                    val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+                                        .addCategory(Intent.CATEGORY_OPENABLE)
+                                        .setType("*/*")
+                                    try {
+                                        launcher.launch(intent)
+                                    } catch (_: Exception) {}
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(stringResource(R.string.cjk_plugin_button_load_storage))
+                            }
                         }
 
                         if (hasPlugin) {
@@ -257,6 +271,7 @@ fun LoadCjkPluginPreference(
                                 onClick = {
                                     CjkPluginLoader.removePlugin(ctx)
                                     FeedbackManager.message(ctx, R.string.cjk_plugin_removed_restarting)
+                                    hasPlugin = false
                                     onSuccess?.invoke()
                                     showDialog = false
                                     if (restartOnSuccess) {

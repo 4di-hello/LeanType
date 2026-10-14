@@ -1,7 +1,7 @@
-- Added full keyboard horizontal swipe gesture to switch languages or move cursor.
-- Automatically turn off gesture typing when full keyboard swipe is enabled.
-- Unified bottom row geometry and key heights across all keyboard views.
-- Separated Dictionaries and Typing History in Backup & Restore, with optional API key export.
-- Refined Arabic Alif popup letter ordering and scaled emoticon recents.
-- Polished GIF picker search bar styling and simplified provider toggles.
-- Added custom slider for horizontal swipe threshold sensitivity.
+- Added companion CJK plugin support for Chinese, Japanese, and Korean typing.
+- Restored uppercase letter input when chording characters while holding Shift.
+- Added option to continuously delete whole words when holding down Delete.
+- Added option to skip passwords and one-time codes in clipboard history.
+- Restored toolbar and suggestion strip visibility upon exiting full-screen touchpad.
+- Added plus/minus stepper buttons and snapping to slider preference dialogs.
+- Centered emoji grid in key fit mode and added Unicode 16.0 regex support.
