@@ -22,6 +22,11 @@ class KeyboardThemeTest {
             assertTrue(onKey >= 7.0, "$name: text on keys has contrast $onKey")
             assertTrue(onFunctional >= 4.5, "$name: text on functional keys has contrast $onFunctional")
             assertTrue(hint >= 3.0, "$name: hint text has contrast $hint")
+            // suggestion strip has the keyboard background
+            val autoCorrect = ColorUtils.calculateContrast(theme.autoCorrect, theme.background)
+            val typedWord = ColorUtils.calculateContrast(theme.typedWord, theme.background)
+            assertTrue(autoCorrect >= 4.5, "$name: auto-correction has contrast $autoCorrect")
+            assertTrue(typedWord >= 4.5, "$name: typed word has contrast $typedWord")
         }
     }
 
