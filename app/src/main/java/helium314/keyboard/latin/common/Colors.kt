@@ -327,7 +327,8 @@ class DynamicColors(context: Context, override val themeStyle: String, override 
         CLIPBOARD_SUGGESTION_BACKGROUND -> doubleAdjustedBackground
         NAVIGATION_BAR -> navBar
         MORE_SUGGESTIONS_HINT, SUGGESTED_WORD, SUGGESTION_TYPED_WORD, SUGGESTION_VALID_WORD -> adjustedKeyText
-        ACTION_KEY_ICON, TOOL_BAR_EXPAND_KEY -> Color.WHITE
+        TOOL_BAR_EXPAND_KEY -> Color.WHITE
+        ACTION_KEY_ICON -> if (isBrightColor(accent)) Color.DKGRAY else Color.WHITE
         EDIT_MODE_DELETE_BACKGROUND -> androidx.core.graphics.ColorUtils.blendARGB(accent, functionalKey, 0.4f)
         EDIT_MODE_FUNC_BACKGROUND -> androidx.core.graphics.ColorUtils.blendARGB(accent, functionalKey, 0.2f)
         EDIT_MODE_ALPHA_BACKGROUND -> androidx.core.graphics.ColorUtils.blendARGB(accent, functionalKey, 0.6f)
@@ -545,7 +546,7 @@ class DefaultColors (
         SUGGESTION_AUTO_CORRECT, EMOJI_CATEGORY, TOOL_BAR_EXPAND_KEY, ONE_HANDED_MODE_BUTTON -> suggestionText
         TOOL_BAR_KEY -> toolbarKeyOverride ?: suggestionText
         MORE_SUGGESTIONS_HINT, SUGGESTED_WORD, SUGGESTION_TYPED_WORD, SUGGESTION_VALID_WORD -> adjustedSuggestionText
-        ACTION_KEY_ICON -> Color.WHITE
+        ACTION_KEY_ICON -> if (isBrightColor(accent)) Color.DKGRAY else Color.WHITE
         EDIT_MODE_DELETE_BACKGROUND -> androidx.core.graphics.ColorUtils.blendARGB(accent, functionalKey, 0.4f)
         EDIT_MODE_FUNC_BACKGROUND -> androidx.core.graphics.ColorUtils.blendARGB(accent, functionalKey, 0.2f)
         EDIT_MODE_ALPHA_BACKGROUND -> androidx.core.graphics.ColorUtils.blendARGB(accent, functionalKey, 0.6f)
@@ -627,22 +628,53 @@ class AllColors(private val colorMap: EnumMap<ColorType, Int>, override val them
     private val stateListMap = EnumMap<ColorType, ColorStateList>(ColorType::class.java)
     private var backgroundSetupDone = false
     private val colorFilters = hashMapOf<ColorType, ColorFilter>()
+    private val toolbarKeyStateList by lazy {
+        val color = get(ColorType.TOOL_BAR_KEY)
+        activatedStateList(
+            color,
+            if (isBrightColor(color)) darken(darken(color))
+            else brighten(brighten(color))
+        )
+    }
+
     override fun get(color: ColorType): Int = colorMap[color] ?: color.default()
 
     override fun setColor(drawable: Drawable?, color: ColorType) {
         if (drawable == null) return
-        val colorStateList = stateListMap.getOrPut(color) { pressedStateList(brightenOrDarken(get(color), true), get(color)) }
+        val colorStateList = when (color) {
+            ColorType.MORE_SUGGESTIONS_WORD_BACKGROUND,
+            ColorType.KEY_BACKGROUND,
+            ColorType.FUNCTIONAL_KEY_BACKGROUND,
+            ColorType.ACTION_KEY_BACKGROUND,
+            ColorType.SPACE_BAR_BACKGROUND,
+            ColorType.POPUP_KEYS_BACKGROUND,
+            ColorType.STRIP_BACKGROUND,
+            ColorType.ACTION_KEY_POPUP_KEYS_BACKGROUND -> stateListMap.getOrPut(color) {
+                pressedStateList(brightenOrDarken(get(color), true), get(color))
+            }
+            ColorType.TOOL_BAR_KEY -> toolbarKeyStateList
+            else -> null // use color filter
+        }
+        if (colorStateList == null) {
+            DrawableCompat.setTintList(drawable, null)
+            drawable.colorFilter = getColorFilter(color)
+            return
+        }
+        drawable.colorFilter = null
         DrawableCompat.setTintMode(drawable, PorterDuff.Mode.MULTIPLY)
         DrawableCompat.setTintList(drawable, colorStateList)
     }
 
     override fun setColor(view: ImageView, color: ColorType) {
-        if (color == TOOL_BAR_KEY) {
+        if (color == ColorType.TOOL_BAR_KEY) {
             view.clearColorFilter()
             view.drawable?.let { setColor(it, color) }
             return
         }
-        view.drawable?.let { DrawableCompat.setTintList(it, null) }
+        view.drawable?.let {
+            DrawableCompat.setTintList(it, null)
+            it.colorFilter = null
+        }
         view.colorFilter = getColorFilter(color)
     }
 
@@ -650,8 +682,8 @@ class AllColors(private val colorMap: EnumMap<ColorType, Int>, override val them
         if (view.background == null)
             view.setBackgroundColor(Color.WHITE) // set white to make the color filters work
         when (color) {
-            ONE_HANDED_MODE_BUTTON -> setColor(view.background, MAIN_BACKGROUND) // button has no separate background color
-            MAIN_BACKGROUND -> {
+            ColorType.ONE_HANDED_MODE_BUTTON -> setColor(view.background, ColorType.MAIN_BACKGROUND) // button has no separate background color
+            ColorType.MAIN_BACKGROUND -> {
                 keyboardBackground?.let { bg ->
                     view.background = bg
                 } ?: run { setColor(view.background, color) }
@@ -660,7 +692,15 @@ class AllColors(private val colorMap: EnumMap<ColorType, Int>, override val them
         }
     }
 
-    private fun getColorFilter(color: ColorType) = colorFilters.getOrPut(color) { colorFilter(get(color)) }
+    private fun getColorFilter(color: ColorType) = colorFilters.getOrPut(color) {
+        val c = get(color)
+        if (color == ColorType.ACTION_KEY_ICON && !colorMap.containsKey(ColorType.ACTION_KEY_ICON)) {
+            val accent = get(ColorType.ACTION_KEY_BACKGROUND)
+            if (isBrightColor(accent)) colorFilter(Color.DKGRAY) else colorFilter(Color.WHITE)
+        } else {
+            colorFilter(c)
+        }
+    }
 
     override fun getPressedColor(color: ColorType): Int {
         return brightenOrDarken(get(color), true)

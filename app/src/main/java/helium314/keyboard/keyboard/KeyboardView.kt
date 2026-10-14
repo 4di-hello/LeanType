@@ -482,9 +482,10 @@ open class KeyboardView @JvmOverloads constructor(
         val label = if (isHexSpace) null else key.label
         
         if (label != null) {
-            val typeface = if (mEmojiTypeface != null && isEmoji(label)) mEmojiTypeface else mTypeface
+            val isEmojiKey = isEmoji(label) || (this is EmojiPageKeyboardView && keyboard?.mId?.mElementId != KeyboardId.ELEMENT_EMOJI_CATEGORY10)
+            val typeface = if (mEmojiTypeface != null && isEmojiKey) mEmojiTypeface else mTypeface
             paint.typeface = typeface ?: key.selectTypeface(params)
-            val isEmoticonInEmojiKeyboard = this is EmojiPageKeyboardView && !isEmoji(label)
+            val isEmoticonInEmojiKeyboard = this is EmojiPageKeyboardView && keyboard?.mId?.mElementId == KeyboardId.ELEMENT_EMOJI_CATEGORY10
             val fontMultiplier = if (isEmoticonInEmojiKeyboard) {
                 Settings.getValues().mFontSizeMultiplierEmoji * 0.55f
             } else {
@@ -503,13 +504,13 @@ open class KeyboardView @JvmOverloads constructor(
                 paint.textAlign = Paint.Align.CENTER
             }
             
-            if (key.needsAutoXScale() || (isEmoji(label) && Settings.getValues().mEmojiKeyFit) || isEmoticonInEmojiKeyboard) {
+            if (key.needsAutoXScale() || (isEmojiKey && Settings.getValues().mEmojiKeyFit) || isEmoticonInEmojiKeyboard) {
                 val width = if (key.needsToKeepBackgroundAspectRatio(mDefaultKeyLabelFlags) && !(KeyboardActionListenerImpl.sPersistentTextEditModeActive || (kb != null && kb.mId.mElementId == KeyboardId.ELEMENT_TEXT_EDIT))) {
                     val bg = key.selectBackgroundDrawable(mKeyBackground, mFunctionalKeyBackground, mSpacebarBackground, mActionKeyBackground)
                     min(bg.bounds.bottom, bg.bounds.right)
                 } else keyWidth
                 val ratio = min(1.0f, (width * 0.90f) / TypefaceUtils.getStringWidth(label, paint))
-                if (key.needsAutoScale() || (isEmoji(label) && Settings.getValues().mEmojiKeyFit) || isEmoticonInEmojiKeyboard) {
+                if (key.needsAutoScale() || (isEmojiKey && Settings.getValues().mEmojiKeyFit) || isEmoticonInEmojiKeyboard) {
                     paint.textSize = paint.textSize * ratio
                 } else {
                     paint.textScaleX = ratio
@@ -682,6 +683,7 @@ open class KeyboardView @JvmOverloads constructor(
     private fun setKeyIconColor(key: Key, icon: Drawable, keyboard: Keyboard?) {
         val customBgColor = mKeyCustomBgColors[key]
         if (customBgColor != null) {
+            DrawableCompat.setTintList(icon, null)
             icon.setColorFilter(getContrastingColor(customBgColor), PorterDuff.Mode.SRC_IN)
         } else if (key.hasActionKeyBackground() || (keyboard?.isHexagonal == true && key.code == Constants.CODE_ENTER)) {
             mColors.setColor(icon, ColorType.ACTION_KEY_ICON)
