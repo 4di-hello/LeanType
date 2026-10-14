@@ -1610,25 +1610,10 @@ class InputLogicTest {
         assertEquals("a b ", text)
     }
 
-    @Test fun `held backspace word deletion without acceleration has constant speed`() {
-        reset()
-        latinIME.prefs().edit {
-            putBoolean(Settings.PREF_BACKSPACE_REPEAT_DELETES_WORDS, true)
-            putInt(Settings.PREF_BACKSPACE_WORD_ACCELERATION, 1)
-        }
-        setText("a b c d e f g h")
-        functionalKeyPress(KeyCode.DELETE)
-        for (i in 1..22) functionalKeyPress(KeyCode.DELETE, isKeyRepeat = true)
-        // words at 0, 350, 700, 1050 ms
-        assertEquals("a b c ", text)
-    }
-
     @Test fun `backspace word intervals`() {
-        assertEquals(350f, InputLogic.getBackspaceWordInterval(0, 3, 3), 0.01f)
-        assertEquals(280f, InputLogic.getBackspaceWordInterval(1, 3, 3), 0.01f)
-        assertEquals(80f, InputLogic.getBackspaceWordInterval(20, 3, 3), 0.01f) // minimum
-        assertEquals(600f, InputLogic.getBackspaceWordInterval(5, 1, 1), 0.01f) // no acceleration
-        assertEquals(175f, InputLogic.getBackspaceWordInterval(0, 5, 5), 0.01f)
+        assertEquals(350f, InputLogic.getBackspaceWordInterval(0), 0.01f)
+        assertEquals(280f, InputLogic.getBackspaceWordInterval(1), 0.01f)
+        assertEquals(80f, InputLogic.getBackspaceWordInterval(20), 0.01f) // minimum
     }
 
     @Test fun `start of previous word keeps whitespace before the word`() {

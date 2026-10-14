@@ -1406,9 +1406,7 @@ class InputLogic(
                 mConnection.deleteTextBeforeCursor(length)
             }
             StatsUtils.onBackspaceWordDelete(length)
-            mBackspaceNextWordTime += getBackspaceWordInterval(
-                mBackspaceWordsDeleted, settingsValues.mBackspaceWordSpeed, settingsValues.mBackspaceWordAcceleration
-            )
+            mBackspaceNextWordTime += getBackspaceWordInterval(mBackspaceWordsDeleted)
             mBackspaceWordsDeleted++
             deletedWords++
         }
@@ -3018,19 +3016,16 @@ class InputLogic(
         private const val TAG = "InputLogic"
         private const val INLINE_EMOJI_SEARCH_MARKER = ':'
         private const val KEY_REPEAT_INTERVAL_MS = 50
-        /** interval between the first words for speed 1..5 */
-        private val BACKSPACE_WORD_START_INTERVALS = floatArrayOf(600f, 450f, 350f, 250f, 175f)
-        /** factor for the interval after each word, for acceleration 1 (off) .. 5 */
-        private val BACKSPACE_WORD_ACCELERATION = floatArrayOf(1f, 0.9f, 0.8f, 0.7f, 0.6f)
+        /** interval before the second word, it gets shorter with each word until the minimum */
+        private const val BACKSPACE_WORD_START_INTERVAL = 350f
+        private const val BACKSPACE_WORD_ACCELERATION = 0.8f
         private const val BACKSPACE_WORD_MIN_INTERVAL = 80f
 
         /** Time until the next word is deleted, after [wordsDeleted] words were deleted already */
-        fun getBackspaceWordInterval(wordsDeleted: Int, speed: Int, acceleration: Int): Float {
-            val start = BACKSPACE_WORD_START_INTERVALS[(speed - 1).coerceIn(0, 4)]
-            val factor = BACKSPACE_WORD_ACCELERATION[(acceleration - 1).coerceIn(0, 4)]
-            var interval = start
-            repeat(wordsDeleted.coerceAtMost(30)) { interval *= factor }
-            return interval.coerceAtLeast(minOf(start, BACKSPACE_WORD_MIN_INTERVAL))
+        fun getBackspaceWordInterval(wordsDeleted: Int): Float {
+            var interval = BACKSPACE_WORD_START_INTERVAL
+            repeat(wordsDeleted.coerceAtMost(30)) { interval *= BACKSPACE_WORD_ACCELERATION }
+            return interval.coerceAtLeast(BACKSPACE_WORD_MIN_INTERVAL)
         }
         private const val BACKSPACE_WORD_LOOKBACK = 200
         private val THAI_LOCALE = Locale.forLanguageTag("th")
