@@ -37,6 +37,7 @@ class DynamicGridKeyboard(
     private val mHorizontalGap: Int
     private val mVerticalStep: Int
     private val mColumnsNum: Int
+    private val mHorizontalOffset: Int
     private val mIsRecents: Boolean = categoryId == EmojiCategory.ID_RECENTS
     private val mGridKeys = ArrayDeque<GridKey>()
     private val mPendingKeys = ArrayDeque<Key>()
@@ -82,6 +83,7 @@ class DynamicGridKeyboard(
         mHorizontalStep = horizontalStepVal
         mColumnsNum = columnsNumVal
         mVerticalStep = verticalStepVal
+        mHorizontalOffset = max(0, (mBaseWidth - columnsNumVal * horizontalStepVal) / 2)
 
         if (spacerWidth > 0) {
             setSpacerColumns(spacerWidth)
@@ -269,12 +271,12 @@ class DynamicGridKeyboard(
 
     private fun getKeyX0(index: Int): Int {
         val column = index % mColumnsNum
-        return column * mHorizontalStep + mHorizontalGap / 2
+        return column * mHorizontalStep + mHorizontalGap / 2 + mHorizontalOffset
     }
 
     private fun getKeyX1(index: Int): Int {
         val column = index % mColumnsNum + 1
-        return column * mHorizontalStep + mHorizontalGap / 2
+        return column * mHorizontalStep + mHorizontalGap / 2 + mHorizontalOffset
     }
 
     private fun getKeyY0(index: Int): Int {
