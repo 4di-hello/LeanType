@@ -91,11 +91,20 @@ jobs:
             echo "::error::secret DEBUG_KEYSTORE_B64 is missing, without it the APK can't be installed over the previous one"
             exit 1
           fi
-          mkdir -p ~/.android
-          echo "$DEBUG_KEYSTORE_B64" | tr -d ' \n\r' | base64 -d > ~/.android/debug.keystore
+          echo "$DEBUG_KEYSTORE_B64" | tr -d ' \n\r' | base64 -d > "$RUNNER_TEMP/personal.keystore"
+          echo "PERSONAL_KEYSTORE=$RUNNER_TEMP/personal.keystore" >> "$GITHUB_ENV"
+          keytool -list -v -keystore "$RUNNER_TEMP/personal.keystore" -storepass android | grep -m1 "SHA256:" | sed 's/^ */::notice title=key::/'
 
       - name: Build APK
         run: ./gradlew assembleOfflinePersonal
+
+      - name: Check that the APK has the fixed key
+        run: |
+          apk=$(find app/build/outputs/apk -name '*.apk' | head -1)
+          want=$(keytool -list -v -keystore "$PERSONAL_KEYSTORE" -storepass android | grep -m1 "SHA256:" | awk '{print $2}')
+          got=$(keytool -printcert -jarfile "$apk" | grep -m1 "SHA256:" | awk '{print $2}')
+          echo "::notice title=apk key::$got"
+          if [ "$want" != "$got" ]; then echo "::error::APK is not signed with the fixed key"; exit 1; fi
 
       - name: Store updated branch
         if: env.UPDATED == '1'
