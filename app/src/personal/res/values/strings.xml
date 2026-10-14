@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    SPDX-License-Identifier: GPL-3.0-only
+    Only in this fork: name of my own build, to tell it apart from the official LeanType
+-->
+<resources>
+    <string name="english_ime_name" translatable="false">LeanType+</string>
+    <string name="spell_checker_service_name" translatable="false">LeanType+ Spell Checker</string>
+    <string name="ime_settings" translatable="false">LeanType+ Settings</string>
+</resources>
