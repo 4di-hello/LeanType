@@ -18,7 +18,7 @@ import java.util.zip.ZipFile
  */
 object CjkPluginLoader {
     private const val CURRENT_INTERFACE_VERSION = 2
-    private const val PLUGIN_PACKAGE_NAME = "com.leanbitlab.leantype.cjk.plugin"
+    const val PLUGIN_PACKAGE_NAME = "com.leanbitlab.leantype.cjk.plugin"
     private const val PLUGIN_FILENAME = "cjk_plugin.apk"
     private const val PLUGIN_CLASS_NAME = "com.leanbitlab.leantype.cjk.plugin.CjkEngineImpl"
     private const val PREF_HAS_PLUGIN = "pref_cjk_has_plugin"

@@ -67,7 +67,17 @@ fun LoadCjkPluginPreference(
         ) == android.content.pm.PackageManager.PERMISSION_GRANTED
     }
 
-    val hasPlugin = CjkPluginLoader.hasPlugin(ctx)
+    var hasPlugin by remember { mutableStateOf(CjkPluginLoader.hasPlugin(ctx)) }
+    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+    androidx.compose.runtime.DisposableEffect(lifecycleOwner) {
+        val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+            if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
+                hasPlugin = CjkPluginLoader.hasPlugin(ctx)
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
     val localVersion = remember(hasPlugin) { CjkPluginLoader.getPluginVersion(ctx) }
     val updateAvailable = remember(localVersion, remoteVersion) {
         val remVersion = remoteVersion
@@ -253,16 +263,28 @@ fun LoadCjkPluginPreference(
                         }
 
                         if (hasPlugin) {
+                            val isInstalledApp = CjkPluginLoader.getInstalledPluginApk(ctx) != null
                             Button(
                                 onClick = {
-                                    CjkPluginLoader.removePlugin(ctx)
-                                    FeedbackManager.message(ctx, R.string.cjk_plugin_removed_restarting)
-                                    onSuccess?.invoke()
                                     showDialog = false
-                                    if (restartOnSuccess) {
-                                        scope.launch {
-                                            delay(2000)
-                                            Runtime.getRuntime().exit(0)
+                                    if (isInstalledApp) {
+                                        val appInfoIntent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                            data = Uri.parse("package:${CjkPluginLoader.PLUGIN_PACKAGE_NAME}")
+                                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                        }
+                                        try {
+                                            ctx.startActivity(appInfoIntent)
+                                        } catch (_: Exception) {}
+                                    } else {
+                                        CjkPluginLoader.removePlugin(ctx)
+                                        FeedbackManager.message(ctx, R.string.cjk_plugin_removed_restarting)
+                                        hasPlugin = false
+                                        onSuccess?.invoke()
+                                        if (restartOnSuccess) {
+                                            scope.launch {
+                                                delay(2000)
+                                                Runtime.getRuntime().exit(0)
+                                            }
                                         }
                                     }
                                 },
@@ -272,7 +294,12 @@ fun LoadCjkPluginPreference(
                                 ),
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                Text(stringResource(R.string.load_cjk_plugin_button_delete))
+                                val deleteLabel = if (isInstalledApp) {
+                                    stringResource(R.string.voice_plugin_uninstall)
+                                } else {
+                                    stringResource(R.string.load_cjk_plugin_button_delete)
+                                }
+                                Text(deleteLabel)
                             }
                         }
                     }
