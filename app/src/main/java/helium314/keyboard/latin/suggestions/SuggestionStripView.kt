@@ -559,9 +559,11 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
         if (settingsValues.mToolbarMode == ToolbarMode.EXPANDABLE && !settingsValues.mSplitToolbar) {
             val hasNoSuggestions = (suggestions.isEmpty || suggestions.isPunctuationSuggestions) && !isMissingDict
             val shouldShow = when {
+                isToolbarManuallyOpen -> true
+                settingsValues.mAutoShowToolbar -> true
                 settingsValues.mAutoShowToolbarNoSuggestions && hasNoSuggestions -> true
                 settingsValues.mAutoHideToolbar && !hasNoSuggestions -> false
-                else -> isToolbarManuallyOpen
+                else -> false
             }
             setToolbarVisibility(shouldShow, saveState = false)
         }
@@ -1853,10 +1855,11 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
         val settingsValues = Settings.getValues()
         if (settingsValues.mToolbarMode == ToolbarMode.EXPANDABLE && !settingsValues.mSplitToolbar) {
             val shouldShow = when {
-                settingsValues.mAutoShowToolbarNoSuggestions -> true
+                isToolbarManuallyOpen -> true
                 settingsValues.mAutoShowToolbar -> true
+                settingsValues.mAutoShowToolbarNoSuggestions -> true
                 settingsValues.mAutoHideToolbar -> false
-                else -> isToolbarManuallyOpen
+                else -> false
             }
             setToolbarVisibility(shouldShow, saveState = false)
         }

@@ -1566,7 +1566,7 @@ class LatinIME : InputMethodService(),
             noSuggestionsFromDictionaries
         ) {
             suggestionStripView?.setSuggestions(suggestedWords, richImm.currentSubtype.isRtlSubtype)
-            if (currentSettingsValues.mAutoHideToolbar && !noSuggestionsFromDictionaries) {
+            if (currentSettingsValues.mAutoHideToolbar && !noSuggestionsFromDictionaries && inputLogic.isComposingWord) {
                 suggestionStripView?.foldToolbar(!currentSettingsValues.mAutoShowToolbarNoSuggestions)
             } else if (currentSettingsValues.mAutoShowToolbarNoSuggestions && noSuggestionsFromDictionaries) {
                 if (suggestionStripView?.isExternalSuggestionVisible != true) {
@@ -1679,10 +1679,11 @@ class LatinIME : InputMethodService(),
                             } else {
                                 val shouldShow = when {
                                     currentSettings.mToolbarMode == ToolbarMode.TOOLBAR_KEYS -> true
-                                    currentSettings.mAutoHideToolbar -> false
-                                    currentSettings.mAutoShowToolbarNoSuggestions -> true
+                                    strip.isToolbarManuallyOpen -> true
                                     currentSettings.mAutoShowToolbar -> true
-                                    else -> strip.isToolbarManuallyOpen
+                                    currentSettings.mAutoShowToolbarNoSuggestions -> true
+                                    currentSettings.mAutoHideToolbar -> false
+                                    else -> false
                                 }
                                 strip.setToolbarVisibility(shouldShow)
                             }
@@ -1706,10 +1707,11 @@ class LatinIME : InputMethodService(),
             } else {
                 val shouldShow = when {
                     currentSettings.mToolbarMode == ToolbarMode.TOOLBAR_KEYS -> true
-                    currentSettings.mAutoShowToolbarNoSuggestions -> true
+                    strip.isToolbarManuallyOpen -> true
                     currentSettings.mAutoShowToolbar -> true
+                    currentSettings.mAutoShowToolbarNoSuggestions -> true
                     currentSettings.mAutoHideToolbar -> false
-                    else -> strip.isToolbarManuallyOpen
+                    else -> false
                 }
                 strip.setToolbarVisibility(shouldShow)
             }

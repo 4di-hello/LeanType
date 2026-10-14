@@ -901,6 +901,7 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         val touchpad = mTouchpadView ?: return
         val kbView = mKeyboardView ?: return
         mWasToolbarVisibleBeforeTouchpad = mSuggestionStripView?.isToolbarShowing == true ||
+            mSuggestionStripView?.isToolbarManuallyOpen == true ||
             Settings.getValues().mAutoShowToolbar ||
             Settings.getValues().mToolbarMode == ToolbarMode.TOOLBAR_KEYS
         kbView.visibility = View.INVISIBLE
@@ -961,15 +962,20 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
                 kbView.alpha = 1f
             }
         }
-        updateStripVisibility()
-        mLatinIME?.let { ime ->
-            ime.setNeutralSuggestionStrip()
-            ime.mHandler.postResumeSuggestions(false)
-        }
-        if (mWasToolbarVisibleBeforeTouchpad ||
+        val shouldRestoreToolbar = mWasToolbarVisibleBeforeTouchpad ||
+            mSuggestionStripView?.isToolbarManuallyOpen == true ||
             Settings.getValues().mAutoShowToolbar ||
             Settings.getValues().mToolbarMode == ToolbarMode.TOOLBAR_KEYS
-        ) {
+
+        if (shouldRestoreToolbar) {
+            mSuggestionStripView?.isToolbarManuallyOpen = true
+        }
+        updateStripVisibility()
+        mLatinIME?.let { ime ->
+            ime.mHandler.cancelResumeSuggestions()
+            ime.setNeutralSuggestionStrip()
+        }
+        if (shouldRestoreToolbar) {
             mSuggestionStripView?.isToolbarManuallyOpen = true
             mSuggestionStripView?.setToolbarVisibility(true, saveState = false)
         }
