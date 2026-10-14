@@ -4,6 +4,7 @@ package helium314.keyboard.latin.heatmap
 import android.content.Context
 import android.os.Build
 import helium314.keyboard.compat.isUserLocked
+import helium314.keyboard.latin.backup.LocalCrypto
 import helium314.keyboard.latin.common.StringUtils
 import helium314.keyboard.latin.utils.DeviceProtectedUtils
 import helium314.keyboard.latin.utils.Log
@@ -111,12 +112,23 @@ object TypingHeatmap {
     class ParsedData(val layouts: Map<String, LayoutData>, val device: String?, val weeks: Map<Int, IntArray> = emptyMap())
 
     /** touches and misses of one week, for showing whether typing gets better */
-    class WeekStats(val week: Int, val touches: Int, val misses: Int)
+    /** [typedChars] were typed in [typingMillis] (pauses not counted), for the typing speed */
+    class WeekStats(val week: Int, val touches: Int, val misses: Int, val typedChars: Int = 0, val typingMillis: Int = 0) {
+        /** words (of 5 characters) per minute, null if not enough data */
+        val wordsPerMinute: Float? get() =
+            if (typingMillis < MIN_TYPING_MILLIS_FOR_SPEED) null else typedChars / 5f / (typingMillis / 60_000f)
+    }
 
     private val layouts = LinkedHashMap<String, LayoutData>()
     /** week (days since 1970 / 7) -> [touches, misses]; only counts, nothing about the text */
     private val weeks = java.util.TreeMap<Int, IntArray>()
     private const val MAX_WEEKS = 26
+    /** a longer time between two words is a pause, it does not count for the typing speed */
+    private const val TYPING_PAUSE_MILLIS = 8_000L
+    private const val MIN_TYPING_MILLIS_FOR_SPEED = 60_000
+    /** per week: touches, misses, typed characters, typing time in ms */
+    private const val WEEK_VALUES = 4
+    private var lastCommitTime = 0L
     @Volatile private var loaded = false
     private var pending: PendingWord? = null
     /** committed word at the time of a backspace press, only kept for reverting the autocorrection */
@@ -153,6 +165,7 @@ object TypingHeatmap {
         finalizePending()
         revertCandidate = null
         if (typedWord.isEmpty() || finalWord.isEmpty()) return
+        recordTypingTime(finalWord.length + 1) // + separator
         val rawXs = xs.copyOf()
         val rawYs = ys.copyOf()
         for (i in rawXs.indices) {
@@ -214,6 +227,28 @@ object TypingHeatmap {
         addSamples(geometry, listOf(sample))
     }
 
+    /** time since the previous word, if typing continued without a pause */
+    private fun recordTypingTime(chars: Int) {
+        val now = android.os.SystemClock.uptimeMillis()
+        val gap = now - lastCommitTime
+        lastCommitTime = now
+        if (gap <= 0 || gap > TYPING_PAUSE_MILLIS) return
+        ensureLoaded()
+        if (!loaded) return
+        val stats = weekStats(currentWeek())
+        stats[2] += chars
+        stats[3] += gap.toInt()
+    }
+
+    private fun weekStats(week: Int): IntArray {
+        val stats = weeks[week]
+        if (stats != null && stats.size >= WEEK_VALUES) return stats
+        val new = stats?.copyOf(WEEK_VALUES) ?: IntArray(WEEK_VALUES)
+        weeks[week] = new
+        while (weeks.size > MAX_WEEKS) weeks.remove(weeks.firstKey())
+        return new
+    }
+
     private fun addSamples(geometry: KeyGeometry, newSamples: List<Pair<Int, Sample>>) {
         if (newSamples.isEmpty()) return
         ensureLoaded()
@@ -235,8 +270,7 @@ object TypingHeatmap {
             list.addLast(sample)
             while (list.size > MAX_SAMPLES_PER_KEY) list.removeFirst()
         }
-        val week = currentWeek()
-        val stats = weeks.getOrPut(week) { IntArray(2) }
+        val stats = weekStats(currentWeek())
         stats[0] += newSamples.size
         stats[1] += newSamples.count { (code, sample) -> sample.touchedCode != code }
         while (weeks.size > MAX_WEEKS) weeks.remove(weeks.firstKey())
@@ -248,6 +282,7 @@ object TypingHeatmap {
     @Synchronized
     fun onFinishInput() {
         finalizePending()
+        lastCommitTime = 0L
         if (unsavedSamples > 0) save()
     }
 
@@ -370,7 +405,9 @@ object TypingHeatmap {
     fun getWeeklyStats(context: Context): List<WeekStats> {
         appContext = context.applicationContext
         ensureLoaded()
-        return weeks.map { (week, stats) -> WeekStats(week, stats[0], stats[1]) }
+        return weeks.map { (week, stats) ->
+            WeekStats(week, stats[0], stats[1], stats.getOrElse(2) { 0 }, stats.getOrElse(3) { 0 })
+        }
     }
 
     private fun currentWeek() = (System.currentTimeMillis() / 86_400_000L / 7).toInt()
@@ -427,8 +464,8 @@ object TypingHeatmap {
 
     // ---------------- backup ----------------
 
-    /** File to put into a backup, null if there is no data. Must not be called on the main thread. */
-    fun getFileForBackup(context: Context): File? {
+    /** Data (not encrypted) to put into a backup, null if there is none. Must not be called on the main thread. */
+    fun getDataForBackup(context: Context): ByteArray? {
         synchronized(this) {
             appContext = context.applicationContext
             if (isUserLocked(context)) return null
@@ -437,7 +474,8 @@ object TypingHeatmap {
         }
         // ... and wait until it is written (without holding the lock, background tasks may need it)
         try { ioExecutor.submit(Runnable { }).get() } catch (_: Exception) { }
-        return getFile(context).takeIf { it.isFile }
+        val file = getFile(context).takeIf { it.isFile } ?: return null
+        return try { LocalCrypto.decrypt(file.readBytes()) } catch (e: Exception) { null }
     }
 
     /**
@@ -593,7 +631,9 @@ object TypingHeatmap {
         if (!file.isFile) return
         try {
             if (file.length() > MAX_FILE_SIZE) throw IllegalStateException("file too large")
-            val parsed = parse(JSONObject(file.readText()))
+            // encrypted with a key in the Android keystore, older versions wrote plain text
+            val bytes = LocalCrypto.decrypt(file.readBytes()) ?: throw IllegalStateException("could not decrypt")
+            val parsed = parse(JSONObject(String(bytes, Charsets.UTF_8)))
             layouts.clear()
             layouts.putAll(parsed.layouts)
             weeks.clear()
@@ -650,7 +690,10 @@ object TypingHeatmap {
     private fun writeAtomically(file: File, text: String) {
         file.parentFile?.mkdirs()
         val tmp = File(file.parentFile, "$FILE_NAME.tmp")
-        tmp.writeText(text)
+        val plain = text.toByteArray(Charsets.UTF_8)
+        // if the keystore is not available (e.g. some custom ROMs), the file is stored like in earlier versions:
+        // it is still in credential encrypted app storage
+        tmp.writeBytes(LocalCrypto.encrypt(plain) ?: plain)
         if (!tmp.renameTo(file)) {
             tmp.delete()
             throw IllegalStateException("rename failed")
@@ -691,7 +734,11 @@ object TypingHeatmap {
         }
         root.put("layouts", layoutArray)
         val weeksJson = JSONObject()
-        weeks.forEach { (week, stats) -> weeksJson.put(week.toString(), JSONArray().put(stats[0]).put(stats[1])) }
+        weeks.forEach { (week, stats) ->
+            val a = JSONArray()
+            stats.forEach { a.put(it) }
+            weeksJson.put(week.toString(), a)
+        }
         root.put("weeks", weeksJson)
         return root
     }
@@ -710,7 +757,9 @@ object TypingHeatmap {
                 val touches = a.optInt(0, -1)
                 val misses = a.optInt(1, -1)
                 if (week < 0 || touches < 0 || misses < 0 || misses > touches) continue
-                weeks[week] = intArrayOf(touches, misses)
+                val chars = a.optInt(2, 0).coerceAtLeast(0)
+                val millis = a.optInt(3, 0).coerceAtLeast(0)
+                weeks[week] = intArrayOf(touches, misses, chars, millis)
             }
             while (weeks.size > MAX_WEEKS) weeks.remove(weeks.firstKey())
         }
