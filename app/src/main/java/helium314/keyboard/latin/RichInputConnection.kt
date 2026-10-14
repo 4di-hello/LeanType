@@ -161,7 +161,6 @@ class RichInputConnection(private val mParent: InputMethodService) : PrivateComm
 
     fun endBatchEdit() {
         if (mNestLevel <= 0) {
-            Log.e(TAG, "Batch edit not in progress!")
             mNestLevel = 0
             return
         }
@@ -447,12 +446,19 @@ class RichInputConnection(private val mParent: InputMethodService) : PrivateComm
             return TextUtils.CAP_MODE_CHARACTERS and inputType
         }
 
-        val text = if (InputTypeUtils.isWebEditor(mParent.currentInputEditorInfo)) {
-            getTextBeforeCursor(Constants.EDITOR_CONTENTS_CACHE_SIZE, 0)?.toString() ?: ""
+        val ei = mParent.currentInputEditorInfo
+        val text = if (InputTypeUtils.isWebEditor(ei)) {
+            val t = getTextBeforeCursor(Constants.EDITOR_CONTENTS_CACHE_SIZE, 0)
+            if (t == null) {
+                Log.d(TAG, "Setting caps mode with default fallback (text cache unavailable).")
+                return ei?.initialCapsMode ?: Constants.TextUtils.CAP_MODE_OFF
+            }
+            t.toString()
         } else {
             if (mCommittedTextBeforeComposingText.isEmpty() && mExpectedSelStart != 0) {
                 if (!reloadTextCache()) {
                     Log.d(TAG, "Setting caps mode with default fallback (text cache unavailable).")
+                    return ei?.initialCapsMode ?: Constants.TextUtils.CAP_MODE_OFF
                 }
             }
             mCommittedTextBeforeComposingText.toString()
