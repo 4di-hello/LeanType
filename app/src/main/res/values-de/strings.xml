@@ -408,6 +408,8 @@
     <string name="subtype_dag">Dagbani</string>
     <string name="subtype_st">Sesotho</string>
     <string name="backspace_reverts_autocorrect">Rücktaste macht Autokorrektur rückgängig</string>
+    <string name="backspace_repeat_deletes_words">Gedrückte Löschtaste löscht ganze Wörter</string>
+    <string name="backspace_repeat_deletes_words_summary">Nach kurzem Halten der Löschtaste wortweise löschen, zunehmend schneller</string>
     <string name="autospace_after_suggestion">Automatische Leerzeichen nach Auswählen eines Vorschlags</string>
     <string name="prefs_emoji_key_fit">Skaliere den Emoji-Knopf mit der Schriftgröße</string>
     <string name="backup_restored">Backup wiederhergestellt</string>

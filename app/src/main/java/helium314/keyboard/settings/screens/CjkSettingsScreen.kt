@@ -34,6 +34,16 @@ fun CjkSettingsScreen(
 ) {
     val context = LocalContext.current
     var cjkInstalled by remember { mutableStateOf(CjkPluginLoader.hasPlugin(context)) }
+    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+    androidx.compose.runtime.DisposableEffect(lifecycleOwner) {
+        val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+            if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
+                cjkInstalled = CjkPluginLoader.hasPlugin(context)
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
 
     SearchSettingsScreen(
         onClickBack = onClickBack,

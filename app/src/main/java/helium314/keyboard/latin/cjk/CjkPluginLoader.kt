@@ -18,7 +18,6 @@ import java.util.zip.ZipFile
  */
 object CjkPluginLoader {
     private const val CURRENT_INTERFACE_VERSION = 2
-    private const val PLUGIN_PACKAGE_NAME = "com.leanbitlab.leantype.cjk.plugin"
     private const val PLUGIN_FILENAME = "cjk_plugin.apk"
     private const val PLUGIN_CLASS_NAME = "com.leanbitlab.leantype.cjk.plugin.CjkEngineImpl"
     private const val PREF_HAS_PLUGIN = "pref_cjk_has_plugin"
@@ -120,27 +119,7 @@ object CjkPluginLoader {
         return false
     }
 
-    fun getInstalledPluginApk(context: Context): File? {
-        return try {
-            val pkgInfo = context.packageManager.getPackageInfo(PLUGIN_PACKAGE_NAME, 0)
-            val path = pkgInfo.applicationInfo?.sourceDir
-            if (!path.isNullOrEmpty()) {
-                val file = File(path)
-                if (file.exists() && file.length() > 0L) file else null
-            } else null
-        } catch (_: Exception) {
-            null
-        }
-    }
-
     fun getPluginVersion(context: Context): String? {
-        val installedApk = getInstalledPluginApk(context)
-        if (installedApk != null) {
-            try {
-                val pkgInfo = context.packageManager.getPackageInfo(PLUGIN_PACKAGE_NAME, 0)
-                if (!pkgInfo.versionName.isNullOrEmpty()) return pkgInfo.versionName
-            } catch (_: Exception) {}
-        }
         val apkFile = File(context.filesDir, PLUGIN_FILENAME)
         if (apkFile.exists() && apkFile.length() > 0L) {
             try {
@@ -152,7 +131,6 @@ object CjkPluginLoader {
     }
 
     fun hasPlugin(context: Context): Boolean {
-        if (getInstalledPluginApk(context) != null) return true
         val apkFile = File(context.filesDir, PLUGIN_FILENAME)
         if (apkFile.exists() && apkFile.length() > 0L) return true
         return context.prefs().getBoolean(PREF_HAS_PLUGIN, false)
@@ -167,22 +145,22 @@ object CjkPluginLoader {
     }
 
     fun getEngine(context: Context): ICjkEngine? {
-        val installedApk = getInstalledPluginApk(context)
-        val apkModified = installedApk?.lastModified() ?: 0L
+        val internalApk = File(context.filesDir, PLUGIN_FILENAME)
+        val apkModified = if (internalApk.exists()) internalApk.lastModified() else 0L
         val cached = activeEngine
-        if (cached != null && cached.isAvailable() && (installedApk == null || apkModified == lastApkModified)) {
+        if (cached != null && cached.isAvailable() && (!internalApk.exists() || apkModified == lastApkModified)) {
             return cached
         }
-        if (cached != null && installedApk != null && apkModified != lastApkModified) {
-            Log.i(TAG, "Companion plugin APK updated on disk (timestamp changed), reloading engine")
+        if (cached != null && internalApk.exists() && apkModified != lastApkModified) {
+            Log.i(TAG, "Companion plugin APK updated in internal storage, reloading engine")
             try { cached.cleanup() } catch (_: Exception) {}
             activeEngine = null
         }
 
-        // 1. Try loading companion plugin from installed package
-        if (installedApk != null) {
-            Log.i(TAG, "Attempting to load CJK engine from installed app package: ${installedApk.absolutePath}")
-            val engine = loadEngineInternal(context, installedApk)
+        // 1. Try loading companion plugin from internal storage
+        if (internalApk.exists() && internalApk.length() > 0L) {
+            Log.i(TAG, "Attempting to load CJK engine from internal storage: ${internalApk.absolutePath}")
+            val engine = loadEngineInternal(context, internalApk)
             if (engine != null && engine.isAvailable()) {
                 activeEngine = engine
                 lastApkModified = apkModified
@@ -190,18 +168,7 @@ object CjkPluginLoader {
             }
         }
 
-        // 2. Try loading companion plugin from storage
-        val internalApk = File(context.filesDir, PLUGIN_FILENAME)
-        if (internalApk.exists() && internalApk.length() > 0L) {
-            Log.i(TAG, "Attempting to load CJK engine from internal storage: ${internalApk.absolutePath}")
-            val engine = loadEngineInternal(context, internalApk)
-            if (engine != null && engine.isAvailable()) {
-                activeEngine = engine
-                return engine
-            }
-        }
-
-        // 3. Fall back to in-memory MockPinyinEngine if mock is enabled
+        // 2. Fall back to in-memory MockPinyinEngine if mock is enabled
         if (isMockEnabled(context)) {
             Log.i(TAG, "Using in-memory MockPinyinEngine fallback")
             val mock = MockPinyinEngine()
@@ -313,6 +280,8 @@ object CjkPluginLoader {
             Log.e(TAG, "Error extracting native libs and assets from CJK plugin", e)
         }
     }
+
+    fun importPlugin(context: Context, sourceUri: Uri): Boolean = loadPluginFromUri(context, sourceUri)
 
     fun loadPluginFromUri(context: Context, sourceUri: Uri): Boolean {
         return try {

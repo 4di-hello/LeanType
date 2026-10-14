@@ -267,7 +267,6 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
 
     override fun setAlphabetKeyboard() {
         if (DEBUG_ACTION) Log.d(TAG, "setAlphabetKeyboard")
-        hideGifPicker()
         setKeyboard(KeyboardId.ELEMENT_ALPHABET, KeyboardSwitchState.OTHER)
     }
 
@@ -295,7 +294,10 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         mGifPickerView?.let { v ->
             v.targetProvider = { latinIme.currentInputConnection to latinIme.currentInputEditorInfo }
             v.sessionProvider = { editorSession }
-            v.onCloseRequested = { setAlphabetKeyboard() }
+            v.onCloseRequested = {
+                hideGifPicker()
+                setAlphabetKeyboard()
+            }
             v.visibility = View.VISIBLE
             v.open()
         }
@@ -395,7 +397,8 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         }
         val visibility = if (isImeSuppressedByHardwareKeyboard(settingsValues, toggleState)) View.GONE else View.VISIBLE
         val stripVisibility = if (settingsValues.mToolbarMode == ToolbarMode.HIDDEN
-            || (PointerTracker.sPersistentTouchpadModeActive && settingsValues.mTouchpadFullscreen)) View.GONE else View.VISIBLE
+            || (PointerTracker.sPersistentTouchpadModeActive && settingsValues.mTouchpadFullscreen)
+            || isGifPickerShowing) View.GONE else View.VISIBLE
         mStripContainer?.visibility = stripVisibility
         val wasSecondaryShowing = (mEmojiPalettesView?.visibility == View.VISIBLE)
             || (mClipboardHistoryView?.visibility == View.VISIBLE)
@@ -848,6 +851,9 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         mState?.setCapsLock(enabled)
     }
 
+    val isShiftChording: Boolean
+        get() = mState?.isShiftChording == true
+
     override fun requestUpdatingShiftState(autoCapsFlags: Int, recapitalizeMode: RecapitalizeMode?) {
         if (DEBUG_ACTION) {
             Log.d(TAG, "requestUpdatingShiftState: autoCapsFlags=" + CapsModeUtils.flagsToString(autoCapsFlags) + " recapitalizeMode=" + recapitalizeMode)
@@ -889,9 +895,15 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         mLatinIME?.floatingKeyboardManager?.toggle()
     }
 
+    private var mWasToolbarVisibleBeforeTouchpad = false
+
     fun showTouchpadView() {
         val touchpad = mTouchpadView ?: return
         val kbView = mKeyboardView ?: return
+        mWasToolbarVisibleBeforeTouchpad = mSuggestionStripView?.isToolbarShowing == true ||
+            mSuggestionStripView?.isToolbarManuallyOpen == true ||
+            Settings.getValues().mAutoShowToolbar ||
+            Settings.getValues().mToolbarMode == ToolbarMode.TOOLBAR_KEYS
         kbView.visibility = View.INVISIBLE
         mEmojiPalettesView?.visibility = View.GONE
         mClipboardHistoryView?.visibility = View.GONE
@@ -929,6 +941,7 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
     }
 
     fun hideTouchpadView() {
+        PointerTracker.sPersistentTouchpadModeActive = false
         val touchpad = mTouchpadView ?: return
         touchpad.animate()?.cancel()
         touchpad.visibility = View.GONE
@@ -949,7 +962,23 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
                 kbView.alpha = 1f
             }
         }
+        val shouldRestoreToolbar = mWasToolbarVisibleBeforeTouchpad ||
+            mSuggestionStripView?.isToolbarManuallyOpen == true ||
+            Settings.getValues().mAutoShowToolbar ||
+            Settings.getValues().mToolbarMode == ToolbarMode.TOOLBAR_KEYS
+
+        if (shouldRestoreToolbar) {
+            mSuggestionStripView?.isToolbarManuallyOpen = true
+        }
         updateStripVisibility()
+        mLatinIME?.let { ime ->
+            ime.mHandler.cancelResumeSuggestions()
+            ime.setNeutralSuggestionStrip()
+        }
+        if (shouldRestoreToolbar) {
+            mSuggestionStripView?.isToolbarManuallyOpen = true
+            mSuggestionStripView?.setToolbarVisibility(true, saveState = false)
+        }
         mKeyboardViewWrapper?.let { wrapper ->
             if (wrapper.oneHandedModeEnabled) {
                 wrapper.findViewById<View>(R.id.btn_stop_one_handed_mode)?.visibility = View.VISIBLE

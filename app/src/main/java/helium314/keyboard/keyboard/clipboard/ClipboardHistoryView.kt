@@ -967,7 +967,10 @@ class ClipboardHistoryView @JvmOverloads constructor(
                 KeyboardId.ELEMENT_SYMBOLS -> KeyboardId.ELEMENT_SYMBOLS_SHIFTED
                 KeyboardId.ELEMENT_SYMBOLS_SHIFTED -> KeyboardId.ELEMENT_SYMBOLS
                 KeyboardId.ELEMENT_ALPHABET -> KeyboardId.ELEMENT_ALPHABET_MANUAL_SHIFTED
-                KeyboardId.ELEMENT_ALPHABET_MANUAL_SHIFTED,
+                KeyboardId.ELEMENT_ALPHABET_MANUAL_SHIFTED -> {
+                    if (primaryCode == KeyCode.CAPS_LOCK) KeyboardId.ELEMENT_ALPHABET_SHIFT_LOCKED
+                    else KeyboardId.ELEMENT_ALPHABET
+                }
                 KeyboardId.ELEMENT_ALPHABET_AUTOMATIC_SHIFTED,
                 KeyboardId.ELEMENT_ALPHABET_SHIFT_LOCKED -> KeyboardId.ELEMENT_ALPHABET
                 else -> KeyboardId.ELEMENT_ALPHABET
@@ -1030,6 +1033,11 @@ class ClipboardHistoryView @JvmOverloads constructor(
                 editText.insert(editCursorPos, char.toString())
                 editCursorPos++
                 updateEditDisplay()
+                if (currentBottomRowLayout == KeyboardId.ELEMENT_ALPHABET_MANUAL_SHIFTED) {
+                    setBottomRowLayout(KeyboardId.ELEMENT_ALPHABET)
+                }
+            } else {
+                keyboardActionListener.onCodeInput(primaryCode, x, y, isKeyRepeat)
             }
             return
         }
@@ -1086,6 +1094,9 @@ class ClipboardHistoryView @JvmOverloads constructor(
               editText.insert(editCursorPos, text)
               editCursorPos += text.length
               updateEditDisplay()
+              if (currentBottomRowLayout == KeyboardId.ELEMENT_ALPHABET_MANUAL_SHIFTED) {
+                  setBottomRowLayout(KeyboardId.ELEMENT_ALPHABET)
+              }
               return
          }
 
@@ -1093,12 +1104,15 @@ class ClipboardHistoryView @JvmOverloads constructor(
          val inSearchMode = this::searchBarTextView.isInitialized && searchBarTextView.parent == clipboardStrip
          
          if (inSearchMode) {
-             searchQuery.insert(searchCursorPos, text)
-             searchCursorPos += text.length
-             updateSearchDisplay()
-             clipboardAdapter.filter(searchQuery.toString())
-             updateEmptyView(true)
-             return
+              searchQuery.insert(searchCursorPos, text)
+              searchCursorPos += text.length
+              updateSearchDisplay()
+              clipboardAdapter.filter(searchQuery.toString())
+              updateEmptyView(true)
+              if (currentBottomRowLayout == KeyboardId.ELEMENT_ALPHABET_MANUAL_SHIFTED) {
+                  setBottomRowLayout(KeyboardId.ELEMENT_ALPHABET)
+              }
+              return
          }
          
          keyboardActionListener.onTextInput(text)

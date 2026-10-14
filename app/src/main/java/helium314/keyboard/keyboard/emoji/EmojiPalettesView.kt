@@ -840,9 +840,22 @@ class EmojiPalettesView @JvmOverloads constructor(
 
     override fun getDescription(emoji: String): String? {
         val wordProperty = sDictionaryFacilitator?.getWordProperty(emoji)
-        if (wordProperty == null || !wordProperty.mHasShortcuts) return null
+        if (wordProperty?.mHasShortcuts == true) {
+            val desc = wordProperty.mShortcutTargets?.firstOrNull()?.mWord
+            if (!desc.isNullOrEmpty()) return desc
+        }
 
-        return wordProperty.mShortcutTargets?.firstOrNull()?.mWord
+        val cleanEmoji = stripEmojiModifiers(emoji)
+        if (cleanEmoji != emoji) {
+            val baseProperty = sDictionaryFacilitator?.getWordProperty(cleanEmoji)
+            if (baseProperty?.mHasShortcuts == true) {
+                val desc = baseProperty.mShortcutTargets?.firstOrNull()?.mWord
+                if (!desc.isNullOrEmpty()) return desc
+            }
+        }
+
+        return EMOJI_FALLBACK_DESCRIPTIONS[emoji]
+            ?: EMOJI_FALLBACK_DESCRIPTIONS[cleanEmoji]
     }
 
     fun setHardwareAcceleratedDrawingEnabled(enabled: Boolean) {
@@ -1446,5 +1459,152 @@ class EmojiPalettesView @JvmOverloads constructor(
         private fun getRecyclerView(view: View): RecyclerView {
             return view.findViewById(R.id.emoji_keyboard_list)
         }
+
+        private val REGEX_EMOJI_MODIFIERS = Regex("[\\uFE0E\\uFE0F\\uD83C\\uDFFB-\\uD83C\\uDFFF]")
+
+        private fun stripEmojiModifiers(emoji: String): String {
+            return emoji.replace(REGEX_EMOJI_MODIFIERS, "")
+        }
+
+        private val EMOJI_FALLBACK_DESCRIPTIONS: Map<String, String> = mapOf(
+            // Unicode 14.0
+            "🛝" to "playground slide",
+            "🛞" to "wheel",
+            "🛟" to "ring buoy",
+            "🟰" to "heavy equals sign",
+            "🥹" to "face holding back tears",
+            "🧌" to "troll",
+            "🩻" to "x-ray",
+            "🩼" to "crutch",
+            "🪩" to "mirror ball",
+            "🪪" to "identification card",
+            "🪫" to "low battery",
+            "🪬" to "hamsa",
+            "🪷" to "lotus",
+            "🪸" to "coral",
+            "🪹" to "empty nest",
+            "🪺" to "nest with eggs",
+            "🫃" to "pregnant man",
+            "🫄" to "pregnant person",
+            "🫅" to "person with crown",
+            "🫗" to "pouring liquid",
+            "🫘" to "beans",
+            "🫙" to "jar",
+            "🫠" to "melting face",
+            "🫡" to "saluting face",
+            "🫢" to "face with open eyes and hand over mouth",
+            "🫣" to "face with peeking eye",
+            "🫤" to "face with diagonal mouth",
+            "🫥" to "dotted line face",
+            "🫦" to "biting lip",
+            "🫧" to "bubbles",
+            "🫰" to "hand with index finger and thumb crossed",
+            "🫱" to "rightwards hand",
+            "🫲" to "leftwards hand",
+            "🫳" to "palm down hand",
+            "🫴" to "palm up hand",
+            "🫵" to "index pointing at the viewer",
+            "🫶" to "heart hands",
+
+            // Unicode 15.0
+            "🫨" to "shaking face",
+            "🩷" to "pink heart",
+            "🩵" to "light blue heart",
+            "🩶" to "grey heart",
+            "🫷" to "leftwards pushing hand",
+            "🫸" to "rightwards pushing hand",
+            "🫎" to "moose",
+            "🫏" to "donkey",
+            "🪽" to "wing",
+            "🐦\u200D⬛" to "black bird",
+            "🪿" to "goose",
+            "🪼" to "jellyfish",
+            "🪻" to "hyacinth",
+            "🫚" to "ginger root",
+            "🫛" to "pea pod",
+            "🪭" to "folding hand fan",
+            "🪮" to "hair pick",
+            "🪇" to "maracas",
+            "🪈" to "flute",
+            "🪯" to "khanda",
+            "🛜" to "wireless",
+
+            // Unicode 15.1
+            "🙂\u200D↔️" to "head shaking horizontally",
+            "🙂\u200D↔" to "head shaking horizontally",
+            "🙂\u200D↕️" to "head shaking vertically",
+            "🙂\u200D↕" to "head shaking vertically",
+            "🐦\u200D🔥" to "phoenix",
+            "🍋\u200D🟩" to "lime",
+            "🍄\u200D🟫" to "brown mushroom",
+            "⛓️\u200D💥" to "broken chain",
+            "⛓\u200D💥" to "broken chain",
+            "🧑\u200D🧑\u200D🧒" to "family: adult, adult, child",
+            "🧑\u200D🧑\u200D🧒\u200D🧒" to "family: adult, adult, child, child",
+            "🧑\u200D🧒" to "family: adult, child",
+            "🧑\u200D🧒\u200D🧒" to "family: adult, child, child",
+            "🚶\u200D➡" to "person walking facing right",
+            "🚶\u200D➡️" to "person walking facing right",
+            "🚶‍♀\u200D➡" to "woman walking facing right",
+            "🚶‍♀\u200D➡️" to "woman walking facing right",
+            "🚶‍♂\u200D➡" to "man walking facing right",
+            "🚶‍♂\u200D➡️" to "man walking facing right",
+            "🏃\u200D➡" to "person running facing right",
+            "🏃\u200D➡️" to "person running facing right",
+            "🏃‍♀\u200D➡" to "woman running facing right",
+            "🏃‍♀\u200D➡️" to "woman running facing right",
+            "🏃‍♂\u200D➡" to "man running facing right",
+            "🏃‍♂\u200D➡️" to "man running facing right",
+            "🧎\u200D➡" to "person kneeling facing right",
+            "🧎\u200D➡️" to "person kneeling facing right",
+            "🧎‍♀\u200D➡" to "woman kneeling facing right",
+            "🧎‍♀\u200D➡️" to "woman kneeling facing right",
+            "🧎‍♂\u200D➡" to "man kneeling facing right",
+            "🧎‍♂\u200D➡️" to "man kneeling facing right",
+            "🧑\u200D🦯\u200D➡" to "person with white cane facing right",
+            "🧑\u200D🦯\u200D➡️" to "person with white cane facing right",
+            "👨\u200D🦯\u200D➡" to "man with white cane facing right",
+            "👨\u200D🦯\u200D➡️" to "man with white cane facing right",
+            "👩\u200D🦯\u200D➡" to "woman with white cane facing right",
+            "👩\u200D🦯\u200D➡️" to "woman with white cane facing right",
+            "🧑\u200D🦼\u200D➡" to "person in motorized wheelchair facing right",
+            "🧑\u200D🦼\u200D➡️" to "person in motorized wheelchair facing right",
+            "👨\u200D🦼\u200D➡" to "man in motorized wheelchair facing right",
+            "👨\u200D🦼\u200D➡️" to "man in motorized wheelchair facing right",
+            "👩\u200D🦼\u200D➡" to "woman in motorized wheelchair facing right",
+            "👩\u200D🦼\u200D➡️" to "woman in motorized wheelchair facing right",
+            "🧑\u200D🦽\u200D➡" to "person in manual wheelchair facing right",
+            "🧑\u200D🦽\u200D➡️" to "person in manual wheelchair facing right",
+            "👨\u200D🦽\u200D➡" to "man in manual wheelchair facing right",
+            "👨\u200D🦽\u200D➡️" to "man in manual wheelchair facing right",
+            "👩\u200D🦽\u200D➡" to "woman in manual wheelchair facing right",
+            "👩\u200D🦽\u200D➡️" to "woman in manual wheelchair facing right",
+
+            // Unicode 16.0
+            "🫩" to "face with bags under eyes",
+            "🫆" to "fingerprint",
+            "🪾" to "leafless tree",
+            "🫜" to "root vegetable",
+            "🪉" to "harp",
+            "🪏" to "shovel",
+            "🫟" to "splatter",
+            "🇨🇶" to "flag: Sark",
+
+            // Unicode 17.0
+            "🫪" to "distorted face",
+            "🫯" to "fight cloud",
+            "🫈" to "hairy creature",
+            "🧑\u200D🩰" to "ballet dancer",
+            "👯" to "people with bunny ears",
+            "👯‍♀" to "women with bunny ears",
+            "👯‍♂" to "men with bunny ears",
+            "🤼" to "people wrestling",
+            "🤼‍♀" to "women wrestling",
+            "🤼‍♂" to "men wrestling",
+            "🫍" to "orca",
+            "🛘" to "landslide",
+            "🪊" to "trombone",
+            "🪎" to "treasure chest"
+        )
     }
 }

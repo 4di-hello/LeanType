@@ -289,7 +289,7 @@ fun mightBeEmoji(text: CharSequence): Boolean {
 fun isEmoji(c: Int): Boolean = StringUtils.mightBeEmoji(c) && isEmoji(StringUtils.newSingleCodePointString(c))
 
 /** returns whether the text is a single emoji */
-fun isEmoji(text: CharSequence): Boolean = mightBeEmoji(text) && text.matches(emoRegex)
+fun isEmoji(text: CharSequence): Boolean = mightBeEmoji(text) && (text.matches(emoRegex) || (StringUtils.codePointCount(text) == 1 && text.codePointAt(0) in 0x1F300..0x1FAFF))
 
 private val WHITESPACE_REGEX = Regex("\\s+")
 fun String.splitOnWhitespace() = split(WHITESPACE_REGEX).filter { it.isNotEmpty() }
