@@ -92,6 +92,13 @@ class InputLogic(
     private var mCapsLockFromRecapitalize = false
 
     private var mDeleteCount = 0
+    // for "backspace repeat deletes words": repeat ticks in the current hold, and words deleted so far
+    private var mBackspaceRepeatTicks = 0
+    private var mBackspaceWordsDeleted = 0
+    /** time (ms after the first key repeat) when the next word is deleted */
+    private var mBackspaceNextWordTime = 0f
+    /** word deletion not possible in the current hold (no text available), normal deletion is used */
+    private var mBackspaceWordModeFailed = false
     private var mLastKeyTime = 0L
     private var mEnteredText: String? = null
     private var mIsAutoCorrectionIndicatorOn = false
@@ -1360,6 +1367,65 @@ class InputLogic(
         }
     }
 
+    /**
+     * Whether holding delete currently removes whole words. Not for languages without spaces, where
+     * a "word" may be a whole sentence. Also used to give feedback per word instead of per key repeat.
+     */
+    fun isBackspaceWordModeActive(settingsValues: SettingsValues): Boolean =
+        settingsValues.mBackspaceRepeatDeletesWords
+            && settingsValues.mSpacingAndPunctuations.mCurrentLanguageHasSpaces
+            && !mBackspaceWordModeFailed
+
+    /**
+     * When the option is enabled and the delete key is held down, switch from deleting characters
+     * to deleting whole words after a short while. Words are deleted with increasing speed.
+     * Returns true if the event was consumed (a word was deleted, or this repeat tick is skipped).
+     */
+    private fun handleBackspaceRepeatWordDeletion(event: Event, settingsValues: SettingsValues): Boolean {
+        if (!event.isKeyRepeat || mDeleteCount <= 1) {
+            // new press of the delete key
+            mBackspaceRepeatTicks = 0
+            mBackspaceWordsDeleted = 0
+            mBackspaceNextWordTime = 0f
+            mBackspaceWordModeFailed = false
+        }
+        if (!event.isKeyRepeat) return false
+        mBackspaceRepeatTicks++
+        if (!isBackspaceWordModeActive(settingsValues)) return false
+        // key repeats come in fixed intervals, so we can count time in repeats
+        val time = (mBackspaceRepeatTicks - 1) * KEY_REPEAT_INTERVAL_MS
+        if (time < mBackspaceNextWordTime) return true // wait between words
+
+        if (mWordComposer.isComposingWord()) {
+            mConnection.finishComposingText()
+            resetComposingState(true)
+        }
+        // with very short intervals, more than one word may be due per key repeat
+        var deletedWords = 0
+        while (time >= mBackspaceNextWordTime && deletedWords < 2) {
+            val textBefore = mConnection.getTextBeforeCursor(BACKSPACE_WORD_LOOKBACK, 0)?.toString()
+            if (textBefore == null) { // fall back to normal deletion
+                mBackspaceWordModeFailed = true
+                return deletedWords > 0
+            }
+            if (textBefore.isEmpty()) return true
+            val length = textBefore.length - getStartOfPreviousWord(textBefore)
+            if (InputTypeUtils.isWebEditor(getCurrentInputEditorInfo())) {
+                repeat(length) { sendDownUpKeyEvent(KeyEvent.KEYCODE_DEL) }
+            } else {
+                mConnection.deleteTextBeforeCursor(length)
+            }
+            StatsUtils.onBackspaceWordDelete(length)
+            mBackspaceNextWordTime += getBackspaceWordInterval(mBackspaceWordsDeleted)
+            mBackspaceWordsDeleted++
+            deletedWords++
+        }
+        mSuggestionStripViewAccessor.setNeutralSuggestionStrip()
+        // one feedback per deleted word, key repeat feedback is suppressed in word mode
+        mLatinIME.feedbackForDeletedWord()
+        return true
+    }
+
     private fun handleBackspaceEvent(event: Event, inputTransaction: InputTransaction) {
         val currentKeyboardScript = inputTransaction.settingsValues.mCurrentKeyboardScript
         mSpaceState = SpaceState.NONE
@@ -1419,6 +1485,8 @@ class InputLogic(
             InputTransaction.SHIFT_UPDATE_NOW
         }
         inputTransaction.requireShiftUpdate(shiftUpdateKind)
+
+        if (handleBackspaceRepeatWordDeletion(event, inputTransaction.settingsValues)) return
 
         if (mWordComposer.isCursorFrontOrMiddleOfComposingWord()) {
             unlearnWord(mWordComposer.getTypedWord(), inputTransaction.settingsValues, Constants.EVENT_BACKSPACE)
@@ -2964,9 +3032,41 @@ class InputLogic(
     companion object {
         private const val TAG = "InputLogic"
         private const val INLINE_EMOJI_SEARCH_MARKER = ':'
+        private const val KEY_REPEAT_INTERVAL_MS = 50
+        /** interval before the second word, it gets shorter with each word until the minimum */
+        private const val BACKSPACE_WORD_START_INTERVAL = 350f
+        private const val BACKSPACE_WORD_ACCELERATION = 0.8f
+        private const val BACKSPACE_WORD_MIN_INTERVAL = 80f
+
+        /** Time until the next word is deleted, after [wordsDeleted] words were deleted already */
+        fun getBackspaceWordInterval(wordsDeleted: Int): Float {
+            var interval = BACKSPACE_WORD_START_INTERVAL
+            repeat(wordsDeleted.coerceAtMost(30)) { interval *= BACKSPACE_WORD_ACCELERATION }
+            return interval.coerceAtLeast(BACKSPACE_WORD_MIN_INTERVAL)
+        }
+        private const val BACKSPACE_WORD_LOOKBACK = 200
         private val THAI_LOCALE = Locale.forLanguageTag("th")
         private val THAI_WORD_BREAK_ITERATOR = ThreadLocal.withInitial { BreakIterator.getWordInstance(THAI_LOCALE) }
         private val CURSOR_PATTERN = java.util.regex.Pattern.compile("%cursor(\\d+)%")
+
+        /**
+         * Index where the word before the end of [text] starts, including whitespace and punctuation
+         * after it, but keeping the whitespace before it (so "one two " -> "one ").
+         */
+        internal fun getStartOfPreviousWord(text: String): Int {
+            var i = text.length
+            fun skipWhile(predicate: (Int) -> Boolean) {
+                while (i > 0) {
+                    val cp = Character.codePointBefore(text, i)
+                    if (!predicate(cp)) break
+                    i -= Character.charCount(cp)
+                }
+            }
+            skipWhile { Character.isWhitespace(it) }
+            skipWhile { !Character.isLetterOrDigit(it) && !Character.isWhitespace(it) }
+            skipWhile { Character.isLetterOrDigit(it) }
+            return i
+        }
 
         fun isSpaceStrippingPunctuation(codePoint: Int): Boolean {
             return codePoint == '.'.code
