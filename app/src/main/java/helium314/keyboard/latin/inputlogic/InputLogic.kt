@@ -147,7 +147,6 @@ class InputLogic(
         mCapsLockFromRecapitalize = false
         TypingHeatmap.init(mLatinIME)
         mDeletedLetterIndex = -1
-        mCapsLockFromRecapitalize = false
         mRecapitalizedWord = null
         mEnteredText = null
         mWordBeingCorrectedByCursor = null
