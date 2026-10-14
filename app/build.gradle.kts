@@ -89,6 +89,18 @@ android {
                 abiFilters.add("x86_64")
             }
         }
+        // only in this fork: optimized like release, but with the fixed key and id of the test version,
+        // so it installs over it and keeps its data (models, plugins, settings)
+        create("personal") {
+            initWith(getByName("release"))
+            isMinifyEnabled = true
+            isShrinkResources = true
+            isDebuggable = false
+            isJniDebuggable = false
+            signingConfig = signingConfigs.getByName("debug")
+            applicationIdSuffix = ".debug"
+            matchingFallbacks += listOf("release")
+        }
         create("runTests") { // build variant for running tests on CI that skips tests known to fail
             isMinifyEnabled = false
             isJniDebuggable = false
