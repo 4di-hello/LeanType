@@ -92,6 +92,7 @@ fun AdvancedSettingsScreen(
             Settings.PREF_DISABLE_NETWORK,
             SettingsWithoutKey.BACKGROUND_SERVICES,
             SettingsWithoutKey.BACKUP_RESTORE,
+            "auto_backup",
             if (BuildConfig.DEBUG || prefs.getBoolean(DebugSettings.PREF_SHOW_DEBUG_SETTINGS, Defaults.PREF_SHOW_DEBUG_SETTINGS))
                 SettingsWithoutKey.DEBUG_SETTINGS else null,
             Settings.PREF_EXPAND_FINE_TUNE_ADVANCED,
@@ -187,6 +188,9 @@ fun createAdvancedSettings(context: Context) = listOfNotNull(
     },
     Setting(context, SettingsWithoutKey.BACKUP_RESTORE, R.string.backup_restore_title) {
         BackupRestorePreference(it)
+    },
+    Setting(context, "auto_backup", R.string.auto_backup_title) {
+        helium314.keyboard.settings.preferences.AutoBackupPreference(it)
     },
     Setting(context, SettingsWithoutKey.BACKGROUND_SERVICES, R.string.background_services_title) {
         Preference(
