@@ -153,6 +153,9 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
     // Track whether the user manually toggles the toolbar open/close
     var isToolbarManuallyOpen: Boolean = false
 
+    val isToolbarShowing: Boolean
+        get() = toolbarContainer.visibility == VISIBLE
+
     // Translate language selector
     private var isTranslateLanguageSelectorVisible = false
     private val translateLanguageContainer: View = findViewById(R.id.translate_language_container)
@@ -1849,7 +1852,13 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
         // Update toolbar visibility state
         val settingsValues = Settings.getValues()
         if (settingsValues.mToolbarMode == ToolbarMode.EXPANDABLE && !settingsValues.mSplitToolbar) {
-            setToolbarVisibility(isToolbarManuallyOpen, saveState = false)
+            val shouldShow = when {
+                settingsValues.mAutoShowToolbarNoSuggestions -> true
+                settingsValues.mAutoShowToolbar -> true
+                settingsValues.mAutoHideToolbar -> false
+                else -> isToolbarManuallyOpen
+            }
+            setToolbarVisibility(shouldShow, saveState = false)
         }
         updateSplitToolbarState()
     }

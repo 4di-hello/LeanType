@@ -1677,7 +1677,13 @@ class LatinIME : InputMethodService(),
                             if (currentSettings.mAutoShowToolbarOnSelect && inputLogic.connection.hasSelection()) {
                                 strip.setToolbarVisibility(true)
                             } else {
-                                val shouldShow = if (currentSettings.mAutoHideToolbar) false else strip.isToolbarManuallyOpen
+                                val shouldShow = when {
+                                    currentSettings.mToolbarMode == ToolbarMode.TOOLBAR_KEYS -> true
+                                    currentSettings.mAutoHideToolbar -> false
+                                    currentSettings.mAutoShowToolbarNoSuggestions -> true
+                                    currentSettings.mAutoShowToolbar -> true
+                                    else -> strip.isToolbarManuallyOpen
+                                }
                                 strip.setToolbarVisibility(shouldShow)
                             }
                         }
@@ -1698,7 +1704,13 @@ class LatinIME : InputMethodService(),
             if (currentSettings.mAutoShowToolbarOnSelect && inputLogic.connection.hasSelection()) {
                 strip.setToolbarVisibility(true)
             } else {
-                val shouldShow = if (currentSettings.mAutoShowToolbarNoSuggestions) true else strip.isToolbarManuallyOpen
+                val shouldShow = when {
+                    currentSettings.mToolbarMode == ToolbarMode.TOOLBAR_KEYS -> true
+                    currentSettings.mAutoShowToolbarNoSuggestions -> true
+                    currentSettings.mAutoShowToolbar -> true
+                    currentSettings.mAutoHideToolbar -> false
+                    else -> strip.isToolbarManuallyOpen
+                }
                 strip.setToolbarVisibility(shouldShow)
             }
         }

@@ -892,9 +892,14 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         mLatinIME?.floatingKeyboardManager?.toggle()
     }
 
+    private var mWasToolbarVisibleBeforeTouchpad = false
+
     fun showTouchpadView() {
         val touchpad = mTouchpadView ?: return
         val kbView = mKeyboardView ?: return
+        mWasToolbarVisibleBeforeTouchpad = mSuggestionStripView?.isToolbarShowing == true ||
+            Settings.getValues().mAutoShowToolbar ||
+            Settings.getValues().mToolbarMode == ToolbarMode.TOOLBAR_KEYS
         kbView.visibility = View.INVISIBLE
         mEmojiPalettesView?.visibility = View.GONE
         mClipboardHistoryView?.visibility = View.GONE
@@ -932,6 +937,7 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
     }
 
     fun hideTouchpadView() {
+        PointerTracker.sPersistentTouchpadModeActive = false
         val touchpad = mTouchpadView ?: return
         touchpad.animate()?.cancel()
         touchpad.visibility = View.GONE
@@ -956,6 +962,13 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         mLatinIME?.let { ime ->
             ime.setNeutralSuggestionStrip()
             ime.mHandler.postResumeSuggestions(false)
+        }
+        if (mWasToolbarVisibleBeforeTouchpad ||
+            Settings.getValues().mAutoShowToolbar ||
+            Settings.getValues().mToolbarMode == ToolbarMode.TOOLBAR_KEYS
+        ) {
+            mSuggestionStripView?.isToolbarManuallyOpen = true
+            mSuggestionStripView?.setToolbarVisibility(true, saveState = false)
         }
         mKeyboardViewWrapper?.let { wrapper ->
             if (wrapper.oneHandedModeEnabled) {
