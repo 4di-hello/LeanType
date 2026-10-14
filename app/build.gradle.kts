@@ -50,6 +50,15 @@ android {
     }
 
     signingConfigs {
+        // only in this fork: fixed key for my own builds, the path is given by the build workflow
+        System.getenv("PERSONAL_KEYSTORE")?.let { path ->
+            if (file(path).exists()) create("personal") {
+                storeFile = file(path)
+                storePassword = "android"
+                keyAlias = "androiddebugkey"
+                keyPassword = "android"
+            }
+        }
         if (keystorePropertiesFile.exists()) {
             create("release") {
                 keyAlias = keystoreProperties["keyAlias"] as String
@@ -97,7 +106,7 @@ android {
             isShrinkResources = true
             isDebuggable = false
             isJniDebuggable = false
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.findByName("personal") ?: signingConfigs.getByName("debug")
             applicationIdSuffix = ".debug"
             matchingFallbacks += listOf("release")
         }
