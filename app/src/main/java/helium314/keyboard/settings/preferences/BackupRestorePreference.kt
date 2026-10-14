@@ -2,6 +2,12 @@
 package helium314.keyboard.settings.preferences
 
 import android.content.Intent
+import android.net.Uri
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.foundation.text.KeyboardOptions
+import helium314.keyboard.latin.backup.BackupCrypto
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
@@ -55,6 +61,8 @@ import helium314.keyboard.settings.filePicker
 import kotlinx.serialization.json.Json
 import java.io.File
 import java.io.FileInputStream
+import java.io.IOException
+import java.io.InputStream
 import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -84,8 +92,10 @@ fun BackupRestorePreference(setting: Setting) {
             )
         )
     }
-    val backupLauncher = backupLauncher(selectedCategories) { error = it }
-    val restoreLauncher = restoreLauncher(selectedCategories) { error = it }
+    var backupPassword by remember { mutableStateOf("") }
+    var encryptedUri: Uri? by remember { mutableStateOf(null) }
+    val backupLauncher = backupLauncher(selectedCategories, { backupPassword.takeIf { it.isNotEmpty() }?.toCharArray() }) { error = it }
+    val restoreLauncher = restoreLauncher(selectedCategories, { encryptedUri = it }) { error = it }
     Preference(name = setting.title, onClick = { showDialog = true })
     if (showDialog) {
         ConfirmationDialog(
@@ -138,6 +148,16 @@ fun BackupRestorePreference(setting: Setting) {
                         }
                     }
                     Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = backupPassword,
+                        onValueChange = { backupPassword = it },
+                        label = { Text(stringResource(R.string.backup_password)) },
+                        supportingText = { Text(stringResource(R.string.backup_password_hint)) },
+                        singleLine = true,
+                        visualTransformation = PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
                     Text(text = stringResource(R.string.backup_restore_message))
                 }
             },
@@ -151,7 +171,8 @@ fun BackupRestorePreference(setting: Setting) {
                 showDialog = false
                 val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
                     .addCategory(Intent.CATEGORY_OPENABLE)
-                    .setType("application/zip")
+                    .setType("*/*")
+                    .putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("application/zip", "application/octet-stream"))
                 restoreLauncher.launch(intent)
             },
             onConfirmed = {
@@ -165,9 +186,9 @@ fun BackupRestorePreference(setting: Setting) {
                     .putExtra(
                         Intent.EXTRA_TITLE,
                         ctx.getString(R.string.english_ime_name)
-                            .replace(" ", "_") + "_backup_$currentDate.zip"
+                            .replace(" ", "_") + "_backup_$currentDate." + if (backupPassword.isEmpty()) "zip" else BackupCrypto.FILE_EXTENSION
                     )
-                    .setType("application/zip")
+                    .setType(if (backupPassword.isEmpty()) "application/zip" else "application/octet-stream")
                 backupLauncher.launch(intent)
             }
         )
@@ -186,6 +207,29 @@ fun BackupRestorePreference(setting: Setting) {
             }
         )
     }
+    val uriToDecrypt = encryptedUri
+    if (uriToDecrypt != null) {
+        var password by remember { mutableStateOf("") }
+        ConfirmationDialog(
+            onDismissRequest = { encryptedUri = null },
+            title = { Text(stringResource(R.string.backup_encrypted_title)) },
+            content = {
+                OutlinedTextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    label = { Text(stringResource(R.string.backup_password_enter)) },
+                    singleLine = true,
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                )
+            },
+            confirmButtonText = stringResource(R.string.button_restore),
+            onConfirmed = {
+                encryptedUri = null
+                restoreEncrypted(ctx, uriToDecrypt, password.toCharArray(), selectedCategories) { error = it }
+            }
+        )
+    }
     val currentError = error
     if (currentError != null) {
         InfoDialog(
@@ -196,109 +240,118 @@ fun BackupRestorePreference(setting: Setting) {
     }
 }
 
+/**
+ * Writes a backup of [selectedCategories] as zip to [os], encrypted if a [password] is given.
+ * Must not run on the main thread.
+ */
+internal fun writeBackup(ctx: Context, os: OutputStream, selectedCategories: Set<BackupCategory>, password: CharArray? = null) {
+    val filesDir = ctx.filesDir ?: return
+    val filesPath = filesDir.path + File.separator
+    val files = mutableListOf<File>()
+    filesDir.walk().forEach { file ->
+        val path = file.path.replace(filesPath, "")
+        if (file.isFile && backupFilePatterns.any { path.matches(it) }) {
+            val cat = getCategoryForFilePath(path)
+            if (cat == null || selectedCategories.contains(cat)) {
+                files.add(file)
+            }
+        }
+    }
+    val protectedFilesDir = DeviceProtectedUtils.getFilesDir(ctx)
+    val protectedFilesPath = protectedFilesDir.path + File.separator
+    val protectedFiles = mutableListOf<File>()
+    protectedFilesDir.walk().forEach { file ->
+        val path = file.path.replace(protectedFilesPath, "")
+        if (file.isFile && backupFilePatterns.any { path.matches(it) }) {
+            val cat = getCategoryForFilePath(path)
+            if (cat == null || selectedCategories.contains(cat)) {
+                protectedFiles.add(file)
+            }
+        }
+    }
+    val target = if (password != null) BackupCrypto.encryptingStream(os, password) else os
+    val zipStream = ZipOutputStream(target)
+    files.forEach {
+        val fileStream = FileInputStream(it).buffered()
+        zipStream.putNextEntry(ZipEntry(it.path.replace(filesPath, "")))
+        fileStream.copyTo(zipStream, 1024)
+        fileStream.close()
+        zipStream.closeEntry()
+    }
+    protectedFiles.forEach {
+        val fileStream = FileInputStream(it).buffered()
+        zipStream.putNextEntry(ZipEntry(it.path.replace(protectedFilesDir.path, "unprotected")))
+        fileStream.copyTo(zipStream, 1024)
+        fileStream.close()
+        zipStream.closeEntry()
+    }
+    if (selectedCategories.contains(BackupCategory.TYPING_PROFILE)) {
+        // stored outside the normal folders (excluded from Android backup), see TypingHeatmap
+        TypingHeatmap.getDataForBackup(ctx)?.let { data ->
+            zipStream.putNextEntry(ZipEntry(TypingHeatmap.FILE_NAME))
+            zipStream.write(data)
+            zipStream.closeEntry()
+        }
+    }
+    if (selectedCategories.contains(BackupCategory.CLIPBOARD)) {
+        val dbFile = ctx.getDatabasePath(Database.NAME)
+        if (dbFile.exists()) {
+            val fileStream = FileInputStream(dbFile).buffered()
+            zipStream.putNextEntry(ZipEntry(Database.NAME))
+            fileStream.copyTo(zipStream, 1024)
+            fileStream.close()
+            zipStream.closeEntry()
+        }
+    }
+    if (selectedCategories.contains(BackupCategory.API_KEYS)) {
+        val secureSettings = ProofreadService(ctx).getSecureSettings()
+        if (secureSettings.isNotEmpty()) {
+            zipStream.putNextEntry(ZipEntry(API_KEYS_FILE_NAME))
+            settingsToJsonStream(secureSettings, zipStream)
+            zipStream.closeEntry()
+        }
+    }
+    val filteredPrefs = ctx.prefs().all.filter {
+        selectedCategories.contains(getCategoryForPrefKey(it.key))
+    }
+    zipStream.putNextEntry(ZipEntry(PREFS_FILE_NAME))
+    settingsToJsonStream(filteredPrefs, zipStream)
+    zipStream.closeEntry()
+
+    val filteredProtectedPrefs = ctx.protectedPrefs().all.filter {
+        selectedCategories.contains(getCategoryForPrefKey(it.key))
+    }
+    zipStream.putNextEntry(ZipEntry(PROTECTED_PREFS_FILE_NAME))
+    settingsToJsonStream(filteredProtectedPrefs, zipStream)
+    zipStream.closeEntry()
+
+    for ((entryName, prefsForBackup) in auxiliaryPrefsToBackUp(ctx)) {
+        val cat = getCategoryForFilePath(entryName)
+        if (cat == null || selectedCategories.contains(cat)) {
+            val filteredAuxPrefs = prefsForBackup.all.filter {
+                selectedCategories.contains(getCategoryForPrefKey(it.key))
+            }
+            zipStream.putNextEntry(ZipEntry(entryName))
+            settingsToJsonStream(filteredAuxPrefs, zipStream)
+            zipStream.closeEntry()
+        }
+    }
+    zipStream.close()
+}
+
 @Composable
 private fun backupLauncher(
     selectedCategories: Set<BackupCategory>,
+    password: () -> CharArray?,
     onError: (String) -> Unit
 ): ManagedActivityResultLauncher<Intent, ActivityResult> {
     val ctx = LocalContext.current
     return filePicker { uri ->
-        val filesDir = ctx.filesDir ?: return@filePicker
-        val filesPath = filesDir.path + File.separator
-        val files = mutableListOf<File>()
-        filesDir.walk().forEach { file ->
-            val path = file.path.replace(filesPath, "")
-            if (file.isFile && backupFilePatterns.any { path.matches(it) }) {
-                val cat = getCategoryForFilePath(path)
-                if (cat == null || selectedCategories.contains(cat)) {
-                    files.add(file)
-                }
-            }
-        }
-        val protectedFilesDir = DeviceProtectedUtils.getFilesDir(ctx)
-        val protectedFilesPath = protectedFilesDir.path + File.separator
-        val protectedFiles = mutableListOf<File>()
-        protectedFilesDir.walk().forEach { file ->
-            val path = file.path.replace(protectedFilesPath, "")
-            if (file.isFile && backupFilePatterns.any { path.matches(it) }) {
-                val cat = getCategoryForFilePath(path)
-                if (cat == null || selectedCategories.contains(cat)) {
-                    protectedFiles.add(file)
-                }
-            }
-        }
+        val pw = password()
         ExecutorUtils.getBackgroundExecutor(ExecutorUtils.KEYBOARD).execute {
             try {
                 ctx.getActivity()?.contentResolver?.openOutputStream(uri)?.use { os ->
-                    val zipStream = ZipOutputStream(os)
-                    files.forEach {
-                        val fileStream = FileInputStream(it).buffered()
-                        zipStream.putNextEntry(ZipEntry(it.path.replace(filesPath, "")))
-                        fileStream.copyTo(zipStream, 1024)
-                        fileStream.close()
-                        zipStream.closeEntry()
-                    }
-                    protectedFiles.forEach {
-                        val fileStream = FileInputStream(it).buffered()
-                        zipStream.putNextEntry(ZipEntry(it.path.replace(protectedFilesDir.path, "unprotected")))
-                        fileStream.copyTo(zipStream, 1024)
-                        fileStream.close()
-                        zipStream.closeEntry()
-                    }
-                    if (selectedCategories.contains(BackupCategory.TYPING_PROFILE)) {
-                        // stored outside the normal folders (excluded from Android backup), see TypingHeatmap
-                        TypingHeatmap.getFileForBackup(ctx)?.let { file ->
-                            val fileStream = FileInputStream(file).buffered()
-                            zipStream.putNextEntry(ZipEntry(TypingHeatmap.FILE_NAME))
-                            fileStream.copyTo(zipStream, 1024)
-                            fileStream.close()
-                            zipStream.closeEntry()
-                        }
-                    }
-                    if (selectedCategories.contains(BackupCategory.CLIPBOARD)) {
-                        val dbFile = ctx.getDatabasePath(Database.NAME)
-                        if (dbFile.exists()) {
-                            val fileStream = FileInputStream(dbFile).buffered()
-                            zipStream.putNextEntry(ZipEntry(Database.NAME))
-                            fileStream.copyTo(zipStream, 1024)
-                            fileStream.close()
-                            zipStream.closeEntry()
-                        }
-                    }
-                    if (selectedCategories.contains(BackupCategory.API_KEYS)) {
-                        val secureSettings = ProofreadService(ctx).getSecureSettings()
-                        if (secureSettings.isNotEmpty()) {
-                            zipStream.putNextEntry(ZipEntry(API_KEYS_FILE_NAME))
-                            settingsToJsonStream(secureSettings, zipStream)
-                            zipStream.closeEntry()
-                        }
-                    }
-                    val filteredPrefs = ctx.prefs().all.filter {
-                        selectedCategories.contains(getCategoryForPrefKey(it.key))
-                    }
-                    zipStream.putNextEntry(ZipEntry(PREFS_FILE_NAME))
-                    settingsToJsonStream(filteredPrefs, zipStream)
-                    zipStream.closeEntry()
-
-                    val filteredProtectedPrefs = ctx.protectedPrefs().all.filter {
-                        selectedCategories.contains(getCategoryForPrefKey(it.key))
-                    }
-                    zipStream.putNextEntry(ZipEntry(PROTECTED_PREFS_FILE_NAME))
-                    settingsToJsonStream(filteredProtectedPrefs, zipStream)
-                    zipStream.closeEntry()
-
-                    for ((entryName, prefsForBackup) in auxiliaryPrefsToBackUp(ctx)) {
-                        val cat = getCategoryForFilePath(entryName)
-                        if (cat == null || selectedCategories.contains(cat)) {
-                            val filteredAuxPrefs = prefsForBackup.all.filter {
-                                selectedCategories.contains(getCategoryForPrefKey(it.key))
-                            }
-                            zipStream.putNextEntry(ZipEntry(entryName))
-                            settingsToJsonStream(filteredAuxPrefs, zipStream)
-                            zipStream.closeEntry()
-                        }
-                    }
-                    zipStream.close()
+                    writeBackup(ctx, os, selectedCategories, pw)
                 }
             } catch (t: Throwable) {
                 Handler(Looper.getMainLooper()).post {
@@ -313,14 +366,60 @@ private fun backupLauncher(
 @Composable
 private fun restoreLauncher(
     selectedCategories: Set<BackupCategory>,
+    onEncrypted: (Uri) -> Unit,
     onError: (String) -> Unit
 ): ManagedActivityResultLauncher<Intent, ActivityResult> {
     val ctx = LocalContext.current
     return filePicker { uri ->
+        ExecutorUtils.getBackgroundExecutor(ExecutorUtils.KEYBOARD).execute {
+            val encrypted = try {
+                ctx.contentResolver.openInputStream(uri)?.use { input ->
+                    val header = ByteArray(BackupCrypto.headerLength)
+                    var read = 0
+                    while (read < header.size) {
+                        val r = input.read(header, read, header.size - read)
+                        if (r < 0) break
+                        read += r
+                    }
+                    BackupCrypto.isEncrypted(header)
+                } ?: false
+            } catch (_: Exception) { false }
+            if (encrypted) Handler(Looper.getMainLooper()).post { onEncrypted(uri) }
+            else runRestore(ctx, selectedCategories, onError) { ctx.contentResolver.openInputStream(uri) }
+        }
+    }
+}
+
+/** Decrypts the backup at [uri] with [password] and restores it, nothing is changed if the password is wrong */
+private fun restoreEncrypted(ctx: Context, uri: Uri, password: CharArray, selectedCategories: Set<BackupCategory>, onError: (String) -> Unit) {
+    ExecutorUtils.getBackgroundExecutor(ExecutorUtils.KEYBOARD).execute {
+        val tmp = File(ctx.cacheDir, "restore_decrypted.zip")
+        try {
+            ctx.contentResolver.openInputStream(uri)?.use { BackupCrypto.decryptToFile(it, password, tmp) }
+                ?: throw IOException("can't open file")
+        } catch (e: BackupCrypto.WrongPasswordException) {
+            Handler(Looper.getMainLooper()).post { onError("r" + ctx.getString(R.string.backup_wrong_password)) }
+            return@execute
+        } catch (t: Throwable) {
+            tmp.delete()
+            Handler(Looper.getMainLooper()).post { onError("r" + t.message) }
+            return@execute
+        } finally {
+            password.fill(' ')
+        }
+        runRestore(ctx, selectedCategories, onError) {
+            object : java.io.FilterInputStream(FileInputStream(tmp)) {
+                override fun close() { super.close(); tmp.delete() }
+            }
+        }
+    }
+}
+
+private fun runRestore(ctx: Context, selectedCategories: Set<BackupCategory>, onError: (String) -> Unit, openInput: () -> InputStream?) {
         val restoredDb = ctx.getDatabasePath(Database.NAME + "_restored")
         ExecutorUtils.getBackgroundExecutor(ExecutorUtils.KEYBOARD).execute {
             try {
-                ctx.getActivity()?.contentResolver?.openInputStream(uri)?.use { inputStream ->
+                openInput()?.use { inputStream ->
                     ZipInputStream(inputStream).use { zip ->
                         var entry: ZipEntry? = zip.nextEntry
                         val filesDir = ctx.filesDir ?: return@execute
@@ -443,7 +542,6 @@ private fun restoreLauncher(
                 Log.w("AdvancedScreen", "error during restore", t)
             }
         }
-    }
 }
 
 internal fun restoreMainPreferences(
