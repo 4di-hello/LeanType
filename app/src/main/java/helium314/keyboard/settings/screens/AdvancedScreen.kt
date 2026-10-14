@@ -90,6 +90,7 @@ fun AdvancedSettingsScreen(
             SettingsWithoutKey.APP_QUIRKS,
             SettingsWithoutKey.BACKGROUND_SERVICES,
             SettingsWithoutKey.BACKUP_RESTORE,
+            "auto_backup",
             if (BuildConfig.DEBUG || prefs.getBoolean(DebugSettings.PREF_SHOW_DEBUG_SETTINGS, Defaults.PREF_SHOW_DEBUG_SETTINGS))
                 SettingsWithoutKey.DEBUG_SETTINGS else null,
             Settings.PREF_EXPAND_FINE_TUNE_ADVANCED,
@@ -188,6 +189,9 @@ private fun createAdvancedSettings(context: Context) = listOfNotNull(
             description = stringResource(R.string.app_quirks_summary),
             onClick = { SettingsDestination.navigateTo(SettingsDestination.AppQuirks) }
         ) { NextScreenIcon() }
+    },
+    Setting(context, "auto_backup", R.string.auto_backup_title) {
+        helium314.keyboard.settings.preferences.AutoBackupPreference(it)
     },
     Setting(context, SettingsWithoutKey.BACKGROUND_SERVICES, R.string.background_services_title) {
         Preference(
