@@ -1369,6 +1369,7 @@ New dictionary:
     <string name="theme_name_dynamic_vivid" tools:keep="@string/theme_name_dynamic_vivid">Dynamic colors (vivid)</string>
     <string name="theme_name_clean_light" tools:keep="@string/theme_name_clean_light">Clean Light</string>
     <string name="theme_name_clean_dark" tools:keep="@string/theme_name_clean_dark">Clean Dark</string>
+    <string name="theme_name_graphite" tools:keep="@string/theme_name_graphite">Graphite</string>
     <string name="theme_name_pure_black" tools:keep="@string/theme_name_pure_black">Pure Black (dimmed)</string>
     <string name="theme_name_warm_night" tools:keep="@string/theme_name_warm_night">Warm Night</string>
     <string name="theme_name_high_contrast_light" tools:keep="@string/theme_name_high_contrast_light">High Contrast Light</string>
