@@ -131,6 +131,11 @@ class DynamicColors(
     private val keyText = getKeyText(context)
     private val keyHintText = getKeyHintText(context)
     private val spaceBarText = getSpaceBarText(context)
+    /** colored auto-correction and typed word for the subtle and vivid variants */
+    private val variantAutoCorrect = ContextCompat.getColor(context,
+        if (isNight) android.R.color.system_accent1_200 else android.R.color.system_accent1_700)
+    private val variantTypedWord = ContextCompat.getColor(context,
+        if (isNight) android.R.color.system_accent3_200 else android.R.color.system_accent3_700)
 
     private fun isNight(context: Context) =
         context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
@@ -338,7 +343,9 @@ class DynamicColors(
         AUTOFILL_BACKGROUND_CHIP, GESTURE_PREVIEW, POPUP_KEYS_BACKGROUND, MORE_SUGGESTIONS_BACKGROUND, KEY_PREVIEW_BACKGROUND -> adjustedBackground
         TOOL_BAR_EXPAND_KEY_BACKGROUND -> doubleAdjustedBackground
         GESTURE_TRAIL -> gesture
-        KEY_TEXT, SUGGESTION_AUTO_CORRECT, REMOVE_SUGGESTION_ICON, EMOJI_KEY_TEXT, KEY_PREVIEW_TEXT,
+        SUGGESTION_AUTO_CORRECT -> if (variant == VARIANT_DEFAULT) keyText else variantAutoCorrect
+        SUGGESTION_TYPED_WORD -> if (variant == VARIANT_DEFAULT) adjustedKeyText else variantTypedWord
+        KEY_TEXT, REMOVE_SUGGESTION_ICON, EMOJI_KEY_TEXT, KEY_PREVIEW_TEXT,
             KEY_ICON, ONE_HANDED_MODE_BUTTON, EMOJI_CATEGORY, TOOL_BAR_KEY, FUNCTIONAL_KEY_TEXT,
             POPUP_KEY_TEXT, POPUP_KEY_ICON -> keyText
         KEY_HINT_TEXT -> keyHintText
@@ -351,7 +358,7 @@ class DynamicColors(
         STRIP_BACKGROUND -> background
         CLIPBOARD_SUGGESTION_BACKGROUND -> doubleAdjustedBackground
         NAVIGATION_BAR -> navBar
-        MORE_SUGGESTIONS_HINT, SUGGESTED_WORD, SUGGESTION_TYPED_WORD, SUGGESTION_VALID_WORD -> adjustedKeyText
+        MORE_SUGGESTIONS_HINT, SUGGESTED_WORD, SUGGESTION_VALID_WORD -> adjustedKeyText
         TOOL_BAR_EXPAND_KEY -> Color.WHITE
         ACTION_KEY_ICON -> if (isBrightColor(accent)) Color.DKGRAY else Color.WHITE
         EDIT_MODE_DELETE_BACKGROUND -> androidx.core.graphics.ColorUtils.blendARGB(accent, functionalKey, 0.4f)
@@ -456,6 +463,10 @@ class DefaultColors (
     private var keyboardBackground: Drawable? = null,
     private val stripBackgroundOverride: Int? = null,
     private val toolbarKeyOverride: Int? = null,
+    /** own colors for the auto-correction, the typed word and other suggestions in the suggestion strip */
+    private val autoCorrectOverride: Int? = null,
+    private val typedWordOverride: Int? = null,
+    private val suggestionOverride: Int? = null,
 ) : Colors {
     private val navBar: Int
     /** brightened or darkened variant of [background], to be used if exact background color would be
@@ -568,9 +579,12 @@ class DefaultColors (
         ACTION_KEY_POPUP_KEYS_BACKGROUND -> if (themeStyle == STYLE_HOLO) adjustedBackground else accent
         STRIP_BACKGROUND -> stripBackgroundOverride ?: background
         NAVIGATION_BAR -> navBar
-        SUGGESTION_AUTO_CORRECT, EMOJI_CATEGORY, TOOL_BAR_EXPAND_KEY, ONE_HANDED_MODE_BUTTON -> suggestionText
+        SUGGESTION_AUTO_CORRECT -> autoCorrectOverride ?: suggestionText
+        EMOJI_CATEGORY, TOOL_BAR_EXPAND_KEY, ONE_HANDED_MODE_BUTTON -> suggestionText
         TOOL_BAR_KEY -> toolbarKeyOverride ?: suggestionText
-        MORE_SUGGESTIONS_HINT, SUGGESTED_WORD, SUGGESTION_TYPED_WORD, SUGGESTION_VALID_WORD -> adjustedSuggestionText
+        SUGGESTION_TYPED_WORD -> typedWordOverride ?: adjustedSuggestionText
+        SUGGESTED_WORD, SUGGESTION_VALID_WORD -> suggestionOverride ?: adjustedSuggestionText
+        MORE_SUGGESTIONS_HINT -> adjustedSuggestionText
         ACTION_KEY_ICON -> if (isBrightColor(accent)) Color.DKGRAY else Color.WHITE
         EDIT_MODE_DELETE_BACKGROUND -> androidx.core.graphics.ColorUtils.blendARGB(accent, functionalKey, 0.4f)
         EDIT_MODE_FUNC_BACKGROUND -> androidx.core.graphics.ColorUtils.blendARGB(accent, functionalKey, 0.2f)
