@@ -442,8 +442,8 @@ private constructor(val themeId: Int, val mStyleId: Int) {
             // neutral, with blue accent
             THEME_CLEAN_LIGHT to SimpleTheme("#3E7BFA", "#EEF0F3", "#FFFFFF", "#D8DCE2", "#1B1B1F", "#6B6F76", "#1F5FD6", "#B8205E"),
             THEME_CLEAN_DARK to SimpleTheme("#5A9BFF", "#17181A", "#2A2B2E", "#3A3C40", "#F2F2F4", "#A0A3A8", "#5A9BFF", "#FF6FA5"),
-            // black background, gray letter keys, darker functional keys, blue hints and suggestions
-            THEME_GRAPHITE to SimpleTheme("#12B0E6", "#000000", "#575757", "#212121", "#FFFFFF", "#3CC3F2", "#FFFFFF", "#12B0E6", "#12B0E6"),
+            // black background, gray letter keys, darker functional keys, blue hints and suggestions, pink typed word
+            THEME_GRAPHITE to SimpleTheme("#12B0E6", "#000000", "#575757", "#212121", "#FFFFFF", "#3CC3F2", "#FFFFFF", "#FF4FA0", "#12B0E6"),
             // easy on the eyes: black for OLED with dimmed text, warm colors for the evening, high contrast
             THEME_PURE_BLACK to SimpleTheme("#8AB4F8", "#000000", "#141414", "#222222", "#D6D6D6", "#8A8A8A", "#8AB4F8", "#F28AB8"),
             THEME_WARM_NIGHT to SimpleTheme("#E0954A", "#1C1712", "#2A231C", "#352C23", "#F1D9B5", "#A88F70", "#F0A050", "#E39BB0"),
