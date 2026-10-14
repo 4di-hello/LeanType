@@ -953,6 +953,10 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
             }
         }
         updateStripVisibility()
+        mLatinIME?.let { ime ->
+            ime.setNeutralSuggestionStrip()
+            ime.mHandler.postResumeSuggestions(false)
+        }
         mKeyboardViewWrapper?.let { wrapper ->
             if (wrapper.oneHandedModeEnabled) {
                 wrapper.findViewById<View>(R.id.btn_stop_one_handed_mode)?.visibility = View.VISIBLE

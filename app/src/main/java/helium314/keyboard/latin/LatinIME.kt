@@ -1676,7 +1676,7 @@ class LatinIME : InputMethodService(),
                         suggestionStripView?.let { strip ->
                             if (currentSettings.mAutoShowToolbarOnSelect && inputLogic.connection.hasSelection()) {
                                 strip.setToolbarVisibility(true)
-                            } else if (currentSettings.mAutoShowToolbarOnSelect) {
+                            } else {
                                 val shouldShow = if (currentSettings.mAutoHideToolbar) false else strip.isToolbarManuallyOpen
                                 strip.setToolbarVisibility(shouldShow)
                             }
@@ -1697,7 +1697,7 @@ class LatinIME : InputMethodService(),
         suggestionStripView?.let { strip ->
             if (currentSettings.mAutoShowToolbarOnSelect && inputLogic.connection.hasSelection()) {
                 strip.setToolbarVisibility(true)
-            } else if (currentSettings.mAutoShowToolbarOnSelect) {
+            } else {
                 val shouldShow = if (currentSettings.mAutoShowToolbarNoSuggestions) true else strip.isToolbarManuallyOpen
                 strip.setToolbarVisibility(shouldShow)
             }
