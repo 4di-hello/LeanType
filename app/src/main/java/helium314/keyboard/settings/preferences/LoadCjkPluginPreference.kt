@@ -14,6 +14,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,6 +34,7 @@ import helium314.keyboard.latin.R
 import helium314.keyboard.latin.cjk.CjkPluginLoader
 import helium314.keyboard.settings.FeedbackManager
 import helium314.keyboard.settings.dialogs.PreferenceDialog
+import helium314.keyboard.settings.filePicker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -110,6 +112,23 @@ fun LoadCjkPluginPreference(
         }
     }
 
+    val launcher = filePicker { uri ->
+        val success = CjkPluginLoader.loadPluginFromUri(ctx, uri)
+        showDialog = false
+        if (success) {
+            FeedbackManager.message(ctx, R.string.cjk_plugin_loaded_restarting)
+            hasPlugin = true
+            onSuccess?.invoke()
+            if (restartOnSuccess) {
+                scope.launch {
+                    delay(2000)
+                    Runtime.getRuntime().exit(0)
+                }
+            }
+        } else {
+            FeedbackManager.message(ctx, R.string.load_cjk_plugin_failed)
+        }
+    }
 
     fun startDownload() {
         if (!hasInternet) {
@@ -230,29 +249,35 @@ fun LoadCjkPluginPreference(
                         }
 
 
-                        if (hasPlugin) {
-                            val isInstalledApp = CjkPluginLoader.getInstalledPluginApk(ctx) != null
-                            Button(
+                        if (!hasPlugin) {
+                            OutlinedButton(
                                 onClick = {
                                     showDialog = false
-                                    if (isInstalledApp) {
-                                        val appInfoIntent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                                            data = Uri.parse("package:${CjkPluginLoader.PLUGIN_PACKAGE_NAME}")
-                                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                        }
-                                        try {
-                                            ctx.startActivity(appInfoIntent)
-                                        } catch (_: Exception) {}
-                                    } else {
-                                        CjkPluginLoader.removePlugin(ctx)
-                                        FeedbackManager.message(ctx, R.string.cjk_plugin_removed_restarting)
-                                        hasPlugin = false
-                                        onSuccess?.invoke()
-                                        if (restartOnSuccess) {
-                                            scope.launch {
-                                                delay(2000)
-                                                Runtime.getRuntime().exit(0)
-                                            }
+                                    val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+                                        .addCategory(Intent.CATEGORY_OPENABLE)
+                                        .setType("*/*")
+                                    try {
+                                        launcher.launch(intent)
+                                    } catch (_: Exception) {}
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(stringResource(R.string.cjk_plugin_button_load_storage))
+                            }
+                        }
+
+                        if (hasPlugin) {
+                            Button(
+                                onClick = {
+                                    CjkPluginLoader.removePlugin(ctx)
+                                    FeedbackManager.message(ctx, R.string.cjk_plugin_removed_restarting)
+                                    hasPlugin = false
+                                    onSuccess?.invoke()
+                                    showDialog = false
+                                    if (restartOnSuccess) {
+                                        scope.launch {
+                                            delay(2000)
+                                            Runtime.getRuntime().exit(0)
                                         }
                                     }
                                 },
@@ -262,12 +287,7 @@ fun LoadCjkPluginPreference(
                                 ),
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                val deleteLabel = if (isInstalledApp) {
-                                    stringResource(R.string.voice_plugin_uninstall)
-                                } else {
-                                    stringResource(R.string.load_cjk_plugin_button_delete)
-                                }
-                                Text(deleteLabel)
+                                Text(stringResource(R.string.load_cjk_plugin_button_delete))
                             }
                         }
                     }
