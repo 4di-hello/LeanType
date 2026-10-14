@@ -125,7 +125,7 @@ fun ColorThemePickerDialog(
                 LazyColumn(state = state) {
                     items(colors, key = { it }) { item ->
                         if (item == "") {
-                            AddColorRow(onDismissRequest, userColors, targetScreen, setting.key)
+                            AddColorRow(onDismissRequest, userColors, targetScreen, setting.key, selectedColor, isNight)
                         } else {
                             ColorItemRow(onDismissRequest, item, item == selectedColor, item in userColors, targetScreen, setting.key, isNight)
                         }
@@ -175,7 +175,9 @@ fun ColorThemePickerDialog(
 }
 
 @Composable
-private fun AddColorRow(onDismissRequest: () -> Unit, userColors: Collection<String>, targetScreen: String, prefKey: String) {
+private fun AddColorRow(onDismissRequest: () -> Unit, userColors: Collection<String>, targetScreen: String, prefKey: String,
+                        currentTheme: String, isNight: Boolean) {
+    val ctx = LocalContext.current
     var textValue by remember { mutableStateOf(TextFieldValue()) }
     val prefs = LocalContext.current.prefs()
     val defaultName = KeyboardTheme.getUnusedThemeName(stringResource(R.string.theme_name_user), prefs)
@@ -197,8 +199,17 @@ private fun AddColorRow(onDismissRequest: () -> Unit, userColors: Collection<Str
         )
         EditButton(currentName.isNotBlank() && currentName !in userColors) {
             onDismissRequest()
+            // start with the colors of the current theme (all of them, e.g. also the suggestion colors), not with defaults
+            val baseColors = KeyboardTheme.getThemeColorsForPreview(currentTheme, ctx, isNight)
+            if (baseColors != null) {
+                val colorMap = EnumMap<ColorType, Int>(ColorType::class.java)
+                ColorType.entries.forEach { colorMap[it] = baseColors.get(it) }
+                KeyboardTheme.writeUserAllColors(prefs, currentName, colorMap)
+                KeyboardTheme.writeUserMoreColors(prefs, currentName, 2)
+            } else {
+                KeyboardTheme.writeUserMoreColors(prefs, currentName, Defaults.PREF_USER_MORE_COLORS) // write sth so theme is stored
+            }
             prefs.edit { putString(prefKey, currentName) }
-            KeyboardTheme.writeUserMoreColors(prefs, currentName, Defaults.PREF_USER_MORE_COLORS) // write sth so theme is stored
             SettingsDestination.navigateTo(targetScreen + currentName)
             KeyboardSwitcher.getInstance().setThemeNeedsReload()
         }
