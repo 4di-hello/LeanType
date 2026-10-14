@@ -701,6 +701,7 @@
     <string name="theme_name_dynamic_vivid" tools:keep="@string/theme_name_dynamic_vivid">Dynamische Farben (kräftig)</string>
     <string name="theme_name_clean_light" tools:keep="@string/theme_name_clean_light">Klar Hell</string>
     <string name="theme_name_clean_dark" tools:keep="@string/theme_name_clean_dark">Klar Dunkel</string>
+    <string name="theme_name_graphite" tools:keep="@string/theme_name_graphite">Graphit</string>
     <string name="theme_name_pure_black" tools:keep="@string/theme_name_pure_black">Tiefschwarz (gedimmt)</string>
     <string name="theme_name_warm_night" tools:keep="@string/theme_name_warm_night">Warme Nacht</string>
     <string name="theme_name_high_contrast_light" tools:keep="@string/theme_name_high_contrast_light">Hoher Kontrast Hell</string>
