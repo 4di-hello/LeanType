@@ -1,0 +1,114 @@
+name: My LeanType build
+# Only for this fork:
+# - weekly (and on demand): rebase the branch "daily" with my features onto the current LeanType,
+#   run the tests and build the APK
+# - on every push to "daily": run the tests and build the APK
+# The APKs are stored on the branch apk-out. A failed run (e.g. a conflict) is reported by GitHub by mail.
+
+on:
+  schedule:
+    - cron: '17 3 * * 1' # Monday morning
+  workflow_dispatch:
+  push:
+    branches: [ daily ]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: my-leantype
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: daily
+          fetch-depth: 0
+
+      - name: Update with the current LeanType
+        if: github.event_name != 'push'
+        run: |
+          git config user.name 4di-hello
+          git config user.email 4di-hello@users.noreply.github.com
+          git remote add upstream https://github.com/LeanBitLab/LeanType.git
+          git fetch -q upstream main
+          if git merge-base --is-ancestor upstream/main HEAD; then
+            echo "::notice::already up to date"
+          elif git rebase upstream/main; then
+            echo "UPDATED=1" >> "$GITHUB_ENV"
+            echo "::notice::rebased onto $(git rev-parse --short upstream/main)"
+          else
+            echo "::error::conflict while updating, files: $(git diff --name-only --diff-filter=U | tr '\n' ' ')"
+            git rebase --abort
+            exit 1
+          fi
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - uses: gradle/actions/setup-gradle@v3
+
+      - name: Run tests
+        run: |
+          chmod +x gradlew
+          ./gradlew testStandardRunTestsUnitTest \
+            --tests "helium314.keyboard.latin.InputLogicTest" \
+            --tests "helium314.keyboard.latin.suggestions.SuggestionStripLayoutHelperTest" \
+            --tests "helium314.keyboard.latin.heatmap.TypingHeatmapTest" \
+            --tests "helium314.keyboard.keyboard.KeyboardThemeTest" \
+            --tests "helium314.keyboard.latin.backup.BackupCryptoTest" \
+            --continue 2>&1 | tee gradle.log || true
+          grep -E "^e: " gradle.log | head -20 | sed 's/^/::error::/' || true
+          python3 - <<'PY'
+          import glob, sys, xml.etree.ElementTree as ET
+          # these LeanType tests also fail without my changes (Robolectric permission problem)
+          known = lambda name: name.startswith("caps")
+          files = glob.glob('app/build/test-results/**/*.xml', recursive=True)
+          if not files:
+              print("::error::no test results (compile error?)"); sys.exit(1)
+          bad = 0
+          for f in files:
+              root = ET.parse(f).getroot()
+              print(f"::notice title={root.get('name')}::tests={root.get('tests')} failures={root.get('failures')} errors={root.get('errors')}")
+              for tc in root.iter('testcase'):
+                  if (tc.find('failure') is not None or tc.find('error') is not None) and not known(tc.get('name')):
+                      bad += 1
+                      print(f"::error title={tc.get('name')}::test failed")
+          sys.exit(1 if bad else 0)
+          PY
+
+      - name: Use the fixed key (secret DEBUG_KEYSTORE_B64)
+        env:
+          DEBUG_KEYSTORE_B64: ${{ secrets.DEBUG_KEYSTORE_B64 }}
+        run: |
+          if [ -z "$DEBUG_KEYSTORE_B64" ]; then
+            echo "::error::secret DEBUG_KEYSTORE_B64 is missing, without it the APK can't be installed over the previous one"
+            exit 1
+          fi
+          mkdir -p ~/.android
+          echo "$DEBUG_KEYSTORE_B64" | tr -d ' \n\r' | base64 -d > ~/.android/debug.keystore
+
+      - name: Build APK
+        run: ./gradlew assembleOfflinePersonal
+
+      - name: Store updated branch
+        if: env.UPDATED == '1'
+        run: git push --force-with-lease origin HEAD:daily
+
+      - name: Push APK to branch apk-out
+        run: |
+          mkdir /tmp/out
+          find app/build/outputs/apk -name '*.apk' -exec cp {} /tmp/out/ \;
+          cd /tmp/out
+          git init -q -b apk-out
+          git config user.name 4di-hello
+          git config user.email 4di-hello@users.noreply.github.com
+          git add .
+          git commit -q -m "APK for ${GITHUB_SHA}"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" apk-out
