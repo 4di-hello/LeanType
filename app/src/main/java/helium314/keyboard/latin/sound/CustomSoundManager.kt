@@ -144,6 +144,16 @@ class CustomSoundManager private constructor(private val appContext: Context) {
 
     @Synchronized
     private fun loadActivePack() {
+        val currentPool = soundPool
+        if (currentPool != null) {
+            loadedEvents.values.forEach { event ->
+                event.sampleIds.forEach { sampleId ->
+                    try {
+                        currentPool.unload(sampleId)
+                    } catch (_: Exception) {}
+                }
+            }
+        }
         loadedEvents.clear()
         cycleIndexes.clear()
         lastPlayedTime.clear()
@@ -402,6 +412,16 @@ class CustomSoundManager private constructor(private val appContext: Context) {
         cycleIndexes.clear()
         lastPlayedTime.clear()
         lastBtCheckTime = 0L
+    }
+
+    @Synchronized
+    fun onTrimMemory() {
+        if (!isInputViewActive) {
+            release()
+            previewSoundPool?.release()
+            previewSoundPool = null
+            previewCache.clear()
+        }
     }
 
     companion object {

@@ -279,7 +279,11 @@ class GifPluginManager private constructor(private val appContext: Context) {
             addAction(Intent.ACTION_PACKAGE_REMOVED)
             addDataScheme("package")
         }
-        ContextCompat.registerReceiver(appContext, packageReceiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
+        try {
+            ContextCompat.registerReceiver(appContext, packageReceiver, filter, ContextCompat.RECEIVER_EXPORTED)
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to register package receiver", e)
+        }
         started = true
         refresh()
     }

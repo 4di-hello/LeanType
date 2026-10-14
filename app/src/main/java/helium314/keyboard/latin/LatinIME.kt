@@ -98,6 +98,8 @@ import helium314.keyboard.latin.utils.JniUtils
 import helium314.keyboard.latin.utils.InputTypeUtils
 import helium314.keyboard.latin.utils.LeakGuardHandlerWrapper
 import helium314.keyboard.latin.utils.LocaleUtils
+import helium314.keyboard.latin.ai.OfflineAiLoader
+import helium314.keyboard.latin.sound.CustomSoundManager
 import helium314.keyboard.latin.utils.Log
 import helium314.keyboard.latin.utils.ProofreadHelper
 import helium314.keyboard.latin.utils.RecapitalizeMode
@@ -957,6 +959,11 @@ class LatinIME : InputMethodService(),
         Log.i(TAG, "onWindowHidden")
         updateVoiceKeepScreenOn(VoiceInputManager.VoiceState.IDLE)
         keyboardSwitcher.hideGifPicker()
+        if (keyboardSwitcher.isOcrShowing) {
+            keyboardSwitcher.hideOcrPanels()
+        }
+        clipboardHistoryManager.onWindowHidden()
+        ProofreadHelper.cancelCurrentJob()
         val fkm = floatingKeyboardManager
         if (fkm != null) {
             if (!settings.current.mRememberFloatingKeyboard) {
@@ -986,6 +993,7 @@ class LatinIME : InputMethodService(),
         if (keyboardSwitcher.isOcrShowing) {
             keyboardSwitcher.hideOcrPanels()
         }
+        ProofreadHelper.cancelCurrentJob()
         voiceInputManager?.takeIf { it.isRecording() }?.stopVoice()
         updateVoiceKeepScreenOn(VoiceInputManager.VoiceState.IDLE)
         otpSuggestionManager.stop()
@@ -1970,9 +1978,17 @@ class LatinIME : InputMethodService(),
         if (level >= ComponentCallbacks2.TRIM_MEMORY_BACKGROUND || level == ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
             keyboardSwitcher.trimMemory()
             deallocateMemory()
+            if (!isInputViewShown) {
+                OfflineAiLoader.onTrimMemory()
+                CustomSoundManager.getInstance(this).onTrimMemory()
+            }
         } else if (level >= ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW) {
             KeyboardLayoutSet.onSystemLocaleChanged()
             keyboardSwitcher.trimMemory()
+            if (!isInputViewShown) {
+                OfflineAiLoader.onTrimMemory()
+                CustomSoundManager.getInstance(this).onTrimMemory()
+            }
         }
     }
 

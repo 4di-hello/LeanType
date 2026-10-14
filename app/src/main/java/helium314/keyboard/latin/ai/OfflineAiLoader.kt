@@ -286,6 +286,17 @@ object OfflineAiLoader {
         }
     }
 
+    fun onTrimMemory() {
+        try {
+            if (activeProvider?.isModelLoaded() == true) {
+                Log.i(TAG, "Trimming memory: unloading idle offline AI model")
+                activeProvider?.unloadModel()
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Error trimming offline AI model memory", e)
+        }
+    }
+
     class PluginClassLoader(
         dexPath: String,
         optimizedDirectory: String?,
