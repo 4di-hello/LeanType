@@ -82,6 +82,7 @@ fun SuggestionsScreen(
             if (suggestionsEnabled) Settings.PREF_SUGGESTIONS_COUNT_IN_STRIP else null,
             if (suggestionsEnabled) Settings.PREF_CENTER_SUGGESTION_TEXT_TO_ENTER else null,
             if (suggestionsEnabled) Settings.PREF_CENTER_TYPED_WORD else null,
+            if (suggestionsEnabled) Settings.PREF_SUGGESTION_UPDATE_DELAY else null,
             if (suggestionsEnabled) Settings.PREF_AUTOCORRECTION_RIGHT_OF_TYPED_WORD else null,
             Settings.PREF_SUGGEST_PUNCTUATION,
 
@@ -227,6 +228,16 @@ fun createSuggestionsSettings(context: Context) = listOf(
         R.string.center_suggestion_text_to_enter, R.string.center_suggestion_text_to_enter_summary
     ) {
         SwitchPreference(it, Defaults.PREF_CENTER_SUGGESTION_TEXT_TO_ENTER)
+    },
+    Setting(context, Settings.PREF_SUGGESTION_UPDATE_DELAY, R.string.suggestion_update_delay, R.string.suggestion_update_delay_summary) { setting ->
+        SliderPreference(
+            name = setting.title,
+            key = setting.key,
+            default = Defaults.PREF_SUGGESTION_UPDATE_DELAY,
+            range = 0f..150f,
+            stepSize = 25,
+            description = { value -> stringResource(R.string.suggestion_update_delay_value, value) }
+        )
     },
     Setting(context, Settings.PREF_CENTER_TYPED_WORD,
         R.string.center_typed_word, R.string.center_typed_word_summary
