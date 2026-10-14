@@ -105,6 +105,8 @@ class CustomSoundManager private constructor(private val appContext: Context) {
         return soundPool ?: createSoundPool().also { soundPool = it }
     }
 
+    private var lastLoadedPackId: String? = null
+
     @Synchronized
     fun setSoundPack(packId: String) {
         if (activePackId == packId && (packId == SoundPackUrls.SYSTEM_DEFAULT_ID || loadedEvents.isNotEmpty())) {
@@ -112,31 +114,34 @@ class CustomSoundManager private constructor(private val appContext: Context) {
         }
         activePackId = packId
         loadActivePack()
+        lastLoadedPackId = packId
     }
 
     fun reloadIfActive(packId: String) {
         if (activePackId == packId) {
             loadActivePack()
+            lastLoadedPackId = packId
         }
     }
 
     fun onStartInputView() {
         isInputViewActive = true
         lastBtCheckTime = 0L
-        if (activePackId != SoundPackUrls.SYSTEM_DEFAULT_ID && (soundPool == null || loadedEvents.isEmpty())) {
+        if (activePackId != SoundPackUrls.SYSTEM_DEFAULT_ID && (soundPool == null || loadedEvents.isEmpty() || activePackId != lastLoadedPackId)) {
             loadActivePack()
+            lastLoadedPackId = activePackId
         }
     }
 
     fun onFinishInputView() {
         isInputViewActive = false
         lastBtCheckTime = 0L
-        release()
     }
 
     fun onDestroy() {
         isInputViewActive = false
         release()
+        lastLoadedPackId = null
         previewSoundPool?.release()
         previewSoundPool = null
         previewCache.clear()

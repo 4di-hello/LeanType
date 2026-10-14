@@ -485,8 +485,11 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
             toolbarExpandKey.scaleX = targetScaleX
         }
 
-        applyToolbarKeyLayoutParams(toolbarVisible && !locked)
-        toolbarContainer.post { applyToolbarKeyLayoutParams(toolbarContainer.isVisible) }
+        if (toolbarContainer.width == 0 || !toolbarContainer.isLaidOut) {
+            toolbarContainer.post { applyToolbarKeyLayoutParams(toolbarContainer.isVisible) }
+        } else {
+            applyToolbarKeyLayoutParams(toolbarVisible && !locked)
+        }
 
         if (saveState && Settings.getValues().mRememberToolbarState) {
             context.prefs().edit().putBoolean(Settings.PREF_TOOLBAR_EXPANDED, toolbarVisible).apply()
@@ -1467,8 +1470,11 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
             val count = Settings.getValues().mSuggestionsCountInStrip
             val splitCount = Math.max(5, count)
             layoutHelper.setSuggestionsCountInStrip(splitCount)
-            applyToolbarKeyLayoutParams(true)
-            toolbarContainer.post { applyToolbarKeyLayoutParams(true) }
+            if (toolbarContainer.width == 0 || !toolbarContainer.isLaidOut) {
+                toolbarContainer.post { applyToolbarKeyLayoutParams(true) }
+            } else {
+                applyToolbarKeyLayoutParams(true)
+            }
         } else {
             toolbarExpandKey.isVisible = toolbarIsExpandable
             // Don't manage visibility here - let setToolbarVisibility handle it
@@ -1626,8 +1632,11 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
             }
         }
         updateVoiceKey()
-        applyToolbarKeyLayoutParams(toolbarContainer.isVisible)
-        toolbarContainer.post { applyToolbarKeyLayoutParams(toolbarContainer.isVisible) }
+        if (toolbarContainer.width == 0 || !toolbarContainer.isLaidOut) {
+            toolbarContainer.post { applyToolbarKeyLayoutParams(toolbarContainer.isVisible) }
+        } else {
+            applyToolbarKeyLayoutParams(toolbarContainer.isVisible)
+        }
     }
 
     private fun applyToolbarKeyLayoutParams(isExpanded: Boolean) {
@@ -1673,17 +1682,27 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
         }
         (toolbar as? LinearLayout)?.gravity = if (useEqualSpacing) Gravity.NO_GRAVITY else alignmentGravity
 
-        val spannedLayoutParams = LinearLayout.LayoutParams(0, singleKeyWidth, 1f).apply {
-            gravity = Gravity.CENTER_VERTICAL
-        }
-
         for (i in 0 until count) {
             val child = toolbar.getChildAt(i) ?: continue
             if (child.visibility == View.GONE) continue
-            child.layoutParams = if (useEqualSpacing) {
-                spannedLayoutParams
+            val targetWidth = if (useEqualSpacing) 0 else singleKeyWidth
+            val targetHeight = singleKeyWidth
+            val targetWeight = if (useEqualSpacing) 1f else 0f
+            val targetGravity = Gravity.CENTER_VERTICAL
+
+            val lp = child.layoutParams as? LinearLayout.LayoutParams
+            if (lp != null) {
+                if (lp.width != targetWidth || lp.height != targetHeight || lp.weight != targetWeight || lp.gravity != targetGravity) {
+                    lp.width = targetWidth
+                    lp.height = targetHeight
+                    lp.weight = targetWeight
+                    lp.gravity = targetGravity
+                    child.layoutParams = lp
+                }
             } else {
-                toolbarKeyLayoutParams
+                child.layoutParams = LinearLayout.LayoutParams(targetWidth, targetHeight, targetWeight).apply {
+                    gravity = targetGravity
+                }
             }
         }
     }

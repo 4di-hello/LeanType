@@ -37,27 +37,30 @@ object BrowserDetector {
     @Synchronized
     fun init(context: Context) {
         if (isInitialized) return
-        try {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://example.com")).apply {
-                addCategory(Intent.CATEGORY_BROWSABLE)
-            }
-            val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                PackageManager.MATCH_ALL
-            } else {
-                0
-            }
-            val resolveInfos = context.packageManager.queryIntentActivities(intent, flags)
-            for (info in resolveInfos) {
-                val pkg = info.activityInfo?.packageName
-                if (!pkg.isNullOrEmpty()) {
-                    discoveredBrowsers.add(pkg)
+        isInitialized = true
+        val appContext = context.applicationContext
+        Thread({
+            try {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://example.com")).apply {
+                    addCategory(Intent.CATEGORY_BROWSABLE)
                 }
+                val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    PackageManager.MATCH_ALL
+                } else {
+                    0
+                }
+                val resolveInfos = appContext.packageManager.queryIntentActivities(intent, flags)
+                for (info in resolveInfos) {
+                    val pkg = info.activityInfo?.packageName
+                    if (!pkg.isNullOrEmpty()) {
+                        discoveredBrowsers.add(pkg)
+                    }
+                }
+                Log.i(TAG, "BrowserDetector initialized with ${discoveredBrowsers.size} known/discovered browsers")
+            } catch (e: Exception) {
+                Log.w(TAG, "Failed to query browser packages via PackageManager, falling back to defaults", e)
             }
-            isInitialized = true
-            Log.i(TAG, "BrowserDetector initialized with ${discoveredBrowsers.size} known/discovered browsers")
-        } catch (e: Exception) {
-            Log.w(TAG, "Failed to query browser packages via PackageManager, falling back to defaults", e)
-        }
+        }, "BrowserDetector-Init").apply { isDaemon = true }.start()
     }
 
     private val GECKO_BROWSER_PACKAGES = setOf(
