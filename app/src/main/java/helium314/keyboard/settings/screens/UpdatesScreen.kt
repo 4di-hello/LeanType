@@ -63,15 +63,15 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 private val currentChangelogItems = listOf(
-    "• Full Keyboard Swipe: Switch languages or move cursor by swiping horizontally across any part of the keyboard",
-    "• Mutual Gesture Exclusion: Automatically disables gesture typing when full keyboard swipe actions are active",
-    "• Unified Bottom Row Geometry: Synchronized key heights and bottom row alignment across all keyboard layouts and modes",
-    "• Granular Backup & Restore: Separate Dictionaries from Typing History, with optional encrypted API key export",
-    "• Emoji & Emoticon Improvements: Scaled emoticon recents, removed redundant pages, and prevented tab transition freezes",
-    "• Arabic Layout Refinement: Restored familiar 5-letter layout for Alif popup keys to preserve muscle memory",
-    "• GIF Picker & Settings Polish: Streamlined enable/disable toggles, removed redundant backgrounds, and fixed layout overflow",
-    "• Swipe Sensitivity Threshold: Added custom slider to fine-tune horizontal swipe sensitivity",
-    "• Performance & Regex: Pre-compiled regex in OCR formatting and added comprehensive test coverage"
+    "• CJK Plugin Support: Added architecture to load companion CJK plugin for Chinese, Japanese, and Korean typing",
+    "• Shift Key Chording: Restored uppercase input when chording letters while holding the Shift key",
+    "• Hold Delete for Words: Added option to continuously delete whole words when holding down the Delete key",
+    "• Clipboard Privacy: Added toggle to skip passwords and one-time numeric verification codes in clipboard history",
+    "• Touchpad Toolbar Recovery: Preserved manual toolbar states and fixed visibility upon closing full-screen touchpad",
+    "• Slider Stepper Buttons: Added plus and minus buttons and value snapping to slider preference dialogs",
+    "• Emoji & Unicode 16.0: Centered emoji grid in key fit mode, supported Unicode 16.0, and added long-press descriptions",
+    "• Theme Polish: Preserved icon colors and accent press feedback in Show all colors mode",
+    "• Diacritic Performance: Replaced diacritic regex in Suggest with allocation-free ASCII normalization"
 )
 
 @Composable
