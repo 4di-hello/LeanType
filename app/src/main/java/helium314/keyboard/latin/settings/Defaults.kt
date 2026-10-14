@@ -102,6 +102,7 @@ object Defaults {
     const val PREF_BACKSPACE_WORD_ACCELERATION = 3
     const val PREF_CENTER_SUGGESTION_TEXT_TO_ENTER = false
     const val PREF_CENTER_TYPED_WORD = false
+    const val PREF_SUGGESTION_UPDATE_DELAY = 100
     const val PREF_AUTOCORRECTION_RIGHT_OF_TYPED_WORD = false
     const val PREF_SHOW_SUGGESTIONS = true
     const val PREF_ALWAYS_SHOW_SUGGESTIONS = false

@@ -1933,7 +1933,8 @@ class LatinIME : InputMethodService(),
         fun postUpdateSuggestionStrip(inputStyle: Int) {
             val latinIme = ownerInstance
             if (latinIme != null && latinIme.keyboardSwitcher.isHandwritingShowing) return
-            sendMessageDelayed(obtainMessage(MSG_UPDATE_SUGGESTION_STRIP, inputStyle, 0), delayInMillisecondsToUpdateSuggestions.toLong())
+            val delay = latinIme?.settings?.current?.mSuggestionUpdateDelay ?: delayInMillisecondsToUpdateSuggestions
+            sendMessageDelayed(obtainMessage(MSG_UPDATE_SUGGESTION_STRIP, inputStyle, 0), delay.toLong())
         }
 
         fun postReopenDictionaries() { sendMessage(obtainMessage(MSG_REOPEN_DICTIONARIES)) }
