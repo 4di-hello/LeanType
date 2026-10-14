@@ -712,12 +712,6 @@ class KeyboardState(private val switchActions: SwitchActions) {
         }
 
         if (Constants.isLetterCode(code)) {
-            // If the code is a letter, a single-tap shift or auto-caps is consumed by this letter
-            if (alphabetShiftState.isManualShifted || alphabetShiftState.isAutomaticShifted) {
-                if (shiftKeyState.isChording) {
-                    shiftKeyState.onRelease()
-                }
-            }
             // Update keyboard shift state.
             updateAlphabetShiftState(autoCapsFlags, recapitalizeMode)
         } else when (code) {
