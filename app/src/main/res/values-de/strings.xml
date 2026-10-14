@@ -1882,8 +1882,10 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="learned_casing_empty">Noch nichts gemerkt.</string>
     <string name="learned_casing_not_yet">Im Lernen: wird nach einem weiteren Mal automatisch verwendet</string>
     <string name="learned_casing_forget_all">Alle vergessen</string>
-    <string name="typing_heatmap_history">Fehltreffer pro Woche</string>
+    <string name="typing_heatmap_history">Fehltreffer und Tipp-Tempo pro Woche</string>
     <string name="typing_heatmap_history_value">%1$.1f %% (%2$d)</string>
+    <string name="typing_heatmap_wpm">%1$.0f W/min</string>
+    <string name="typing_heatmap_wpm_explanation">Tempo in Wörtern pro Minute (je 5 Zeichen), gezählt beim Tippen ohne längere Pausen. Gewischte Wörter zählen nicht.</string>
     <!-- Short descriptions of the entries in the main settings menu, and the keyboard test field -->
     <string name="main_summary_ai">Korrekturlesen, KI-Tasten und Modelle</string>
     <string name="main_summary_plugins">Spracheingabe, Handschrift, Übersetzung, GIFs, Töne</string>
@@ -1929,4 +1931,31 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
         <item>background_image|hintergrund bild foto</item>
         <item>navbar_color|navigationsleiste navigation</item>
     </string-array>
+    <string name="suggestion_update_delay">Verzögerung der Vorschläge</string>
+    <string name="suggestion_update_delay_summary">Wartezeit nach einem Tastendruck, bis die Vorschläge aktualisiert werden. Kürzer wirkt direkter, länger kann bei sehr schnellem Tippen flüssiger sein.</string>
+    <string name="suggestion_update_delay_value">%1$d ms</string>
+    <string name="backup_password">Passwort (optional)</string>
+    <string name="backup_password_hint">Verschlüsselt die Sicherung. Ohne das Passwort kann sie nicht wiederhergestellt werden.</string>
+    <string name="backup_encrypted_title">Verschlüsselte Sicherung</string>
+    <string name="backup_password_enter">Passwort der Sicherung</string>
+    <string name="backup_wrong_password">Falsches Passwort oder beschädigte Datei. Es wurde nichts verändert.</string>
+    <string name="auto_backup_title">Automatische Sicherung</string>
+    <string name="auto_backup_now">Jetzt sichern</string>
+    <string name="auto_backup_folder">Ordner</string>
+    <string name="auto_backup_no_folder">Kein Ordner gewählt</string>
+    <string name="auto_backup_choose_folder">Ordner wählen</string>
+    <string name="auto_backup_interval">Wie oft</string>
+    <string name="auto_backup_off">Aus</string>
+    <string name="auto_backup_daily">Täglich</string>
+    <string name="auto_backup_weekly">Wöchentlich</string>
+    <string name="auto_backup_keep">Neueste Sicherungen behalten</string>
+    <string name="auto_backup_password">Passwort</string>
+    <string name="auto_backup_password_set">Sicherungen werden mit Deinem Passwort verschlüsselt.</string>
+    <string name="auto_backup_password_not_set">Kein Passwort: Sicherungen sind unverschlüsselt und enthalten keinen Zwischenablage-Verlauf.</string>
+    <string name="auto_backup_password_save">Passwort speichern</string>
+    <string name="auto_backup_password_remove">Passwort entfernen</string>
+    <string name="auto_backup_encrypted">verschlüsselt</string>
+    <string name="auto_backup_error">Letzte Sicherung fehlgeschlagen: %s</string>
+    <string name="auto_backup_last">Letzte Sicherung: %s</string>
+    <string name="auto_backup_explanation">Sichert Einstellungen, Layouts, Wörterbücher, gelernte Wörter und das Tipp-Profil, mit Passwort auch den Zwischenablage-Verlauf. Heruntergeladene Modelle und Plugins sind nicht enthalten. Merk Dir das Passwort: Ohne es lässt sich die Sicherung nicht wiederherstellen.</string>
 </resources>
