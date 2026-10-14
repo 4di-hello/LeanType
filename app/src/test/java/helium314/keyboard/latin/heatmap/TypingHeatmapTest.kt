@@ -205,6 +205,20 @@ class TypingHeatmapTest {
         assertEquals("Test", parsed.device)
     }
 
+    @Test fun `typing speed is read from weeks, also from older data without it`() {
+        val weeks = JSONObject()
+            .put("2900", JSONArray().put(100).put(10)) // older data: touches and misses only
+            .put("2901", JSONArray().put(100).put(5).put(600).put(120_000))
+            .put("2902", JSONArray().put(100).put(5).put(-3).put(-1)) // broken values
+        val parsed = TypingHeatmap.parse(JSONObject().put("version", 2).put("weeks", weeks).put("layouts", JSONArray()))
+        assertEquals(listOf(0, 0), parsed.weeks.getValue(2900).drop(2))
+        assertEquals(listOf(600, 120_000), parsed.weeks.getValue(2901).drop(2))
+        assertEquals(listOf(0, 0), parsed.weeks.getValue(2902).drop(2))
+        // 600 characters = 120 words of 5 characters in 2 minutes
+        assertEquals(60f, TypingHeatmap.WeekStats(2901, 100, 5, 600, 120_000).wordsPerMinute!!, 0.01f)
+        assertNull(TypingHeatmap.WeekStats(2901, 100, 5, 60, 10_000).wordsPerMinute) // too little time
+    }
+
     @Test fun `too many samples are limited when reading`() {
         val flat = JSONArray()
         repeat(1000) { flat.put(0.1).put(0.1).put('o'.code).put(0) }
