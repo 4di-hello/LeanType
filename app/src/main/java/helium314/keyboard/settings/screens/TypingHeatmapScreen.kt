@@ -179,9 +179,13 @@ fun TypingHeatmapScreen(onClickBack: () -> Unit) {
                                 .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(5.dp)))
                         }
                         Text(stringResource(R.string.typing_heatmap_history_value, rate, week.touches),
-                            Modifier.width(120.dp), style = MaterialTheme.typography.bodySmall)
+                            Modifier.width(96.dp), style = MaterialTheme.typography.bodySmall)
+                        Text(week.wordsPerMinute?.let { stringResource(R.string.typing_heatmap_wpm, it) } ?: "",
+                            Modifier.width(64.dp), style = MaterialTheme.typography.bodySmall)
                     }
                 }
+                Text(stringResource(R.string.typing_heatmap_wpm_explanation),
+                    style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
 
             val confusions = layout.samples.entries
