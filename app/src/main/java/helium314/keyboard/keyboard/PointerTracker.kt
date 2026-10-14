@@ -271,9 +271,7 @@ class PointerTracker private constructor(
     private fun isOnlyShiftStateChange(oldKb: Keyboard, newKb: Keyboard): Boolean {
         val oldId = oldKb.mId
         val newId = newKb.mId
-        return newId.mElementId == KeyboardId.ELEMENT_ALPHABET
-                && (oldId.mElementId == KeyboardId.ELEMENT_ALPHABET_AUTOMATIC_SHIFTED
-                    || oldId.mElementId == KeyboardId.ELEMENT_ALPHABET_MANUAL_SHIFTED)
+        return oldId.isAlphabetKeyboard && newId.isAlphabetKeyboard
                 && oldId.mSubtype == newId.mSubtype
                 && oldId.mHeight == newId.mHeight
     }
@@ -564,7 +562,7 @@ class PointerTracker private constructor(
                 keyboardChangeOccupiedHeightDifference = 0
                 CoordinateUtils.set(mDownCoordinates, x, y + yOffset)
                 val newKey = mKeyDetector.detectHitKey(x, y + yOffset)
-                if (newKey != null && (newKey.code == pressedKey.code || (!pressedKey.isModifier() && !newKey.isModifier()))) {
+                if (newKey != null && newKey.code == pressedKey.code) {
                     key = onDownKey(x, y + yOffset, eventTime)
                 } else {
                     key = null

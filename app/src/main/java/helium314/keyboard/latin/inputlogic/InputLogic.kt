@@ -737,8 +737,10 @@ class InputLogic(
                 if (keyboard != null && !keyboard.mId.isAlphabetKeyboard && keyboard.mId.mElementId != KeyboardId.ELEMENT_TEXT_EDIT) {
                     return
                 }
-                if (!recapitalizeComposingWord(inputTransaction.settingsValues)) {
-                    performRecapitalization(inputTransaction.settingsValues)
+                if (!KeyboardSwitcher.getInstance().isShiftChording) {
+                    if (!recapitalizeComposingWord(inputTransaction.settingsValues)) {
+                        performRecapitalization(inputTransaction.settingsValues)
+                    }
                 }
                 inputTransaction.requireShiftUpdate(InputTransaction.SHIFT_UPDATE_NOW)
                 inputTransaction.setRequiresUpdateSuggestions()
@@ -1879,6 +1881,10 @@ class InputLogic(
      *  @return whether the word was changed
      */
     private fun recapitalizeComposingWord(settingsValues: SettingsValues): Boolean {
+        if (KeyboardSwitcher.getInstance().isShiftChording) {
+            mTypedWordOnShiftPress = null
+            return false
+        }
         val typedWordOnShiftPress = mTypedWordOnShiftPress
         mTypedWordOnShiftPress = null
         if (!settingsValues.mShiftRecapitalizesWord) return false

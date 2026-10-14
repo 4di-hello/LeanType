@@ -851,6 +851,9 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         mState?.setCapsLock(enabled)
     }
 
+    val isShiftChording: Boolean
+        get() = mState?.isShiftChording == true
+
     override fun requestUpdatingShiftState(autoCapsFlags: Int, recapitalizeMode: RecapitalizeMode?) {
         if (DEBUG_ACTION) {
             Log.d(TAG, "requestUpdatingShiftState: autoCapsFlags=" + CapsModeUtils.flagsToString(autoCapsFlags) + " recapitalizeMode=" + recapitalizeMode)
