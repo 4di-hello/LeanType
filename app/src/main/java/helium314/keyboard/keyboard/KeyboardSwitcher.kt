@@ -267,7 +267,6 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
 
     override fun setAlphabetKeyboard() {
         if (DEBUG_ACTION) Log.d(TAG, "setAlphabetKeyboard")
-        hideGifPicker()
         setKeyboard(KeyboardId.ELEMENT_ALPHABET, KeyboardSwitchState.OTHER)
     }
 
@@ -295,7 +294,10 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         mGifPickerView?.let { v ->
             v.targetProvider = { latinIme.currentInputConnection to latinIme.currentInputEditorInfo }
             v.sessionProvider = { editorSession }
-            v.onCloseRequested = { setAlphabetKeyboard() }
+            v.onCloseRequested = {
+                hideGifPicker()
+                setAlphabetKeyboard()
+            }
             v.visibility = View.VISIBLE
             v.open()
         }
@@ -395,7 +397,8 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         }
         val visibility = if (isImeSuppressedByHardwareKeyboard(settingsValues, toggleState)) View.GONE else View.VISIBLE
         val stripVisibility = if (settingsValues.mToolbarMode == ToolbarMode.HIDDEN
-            || (PointerTracker.sPersistentTouchpadModeActive && settingsValues.mTouchpadFullscreen)) View.GONE else View.VISIBLE
+            || (PointerTracker.sPersistentTouchpadModeActive && settingsValues.mTouchpadFullscreen)
+            || isGifPickerShowing) View.GONE else View.VISIBLE
         mStripContainer?.visibility = stripVisibility
         val wasSecondaryShowing = (mEmojiPalettesView?.visibility == View.VISIBLE)
             || (mClipboardHistoryView?.visibility == View.VISIBLE)
