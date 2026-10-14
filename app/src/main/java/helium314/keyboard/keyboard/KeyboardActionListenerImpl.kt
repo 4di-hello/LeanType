@@ -527,11 +527,68 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
             deleteSwipeStepCount = 0
         }
 
+        // Vertical movement is delegated to the editor, so the selection always ends exactly one
+        // visual (wrapped) line above/below, like the arrow keys do. If the editor can't do that,
+        // we fall back to the approximated line boundaries below.
+        val movedByEditor = stepsY != 0 && moveDeleteSelectionByEditorLines(stepsY)
+        val remainingStepsY = if (movedByEditor) 0 else stepsY
+        if (movedByEditor && stepsX == 0) return
+
         if (settings.current.mDeleteSwipeWordByWord) {
-            onMoveDeletePointerWords2D(stepsX, stepsY)
+            onMoveDeletePointerWords2D(stepsX, remainingStepsY)
         } else {
-            onMoveDeletePointerChars2D(stepsX, stepsY)
+            onMoveDeletePointerChars2D(stepsX, remainingStepsY)
         }
+    }
+
+    /**
+     * Moves the left end of the delete-swipe selection by whole editor lines (negative = up, positive = down),
+     * using Shift+DPAD_UP/DOWN on a reversed selection (anchor = right end, extent = left end).
+     * Afterwards the horizontal state is re-based on the new left end.
+     * Returns false (and leaves the selection as it was) if the editor does not behave as expected.
+     */
+    private fun moveDeleteSelectionByEditorLines(stepsY: Int): Boolean {
+        val initialEnd = deleteSwipeInitialEnd
+        val currentStart = connection.expectedSelectionStart
+        if (initialEnd < 0 || currentStart < 0 || currentStart > initialEnd) return false
+
+        // make the moving end the extent: anchor at the right end, extent at the left end
+        if (!connection.setSelection(initialEnd, currentStart)) return false
+
+        val keyCode = if (stepsY < 0) KeyEvent.KEYCODE_DPAD_UP else KeyEvent.KEYCODE_DPAD_DOWN
+        repeat(abs(stepsY)) {
+            val eventTime = android.os.SystemClock.uptimeMillis()
+            connection.sendKeyEvent(KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_SHIFT_LEFT, 0, 0))
+            connection.sendKeyEvent(KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN, keyCode, 0, KeyEvent.META_SHIFT_ON))
+            connection.sendKeyEvent(KeyEvent(eventTime, eventTime, KeyEvent.ACTION_UP, keyCode, 0, KeyEvent.META_SHIFT_ON))
+            connection.sendKeyEvent(KeyEvent(eventTime, eventTime, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_SHIFT_LEFT, 0, 0))
+        }
+
+        val selection = connection.getEditorSelection()
+        if (selection == null || selection.first != initialEnd) {
+            // editor doesn't support extracted text or reversed selections: restore and use the fallback
+            connection.setSelection(currentStart, initialEnd)
+            return false
+        }
+
+        // moving down must not go past the original cursor position
+        val newStart = selection.second.coerceIn(0, initialEnd)
+        connection.setSelection(newStart, initialEnd) // normal order again, also updates expected selection
+
+        val textBefore = connection.getTextBeforeCursor(2000, 0)?.toString() ?: ""
+        deleteSwipeWordBoundaries = getWordBoundariesBackwards(textBefore, newStart)
+        deleteSwipeLineBoundaries = listOf(newStart)
+        deleteSwipeWordIndex = 0
+        deleteSwipeLineIndex = 0
+        deleteSwipeCharOffset = 0
+
+        if (newStart != currentStart) {
+            deleteSwipeStepCount++
+            if (deleteSwipeStepCount % 2 != 0) {
+                performHapticFeedback(HapticEvent.GESTURE_MOVE)
+            }
+        }
+        return true
     }
 
     private fun onMoveDeletePointerChars2D(stepsX: Int, stepsY: Int) {
