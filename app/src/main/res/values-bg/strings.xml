@@ -588,8 +588,6 @@
     <string name="immediate_auto_space_summary">Незабавно потвърждаване на интервал при избор на предложение, за да се предотврати забавяне при следващата въведена буква</string>
     <string name="pref_foldable_mode_title">Профил на сгъваем екран</string>
     <string name="pref_foldable_mode_summary">Активиране на автоматично откриване на профил на екрана и мащабиране на разделената клавиатура за сгъваеми устройства</string>
-    <string name="first_word_prediction">Предложения за първа дума</string>
-    <string name="first_word_prediction_summary">Показване на предложения, когато няма въвеждане в началото на изречението</string>
     <string name="suggest_screenshots">Предлагане на скорошни екранни снимки</string>
     <string name="suggest_screenshots_summary">Показване на наскоро направени екранни снимки като предложение</string>
     <string name="auto_read_otp">Автоматично четене на OTP от SMS</string>
@@ -1814,4 +1812,8 @@
     <string name="cjk_clear_user_dict_title">Изчистване на потребителската история на CJK</string>
     <string name="cjk_clear_user_dict_summary">Нулиране на наученото класиране на кандидати и кеша на потребителския речник</string>
     <string name="cjk_clear_user_dict_success">Потребителската история на CJK е изчистена</string>
+    <string name="backspace_repeat_deletes_words">Задържането на delete премахва цели думи</string>
+    <string name="backspace_repeat_deletes_words_summary">След като задържите клавиша за изтриване за момент, изтривайте дума по дума с нарастваща скорост</string>
+    <string name="clipboard_skip_sensitive">Не пазете пароли и кодове</string>
+    <string name="clipboard_skip_sensitive_summary">Записи, маркирани като поверителни (напр. от мениджъри на пароли) и еднократни кодове с 4 до 8 цифри не се добавят към хронологията. Залепването все още работи</string>
 </resources>

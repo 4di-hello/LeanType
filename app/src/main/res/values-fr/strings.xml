@@ -525,8 +525,6 @@ Nouveau dictionnaire:
     <string name="next_word_strict_ngram_summary">Ne suggérer les mots appris que lorsque le contexte du mot précédent correspond</string>
     <string name="immediate_auto_space">Espace automatique immédiat</string>
     <string name="immediate_auto_space_summary">Insérer un espace instantanément lors de la sélection d\'une suggestion pour éviter un délai sur la prochaine lettre tapée</string>
-    <string name="first_word_prediction">Suggestions du premier mot</string>
-    <string name="first_word_prediction_summary">Afficher des suggestions lorsqu\'il n\'y a pas de saisie au début d\'une phrase</string>
     <string name="suggest_screenshots">Suggérer des captures d\'écran récentes</string>
     <string name="suggest_screenshots_summary">Afficher les captures d\'écran récentes comme suggestion</string>
     <string name="auto_read_otp">Lecture automatique des OTP depuis les SMS</string>
@@ -1828,4 +1826,8 @@ Permet l\'inférence GGUF / llama.cpp sur l\'appareil pour la correction et la r
     <string name="cjk_clear_user_dict_title">Effacer l\'historique des utilisateurs CJK</string>
     <string name="cjk_clear_user_dict_summary">Réinitialiser les classements des candidats appris et le cache du dictionnaire utilisateur</string>
     <string name="cjk_clear_user_dict_success">Historique des utilisateurs CJK effacé</string>
+    <string name="backspace_repeat_deletes_words">Maintenir la suppression supprime des mots entiers</string>
+    <string name="backspace_repeat_deletes_words_summary">Après avoir maintenu la touche Suppr enfoncée pendant un moment, supprimez mot par mot avec une vitesse croissante</string>
+    <string name="clipboard_skip_sensitive">Ne conservez pas les mots de passe et les codes</string>
+    <string name="clipboard_skip_sensitive_summary">Les entrées marquées comme confidentielles (par exemple provenant de gestionnaires de mots de passe) et les codes à usage unique de 4 à 8 chiffres ne sont pas ajoutés à l\'historique. Le collage fonctionne toujours</string>
 </resources>

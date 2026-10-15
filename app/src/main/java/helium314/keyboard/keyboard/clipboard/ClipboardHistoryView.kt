@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.ImageButton
+import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.graphics.Color
@@ -1247,11 +1248,12 @@ class ClipboardHistoryView @JvmOverloads constructor(
     override fun resetMetaState() { keyboardActionListener.resetMetaState() }
     
     private fun setupClipKey(params: KeyDrawParams) {
+        val fontMultiplier = Settings.getValues().mFontSizeMultiplier
         clipboardAdapter.apply {
             itemBackgroundId = keyBackgroundId
             itemTypeFace = params.mTypeface
             itemTextColor = params.mTextColor
-            itemTextSize = params.mLabelSize.toFloat()
+            itemTextSize = params.mLabelSize.toFloat() * fontMultiplier
         }
     }
 
@@ -1316,7 +1318,7 @@ class ClipboardHistoryView @JvmOverloads constructor(
         }
 
         val params = KeyDrawParams()
-        params.updateParams(clipboardLayoutParams.bottomRowKeyHeight, keyVisualAttr)
+        params.updateParams(clipboardLayoutParams.bottomRowKeyboardHeight, keyVisualAttr)
         val settings = Settings.getInstance()
         settings.getCustomTypeface()?.let { params.mTypeface = it }
         setupClipKey(params)
@@ -1531,8 +1533,7 @@ class ClipboardHistoryView @JvmOverloads constructor(
             ?: keyboardWidth
 
         val isAutoSpan = Settings.getValues().mAutoSpanToolbarKeys
-        val minSpannedKeyWidth = (singleKeyWidth * 1.25f).toInt()
-        val canSpan = containerWidth > 0 && (containerWidth / visibleCount >= minSpannedKeyWidth)
+        val canSpan = containerWidth > 0 && (containerWidth >= visibleCount * singleKeyWidth)
         val useEqualSpacing = isAutoSpan && canSpan
 
         val alignmentGravity = when (Settings.getValues().mToolbarKeysAlignment) {
@@ -1553,9 +1554,17 @@ class ClipboardHistoryView @JvmOverloads constructor(
             gravity = Gravity.CENTER_VERTICAL
         }
 
+        val toolbarContainer = clipboardStrip.parent as? HorizontalScrollView
+        toolbarContainer?.let { hsv ->
+            hsv.overScrollMode = if (useEqualSpacing) View.OVER_SCROLL_NEVER else View.OVER_SCROLL_IF_CONTENT_SCROLLS
+            if (useEqualSpacing) hsv.scrollTo(0, 0)
+        }
+
         for (i in 0 until count) {
             val child = clipboardStrip.getChildAt(i) ?: continue
             if (child.visibility == View.GONE) continue
+            child.minimumWidth = 0
+            child.minimumHeight = 0
             child.layoutParams = if (useEqualSpacing) {
                 spannedLayoutParams
             } else {

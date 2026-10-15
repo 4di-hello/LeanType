@@ -57,6 +57,8 @@ class RichInputConnection(private val mParent: InputMethodService) : PrivateComm
 
     private var mIC: InputConnection? = null
     private var mNestLevel = 0
+    var isSelectionUpdateInProgress: Boolean = false
+    private var mLastCursorUpdateRequestTime: Long = 0L
 
     private var mExpectedSelStart = INVALID_CURSOR_POSITION // in chars, not code points
     private var mExpectedSelEnd = INVALID_CURSOR_POSITION   // in chars, not code points
@@ -167,11 +169,15 @@ class RichInputConnection(private val mParent: InputMethodService) : PrivateComm
 
         if (--mNestLevel == 0 && isConnected()) {
             mIC?.endBatchEdit()
-            if (InputTypeUtils.isWebEditor(mParent.currentInputEditorInfo)) {
-                try {
-                    mIC?.requestCursorUpdates(InputConnection.CURSOR_UPDATE_IMMEDIATE)
-                } catch (e: Exception) {
-                    Log.w(TAG, "Failed to request cursor updates in web editor", e)
+            if (!isSelectionUpdateInProgress && InputTypeUtils.isWebEditor(mParent.currentInputEditorInfo)) {
+                val now = SystemClock.uptimeMillis()
+                if (now - mLastCursorUpdateRequestTime >= 100L) {
+                    mLastCursorUpdateRequestTime = now
+                    try {
+                        mIC?.requestCursorUpdates(InputConnection.CURSOR_UPDATE_IMMEDIATE)
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Failed to request cursor updates in web editor", e)
+                    }
                 }
             }
         }
@@ -262,17 +268,6 @@ class RichInputConnection(private val mParent: InputMethodService) : PrivateComm
 
         mCommittedTextBeforeComposingText.append(textBeforeCursor)
         return true
-    }
-
-    /**
-     * Synchronously asks the editor for its current selection as (anchor, extent) in absolute offsets.
-     * For a reversed selection, extent < anchor. Returns null if the editor does not provide extracted text.
-     */
-    fun getEditorSelection(): Pair<Int, Int>? {
-        if (!isConnected()) return null
-        val et = mIC?.getExtractedText(ExtractedTextRequest(), 0) ?: return null
-        if (et.selectionStart < 0 || et.selectionEnd < 0) return null
-        return Pair(et.selectionStart + et.startOffset, et.selectionEnd + et.startOffset)
     }
 
     private fun reloadCursorPosition() {

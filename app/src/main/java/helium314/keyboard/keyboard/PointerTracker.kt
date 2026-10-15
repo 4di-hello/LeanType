@@ -562,7 +562,8 @@ class PointerTracker private constructor(
                 keyboardChangeOccupiedHeightDifference = 0
                 CoordinateUtils.set(mDownCoordinates, x, y + yOffset)
                 val newKey = mKeyDetector.detectHitKey(x, y + yOffset)
-                if (newKey != null && newKey.code == pressedKey.code) {
+                val isShiftChording = KeyboardSwitcher.getInstance().isShiftChording
+                if (newKey != null && (newKey.code == pressedKey.code || (!pressedKey.isModifier() && !newKey.isModifier() && !isShiftChording))) {
                     key = onDownKey(x, y + yOffset, eventTime)
                 } else {
                     key = null

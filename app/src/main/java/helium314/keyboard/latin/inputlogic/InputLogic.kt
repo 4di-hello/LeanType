@@ -113,6 +113,8 @@ class InputLogic(
     private var mJustRevertedExpandedShortcut: String? = null
     private var mJustRevertedACommit = false
     private var mIsProcessingSelectionUpdate = false
+    private var mIsRecoveringComposingSpan = false
+    private var mLastSpanReclaimTime = 0L
 
     private var mAutoCommitSequenceNumber = 1
     private var mTextBeforeProofread: String? = null
@@ -162,8 +164,11 @@ class InputLogic(
     fun onOrientationChange(settingsValues: SettingsValues) {
         if (mWordComposer.isComposingWord()) {
             mConnection.beginBatchEdit()
-            commitTyped(settingsValues, LastComposedWord.NOT_A_SEPARATOR)
-            mConnection.endBatchEdit()
+            try {
+                commitTyped(settingsValues, LastComposedWord.NOT_A_SEPARATOR)
+            } finally {
+                mConnection.endBatchEdit()
+            }
         }
     }
 
@@ -186,6 +191,7 @@ class InputLogic(
     ): Boolean {
         if (mIsProcessingSelectionUpdate) return false
         mIsProcessingSelectionUpdate = true
+        mConnection.isSelectionUpdateInProgress = true
         try {
             if (mConnection.isBelatedExpectedUpdate(oldSelStart, newSelStart, oldSelEnd, newSelEnd, composingSpanStart, composingSpanEnd)) {
                 return false
@@ -195,9 +201,16 @@ class InputLogic(
             if (isWeb && mWordComposer.isComposingWord() && composingSpanStart == -1 && composingSpanEnd == -1) {
                 // The web editor / contenteditable JS destroyed our composing span in the DOM.
                 // Reclaim the region if possible; otherwise reset composing state to prevent duplicate characters.
+                val now = SystemClock.uptimeMillis()
                 val wordLength = mWordComposer.size()
-                val reclaimed = if (wordLength > 0 && newSelStart >= wordLength) {
-                    mConnection.setComposingRegion(newSelStart - wordLength, newSelStart)
+                val reclaimed = if (!mIsRecoveringComposingSpan && now - mLastSpanReclaimTime >= 120L && wordLength > 0 && newSelStart >= wordLength) {
+                    mIsRecoveringComposingSpan = true
+                    mLastSpanReclaimTime = now
+                    try {
+                        mConnection.setComposingRegion(newSelStart - wordLength, newSelStart)
+                    } finally {
+                        mIsRecoveringComposingSpan = false
+                    }
                 } else false
                 if (!reclaimed) {
                     resetEntireInputState(newSelStart, newSelEnd, false)
@@ -239,6 +252,7 @@ class InputLogic(
             return true
         } finally {
             mIsProcessingSelectionUpdate = false
+            mConnection.isSelectionUpdateInProgress = false
         }
     }
 
@@ -253,33 +267,36 @@ class InputLogic(
         handler: LatinIME.UIHandler
     ): InputTransaction {
         val rawText = event.textToCommit.toString()
+        val text = performSpecificTldProcessingOnTextInput(rawText)
         val inputTransaction = InputTransaction(
             settingsValues, event,
             SystemClock.uptimeMillis(), mSpaceState,
             getActualCapsMode(settingsValues, keyboardShiftMode)
         )
         mConnection.beginBatchEdit()
-        if (mWordComposer.isComposingWord()) {
-            if (mWordComposer.isCursorFrontOrMiddleOfComposingWord()) {
-                // stop composing, otherwise the text will end up at the end of the current word
-                mConnection.finishComposingText()
-                resetComposingState(false)
+        try {
+            if (mWordComposer.isComposingWord()) {
+                if (mWordComposer.isCursorFrontOrMiddleOfComposingWord()) {
+                    // stop composing, otherwise the text will end up at the end of the current word
+                    mConnection.finishComposingText()
+                    resetComposingState(false)
+                } else {
+                    commitCurrentAutoCorrection(settingsValues, rawText, handler)
+                    addToHistoryIfEmoji(rawText, settingsValues) // add emoji after committing text
+                }
             } else {
-                commitCurrentAutoCorrection(settingsValues, rawText, handler)
-                addToHistoryIfEmoji(rawText, settingsValues) // add emoji after committing text
+                addToHistoryIfEmoji(rawText, settingsValues) // add emoji before resetting, otherwise lastComposedWord is empty
+                resetComposingState(true /* alsoResetLastComposedWord */)
             }
-        } else {
-            addToHistoryIfEmoji(rawText, settingsValues) // add emoji before resetting, otherwise lastComposedWord is empty
-            resetComposingState(true /* alsoResetLastComposedWord */)
+            handler.postUpdateSuggestionStrip(SuggestedWords.INPUT_STYLE_TYPING)
+            if (SpaceState.PHANTOM == mSpaceState) {
+                insertAutomaticSpaceIfOptionsAndTextAllow(settingsValues)
+            }
+            mConnection.commitText(text, 1)
+            StatsUtils.onWordCommitUserTyped(mEnteredText, mWordComposer.isBatchMode())
+        } finally {
+            mConnection.endBatchEdit()
         }
-        handler.postUpdateSuggestionStrip(SuggestedWords.INPUT_STYLE_TYPING)
-        val text = performSpecificTldProcessingOnTextInput(rawText)
-        if (SpaceState.PHANTOM == mSpaceState) {
-            insertAutomaticSpaceIfOptionsAndTextAllow(settingsValues)
-        }
-        mConnection.commitText(text, 1)
-        StatsUtils.onWordCommitUserTyped(mEnteredText, mWordComposer.isBatchMode())
-        mConnection.endBatchEdit()
         // Space state must be updated before calling updateShiftState
         // ponytail: set PHANTOM space state after emoji if autospace after emoji is enabled
         mSpaceState = if (settingsValues.mAutospaceAfterEmoji && isEmoji(text)) SpaceState.PHANTOM else SpaceState.NONE
@@ -323,45 +340,47 @@ class InputLogic(
         // Manual pick affects the contents of the editor, so we take note of this. It's important for the sequence of language switching.
         inputTransaction.setDidAffectContents()
         mConnection.beginBatchEdit()
-        if (SpaceState.PHANTOM == mSpaceState && suggestion.isNotEmpty()
-            // In the batch input mode, a manually picked suggested word should just replace the current batch input text and there is no need for a phantom space.
-            && !mWordComposer.isBatchMode()
-            // when a commit was reverted and user chose a different suggestion, we don't want to insert a space before the picked word
-            && !mJustRevertedACommit
-        ) {
-            val firstChar = Character.codePointAt(suggestion, 0)
-            if (!settingsValues.isWordSeparator(firstChar) || settingsValues.isUsuallyPrecededBySpace(firstChar)) {
-                insertAutomaticSpaceIfOptionsAndTextAllow(settingsValues)
+        try {
+            if (SpaceState.PHANTOM == mSpaceState && suggestion.isNotEmpty()
+                // In the batch input mode, a manually picked suggested word should just replace the current batch input text and there is no need for a phantom space.
+                && !mWordComposer.isBatchMode()
+                // when a commit was reverted and user chose a different suggestion, we don't want to insert a space before the picked word
+                && !mJustRevertedACommit
+            ) {
+                val firstChar = Character.codePointAt(suggestion, 0)
+                if (!settingsValues.isWordSeparator(firstChar) || settingsValues.isUsuallyPrecededBySpace(firstChar)) {
+                    insertAutomaticSpaceIfOptionsAndTextAllow(settingsValues)
+                }
             }
-        }
-        mJustRevertedACommit = false
+            mJustRevertedACommit = false
 
-        if (suggestionInfo.isKindOf(SuggestedWordInfo.KIND_APP_DEFINED)) {
-            mSuggestedWords = SuggestedWords.getEmptyInstance()
-            mSuggestionStripViewAccessor.setNeutralSuggestionStrip()
-            inputTransaction.requireShiftUpdate(InputTransaction.SHIFT_UPDATE_NOW)
-            resetComposingState(true /* alsoResetLastComposedWord */)
-            mConnection.commitCompletion(suggestionInfo.mApplicationSpecifiedCompletionInfo)
+            if (suggestionInfo.isKindOf(SuggestedWordInfo.KIND_APP_DEFINED)) {
+                mSuggestedWords = SuggestedWords.getEmptyInstance()
+                mSuggestionStripViewAccessor.setNeutralSuggestionStrip()
+                inputTransaction.requireShiftUpdate(InputTransaction.SHIFT_UPDATE_NOW)
+                resetComposingState(true /* alsoResetLastComposedWord */)
+                mConnection.commitCompletion(suggestionInfo.mApplicationSpecifiedCompletionInfo)
+                return inputTransaction
+            }
+
+            commitChosenWord(
+                settingsValues, suggestion, LastComposedWord.COMMIT_TYPE_MANUAL_PICK,
+                LastComposedWord.NOT_A_SEPARATOR
+            )
+            if (settingsValues.mAutospaceAfterSuggestion) {
+                if (settingsValues.mImmediateAutoSpace) {
+                    mConnection.finishComposingText()
+                    mConnection.commitText(" ", 1)
+                    mConnection.finishComposingText()
+                    resetComposingState(false)
+                    mSpaceState = SpaceState.DOUBLE
+                } else {
+                    mSpaceState = SpaceState.PHANTOM
+                }
+            }
+        } finally {
             mConnection.endBatchEdit()
-            return inputTransaction
         }
-
-        commitChosenWord(
-            settingsValues, suggestion, LastComposedWord.COMMIT_TYPE_MANUAL_PICK,
-            LastComposedWord.NOT_A_SEPARATOR
-        )
-        if (settingsValues.mAutospaceAfterSuggestion) {
-            if (settingsValues.mImmediateAutoSpace) {
-                mConnection.finishComposingText()
-                mConnection.commitText(" ", 1)
-                mConnection.finishComposingText()
-                resetComposingState(false)
-                mSpaceState = SpaceState.DOUBLE
-            } else {
-                mSpaceState = SpaceState.PHANTOM
-            }
-        }
-        mConnection.endBatchEdit()
         inputTransaction.requireShiftUpdate(InputTransaction.SHIFT_UPDATE_NOW)
         setInlineEmojiSearchAction(false)
 
@@ -402,55 +421,58 @@ class InputLogic(
         }
         mLastKeyTime = inputTransaction.timestamp
         mConnection.beginBatchEdit()
-        if (!mWordComposer.isComposingWord()) {
-            mIsAutoCorrectionIndicatorOn = false
-        }
-
-        if (processedEvent.codePoint != Constants.CODE_SPACE && event.codePoint != Constants.CODE_SPACE) {
-            cancelDoubleSpacePeriodCountdown()
-        }
-
-        var currentEvent: Event? = processedEvent
-        while (null != currentEvent) {
-            if (currentEvent.isConsumed) {
-                handleConsumedEvent(currentEvent, inputTransaction)
-            } else if (currentEvent.isFunctionalKeyEvent) {
-                handleFunctionalEvent(currentEvent, inputTransaction, handler)
-            } else {
-                handleNonFunctionalEvent(currentEvent, inputTransaction, handler)
+        try {
+            if (!mWordComposer.isComposingWord()) {
+                mIsAutoCorrectionIndicatorOn = false
             }
-            currentEvent = currentEvent.nextEvent
-        }
 
-        if (!mConnection.hasSlowInputConnection() && !mWordComposer.isComposingWord()
-            && (settingsValues.isWordCodePoint(processedEvent.codePoint)
-                || processedEvent.keyCode == KeyCode.DELETE)
-        ) {
-            mWordBeingCorrectedByCursor = getWordAtCursor(settingsValues)
+            if (processedEvent.codePoint != Constants.CODE_SPACE && event.codePoint != Constants.CODE_SPACE) {
+                cancelDoubleSpacePeriodCountdown()
+            }
+
+            var currentEvent: Event? = processedEvent
+            while (null != currentEvent) {
+                if (currentEvent.isConsumed) {
+                    handleConsumedEvent(currentEvent, inputTransaction)
+                } else if (currentEvent.isFunctionalKeyEvent) {
+                    handleFunctionalEvent(currentEvent, inputTransaction, handler)
+                } else {
+                    handleNonFunctionalEvent(currentEvent, inputTransaction, handler)
+                }
+                currentEvent = currentEvent.nextEvent
+            }
+
+            if (!mConnection.hasSlowInputConnection() && !mWordComposer.isComposingWord()
+                && (settingsValues.isWordCodePoint(processedEvent.codePoint)
+                    || processedEvent.keyCode == KeyCode.DELETE)
+            ) {
+                mWordBeingCorrectedByCursor = getWordAtCursor(settingsValues)
+            }
+            if (!inputTransaction.didAutoCorrect() && processedEvent.keyCode != KeyCode.SHIFT
+                && processedEvent.keyCode != KeyCode.CAPS_LOCK
+                && processedEvent.keyCode != KeyCode.SYMBOL_ALPHA
+                && processedEvent.keyCode != KeyCode.ALPHA
+                && processedEvent.keyCode != KeyCode.SYMBOL
+                && processedEvent.keyCode != KeyCode.CUSTOM1
+                && processedEvent.keyCode != KeyCode.CUSTOM2
+                && processedEvent.keyCode != KeyCode.CUSTOM3
+                && processedEvent.keyCode != KeyCode.CUSTOM4
+                && processedEvent.keyCode != KeyCode.CUSTOM5
+            ) {
+                mLastComposedWord.deactivate()
+            }
+            if (KeyCode.DELETE != processedEvent.keyCode) {
+                mEnteredText = null
+            }
+            // caps lock only for the word that was changed to upper case with shift, the next word is normal again
+            if (mCapsLockFromRecapitalize && !mWordComposer.isComposingWord()) {
+                mCapsLockFromRecapitalize = false
+                KeyboardSwitcher.getInstance().setCapsLock(false)
+                inputTransaction.requireShiftUpdate(InputTransaction.SHIFT_UPDATE_NOW)
+            }
+        } finally {
+            mConnection.endBatchEdit()
         }
-        if (!inputTransaction.didAutoCorrect() && processedEvent.keyCode != KeyCode.SHIFT
-            && processedEvent.keyCode != KeyCode.CAPS_LOCK
-            && processedEvent.keyCode != KeyCode.SYMBOL_ALPHA
-            && processedEvent.keyCode != KeyCode.ALPHA
-            && processedEvent.keyCode != KeyCode.SYMBOL
-            && processedEvent.keyCode != KeyCode.CUSTOM1
-            && processedEvent.keyCode != KeyCode.CUSTOM2
-            && processedEvent.keyCode != KeyCode.CUSTOM3
-            && processedEvent.keyCode != KeyCode.CUSTOM4
-            && processedEvent.keyCode != KeyCode.CUSTOM5
-        ) {
-            mLastComposedWord.deactivate()
-        }
-        if (KeyCode.DELETE != processedEvent.keyCode) {
-            mEnteredText = null
-        }
-        // caps lock only for the word that was changed to upper case with shift, the next word is normal again
-        if (mCapsLockFromRecapitalize && !mWordComposer.isComposingWord()) {
-            mCapsLockFromRecapitalize = false
-            KeyboardSwitcher.getInstance().setCapsLock(false)
-            inputTransaction.requireShiftUpdate(InputTransaction.SHIFT_UPDATE_NOW)
-        }
-        mConnection.endBatchEdit()
         return inputTransaction
     }
 
@@ -465,37 +487,40 @@ class InputLogic(
         handler.cancelUpdateSuggestionStrip()
         ++mAutoCommitSequenceNumber
         mConnection.beginBatchEdit()
-        if (mWordComposer.isComposingWord()) {
-            if (mWordComposer.isCursorFrontOrMiddleOfComposingWord()) {
-                unlearnWord(mWordComposer.getTypedWord(), settingsValues, Constants.EVENT_BACKSPACE)
-                resetEntireInputState(mConnection.expectedSelectionStart, mConnection.expectedSelectionEnd, true)
-            } else if (mWordComposer.isSingleLetter() && !isInlineEmojiSearchAction()) {
-                commitCurrentAutoCorrection(settingsValues, LastComposedWord.NOT_A_SEPARATOR, handler)
-            } else {
-                commitTyped(settingsValues, LastComposedWord.NOT_A_SEPARATOR)
+        try {
+            if (mWordComposer.isComposingWord()) {
+                if (mWordComposer.isCursorFrontOrMiddleOfComposingWord()) {
+                    unlearnWord(mWordComposer.getTypedWord(), settingsValues, Constants.EVENT_BACKSPACE)
+                    resetEntireInputState(mConnection.expectedSelectionStart, mConnection.expectedSelectionEnd, true)
+                } else if (mWordComposer.isSingleLetter() && !isInlineEmojiSearchAction()) {
+                    commitCurrentAutoCorrection(settingsValues, LastComposedWord.NOT_A_SEPARATOR, handler)
+                } else {
+                    commitTyped(settingsValues, LastComposedWord.NOT_A_SEPARATOR)
+                }
+            } else if (mConnection.hasSelection()) {
+                val selectedText = mConnection.getSelectedText(0)
+                if (selectedText != null) {
+                    mWordComposer.setRejectedBatchModeSuggestion(selectedText.toString())
+                }
             }
-        } else if (mConnection.hasSelection()) {
-            val selectedText = mConnection.getSelectedText(0)
-            if (selectedText != null) {
-                mWordComposer.setRejectedBatchModeSuggestion(selectedText.toString())
+            val codePointBeforeCursor = mConnection.codePointBeforeCursor
+            if (Character.isLetterOrDigit(codePointBeforeCursor)
+                || settingsValues.isUsuallyFollowedBySpace(codePointBeforeCursor)
+            ) {
+                val autoShiftHasBeenOverriden = keyboardSwitcher.keyboardShiftMode != getCurrentAutoCapsState(settingsValues)
+                if (settingsValues.mAutospaceBeforeGestureTyping) {
+                    mSpaceState = SpaceState.PHANTOM
+                }
+                if (!autoShiftHasBeenOverriden) {
+                    keyboardSwitcher.requestUpdatingShiftState(
+                        getCurrentAutoCapsState(settingsValues),
+                        getCurrentRecapitalizeState()
+                    )
+                }
             }
+        } finally {
+            mConnection.endBatchEdit()
         }
-        val codePointBeforeCursor = mConnection.codePointBeforeCursor
-        if (Character.isLetterOrDigit(codePointBeforeCursor)
-            || settingsValues.isUsuallyFollowedBySpace(codePointBeforeCursor)
-        ) {
-            val autoShiftHasBeenOverriden = keyboardSwitcher.keyboardShiftMode != getCurrentAutoCapsState(settingsValues)
-            if (settingsValues.mAutospaceBeforeGestureTyping) {
-                mSpaceState = SpaceState.PHANTOM
-            }
-            if (!autoShiftHasBeenOverriden) {
-                keyboardSwitcher.requestUpdatingShiftState(
-                    getCurrentAutoCapsState(settingsValues),
-                    getCurrentRecapitalizeState()
-                )
-            }
-        }
-        mConnection.endBatchEdit()
         mWordComposer.setCapitalizedModeAtStartComposingTime(
             getActualCapsMode(settingsValues, keyboardSwitcher.keyboardShiftMode)
         )
@@ -603,12 +628,24 @@ class InputLogic(
         }
 
         mTextBeforeProofread = textToProofread
+        val targetEditorInfo = getCurrentInputEditorInfo()
+        val targetPackage = targetEditorInfo?.packageName
+        val targetFieldId = targetEditorInfo?.fieldId
 
         ProofreadHelper.proofreadAsync(
             mLatinIME,
             textToProofread,
             hasSelection,
             onSuccess = { proofreadText ->
+                if (!mLatinIME.isInputViewShown || !mConnection.isConnected()) {
+                    Log.w(TAG, "Input view hidden or disconnected during proofread, ignoring result")
+                    return@proofreadAsync
+                }
+                val currentEditor = getCurrentInputEditorInfo()
+                if (currentEditor?.packageName != targetPackage || currentEditor?.fieldId != targetFieldId) {
+                    Log.w(TAG, "Target editor changed during proofread, ignoring result")
+                    return@proofreadAsync
+                }
                 val textBefore = mTextBeforeProofread
                 if (proofreadText.isNotEmpty() && proofreadText != textBefore) {
                     if (textBefore != null && textBefore.length > 20 && proofreadText.length < textBefore.length * 0.3) {
@@ -678,12 +715,24 @@ class InputLogic(
         }
 
         mTextBeforeTranslate = textToTranslate
+        val targetEditorInfo = getCurrentInputEditorInfo()
+        val targetPackage = targetEditorInfo?.packageName
+        val targetFieldId = targetEditorInfo?.fieldId
 
         ProofreadHelper.translateAsync(
             mLatinIME,
             textToTranslate,
             hasSelection,
             onSuccess = { translatedText ->
+                if (!mLatinIME.isInputViewShown || !mConnection.isConnected()) {
+                    Log.w(TAG, "Input view hidden or disconnected during translation, ignoring result")
+                    return@translateAsync
+                }
+                val currentEditor = getCurrentInputEditorInfo()
+                if (currentEditor?.packageName != targetPackage || currentEditor?.fieldId != targetFieldId) {
+                    Log.w(TAG, "Target editor changed during translation, ignoring result")
+                    return@translateAsync
+                }
                 val textBefore = mTextBeforeTranslate
                 if (translatedText.isNotEmpty() && translatedText != textBefore) {
                     if (textBefore != null && textBefore.length > 20 && translatedText.length < textBefore.length * 0.3) {
@@ -1912,9 +1961,12 @@ class InputLogic(
         }
         val codePoints = StringUtils.toCodePointArray(replacement)
         mConnection.beginBatchEdit()
-        mWordComposer.setComposingWord(codePoints, mLatinIME.getCoordinatesForCurrentKeyboard(codePoints))
-        setComposingTextInternal(replacement, 1)
-        mConnection.endBatchEdit()
+        try {
+            mWordComposer.setComposingWord(codePoints, mLatinIME.getCoordinatesForCurrentKeyboard(codePoints))
+            setComposingTextInternal(replacement, 1)
+        } finally {
+            mConnection.endBatchEdit()
+        }
         // typing should continue in the same case: caps lock for an upper case word, lower case otherwise
         mCapsLockFromRecapitalize = mRecapitalizeStatus.getCurrentMode() == RecapitalizeMode.ALL_UPPER
         KeyboardSwitcher.getInstance().setCapsLock(mCapsLockFromRecapitalize)
@@ -1994,9 +2046,7 @@ class InputLogic(
         if (!mWordComposer.isComposingWord()) {
             val ngramContext = getNgramContextFromNthPreviousWordForSuggestion(settingsValues.mSpacingAndPunctuations, 1)
             val isFirstWord = ngramContext.isBeginningOfSentenceContext
-            if ((isFirstWord && !settingsValues.mFirstWordPredictionEnabled)
-                || (!isFirstWord && !settingsValues.mBigramPredictionEnabled)
-            ) {
+            if (isFirstWord || !settingsValues.mBigramPredictionEnabled) {
                 mSuggestionStripViewAccessor.setNeutralSuggestionStrip()
                 return
             }
@@ -2441,14 +2491,17 @@ class InputLogic(
             return
         }
         mConnection.beginBatchEdit()
-        if (SpaceState.PHANTOM == mSpaceState) {
-            insertAutomaticSpaceIfOptionsAndTextAllow(settingsValues)
-            mSpaceState = SpaceState.NONE
+        try {
+            if (SpaceState.PHANTOM == mSpaceState) {
+                insertAutomaticSpaceIfOptionsAndTextAllow(settingsValues)
+                mSpaceState = SpaceState.NONE
+            }
+            enterInlineEmojiSearchIfNeeded(batchInputText.codePointAt(0), settingsValues)
+            mWordComposer.setBatchInputWord(batchInputText)
+            setComposingTextInternal(batchInputText, 1)
+        } finally {
+            mConnection.endBatchEdit()
         }
-        enterInlineEmojiSearchIfNeeded(batchInputText.codePointAt(0), settingsValues)
-        mWordComposer.setBatchInputWord(batchInputText)
-        setComposingTextInternal(batchInputText, 1)
-        mConnection.endBatchEdit()
         if (settingsValues.mAutospaceAfterGestureTyping) {
             mSpaceState = SpaceState.PHANTOM
         }
@@ -2904,10 +2957,23 @@ class InputLogic(
             }
         }
 
+        val targetEditorInfo = getCurrentInputEditorInfo()
+        val targetPackage = targetEditorInfo?.packageName
+        val targetFieldId = targetEditorInfo?.fieldId
+
         ProofreadHelper.customAsync(
             mLatinIME,
             textToProcess, prompt, hasSelection, showThinking,
             onSuccess = { resultText ->
+                if (!mLatinIME.isInputViewShown || !mConnection.isConnected()) {
+                    Log.w(TAG, "Input view hidden or disconnected during custom AI operation, ignoring result")
+                    return@customAsync
+                }
+                val currentEditor = getCurrentInputEditorInfo()
+                if (currentEditor?.packageName != targetPackage || currentEditor?.fieldId != targetFieldId) {
+                    Log.w(TAG, "Target editor changed during custom AI operation, ignoring result")
+                    return@customAsync
+                }
                 if (!hasSelection && !shouldAppend) {
                     mConnection.replaceEntireText(resultText)
                 } else {
@@ -2970,9 +3036,12 @@ class InputLogic(
                 Log.d(TAG, "tryJumpToNextPlaceholder: jumping to [$targetStart,$targetEnd) currentSelEnd=$currentSelectionEnd")
             }
             mConnection.beginBatchEdit()
-            mConnection.setSelection(targetStart, targetEnd)
-            mConnection.commitText("", 1)
-            mConnection.endBatchEdit()
+            try {
+                mConnection.setSelection(targetStart, targetEnd)
+                mConnection.commitText("", 1)
+            } finally {
+                mConnection.endBatchEdit()
+            }
             return true
         }
         if (DebugFlags.DEBUG_ENABLED) {

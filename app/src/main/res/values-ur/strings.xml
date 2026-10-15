@@ -177,8 +177,6 @@
     <string name="next_word_strict_ngram_summary">صرف اس وقت سیکھے ہوئے الفاظ تجویز کریں جب پچھلے لفظ کا سیاق و سباق مماثل ہو</string>
     <string name="immediate_auto_space">فوری خودکار اسپیس</string>
     <string name="immediate_auto_space_summary">تجویز منتخب کرتے وقت فوراً اسپیس ڈالیں تاکہ اگلے ٹائپ شدہ حرف میں تاخیر نہ ہو</string>
-    <string name="first_word_prediction">پہلے لفظ کی تجاویز</string>
-    <string name="first_word_prediction_summary">جب جملے کے شروع میں کوئی ان پٹ نہ ہو تو تجاویز دکھائیں</string>
     <string name="suggest_punctuation">اوقاف کی تجاویز</string>
     <string name="suggest_punctuation_summary">جب کوئی اور تجاویز دستیاب نہ ہوں تو اوقاف دکھائیں</string>
     <string name="suggest_clipboard_content">کلپ بورڈ مواد تجویز کریں</string>
@@ -1823,4 +1821,8 @@
     <string name="cjk_clear_user_dict_title">CJK صارف کی تاریخ صاف کریں۔</string>
     <string name="cjk_clear_user_dict_summary">سیکھے ہوئے امیدواروں کی درجہ بندی اور صارف کی لغت کیش کو دوبارہ ترتیب دیں۔</string>
     <string name="cjk_clear_user_dict_success">CJK صارف کی تاریخ صاف کر دی گئی۔</string>
+    <string name="backspace_repeat_deletes_words">حذف کو ہولڈ کرنے سے پورے الفاظ ہٹ جاتے ہیں۔</string>
+    <string name="backspace_repeat_deletes_words_summary">ڈیلیٹ کی کو ایک لمحے کے لیے تھامے رکھنے کے بعد، بڑھتی ہوئی رفتار کے ساتھ لفظ بہ لفظ حذف کریں۔</string>
+    <string name="clipboard_skip_sensitive">پاس ورڈ اور کوڈز نہ رکھیں</string>
+    <string name="clipboard_skip_sensitive_summary">خفیہ کے طور پر نشان زد اندراجات (مثلاً پاس ورڈ مینیجرز کی طرف سے) اور 4 سے 8 ہندسوں والے یک وقتی کوڈز کو تاریخ میں شامل نہیں کیا جاتا ہے۔ چسپاں کرنا اب بھی کام کرتا ہے۔</string>
 </resources>

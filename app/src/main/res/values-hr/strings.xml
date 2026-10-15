@@ -528,8 +528,6 @@
     <string name="immediate_auto_space_summary">Trenutno potvrdite razmak prilikom odabira prijedloga kako biste spriječili odgodu na sljedećem upisanom slovu</string>
     <string name="pref_foldable_mode_title">Profil sklopivog zaslona</string>
     <string name="pref_foldable_mode_summary">Omogućite automatsko otkrivanje profila zaslona i skaliranje podijeljene tipkovnice za sklopive uređaje</string>
-    <string name="first_word_prediction">Prijedlozi za prvu riječ</string>
-    <string name="first_word_prediction_summary">Prikažite prijedloge kada nema unosa na početku rečenice</string>
     <string name="suggest_screenshots">Predloži nedavne snimke zaslona</string>
     <string name="suggest_screenshots_summary">Prikažite nedavno napravljene snimke zaslona kao prijedlog</string>
     <string name="auto_read_otp">Automatsko čitanje OTP-a iz SMS-a</string>
@@ -1754,4 +1752,8 @@ Omogućuje lokalno GGUF / llama.cpp zaključivanje na uređaju za lekturu i prep
     <string name="cjk_clear_user_dict_title">Obriši CJK korisničku povijest</string>
     <string name="cjk_clear_user_dict_summary">Resetiraj naučeno rangiranje kandidata i predmemoriju korisničkog rječnika</string>
     <string name="cjk_clear_user_dict_success">CJK korisnička povijest izbrisana</string>
+    <string name="backspace_repeat_deletes_words">Držanjem delete uklanjaju se cijele riječi</string>
+    <string name="backspace_repeat_deletes_words_summary">Nakon što na trenutak držite tipku za brisanje, brišite riječ po riječ sve većom brzinom</string>
+    <string name="clipboard_skip_sensitive">Ne čuvajte lozinke i kodove</string>
+    <string name="clipboard_skip_sensitive_summary">Unosi označeni kao povjerljivi (npr. od upravitelja lozinkama) i jednokratni kodovi s 4 do 8 znamenki ne dodaju se u povijest. Lijepljenje i dalje funkcionira</string>
 </resources>

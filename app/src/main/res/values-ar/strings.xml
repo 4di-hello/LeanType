@@ -528,8 +528,6 @@
     <string name="next_word_strict_ngram_summary">اقتراح الكلمات المتعلّمة فقط عندما يتطابق سياق الكلمة السابقة</string>
     <string name="immediate_auto_space">مسافة تلقائية فورية</string>
     <string name="immediate_auto_space_summary">إدراج مسافة فورًا عند اختيار اقتراح لمنع التأخير في كتابة الحرف التالي</string>
-    <string name="first_word_prediction">اقتراحات الكلمة الأولى</string>
-    <string name="first_word_prediction_summary">عرض الاقتراحات عندما لا يكون هناك إدخال في بداية الجملة</string>
     <string name="suggest_screenshots">اقتراح لقطات الشاشة الحديثة</string>
     <string name="suggest_screenshots_summary">عرض لقطات الشاشة التي تم التقاطها مؤخرًا كاقتراح</string>
     <string name="auto_read_otp">قراءة OTP تلقائيًا من الرسائل القصيرة</string>
@@ -1837,4 +1835,8 @@
     <string name="cjk_clear_user_dict_title">مسح سجل مستخدم CJK</string>
     <string name="cjk_clear_user_dict_summary">إعادة تعيين تصنيفات المرشحين المستفادة وذاكرة التخزين المؤقت لقاموس المستخدم</string>
     <string name="cjk_clear_user_dict_success">تم مسح سجل مستخدم CJK</string>
+    <string name="backspace_repeat_deletes_words">يؤدي الضغط على زر الحذف إلى إزالة الكلمات بأكملها</string>
+    <string name="backspace_repeat_deletes_words_summary">بعد الضغط على مفتاح الحذف للحظة، احذف كلمة بكلمة بسرعة متزايدة</string>
+    <string name="clipboard_skip_sensitive">لا تحتفظ بكلمات المرور والرموز</string>
+    <string name="clipboard_skip_sensitive_summary">لا تتم إضافة الإدخالات التي تم وضع علامة عليها على أنها سرية (على سبيل المثال من مديري كلمات المرور) والرموز لمرة واحدة المكونة من 4 إلى 8 أرقام إلى السجل. اللصق لا يزال يعمل</string>
 </resources>

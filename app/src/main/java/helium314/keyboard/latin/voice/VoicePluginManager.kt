@@ -5,7 +5,9 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.os.DeadObjectException
 import android.os.IBinder
+import android.os.RemoteException
 import com.leanbitlab.leantype.voice.IVoiceCallback
 import com.leanbitlab.leantype.voice.IVoiceEngine
 import com.leanbitlab.leantype.voice.ModelImportRequest
@@ -144,6 +146,13 @@ class VoicePluginManager(private val context: Context) : IBinder.DeathRecipient 
     fun getInfo(): VoiceEngineInfo? {
         return try {
             engine?.info
+        } catch (e: DeadObjectException) {
+            Log.e(TAG, "Voice plugin service died in getInfo", e)
+            handleDisconnection()
+            null
+        } catch (e: RemoteException) {
+            Log.e(TAG, "Failed to get plugin info", e)
+            null
         } catch (e: Exception) {
             Log.e(TAG, "Failed to get plugin info", e)
             null
@@ -158,6 +167,13 @@ class VoicePluginManager(private val context: Context) : IBinder.DeathRecipient 
                 Log.i(TAG, "getModelState for $engineType: ${state?.state} (${state?.message})")
             }
             state
+        } catch (e: DeadObjectException) {
+            Log.e(TAG, "Voice plugin service died in getModelState", e)
+            handleDisconnection()
+            null
+        } catch (e: RemoteException) {
+            Log.e(TAG, "Failed to get model state for $engineType", e)
+            null
         } catch (e: Exception) {
             Log.e(TAG, "Failed to get model state for $engineType", e)
             null
@@ -167,6 +183,11 @@ class VoicePluginManager(private val context: Context) : IBinder.DeathRecipient 
     fun importModelSafely(request: ModelImportRequest) {
         try {
             engine?.importModel(request)
+        } catch (e: DeadObjectException) {
+            Log.e(TAG, "Voice plugin service died in importModel", e)
+            handleDisconnection()
+        } catch (e: RemoteException) {
+            Log.e(TAG, "Failed to import model", e)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to import model", e)
         } finally {
@@ -185,6 +206,13 @@ class VoicePluginManager(private val context: Context) : IBinder.DeathRecipient 
             return@withContext try {
                 engine?.importModel(request)
                 true
+            } catch (e: DeadObjectException) {
+                Log.e(TAG, "Voice plugin service died in importModel", e)
+                handleDisconnection()
+                false
+            } catch (e: RemoteException) {
+                Log.e(TAG, "importModel oneway dispatch failed", e)
+                false
             } catch (e: Exception) {
                 Log.e(TAG, "importModel oneway dispatch failed", e)
                 false
@@ -240,6 +268,9 @@ class VoicePluginManager(private val context: Context) : IBinder.DeathRecipient 
             service.importModel(request)
             Log.i(TAG, "bindAndImport: oneway importModel dispatched successfully")
             true
+        } catch (e: RemoteException) {
+            Log.e(TAG, "bindAndImport remote call failed", e)
+            false
         } catch (e: Exception) {
             Log.e(TAG, "bindAndImport failed", e)
             false
@@ -254,6 +285,11 @@ class VoicePluginManager(private val context: Context) : IBinder.DeathRecipient 
     fun unloadModel(engineType: String) {
         try {
             engine?.unloadModel(engineType)
+        } catch (e: DeadObjectException) {
+            Log.e(TAG, "Voice plugin service died in unloadModel", e)
+            handleDisconnection()
+        } catch (e: RemoteException) {
+            Log.e(TAG, "Failed to unload model $engineType", e)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to unload model $engineType", e)
         }
@@ -262,6 +298,11 @@ class VoicePluginManager(private val context: Context) : IBinder.DeathRecipient 
     fun deleteModel(engineType: String) {
         try {
             engine?.deleteModel(engineType)
+        } catch (e: DeadObjectException) {
+            Log.e(TAG, "Voice plugin service died in deleteModel", e)
+            handleDisconnection()
+        } catch (e: RemoteException) {
+            Log.e(TAG, "Failed to delete model $engineType", e)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to delete model $engineType", e)
         }
@@ -275,6 +316,13 @@ class VoicePluginManager(private val context: Context) : IBinder.DeathRecipient 
         return try {
             engine?.startSession(config, audioInput, callback)
             true
+        } catch (e: DeadObjectException) {
+            Log.e(TAG, "Voice plugin service died in startSession", e)
+            handleDisconnection()
+            false
+        } catch (e: RemoteException) {
+            Log.e(TAG, "Failed to start voice session", e)
+            false
         } catch (e: Exception) {
             Log.e(TAG, "Failed to start voice session", e)
             false
@@ -284,6 +332,11 @@ class VoicePluginManager(private val context: Context) : IBinder.DeathRecipient 
     fun stopSession() {
         try {
             engine?.stopSession()
+        } catch (e: DeadObjectException) {
+            Log.e(TAG, "Voice plugin service died in stopSession", e)
+            handleDisconnection()
+        } catch (e: RemoteException) {
+            Log.e(TAG, "Failed to stop session", e)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to stop session", e)
         }
@@ -292,6 +345,11 @@ class VoicePluginManager(private val context: Context) : IBinder.DeathRecipient 
     fun cancelSession() {
         try {
             engine?.cancelSession()
+        } catch (e: DeadObjectException) {
+            Log.e(TAG, "Voice plugin service died in cancelSession", e)
+            handleDisconnection()
+        } catch (e: RemoteException) {
+            Log.e(TAG, "Failed to cancel session", e)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to cancel session", e)
         }
@@ -300,6 +358,10 @@ class VoicePluginManager(private val context: Context) : IBinder.DeathRecipient 
     fun release() {
         try {
             engine?.release()
+        } catch (e: DeadObjectException) {
+            Log.e(TAG, "Voice plugin service died in release", e)
+        } catch (e: RemoteException) {
+            Log.e(TAG, "Failed to release voice engine", e)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to release voice engine", e)
         } finally {

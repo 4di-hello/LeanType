@@ -144,8 +144,7 @@ class OcrResultView @JvmOverloads constructor(
             if (count == 0) return
 
             val isAutoSpan = Settings.getValues().mAutoSpanToolbarKeys
-            val minSpannedKeyWidth = (keyDimension * 1.25f).toInt()
-            val canSpan = containerWidth > 0 && (containerWidth / count >= minSpannedKeyWidth)
+            val canSpan = containerWidth > 0 && (containerWidth >= count * keyDimension)
             val useEqualSpacing = isAutoSpan && canSpan
 
             val alignmentGravity = when (Settings.getValues().mToolbarKeysAlignment) {
@@ -162,7 +161,14 @@ class OcrResultView @JvmOverloads constructor(
                 gravity = Gravity.CENTER_VERTICAL
             }
 
+            KeyboardSwitcher.getInstance().ocrStripScrollView?.let { hsv ->
+                hsv.overScrollMode = if (useEqualSpacing) View.OVER_SCROLL_NEVER else View.OVER_SCROLL_IF_CONTENT_SCROLLS
+                if (useEqualSpacing) hsv.scrollTo(0, 0)
+            }
+
             for (keyView in keys) {
+                keyView.minimumWidth = 0
+                keyView.minimumHeight = 0
                 keyView.layoutParams = if (useEqualSpacing) spannedLayoutParams else standardLayoutParams
             }
         }

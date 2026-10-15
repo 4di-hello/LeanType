@@ -501,8 +501,6 @@
     <string name="immediate_auto_space_summary">Миттєво вставляти пробіл під час вибору пропозиції, щоб запобігти затримці при введенні наступної літери</string>
     <string name="pref_foldable_mode_title">Профіль складаного екрана</string>
     <string name="pref_foldable_mode_summary">Увімкнути автоматичне визначення профілю екрана та масштабування розділеної клавіатури для складаних пристроїв</string>
-    <string name="first_word_prediction">Пропозиції першого слова</string>
-    <string name="first_word_prediction_summary">Показувати пропозиції, коли на початку речення немає введеного тексту</string>
     <string name="suggest_screenshots">Пропонувати недавні скріншоти</string>
     <string name="suggest_screenshots_summary">Показувати нещодавно зроблені скріншоти як пропозицію</string>
     <string name="auto_read_otp">Автоматичне читання OTP з SMS</string>
@@ -1734,4 +1732,8 @@
     <string name="cjk_clear_user_dict_title">Очистити історію користувача CJK</string>
     <string name="cjk_clear_user_dict_summary">Скинути вивчений рейтинг кандидатів і кеш словника користувача</string>
     <string name="cjk_clear_user_dict_success">Історію користувача CJK очищено</string>
+    <string name="backspace_repeat_deletes_words">Утримуючи delete, ви видаляєте цілі слова</string>
+    <string name="backspace_repeat_deletes_words_summary">Утримуючи клавішу видалення на мить, видаляйте слово за словом зі збільшенням швидкості</string>
+    <string name="clipboard_skip_sensitive">Не зберігайте паролі та коди</string>
+    <string name="clipboard_skip_sensitive_summary">Записи, позначені як конфіденційні (наприклад, від менеджерів паролів), і одноразові коди з 4 до 8 цифр не додаються до історії. Вклеювання все ще працює</string>
 </resources>

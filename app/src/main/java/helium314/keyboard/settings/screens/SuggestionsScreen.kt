@@ -90,7 +90,6 @@ fun SuggestionsScreen(
             if (bigramPredictionsEnabled) Settings.PREF_EXPAND_FINE_TUNE_PREDICTION else null,
             if (bigramPredictionsEnabled && fineTunePredictionExpanded) Settings.PREF_PRIORITIZE_PERSONAL_SUGGESTIONS else null,
             if (bigramPredictionsEnabled && fineTunePredictionExpanded) Settings.PREF_NEXT_WORD_STRICT_NGRAM else null,
-            if (bigramPredictionsEnabled && fineTunePredictionExpanded) Settings.PREF_FIRST_WORD_PREDICTIONS else null,
             if (suggestionsEnabled && bigramPredictionsEnabled && fineTunePredictionExpanded) Settings.PREF_DISABLE_MULTI_WORD_SUGGESTIONS else null,
 
             // Smart suggestions & tools
@@ -236,11 +235,6 @@ fun createSuggestionsSettings(context: Context) = listOf(
         R.string.next_word_strict_ngram, R.string.next_word_strict_ngram_summary
     ) {
         SwitchPreference(it, Defaults.PREF_NEXT_WORD_STRICT_NGRAM)
-    },
-    Setting(context, Settings.PREF_FIRST_WORD_PREDICTIONS,
-        R.string.first_word_prediction, R.string.first_word_prediction_summary
-    ) {
-        SwitchPreference(it, Defaults.PREF_FIRST_WORD_PREDICTIONS) { KeyboardSwitcher.getInstance().setThemeNeedsReload() }
     },
     Setting(context, Settings.PREF_SUGGEST_PUNCTUATION, R.string.suggest_punctuation, R.string.suggest_punctuation_summary
     ) {

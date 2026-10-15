@@ -566,8 +566,6 @@
     <string name="next_word_strict_ngram_summary">Stel alleen geleerde woorden voor als de context van het voorgaande woord overeenkomt</string>
     <string name="immediate_auto_space">Directe automatische spatie</string>
     <string name="immediate_auto_space_summary">Spatie direct invoegen bij het kiezen van een suggestie om vertraging bij de volgende getypte letter te voorkomen</string>
-    <string name="first_word_prediction">Eerste-woord suggesties</string>
-    <string name="first_word_prediction_summary">Toon suggesties wanneer er geen invoer is aan het begin van een zin</string>
     <string name="suggest_screenshots">Recente screenshots voorstellen</string>
     <string name="suggest_screenshots_summary">Recent gemaakte screenshots tonen als suggestie</string>
     <string name="auto_read_otp">OTP automatisch lezen uit sms</string>
@@ -1814,4 +1812,8 @@ Maakt GGUF / llama.cpp-inferentie op het apparaat mogelijk voor proeflezen en he
     <string name="cjk_clear_user_dict_title">CJK-gebruikersgeschiedenis wissen</string>
     <string name="cjk_clear_user_dict_summary">Reset de geleerde kandidatenranglijst en de cache van het gebruikerswoordenboek</string>
     <string name="cjk_clear_user_dict_success">CJK-gebruikersgeschiedenis gewist</string>
+    <string name="backspace_repeat_deletes_words">Door het ingedrukt houden van verwijderen worden hele woorden verwijderd</string>
+    <string name="backspace_repeat_deletes_words_summary">Nadat u de delete-toets even ingedrukt hebt gehouden, verwijdert u woord voor woord met toenemende snelheid</string>
+    <string name="clipboard_skip_sensitive">Bewaar geen wachtwoorden en codes</string>
+    <string name="clipboard_skip_sensitive_summary">Invoer die als vertrouwelijk is gemarkeerd (bijvoorbeeld van wachtwoordbeheerders) en eenmalige codes met 4 tot 8 cijfers worden niet aan de geschiedenis toegevoegd. Plakken werkt nog steeds</string>
 </resources>

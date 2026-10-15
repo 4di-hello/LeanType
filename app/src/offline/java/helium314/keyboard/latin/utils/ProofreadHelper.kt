@@ -65,6 +65,10 @@ object ProofreadHelper {
             }
         }
     }
+
+    fun cancelCurrentJob() {
+        cancelCurrentOperation()
+    }
     
     private fun performAsyncOperation(
         context: Context,
