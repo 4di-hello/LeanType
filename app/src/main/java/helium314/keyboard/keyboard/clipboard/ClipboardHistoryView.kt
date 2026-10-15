@@ -1247,11 +1247,12 @@ class ClipboardHistoryView @JvmOverloads constructor(
     override fun resetMetaState() { keyboardActionListener.resetMetaState() }
     
     private fun setupClipKey(params: KeyDrawParams) {
+        val fontMultiplier = Settings.getValues().mFontSizeMultiplier
         clipboardAdapter.apply {
             itemBackgroundId = keyBackgroundId
             itemTypeFace = params.mTypeface
             itemTextColor = params.mTextColor
-            itemTextSize = params.mLabelSize.toFloat()
+            itemTextSize = params.mLabelSize.toFloat() * fontMultiplier
         }
     }
 
@@ -1316,7 +1317,7 @@ class ClipboardHistoryView @JvmOverloads constructor(
         }
 
         val params = KeyDrawParams()
-        params.updateParams(clipboardLayoutParams.bottomRowKeyHeight, keyVisualAttr)
+        params.updateParams(clipboardLayoutParams.bottomRowKeyboardHeight, keyVisualAttr)
         val settings = Settings.getInstance()
         settings.getCustomTypeface()?.let { params.mTypeface = it }
         setupClipKey(params)
