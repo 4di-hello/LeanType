@@ -1761,4 +1761,8 @@ Võimaldab seadmesisese GGUF / llama.cpp järelduse korrektuuri ja ümbersõnast
     <string name="cjk_clear_user_dict_title">Tühjendage CJK kasutaja ajalugu</string>
     <string name="cjk_clear_user_dict_summary">Lähtestage õpitud kandidaatide pingeread ja kasutajasõnastiku vahemälu</string>
     <string name="cjk_clear_user_dict_success">CJK kasutaja ajalugu on kustutatud</string>
+    <string name="backspace_repeat_deletes_words">Kustutamise all hoidmine eemaldab terved sõnad</string>
+    <string name="backspace_repeat_deletes_words_summary">Pärast kustutamisklahvi hetke hoidmist kustutage sõna-sõnalt kasvava kiirusega</string>
+    <string name="clipboard_skip_sensitive">Ärge hoidke paroole ja koode</string>
+    <string name="clipboard_skip_sensitive_summary">Ajaloosse ei lisata konfidentsiaalseks märgitud kirjeid (nt paroolihalduritelt) ja ühekordseid 4–8-kohalisi koode. Kleepimine ikka toimib</string>
 </resources>

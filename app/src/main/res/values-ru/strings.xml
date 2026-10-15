@@ -1839,4 +1839,8 @@
     <string name="cjk_clear_user_dict_title">Очистить историю пользователя CJK</string>
     <string name="cjk_clear_user_dict_summary">Сбросить изученные рейтинги кандидатов и кеш пользовательского словаря</string>
     <string name="cjk_clear_user_dict_success">История пользователей CJK очищена</string>
+    <string name="backspace_repeat_deletes_words">Удерживание удаления удаляет целые слова</string>
+    <string name="backspace_repeat_deletes_words_summary">Удерживая кнопку удаления на мгновение, удаляйте слово за словом с возрастающей скоростью.</string>
+    <string name="clipboard_skip_sensitive">Не храните пароли и коды</string>
+    <string name="clipboard_skip_sensitive_summary">В историю не добавляются записи, помеченные как конфиденциальные (например, из менеджеров паролей) и одноразовые коды длиной от 4 до 8 цифр. Вставка все еще работает</string>
 </resources>

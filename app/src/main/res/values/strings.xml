@@ -1177,7 +1177,7 @@ language, hence "No language". -->
     <string name="prefs_sound_mute_in_dnd">Mute in Do Not Disturb</string>
     <string name="prefs_sound_mute_in_dnd_summary">Suppress keypress sound when Do Not Disturb is active</string>
     <string name="prefs_sound_play_over_bluetooth">Play custom sounds over Bluetooth</string>
-    <string name="prefs_sound_play_over_bluetooth_summary">Play custom sound pack audio over Bluetooth devices. When disabled, falls back to native system clicks to avoid interrupting car radios or media playback.</string>
+    <string name="prefs_sound_play_over_bluetooth_summary">Play custom sound pack audio over Bluetooth devices and earphones. When disabled, silences keyboard sounds while connected to avoid interrupting music or media playback.</string>
     <string name="prefs_sound_balance_category">Key Sound Balance</string>
     <string name="prefs_sound_vol_space">Spacebar volume</string>
     <string name="prefs_sound_vol_delete">Backspace volume</string>

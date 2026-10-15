@@ -1832,4 +1832,8 @@
     <string name="cjk_clear_user_dict_title">CJK ഉപയോക്തൃ ചരിത്രം മായ്‌ക്കുക</string>
     <string name="cjk_clear_user_dict_summary">പഠിച്ച കാൻഡിഡേറ്റ് റാങ്കിംഗും ഉപയോക്തൃ നിഘണ്ടു കാഷെയും പുനഃസജ്ജമാക്കുക</string>
     <string name="cjk_clear_user_dict_success">CJK ഉപയോക്തൃ ചരിത്രം മായ്‌ച്ചു</string>
+    <string name="backspace_repeat_deletes_words">ഇല്ലാതാക്കൽ അമർത്തിപ്പിടിക്കുന്നത് മുഴുവൻ വാക്കുകളും നീക്കം ചെയ്യുന്നു</string>
+    <string name="backspace_repeat_deletes_words_summary">ഒരു നിമിഷം ഡിലീറ്റ് കീ അമർത്തിപ്പിടിച്ച ശേഷം, വേഗത വർദ്ധിക്കുന്നതോടെ ഓരോ വാക്കും ഇല്ലാതാക്കുക</string>
+    <string name="clipboard_skip_sensitive">പാസ്‌വേഡുകളും കോഡുകളും സൂക്ഷിക്കരുത്</string>
+    <string name="clipboard_skip_sensitive_summary">രഹസ്യസ്വഭാവമുള്ളതായി അടയാളപ്പെടുത്തിയ എൻട്രികളും (ഉദാ. പാസ്‌വേഡ് മാനേജർമാരിൽ നിന്ന്) 4 മുതൽ 8 അക്കങ്ങളുള്ള ഒറ്റത്തവണ കോഡുകളും ചരിത്രത്തിലേക്ക് ചേർക്കില്ല. ഒട്ടിക്കൽ ഇപ്പോഴും പ്രവർത്തിക്കുന്നു</string>
 </resources>

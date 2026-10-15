@@ -1734,4 +1734,8 @@
     <string name="cjk_clear_user_dict_title">Очистити історію користувача CJK</string>
     <string name="cjk_clear_user_dict_summary">Скинути вивчений рейтинг кандидатів і кеш словника користувача</string>
     <string name="cjk_clear_user_dict_success">Історію користувача CJK очищено</string>
+    <string name="backspace_repeat_deletes_words">Утримуючи delete, ви видаляєте цілі слова</string>
+    <string name="backspace_repeat_deletes_words_summary">Утримуючи клавішу видалення на мить, видаляйте слово за словом зі збільшенням швидкості</string>
+    <string name="clipboard_skip_sensitive">Не зберігайте паролі та коди</string>
+    <string name="clipboard_skip_sensitive_summary">Записи, позначені як конфіденційні (наприклад, від менеджерів паролів), і одноразові коди з 4 до 8 цифр не додаються до історії. Вклеювання все ще працює</string>
 </resources>

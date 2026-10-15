@@ -1791,4 +1791,8 @@ Permite la inferencia GGUF / llama.cpp en el dispositivo para corrección y rees
     <string name="cjk_clear_user_dict_title">Borrar historial de usuario de CJK</string>
     <string name="cjk_clear_user_dict_summary">Restablecer las clasificaciones de candidatos aprendidos y el caché del diccionario del usuario</string>
     <string name="cjk_clear_user_dict_success">Historial de usuario de CJK borrado</string>
+    <string name="backspace_repeat_deletes_words">Mantener presionado eliminar elimina palabras completas</string>
+    <string name="backspace_repeat_deletes_words_summary">Después de mantener presionada la tecla Eliminar por un momento, borre palabra por palabra con mayor velocidad.</string>
+    <string name="clipboard_skip_sensitive">No guardes contraseñas ni códigos</string>
+    <string name="clipboard_skip_sensitive_summary">Las entradas marcadas como confidenciales (por ejemplo, de administradores de contraseñas) y los códigos únicos de 4 a 8 dígitos no se agregan al historial. Pegar todavía funciona</string>
 </resources>

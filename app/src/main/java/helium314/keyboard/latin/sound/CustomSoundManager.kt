@@ -63,7 +63,11 @@ class CustomSoundManager private constructor(private val appContext: Context) {
                 audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS).any { device ->
                     when (device.type) {
                         AudioDeviceInfo.TYPE_BLUETOOTH_A2DP,
-                        AudioDeviceInfo.TYPE_BLUETOOTH_SCO -> true
+                        AudioDeviceInfo.TYPE_BLUETOOTH_SCO,
+                        AudioDeviceInfo.TYPE_HEARING_AID,
+                        AudioDeviceInfo.TYPE_WIRED_HEADSET,
+                        AudioDeviceInfo.TYPE_WIRED_HEADPHONES,
+                        AudioDeviceInfo.TYPE_USB_HEADSET -> true
                         else -> {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                                 device.type == AudioDeviceInfo.TYPE_BLE_HEADSET ||
@@ -75,13 +79,21 @@ class CustomSoundManager private constructor(private val appContext: Context) {
                         }
                     }
                 }
-            } catch (_: Throwable) {
+            } catch (e: Throwable) {
                 @Suppress("DEPRECATION")
-                audioManager.isBluetoothA2dpOn
+                try {
+                    audioManager.isBluetoothA2dpOn || audioManager.isWiredHeadsetOn
+                } catch (_: Throwable) {
+                    false
+                }
             }
         } else {
             @Suppress("DEPRECATION")
-            audioManager.isBluetoothA2dpOn
+            try {
+                audioManager.isBluetoothA2dpOn || audioManager.isWiredHeadsetOn
+            } catch (_: Throwable) {
+                false
+            }
         }
     }
 
@@ -272,25 +284,9 @@ class CustomSoundManager private constructor(private val appContext: Context) {
             return true
         }
 
-        // Prevent custom SoundPool from triggering Bluetooth A2DP/AVRCP "Now Playing" media sessions.
-        // Car head units and headphones often treat SoundPool AudioTracks as a media app playback event,
-        // interrupting car radio and announcing "Now Playing". We fall back to native system UI clicks,
-        // which AudioService routes through a system feedback channel that AVRCP ignores.
+        // Silence keyboard audio feedback over Bluetooth and earphones when disabled to avoid interrupting media playback.
         val playOverBluetooth = prefs.getBoolean(Settings.PREF_SOUND_PLAY_OVER_BLUETOOTH, Defaults.PREF_SOUND_PLAY_OVER_BLUETOOTH)
         if (!playOverBluetooth && isBluetoothAudioConnected()) {
-            val audioManager = appContext.getSystemService(Context.AUDIO_SERVICE) as? AudioManager
-            if (audioManager != null) {
-                val sound = when (code) {
-                    KeyCode.DELETE, KeyCode.DELETE_WORD, KeyCode.FORWARD_DELETE, KeyCode.FORWARD_DELETE_WORD -> AudioManager.FX_KEYPRESS_DELETE
-                    Constants.CODE_SPACE -> AudioManager.FX_KEYPRESS_SPACEBAR
-                    Constants.CODE_ENTER -> AudioManager.FX_KEYPRESS_RETURN
-                    else -> AudioManager.FX_KEYPRESS_STANDARD
-                }
-                val effectVolume = if (volume < 0f) -0.01f else (volume * keyVolMultiplier).coerceIn(0f, 1f)
-                try {
-                    audioManager.playSoundEffect(sound, effectVolume)
-                } catch (_: Throwable) {}
-            }
             return true
         }
 

@@ -1781,4 +1781,8 @@
     <string name="cjk_clear_user_dict_title">נקה היסטוריית משתמש של CJK</string>
     <string name="cjk_clear_user_dict_summary">אפס דירוגי מועמדים נלמדים ומטמון של מילון משתמש</string>
     <string name="cjk_clear_user_dict_success">היסטוריית המשתמשים של CJK נוקתה</string>
+    <string name="backspace_repeat_deletes_words">החזקת מחיקה מסירה מילים שלמות</string>
+    <string name="backspace_repeat_deletes_words_summary">לאחר החזקת מקש המחיקה לרגע, מחק מילה אחר מילה במהירות גוברת</string>
+    <string name="clipboard_skip_sensitive">אל תשמור סיסמאות וקודים</string>
+    <string name="clipboard_skip_sensitive_summary">ערכים המסומנים כסודיים (למשל ממנהלי סיסמאות) וקודים חד פעמיים עם 4 עד 8 ספרות אינם מתווספים להיסטוריה. ההדבקה עדיין עובדת</string>
 </resources>

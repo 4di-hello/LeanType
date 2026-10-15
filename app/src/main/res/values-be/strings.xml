@@ -1766,4 +1766,8 @@
     <string name="cjk_clear_user_dict_title">Ачысціць гісторыю карыстальніка CJK</string>
     <string name="cjk_clear_user_dict_summary">Скінуць атрыманыя рэйтынгі кандыдатаў і кэш слоўніка карыстальніка</string>
     <string name="cjk_clear_user_dict_success">Гісторыя карыстальніка CJK ачышчана</string>
+    <string name="backspace_repeat_deletes_words">Утрымліванне выдалення выдаляе цэлыя словы</string>
+    <string name="backspace_repeat_deletes_words_summary">Утрымліваючы клавішу выдалення на імгненне, выдаляйце слова за словам з усё большай хуткасцю</string>
+    <string name="clipboard_skip_sensitive">Не захоўвайце паролі і коды</string>
+    <string name="clipboard_skip_sensitive_summary">Запісы, пазначаныя як канфідэнцыяльныя (напрыклад, з менеджэраў пароляў), і аднаразовыя коды з 4 да 8 лічбаў не дадаюцца ў гісторыю. Уклейка ўсё яшчэ працуе</string>
 </resources>

@@ -1770,4 +1770,8 @@ Lehetővé teszi az eszközön futó GGUF / llama.cpp következtetést a javít�
     <string name="cjk_clear_user_dict_title">CJK felhasználói előzmények törlése</string>
     <string name="cjk_clear_user_dict_summary">Állítsa vissza a tanult jelöltek rangsorát és a felhasználói szótár gyorsítótárát</string>
     <string name="cjk_clear_user_dict_success">A CJK felhasználói előzményei törölve</string>
+    <string name="backspace_repeat_deletes_words">A törlés tartása egész szavakat eltávolít</string>
+    <string name="backspace_repeat_deletes_words_summary">Miután egy pillanatig lenyomva tartja a törlés billentyűt, szóról szóra, növekvő sebességgel törölje</string>
+    <string name="clipboard_skip_sensitive">Ne őrizzen meg jelszavakat és kódokat</string>
+    <string name="clipboard_skip_sensitive_summary">A bizalmasként megjelölt bejegyzések (például a jelszókezelőktől származó) és a 4-8 számjegyből álló egyszeri kódok nem kerülnek az előzmények közé. A beillesztés továbbra is működik</string>
 </resources>

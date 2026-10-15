@@ -1762,4 +1762,8 @@ Metin düzeltme ve yeniden yazma için cihaz üzerinde GGUF / llama.cpp çıkar�
     <string name="cjk_clear_user_dict_title">CJK Kullanıcı Geçmişini Temizle</string>
     <string name="cjk_clear_user_dict_summary">Öğrenilen aday sıralamalarını ve kullanıcı sözlüğü önbelleğini sıfırlayın</string>
     <string name="cjk_clear_user_dict_success">CJK kullanıcı geçmişi temizlendi</string>
+    <string name="backspace_repeat_deletes_words">Silme tuşunu basılı tutmak tüm kelimeleri kaldırır</string>
+    <string name="backspace_repeat_deletes_words_summary">Silme tuşuna bir süre basılı tuttuktan sonra artan bir hızla kelime kelime silin</string>
+    <string name="clipboard_skip_sensitive">Şifreleri ve kodları saklamayın</string>
+    <string name="clipboard_skip_sensitive_summary">Gizli olarak işaretlenen girişler (örneğin şifre yöneticilerinden gelenler) ve 4 ila 8 haneli tek kullanımlık kodlar geçmişe eklenmez. Yapıştırma hâlâ işe yarıyor</string>
 </resources>

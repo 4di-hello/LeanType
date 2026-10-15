@@ -1816,4 +1816,8 @@ Umożliwia lokalne wnioskowanie GGUF / llama.cpp na urządzeniu w celu korekty i
     <string name="cjk_clear_user_dict_title">Wyczyść historię użytkownika CJK</string>
     <string name="cjk_clear_user_dict_summary">Zresetuj poznane rankingi kandydatów i pamięć podręczną słownika użytkownika</string>
     <string name="cjk_clear_user_dict_success">Historia użytkownika CJK została wyczyszczona</string>
+    <string name="backspace_repeat_deletes_words">Przytrzymanie klawisza Delete powoduje usunięcie całych słów</string>
+    <string name="backspace_repeat_deletes_words_summary">Po przytrzymaniu przez chwilę klawisza usuwania, usuwaj słowo po słowie ze wzrastającą szybkością</string>
+    <string name="clipboard_skip_sensitive">Nie przechowuj haseł i kodów</string>
+    <string name="clipboard_skip_sensitive_summary">Wpisy oznaczone jako poufne (np. z menedżerów haseł) oraz kody jednorazowe o długości od 4 do 8 cyfr nie są dodawane do historii. Wklejanie nadal działa</string>
 </resources>

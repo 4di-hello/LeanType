@@ -1832,4 +1832,8 @@
     <string name="cjk_clear_user_dict_title">Εκκαθάριση ιστορικού χρήστη CJK</string>
     <string name="cjk_clear_user_dict_summary">Επαναφέρετε τις κατατάξεις υποψηφίων που έχουν μάθει και την προσωρινή μνήμη λεξικών χρηστών</string>
     <string name="cjk_clear_user_dict_success">Το ιστορικό χρήστη CJK διαγράφηκε</string>
+    <string name="backspace_repeat_deletes_words">Κρατώντας το Delete αφαιρούνται ολόκληρες λέξεις</string>
+    <string name="backspace_repeat_deletes_words_summary">Αφού κρατήσετε πατημένο το πλήκτρο διαγραφής για λίγο, διαγράψτε λέξη προς λέξη με αυξανόμενη ταχύτητα</string>
+    <string name="clipboard_skip_sensitive">Μην κρατάτε κωδικούς και κωδικούς</string>
+    <string name="clipboard_skip_sensitive_summary">Οι καταχωρίσεις που έχουν επισημανθεί ως εμπιστευτικές (π.χ. από διαχειριστές κωδικών πρόσβασης) και οι κωδικοί μιας χρήσης με 4 έως 8 ψηφία δεν προστίθενται στο ιστορικό. Η επικόλληση λειτουργεί ακόμα</string>
 </resources>

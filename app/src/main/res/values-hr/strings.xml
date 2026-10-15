@@ -1754,4 +1754,8 @@ Omogućuje lokalno GGUF / llama.cpp zaključivanje na uređaju za lekturu i prep
     <string name="cjk_clear_user_dict_title">Obriši CJK korisničku povijest</string>
     <string name="cjk_clear_user_dict_summary">Resetiraj naučeno rangiranje kandidata i predmemoriju korisničkog rječnika</string>
     <string name="cjk_clear_user_dict_success">CJK korisnička povijest izbrisana</string>
+    <string name="backspace_repeat_deletes_words">Držanjem delete uklanjaju se cijele riječi</string>
+    <string name="backspace_repeat_deletes_words_summary">Nakon što na trenutak držite tipku za brisanje, brišite riječ po riječ sve većom brzinom</string>
+    <string name="clipboard_skip_sensitive">Ne čuvajte lozinke i kodove</string>
+    <string name="clipboard_skip_sensitive_summary">Unosi označeni kao povjerljivi (npr. od upravitelja lozinkama) i jednokratni kodovi s 4 do 8 znamenki ne dodaju se u povijest. Lijepljenje i dalje funkcionira</string>
 </resources>

@@ -1780,4 +1780,8 @@
     <string name="cjk_clear_user_dict_title">清除 CJK 用户历史记录</string>
     <string name="cjk_clear_user_dict_summary">重置学习的候选排名和用户字典缓存</string>
     <string name="cjk_clear_user_dict_success">CJK 用户历史记录已清除</string>
+    <string name="backspace_repeat_deletes_words">按住删除键会删除整个单词</string>
+    <string name="backspace_repeat_deletes_words_summary">按住删除键片刻后，逐字逐字删除，速度逐渐加快</string>
+    <string name="clipboard_skip_sensitive">不要保留密码和代码</string>
+    <string name="clipboard_skip_sensitive_summary">标记为机密的条目（例如来自密码管理器的条目）和 4 到 8 位数字的一次性代码不会添加到历史记录中。粘贴仍然有效</string>
 </resources>

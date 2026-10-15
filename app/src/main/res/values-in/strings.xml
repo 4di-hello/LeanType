@@ -1729,4 +1729,8 @@ Memungkinkan inferensi GGUF / llama.cpp di perangkat untuk koreksi teks dan penu
     <string name="cjk_clear_user_dict_title">Hapus Riwayat Pengguna CJK</string>
     <string name="cjk_clear_user_dict_summary">Reset peringkat kandidat yang dipelajari dan cache kamus pengguna</string>
     <string name="cjk_clear_user_dict_success">Riwayat pengguna CJK dihapus</string>
+    <string name="backspace_repeat_deletes_words">Menahan hapus akan menghapus seluruh kata</string>
+    <string name="backspace_repeat_deletes_words_summary">Setelah menahan tombol hapus sejenak, hapus kata demi kata dengan kecepatan yang semakin meningkat</string>
+    <string name="clipboard_skip_sensitive">Jangan menyimpan kata sandi dan kode</string>
+    <string name="clipboard_skip_sensitive_summary">Entri yang ditandai sebagai rahasia (misalnya dari pengelola kata sandi) dan kode sekali pakai dengan 4 hingga 8 digit tidak ditambahkan ke riwayat. Menempel masih berfungsi</string>
 </resources>
