@@ -25,3 +25,7 @@
 ## 2025-02-18 - Unit tests for LocaleUtils
 **Learning:** Testing string utility logic for formatting configuration and tracking variables often depends on core frameworks. LocaleUtils modifies global device Context configurations based on language, which requires a complete runtime to correctly set and interact with `android.content.res.Configuration` and Context. Using Robolectric provides a functional implementation of these properties.
 **Action:** When testing classes operating on Android Context extensions and locale configurations, use `@RunWith(RobolectricTestRunner::class)` to bypass null or unimplemented pointer errors and seamlessly interact with resource contexts without extensive mocking.
+
+## 2025-02-18 - Unit tests for LanguageDetector
+**Learning:** Testing string utility logic for language detection requires broad Unicode support. Testing these cases with Robolectric is useful because `LanguageDetector` depends on Android classes such as `android.view.textclassifier.TextClassificationManager` for fallback capabilities.
+**Action:** When adding tests for string utility logic involving language detection that uses Android framework features, use `@RunWith(RobolectricTestRunner::class)` to safely handle any dependencies on framework components like `TextClassificationManager`.
