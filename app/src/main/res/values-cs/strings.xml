@@ -553,8 +553,6 @@
     <string name="immediate_auto_space_summary">Při výběru návrhu okamžitě vložit mezeru, aby se předešlo zpoždění při dalším psaném písmenu</string>
     <string name="pref_foldable_mode_title">Profil skládací obrazovky</string>
     <string name="pref_foldable_mode_summary">Povolit automatickou detekci profilu obrazovky a škálování rozdělené klávesnice pro skládací zařízení</string>
-    <string name="first_word_prediction">Návrhy prvního slova</string>
-    <string name="first_word_prediction_summary">Zobrazit návrhy, když na začátku věty není žádný vstup</string>
     <string name="suggest_screenshots">Navrhovat nedávné snímky obrazovky</string>
     <string name="suggest_screenshots_summary">Zobrazit nedávno pořízené snímky obrazovky jako návrh</string>
     <string name="auto_read_otp">Automaticky číst OTP z SMS</string>
@@ -1779,4 +1777,8 @@ Umožňuje lokální inferenci GGUF / llama.cpp na zařízení pro korektury a p
     <string name="cjk_clear_user_dict_title">Vymazat uživatelskou historii CJK</string>
     <string name="cjk_clear_user_dict_summary">Resetujte naučené hodnocení kandidátů a mezipaměť uživatelského slovníku</string>
     <string name="cjk_clear_user_dict_success">Uživatelská historie CJK byla vymazána</string>
+    <string name="backspace_repeat_deletes_words">Podržením delete odstraníte celá slova</string>
+    <string name="backspace_repeat_deletes_words_summary">Po chvíli přidržení klávesy Delete mažte slovo po slovu se zvyšující se rychlostí</string>
+    <string name="clipboard_skip_sensitive">Neuchovávejte hesla a kódy</string>
+    <string name="clipboard_skip_sensitive_summary">Záznamy označené jako důvěrné (např. od správců hesel) a jednorázové kódy se 4 až 8 číslicemi se do historie nepřidávají. Vkládání stále funguje</string>
 </resources>

@@ -95,4 +95,28 @@ class WordDeleteSwipeTest {
         // line 1 start is 37
         assertEquals(listOf(50, 44, 37), boundaries)
     }
+
+    @Test
+    fun `diagonal swipe word boundaries before line start`() {
+        val initialText = "first line\nsecond line\nthird line"
+        val endOffset = initialText.length // 33
+        val lineBoundaries = KeyboardActionListenerImpl.getLineBoundariesBackwards(initialText, endOffset)
+        assertEquals(listOf(33, 23, 11, 0), lineBoundaries)
+
+        // At line index 1 (start of line 3, offset 23), swiping left selects words in line 2
+        val lineBaseStart = lineBoundaries[1] // 23
+        val textStartOffset = endOffset - initialText.length // 0
+        val charCountBeforeLine = (lineBaseStart - textStartOffset).coerceIn(0, initialText.length)
+        val textBeforeLine = initialText.substring(0, charCountBeforeLine)
+        val wordsBeforeLine = KeyboardActionListenerImpl.getWordBoundariesBackwards(textBeforeLine, lineBaseStart)
+
+        // Text before line 3 is "first line\nsecond line\n" (length 23)
+        // Word boundaries backwards (including delimiter):
+        // 23, 17 (" line\n"), 10 ("second"), 5 (" line\n"), 0 ("first")
+        assertEquals(listOf(23, 17, 10, 5, 0), wordsBeforeLine)
+        assertEquals(23, wordsBeforeLine[0])
+        assertEquals(17, wordsBeforeLine[1])
+        assertEquals(" line\n", initialText.substring(wordsBeforeLine[1], lineBaseStart))
+        assertEquals("\nsecond line\n", initialText.substring(wordsBeforeLine[2], lineBaseStart))
+    }
 }

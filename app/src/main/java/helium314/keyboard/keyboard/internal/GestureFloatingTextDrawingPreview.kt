@@ -12,6 +12,7 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.RectF
 import android.text.TextUtils
+import helium314.keyboard.keyboard.Key
 import helium314.keyboard.keyboard.PointerTracker
 import helium314.keyboard.latin.R
 import helium314.keyboard.latin.SuggestedWords
@@ -31,6 +32,7 @@ open class GestureFloatingTextDrawingPreview(mainKeyboardViewAttr: TypedArray) :
         val mGesturePreviewVerticalPadding: Float
         val mGesturePreviewRoundRadius: Float
         val mDisplayWidth: Int
+        val mDisplayDensity: Float
 
         private val mGesturePreviewTextSize: Int
         private val mGesturePreviewTextColor: Int
@@ -54,6 +56,7 @@ open class GestureFloatingTextDrawingPreview(mainKeyboardViewAttr: TypedArray) :
             mGesturePreviewRoundRadius = mainKeyboardViewAttr.getDimension(
                 R.styleable.MainKeyboardView_gestureFloatingPreviewRoundRadius, 0.0f)
             mDisplayWidth = mainKeyboardViewAttr.resources.displayMetrics.widthPixels
+            mDisplayDensity = mainKeyboardViewAttr.resources.displayMetrics.density
 
             mTextPaint.textAlign = Paint.Align.CENTER
             mTextPaint.textSize = mGesturePreviewTextSize.toFloat()
@@ -91,11 +94,21 @@ open class GestureFloatingTextDrawingPreview(mainKeyboardViewAttr: TypedArray) :
     private var mPreviewTextY = 0
     private var mSuggestedWords: SuggestedWords = SuggestedWords.getEmptyInstance()
     private val mLastPointerCoords: IntArray = CoordinateUtils.newInstance()
+    private var mLastKey: Key? = null
+    private var mKeyboardHeight = 0
 
-    override fun onDeallocateMemory() {}
+    override fun onDeallocateMemory() {
+        mLastKey = null
+    }
+
+    override fun setKeyboardViewGeometry(originCoords: IntArray, width: Int, height: Int) {
+        super.setKeyboardViewGeometry(originCoords, width, height)
+        mKeyboardHeight = height
+    }
 
     fun dismissGestureFloatingPreviewText() {
         setSuggestedWords(SuggestedWords.getEmptyInstance())
+        mLastKey = null
     }
 
     fun setSuggestedWords(suggestedWords: SuggestedWords) {
@@ -107,6 +120,7 @@ open class GestureFloatingTextDrawingPreview(mainKeyboardViewAttr: TypedArray) :
     override fun setPreviewPosition(tracker: PointerTracker) {
         if (!isPreviewEnabled) return
         tracker.getLastCoordinates(mLastPointerCoords)
+        mLastKey = tracker.key ?: tracker.getKeyOn(CoordinateUtils.x(mLastPointerCoords), CoordinateUtils.y(mLastPointerCoords))
         updatePreviewPosition()
     }
 
@@ -144,10 +158,18 @@ open class GestureFloatingTextDrawingPreview(mainKeyboardViewAttr: TypedArray) :
         } else {
             (mParams.mDisplayWidth.toFloat() - rectWidth) / 2.0f
         }
+        val keyboardHeight = mKeyboardHeight.takeIf { it > 0 }
+            ?: (230 * mParams.mDisplayDensity).toInt()
+        val verticalOffsetPx = (keyboardHeight * Settings.getValues().mPopupKeysVerticalOffsetFraction).toInt()
+
+        val defaultKeyHeight = (keyboardHeight / 4).coerceAtLeast((40 * mParams.mDisplayDensity).toInt())
+        val keyHeight = (mLastKey?.height ?: defaultKeyHeight).toFloat()
+        val popupOffset = (keyHeight * 0.5f) + verticalOffsetPx
+
         val rectY = if (mParams.mGesturePreviewDynamic) {
-            CoordinateUtils.y(mLastPointerCoords).toFloat() - mParams.mGesturePreviewTextOffset.toFloat() - rectHeight
+            CoordinateUtils.y(mLastPointerCoords).toFloat() - popupOffset - rectHeight
         } else {
-            -mParams.mGesturePreviewTextOffset.toFloat() - rectHeight
+            -verticalOffsetPx.toFloat() - rectHeight
         }
         mGesturePreviewRectangle.set(rectX, rectY, rectX + rectWidth, rectY + rectHeight)
 

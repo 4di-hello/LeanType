@@ -477,8 +477,6 @@
     <string name="next_word_strict_ngram_summary">Nur gelernte Wörter vorschlagen, wenn der vorhergehende Wortkontext übereinstimmt</string>
     <string name="immediate_auto_space">Sofortiges automatisches Leerzeichen</string>
     <string name="immediate_auto_space_summary">Bei Auswahl eines Vorschlags sofort ein Leerzeichen einfügen, um Verzögerung beim nächsten getippten Buchstaben zu vermeiden</string>
-    <string name="first_word_prediction">Erstwort-Vorschläge</string>
-    <string name="first_word_prediction_summary">Vorschläge anzeigen, wenn am Satzanfang keine Eingabe vorhanden ist</string>
     <string name="suggest_screenshots">Aktuelle Screenshots vorschlagen</string>
     <string name="suggest_screenshots_summary">Kürzlich aufgenommene Screenshots als Vorschlag anzeigen</string>
     <string name="auto_read_otp">OTP automatisch aus SMS lesen</string>

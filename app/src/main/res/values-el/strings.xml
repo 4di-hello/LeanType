@@ -199,8 +199,6 @@
     <string name="next_word_strict_ngram_summary">Πρόταση μαθημένων λέξεων μόνο όταν το προηγούμενο λεκτικό περιβάλλον ταιριάζει</string>
     <string name="immediate_auto_space">Άμεσο αυτόματο διάστημα</string>
     <string name="immediate_auto_space_summary">Εισαγωγή διαστήματος αμέσως κατά την επιλογή πρότασης για αποφυγή καθυστέρησης στο επόμενο γράμμα</string>
-    <string name="first_word_prediction">Προτάσεις πρώτης λέξης</string>
-    <string name="first_word_prediction_summary">Εμφάνιση προτάσεων όταν δεν υπάρχει εισαγωγή στην αρχή μιας πρότασης</string>
     <string name="suggest_punctuation">Προτάσεις σημείων στίξης</string>
     <string name="suggest_punctuation_summary">Εμφάνιση σημείων στίξης όταν δεν υπάρχουν άλλες διαθέσιμες προτάσεις</string>
     <string name="suggest_clipboard_content">Πρόταση περιεχομένου προχείρου</string>
@@ -1832,4 +1830,8 @@
     <string name="cjk_clear_user_dict_title">Εκκαθάριση ιστορικού χρήστη CJK</string>
     <string name="cjk_clear_user_dict_summary">Επαναφέρετε τις κατατάξεις υποψηφίων που έχουν μάθει και την προσωρινή μνήμη λεξικών χρηστών</string>
     <string name="cjk_clear_user_dict_success">Το ιστορικό χρήστη CJK διαγράφηκε</string>
+    <string name="backspace_repeat_deletes_words">Κρατώντας το Delete αφαιρούνται ολόκληρες λέξεις</string>
+    <string name="backspace_repeat_deletes_words_summary">Αφού κρατήσετε πατημένο το πλήκτρο διαγραφής για λίγο, διαγράψτε λέξη προς λέξη με αυξανόμενη ταχύτητα</string>
+    <string name="clipboard_skip_sensitive">Μην κρατάτε κωδικούς και κωδικούς</string>
+    <string name="clipboard_skip_sensitive_summary">Οι καταχωρίσεις που έχουν επισημανθεί ως εμπιστευτικές (π.χ. από διαχειριστές κωδικών πρόσβασης) και οι κωδικοί μιας χρήσης με 4 έως 8 ψηφία δεν προστίθενται στο ιστορικό. Η επικόλληση λειτουργεί ακόμα</string>
 </resources>

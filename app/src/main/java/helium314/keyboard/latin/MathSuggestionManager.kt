@@ -16,6 +16,7 @@ import helium314.keyboard.latin.utils.ToolbarKey
 class MathSuggestionManager(private val latinIME: LatinIME) {
 
     private var mathSuggestionView: View? = null
+    private var cachedBinding: OtpSuggestionBinding? = null
     private var lastDismissedExpression: String? = null
     private val historyManager by lazy { CalculatorHistoryManager.getInstance(latinIME) }
 
@@ -31,7 +32,12 @@ class MathSuggestionManager(private val latinIME: LatinIME) {
         val match = MathEvaluator.evaluateInline(textBefore, historyManager.getLastAnswer()?.let { runCatching { java.math.BigDecimal(it) }.getOrNull() }) ?: return null
         if (match.expression == lastDismissedExpression) return null
 
-        val binding = OtpSuggestionBinding.inflate(LayoutInflater.from(latinIME), parent, false)
+        val binding = cachedBinding?.also { b ->
+            (b.root.parent as? ViewGroup)?.removeView(b.root)
+            b.root.isGone = false
+        } ?: OtpSuggestionBinding.inflate(LayoutInflater.from(latinIME), parent, false).also {
+            cachedBinding = it
+        }
         val textView = binding.otpSuggestionText
         latinIME.mSettings.getCustomTypeface()?.let { textView.typeface = it }
         

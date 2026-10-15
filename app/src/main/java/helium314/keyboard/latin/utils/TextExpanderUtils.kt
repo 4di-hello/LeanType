@@ -6,6 +6,7 @@ package helium314.keyboard.latin.utils
 
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import org.json.JSONObject
 import java.text.SimpleDateFormat
@@ -45,19 +46,64 @@ object TextExpanderUtils {
     private val LIST_REGEX = Regex("%list(?:_(\\d+))?%")
     private val SPACE_UNDERSCORE_DASH_REGEX = Regex("""[\s_-]+""")
 
+    @Volatile private var cachedEnabled: Boolean? = null
+    @Volatile private var cachedImmediateEnabled: Boolean? = null
+    @Volatile private var cachedRawJson: String? = null
+    @Volatile private var cachedShortcuts: Map<String, ShortcutEntry>? = null
+    @Volatile private var cachedCompiledList: List<CompiledShortcut>? = null
+    @Volatile private var cachedPrefs: SharedPreferences? = null
+
+    private val prefListener = SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
+        if (key == null) {
+            cachedEnabled = prefs.getBoolean(PREF_ENABLED, false)
+            cachedImmediateEnabled = prefs.getBoolean(PREF_IMMEDIATE, false)
+            cachedRawJson = null
+            cachedShortcuts = null
+            cachedCompiledList = null
+            return@OnSharedPreferenceChangeListener
+        }
+        when (key) {
+            PREF_ENABLED -> cachedEnabled = prefs.getBoolean(PREF_ENABLED, false)
+            PREF_IMMEDIATE -> cachedImmediateEnabled = prefs.getBoolean(PREF_IMMEDIATE, false)
+            PREF_DATA -> {
+                cachedRawJson = null
+                cachedShortcuts = null
+                cachedCompiledList = null
+            }
+        }
+    }
+
+    private fun ensureListener(prefs: SharedPreferences) {
+        if (cachedPrefs !== prefs) {
+            synchronized(this) {
+                if (cachedPrefs !== prefs) {
+                    prefs.registerOnSharedPreferenceChangeListener(prefListener)
+                    cachedPrefs = prefs
+                    cachedEnabled = prefs.getBoolean(PREF_ENABLED, false)
+                    cachedImmediateEnabled = prefs.getBoolean(PREF_IMMEDIATE, false)
+                    cachedRawJson = null
+                    cachedShortcuts = null
+                    cachedCompiledList = null
+                }
+            }
+        }
+    }
+
     fun isEnabled(context: Context): Boolean {
-        return context.prefs().getBoolean(PREF_ENABLED, false)
+        val prefs = context.prefs()
+        ensureListener(prefs)
+        return cachedEnabled ?: prefs.getBoolean(PREF_ENABLED, false).also { cachedEnabled = it }
     }
 
     fun isImmediateEnabled(context: Context): Boolean {
-        return context.prefs().getBoolean(PREF_IMMEDIATE, false)
+        val prefs = context.prefs()
+        ensureListener(prefs)
+        return cachedImmediateEnabled ?: prefs.getBoolean(PREF_IMMEDIATE, false).also { cachedImmediateEnabled = it }
     }
 
     fun isBackspaceRevertsEnabled(context: Context): Boolean {
         return context.prefs().getBoolean(PREF_BACKSPACE_REVERTS, false)
     }
-
-
 
     data class ShortcutEntry(
         val template: String,
@@ -78,27 +124,25 @@ object TextExpanderUtils {
         val entry: ShortcutEntry
     )
 
-    @Volatile
-    private var cachedJsonStr: String? = null
-
-    @Volatile
-    private var cachedShortcutsMap: Map<String, ShortcutEntry>? = null
-
-    @Volatile
-    private var cachedCompiledList: List<CompiledShortcut>? = null
-
     fun clearCache() {
-        cachedJsonStr = null
-        cachedShortcutsMap = null
+        cachedEnabled = null
+        cachedImmediateEnabled = null
+        cachedRawJson = null
+        cachedShortcuts = null
         cachedCompiledList = null
+        cachedPrefs = null
     }
 
     fun getShortcuts(context: Context): Map<String, ShortcutEntry> {
-        val jsonStr = context.prefs().getString(PREF_DATA, "{}") ?: "{}"
-        val currentJson = cachedJsonStr
-        val currentMap = cachedShortcutsMap
-        if (currentJson != null && currentJson == jsonStr && currentMap != null) {
-            return currentMap
+        val prefs = context.prefs()
+        ensureListener(prefs)
+        val currentShortcuts = cachedShortcuts
+        if (currentShortcuts != null) {
+            return currentShortcuts
+        }
+        val jsonStr = prefs.getString(PREF_DATA, "{}") ?: "{}"
+        if (cachedRawJson != null && cachedRawJson == jsonStr && cachedShortcuts != null) {
+            return cachedShortcuts!!
         }
         val map = mutableMapOf<String, ShortcutEntry>()
         try {
@@ -130,8 +174,8 @@ object TextExpanderUtils {
             } else null
             CompiledShortcut(key, cleanKey, isRegex, regex, entry)
         }
-        cachedJsonStr = jsonStr
-        cachedShortcutsMap = map
+        cachedRawJson = jsonStr
+        cachedShortcuts = map
         cachedCompiledList = compiled
         return map
     }
@@ -146,7 +190,9 @@ object TextExpanderUtils {
                 json.put(key, obj)
             }
             val jsonStr = json.toString()
-            context.prefs().edit().putString(PREF_DATA, jsonStr).commit()
+            val prefs = context.prefs()
+            ensureListener(prefs)
+            prefs.edit().putString(PREF_DATA, jsonStr).commit()
             clearCache()
         } catch (e: java.lang.Exception) {
             // fail silently

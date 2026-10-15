@@ -983,9 +983,12 @@ class VoiceInputManager(
             }
             VoiceTextProcessor.Action.CLEAR_ALL -> {
                 ic.beginBatchEdit()
-                ic.performContextMenuAction(android.R.id.selectAll)
-                ic.commitText("", 1)
-                ic.endBatchEdit()
+                try {
+                    ic.performContextMenuAction(android.R.id.selectAll)
+                    ic.commitText("", 1)
+                } finally {
+                    ic.endBatchEdit()
+                }
             }
             VoiceTextProcessor.Action.SEND -> {
                 val editorInfo = ims.currentInputEditorInfo

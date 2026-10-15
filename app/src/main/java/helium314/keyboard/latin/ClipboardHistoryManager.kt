@@ -76,6 +76,7 @@ class ClipboardHistoryManager(
     private var cachedScreenshotInfo: ScreenshotInfo? = null
 
     private var screenshotObserver: ContentObserver? = null
+    private var screenshotDebounceRunnable: Runnable? = null
 
     private fun registerScreenshotObserver() {
         if (screenshotObserver != null) return
@@ -91,9 +92,15 @@ class ClipboardHistoryManager(
                     super.onChange(selfChange, uri)
                     if (!latinIME.isInputViewShown) return
                     if (latinIME.mSettings.current.mSuggestScreenshots) {
-                        updateLatestScreenshotCache {
-                            latinIME.tryShowClipboardSuggestion()
+                        screenshotDebounceRunnable?.let { mainHandler.removeCallbacks(it) }
+                        val runnable = Runnable {
+                            if (!latinIME.isInputViewShown) return@Runnable
+                            updateLatestScreenshotCache {
+                                latinIME.tryShowClipboardSuggestion()
+                            }
                         }
+                        screenshotDebounceRunnable = runnable
+                        mainHandler.postDelayed(runnable, 300L)
                     }
                 }
             }
@@ -109,6 +116,10 @@ class ClipboardHistoryManager(
     }
 
     private fun unregisterScreenshotObserver() {
+        screenshotDebounceRunnable?.let {
+            mainHandler.removeCallbacks(it)
+            screenshotDebounceRunnable = null
+        }
         try {
             screenshotObserver?.let {
                 latinIME.contentResolver.unregisterContentObserver(it)
@@ -266,10 +277,6 @@ class ClipboardHistoryManager(
         if (latinIME.mSettings.current.mClipboardHistoryEnabled)
             ExecutorUtils.getBackgroundExecutor(ExecutorUtils.KEYBOARD).execute { fetchPrimaryClip() }
         ExecutorUtils.getBackgroundExecutor(ExecutorUtils.KEYBOARD).execute { cleanUpImageCache() }
-        if (latinIME.mSettings.current.mSuggestScreenshots) {
-            registerScreenshotObserver()
-            updateLatestScreenshotCache()
-        }
     }
 
     fun onStartInputView() {
@@ -293,11 +300,20 @@ class ClipboardHistoryManager(
             dontShowCurrentSuggestion = false
         }
         if (latinIME.mSettings.current.mSuggestScreenshots) {
+            registerScreenshotObserver()
             updateLatestScreenshotCache()
+        } else {
+            unregisterScreenshotObserver()
         }
     }
 
     fun onFinishInputView() {
+        unregisterScreenshotObserver()
+        mainHandler.removeCallbacksAndMessages(null)
+    }
+
+    fun onWindowHidden() {
+        unregisterScreenshotObserver()
         mainHandler.removeCallbacksAndMessages(null)
     }
 

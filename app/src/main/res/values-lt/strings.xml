@@ -500,8 +500,6 @@
     <string name="immediate_auto_space_summary">Iš karto įterpti tarpą pasirinkus pasiūlymą, kad būtų išvengta delsos rašant kitą raidę</string>
     <string name="pref_foldable_mode_title">Lankstomo ekrano profilis</string>
     <string name="pref_foldable_mode_summary">Įjungti automatinį ekrano profilio aptikimą ir padalintos klaviatūros mastelį lankstomiems įrenginiams</string>
-    <string name="first_word_prediction">Pirmojo žodžio pasiūlymai</string>
-    <string name="first_word_prediction_summary">Rodyti pasiūlymus, kai sakinio pradžioje nėra įvesties</string>
     <string name="suggest_screenshots">Siūlyti naujausias ekrano kopijas</string>
     <string name="suggest_screenshots_summary">Rodyti neseniai padarytas ekrano kopijas kaip pasiūlymą</string>
     <string name="auto_read_otp">Automatiškai nuskaityti OTP iš SMS</string>
@@ -1762,4 +1760,8 @@ Ar norite atnaujinti?</string>
     <string name="cjk_clear_user_dict_title">Išvalykite CJK vartotojo istoriją</string>
     <string name="cjk_clear_user_dict_summary">Iš naujo nustatykite išmoktų kandidatų reitingus ir vartotojo žodyno talpyklą</string>
     <string name="cjk_clear_user_dict_success">CJK vartotojo istorija išvalyta</string>
+    <string name="backspace_repeat_deletes_words">Laikant ištrynimą pašalinami visi žodžiai</string>
+    <string name="backspace_repeat_deletes_words_summary">Kurį laiką palaikę trynimo klavišą, vis greičiau ištrinkite žodį po žodžio</string>
+    <string name="clipboard_skip_sensitive">Nelaikykite slaptažodžių ir kodų</string>
+    <string name="clipboard_skip_sensitive_summary">Įrašai, pažymėti kaip konfidencialūs (pvz., iš slaptažodžių tvarkytuvų), ir vienkartiniai kodai su 4–8 skaitmenimis į istoriją neįtraukiami. Įklijavimas vis dar veikia</string>
 </resources>

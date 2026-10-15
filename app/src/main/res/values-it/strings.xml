@@ -527,8 +527,6 @@
     <string name="next_word_strict_ngram_summary">Suggerisci le parole apprese solo quando il contesto della parola precedente corrisponde</string>
     <string name="immediate_auto_space">Spazio automatico immediato</string>
     <string name="immediate_auto_space_summary">Inserisci subito uno spazio quando scegli un suggerimento per evitare ritardi nella prossima lettera digitata</string>
-    <string name="first_word_prediction">Suggerimenti prima parola</string>
-    <string name="first_word_prediction_summary">Mostra suggerimenti quando non c\'è input all\'inizio di una frase</string>
     <string name="suggest_screenshots">Suggerisci screenshot recenti</string>
     <string name="suggest_screenshots_summary">Mostra gli screenshot scattati di recente come suggerimento</string>
     <string name="auto_read_otp">Leggi automaticamente OTP da SMS</string>
@@ -1839,4 +1837,8 @@ Abilita l\'inferenza GGUF / llama.cpp sul dispositivo per correzione e riscrittu
     <string name="cjk_clear_user_dict_title">Cancella la cronologia utente CJK</string>
     <string name="cjk_clear_user_dict_summary">Reimposta le classifiche dei candidati apprese e la cache del dizionario utente</string>
     <string name="cjk_clear_user_dict_success">La cronologia utente CJK è stata cancellata</string>
+    <string name="backspace_repeat_deletes_words">Tenendo premuto Elimina si rimuovono parole intere</string>
+    <string name="backspace_repeat_deletes_words_summary">Dopo aver tenuto premuto per un momento il tasto Elimina, elimina parola per parola con velocità crescente</string>
+    <string name="clipboard_skip_sensitive">Non conservare password e codici</string>
+    <string name="clipboard_skip_sensitive_summary">Le voci contrassegnate come riservate (ad esempio dai gestori di password) e i codici monouso da 4 a 8 cifre non vengono aggiunti alla cronologia. Incollare funziona ancora</string>
 </resources>

@@ -941,8 +941,6 @@
     <string name="next_word_strict_ngram_summary">केवल तभी सीखे हुए शब्दों का सुझाव दें जब पूर्ववर्ती शब्द संदर्भ मेल खाता हो</string>
     <string name="immediate_auto_space">तत्काल ऑटो-स्पेस</string>
     <string name="immediate_auto_space_summary">अगले टाइप किए गए पत्र पर देरी को रोकने के लिए कोई सुझाव चुनते समय तुरंत स्थान छोड़ दें</string>
-    <string name="first_word_prediction">प्रथम-शब्द सुझाव</string>
-    <string name="first_word_prediction_summary">जब वाक्य की शुरुआत में कोई इनपुट न हो तो सुझाव दिखाएं</string>
     <string name="suggest_punctuation">विराम चिह्न सुझाव</string>
     <string name="suggest_punctuation_summary">जब कोई अन्य सुझाव उपलब्ध न हो तो विराम चिह्न दिखाएँ</string>
     <string name="suggest_clipboard_content">क्लिपबोर्ड सामग्री का सुझाव दें</string>
@@ -1758,4 +1756,8 @@
     <string name="cjk_clear_user_dict_title">सीजेके उपयोगकर्ता इतिहास साफ़ करें</string>
     <string name="cjk_clear_user_dict_summary">सीखी गई उम्मीदवार रैंकिंग और उपयोगकर्ता शब्दकोश कैश को रीसेट करें</string>
     <string name="cjk_clear_user_dict_success">CJK उपयोगकर्ता इतिहास साफ़ किया गया</string>
+    <string name="backspace_repeat_deletes_words">डिलीट को दबाए रखने से पूरे शब्द हट जाते हैं</string>
+    <string name="backspace_repeat_deletes_words_summary">कुछ देर के लिए डिलीट कुंजी दबाए रखने के बाद, बढ़ती गति के साथ शब्द दर शब्द डिलीट करें</string>
+    <string name="clipboard_skip_sensitive">पासवर्ड और कोड न रखें</string>
+    <string name="clipboard_skip_sensitive_summary">गोपनीय के रूप में चिह्नित प्रविष्टियाँ (उदाहरण के लिए पासवर्ड प्रबंधकों से) और 4 से 8 अंकों वाले एक-बार कोड को इतिहास में नहीं जोड़ा जाता है। चिपकाना अभी भी काम करता है</string>
 </resources>

@@ -60,6 +60,8 @@ private val toolbarPrefScope = CoroutineScope(SupervisorJob() + Dispatchers.Defa
 
 fun createToolbarKey(context: Context, key: ToolbarKey): ImageButton {
     val button = ImageButton(context, null, R.attr.suggestionWordStyle)
+    button.minimumWidth = 0
+    button.minimumHeight = 0
     button.scaleType = ImageView.ScaleType.CENTER_INSIDE
     val defaultStripHeight = context.resources.getDimensionPixelSize(R.dimen.config_suggestions_strip_height).toFloat()
     val stripHeight = ResourceUtils.getSuggestionsStripHeight(context.resources).toFloat()

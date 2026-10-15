@@ -68,6 +68,9 @@ class CombinerChain(initialText: String, combiningSpec: String) {
      * new event. However it may never be null.
      */
     fun processEvent(previousEvents: ArrayList<Event>?, newEvent: Event): Event {
+        if (mCombiners.isEmpty() && previousEvents.isNullOrEmpty()) {
+            return newEvent
+        }
         val modifiablePreviousEvents = ArrayList(previousEvents ?: emptyList())
         var event = newEvent
         for (combiner in mCombiners) {

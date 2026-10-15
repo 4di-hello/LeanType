@@ -824,8 +824,6 @@
     <string name="next_word_strict_ngram_summary">Sugerir palavras aprendidas apenas quando o contexto da palavra anterior corresponder</string>
     <string name="immediate_auto_space">Auto-espaço imediato</string>
     <string name="immediate_auto_space_summary">Inserir espaço instantaneamente ao escolher uma sugestão para evitar atraso na próxima letra digitada</string>
-    <string name="first_word_prediction">Sugestões de primeira palavra</string>
-    <string name="first_word_prediction_summary">Mostrar sugestões quando não há entrada no início de uma frase</string>
     <string name="suggest_screenshots">Sugerir capturas de ecrã recentes</string>
     <string name="suggest_screenshots_summary">Mostrar capturas de ecrã tiradas recentemente como sugestão</string>
     <string name="auto_read_otp">Ler OTP automaticamente de SMS</string>
@@ -1769,4 +1767,8 @@ Habilita inferência GGUF / llama.cpp no dispositivo para revisão e reescrita.<
     <string name="cjk_clear_user_dict_title">Limpar histórico do usuário CJK</string>
     <string name="cjk_clear_user_dict_summary">Redefinir classificações de candidatos aprendidas e cache de dicionário do usuário</string>
     <string name="cjk_clear_user_dict_success">Histórico do usuário CJK apagado</string>
+    <string name="backspace_repeat_deletes_words">Segurar delete remove palavras inteiras</string>
+    <string name="backspace_repeat_deletes_words_summary">Depois de segurar a tecla delete por um momento, exclua palavra por palavra com velocidade crescente</string>
+    <string name="clipboard_skip_sensitive">Não guarde senhas e códigos</string>
+    <string name="clipboard_skip_sensitive_summary">Entradas marcadas como confidenciais (por exemplo, de gerenciadores de senhas) e códigos únicos com 4 a 8 dígitos não são adicionados ao histórico. Colar ainda funciona</string>
 </resources>

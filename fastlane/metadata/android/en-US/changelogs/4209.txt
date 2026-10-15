@@ -1,7 +1,7 @@
-- Added companion CJK plugin support for Chinese, Japanese, and Korean typing.
-- Restored uppercase letter input when chording characters while holding Shift.
-- Added option to continuously delete whole words when holding down Delete.
-- Added option to skip passwords and one-time codes in clipboard history.
-- Restored toolbar and suggestion strip visibility upon exiting full-screen touchpad.
-- Added plus/minus stepper buttons and snapping to slider preference dialogs.
-- Centered emoji grid in key fit mode and added Unicode 16.0 regex support.
+- Fixed batch edit integrity, async AI callbacks, and background ContentObserver leaks.
+- Adapted second key to unshifted layout on auto-shift drop during fast typing.
+- Restored 2D backspace swipe upward and diagonal selection across lines.
+- Auto-spanned toolbar keys across available width with minimum width caps.
+- Silenced key sounds over Bluetooth and earphones when play-over-bluetooth is off.
+- Aligned gesture typing preview balloon and smoothed dynamic vertical tracking.
+- Added x86_64 debug support for Waydroid and native C++ optimization flags.

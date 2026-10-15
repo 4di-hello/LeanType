@@ -630,8 +630,6 @@
     <string name="next_word_strict_ngram_summary">Предлагать выученные слова только тогда, когда контекст предыдущего слова совпадает</string>
     <string name="immediate_auto_space">Мгновенный автопробел</string>
     <string name="immediate_auto_space_summary">Вставлять пробел мгновенно при выборе подсказки, чтобы предотвратить задержку при вводе следующей буквы</string>
-    <string name="first_word_prediction">Предложения первого слова</string>
-    <string name="first_word_prediction_summary">Показывать предложения, когда в начале предложения нет ввода</string>
     <string name="auto_read_otp">Авто-чтение OTP из SMS</string>
     <string name="auto_read_otp_summary">Показывать код из входящего SMS как подсказку, которую можно нажать для вставки</string>
     <string name="spoken_otp_suggestion">Отклонить подсказку OTP</string>
@@ -1839,4 +1837,8 @@
     <string name="cjk_clear_user_dict_title">Очистить историю пользователя CJK</string>
     <string name="cjk_clear_user_dict_summary">Сбросить изученные рейтинги кандидатов и кеш пользовательского словаря</string>
     <string name="cjk_clear_user_dict_success">История пользователей CJK очищена</string>
+    <string name="backspace_repeat_deletes_words">Удерживание удаления удаляет целые слова</string>
+    <string name="backspace_repeat_deletes_words_summary">Удерживая кнопку удаления на мгновение, удаляйте слово за словом с возрастающей скоростью.</string>
+    <string name="clipboard_skip_sensitive">Не храните пароли и коды</string>
+    <string name="clipboard_skip_sensitive_summary">В историю не добавляются записи, помеченные как конфиденциальные (например, из менеджеров паролей) и одноразовые коды длиной от 4 до 8 цифр. Вставка все еще работает</string>
 </resources>

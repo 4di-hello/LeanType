@@ -134,7 +134,6 @@ open class SettingsValues(
     val mPopupKeyLabelSources: List<String>
     val mSecondaryLocales: List<Locale>
     val mBigramPredictionEnabled: Boolean
-    val mFirstWordPredictionEnabled: Boolean
     val mSuggestPunctuation: Boolean
     val mCenterSuggestionTextToEnter: Boolean
     val mCenterTypedWord: Boolean
@@ -376,7 +375,6 @@ open class SettingsValues(
         }
         mNextWordBoostLevel = boostLevel
         mNextWordStrictNgram = prefs.getBoolean(Settings.PREF_NEXT_WORD_STRICT_NGRAM, Defaults.PREF_NEXT_WORD_STRICT_NGRAM)
-        mFirstWordPredictionEnabled = prefs.getBoolean(Settings.PREF_FIRST_WORD_PREDICTIONS, Defaults.PREF_FIRST_WORD_PREDICTIONS)
         mSuggestPunctuation = prefs.getBoolean(Settings.PREF_SUGGEST_PUNCTUATION, Defaults.PREF_SUGGEST_PUNCTUATION)
         mSuggestClipboardContent = prefs.getBoolean(Settings.PREF_SUGGEST_CLIPBOARD_CONTENT, Defaults.PREF_SUGGEST_CLIPBOARD_CONTENT)
         mSuggestScreenshots = prefs.getBoolean(Settings.PREF_SUGGEST_SCREENSHOTS, Defaults.PREF_SUGGEST_SCREENSHOTS)
@@ -592,7 +590,6 @@ Current settings :
    mUseDoubleSpacePeriod = $mUseDoubleSpacePeriod
    mBlockPotentiallyOffensive = $mBlockPotentiallyOffensive
    mBigramPredictionEnabled = $mBigramPredictionEnabled
-   mFirstWordPredictionEnabled = $mFirstWordPredictionEnabled
    mFullKeyboardSwipe = $mFullKeyboardSwipe
    mGestureInputEnabled = $mGestureInputEnabled
    mGestureTrailEnabled = $mGestureTrailEnabled

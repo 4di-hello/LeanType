@@ -97,7 +97,7 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_CLANG := true
 LOCAL_SDK_VERSION := 14
 LOCAL_NDK_STL_VARIANT := c++_static
-LOCAL_CFLAGS += -fvisibility=hidden -fvisibility-inlines-hidden -ffunction-sections -fdata-sections
+LOCAL_CFLAGS += -O3 -fvectorize -funroll-loops -fvisibility=hidden -fvisibility-inlines-hidden -ffunction-sections -fdata-sections
 LOCAL_LDFLAGS += -ldl -llog -Wl,-z,max-page-size=16384 -Wl,--gc-sections
 
 ifneq ($(FLAG_DBG), true)

@@ -63,15 +63,15 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 private val currentChangelogItems = listOf(
-    "• CJK Plugin Support: Added architecture to load companion CJK plugin for Chinese, Japanese, and Korean typing",
-    "• Shift Key Chording: Restored uppercase input when chording letters while holding the Shift key",
-    "• Hold Delete for Words: Added option to continuously delete whole words when holding down the Delete key",
-    "• Clipboard Privacy: Added toggle to skip passwords and one-time numeric verification codes in clipboard history",
-    "• Touchpad Toolbar Recovery: Preserved manual toolbar states and fixed visibility upon closing full-screen touchpad",
-    "• Slider Stepper Buttons: Added plus and minus buttons and value snapping to slider preference dialogs",
-    "• Emoji & Unicode 16.0: Centered emoji grid in key fit mode, supported Unicode 16.0, and added long-press descriptions",
-    "• Theme Polish: Preserved icon colors and accent press feedback in Show all colors mode",
-    "• Diacritic Performance: Replaced diacritic regex in Suggest with allocation-free ASCII normalization"
+    "• Core Stability & Leaks: Fixed batch edit integrity, guarded AI callbacks, and eliminated MediaStore leaks",
+    "• Fast-Typing Auto-Shift: Adapted second key to unshifted layout on auto-shift drop during rapid typing",
+    "• 2D Delete Swipe: Restored upward and diagonal text selection across lines and word boundaries",
+    "• Dynamic Toolbar Auto-Spanning: Auto-expanded toolbar keys across free space with minimum width caps and no wobble",
+    "• Bluetooth Sound Output: Silenced keypress audio over headphones and Bluetooth when play-over-bluetooth is disabled",
+    "• Gesture Typing Preview: Aligned floating preview height with popups and smoothed dynamic finger tracking",
+    "• Clipboard Font Sizing: Restored font baseline and scaled history entries with the Appearance font multiplier",
+    "• Native Waydroid Support: Added x86_64 ABI debug support and optimized native C++ compilation flags",
+    "• Latency & Caching Polish: In-memory caching for TextExpander, border radii, and hot-path sound pools"
 )
 
 @Composable

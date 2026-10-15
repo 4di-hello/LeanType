@@ -85,6 +85,9 @@ android {
             isMinifyEnabled = false
             isJniDebuggable = false
             applicationIdSuffix = ".debug"
+            ndk {
+                abiFilters.add("x86_64")
+            }
         }
         create("runTests") { // build variant for running tests on CI that skips tests known to fail
             isMinifyEnabled = false

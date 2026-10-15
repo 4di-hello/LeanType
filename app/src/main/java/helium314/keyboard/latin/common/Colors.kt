@@ -85,6 +85,8 @@ interface Colors {
 
     fun applyKeyBorderRadius(drawable: Drawable?, radiusPx: Float) {
         val current = drawable?.current ?: drawable ?: return
+        if (appliedRadii[current] == radiusPx) return
+        appliedRadii[current] = radiusPx
         applyRadiusRecursive(current, radiusPx)
     }
 
@@ -100,6 +102,8 @@ interface Colors {
         }
     }
 }
+
+private val appliedRadii = java.util.WeakHashMap<Drawable, Float>()
 
 @RequiresApi(Build.VERSION_CODES.S)
 class DynamicColors(context: Context, override val themeStyle: String, override val hasKeyBorders: Boolean, private var keyboardBackground: Drawable? = null) : Colors {
