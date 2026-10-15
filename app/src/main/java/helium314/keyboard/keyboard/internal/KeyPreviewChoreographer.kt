@@ -115,8 +115,7 @@ class KeyPreviewChoreographer(private val mParams: KeyPreviewDrawParams) {
         val keyDrawWidth = key.drawWidth
         val keyHeight = key.height
 
-        val popupOffsetLift = (keyHeight * 4f * settingsValues.mPopupKeysVerticalOffsetFraction).roundToInt()
-        val stemHeight = keyHeight + popupOffsetLift
+        val stemHeight = keyHeight
         val bubbleHeight = (keyHeight * 0.85f * heightScale).roundToInt().coerceAtLeast(18.dpToPx(keyPreviewView.resources))
         val previewHeight = stemHeight + bubbleHeight
         val previewWidth = (keyDrawWidth * widthScale).roundToInt().coerceAtLeast(24.dpToPx(keyPreviewView.resources))
