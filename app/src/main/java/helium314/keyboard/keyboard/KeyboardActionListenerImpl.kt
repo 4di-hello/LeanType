@@ -542,20 +542,22 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
 
         if (stepsY != 0 && deleteSwipeLineBoundaries.isNotEmpty()) {
             deleteSwipeLineIndex = (deleteSwipeLineIndex - stepsY).coerceIn(0, deleteSwipeLineBoundaries.size - 1)
+            // A rightward (negative) offset only makes sense inside the line it was made on.
+            // A vertical step re-anchors the selection at the start of the new line.
+            if (deleteSwipeLineIndex != oldLineIndex && deleteSwipeCharOffset < 0) deleteSwipeCharOffset = 0
         }
 
         if (stepsX != 0) {
             val actual = actualSteps(stepsX)
-            deleteSwipeCharOffset = (deleteSwipeCharOffset - actual).coerceAtLeast(0)
+            // Positive offset: selection start is left of the line start (selected more by swiping left).
+            // Negative offset: selection start is right of the line start (deselected by swiping right
+            // after a vertical swipe). It can never go past the position where the swipe started.
+            val minOffset = -(deleteSwipeSelectionAnchor() - deleteSwipeLineBase()).coerceAtLeast(0)
+            deleteSwipeCharOffset = (deleteSwipeCharOffset - actual).coerceAtLeast(minOffset)
         }
 
         if (deleteSwipeLineIndex != oldLineIndex || deleteSwipeCharOffset != oldCharOffset) {
-            val lineBaseStart = if (deleteSwipeLineBoundaries.isNotEmpty()) {
-                deleteSwipeLineBoundaries[deleteSwipeLineIndex]
-            } else {
-                deleteSwipeInitialEnd
-            }
-            val finalStart = (lineBaseStart - deleteSwipeCharOffset).coerceIn(0, deleteSwipeInitialEnd)
+            val finalStart = (deleteSwipeLineBase() - deleteSwipeCharOffset).coerceIn(0, deleteSwipeInitialEnd)
 
             deleteSwipeStepCount++
             if (deleteSwipeStepCount % 2 != 0) {
@@ -565,6 +567,16 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
         }
     }
 
+    /** Start of the line currently used as base of the delete swipe selection. */
+    private fun deleteSwipeLineBase(): Int =
+        if (deleteSwipeLineBoundaries.isNotEmpty()) deleteSwipeLineBoundaries[deleteSwipeLineIndex]
+        else deleteSwipeInitialEnd
+
+    /** Selection start when the delete swipe began, i.e. the right-most point the selection start may be moved to. */
+    private fun deleteSwipeSelectionAnchor(): Int =
+        if (deleteSwipeLineBoundaries.isNotEmpty()) deleteSwipeLineBoundaries[0]
+        else deleteSwipeInitialEnd
+
     private fun onMoveDeletePointerWords2D(stepsX: Int, stepsY: Int) {
         val oldLineIndex = deleteSwipeLineIndex
         val oldWordIndex = deleteSwipeWordIndex
@@ -572,22 +584,34 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
         // Negative stepsY moves UP (select more lines), positive stepsY moves DOWN (deselect lines)
         if (stepsY != 0 && deleteSwipeLineBoundaries.isNotEmpty()) {
             deleteSwipeLineIndex = (deleteSwipeLineIndex - stepsY).coerceIn(0, deleteSwipeLineBoundaries.size - 1)
+            // A rightward (negative) word index only makes sense inside the line it was made on.
+            if (deleteSwipeLineIndex != oldLineIndex && deleteSwipeWordIndex < 0) deleteSwipeWordIndex = 0
         }
 
-        // Negative stepsX moves LEFT (select more words), positive stepsX moves RIGHT (deselect words)
+        // Negative stepsX moves LEFT (select more words), positive stepsX moves RIGHT (deselect words).
+        // Positive index: words to the left of the line start. Negative index: words to the right of the
+        // line start that are deselected again (limited to what lies before the swipe's start point).
         if (stepsX != 0) {
-            deleteSwipeWordIndex = (deleteSwipeWordIndex - stepsX).coerceAtLeast(0)
+            val minIndex = -getWordBoundariesForwards(
+                deleteSwipeInitialText, deleteSwipeSelectionAnchor(), deleteSwipeLineBase()
+            ).size
+            deleteSwipeWordIndex = (deleteSwipeWordIndex - stepsX).coerceAtLeast(minIndex)
         }
 
         if (deleteSwipeLineIndex != oldLineIndex || deleteSwipeWordIndex != oldWordIndex) {
-            val lineBaseStart = if (deleteSwipeLineBoundaries.isNotEmpty()) {
-                deleteSwipeLineBoundaries[deleteSwipeLineIndex]
-            } else {
-                deleteSwipeInitialEnd
-            }
+            val lineBaseStart = deleteSwipeLineBase()
 
             val finalStart = if (deleteSwipeWordIndex == 0) {
                 lineBaseStart
+            } else if (deleteSwipeWordIndex < 0) {
+                val wordsAfterLine = getWordBoundariesForwards(
+                    deleteSwipeInitialText, deleteSwipeSelectionAnchor(), lineBaseStart
+                )
+                if (wordsAfterLine.isNotEmpty()) {
+                    wordsAfterLine[(-deleteSwipeWordIndex).coerceAtMost(wordsAfterLine.size) - 1]
+                } else {
+                    lineBaseStart
+                }
             } else {
                 val wordsBeforeLine = if (deleteSwipeLineIndex == 0) {
                     deleteSwipeWordBoundaries
@@ -1047,6 +1071,23 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
                 }
             }
             return boundaries
+        }
+
+        /**
+         * Word boundaries between [fromOffset] and the end of [text], in ascending order (nearest to
+         * [fromOffset] first). Used to deselect words by swiping right after a vertical delete swipe.
+         * [textEndOffset] is the absolute offset of the end of [text]. Boundaries are the same ones
+         * [getWordBoundariesBackwards] produces, so selecting and deselecting step over identical positions.
+         */
+        internal fun getWordBoundariesForwards(text: String, textEndOffset: Int, fromOffset: Int): List<Int> {
+            if (fromOffset >= textEndOffset) return emptyList()
+            val textStartOffset = textEndOffset - text.length
+            val charsBeforeFrom = (fromOffset - textStartOffset).coerceIn(0, text.length)
+            val segment = text.substring(charsBeforeFrom)
+            return getWordBoundariesBackwards(segment, textEndOffset)
+                .filter { it > fromOffset }
+                .distinct()
+                .reversed()
         }
 
         internal fun getWordBoundariesBackwards(text: String, endOffset: Int): List<Int> {
