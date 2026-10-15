@@ -162,13 +162,12 @@ open class GestureFloatingTextDrawingPreview(mainKeyboardViewAttr: TypedArray) :
             ?: (230 * mParams.mDisplayDensity).toInt()
         val verticalOffsetPx = (keyboardHeight * Settings.getValues().mPopupKeysVerticalOffsetFraction).toInt()
 
+        val defaultKeyHeight = (keyboardHeight / 4).coerceAtLeast((40 * mParams.mDisplayDensity).toInt())
+        val keyHeight = (mLastKey?.height ?: defaultKeyHeight).toFloat()
+        val popupOffset = (keyHeight * 0.5f) + verticalOffsetPx
+
         val rectY = if (mParams.mGesturePreviewDynamic) {
-            val key = mLastKey
-            if (key != null) {
-                key.y.toFloat() - verticalOffsetPx.toFloat() - rectHeight
-            } else {
-                CoordinateUtils.y(mLastPointerCoords).toFloat() - (rectHeight * 0.5f) - verticalOffsetPx.toFloat() - rectHeight
-            }
+            CoordinateUtils.y(mLastPointerCoords).toFloat() - popupOffset - rectHeight
         } else {
             -verticalOffsetPx.toFloat() - rectHeight
         }
