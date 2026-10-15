@@ -542,8 +542,6 @@
     <string name="immediate_auto_space_summary">Kinnita tühik kohe soovituse valimisel, et vältida viivitust järgmise tippitava tähe juures</string>
     <string name="pref_foldable_mode_title">Kokkuvolditava ekraani profiil</string>
     <string name="pref_foldable_mode_summary">Luba automaatne ekraani profiili tuvastus ja jagatud klaviatuuri skaleerimine kokkuvolditavatele seadmetele</string>
-    <string name="first_word_prediction">Esimese sõna soovitused</string>
-    <string name="first_word_prediction_summary">Näita soovitusi, kui lause alguses pole sisendit</string>
     <string name="suggest_screenshots">Soovita hiljutisi ekraanipilte</string>
     <string name="suggest_screenshots_summary">Näita hiljuti tehtud ekraanipilte soovitusena</string>
     <string name="auto_read_otp">Loe SMS-ist OTP automaatselt</string>

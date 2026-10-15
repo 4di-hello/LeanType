@@ -553,8 +553,6 @@
     <string name="immediate_auto_space_summary">Při výběru návrhu okamžitě vložit mezeru, aby se předešlo zpoždění při dalším psaném písmenu</string>
     <string name="pref_foldable_mode_title">Profil skládací obrazovky</string>
     <string name="pref_foldable_mode_summary">Povolit automatickou detekci profilu obrazovky a škálování rozdělené klávesnice pro skládací zařízení</string>
-    <string name="first_word_prediction">Návrhy prvního slova</string>
-    <string name="first_word_prediction_summary">Zobrazit návrhy, když na začátku věty není žádný vstup</string>
     <string name="suggest_screenshots">Navrhovat nedávné snímky obrazovky</string>
     <string name="suggest_screenshots_summary">Zobrazit nedávno pořízené snímky obrazovky jako návrh</string>
     <string name="auto_read_otp">Automaticky číst OTP z SMS</string>

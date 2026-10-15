@@ -528,8 +528,6 @@
     <string name="next_word_strict_ngram_summary">اقتراح الكلمات المتعلّمة فقط عندما يتطابق سياق الكلمة السابقة</string>
     <string name="immediate_auto_space">مسافة تلقائية فورية</string>
     <string name="immediate_auto_space_summary">إدراج مسافة فورًا عند اختيار اقتراح لمنع التأخير في كتابة الحرف التالي</string>
-    <string name="first_word_prediction">اقتراحات الكلمة الأولى</string>
-    <string name="first_word_prediction_summary">عرض الاقتراحات عندما لا يكون هناك إدخال في بداية الجملة</string>
     <string name="suggest_screenshots">اقتراح لقطات الشاشة الحديثة</string>
     <string name="suggest_screenshots_summary">عرض لقطات الشاشة التي تم التقاطها مؤخرًا كاقتراح</string>
     <string name="auto_read_otp">قراءة OTP تلقائيًا من الرسائل القصيرة</string>

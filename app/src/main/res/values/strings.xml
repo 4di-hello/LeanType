@@ -253,10 +253,6 @@
     <string name="pref_foldable_mode_title">Foldable screen profile</string>
     <string name="pref_foldable_mode_summary">Enable automatic screen profile detection and split keyboard scaling for foldable devices</string>
 
-    <!-- Option to show first-word suggestions when there is no input at the start of a sentence. -->
-    <string name="first_word_prediction">First-word suggestions</string>
-    <!-- Description for first-word suggestions option -->
-    <string name="first_word_prediction_summary">Show suggestions when there is no input at the start of a sentence</string>
     <!-- Option to enable using punctuation suggestions. -->
     <string name="suggest_punctuation">Punctuation suggestions</string>
     <!-- Description for "suggest_punctuation" option. -->

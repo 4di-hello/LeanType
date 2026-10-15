@@ -2046,9 +2046,7 @@ class InputLogic(
         if (!mWordComposer.isComposingWord()) {
             val ngramContext = getNgramContextFromNthPreviousWordForSuggestion(settingsValues.mSpacingAndPunctuations, 1)
             val isFirstWord = ngramContext.isBeginningOfSentenceContext
-            if ((isFirstWord && !settingsValues.mFirstWordPredictionEnabled)
-                || (!isFirstWord && !settingsValues.mBigramPredictionEnabled)
-            ) {
+            if (isFirstWord || !settingsValues.mBigramPredictionEnabled) {
                 mSuggestionStripViewAccessor.setNeutralSuggestionStrip()
                 return
             }

@@ -566,8 +566,6 @@
     <string name="next_word_strict_ngram_summary">Stel alleen geleerde woorden voor als de context van het voorgaande woord overeenkomt</string>
     <string name="immediate_auto_space">Directe automatische spatie</string>
     <string name="immediate_auto_space_summary">Spatie direct invoegen bij het kiezen van een suggestie om vertraging bij de volgende getypte letter te voorkomen</string>
-    <string name="first_word_prediction">Eerste-woord suggesties</string>
-    <string name="first_word_prediction_summary">Toon suggesties wanneer er geen invoer is aan het begin van een zin</string>
     <string name="suggest_screenshots">Recente screenshots voorstellen</string>
     <string name="suggest_screenshots_summary">Recent gemaakte screenshots tonen als suggestie</string>
     <string name="auto_read_otp">OTP automatisch lezen uit sms</string>

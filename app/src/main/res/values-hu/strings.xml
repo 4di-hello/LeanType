@@ -551,8 +551,6 @@
     <string name="immediate_auto_space_summary">Szóköz azonnali beszúrása javaslat kiválasztásakor, hogy elkerüljük a késést a következő begépelt betűnél</string>
     <string name="pref_foldable_mode_title">Összecsukható képernyő profil</string>
     <string name="pref_foldable_mode_summary">Automatikus képernyőprofil-érzékelés és osztott billentyűzet-méretezés engedélyezése összecsukható eszközökhöz</string>
-    <string name="first_word_prediction">Első szó javaslatok</string>
-    <string name="first_word_prediction_summary">Javaslatok megjelenítése, ha nincs bevitel a mondat elején</string>
     <string name="suggest_screenshots">Legutóbbi képernyőképek javasolása</string>
     <string name="suggest_screenshots_summary">Nemrég készített képernyőképek megjelenítése javaslatként</string>
     <string name="auto_read_otp">OTP automatikus olvasása SMS-ből</string>

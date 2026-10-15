@@ -527,8 +527,6 @@
     <string name="next_word_strict_ngram_summary">Suggerisci le parole apprese solo quando il contesto della parola precedente corrisponde</string>
     <string name="immediate_auto_space">Spazio automatico immediato</string>
     <string name="immediate_auto_space_summary">Inserisci subito uno spazio quando scegli un suggerimento per evitare ritardi nella prossima lettera digitata</string>
-    <string name="first_word_prediction">Suggerimenti prima parola</string>
-    <string name="first_word_prediction_summary">Mostra suggerimenti quando non c\'è input all\'inizio di una frase</string>
     <string name="suggest_screenshots">Suggerisci screenshot recenti</string>
     <string name="suggest_screenshots_summary">Mostra gli screenshot scattati di recente come suggerimento</string>
     <string name="auto_read_otp">Leggi automaticamente OTP da SMS</string>

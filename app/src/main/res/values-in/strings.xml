@@ -490,8 +490,6 @@
     <string name="immediate_auto_space_summary">Terapkan spasi secara instan saat memilih saran untuk mencegah penundaan pada huruf yang diketik berikutnya</string>
     <string name="pref_foldable_mode_title">Profil layar lipat</string>
     <string name="pref_foldable_mode_summary">Aktifkan deteksi profil layar otomatis dan penskalaan keyboard terpisah untuk perangkat lipat</string>
-    <string name="first_word_prediction">Saran kata pertama</string>
-    <string name="first_word_prediction_summary">Tampilkan saran ketika tidak ada input di awal kalimat</string>
     <string name="suggest_punctuation">Saran tanda baca</string>
     <string name="suggest_punctuation_summary">Tampilkan tanda baca ketika tidak ada saran lain yang tersedia</string>
     <string name="suggest_screenshots">Sarankan tangkapan layar terbaru</string>

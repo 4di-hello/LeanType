@@ -554,8 +554,6 @@
     <string name="immediate_auto_space_summary">选择建议时立即提交空格，以防止输入下一个字母时出现延迟</string>
     <string name="pref_foldable_mode_title">折叠屏配置文件</string>
     <string name="pref_foldable_mode_summary">为折叠设备启用自动屏幕配置文件检测和分离键盘缩放</string>
-    <string name="first_word_prediction">首词建议</string>
-    <string name="first_word_prediction_summary">在句首没有输入时显示建议</string>
     <string name="suggest_screenshots">建议最近的截图</string>
     <string name="suggest_screenshots_summary">将最近截取的屏幕截图显示为建议</string>
     <string name="auto_read_otp">自动读取短信中的 OTP</string>

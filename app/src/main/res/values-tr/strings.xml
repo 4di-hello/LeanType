@@ -475,8 +475,6 @@
     <string name="next_word_strict_ngram_summary">Öğrenilen kelimeleri yalnızca önceki kelime bağlamı eşleştiğinde öner</string>
     <string name="immediate_auto_space">Anlık otomatik boşluk</string>
     <string name="immediate_auto_space_summary">Bir sonraki harf yazıldığında gecikmeyi önlemek için bir öneri seçildiğinde boşluğu anında ekle</string>
-    <string name="first_word_prediction">İlk kelime önerileri</string>
-    <string name="first_word_prediction_summary">Cümlenin başında henüz bir giriş yokken önerileri göster</string>
     <string name="suggest_screenshots">Son ekran görüntülerini öner</string>
     <string name="suggest_screenshots_summary">Yakın zamanda çekilen ekran görüntülerini öneri olarak göster</string>
     <string name="auto_read_otp">SMS\'ten OTP\'yi otomatik oku</string>

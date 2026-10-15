@@ -494,8 +494,6 @@
     <string name="immediate_auto_space_summary">Confirmă spațiul instantaneu la alegerea unei sugestii pentru a preveni întârzierea la următoarea literă tastată</string>
     <string name="pref_foldable_mode_title">Profil ecran pliabil</string>
     <string name="pref_foldable_mode_summary">Activează detectarea automată a profilului ecranului și scalarea tastaturii divizate pentru dispozitivele pliabile</string>
-    <string name="first_word_prediction">Sugestii pentru primul cuvânt</string>
-    <string name="first_word_prediction_summary">Afișează sugestii când nu există nicio intrare la începutul unei propoziții</string>
     <string name="suggest_screenshots">Sugerează capturi de ecran recente</string>
     <string name="suggest_screenshots_summary">Afișează capturile de ecran făcute recent ca sugestie</string>
     <string name="auto_read_otp">Citește automat OTP din SMS</string>

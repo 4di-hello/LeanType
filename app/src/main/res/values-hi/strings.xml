@@ -941,8 +941,6 @@
     <string name="next_word_strict_ngram_summary">केवल तभी सीखे हुए शब्दों का सुझाव दें जब पूर्ववर्ती शब्द संदर्भ मेल खाता हो</string>
     <string name="immediate_auto_space">तत्काल ऑटो-स्पेस</string>
     <string name="immediate_auto_space_summary">अगले टाइप किए गए पत्र पर देरी को रोकने के लिए कोई सुझाव चुनते समय तुरंत स्थान छोड़ दें</string>
-    <string name="first_word_prediction">प्रथम-शब्द सुझाव</string>
-    <string name="first_word_prediction_summary">जब वाक्य की शुरुआत में कोई इनपुट न हो तो सुझाव दिखाएं</string>
     <string name="suggest_punctuation">विराम चिह्न सुझाव</string>
     <string name="suggest_punctuation_summary">जब कोई अन्य सुझाव उपलब्ध न हो तो विराम चिह्न दिखाएँ</string>
     <string name="suggest_clipboard_content">क्लिपबोर्ड सामग्री का सुझाव दें</string>

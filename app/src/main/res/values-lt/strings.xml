@@ -500,8 +500,6 @@
     <string name="immediate_auto_space_summary">Iš karto įterpti tarpą pasirinkus pasiūlymą, kad būtų išvengta delsos rašant kitą raidę</string>
     <string name="pref_foldable_mode_title">Lankstomo ekrano profilis</string>
     <string name="pref_foldable_mode_summary">Įjungti automatinį ekrano profilio aptikimą ir padalintos klaviatūros mastelį lankstomiems įrenginiams</string>
-    <string name="first_word_prediction">Pirmojo žodžio pasiūlymai</string>
-    <string name="first_word_prediction_summary">Rodyti pasiūlymus, kai sakinio pradžioje nėra įvesties</string>
     <string name="suggest_screenshots">Siūlyti naujausias ekrano kopijas</string>
     <string name="suggest_screenshots_summary">Rodyti neseniai padarytas ekrano kopijas kaip pasiūlymą</string>
     <string name="auto_read_otp">Automatiškai nuskaityti OTP iš SMS</string>

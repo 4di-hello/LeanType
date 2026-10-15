@@ -588,8 +588,6 @@
     <string name="immediate_auto_space_summary">Незабавно потвърждаване на интервал при избор на предложение, за да се предотврати забавяне при следващата въведена буква</string>
     <string name="pref_foldable_mode_title">Профил на сгъваем екран</string>
     <string name="pref_foldable_mode_summary">Активиране на автоматично откриване на профил на екрана и мащабиране на разделената клавиатура за сгъваеми устройства</string>
-    <string name="first_word_prediction">Предложения за първа дума</string>
-    <string name="first_word_prediction_summary">Показване на предложения, когато няма въвеждане в началото на изречението</string>
     <string name="suggest_screenshots">Предлагане на скорошни екранни снимки</string>
     <string name="suggest_screenshots_summary">Показване на наскоро направени екранни снимки като предложение</string>
     <string name="auto_read_otp">Автоматично четене на OTP от SMS</string>

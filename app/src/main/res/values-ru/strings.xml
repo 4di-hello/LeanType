@@ -630,8 +630,6 @@
     <string name="next_word_strict_ngram_summary">Предлагать выученные слова только тогда, когда контекст предыдущего слова совпадает</string>
     <string name="immediate_auto_space">Мгновенный автопробел</string>
     <string name="immediate_auto_space_summary">Вставлять пробел мгновенно при выборе подсказки, чтобы предотвратить задержку при вводе следующей буквы</string>
-    <string name="first_word_prediction">Предложения первого слова</string>
-    <string name="first_word_prediction_summary">Показывать предложения, когда в начале предложения нет ввода</string>
     <string name="auto_read_otp">Авто-чтение OTP из SMS</string>
     <string name="auto_read_otp_summary">Показывать код из входящего SMS как подсказку, которую можно нажать для вставки</string>
     <string name="spoken_otp_suggestion">Отклонить подсказку OTP</string>

@@ -590,8 +590,6 @@
     <string name="immediate_auto_space_summary">Wstawiaj spację natychmiast po wybraniu sugestii, aby zapobiec opóźnieniu przy następnej literze</string>
     <string name="pref_foldable_mode_title">Profil składanego ekranu</string>
     <string name="pref_foldable_mode_summary">Włącz automatyczne wykrywanie profilu ekranu i skalowanie podzielonej klawiatury dla urządzeń składanych</string>
-    <string name="first_word_prediction">Sugestie pierwszego słowa</string>
-    <string name="first_word_prediction_summary">Pokazuj sugestie, gdy nie ma tekstu na początku zdania</string>
     <string name="suggest_screenshots">Sugeruj ostatnie zrzuty ekranu</string>
     <string name="suggest_screenshots_summary">Pokazuj ostatnio zrobione zrzuty ekranu jako sugestię</string>
     <string name="auto_read_otp">Automatyczne odczytywanie OTP z SMS</string>

@@ -416,7 +416,6 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
         const val PREF_NEXT_WORD_BOOST_LEVEL = "next_word_boost_level"
         const val PREF_NEXT_WORD_STRICT_NGRAM = "next_word_strict_ngram"
         const val PREF_IMMEDIATE_AUTO_SPACE = "immediate_auto_space"
-        const val PREF_FIRST_WORD_PREDICTIONS = "first_word_prediction"
         const val PREF_SUGGEST_PUNCTUATION = "suggest_punctuation"
         const val PREF_SUGGEST_CLIPBOARD_CONTENT = "suggest_clipboard_content"
         const val PREF_SUGGESTIONS_COUNT_IN_STRIP = "suggestions_count_in_strip"
@@ -948,18 +947,17 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
 
         @JvmStatic
         fun applySuggestionBalancePreset(prefs: SharedPreferences, level: Int) {
-            val (prioritizePersonal, strictNgram, firstWord) = when (level) {
-                SUGGESTION_BALANCE_DICTIONARY_FOCUSED -> Triple(false, true, false)
-                SUGGESTION_BALANCE_CONSERVATIVE -> Triple(false, true, false)
-                SUGGESTION_BALANCE_PERSONALIZED -> Triple(true, false, true)
-                SUGGESTION_BALANCE_HIGHLY_PERSONALIZED -> Triple(true, false, true)
-                else -> Triple(false, false, false) // SUGGESTION_BALANCE_BALANCED
+            val (prioritizePersonal, strictNgram) = when (level) {
+                SUGGESTION_BALANCE_DICTIONARY_FOCUSED -> Pair(false, true)
+                SUGGESTION_BALANCE_CONSERVATIVE -> Pair(false, true)
+                SUGGESTION_BALANCE_PERSONALIZED -> Pair(true, false)
+                SUGGESTION_BALANCE_HIGHLY_PERSONALIZED -> Pair(true, false)
+                else -> Pair(false, false) // SUGGESTION_BALANCE_BALANCED
             }
             prefs.edit()
                 .putInt(PREF_SUGGESTION_BALANCE, level)
                 .putBoolean(PREF_PRIORITIZE_PERSONAL_SUGGESTIONS, prioritizePersonal)
                 .putBoolean(PREF_NEXT_WORD_STRICT_NGRAM, strictNgram)
-                .putBoolean(PREF_FIRST_WORD_PREDICTIONS, firstWord)
                 .apply()
         }
     }

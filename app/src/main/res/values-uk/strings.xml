@@ -501,8 +501,6 @@
     <string name="immediate_auto_space_summary">Миттєво вставляти пробіл під час вибору пропозиції, щоб запобігти затримці при введенні наступної літери</string>
     <string name="pref_foldable_mode_title">Профіль складаного екрана</string>
     <string name="pref_foldable_mode_summary">Увімкнути автоматичне визначення профілю екрана та масштабування розділеної клавіатури для складаних пристроїв</string>
-    <string name="first_word_prediction">Пропозиції першого слова</string>
-    <string name="first_word_prediction_summary">Показувати пропозиції, коли на початку речення немає введеного тексту</string>
     <string name="suggest_screenshots">Пропонувати недавні скріншоти</string>
     <string name="suggest_screenshots_summary">Показувати нещодавно зроблені скріншоти як пропозицію</string>
     <string name="auto_read_otp">Автоматичне читання OTP з SMS</string>

@@ -1674,7 +1674,7 @@ class LatinIME : InputMethodService(),
         
         val ngramContext = inputLogic.getNgramContextFromNthPreviousWordForSuggestion(currentSettings.mSpacingAndPunctuations, 1)
         val isFirstWord = ngramContext.isBeginningOfSentenceContext
-        val predictionEnabled = if (isFirstWord) currentSettings.mFirstWordPredictionEnabled else currentSettings.mBigramPredictionEnabled
+        val predictionEnabled = !isFirstWord && currentSettings.mBigramPredictionEnabled
         
         if (predictionEnabled) {
             inputLogic.getSuggestedWords(SuggestedWords.INPUT_STYLE_PREDICTION, 0, object : Suggest.OnGetSuggestedWordsCallback {
@@ -1730,15 +1730,11 @@ class LatinIME : InputMethodService(),
         if (CjkInputManager.getInstance(this).isCjkSubtypeActive(richImm.currentSubtype)) return false
         if (!dictionaryFacilitator.hasAtLeastOneInitializedMainDictionary()) return false
         if (!settingsValues.needsToLookupSuggestions()) return false
-        
-        val firstWordEnabled = settingsValues.mFirstWordPredictionEnabled
-        val bigramEnabled = settingsValues.mBigramPredictionEnabled
-        if (!firstWordEnabled && !bigramEnabled) return false
-        if (firstWordEnabled && bigramEnabled) return true
-        
+        if (!settingsValues.mBigramPredictionEnabled) return false
+
         val ngramContext = inputLogic.getNgramContextFromNthPreviousWordForSuggestion(settingsValues.mSpacingAndPunctuations, 1)
         val firstWordContext = ngramContext.isBeginningOfSentenceContext
-        return if (firstWordContext) firstWordEnabled else bigramEnabled
+        return !firstWordContext
     }
 
     fun showTranslateLanguageSelector() {

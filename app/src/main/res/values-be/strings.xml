@@ -484,8 +484,6 @@
     <string name="immediate_auto_space_summary">Устаўляць прабел імгненна пры выбары прапановы, каб прадухіліць затрымку пры ўводзе наступнай літары</string>
     <string name="pref_foldable_mode_title">Профіль складанага экрана</string>
     <string name="pref_foldable_mode_summary">Уключыць аўтаматычнае вызначэнне профілю экрана і маштабаванне раздзеленай клавіятуры для складаных прылад</string>
-    <string name="first_word_prediction">Прапановы першага слова</string>
-    <string name="first_word_prediction_summary">Паказваць прапановы, калі няма ўводу ў пачатку сказа</string>
     <string name="suggest_punctuation">Прапановы пунктуацыі</string>
     <string name="suggest_punctuation_summary">Паказваць знакі пунктуацыі, калі іншых прапаноў няма</string>
     <string name="suggest_screenshots">Прапаноўваць нядаўнія здымкі экрана</string>

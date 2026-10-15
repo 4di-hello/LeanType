@@ -198,8 +198,6 @@
     <string name="next_word_strict_ngram_summary">മുമ്പത്തെ വാക്ക് സന്ദർഭം പൊരുത്തപ്പെടുമ്പോൾ മാത്രം പഠിച്ച വാക്കുകൾ നിർദ്ദേശിക്കുക</string>
     <string name="immediate_auto_space">ഉടനടി ഓട്ടോ-സ്പേസ്</string>
     <string name="immediate_auto_space_summary">അടുത്തതായി ടൈപ്പ് ചെയ്യുന്ന അക്ഷരത്തിലുള്ള കാലതാമസം തടയാൻ ഒരു നിർദ്ദേശം തിരഞ്ഞെടുക്കുമ്പോൾ തൽക്ഷണം സ്പേസ് ചേർക്കുക</string>
-    <string name="first_word_prediction">ആദ്യ-പദ നിർദ്ദേശങ്ങൾ</string>
-    <string name="first_word_prediction_summary">വാക്യത്തിന്റെ തുടക്കത്തിൽ ഇൻപുട്ട് ഇല്ലാത്തപ്പോൾ നിർദ്ദേശങ്ങൾ കാണിക്കുക</string>
     <string name="suggest_punctuation">ചിഹ്നന നിർദ്ദേശങ്ങൾ</string>
     <string name="suggest_punctuation_summary">മറ്റ് നിർദ്ദേശങ്ങൾ ലഭ്യമല്ലാത്തപ്പോൾ ചിഹ്നനം കാണിക്കുക</string>
     <string name="suggest_clipboard_content">ക്ലിപ്പ്ബോർഡ് ഉള്ളടക്കം നിർദ്ദേശിക്കുക</string>

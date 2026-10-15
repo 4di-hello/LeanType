@@ -820,8 +820,6 @@
     <string name="next_word_strict_ngram_summary">Sugerir palabras aprendidas solo cuando coincide el contexto de la palabra anterior</string>
     <string name="immediate_auto_space">Autoespacio inmediato</string>
     <string name="immediate_auto_space_summary">Insertar espacio instantáneamente al elegir una sugerencia para evitar retraso en la siguiente letra escrita</string>
-    <string name="first_word_prediction">Sugerencias de primera palabra</string>
-    <string name="first_word_prediction_summary">Mostrar sugerencias cuando no hay entrada al comienzo de una oración</string>
     <string name="suggest_screenshots">Sugerir capturas de pantalla recientes</string>
     <string name="suggest_screenshots_summary">Mostrar capturas de pantalla tomadas recientemente como sugerencia</string>
     <string name="auto_read_otp">Leer automáticamente OTP de SMS</string>
