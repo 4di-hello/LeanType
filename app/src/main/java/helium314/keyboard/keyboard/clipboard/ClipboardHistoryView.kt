@@ -1532,8 +1532,7 @@ class ClipboardHistoryView @JvmOverloads constructor(
             ?: keyboardWidth
 
         val isAutoSpan = Settings.getValues().mAutoSpanToolbarKeys
-        val minComfortableKeyWidth = maxOf(singleKeyWidth, 42.dpToPx(resources))
-        val canSpan = containerWidth > 0 && (containerWidth >= visibleCount * minComfortableKeyWidth)
+        val canSpan = containerWidth > 0 && (containerWidth >= visibleCount * singleKeyWidth)
         val useEqualSpacing = isAutoSpan && canSpan
 
         val alignmentGravity = when (Settings.getValues().mToolbarKeysAlignment) {

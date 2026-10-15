@@ -144,8 +144,7 @@ class OcrResultView @JvmOverloads constructor(
             if (count == 0) return
 
             val isAutoSpan = Settings.getValues().mAutoSpanToolbarKeys
-            val minComfortableKeyWidth = maxOf(keyDimension, (42 * context.resources.displayMetrics.density).toInt())
-            val canSpan = containerWidth > 0 && (containerWidth >= count * minComfortableKeyWidth)
+            val canSpan = containerWidth > 0 && (containerWidth >= count * keyDimension)
             val useEqualSpacing = isAutoSpan && canSpan
 
             val alignmentGravity = when (Settings.getValues().mToolbarKeysAlignment) {
