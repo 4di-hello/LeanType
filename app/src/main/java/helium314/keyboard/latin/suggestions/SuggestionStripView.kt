@@ -30,6 +30,7 @@ import android.view.ViewConfiguration
 import android.view.ViewGroup
 import android.view.animation.PathInterpolator
 import android.view.accessibility.AccessibilityEvent
+import android.widget.HorizontalScrollView
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
@@ -202,6 +203,8 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
         // weird way of setting size (default is config_suggestions_strip_edge_key_width)
         // but better not change it or people will complain
         val toolbarHeight = keyDimension
+        toolbarExpandKey.minimumWidth = 0
+        toolbarExpandKey.minimumHeight = 0
         toolbarExpandKey.layoutParams.height = toolbarHeight
         toolbarExpandKey.layoutParams.width = toolbarHeight // we want it square
         toolbarExpandKey.setBackgroundResource(R.drawable.toolbar_key_background)
@@ -961,8 +964,9 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        // Called by the framework when the size is known. Show the important notice if applicable.
-        // This may be overridden by showing suggestions later, if applicable.
+        if (w != oldw && w > 0) {
+            post { applyToolbarKeyLayoutParams(toolbarContainer.isVisible) }
+        }
     }
 
     override fun dispatchPopulateAccessibilityEvent(event: AccessibilityEvent): Boolean {
@@ -1676,9 +1680,16 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
         }
         (toolbar as? LinearLayout)?.gravity = if (useEqualSpacing) Gravity.NO_GRAVITY else alignmentGravity
 
+        (toolbarContainer as? HorizontalScrollView)?.let { hsv ->
+            hsv.overScrollMode = if (useEqualSpacing) View.OVER_SCROLL_NEVER else View.OVER_SCROLL_IF_CONTENT_SCROLLS
+            if (useEqualSpacing) hsv.scrollTo(0, 0)
+        }
+
         for (i in 0 until count) {
             val child = toolbar.getChildAt(i) ?: continue
             if (child.visibility == View.GONE) continue
+            child.minimumWidth = 0
+            child.minimumHeight = 0
             val targetWidth = if (useEqualSpacing) 0 else singleKeyWidth
             val targetHeight = singleKeyWidth
             val targetWeight = if (useEqualSpacing) 1f else 0f
@@ -1703,6 +1714,8 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
 
     fun onFloatingKeyboardScaleChanged() {
         val toolbarHeight = keyDimension
+        toolbarExpandKey.minimumWidth = 0
+        toolbarExpandKey.minimumHeight = 0
         toolbarExpandKey.layoutParams.height = toolbarHeight
         toolbarExpandKey.layoutParams.width = toolbarHeight
         val defaultStripHeight = resources.getDimensionPixelSize(R.dimen.config_suggestions_strip_height).toFloat()

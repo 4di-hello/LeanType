@@ -161,7 +161,14 @@ class OcrResultView @JvmOverloads constructor(
                 gravity = Gravity.CENTER_VERTICAL
             }
 
+            KeyboardSwitcher.getInstance().ocrStripScrollView?.let { hsv ->
+                hsv.overScrollMode = if (useEqualSpacing) View.OVER_SCROLL_NEVER else View.OVER_SCROLL_IF_CONTENT_SCROLLS
+                if (useEqualSpacing) hsv.scrollTo(0, 0)
+            }
+
             for (keyView in keys) {
+                keyView.minimumWidth = 0
+                keyView.minimumHeight = 0
                 keyView.layoutParams = if (useEqualSpacing) spannedLayoutParams else standardLayoutParams
             }
         }
