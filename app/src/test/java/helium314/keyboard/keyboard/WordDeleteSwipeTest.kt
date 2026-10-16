@@ -119,4 +119,45 @@ class WordDeleteSwipeTest {
         assertEquals(" line\n", initialText.substring(wordsBeforeLine[1], lineBaseStart))
         assertEquals("\nsecond line\n", initialText.substring(wordsBeforeLine[2], lineBaseStart))
     }
+
+    @Test
+    fun `forward word boundaries are ascending and end at the swipe start`() {
+        val text = "one two three"
+        // from the start of the text: positions between words, nearest first, ending at the cursor
+        assertEquals(listOf(3, 7, 13), KeyboardActionListenerImpl.getWordBoundariesForwards(text, text.length, 0))
+        // from the middle of the text only boundaries after that point remain
+        assertEquals(listOf(7, 13), KeyboardActionListenerImpl.getWordBoundariesForwards(text, text.length, 3))
+    }
+
+    @Test
+    fun `forward word boundaries are empty when there is nothing to deselect`() {
+        val text = "one two three"
+        assertEquals(emptyList(), KeyboardActionListenerImpl.getWordBoundariesForwards(text, text.length, text.length))
+        assertEquals(emptyList(), KeyboardActionListenerImpl.getWordBoundariesForwards("", 0, 0))
+    }
+
+    @Test
+    fun `forward word boundaries match backward boundaries`() {
+        // selecting by swiping left and deselecting by swiping right step over the same positions
+        val text = "first line\nsecond line\nthird line"
+        val end = text.length // 33
+        val lineBase = KeyboardActionListenerImpl.getLineBoundariesBackwards(text, end)[1] // 23
+        assertEquals(23, lineBase)
+        val forward = KeyboardActionListenerImpl.getWordBoundariesForwards(text, end, lineBase)
+        assertEquals(listOf(28, 33), forward)
+        assertEquals("third", text.substring(lineBase, forward[0]).trim())
+        assertEquals("third line", text.substring(lineBase, forward[1]))
+    }
+
+    @Test
+    fun `forward word boundaries respect text offset`() {
+        // text before the cursor does not start at offset 0 of the field
+        val text = "alpha beta gamma"
+        val endOffset = 100
+        val startOffset = endOffset - text.length // 84
+        assertEquals(
+            listOf(startOffset + 5, startOffset + 10, endOffset),
+            KeyboardActionListenerImpl.getWordBoundariesForwards(text, endOffset, startOffset)
+        )
+    }
 }
