@@ -48,6 +48,10 @@ import helium314.keyboard.latin.R
 import helium314.keyboard.latin.heatmap.TypingHeatmap
 import helium314.keyboard.latin.settings.Defaults
 import helium314.keyboard.latin.settings.Settings
+import helium314.keyboard.latin.utils.SubtypeLocaleUtils
+import helium314.keyboard.latin.utils.SubtypeSettings
+import helium314.keyboard.latin.utils.locale
+import helium314.keyboard.latin.utils.mainLayoutName
 import helium314.keyboard.latin.utils.prefs
 import helium314.keyboard.settings.SearchSettingsScreen
 import helium314.keyboard.settings.dialogs.ConfirmationDialog
@@ -112,10 +116,11 @@ fun TypingHeatmapScreen(onClickBack: () -> Unit) {
                         FilterChip(
                             selected = it.id == layout.id,
                             onClick = { selectedLayoutId = it.id },
-                            label = { Text(it.id) }
+                            label = { Text(layoutLabel(it.id)) }
                         )
                     }
                 }
+                Text(stringResource(R.string.typing_heatmap_views), style = MaterialTheme.typography.bodySmall)
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 FilterChip(selected = !onlyMisses, onClick = { onlyMisses = false },
@@ -216,6 +221,27 @@ fun TypingHeatmapScreen(onClickBack: () -> Unit) {
             content = { Text(stringResource(R.string.typing_heatmap_clear_confirm)) }
         )
     }
+}
+
+/** Readable name for a layout id like "custom.Latn.xyz. (landscape) (one-handed)", e.g. "Deutsch (Qwertz) · Querformat" */
+@Composable
+private fun layoutLabel(id: String): String {
+    var main = id
+    val modes = mutableListOf<String>()
+    for ((suffix, res) in listOf(" (floating)" to R.string.typing_heatmap_view_floating,
+            " (one-handed)" to R.string.typing_heatmap_view_one_handed, " (landscape)" to R.string.typing_heatmap_view_landscape)) {
+        if (main.endsWith(suffix)) {
+            main = main.removeSuffix(suffix)
+            modes.add(0, stringResource(res))
+        }
+    }
+    val name = (SubtypeLocaleUtils.getMainLayoutDisplayName(main) ?: main).replaceFirstChar { it.uppercase() }
+    val language = remember(main) {
+        SubtypeSettings.getEnabledSubtypes().firstOrNull { it.mainLayoutName() == main }
+            ?.let { SubtypeLocaleUtils.getSubtypeLanguageDisplayName(it.locale()) }
+    }
+    val base = if (language == null || name.contains(language, ignoreCase = true)) name else "$language ($name)"
+    return (listOf(base) + modes).joinToString(" · ")
 }
 
 private fun cp(code: Int) = if (Character.isValidCodePoint(code)) String(Character.toChars(code)) else "?"
