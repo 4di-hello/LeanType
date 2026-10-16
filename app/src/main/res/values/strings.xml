@@ -2514,6 +2514,10 @@ New dictionary:
     <string name="typing_heatmap_collect">Collect typing data</string>
     <string name="typing_heatmap_collect_summary">Record where you touch the keys, to show which keys you miss. Stored only locally on this device, no cloud, no transfer</string>
     <string name="typing_heatmap_no_data">No data yet. Enable \"Collect typing data\" and type a few sentences as usual. Words typed with gestures or in incognito mode are not recorded.</string>
+    <string name="typing_heatmap_views">The keyboard learns separately for each way you hold it: normal, one-handed, floating and landscape.</string>
+    <string name="typing_heatmap_view_one_handed">One-handed</string>
+    <string name="typing_heatmap_view_floating">Floating</string>
+    <string name="typing_heatmap_view_landscape">Landscape</string>
     <string name="typing_heatmap_all_touches">All touches</string>
     <string name="typing_heatmap_only_misses">Only misses</string>
     <string name="typing_heatmap_stats">%1$d touches, %2$d misses (%3$.1f %%)</string>
