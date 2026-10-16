@@ -341,7 +341,8 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
             override fun onScroll(down: MotionEvent?, me: MotionEvent, deltaX: Float, deltaY: Float): Boolean {
                 if (down == null) return false
                 val dy = me.y - down.y
-                return if (toolbarContainer.visibility != VISIBLE && deltaY > 0 && dy < (-10).dpToPx(resources)) showMoreSuggestions()
+                val canShowMore = if (Settings.getValues().mSplitToolbar) suggestionsStrip.visibility == VISIBLE else toolbarContainer.visibility != VISIBLE
+                return if (canShowMore && deltaY > 0 && dy < (-10).dpToPx(resources)) showMoreSuggestions()
                 else false
             }
         }
@@ -1735,6 +1736,13 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
         val isEmojiView = isShowingEmojiSuggestions || helium314.keyboard.keyboard.KeyboardSwitcher.getInstance().isShowingEmojiPalettes
         val hideToolbarRow = settingsValues.mToolbarMode == ToolbarMode.SUGGESTION_STRIP
         val hideSuggestions = settingsValues.mToolbarMode == ToolbarMode.TOOLBAR_KEYS || settingsValues.mSuggestionStripHiddenPerUserSettings
+        val isTextEdit = helium314.keyboard.keyboard.KeyboardSwitcher.getInstance().keyboard?.mId?.mElementId == helium314.keyboard.keyboard.KeyboardId.ELEMENT_TEXT_EDIT || helium314.keyboard.keyboard.KeyboardActionListenerImpl.sPersistentTextEditModeActive
+        if (isTextEdit) {
+            toolbarRow?.isVisible = false
+            toolbarContainer.isVisible = false
+            suggestionsStrip.isVisible = false
+            return
+        }
         if (isEmojiView) {
             toolbarRow?.isVisible = false
             toolbarContainer.isVisible = false

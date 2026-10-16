@@ -185,6 +185,7 @@ class MainKeyboardView @JvmOverloads constructor(
     }
 
     override fun setKeyboard(keyboard: Keyboard) {
+        dismissAllKeyPreviews()
         mTimerHandler.cancelLongPressTimers()
         super.setKeyboard(keyboard)
         mKeyDetector.setKeyboard(keyboard, -paddingLeft.toFloat(), -paddingTop.toFloat() + verticalCorrection)
@@ -517,7 +518,7 @@ class MainKeyboardView @JvmOverloads constructor(
         mIncognitoIcon?.alpha = 255
     }
 
-    override fun deallocateMemory() { super.deallocateMemory(); mDrawingPreviewPlacerView.deallocateMemory() }
+    override fun deallocateMemory() { super.deallocateMemory(); dismissAllKeyPreviews(); mDrawingPreviewPlacerView.deallocateMemory() }
 
     companion object {
         private fun cancelAndStartAnimators(animatorToCancel: ObjectAnimator?, animatorToStart: ObjectAnimator?) {

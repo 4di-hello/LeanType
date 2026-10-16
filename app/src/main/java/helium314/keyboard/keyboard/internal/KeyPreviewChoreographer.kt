@@ -25,13 +25,22 @@ private val PREVIEW_EXIT_INTERPOLATOR = PathInterpolator(0.3f, 0f, 0.8f, 0.15f)
 class KeyPreviewChoreographer(private val mParams: KeyPreviewDrawParams) {
     private val mFreeKeyPreviewViews = ArrayDeque<KeyPreviewView>()
     private val mShowingKeyPreviewViews = HashMap<Key, KeyPreviewView>()
+    private val mDismissingKeyPreviewViews = HashSet<KeyPreviewView>()
 
     fun getKeyPreviewView(key: Key, placerView: ViewGroup): KeyPreviewView {
         val showingView = mShowingKeyPreviewViews.remove(key)
-        if (showingView != null) return showingView
+        if (showingView != null) {
+            showingView.animate().cancel()
+            mDismissingKeyPreviewViews.remove(showingView)
+            return showingView
+        }
 
         val freeView = mFreeKeyPreviewViews.poll()
-        if (freeView != null) return freeView
+        if (freeView != null) {
+            freeView.animate().cancel()
+            mDismissingKeyPreviewViews.remove(freeView)
+            return freeView
+        }
 
         val context = placerView.context
         val newView = KeyPreviewView(context, null)
@@ -52,9 +61,21 @@ class KeyPreviewChoreographer(private val mParams: KeyPreviewDrawParams) {
             return
         }
         val keyPreviewView = mShowingKeyPreviewViews.remove(key) ?: return
+        mDismissingKeyPreviewViews.add(keyPreviewView)
 
         keyPreviewView.tag = null
         keyPreviewView.animate().cancel()
+        val safetyRunnable = Runnable {
+            if (mDismissingKeyPreviewViews.remove(keyPreviewView)) {
+                keyPreviewView.visibility = View.INVISIBLE
+                keyPreviewView.scaleX = 1f
+                keyPreviewView.scaleY = 1f
+                keyPreviewView.translationY = 0f
+                keyPreviewView.alpha = 1f
+                mFreeKeyPreviewViews.add(keyPreviewView)
+            }
+        }
+        keyPreviewView.postDelayed(safetyRunnable, duration + 30L)
         keyPreviewView.animate()
             .scaleX(0.92f)
             .scaleY(0.92f)
@@ -63,12 +84,8 @@ class KeyPreviewChoreographer(private val mParams: KeyPreviewDrawParams) {
             .setDuration(duration)
             .setInterpolator(PREVIEW_EXIT_INTERPOLATOR)
             .withEndAction {
-                keyPreviewView.visibility = View.INVISIBLE
-                keyPreviewView.scaleX = 1f
-                keyPreviewView.scaleY = 1f
-                keyPreviewView.translationY = 0f
-                keyPreviewView.alpha = 1f
-                mFreeKeyPreviewViews.add(keyPreviewView)
+                keyPreviewView.removeCallbacks(safetyRunnable)
+                safetyRunnable.run()
             }
             .start()
     }
@@ -76,6 +93,7 @@ class KeyPreviewChoreographer(private val mParams: KeyPreviewDrawParams) {
     fun dismissKeyPreviewWithoutDelay(key: Key?) {
         if (key == null) return
         val keyPreviewView = mShowingKeyPreviewViews.remove(key) ?: return
+        mDismissingKeyPreviewViews.remove(keyPreviewView)
         keyPreviewView.tag = null
         keyPreviewView.animate().cancel()
         keyPreviewView.visibility = View.INVISIBLE
@@ -186,7 +204,16 @@ class KeyPreviewChoreographer(private val mParams: KeyPreviewDrawParams) {
             view.translationY = 0f
             view.alpha = 1f
         }
+        for (view in mDismissingKeyPreviewViews) {
+            view.animate().cancel()
+            view.visibility = View.INVISIBLE
+            view.scaleX = 1f
+            view.scaleY = 1f
+            view.translationY = 0f
+            view.alpha = 1f
+        }
         mShowingKeyPreviewViews.clear()
+        mDismissingKeyPreviewViews.clear()
         mFreeKeyPreviewViews.clear()
     }
 }

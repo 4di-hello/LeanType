@@ -240,6 +240,7 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         val languageOnSpacebarFormatType = LanguageOnSpacebarUtils.getLanguageOnSpacebarFormatType(newKeyboard.mId.mSubtype)
         val hasMultipleEnabledIMEsOrSubtypes = richImm.hasMultipleEnabledIMEsOrSubtypes(true)
         keyboardView.startDisplayLanguageOnSpacebar(subtypeChanged, languageOnSpacebarFormatType, hasMultipleEnabledIMEsOrSubtypes)
+        mSuggestionStripView?.updateSplitToolbarState()
     }
 
     val keyboard: Keyboard? get() = mKeyboardView?.keyboard
@@ -309,9 +310,23 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
             return picker.isShown || picker.visibility == View.VISIBLE
         }
 
+    val gifPickerView: helium314.keyboard.latin.gif.GifPickerView? get() = mGifPickerView
+
     fun onGifSearchKey(code: Int): Boolean = isGifPickerShowing && mGifPickerView?.onHostKey(code) == true
 
     fun onGifSearchText(text: String): Boolean = isGifPickerShowing && mGifPickerView?.onHostText(text) == true
+
+    fun onGifMoveDeletePointer(steps: Int): Boolean {
+        if (!isGifPickerShowing) return false
+        mGifPickerView?.onMoveDeletePointer(steps)
+        return true
+    }
+
+    fun onGifUpWithDeletePointerActive(): Boolean {
+        if (!isGifPickerShowing) return false
+        mGifPickerView?.onUpWithDeletePointerActive()
+        return true
+    }
 
     fun bumpEditorSession() {
         editorSession++
@@ -970,7 +985,9 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         if (shouldRestoreToolbar) {
             mSuggestionStripView?.isToolbarManuallyOpen = true
         }
+        mSuggestionStripView?.visibility = View.VISIBLE
         updateStripVisibility()
+        mSuggestionStripView?.updateSplitToolbarState()
         mLatinIME?.let { ime ->
             ime.mHandler.cancelResumeSuggestions()
             ime.setNeutralSuggestionStrip()
@@ -993,11 +1010,14 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
 
     fun showTextEditView() {
         setKeyboard(KeyboardId.ELEMENT_TEXT_EDIT, KeyboardSwitchState.OTHER)
+        mSuggestionStripView?.updateSplitToolbarState()
     }
 
     fun hideTextEditView() {
         KeyboardActionListenerImpl.sPersistentSelectionModeActive = false
+        KeyboardActionListenerImpl.sPersistentTextEditModeActive = false
         setAlphabetKeyboard()
+        mSuggestionStripView?.updateSplitToolbarState()
     }
 
     fun toggleSplitKeyboardMode() {
