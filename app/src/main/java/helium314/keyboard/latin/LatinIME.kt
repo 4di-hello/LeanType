@@ -1997,15 +1997,19 @@ class LatinIME : InputMethodService(),
     override fun onTrimMemory(level: Int) {
         super.onTrimMemory(level)
         if (level >= ComponentCallbacks2.TRIM_MEMORY_BACKGROUND || level == ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
-            keyboardSwitcher.trimMemory()
-            deallocateMemory()
+            if (!isInputViewShown && !keyboardSwitcher.isShowingClipboardHistory) {
+                keyboardSwitcher.trimMemory()
+                deallocateMemory()
+            }
             if (!isInputViewShown) {
                 OfflineAiLoader.onTrimMemory()
                 CustomSoundManager.getInstance(this).onTrimMemory()
             }
         } else if (level >= ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW) {
             KeyboardLayoutSet.onSystemLocaleChanged()
-            keyboardSwitcher.trimMemory()
+            if (!isInputViewShown && !keyboardSwitcher.isShowingClipboardHistory) {
+                keyboardSwitcher.trimMemory()
+            }
             if (!isInputViewShown) {
                 OfflineAiLoader.onTrimMemory()
                 CustomSoundManager.getInstance(this).onTrimMemory()
@@ -2057,8 +2061,11 @@ class LatinIME : InputMethodService(),
                         latinIme.keyboardSwitcher.reloadMainKeyboard()
                     }
                 }
-                MSG_WAIT_FOR_DICTIONARY_LOAD -> Log.i(TAG, "Timeout waiting for dictionary load")
-                MSG_DEALLOCATE_MEMORY -> latinIme.deallocateMemory()
+                MSG_DEALLOCATE_MEMORY -> {
+                    if (!latinIme.isInputViewShown && !latinIme.keyboardSwitcher.isShowingClipboardHistory) {
+                        latinIme.deallocateMemory()
+                    }
+                }
                 MSG_SWITCH_LANGUAGE_AUTOMATICALLY -> latinIme.switchToSubtype(msg.obj as InputMethodSubtype)
             }
         }

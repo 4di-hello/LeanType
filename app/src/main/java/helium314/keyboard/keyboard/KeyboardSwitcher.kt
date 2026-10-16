@@ -466,7 +466,7 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
             it.alpha = 1f
             it.translationY = 0f
             it.visibility = View.GONE
-            it.stopClipboardHistory()
+            it.stopClipboardHistory(force = true)
         }
         mHandwritingView?.let {
             if (it.isShown) it.stopHandwriting()
@@ -851,8 +851,8 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
                         it.visibility = View.GONE
                     }
                     mClipboardHistoryView?.let {
-                        it.stopClipboardHistory()
                         it.visibility = View.GONE
+                        it.stopClipboardHistory(force = true)
                     }
                     mMainKeyboardFrame?.visibility = View.VISIBLE
                     mKeyboardView?.visibility = View.VISIBLE
@@ -1209,14 +1209,20 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
             it.cancelAllOngoingEvents()
             it.deallocateMemory()
         }
-        mEmojiPalettesView?.stopEmojiPalettes()
-        mClipboardHistoryView?.stopClipboardHistory()
+        if (!isShowingEmojiPalettes) {
+            mEmojiPalettesView?.stopEmojiPalettes()
+        }
+        if (!isShowingClipboardHistory) {
+            mClipboardHistoryView?.stopClipboardHistory(force = false)
+        }
         mOcrCameraView?.release()
     }
 
     fun trimMemory() {
         mEmojiPalettesView?.clearKeyboardCache()
-        mClipboardHistoryView?.stopClipboardHistory()
+        if (!isShowingClipboardHistory) {
+            mClipboardHistoryView?.stopClipboardHistory(force = false)
+        }
         PointerTracker.clearOldViewData()
         KeyboardLayoutSet.onSystemLocaleChanged()
     }

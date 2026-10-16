@@ -357,11 +357,13 @@ class ClipboardHistoryView @JvmOverloads constructor(
 
     private fun stopSearchMode() {
         removeCallbacks(cursorBlinkRunnable)
-        val clipboardStrip = KeyboardSwitcher.getInstance().clipboardStrip ?: return
-        clipboardStrip.removeAllViews()
-        toolbarKeys.forEach { clipboardStrip.addView(it) }
-        applyClipboardToolbarKeyLayoutParams()
-        clipboardStrip.post { applyClipboardToolbarKeyLayoutParams() }
+        val clipboardStrip = KeyboardSwitcher.getInstance().clipboardStrip
+        if (clipboardStrip != null) {
+            clipboardStrip.removeAllViews()
+            toolbarKeys.forEach { clipboardStrip.addView(it) }
+            applyClipboardToolbarKeyLayoutParams()
+            clipboardStrip.post { applyClipboardToolbarKeyLayoutParams() }
+        }
         
         if (searchQuery.isNotEmpty()) {
              clipboardAdapter.filter(searchQuery.toString())
@@ -513,11 +515,13 @@ class ClipboardHistoryView @JvmOverloads constructor(
         deleteSwipeStartPos = -1
         currentDeleteSwipePos = -1
 
-        val clipboardStrip = KeyboardSwitcher.getInstance().clipboardStrip ?: return
-        clipboardStrip.removeAllViews()
-        toolbarKeys.forEach { clipboardStrip.addView(it) }
-        applyClipboardToolbarKeyLayoutParams()
-        clipboardStrip.post { applyClipboardToolbarKeyLayoutParams() }
+        val clipboardStrip = KeyboardSwitcher.getInstance().clipboardStrip
+        if (clipboardStrip != null) {
+            clipboardStrip.removeAllViews()
+            toolbarKeys.forEach { clipboardStrip.addView(it) }
+            applyClipboardToolbarKeyLayoutParams()
+            clipboardStrip.post { applyClipboardToolbarKeyLayoutParams() }
+        }
 
         setBottomRowLayout(KeyboardId.ELEMENT_CLIPBOARD_BOTTOM_ROW)
 
@@ -1346,22 +1350,32 @@ class ClipboardHistoryView @JvmOverloads constructor(
         historyManager.setHistoryChangeListener(this)
         clipboardAdapter.clipboardHistoryManager = historyManager
         
+        // Stop edit mode or selection mode if left active
+        if (inEditMode) {
+            stopEditMode(save = false)
+        }
+        if (inSelectionMode) {
+            stopSelectionMode()
+        }
+
         // Clear search on start
         searchQuery.clear() // Explicitly clear query builder
         searchBar.setText("")
         searchBar.clearFocus() // ensure focus is lost
         clipboardAdapter.filter("")
-        updateEmptyView(false)
         stopSearchMode()
 
         clipboardLayoutParams.updateDimensions(context)
         findViewById<View>(R.id.clipboard_content_container)?.let { container ->
+            container.visibility = View.VISIBLE
             val lp = container.layoutParams
             if (lp != null && lp.height != clipboardLayoutParams.listHeight) {
                 lp.height = clipboardLayoutParams.listHeight
                 container.layoutParams = lp
             }
         }
+        clipboardRecyclerView.visibility = View.VISIBLE
+        updateEmptyView(false)
 
         val params = KeyDrawParams()
         params.updateParams(clipboardLayoutParams.bottomRowKeyHeight, keyVisualAttr)
@@ -1416,23 +1430,27 @@ class ClipboardHistoryView @JvmOverloads constructor(
  
 
 
-    fun stopClipboardHistory() {
+    fun stopClipboardHistory(force: Boolean = false) {
         removeCallbacks(cursorBlinkRunnable)
         if (!this::clipboardAdapter.isInitialized) return
 
+        if (!force && (isShown || visibility == View.VISIBLE)) {
+            return
+        }
+
         // Stop edit mode if active
-        if (inEditMode && isAttachedToWindow) {
+        if (inEditMode) {
             stopEditMode(save = false)
         }
         
         // Also ensure search mode is stopped if we explicitly leave clipboard history
         val clipboardStrip = KeyboardSwitcher.getInstance().clipboardStrip
         val inSearchMode = this::searchBarTextView.isInitialized && searchBarTextView.parent == clipboardStrip
-        if (inSearchMode && isAttachedToWindow) {
+        if (inSearchMode) {
             stopSearchMode()
         }
 
-        if (inSelectionMode && isAttachedToWindow) {
+        if (inSelectionMode) {
             stopSelectionMode()
         }
 
