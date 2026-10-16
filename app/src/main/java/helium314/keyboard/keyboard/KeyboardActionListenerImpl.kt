@@ -514,6 +514,10 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
     }
 
     override fun onMoveDeletePointer(stepsX: Int, stepsY: Int) {
+        if (keyboardSwitcher.isGifPickerShowing) {
+            keyboardSwitcher.onGifMoveDeletePointer(stepsX)
+            return
+        }
         inputLogic.finishInput()
         val currentEnd = connection.expectedSelectionEnd
         if (deleteSwipeInitialEnd == -1 || deleteSwipeInitialEnd != currentEnd) {
@@ -656,6 +660,10 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
     }
 
     override fun onUpWithDeletePointerActive() {
+        if (keyboardSwitcher.isGifPickerShowing) {
+            keyboardSwitcher.onGifUpWithDeletePointerActive()
+            return
+        }
         deleteSwipeInitialText = ""
         deleteSwipeInitialEnd = -1
         deleteSwipeWordBoundaries = emptyList()

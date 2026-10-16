@@ -1423,7 +1423,15 @@ class LatinIME : InputMethodService(),
     }
 
     override fun onCodeInput(codePoint: Int, x: Int, y: Int, isKeyRepeat: Boolean) {
-        if (keyboardSwitcher.isGifPickerShowing && keyboardSwitcher.onGifSearchKey(codePoint)) return
+        if (keyboardSwitcher.isGifPickerShowing && keyboardSwitcher.onGifSearchKey(codePoint)) {
+            if (codePoint >= 32) {
+                val keyboard = keyboardSwitcher.keyboard
+                if (keyboard?.mId?.isAlphabetShiftedManually == true && keyboard.mId.mElementId != KeyboardId.ELEMENT_ALPHABET_SHIFT_LOCKED) {
+                    keyboardSwitcher.resetKeyboardStateToAlphabet(0, null)
+                }
+            }
+            return
+        }
         keyboardActionListener.onCodeInput(codePoint, x, y, isKeyRepeat)
     }
 
@@ -1431,10 +1439,24 @@ class LatinIME : InputMethodService(),
         if (keyboardSwitcher.isGifPickerShowing) {
             val text = event.text
             if (text != null) {
-                if (keyboardSwitcher.onGifSearchText(text.toString())) return
+                if (keyboardSwitcher.onGifSearchText(text.toString())) {
+                    val keyboard = keyboardSwitcher.keyboard
+                    if (keyboard?.mId?.isAlphabetShiftedManually == true && keyboard.mId.mElementId != KeyboardId.ELEMENT_ALPHABET_SHIFT_LOCKED) {
+                        keyboardSwitcher.resetKeyboardStateToAlphabet(0, null)
+                    }
+                    return
+                }
             } else {
                 val code = if (event.keyCode != Event.NOT_A_KEY_CODE) event.keyCode else event.codePoint
-                if (keyboardSwitcher.onGifSearchKey(code)) return
+                if (keyboardSwitcher.onGifSearchKey(code)) {
+                    if (code >= 32) {
+                        val keyboard = keyboardSwitcher.keyboard
+                        if (keyboard?.mId?.isAlphabetShiftedManually == true && keyboard.mId.mElementId != KeyboardId.ELEMENT_ALPHABET_SHIFT_LOCKED) {
+                            keyboardSwitcher.resetKeyboardStateToAlphabet(0, null)
+                        }
+                    }
+                    return
+                }
             }
         }
         if (event.keyCode == KeyCode.SWITCH_TO_USER_IME) { switchToUserIme(); return }

@@ -63,11 +63,11 @@
 
                 <View
                     android:id="@+id/cursorIndicator"
-                    android:layout_width="1.5dp"
+                    android:layout_width="2dp"
                     android:layout_height="16dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="8dp"
-                    android:background="?android:attr/textColorPrimary" />
+                    android:background="@color/foreground" />
             </FrameLayout>
 
             <TextView

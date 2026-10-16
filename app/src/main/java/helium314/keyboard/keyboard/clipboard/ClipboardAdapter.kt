@@ -304,6 +304,8 @@ class ClipboardAdapter(
                 typeface = itemTypeFace
                 setTextColor(itemTextColor)
                 setTextSize(TypedValue.COMPLEX_UNIT_PX, itemTextSize)
+                maxLines = 4
+                ellipsize = android.text.TextUtils.TruncateAt.END
             }
             clipboardLayoutParams.setItemProperties(view)
             val colors = Settings.getValues().mColors

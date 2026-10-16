@@ -345,6 +345,7 @@ class ClipboardHistoryView @JvmOverloads constructor(
         searchQuery.clear()
         searchCursorPos = 0
         updateSearchDisplay()
+        resetCursorBlink()
 
         setBottomRowLayout(KeyboardId.ELEMENT_ALPHABET)
         
@@ -355,6 +356,7 @@ class ClipboardHistoryView @JvmOverloads constructor(
     }
 
     private fun stopSearchMode() {
+        removeCallbacks(cursorBlinkRunnable)
         val clipboardStrip = KeyboardSwitcher.getInstance().clipboardStrip ?: return
         clipboardStrip.removeAllViews()
         toolbarKeys.forEach { clipboardStrip.addView(it) }
@@ -397,6 +399,25 @@ class ClipboardHistoryView @JvmOverloads constructor(
     private var deleteSwipeStartPos = -1
     private var currentDeleteSwipePos = -1
     private lateinit var editTextView: TextView
+    private var lastShiftPressTime = 0L
+    private var isCursorBlinkVisible = true
+    private val cursorBlinkRunnable = object : Runnable {
+        override fun run() {
+            val clipboardStrip = KeyboardSwitcher.getInstance().clipboardStrip
+            val inSearch = this@ClipboardHistoryView::searchBarTextView.isInitialized && searchBarTextView.parent == clipboardStrip
+            if (!inEditMode && !inSearch) return
+            isCursorBlinkVisible = !isCursorBlinkVisible
+            if (inEditMode) updateEditDisplay()
+            else if (inSearch) updateSearchDisplay()
+            postDelayed(this, 500)
+        }
+    }
+
+    private fun resetCursorBlink() {
+        isCursorBlinkVisible = true
+        removeCallbacks(cursorBlinkRunnable)
+        postDelayed(cursorBlinkRunnable, 500)
+    }
 
     val inEditMode: Boolean
         get() = editEntry != null
@@ -471,12 +492,14 @@ class ClipboardHistoryView @JvmOverloads constructor(
         emptyViewContainer.visibility = View.GONE
 
         updateEditDisplay()
+        resetCursorBlink()
 
         setBottomRowLayout(KeyboardId.ELEMENT_ALPHABET)
         updateClipboardGestureSuppression()
     }
 
     private fun stopEditMode(save: Boolean) {
+        removeCallbacks(cursorBlinkRunnable)
         val entry = editEntry ?: return
 
         if (save) {
@@ -536,8 +559,9 @@ class ClipboardHistoryView @JvmOverloads constructor(
             val sb = android.text.SpannableStringBuilder(editText)
             val pos = editCursorPos.coerceIn(0, sb.length)
             sb.insert(pos, "|")
+            val cursorColor = if (isCursorBlinkVisible) textColor else android.graphics.Color.TRANSPARENT
             sb.setSpan(
-                android.text.style.ForegroundColorSpan(textColor),
+                android.text.style.ForegroundColorSpan(cursorColor),
                 pos,
                 pos + 1,
                 android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -571,8 +595,9 @@ class ClipboardHistoryView @JvmOverloads constructor(
             val sb = android.text.SpannableStringBuilder(searchQuery)
             val pos = searchCursorPos.coerceIn(0, sb.length)
             sb.insert(pos, "|")
+            val cursorColor = if (isCursorBlinkVisible) textColor else android.graphics.Color.TRANSPARENT
             sb.setSpan(
-                android.text.style.ForegroundColorSpan(textColor),
+                android.text.style.ForegroundColorSpan(cursorColor),
                 pos,
                 pos + 1,
                 android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -964,12 +989,19 @@ class ClipboardHistoryView @JvmOverloads constructor(
             return true
         }
         if (primaryCode == KeyCode.SHIFT || primaryCode == KeyCode.CAPS_LOCK) {
+            val now = android.os.SystemClock.uptimeMillis()
+            val isDoubleTap = primaryCode == KeyCode.SHIFT && (now - lastShiftPressTime < android.view.ViewConfiguration.getDoubleTapTimeout())
+            lastShiftPressTime = if (primaryCode == KeyCode.SHIFT) now else 0L
+
             val targetId = when (currentBottomRowLayout) {
                 KeyboardId.ELEMENT_SYMBOLS -> KeyboardId.ELEMENT_SYMBOLS_SHIFTED
                 KeyboardId.ELEMENT_SYMBOLS_SHIFTED -> KeyboardId.ELEMENT_SYMBOLS
-                KeyboardId.ELEMENT_ALPHABET -> KeyboardId.ELEMENT_ALPHABET_MANUAL_SHIFTED
-                KeyboardId.ELEMENT_ALPHABET_MANUAL_SHIFTED -> {
+                KeyboardId.ELEMENT_ALPHABET -> {
                     if (primaryCode == KeyCode.CAPS_LOCK) KeyboardId.ELEMENT_ALPHABET_SHIFT_LOCKED
+                    else KeyboardId.ELEMENT_ALPHABET_MANUAL_SHIFTED
+                }
+                KeyboardId.ELEMENT_ALPHABET_MANUAL_SHIFTED -> {
+                    if (primaryCode == KeyCode.CAPS_LOCK || isDoubleTap) KeyboardId.ELEMENT_ALPHABET_SHIFT_LOCKED
                     else KeyboardId.ELEMENT_ALPHABET
                 }
                 KeyboardId.ELEMENT_ALPHABET_AUTOMATIC_SHIFTED,
@@ -1010,29 +1042,35 @@ class ClipboardHistoryView @JvmOverloads constructor(
                 if (editCursorPos > 0) {
                     editText.deleteCharAt(editCursorPos - 1)
                     editCursorPos--
+                    resetCursorBlink()
                     updateEditDisplay()
                 }
             } else if (primaryCode == Constants.CODE_ENTER) {
                 editText.insert(editCursorPos, "\n")
                 editCursorPos++
+                resetCursorBlink()
                 updateEditDisplay()
             } else if (primaryCode == Constants.CODE_SPACE) {
                 editText.insert(editCursorPos, " ")
                 editCursorPos++
+                resetCursorBlink()
                 updateEditDisplay()
             } else if (primaryCode == KeyCode.ARROW_LEFT) {
                 if (editCursorPos > 0) {
                     editCursorPos--
+                    resetCursorBlink()
                     updateEditDisplay()
                 }
             } else if (primaryCode == KeyCode.ARROW_RIGHT) {
                 if (editCursorPos < editText.length) {
                     editCursorPos++
+                    resetCursorBlink()
                     updateEditDisplay()
                 }
             } else if (char != null) {
                 editText.insert(editCursorPos, char.toString())
                 editCursorPos++
+                resetCursorBlink()
                 updateEditDisplay()
                 if (currentBottomRowLayout == KeyboardId.ELEMENT_ALPHABET_MANUAL_SHIFTED) {
                     setBottomRowLayout(KeyboardId.ELEMENT_ALPHABET)
@@ -1054,6 +1092,7 @@ class ClipboardHistoryView @JvmOverloads constructor(
                 if (searchCursorPos > 0) {
                     searchQuery.deleteCharAt(searchCursorPos - 1)
                     searchCursorPos--
+                    resetCursorBlink()
                     updateSearchDisplay()
                     clipboardAdapter.filter(searchQuery.toString()) 
                 }
@@ -1062,23 +1101,30 @@ class ClipboardHistoryView @JvmOverloads constructor(
             } else if (primaryCode == Constants.CODE_SPACE) {
                 searchQuery.insert(searchCursorPos, " ")
                 searchCursorPos++
+                resetCursorBlink()
                 updateSearchDisplay()
                 clipboardAdapter.filter(searchQuery.toString())
             } else if (primaryCode == KeyCode.ARROW_LEFT) {
                 if (searchCursorPos > 0) {
                     searchCursorPos--
+                    resetCursorBlink()
                     updateSearchDisplay()
                 }
             } else if (primaryCode == KeyCode.ARROW_RIGHT) {
                 if (searchCursorPos < searchQuery.length) {
                     searchCursorPos++
+                    resetCursorBlink()
                     updateSearchDisplay()
                 }
             } else if (char != null) {
                 searchQuery.insert(searchCursorPos, char.toString())
                 searchCursorPos++
+                resetCursorBlink()
                 updateSearchDisplay()
                 clipboardAdapter.filter(searchQuery.toString())
+                if (currentBottomRowLayout == KeyboardId.ELEMENT_ALPHABET_MANUAL_SHIFTED) {
+                    setBottomRowLayout(KeyboardId.ELEMENT_ALPHABET)
+                }
             } else {
                  stopSearchMode()
                  keyboardActionListener.onCodeInput(primaryCode, x, y, isKeyRepeat)
@@ -1253,7 +1299,7 @@ class ClipboardHistoryView @JvmOverloads constructor(
             itemBackgroundId = keyBackgroundId
             itemTypeFace = params.mTypeface
             itemTextColor = params.mTextColor
-            itemTextSize = params.mLabelSize.toFloat() * fontMultiplier
+            itemTextSize = (params.mLabelSize.toFloat() * fontMultiplier).coerceAtMost(16.dpToPx(resources).toFloat())
         }
     }
 
@@ -1318,7 +1364,7 @@ class ClipboardHistoryView @JvmOverloads constructor(
         }
 
         val params = KeyDrawParams()
-        params.updateParams(clipboardLayoutParams.bottomRowKeyboardHeight, keyVisualAttr)
+        params.updateParams(clipboardLayoutParams.bottomRowKeyHeight, keyVisualAttr)
         val settings = Settings.getInstance()
         settings.getCustomTypeface()?.let { params.mTypeface = it }
         setupClipKey(params)
@@ -1371,6 +1417,7 @@ class ClipboardHistoryView @JvmOverloads constructor(
 
 
     fun stopClipboardHistory() {
+        removeCallbacks(cursorBlinkRunnable)
         if (!this::clipboardAdapter.isInitialized) return
 
         // Stop edit mode if active

@@ -217,6 +217,8 @@ class GifPickerView @JvmOverloads constructor(
     fun close() {
         if (!opened) return
         opened = false
+        deleteSwipeStartPos = -1
+        currentDeleteSwipePos = -1
         removeCallbacks(cursorBlinkRunnable)
         activeProviderId = ""
         activeProviderName = ""
@@ -244,6 +246,8 @@ class GifPickerView @JvmOverloads constructor(
     fun onHostKey(code: Int): Boolean {
         when {
             code == KeyCode.DELETE || code == -5 -> {
+                deleteSwipeStartPos = -1
+                currentDeleteSwipePos = -1
                 if (query.isNotEmpty()) {
                     query.setLength(query.offsetByCodePoints(query.length, -1))
                     renderQuery()
@@ -319,6 +323,56 @@ class GifPickerView @JvmOverloads constructor(
         clearQueryButton.visibility = if (text.isNotEmpty()) View.VISIBLE else View.GONE
         resetCursorBlink()
         updateCursorPosition()
+    }
+
+    private var deleteSwipeStartPos = -1
+    private var currentDeleteSwipePos = -1
+
+    fun onMoveDeletePointer(steps: Int) {
+        if (query.isEmpty()) return
+        if (deleteSwipeStartPos == -1) {
+            deleteSwipeStartPos = query.length
+            currentDeleteSwipePos = query.length
+        }
+        currentDeleteSwipePos = (currentDeleteSwipePos + steps).coerceIn(0, query.length)
+        renderQueryWithSelection(
+            minOf(deleteSwipeStartPos, currentDeleteSwipePos),
+            maxOf(deleteSwipeStartPos, currentDeleteSwipePos)
+        )
+    }
+
+    fun onUpWithDeletePointerActive() {
+        if (deleteSwipeStartPos != -1 && currentDeleteSwipePos != -1) {
+            val start = minOf(deleteSwipeStartPos, currentDeleteSwipePos)
+            val end = maxOf(deleteSwipeStartPos, currentDeleteSwipePos)
+            if (start < end) {
+                query.delete(start, end)
+                reload(debounce = true)
+            }
+        }
+        deleteSwipeStartPos = -1
+        currentDeleteSwipePos = -1
+        renderQuery()
+    }
+
+    private fun renderQueryWithSelection(selStart: Int, selEnd: Int) {
+        val text = query.toString()
+        if (selStart >= 0 && selEnd > selStart && selEnd <= text.length) {
+            val sb = android.text.SpannableStringBuilder(text)
+            val textColor = Settings.getValues().mColors.get(ColorType.KEY_TEXT)
+            val highlightColor = (textColor and 0x00FFFFFF) or 0x50000000
+            sb.setSpan(
+                android.text.style.BackgroundColorSpan(highlightColor),
+                selStart,
+                selEnd,
+                android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            searchText.text = sb
+            cursorIndicator.visibility = View.INVISIBLE
+            removeCallbacks(cursorBlinkRunnable)
+        } else {
+            renderQuery()
+        }
     }
 
     private fun selectKind(kind: Int) {
