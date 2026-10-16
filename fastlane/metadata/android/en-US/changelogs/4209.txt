@@ -1,7 +1,7 @@
+- Prevented memory trim and deallocation from tearing down active clipboard view.
 - Routed spacebar swipe and arrow keys to GIF search query cursor.
 - Committed host text on open, restored shift unshift, and fixed Android 9 GIF crash.
 - Fixed standalone auto-spacing after suggestions and backspace undo off-by-one.
 - Supported horizontal-right swipe deselect immediately after a vertical swipe.
 - Restored suggestion strip after touchpad mode and fixed split toolbar state.
-- Cleared stuck key popups during rapid gestures and mode switches.
 - Pulled active theme defaults in Show All Colors and preserved child toolbar settings.

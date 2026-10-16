@@ -63,12 +63,12 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 private val currentChangelogItems = listOf(
+    "• Clipboard Lifecycle & Trim Protection: Prevented memory trim and deallocation from tearing down active clipboard view",
     "• GIF Cursor & Search Navigation: Routed spacebar swipe and arrow keys to GIF search query cursor",
     "• GIF Picker Stability: Committed host text on open, restored shift unshift, and fixed Android 9 crash",
     "• Input Auto-Space & Backspace Undo: Fixed standalone auto-spacing after suggestions and backspace undo offset",
     "• 2D Delete Swipe Deselection: Supported horizontal-right swipe deselect immediately after vertical swipe",
     "• Toolbar & Touchpad Recovery: Restored suggestion strip after touchpad mode and fixed split toolbar state",
-    "• Stuck Key Popup Cleanup: Prevented stuck key previews and popups during rapid gestures and mode switches",
     "• Theme Color Defaults: Pulled active theme defaults in Show All Colors and preserved child toolbar settings",
     "• Language Detector Tests: Added comprehensive unit test suite covering multilingual script and diacritic detection"
 )
