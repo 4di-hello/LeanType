@@ -27,11 +27,17 @@ import androidx.compose.runtime.Immutable
 import androidx.core.content.edit
 
 @Composable
-fun ReorderSwitchPreference(setting: Setting, default: String, filter: (String) -> Boolean = { true }) {
+fun ReorderSwitchPreference(
+    setting: Setting,
+    default: String,
+    filter: (String) -> Boolean = { true },
+    enabled: Boolean = true,
+) {
     var showDialog by rememberSaveable { mutableStateOf(false) }
     Preference(
         name = setting.title,
         description = setting.description,
+        enabled = enabled,
         onClick = { showDialog = true },
     )
     if (showDialog) {

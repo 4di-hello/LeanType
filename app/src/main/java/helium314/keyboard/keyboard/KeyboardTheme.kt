@@ -151,7 +151,7 @@ private constructor(val themeId: Int, val mStyleId: Int) {
             return getThemeColors(safeThemeName, safeThemeStyle, context, prefs, isNight)
         }
 
-        private fun getThemeColors(themeName: String, themeStyle: String, context: Context, prefs: SharedPreferences, isNight: Boolean): Colors {
+        fun getThemeColors(themeName: String, themeStyle: String, context: Context, prefs: SharedPreferences, isNight: Boolean): Colors {
             val hasBorders = prefs.getBoolean(Settings.PREF_THEME_KEY_BORDERS, Defaults.PREF_THEME_KEY_BORDERS)
             val backgroundImage = Settings.readUserBackgroundImage(context, isNight)
             return when (themeName) {
@@ -561,6 +561,11 @@ private constructor(val themeId: Int, val mStyleId: Int) {
                 )
                 COLOR_STRIP_BACKGROUND -> return determineUserColor(colors, context, COLOR_BACKGROUND, isNight)
                 COLOR_TOOLBAR_KEY -> return determineUserColor(colors, context, COLOR_SUGGESTION_TEXT, isNight)
+                COLOR_FUNCTIONAL_KEYS -> {
+                    val keyColor = determineUserColor(colors, context, COLOR_KEYS, isNight)
+                    val background = determineUserColor(colors, context, COLOR_BACKGROUND, isNight)
+                    return androidx.core.graphics.ColorUtils.blendARGB(background, keyColor, 0.5f)
+                }
                 else -> return ContextCompat.getColor(Settings.getDayNightContext(context, isNight), R.color.keyboard_background)
             }
         }

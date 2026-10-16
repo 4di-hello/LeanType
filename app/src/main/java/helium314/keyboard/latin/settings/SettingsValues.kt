@@ -392,7 +392,7 @@ open class SettingsValues(
             minOf(maxOf((displayWidthDp - 600f) / 600f + 0.15f, 0.15f), 0.35f) * Settings.readSplitSpacerScale(prefs, isLandscape)
         else 0f
 
-        mQuickPinToolbarKeys = mToolbarMode == ToolbarMode.EXPANDABLE && prefs.getBoolean(Settings.PREF_QUICK_PIN_TOOLBAR_KEYS, Defaults.PREF_QUICK_PIN_TOOLBAR_KEYS)
+        mQuickPinToolbarKeys = mToolbarMode == ToolbarMode.EXPANDABLE && !mSplitToolbar && prefs.getBoolean(Settings.PREF_QUICK_PIN_TOOLBAR_KEYS, Defaults.PREF_QUICK_PIN_TOOLBAR_KEYS)
         mScreenMetrics = Settings.readScreenMetrics(res)
         mKeyLongpressTimeout = prefs.getInt(Settings.PREF_KEY_LONGPRESS_TIMEOUT, Defaults.PREF_KEY_LONGPRESS_TIMEOUT)
         mKeypressVibrationDuration = prefs.getInt(Settings.PREF_VIBRATION_DURATION_SETTINGS, Defaults.PREF_VIBRATION_DURATION_SETTINGS)
@@ -491,8 +491,8 @@ open class SettingsValues(
         mSidePaddingScale = Settings.readSidePaddingScale(prefs, isLandscape, mIsSplitKeyboardEnabled)
         mLongPressSymbolsForNumpad = prefs.getBoolean(Settings.PREFS_LONG_PRESS_SYMBOLS_FOR_NUMPAD, Defaults.PREFS_LONG_PRESS_SYMBOLS_FOR_NUMPAD)
         mAutoShowToolbarOnSelect = mToolbarMode == ToolbarMode.EXPANDABLE && !mSplitToolbar && prefs.getBoolean(Settings.PREF_AUTO_SHOW_TOOLBAR_ON_SELECT, Defaults.PREF_AUTO_SHOW_TOOLBAR_ON_SELECT)
-        mAutoShowToolbar = mToolbarMode == ToolbarMode.EXPANDABLE && !mAutoShowToolbarOnSelect && prefs.getBoolean(Settings.PREF_AUTO_SHOW_TOOLBAR, Defaults.PREF_AUTO_SHOW_TOOLBAR)
-        mAutoHideToolbar = mSuggestionsEnabledPerUserSettings && prefs.getBoolean(Settings.PREF_AUTO_HIDE_TOOLBAR, Defaults.PREF_AUTO_HIDE_TOOLBAR)
+        mAutoShowToolbar = mToolbarMode == ToolbarMode.EXPANDABLE && !mSplitToolbar && !mAutoShowToolbarOnSelect && prefs.getBoolean(Settings.PREF_AUTO_SHOW_TOOLBAR, Defaults.PREF_AUTO_SHOW_TOOLBAR)
+        mAutoHideToolbar = mSuggestionsEnabledPerUserSettings && !mSplitToolbar && prefs.getBoolean(Settings.PREF_AUTO_HIDE_TOOLBAR, Defaults.PREF_AUTO_HIDE_TOOLBAR)
         mAutoShowToolbarNoSuggestions = mToolbarMode == ToolbarMode.EXPANDABLE && !mSplitToolbar && prefs.getBoolean(Settings.PREF_AUTO_SHOW_TOOLBAR_NO_SUGGESTIONS, Defaults.PREF_AUTO_SHOW_TOOLBAR_NO_SUGGESTIONS)
         mToolbarSwipeUp = Settings.readToolbarSwipeUp(prefs)
         mToolbarSwipeDown = Settings.readToolbarSwipeDown(prefs)

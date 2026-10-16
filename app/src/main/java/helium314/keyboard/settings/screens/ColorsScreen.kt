@@ -99,11 +99,8 @@ fun ColorsScreen(
     val moreColors = KeyboardTheme.readUserMoreColors(prefs, newThemeName.text)
     val userColors = KeyboardTheme.readUserColors(prefs, newThemeName.text)
     val shownColors = if (moreColors == 2) {
-        val fallbackColors = KeyboardTheme.readUserColorTheme(
-            prefs.getString(Settings.PREF_THEME_STYLE, Defaults.PREF_THEME_STYLE) ?: Defaults.PREF_THEME_STYLE,
-            prefs.getBoolean(Settings.PREF_THEME_KEY_BORDERS, Defaults.PREF_THEME_KEY_BORDERS),
-        userColors, ctx, isNight, null
-        )
+        val themeStyle = prefs.getString(Settings.PREF_THEME_STYLE, Defaults.PREF_THEME_STYLE) ?: Defaults.PREF_THEME_STYLE
+        val fallbackColors = KeyboardTheme.getThemeColors(newThemeName.text, themeStyle, ctx, prefs, isNight)
         val allColors = KeyboardTheme.readUserAllColors(prefs, newThemeName.text, fallbackColors)
         ColorType.entries.map { ct ->
             val cs = ColorSetting(ct.name, null, allColors[ct] ?: ct.default())

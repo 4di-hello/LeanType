@@ -74,17 +74,17 @@ fun ToolbarScreen(
         Settings.PREF_AUTO_SPAN_TOOLBAR_KEYS,
         if (toolbarMode == ToolbarMode.HIDDEN) Settings.PREF_TOOLBAR_HIDING_GLOBAL else null,
         Settings.PREF_TOOLBAR_KEYS,
-        if (!isSplitToolbar) Settings.PREF_PINNED_TOOLBAR_KEYS else null,
+        Settings.PREF_PINNED_TOOLBAR_KEYS,
         Settings.PREF_CLIPBOARD_TOOLBAR_KEYS,
         Settings.PREF_TOOLBAR_KEYS_ALIGNMENT,
         Settings.PREF_TOOLBAR_CUSTOM_KEY_CODES,
         Settings.PREF_TOOLBAR_LONG_PRESS_HINT,
-        if (toolbarMode == ToolbarMode.EXPANDABLE && !isSplitToolbar) Settings.PREF_QUICK_PIN_TOOLBAR_KEYS else null,
-        if (toolbarMode == ToolbarMode.EXPANDABLE && !isSplitToolbar) Settings.PREF_AUTO_SHOW_TOOLBAR else null,
-        if (toolbarMode == ToolbarMode.EXPANDABLE && !isSplitToolbar) Settings.PREF_AUTO_SHOW_TOOLBAR_ON_SELECT else null,
-        if (toolbarMode == ToolbarMode.EXPANDABLE && !isSplitToolbar) Settings.PREF_AUTO_HIDE_TOOLBAR else null,
-        if (toolbarMode == ToolbarMode.EXPANDABLE && !isSplitToolbar) Settings.PREF_AUTO_SHOW_TOOLBAR_NO_SUGGESTIONS else null,
-        if (toolbarMode == ToolbarMode.EXPANDABLE && !isSplitToolbar) Settings.PREF_AUTO_HIDE_PINNED_KEYS else null,
+        if (toolbarMode == ToolbarMode.EXPANDABLE) Settings.PREF_QUICK_PIN_TOOLBAR_KEYS else null,
+        if (toolbarMode == ToolbarMode.EXPANDABLE) Settings.PREF_AUTO_SHOW_TOOLBAR else null,
+        if (toolbarMode == ToolbarMode.EXPANDABLE) Settings.PREF_AUTO_SHOW_TOOLBAR_ON_SELECT else null,
+        if (toolbarMode == ToolbarMode.EXPANDABLE) Settings.PREF_AUTO_HIDE_TOOLBAR else null,
+        if (toolbarMode == ToolbarMode.EXPANDABLE) Settings.PREF_AUTO_SHOW_TOOLBAR_NO_SUGGESTIONS else null,
+        if (toolbarMode == ToolbarMode.EXPANDABLE) Settings.PREF_AUTO_HIDE_PINNED_KEYS else null,
         if (toolbarMode == ToolbarMode.EXPANDABLE) Settings.PREF_REMEMBER_TOOLBAR_STATE else null,
         if (toolbarMode != ToolbarMode.HIDDEN) Settings.PREF_SHOW_ONLY_TOOLBAR_WITH_HARDWARE_KEYBOARD else null,
         if (toolbarMode != ToolbarMode.HIDDEN) Settings.PREF_VARIABLE_TOOLBAR_DIRECTION else null,
@@ -137,7 +137,8 @@ fun createToolbarSettings(context: Context): List<Setting> {
             ReorderSwitchPreference(it, Defaults.PREF_TOOLBAR_KEYS, filter)
         },
         Setting(context, Settings.PREF_PINNED_TOOLBAR_KEYS, R.string.pinned_toolbar_keys) {
-            ReorderSwitchPreference(it, Defaults.PREF_PINNED_TOOLBAR_KEYS, filter)
+            val isSplitToolbar = LocalContext.current.prefs().getBoolean(Settings.PREF_SPLIT_TOOLBAR, Defaults.PREF_SPLIT_TOOLBAR)
+            ReorderSwitchPreference(it, Defaults.PREF_PINNED_TOOLBAR_KEYS, enabled = !isSplitToolbar, filter = filter)
         },
         Setting(context, Settings.PREF_CLIPBOARD_TOOLBAR_KEYS, R.string.clipboard_toolbar_keys) {
             ReorderSwitchPreference(it, Defaults.PREF_CLIPBOARD_TOOLBAR_KEYS, filter)
@@ -171,7 +172,8 @@ fun createToolbarSettings(context: Context): List<Setting> {
         Setting(context, Settings.PREF_QUICK_PIN_TOOLBAR_KEYS,
             R.string.quick_pin_toolbar_keys, R.string.quick_pin_toolbar_keys_summary)
         {
-            SwitchPreference(it, Defaults.PREF_QUICK_PIN_TOOLBAR_KEYS) { KeyboardSwitcher.getInstance().setThemeNeedsReload() }
+            val isSplitToolbar = LocalContext.current.prefs().getBoolean(Settings.PREF_SPLIT_TOOLBAR, Defaults.PREF_SPLIT_TOOLBAR)
+            SwitchPreference(it, Defaults.PREF_QUICK_PIN_TOOLBAR_KEYS, enabled = !isSplitToolbar) { KeyboardSwitcher.getInstance().setThemeNeedsReload() }
         },
         Setting(context, Settings.PREF_TOOLBAR_LONG_PRESS_HINT,
             R.string.toolbar_long_press_hint, R.string.toolbar_long_press_hint_summary)
@@ -180,23 +182,28 @@ fun createToolbarSettings(context: Context): List<Setting> {
         },
         Setting(context, Settings.PREF_AUTO_SHOW_TOOLBAR, R.string.auto_show_toolbar_open, R.string.auto_show_toolbar_summary)
         {
-            SwitchPreference(it, Defaults.PREF_AUTO_SHOW_TOOLBAR)
+            val isSplitToolbar = LocalContext.current.prefs().getBoolean(Settings.PREF_SPLIT_TOOLBAR, Defaults.PREF_SPLIT_TOOLBAR)
+            SwitchPreference(it, Defaults.PREF_AUTO_SHOW_TOOLBAR, enabled = !isSplitToolbar)
         },
         Setting(context, Settings.PREF_AUTO_SHOW_TOOLBAR_ON_SELECT, R.string.auto_show_toolbar_select, R.string.auto_show_toolbar_select_summary)
         {
-            SwitchPreference(it, Defaults.PREF_AUTO_SHOW_TOOLBAR_ON_SELECT)
+            val isSplitToolbar = LocalContext.current.prefs().getBoolean(Settings.PREF_SPLIT_TOOLBAR, Defaults.PREF_SPLIT_TOOLBAR)
+            SwitchPreference(it, Defaults.PREF_AUTO_SHOW_TOOLBAR_ON_SELECT, enabled = !isSplitToolbar)
         },
         Setting(context, Settings.PREF_AUTO_HIDE_TOOLBAR, R.string.auto_hide_toolbar, R.string.auto_hide_toolbar_summary)
         {
-            SwitchPreference(it, Defaults.PREF_AUTO_HIDE_TOOLBAR)
+            val isSplitToolbar = LocalContext.current.prefs().getBoolean(Settings.PREF_SPLIT_TOOLBAR, Defaults.PREF_SPLIT_TOOLBAR)
+            SwitchPreference(it, Defaults.PREF_AUTO_HIDE_TOOLBAR, enabled = !isSplitToolbar)
         },
         Setting(context, Settings.PREF_AUTO_SHOW_TOOLBAR_NO_SUGGESTIONS, R.string.auto_show_toolbar_no_suggestions, R.string.auto_show_toolbar_no_suggestions_summary)
         {
-            SwitchPreference(it, Defaults.PREF_AUTO_SHOW_TOOLBAR_NO_SUGGESTIONS)
+            val isSplitToolbar = LocalContext.current.prefs().getBoolean(Settings.PREF_SPLIT_TOOLBAR, Defaults.PREF_SPLIT_TOOLBAR)
+            SwitchPreference(it, Defaults.PREF_AUTO_SHOW_TOOLBAR_NO_SUGGESTIONS, enabled = !isSplitToolbar)
         },
         Setting(context, Settings.PREF_AUTO_HIDE_PINNED_KEYS, R.string.auto_hide_pinned_keys, R.string.auto_hide_pinned_keys_summary)
         {
-            SwitchPreference(it, Defaults.PREF_AUTO_HIDE_PINNED_KEYS) { _ ->
+            val isSplitToolbar = LocalContext.current.prefs().getBoolean(Settings.PREF_SPLIT_TOOLBAR, Defaults.PREF_SPLIT_TOOLBAR)
+            SwitchPreference(it, Defaults.PREF_AUTO_HIDE_PINNED_KEYS, enabled = !isSplitToolbar) { _ ->
                 KeyboardSwitcher.getInstance().setThemeNeedsReload()
             }
         },
@@ -224,21 +231,6 @@ fun createToolbarSettings(context: Context): List<Setting> {
                     if (currentMode == ToolbarMode.TOOLBAR_KEYS || currentMode == ToolbarMode.SUGGESTION_STRIP) {
                         prefs.edit {
                             putString(Settings.PREF_TOOLBAR_MODE, ToolbarMode.EXPANDABLE.name)
-                        }
-                    }
-                    prefs.edit {
-                        putBoolean(Settings.PREF_AUTO_SHOW_TOOLBAR, false)
-                        putBoolean(Settings.PREF_AUTO_HIDE_TOOLBAR, false)
-                        putBoolean(Settings.PREF_AUTO_SHOW_TOOLBAR_ON_SELECT, false)
-                        putBoolean(Settings.PREF_AUTO_SHOW_TOOLBAR_NO_SUGGESTIONS, false)
-                        putBoolean(Settings.PREF_QUICK_PIN_TOOLBAR_KEYS, false)
-                    }
-                } else {
-                    // Restore pinned keys to default if they were previously cleared
-                    val currentPinned = prefs.getString(Settings.PREF_PINNED_TOOLBAR_KEYS, "")
-                    if (currentPinned.isNullOrEmpty()) {
-                        prefs.edit {
-                            putString(Settings.PREF_PINNED_TOOLBAR_KEYS, Defaults.PREF_PINNED_TOOLBAR_KEYS)
                         }
                     }
                 }
