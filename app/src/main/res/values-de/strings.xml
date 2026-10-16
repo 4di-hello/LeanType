@@ -1836,6 +1836,10 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="typing_heatmap_collect">Tipp-Daten sammeln</string>
     <string name="typing_heatmap_collect_summary">Aufzeichnen, wo Du die Tasten triffst, um zu zeigen, welche Tasten Du verfehlst. Nur lokal auf diesem Gerät gespeichert, keine Cloud, keine Übertragung</string>
     <string name="typing_heatmap_no_data">Noch keine Daten. Schalte \"Tipp-Daten sammeln\" ein und tippe wie gewohnt ein paar Sätze. Mit Gesten oder im Inkognito-Modus getippte Wörter werden nicht aufgezeichnet.</string>
+    <string name="typing_heatmap_views">Die Tastatur lernt für jede Ansicht getrennt, weil Du sie unterschiedlich hältst: normal, Einhand, schwebend und Querformat.</string>
+    <string name="typing_heatmap_view_one_handed">Einhand</string>
+    <string name="typing_heatmap_view_floating">Schwebend</string>
+    <string name="typing_heatmap_view_landscape">Querformat</string>
     <string name="typing_heatmap_all_touches">Alle Anschläge</string>
     <string name="typing_heatmap_only_misses">Nur Fehltreffer</string>
     <string name="typing_heatmap_stats">%1$d Anschläge, %2$d Fehltreffer (%3$.1f %%)</string>
