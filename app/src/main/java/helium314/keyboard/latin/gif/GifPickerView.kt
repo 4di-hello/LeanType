@@ -14,6 +14,7 @@ import android.os.ParcelFileDescriptor
 import android.util.AttributeSet
 import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -56,6 +57,7 @@ class GifPickerView @JvmOverloads constructor(
     private val manager = GifPluginManager.get(context)
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private val query = StringBuilder()
+    private var cursorPos = 0
 
     private var activeProviderId: String = ""
     private var activeProviderName: String = ""
@@ -135,8 +137,22 @@ class GifPickerView @JvmOverloads constructor(
         closeButton.setOnClickListener { onCloseRequested?.invoke() }
         clearQueryButton.setOnClickListener {
             query.clear()
+            cursorPos = 0
             renderQuery()
             reload(debounce = false)
+        }
+        @SuppressLint("ClickableViewAccessibility")
+        searchText.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_UP && query.isNotEmpty()) {
+                val layout = searchText.layout
+                if (layout != null) {
+                    val x = event.x - searchText.totalPaddingLeft + searchText.scrollX
+                    val offset = layout.getOffsetForHorizontal(0, x)
+                    cursorPos = offset.coerceIn(0, query.length)
+                    renderQuery()
+                }
+            }
+            false
         }
         providerBadge.setOnClickListener { toggleProvider() }
 
@@ -159,6 +175,7 @@ class GifPickerView @JvmOverloads constructor(
         opened = true
         loadSeq++
         query.clear()
+        cursorPos = 0
         nextPos = null
         isPaging = false
         hasMore = true
@@ -248,8 +265,10 @@ class GifPickerView @JvmOverloads constructor(
             code == KeyCode.DELETE || code == -5 -> {
                 deleteSwipeStartPos = -1
                 currentDeleteSwipePos = -1
-                if (query.isNotEmpty()) {
-                    query.setLength(query.offsetByCodePoints(query.length, -1))
+                if (cursorPos > 0) {
+                    val prevPos = query.offsetByCodePoints(cursorPos, -1)
+                    query.delete(prevPos, cursorPos)
+                    cursorPos = prevPos
                     renderQuery()
                     reload(debounce = true)
                 }
@@ -259,9 +278,17 @@ class GifPickerView @JvmOverloads constructor(
                 reload(debounce = false)
                 return true
             }
+            code == KeyCode.ARROW_LEFT -> {
+                return onMoveCursor(-1)
+            }
+            code == KeyCode.ARROW_RIGHT -> {
+                return onMoveCursor(1)
+            }
             code >= 32 -> {
                 if (query.codePointCount(0, query.length) < MAX_QUERY_CODE_POINTS) {
-                    query.appendCodePoint(code)
+                    val str = String(Character.toChars(code))
+                    query.insert(cursorPos, str)
+                    cursorPos += str.length
                     renderQuery()
                     reload(debounce = true)
                 }
@@ -275,7 +302,9 @@ class GifPickerView @JvmOverloads constructor(
         var added = false
         for (cp in text.codePoints()) {
             if (query.codePointCount(0, query.length) < MAX_QUERY_CODE_POINTS) {
-                query.appendCodePoint(cp)
+                val str = String(Character.toChars(cp))
+                query.insert(cursorPos, str)
+                cursorPos += str.length
                 added = true
             }
         }
@@ -284,6 +313,30 @@ class GifPickerView @JvmOverloads constructor(
             reload(debounce = true)
         }
         return true
+    }
+
+    fun onMoveCursor(steps: Int): Boolean {
+        if (query.isEmpty() || steps == 0) return false
+        var pos = cursorPos
+        if (steps > 0) {
+            var c = steps
+            while (c > 0 && pos < query.length) {
+                pos = query.offsetByCodePoints(pos, 1)
+                c--
+            }
+        } else {
+            var c = -steps
+            while (c > 0 && pos > 0) {
+                pos = query.offsetByCodePoints(pos, -1)
+                c--
+            }
+        }
+        if (pos != cursorPos) {
+            cursorPos = pos
+            renderQuery()
+            return true
+        }
+        return false
     }
 
     private var isCursorVisible = true
@@ -310,7 +363,8 @@ class GifPickerView @JvmOverloads constructor(
         if (text.isEmpty()) {
             cursorIndicator.translationX = 0f
         } else {
-            val textWidth = searchText.paint.measureText(text)
+            val textBeforeCursor = text.substring(0, cursorPos.coerceIn(0, text.length))
+            val textWidth = if (textBeforeCursor.isEmpty()) 0f else searchText.paint.measureText(textBeforeCursor)
             val delta = 4.dpToPx(resources).toFloat()
             val maxTranslation = (searchText.width - 20.dpToPx(resources)).toFloat().coerceAtLeast(0f)
             cursorIndicator.translationX = (textWidth + delta).coerceAtMost(maxTranslation)
@@ -331,15 +385,29 @@ class GifPickerView @JvmOverloads constructor(
     fun onMoveDeletePointer(stepsX: Int, stepsY: Int) {
         if (query.isEmpty()) return
         if (deleteSwipeStartPos == -1) {
-            deleteSwipeStartPos = query.length
-            currentDeleteSwipePos = query.length
+            deleteSwipeStartPos = cursorPos
+            currentDeleteSwipePos = cursorPos
         }
         if (stepsY < 0) {
             currentDeleteSwipePos = 0
         } else if (stepsY > 0) {
             currentDeleteSwipePos = deleteSwipeStartPos
         } else if (stepsX != 0) {
-            currentDeleteSwipePos = (currentDeleteSwipePos + stepsX).coerceIn(0, query.length)
+            var pos = currentDeleteSwipePos
+            if (stepsX > 0) {
+                var c = stepsX
+                while (c > 0 && pos < query.length) {
+                    pos = query.offsetByCodePoints(pos, 1)
+                    c--
+                }
+            } else {
+                var c = -stepsX
+                while (c > 0 && pos > 0) {
+                    pos = query.offsetByCodePoints(pos, -1)
+                    c--
+                }
+            }
+            currentDeleteSwipePos = pos
         }
         renderQueryWithSelection(
             minOf(deleteSwipeStartPos, currentDeleteSwipePos),
@@ -353,6 +421,7 @@ class GifPickerView @JvmOverloads constructor(
             val end = maxOf(deleteSwipeStartPos, currentDeleteSwipePos)
             if (start < end) {
                 query.delete(start, end)
+                cursorPos = start
                 reload(debounce = true)
             }
         }

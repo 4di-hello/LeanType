@@ -1427,7 +1427,7 @@ class LatinIME : InputMethodService(),
             val event = Event.createSoftwareKeypressEvent(codePoint, 0, x, y, isKeyRepeat)
             keyboardSwitcher.onEvent(event, Constants.TextUtils.CAP_MODE_OFF, null)
             val keyboard = keyboardSwitcher.keyboard
-            if (keyboard?.mId?.isAlphabetShiftedManually == true && keyboard.mId.mElementId != KeyboardId.ELEMENT_ALPHABET_SHIFT_LOCKED) {
+            if (codePoint >= 32 && keyboard?.mId?.isAlphabetShiftedManually == true && keyboard.mId.mElementId != KeyboardId.ELEMENT_ALPHABET_SHIFT_LOCKED) {
                 keyboardSwitcher.returnToAlphabetKeyboard()
             }
             return
@@ -1455,7 +1455,7 @@ class LatinIME : InputMethodService(),
                 if (keyboardSwitcher.onGifSearchKey(code)) {
                     keyboardSwitcher.onEvent(event, Constants.TextUtils.CAP_MODE_OFF, null)
                     val keyboard = keyboardSwitcher.keyboard
-                    if (keyboard?.mId?.isAlphabetShiftedManually == true && keyboard.mId.mElementId != KeyboardId.ELEMENT_ALPHABET_SHIFT_LOCKED) {
+                    if (code >= 32 && keyboard?.mId?.isAlphabetShiftedManually == true && keyboard.mId.mElementId != KeyboardId.ELEMENT_ALPHABET_SHIFT_LOCKED) {
                         keyboardSwitcher.returnToAlphabetKeyboard()
                     }
                     return

@@ -318,6 +318,11 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         return true
     }
 
+    fun onGifMoveCursor(steps: Int): Boolean {
+        if (!isGifPickerShowing) return false
+        return mGifPickerView?.onMoveCursor(steps) == true
+    }
+
     fun onGifUpWithDeletePointerActive(): Boolean {
         if (!isGifPickerShowing) return false
         mGifPickerView?.onUpWithDeletePointerActive()

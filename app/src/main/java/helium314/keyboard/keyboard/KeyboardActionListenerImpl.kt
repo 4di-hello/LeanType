@@ -426,37 +426,54 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
         return false
     }
 
-    override fun onHorizontalSpaceSwipe(steps: Int): Boolean = when (Settings.getValues().mSpaceSwipeHorizontal) {
-        KeyboardActionListener.SWIPE_MOVE_CURSOR -> onMoveCursorHorizontally(steps)
-        KeyboardActionListener.SWIPE_SWITCH_LANGUAGE -> onLanguageSlide(steps)
-        KeyboardActionListener.SWIPE_TOGGLE_NUMPAD -> toggleNumpad(false, false)
-        else -> false
+    override fun onHorizontalSpaceSwipe(steps: Int): Boolean {
+        if (keyboardSwitcher.isGifPickerShowing) {
+            val rtl = RichInputMethodManager.getInstance().currentSubtype.isRtlSubtype
+            val moveSteps = if (rtl) -steps else steps
+            val moved = keyboardSwitcher.onGifMoveCursor(moveSteps)
+            if (moved) {
+                performHapticFeedback(HapticEvent.GESTURE_MOVE)
+            }
+            return true
+        }
+        return when (Settings.getValues().mSpaceSwipeHorizontal) {
+            KeyboardActionListener.SWIPE_MOVE_CURSOR -> onMoveCursorHorizontally(steps)
+            KeyboardActionListener.SWIPE_SWITCH_LANGUAGE -> onLanguageSlide(steps)
+            KeyboardActionListener.SWIPE_TOGGLE_NUMPAD -> toggleNumpad(false, false)
+            else -> false
+        }
     }
 
-    override fun onVerticalSpaceSwipe(steps: Int, action: Int): Boolean = when (action) {
-        KeyboardActionListener.SWIPE_MOVE_CURSOR -> onMoveCursorVertically(steps)
-        KeyboardActionListener.SWIPE_SWITCH_LANGUAGE -> onLanguageSlide(steps, isVertical = true)
-        KeyboardActionListener.SWIPE_TOGGLE_NUMPAD -> toggleNumpad(false, false)
-        KeyboardActionListener.SWIPE_HIDE_KEYBOARD -> {
-            latinIME.requestHideSelf(0)
-            true
+    override fun onVerticalSpaceSwipe(steps: Int, action: Int): Boolean {
+        if (keyboardSwitcher.isGifPickerShowing) return true
+        return when (action) {
+            KeyboardActionListener.SWIPE_MOVE_CURSOR -> onMoveCursorVertically(steps)
+            KeyboardActionListener.SWIPE_SWITCH_LANGUAGE -> onLanguageSlide(steps, isVertical = true)
+            KeyboardActionListener.SWIPE_TOGGLE_NUMPAD -> toggleNumpad(false, false)
+            KeyboardActionListener.SWIPE_HIDE_KEYBOARD -> {
+                latinIME.requestHideSelf(0)
+                true
+            }
+            KeyboardActionListener.SWIPE_TOUCHPAD_MODE -> {
+                // Activate touchpad mode - the actual cursor movement will be handled in PointerTracker
+                isSpaceSwipeActive = true
+                latinIME.isCursorGestureActive = true
+                latinIME.mHandler.cancelResumeSuggestions()
+                inputLogic.finishInput()
+                PointerTracker.setTouchpadModeActive(true)
+                true
+            }
+            else -> false
         }
-        KeyboardActionListener.SWIPE_TOUCHPAD_MODE -> {
-            // Activate touchpad mode - the actual cursor movement will be handled in PointerTracker
-            isSpaceSwipeActive = true
-            latinIME.isCursorGestureActive = true
-            latinIME.mHandler.cancelResumeSuggestions()
-            inputLogic.finishInput()
-            PointerTracker.setTouchpadModeActive(true)
-            true
-        }
-        else -> false
     }
 
     override fun onEndSpaceSwipe(){
         initialSubtype = null
         subtypeSwitchCount = 0
         cursorMoveStepCount = 0
+        if (keyboardSwitcher.isGifPickerShowing) {
+            return
+        }
         if (isSpaceSwipeActive || latinIME.isCursorGestureActive) {
             isSpaceSwipeActive = false
             latinIME.isCursorGestureActive = false
@@ -724,7 +741,7 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
     }
 
     private fun onMoveCursorVertically(steps: Int): Boolean {
-        if (steps == 0) return false
+        if (steps == 0 || keyboardSwitcher.isGifPickerShowing) return false
         if (!isSpaceSwipeActive) {
             isSpaceSwipeActive = true
             cursorMoveStepCount = 0
@@ -752,6 +769,14 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
         // for RTL languages we want to invert pointer movement
         val rtl = RichInputMethodManager.getInstance().currentSubtype.isRtlSubtype
         val steps = if (rtl) -rawSteps else rawSteps
+
+        if (keyboardSwitcher.isGifPickerShowing) {
+            val moved = keyboardSwitcher.onGifMoveCursor(steps)
+            if (moved) {
+                performHapticFeedback(HapticEvent.GESTURE_MOVE)
+            }
+            return true
+        }
 
         if (!isSpaceSwipeActive) {
             isSpaceSwipeActive = true
