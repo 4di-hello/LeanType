@@ -1,7 +1,7 @@
-- Fixed batch edit integrity, async AI callbacks, and background ContentObserver leaks.
-- Adapted second key to unshifted layout on auto-shift drop during fast typing.
-- Restored 2D backspace swipe upward and diagonal selection across lines.
-- Auto-spanned toolbar keys across available width with minimum width caps.
-- Silenced key sounds over Bluetooth and earphones when play-over-bluetooth is off.
-- Aligned gesture typing preview balloon and smoothed dynamic vertical tracking.
-- Added x86_64 debug support for Waydroid and native C++ optimization flags.
+- Routed spacebar swipe and arrow keys to GIF search query cursor.
+- Committed host text on open, restored shift unshift, and fixed Android 9 GIF crash.
+- Fixed standalone auto-spacing after suggestions and backspace undo off-by-one.
+- Supported horizontal-right swipe deselect immediately after a vertical swipe.
+- Restored suggestion strip after touchpad mode and fixed split toolbar state.
+- Cleared stuck key popups during rapid gestures and mode switches.
+- Pulled active theme defaults in Show All Colors and preserved child toolbar settings.

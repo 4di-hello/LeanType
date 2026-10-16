@@ -63,15 +63,14 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 private val currentChangelogItems = listOf(
-    "• Core Stability & Leaks: Fixed batch edit integrity, guarded AI callbacks, and eliminated MediaStore leaks",
-    "• Fast-Typing Auto-Shift: Adapted second key to unshifted layout on auto-shift drop during rapid typing",
-    "• 2D Delete Swipe: Restored upward and diagonal text selection across lines and word boundaries",
-    "• Dynamic Toolbar Auto-Spanning: Auto-expanded toolbar keys across free space with minimum width caps and no wobble",
-    "• Bluetooth Sound Output: Silenced keypress audio over headphones and Bluetooth when play-over-bluetooth is disabled",
-    "• Gesture Typing Preview: Aligned floating preview height with popups and smoothed dynamic finger tracking",
-    "• Clipboard Font Sizing: Restored font baseline and scaled history entries with the Appearance font multiplier",
-    "• Native Waydroid Support: Added x86_64 ABI debug support and optimized native C++ compilation flags",
-    "• Latency & Caching Polish: In-memory caching for TextExpander, border radii, and hot-path sound pools"
+    "• GIF Cursor & Search Navigation: Routed spacebar swipe and arrow keys to GIF search query cursor",
+    "• GIF Picker Stability: Committed host text on open, restored shift unshift, and fixed Android 9 crash",
+    "• Input Auto-Space & Backspace Undo: Fixed standalone auto-spacing after suggestions and backspace undo offset",
+    "• 2D Delete Swipe Deselection: Supported horizontal-right swipe deselect immediately after vertical swipe",
+    "• Toolbar & Touchpad Recovery: Restored suggestion strip after touchpad mode and fixed split toolbar state",
+    "• Stuck Key Popup Cleanup: Prevented stuck key previews and popups during rapid gestures and mode switches",
+    "• Theme Color Defaults: Pulled active theme defaults in Show All Colors and preserved child toolbar settings",
+    "• Language Detector Tests: Added comprehensive unit test suite covering multilingual script and diacritic detection"
 )
 
 @Composable
