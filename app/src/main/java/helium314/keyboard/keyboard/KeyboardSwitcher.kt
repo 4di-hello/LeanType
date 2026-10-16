@@ -285,11 +285,7 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
     fun setGifPickerKeyboard() {
         val latinIme = mLatinIME ?: return
         if (InputTypeUtils.isAnyPasswordInputType(latinIme.currentInputEditorInfo?.inputType ?: 0)) return
-        if (latinIme.inputLogic.isComposingWord) {
-            latinIme.inputLogic.connection.setComposingText("", 1)
-        }
-        latinIme.inputLogic.resetComposingState(true)
-        latinIme.inputLogic.connection.finishComposingText()
+        latinIme.inputLogic.commitTyped(Settings.getValues(), LastComposedWord.NOT_A_SEPARATOR)
         setKeyboard(KeyboardId.ELEMENT_ALPHABET, KeyboardSwitchState.OTHER)
         mStripContainer?.visibility = View.GONE
         mGifPickerView?.let { v ->
@@ -316,9 +312,9 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
 
     fun onGifSearchText(text: String): Boolean = isGifPickerShowing && mGifPickerView?.onHostText(text) == true
 
-    fun onGifMoveDeletePointer(steps: Int): Boolean {
+    fun onGifMoveDeletePointer(stepsX: Int, stepsY: Int): Boolean {
         if (!isGifPickerShowing) return false
-        mGifPickerView?.onMoveDeletePointer(steps)
+        mGifPickerView?.onMoveDeletePointer(stepsX, stepsY)
         return true
     }
 

@@ -1424,11 +1424,11 @@ class LatinIME : InputMethodService(),
 
     override fun onCodeInput(codePoint: Int, x: Int, y: Int, isKeyRepeat: Boolean) {
         if (keyboardSwitcher.isGifPickerShowing && keyboardSwitcher.onGifSearchKey(codePoint)) {
-            if (codePoint >= 32) {
-                val keyboard = keyboardSwitcher.keyboard
-                if (keyboard?.mId?.isAlphabetShiftedManually == true && keyboard.mId.mElementId != KeyboardId.ELEMENT_ALPHABET_SHIFT_LOCKED) {
-                    keyboardSwitcher.resetKeyboardStateToAlphabet(0, null)
-                }
+            val event = Event.createSoftwareKeypressEvent(codePoint, 0, x, y, isKeyRepeat)
+            keyboardSwitcher.onEvent(event, Constants.TextUtils.CAP_MODE_OFF, null)
+            val keyboard = keyboardSwitcher.keyboard
+            if (keyboard?.mId?.isAlphabetShiftedManually == true && keyboard.mId.mElementId != KeyboardId.ELEMENT_ALPHABET_SHIFT_LOCKED) {
+                keyboardSwitcher.returnToAlphabetKeyboard()
             }
             return
         }
@@ -1437,23 +1437,26 @@ class LatinIME : InputMethodService(),
 
     fun onEvent(event: Event) {
         if (keyboardSwitcher.isGifPickerShowing) {
+            if (event.keyCode == KeyCode.SHIFT) {
+                return
+            }
             val text = event.text
             if (text != null) {
                 if (keyboardSwitcher.onGifSearchText(text.toString())) {
+                    keyboardSwitcher.onEvent(event, Constants.TextUtils.CAP_MODE_OFF, null)
                     val keyboard = keyboardSwitcher.keyboard
                     if (keyboard?.mId?.isAlphabetShiftedManually == true && keyboard.mId.mElementId != KeyboardId.ELEMENT_ALPHABET_SHIFT_LOCKED) {
-                        keyboardSwitcher.resetKeyboardStateToAlphabet(0, null)
+                        keyboardSwitcher.returnToAlphabetKeyboard()
                     }
                     return
                 }
             } else {
                 val code = if (event.keyCode != Event.NOT_A_KEY_CODE) event.keyCode else event.codePoint
                 if (keyboardSwitcher.onGifSearchKey(code)) {
-                    if (code >= 32) {
-                        val keyboard = keyboardSwitcher.keyboard
-                        if (keyboard?.mId?.isAlphabetShiftedManually == true && keyboard.mId.mElementId != KeyboardId.ELEMENT_ALPHABET_SHIFT_LOCKED) {
-                            keyboardSwitcher.resetKeyboardStateToAlphabet(0, null)
-                        }
+                    keyboardSwitcher.onEvent(event, Constants.TextUtils.CAP_MODE_OFF, null)
+                    val keyboard = keyboardSwitcher.keyboard
+                    if (keyboard?.mId?.isAlphabetShiftedManually == true && keyboard.mId.mElementId != KeyboardId.ELEMENT_ALPHABET_SHIFT_LOCKED) {
+                        keyboardSwitcher.returnToAlphabetKeyboard()
                     }
                     return
                 }

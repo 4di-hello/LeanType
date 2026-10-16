@@ -328,13 +328,19 @@ class GifPickerView @JvmOverloads constructor(
     private var deleteSwipeStartPos = -1
     private var currentDeleteSwipePos = -1
 
-    fun onMoveDeletePointer(steps: Int) {
+    fun onMoveDeletePointer(stepsX: Int, stepsY: Int) {
         if (query.isEmpty()) return
         if (deleteSwipeStartPos == -1) {
             deleteSwipeStartPos = query.length
             currentDeleteSwipePos = query.length
         }
-        currentDeleteSwipePos = (currentDeleteSwipePos + steps).coerceIn(0, query.length)
+        if (stepsY < 0) {
+            currentDeleteSwipePos = 0
+        } else if (stepsY > 0) {
+            currentDeleteSwipePos = deleteSwipeStartPos
+        } else if (stepsX != 0) {
+            currentDeleteSwipePos = (currentDeleteSwipePos + stepsX).coerceIn(0, query.length)
+        }
         renderQueryWithSelection(
             minOf(deleteSwipeStartPos, currentDeleteSwipePos),
             maxOf(deleteSwipeStartPos, currentDeleteSwipePos)

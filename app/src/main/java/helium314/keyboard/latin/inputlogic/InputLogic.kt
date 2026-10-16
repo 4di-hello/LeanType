@@ -792,7 +792,6 @@ class InputLogic(
                     return
                 }
                 if (KeyboardSwitcher.getInstance().isGifPickerShowing) {
-                    inputTransaction.requireShiftUpdate(InputTransaction.SHIFT_UPDATE_NOW)
                     return
                 }
                 if (!KeyboardSwitcher.getInstance().isShiftChording) {

@@ -515,7 +515,7 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
 
     override fun onMoveDeletePointer(stepsX: Int, stepsY: Int) {
         if (keyboardSwitcher.isGifPickerShowing) {
-            keyboardSwitcher.onGifMoveDeletePointer(stepsX)
+            keyboardSwitcher.onGifMoveDeletePointer(stepsX, stepsY)
             return
         }
         inputLogic.finishInput()

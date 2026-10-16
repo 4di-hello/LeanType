@@ -883,7 +883,7 @@ class PointerTracker private constructor(
                 mDeleteRunY = y
                 mDeleteRunX = x
             }
-            if (stepsY < 0) {
+            if (stepsY < 0 && mInHorizontalSwipe && stepsX > 0) {
                 // Upward step candidate. If it comes from a rightward move that is at least as long
                 // horizontally as it is vertically (<= 45 degrees), it is thumb drift while
                 // swiping right to deselect text, so ignore it and restart vertical tracking.
