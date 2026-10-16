@@ -363,20 +363,25 @@ class InputLogic(
                 return inputTransaction
             }
 
+            val isImmediate = settingsValues.mAutospaceAfterSuggestion && settingsValues.mImmediateAutoSpace && settingsValues.shouldInsertSpacesAutomatically() && !mConnection.hasTextAfterCursor()
             commitChosenWord(
                 settingsValues, suggestion, LastComposedWord.COMMIT_TYPE_MANUAL_PICK,
-                LastComposedWord.NOT_A_SEPARATOR
+                if (isImmediate) Constants.STRING_SPACE else LastComposedWord.NOT_A_SEPARATOR
             )
+            mConnection.finishComposingText()
             if (settingsValues.mAutospaceAfterSuggestion) {
-                if (settingsValues.mImmediateAutoSpace) {
-                    mConnection.finishComposingText()
+                if (isImmediate) {
                     mConnection.commitText(" ", 1)
                     mConnection.finishComposingText()
                     resetComposingState(false)
                     mSpaceState = SpaceState.DOUBLE
                 } else {
+                    resetComposingState(false)
                     mSpaceState = SpaceState.PHANTOM
                 }
+            } else {
+                resetComposingState(false)
+                mSpaceState = SpaceState.NONE
             }
         } finally {
             mConnection.endBatchEdit()
@@ -784,6 +789,10 @@ class InputLogic(
             KeyCode.SHIFT -> {
                 val keyboard = KeyboardSwitcher.getInstance().keyboard
                 if (keyboard != null && !keyboard.mId.isAlphabetKeyboard && keyboard.mId.mElementId != KeyboardId.ELEMENT_TEXT_EDIT) {
+                    return
+                }
+                if (KeyboardSwitcher.getInstance().isGifPickerShowing) {
+                    inputTransaction.requireShiftUpdate(InputTransaction.SHIFT_UPDATE_NOW)
                     return
                 }
                 if (!KeyboardSwitcher.getInstance().isShiftChording) {
@@ -2224,8 +2233,9 @@ class InputLogic(
         val committedWordString = committedWord.toString()
         val cancelLength = committedWord.length
         val separatorString = mLastComposedWord.mSeparatorString
-        val usePhantomSpace = separatorString == Constants.STRING_SPACE
-        val separatorLength = separatorString.length
+        val hasTrailingSpace = separatorString == Constants.STRING_SPACE || (separatorString.isEmpty() && mConnection.codePointBeforeCursor == Constants.CODE_SPACE)
+        val usePhantomSpace = hasTrailingSpace
+        val separatorLength = if (separatorString.isNotEmpty()) separatorString.length else if (hasTrailingSpace) 1 else 0
         val deleteLength = cancelLength + separatorLength
         if (DebugFlags.DEBUG_ENABLED) {
             if (mWordComposer.isComposingWord()) {
@@ -2539,7 +2549,7 @@ class InputLogic(
         val autoCorrectionOrNull = mWordComposer.getAutoCorrectionOrNull()
         val typedWord = mWordComposer.getTypedWord()
         val stringToCommit = autoCorrectionOrNull?.mWord ?: typedWord
-        if (stringToCommit != null) {
+        if (!stringToCommit.isNullOrEmpty()) {
             val isBatchMode = mWordComposer.isBatchMode()
             commitChosenWord(settingsValues, stringToCommit, LastComposedWord.COMMIT_TYPE_DECIDED_WORD, separator)
             if (typedWord != stringToCommit) {
