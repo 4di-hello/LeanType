@@ -2478,6 +2478,10 @@ New dictionary:
     <string name="adapt_to_typing_summary">Learn where you touch the keys and recognize the key you meant near key borders, also for autocorrection. A key is adapted once it has 30 touches. Stored only locally, no cloud, no transfer</string>
     <string name="typing_heatmap_title">Typing heatmap</string>
     <string name="typing_heatmap_no_data">No data yet. Enable \"Adapt to my typing\" and type a few sentences as usual. Words typed with gestures or in incognito mode are not recorded.</string>
+    <string name="typing_heatmap_views">The keyboard learns separately for each way you hold it: normal, one-handed, floating and landscape.</string>
+    <string name="typing_heatmap_view_one_handed">One-handed</string>
+    <string name="typing_heatmap_view_floating">Floating</string>
+    <string name="typing_heatmap_view_landscape">Landscape</string>
     <string name="typing_heatmap_all_touches">All touches</string>
     <string name="typing_heatmap_only_misses">Only misses</string>
     <string name="typing_heatmap_stats">%1$d touches, %2$d misses (%3$.1f %%)</string>
