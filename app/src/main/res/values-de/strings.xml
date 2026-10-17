@@ -786,6 +786,9 @@
     <string name="text_expander_error_regex">Zeile %1$d: ungültiger Regex „%2$s“</string>
     <string name="text_expander_discard_title">Deine Änderungen verwerfen?</string>
     <string name="text_expander_discard">Verwerfen</string>
+    <string name="text_expander_full_editor">Im Vollbild bearbeiten</string>
+    <string name="text_expander_full_editor_done">Fertig</string>
+    <string name="text_expander_char_count">%d Zeichen</string>
     <string name="text_expander_template_title">Vorlagenerweiterung</string>
     <string name="text_expander_template_hint" formatted="false">Be right back! oder Meine E-Mail ist %clipboard%</string>
     <string name="text_expander_quick_placeholders_title">Schnelle Platzhalter (zum Einfügen am Cursor tippen):</string>

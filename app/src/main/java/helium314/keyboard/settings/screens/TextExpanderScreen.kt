@@ -34,6 +34,12 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.window.Dialog
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.material3.Surface
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -107,6 +113,7 @@ fun TextExpanderScreen(onClickBack: () -> Unit) {
     var originalShortcutToEdit by remember { mutableStateOf<String?>(null) }
     var editingIsRegex by remember { mutableStateOf(false) }
     var showTextEditor by remember { mutableStateOf(false) }
+    var showFullEditor by remember { mutableStateOf(false) } // only in this fork, see TemplateFullEditor
 
     val openGuide = {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Links.TEXT_EXPANDER_GUIDE_URL))
@@ -429,6 +436,11 @@ fun TextExpanderScreen(onClickBack: () -> Unit) {
                         label = { Text(stringResource(R.string.text_expander_template_title)) },
                         placeholder = { Text(stringResource(R.string.text_expander_template_hint)) }
                     )
+                    TextButton(onClick = { showFullEditor = true }, modifier = Modifier.align(Alignment.End)) {
+                        Icon(painterResource(R.drawable.ic_open_in_full), null, Modifier.size(18.dp))
+                        Spacer(Modifier.size(8.dp))
+                        Text(stringResource(R.string.text_expander_full_editor))
+                    }
 
                     Text(
                         text = stringResource(R.string.text_expander_quick_placeholders_title),
@@ -442,7 +454,66 @@ fun TextExpanderScreen(onClickBack: () -> Unit) {
                 }
             }
         )
+        if (showFullEditor) {
+            TemplateFullEditor(
+                title = (editingPrefix.trim() + editingShortcut.trim()).ifEmpty { stringResource(R.string.text_expander_template_title) },
+                value = editingTemplate,
+                onValueChange = { editingTemplate = it },
+                onDone = { showFullEditor = false }
+            )
+        }
     }
+}
+
+/** Full screen editor for long templates such as prompts, edits the same text as the dialog */
+@Composable
+private fun TemplateFullEditor(title: String, value: TextFieldValue, onValueChange: (TextFieldValue) -> Unit, onDone: () -> Unit) {
+    val focusRequester = remember { FocusRequester() }
+    Dialog(
+        onDismissRequest = onDone,
+        properties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)
+    ) {
+        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.surface) {
+            Column(modifier = Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp, vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = onDone) {
+                        Icon(painterResource(R.drawable.ic_arrow_back), stringResource(R.string.text_expander_full_editor_done))
+                    }
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.titleLarge,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f)
+                    )
+                    TextButton(onClick = onDone) { Text(stringResource(R.string.text_expander_full_editor_done)) }
+                }
+                OutlinedTextField(
+                    value = value,
+                    onValueChange = onValueChange,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .padding(horizontal = 12.dp)
+                        .focusRequester(focusRequester),
+                    placeholder = { Text(stringResource(R.string.text_expander_template_hint)) }
+                )
+                Text(
+                    text = stringResource(R.string.text_expander_char_count, value.text.length),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.align(Alignment.End).padding(horizontal = 16.dp, vertical = 4.dp)
+                )
+                Box(modifier = Modifier.padding(start = 12.dp, end = 12.dp, bottom = 8.dp)) {
+                    PlaceholderTagsRow(value, onValueChange)
+                }
+            }
+        }
+    }
+    LaunchedEffect(Unit) { focusRequester.requestFocus() }
 }
 
 /** Placeholder tags, a tap inserts the tag at the cursor */
