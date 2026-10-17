@@ -827,6 +827,9 @@
     <string name="text_expander_regex_pattern_title">Regex-Muster</string>
     <string name="text_expander_regex_title">Regulärer Ausdruck</string>
     <string name="text_expander_regex_invalid">⚠️ Ungültiges reguläres Ausdrucksmuster</string>
+    <string name="text_expander_full_editor">Im Vollbild bearbeiten</string>
+    <string name="text_expander_full_editor_done">Fertig</string>
+    <string name="text_expander_char_count">%d Zeichen</string>
     <string name="text_expander_template_title">Vorlagenerweiterung</string>
     <string name="text_expander_template_hint">Be right back! oder Meine E-Mail ist %clipboard%</string>
     <string name="text_expander_quick_placeholders_title">Schnelle Platzhalter (zum Einfügen am Cursor tippen):</string>
