@@ -533,7 +533,9 @@ internal fun PlaceholderTagsRow(value: TextFieldValue, onValueChange: (TextField
             "%day%", "%month%", "%year%", "%week%",
             "%battery%", "%language%", "%cursor%", "%greeting%",
             "%tomorrow%", "%bullets%", "%list%",
-            "%tab%"
+            "%tab%",
+            // only in this fork: key presses (LeanType did not want them, see #695)
+            "%tabkey%", "%enter%"
         )
         tags.forEach { tag ->
             Box(
