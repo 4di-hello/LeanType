@@ -394,7 +394,7 @@ class ProofreadService(private val context: Context) {
             }
             
             // Use provider to generate completion
-            val output = provider.generate(fullPrompt, mapOf(
+            val output = provider.generate(chatPrompt(modelPath, fullPrompt), mapOf(
                 "temperature" to temp.toDouble(),
                 "top_p" to topP.toDouble(),
                 "top_k" to topK,
@@ -440,6 +440,18 @@ class ProofreadService(private val context: Context) {
             ModelHolder.scheduleUnload(context) // Ensure we still schedule unload on error
             Result.failure(ProofreadException(e.message ?: "Unknown error"))
         }
+    }
+
+    /**
+     * Chat models like Qwen expect their chat format. Without it they answer badly, and thinking
+     * models (Qwen3, Qwen3.5) first "think" and use up the few tokens available, so nothing is left
+     * for the answer. For Qwen the prompt is wrapped in ChatML with an empty think block, which
+     * switches thinking off. Other models get the plain prompt as before.
+     */
+    private fun chatPrompt(modelPath: String, prompt: String): String {
+        val name = (modelPath + " " + runCatching { getModelName() }.getOrDefault("")).lowercase()
+        if (!name.contains("qwen")) return prompt
+        return "<|im_start|>user\n$prompt<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
     }
 
     private fun stripThinkingTags(text: String): String {
