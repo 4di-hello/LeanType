@@ -30,7 +30,7 @@ jobs:
           ./gradlew testStandardRunTestsUnitTest
           --tests "helium314.keyboard.latin.InputLogicTest"
           --tests "helium314.keyboard.latin.suggestions.SuggestionStripLayoutHelperTest"
-          --tests "helium314.keyboard.latin.heatmap.TypingHeatmapTest"
+          --tests "helium314.keyboard.latin.utils.TextExpanderTextTest"
           2>&1 | tee gradle.log
 
       - name: Report compile errors as annotations
