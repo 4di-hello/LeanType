@@ -1793,6 +1793,9 @@ New dictionary:
     <string name="text_expander_regex_pattern_title">Regex Pattern</string>
     <string name="text_expander_regex_title">Regular Expression</string>
     <string name="text_expander_regex_invalid">⚠️ Invalid regular expression pattern</string>
+    <string name="text_expander_full_editor">Edit in full screen</string>
+    <string name="text_expander_full_editor_done">Done</string>
+    <string name="text_expander_char_count">%d characters</string>
     <string name="text_expander_template_title">Template Expansion</string>
     <string name="text_expander_template_hint">Be right back! or My email is %clipboard%</string>
     <string name="text_expander_quick_placeholders_title">Quick Placeholders (tap to insert at cursor):</string>
