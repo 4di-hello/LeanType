@@ -128,6 +128,8 @@ jobs:
       - name: Publish release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # always this fork, gh would otherwise pick the remote "upstream" (LeanType)
+          GH_REPO: ${{ github.repository }}
         run: |
           git fetch -q --tags origin
           git remote get-url upstream >/dev/null 2>&1 || git remote add upstream https://github.com/LeanBitLab/LeanType.git
@@ -147,7 +149,10 @@ jobs:
             echo
             echo "### My changes on top of LeanType"
             git log --reverse --format='- %s' upstream/main..HEAD | grep -v -e '^- Fork only' -e '^- Fix duplicates' || true
-            prevbase=$(gh release view "$prev" --json body --jq .body 2>/dev/null | grep -o 'base: [0-9a-f]*' | head -1 | cut -d' ' -f2)
+            prevbase=""
+            if [ -n "$prev" ]; then
+              prevbase=$(gh release view "$prev" --json body --jq .body 2>/dev/null | grep -o 'base: [0-9a-f]*' | head -1 | cut -d' ' -f2 || true)
+            fi
             if [ -n "$prevbase" ] && [ "$prevbase" != "$base" ] && git cat-file -e "$prevbase^{commit}" 2>/dev/null; then
               echo
               echo "### New in LeanType since the last release"
