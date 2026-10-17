@@ -3,7 +3,8 @@ name: My LeanType build
 # - weekly (and on demand): rebase the branch "daily" with my features onto the current LeanType,
 #   run the tests and build the APK
 # - on every push to "daily": run the tests and build the APK
-# The APKs are stored on the branch apk-out. A failed run (e.g. a conflict) is reported by GitHub by mail.
+# The APK is published as a GitHub release (latest: releases/latest/download/LeanTypePlus.apk) when the app
+# changed, and also stored on the branch apk-out. A failed run (e.g. a conflict) is reported by GitHub by mail.
 
 on:
   schedule:
@@ -21,9 +22,10 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # fixed version, so a change of ubuntu-latest can't break the build unnoticed
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: daily
           fetch-depth: 0
@@ -47,12 +49,12 @@ jobs:
           fi
 
       - name: Set up JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      - uses: gradle/actions/setup-gradle@v3
+      - uses: gradle/actions/setup-gradle@v5
 
       - name: Run tests
         run: |
@@ -63,6 +65,7 @@ jobs:
             --tests "helium314.keyboard.latin.heatmap.TypingHeatmapTest" \
             --tests "helium314.keyboard.keyboard.KeyboardThemeTest" \
             --tests "helium314.keyboard.latin.backup.BackupCryptoTest" \
+            --tests "helium314.keyboard.latin.utils.TextExpanderTextTest" \
             --continue 2>&1 | tee gradle.log || true
           grep -E "^e: " gradle.log | head -20 | sed 's/^/::error::/' || true
           python3 - <<'PY'
@@ -119,5 +122,43 @@ jobs:
           git config user.name 4di-hello
           git config user.email 4di-hello@users.noreply.github.com
           git add .
-          git commit -q -m "APK for ${GITHUB_SHA}"
+          git commit -q -m "APK for $(git -C "$GITHUB_WORKSPACE" rev-parse HEAD)"
           git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" apk-out
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git fetch -q --tags origin
+          git remote get-url upstream >/dev/null 2>&1 || git remote add upstream https://github.com/LeanBitLab/LeanType.git
+          git fetch -q upstream main
+          prev=$(gh release list --limit 1 --json tagName --jq '.[0].tagName // empty')
+          if [ -n "$prev" ] && git rev-parse -q --verify "refs/tags/$prev^{commit}" >/dev/null \
+             && git diff --quiet "$prev" HEAD -- app build.gradle.kts gradle settings.gradle.kts; then
+            echo "::notice::app unchanged since $prev, no new release"
+            exit 0
+          fi
+          sha=$(git rev-parse --short HEAD)
+          base=$(git rev-parse --short upstream/main)
+          tag="plus-$(date -u +%Y-%m-%d-%H%M)-$sha"
+          cp "$(find app/build/outputs/apk -name '*.apk' | head -1)" "$RUNNER_TEMP/LeanTypePlus.apk"
+          {
+            echo "LeanType+ $(date -u +%d.%m.%Y), based on LeanType ${base}. Install over the previous version, nothing is lost."
+            echo
+            echo "### My changes on top of LeanType"
+            git log --reverse --format='- %s' upstream/main..HEAD | grep -v -e '^- Fork only' -e '^- Fix duplicates' || true
+            prevbase=$(gh release view "$prev" --json body --jq .body 2>/dev/null | grep -o 'base: [0-9a-f]*' | head -1 | cut -d' ' -f2)
+            if [ -n "$prevbase" ] && [ "$prevbase" != "$base" ] && git cat-file -e "$prevbase^{commit}" 2>/dev/null; then
+              echo
+              echo "### New in LeanType since the last release"
+              git log --no-merges --format='- %s' "$prevbase..upstream/main" | grep -v -e 'README badges' -e '^- docs' | head -40 || true
+            fi
+            echo
+            echo "<!-- base: ${base} -->"
+          } > "$RUNNER_TEMP/notes.md"
+          gh release create "$tag" "$RUNNER_TEMP/LeanTypePlus.apk" --target "$(git rev-parse HEAD)" \
+            --title "LeanType+ $(date -u +%d.%m.%Y) ($sha)" --notes-file "$RUNNER_TEMP/notes.md" --latest
+          # keep the last 10 releases
+          gh release list --limit 100 --json tagName --jq '.[10:][].tagName' | while read -r old; do
+            gh release delete "$old" --yes --cleanup-tag
+          done
