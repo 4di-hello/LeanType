@@ -104,6 +104,7 @@ fun TextExpanderScreen(onClickBack: () -> Unit) {
     var originalShortcutToEdit by remember { mutableStateOf<String?>(null) }
     var editingIsRegex by remember { mutableStateOf(false) }
     var showFullEditor by remember { mutableStateOf(false) }
+    var showTextEditor by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         SearchScreen(
@@ -359,6 +360,14 @@ fun TextExpanderScreen(onClickBack: () -> Unit) {
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.padding(top = 8.dp)
                     )
+                    androidx.compose.material3.OutlinedButton(
+                        onClick = { showTextEditor = true },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(painterResource(R.drawable.ic_open_in_full), null, Modifier.size(18.dp))
+                        Spacer(Modifier.size(8.dp))
+                        Text(stringResource(R.string.text_expander_all_as_text))
+                    }
 
                     // 4. List of saved shortcuts
                     if (shortcutsMap.isEmpty()) {
@@ -455,6 +464,13 @@ fun TextExpanderScreen(onClickBack: () -> Unit) {
                     .padding(all = 16.dp)
                     .then(Modifier.safeDrawingPadding())
             )
+        }
+    }
+
+    if (showTextEditor) {
+        TextExpanderTextEditor { changed ->
+            showTextEditor = false
+            if (changed) shortcutsMap = TextExpanderUtils.getShortcuts(context)
         }
     }
 
@@ -594,7 +610,7 @@ fun TextExpanderScreen(onClickBack: () -> Unit) {
 
 /** Placeholder tags, a tap inserts the tag at the cursor */
 @Composable
-private fun PlaceholderTagsRow(value: TextFieldValue, onValueChange: (TextFieldValue) -> Unit) {
+internal fun PlaceholderTagsRow(value: TextFieldValue, onValueChange: (TextFieldValue) -> Unit) {
     val editingTemplate = value
     androidx.compose.foundation.layout.Row(
         modifier = Modifier
@@ -608,7 +624,8 @@ private fun PlaceholderTagsRow(value: TextFieldValue, onValueChange: (TextFieldV
             "%date%", "%date:yyyy/MM/dd%", "%date:dd-MM-yyyy%", "%time%", "%time12%",
             "%day%", "%month%", "%year%", "%week%",
             "%battery%", "%language%", "%cursor%", "%greeting%",
-            "%tomorrow%", "%bullets%", "%list%"
+            "%tomorrow%", "%bullets%", "%list%",
+        "%tab%", "%tabkey%", "%enter%"
         )
         tags.forEach { tag ->
             Box(
