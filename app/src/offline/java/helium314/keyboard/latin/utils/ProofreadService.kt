@@ -372,7 +372,13 @@ class ProofreadService(private val context: Context) {
             
             // Build the prompt
             val systemPrompt = overridePrompt ?: getSystemPrompt().ifBlank { Defaults.PREF_OFFLINE_SYSTEM_PROMPT }
-            val fullPrompt = if (systemPrompt.contains("{text}")) {
+            val chatFormat = chatFormat(modelPath)
+            val fullPrompt = if (chatFormat != null) {
+                // Chat models get the instruction as system message and the text as user message,
+                // the few-shot examples below would end up in their answer
+                if (systemPrompt.contains("{text}")) chatFormat.build(null, systemPrompt.replace("{text}", text))
+                else chatFormat.build(systemPrompt.trim(), text)
+            } else if (systemPrompt.contains("{text}")) {
                 systemPrompt.replace("{text}", text)
             } else if (overridePrompt != null) {
                 // Translation or specific override
@@ -406,7 +412,7 @@ class ProofreadService(private val context: Context) {
             }
             
             // Use provider to generate completion
-            val output = provider.generate(chatPrompt(modelPath, fullPrompt), mapOf(
+            val output = provider.generate(fullPrompt, mapOf(
                 "temperature" to temp.toDouble(),
                 "top_p" to topP.toDouble(),
                 "top_k" to topK,
@@ -455,15 +461,30 @@ class ProofreadService(private val context: Context) {
     }
 
     /**
-     * Chat models like Qwen expect their chat format. Without it they answer badly, and thinking
-     * models (Qwen3, Qwen3.5) first "think" and use up the few tokens available, so nothing is left
-     * for the answer. For Qwen the prompt is wrapped in ChatML with an empty think block, which
-     * switches thinking off. Other models get the plain prompt as before.
+     * Chat models expect their chat format. Without it they answer badly, take few-shot examples as part
+     * of the text, and thinking models (Qwen3, Qwen3.5) first "think" and use up the tokens available.
+     * Detected by the model file name; other models get the plain prompt as before.
      */
-    private fun chatPrompt(modelPath: String, prompt: String): String {
+    private enum class ChatFormat {
+        /** ChatML with an empty think block, which switches thinking off */
+        QWEN,
+        /** Liquid LFM2: ChatML, the begin token is added by llama.cpp */
+        LFM2;
+
+        fun build(system: String?, user: String): String = buildString {
+            if (!system.isNullOrBlank()) append("<|im_start|>system\n$system<|im_end|>\n")
+            append("<|im_start|>user\n$user<|im_end|>\n<|im_start|>assistant\n")
+            if (this@ChatFormat == QWEN) append("<think>\n\n</think>\n\n")
+        }
+    }
+
+    private fun chatFormat(modelPath: String): ChatFormat? {
         val name = (modelPath + " " + runCatching { getModelName() }.getOrDefault("")).lowercase()
-        if (!name.contains("qwen")) return prompt
-        return "<|im_start|>user\n$prompt<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+        return when {
+            name.contains("qwen") -> ChatFormat.QWEN
+            name.contains("lfm") -> ChatFormat.LFM2
+            else -> null
+        }
     }
 
     /**
