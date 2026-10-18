@@ -477,8 +477,14 @@ class ProofreadService(private val context: Context) {
         val lines = process.inputStream.bufferedReader().readLines()
         process.waitFor()
         val keywords = listOf("llama", "gguf", "OfflineAi", "plugin", "Exception", "error", "Caused by", "tensor")
-        val relevant = lines.filter { line -> keywords.any { line.contains(it, ignoreCase = true) } }.takeLast(40)
+        // without stack trace lines, which would push out the actual error messages
+        val relevant = lines.filter { line ->
+            keywords.any { line.contains(it, ignoreCase = true) } && !line.contains("\tat ") && !Regex(":\\s+at ").containsMatchIn(line)
+                && !line.contains("... ")
+        }.takeLast(60)
         val key = relevant.lastOrNull { it.contains("error loading model", true) || it.contains("llama_model_load", true) }
+            ?: relevant.lastOrNull { it.contains("Error initializing context", true) }
+                ?.let { init -> relevant.getOrNull(relevant.indexOf(init) + 1)?.takeIf { it.contains("Exception") } ?: init }
             ?: relevant.lastOrNull { it.contains("Exception", true) || it.contains("error", true) }
         if (key == null) null
         else {
