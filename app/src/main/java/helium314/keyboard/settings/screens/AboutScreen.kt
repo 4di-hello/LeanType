@@ -93,7 +93,8 @@ fun createAboutSettings(context: Context) = listOf(
         var count by rememberSaveable { mutableIntStateOf(0) }
         val ctx = LocalContext.current
         val prefs = ctx.prefs()
-        val versionDescription = stringResource(R.string.version_text, BuildConfig.VERSION_NAME)
+        val versionDescription = stringResource(R.string.version_text, BuildConfig.VERSION_NAME) +
+                (if (BuildConfig.FORK_BUILD.isNotEmpty()) "\nLeanType+ " + BuildConfig.FORK_BUILD else "")
         Preference(
             name = it.title,
             description = versionDescription,
