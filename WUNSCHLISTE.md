@@ -9,11 +9,11 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
   - ~~Wunsch A: alle Bausteine als Text/Datei bearbeiten~~ erledigt („Alle als Text bearbeiten“: === Kürzel ===, Kopieren/Einfügen, Teilen, Datei, Sprungleiste, letzten Stand wiederherstellen)
   - Neue Platzhalter: %tab% (Tab-Zeichen), %tabkey% (Tab-Taste), %enter% (Enter/Senden)
   - ~~Wunsch B: Vollbild-Editor in der App~~ erledigt (Knopf „Im Vollbild bearbeiten“ im Bearbeiten-Dialog)
-- **Neue effiziente Qwen-Modelle (Qwen3.8 u. a.) im Offline-AI-Plugin unterstützen** – sollen auch auf schwacher Hardware lokal laufen
-  - Letzter Test (Qwen3.5/3.8) hat nicht funktioniert; Ursache vermutlich zu alte llama.cpp-Version im Plugin
-  - Geprüft 17.10.: Qwen3.8-Flash-Next ist ein MoE mit 125B Parametern (6B aktiv) – rechnet sparsam, braucht aber ~100 GB Speicher (Q4), passt nicht aufs Handy. Qwen3.8-27B ebenfalls zu groß
-  - Realistisch fürs Handy (12 GB RAM): kleine Modelle bis ca. 4B, z. B. Qwen3.5 0.8B/2B/4B; auf kleine Qwen3.8/Qwen4-Varianten warten
-  - Vorgehen: konkretes Modell festlegen, llama.cpp im Plugin aktualisieren, Denkmodus aus, kurze Antworten
+- **Lokale KI mit Qwen** – ~~läuft nicht~~ läuft (18.10.)
+  - Funktioniert: Qwen3-4B-Instruct-2507 Q4_K_M, ca. 8 s inkl. Laden; Tipps: max. Tokens 256, Modell geladen lassen
+  - Behoben in LeanType+: Chat-Format für Qwen ohne Denkmodus, Diagnose zeigt den echten Ladefehler
+  - Qwen3.5 (2B/4B) lädt nicht: llama.cpp im Plugin (April 2026) lehnt die Dateien ab. Nur mit eigenem Plugin und aktueller llama.cpp – optional, falls Qwen3 nicht reicht
+  - Qwen3.8-Flash-Next (125B MoE, ~100 GB) passt nicht aufs Handy
 - Emoji-Vorschläge zum getippten Wort: prüfen, was LeanType schon kann (`suggest_emojis`, Inline-Emoji-Suche mit Emoji-Wörterbuch), dann entscheiden
 - Getrennte Tipp-Profile pro Daumen bzw. Haltung weiter verfeinern (Idee)
 
