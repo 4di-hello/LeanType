@@ -344,7 +344,11 @@ class ProofreadService(private val context: Context) {
         // Load model (or get cached)
         if (!ModelHolder.loadModel(context, modelPath)) {
              Log.e(TAG, "Model load failed")
-             return@withContext Result.failure(ProofreadException("Failed to load model in AI plugin."))
+             val details = loadFailureDetails()
+             return@withContext Result.failure(ProofreadException(
+                 if (details == null) "Failed to load model in AI plugin."
+                 else "Failed to load model in AI plugin: ${details.first} (details copied to clipboard)"
+             ))
         }
 
         // Cancel unload timer while working
@@ -452,6 +456,35 @@ class ProofreadService(private val context: Context) {
         val name = (modelPath + " " + runCatching { getModelName() }.getOrDefault("")).lowercase()
         if (!name.contains("qwen")) return prompt
         return "<|im_start|>user\n$prompt<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+    }
+
+    /**
+     * The plugin only logs why loading failed. Read the log of this process (the plugin runs in it)
+     * to show the actual llama.cpp error, and copy the relevant lines to the clipboard.
+     * Returns the most telling line and all relevant lines, or null if nothing was found.
+     */
+    private fun loadFailureDetails(): Pair<String, String>? = try {
+        val pid = android.os.Process.myPid().toString()
+        val process = ProcessBuilder("logcat", "-d", "-t", "400", "--pid", pid).redirectErrorStream(true).start()
+        val lines = process.inputStream.bufferedReader().readLines()
+        process.waitFor()
+        val keywords = listOf("llama", "gguf", "OfflineAi", "plugin", "Exception", "error", "Caused by", "tensor")
+        val relevant = lines.filter { line -> keywords.any { line.contains(it, ignoreCase = true) } }.takeLast(40)
+        val key = relevant.lastOrNull { it.contains("error loading model", true) || it.contains("llama_model_load", true) }
+            ?: relevant.lastOrNull { it.contains("Exception", true) || it.contains("error", true) }
+        if (key == null) null
+        else {
+            val all = relevant.joinToString("\n")
+            runCatching {
+                val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+                cm.setPrimaryClip(android.content.ClipData.newPlainText("LeanType AI error", all))
+            }
+            // without the logcat prefix (date, pid, tag)
+            key.substringAfter(": ").trim().take(200) to all
+        }
+    } catch (e: Exception) {
+        Log.w(TAG, "Could not read the log", e)
+        null
     }
 
     private fun stripThinkingTags(text: String): String {
