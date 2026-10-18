@@ -20,6 +20,8 @@ android {
     compileSdk = 36
 
     defaultConfig {
+        // only in this fork: build date and commit of the personal build, shown in About
+        buildConfigField("String", "FORK_BUILD", "\"\"")
         applicationId = "com.leanbitlab.leantype"
         minSdk = 21
         targetSdk = 35
@@ -109,6 +111,7 @@ android {
             signingConfig = signingConfigs.findByName("personal") ?: signingConfigs.getByName("debug")
             applicationIdSuffix = ".debug"
             matchingFallbacks += listOf("release")
+            buildConfigField("String", "FORK_BUILD", "\"" + (System.getenv("FORK_BUILD_INFO") ?: "") + "\"")
         }
         create("runTests") { // build variant for running tests on CI that skips tests known to fail
             isMinifyEnabled = false
