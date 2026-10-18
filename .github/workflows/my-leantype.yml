@@ -99,7 +99,10 @@ jobs:
           keytool -list -v -keystore "$RUNNER_TEMP/personal.keystore" -storepass android | grep -m1 "SHA256:" | sed 's/^ */::notice title=key::/'
 
       - name: Build APK
-        run: ./gradlew assembleOfflinePersonal
+        run: |
+          # shown in About, matches the release name
+          export FORK_BUILD_INFO="$(date -u +%d.%m.%Y) ($(git rev-parse --short HEAD))"
+          ./gradlew assembleOfflinePersonal
 
       - name: Check that the APK has the fixed key
         run: |
