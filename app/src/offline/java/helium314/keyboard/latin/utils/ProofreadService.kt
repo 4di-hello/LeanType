@@ -346,9 +346,10 @@ class ProofreadService(private val context: Context) {
             ?: return@withContext Result.failure(ProofreadException("Offline AI plugin not installed. Please install the plugin in Settings."))
 
         // Load model (or get cached)
+        val loadStart = System.currentTimeMillis()
         if (!ModelHolder.loadModel(context, modelPath)) {
              Log.e(TAG, "Model load failed")
-             val details = loadFailureDetails()
+             val details = loadFailureDetails(loadStart)
              return@withContext Result.failure(ProofreadException(
                  if (details == null) "Failed to load model in AI plugin."
                  else "Failed to load model in AI plugin: ${details.first} (details copied to clipboard)"
@@ -446,7 +447,8 @@ class ProofreadService(private val context: Context) {
                 cleanProofreadOutput(text, cleanedOutput)
             }
 
-            Log.i(TAG, "inference via plugin: input='$text' generated='$output' final='$finalOutput'")
+            // only the lengths: the texts are private and the system log can be read by other tools
+            Log.i(TAG, "inference via plugin: input ${text.length} chars, generated ${output.length} chars, result ${finalOutput.length} chars")
             if (finalOutput.isNotBlank()) {
                 Result.success(finalOutput)
             } else {
@@ -490,18 +492,23 @@ class ProofreadService(private val context: Context) {
     /**
      * The plugin only logs why loading failed. Read the log of this process (the plugin runs in it)
      * to show the actual llama.cpp error, and copy the relevant lines to the clipboard.
+     * Only lines logged since [since] (the start of loading) are used, and never lines that may
+     * contain typed or dictated text, so no private text ends up in the clipboard.
      * Returns the most telling line and all relevant lines, or null if nothing was found.
      */
-    private fun loadFailureDetails(): Pair<String, String>? = try {
+    private fun loadFailureDetails(since: Long): Pair<String, String>? = try {
         val pid = android.os.Process.myPid().toString()
-        val process = ProcessBuilder("logcat", "-d", "-t", "400", "--pid", pid).redirectErrorStream(true).start()
+        // logcat time format, one second earlier to be safe
+        val sinceTime = java.text.SimpleDateFormat("MM-dd HH:mm:ss.SSS", java.util.Locale.US).format(java.util.Date(since - 1000))
+        val process = ProcessBuilder("logcat", "-d", "-t", sinceTime, "--pid", pid).redirectErrorStream(true).start()
         val lines = process.inputStream.bufferedReader().readLines()
         process.waitFor()
         val keywords = listOf("llama", "gguf", "OfflineAi", "plugin", "Exception", "error", "Caused by", "tensor")
+        val withText = listOf("inference via plugin", "VoiceInputManager", "input='", "onPartial", "onFinal")
         // without stack trace lines, which would push out the actual error messages
         val relevant = lines.filter { line ->
             keywords.any { line.contains(it, ignoreCase = true) } && !line.contains("\tat ") && !Regex(":\\s+at ").containsMatchIn(line)
-                && !line.contains("... ")
+                && !line.contains("... ") && withText.none { line.contains(it, ignoreCase = true) }
         }.takeLast(60)
         val key = relevant.lastOrNull { it.contains("error loading model", true) || it.contains("llama_model_load", true) }
             ?: relevant.lastOrNull { it.contains("Error initializing context", true) }
@@ -512,7 +519,14 @@ class ProofreadService(private val context: Context) {
             val all = relevant.joinToString("\n")
             runCatching {
                 val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
-                cm.setPrimaryClip(android.content.ClipData.newPlainText("LeanType AI error", all))
+                val clip = android.content.ClipData.newPlainText("LeanType AI error", all)
+                // marked as sensitive: not shown in clipboard previews and not kept in the clipboard history
+                if (android.os.Build.VERSION.SDK_INT >= 24) {
+                    clip.description.extras = android.os.PersistableBundle().apply {
+                        putBoolean("android.content.extra.IS_SENSITIVE", true)
+                    }
+                }
+                cm.setPrimaryClip(clip)
             }
             // without the logcat prefix (date, pid, tag)
             key.substringAfter(": ").trim().take(200) to all
