@@ -3166,7 +3166,8 @@ class InputLogic(
     }
 
     private fun commitExpandedText(shortcut: String, expanded: String) {
-        if (KEY_PRESS_PLACEHOLDER.containsMatchIn(expanded)) {
+        mKeyExpansionId++ // a new expansion stops the rest of an earlier one with key presses
+        if (expanded.any(TextExpanderUtils::isKeyPressMarker)) {
             commitExpandedTextWithKeys(expanded)
             return
         }
@@ -3223,39 +3224,45 @@ class InputLogic(
         mLastExpandedCursorPosition = mConnection.expectedSelectionEnd
     }
 
+    /** Counts expansions: when a new one starts, the rest of an earlier one with key presses is dropped */
+    private var mKeyExpansionId = 0
+
     /**
-     * Expanded text with key presses (%enter%, %tabkey%): text parts and key presses are sent one
-     * after another, with a short pause after each key press, so the app can e.g. move to the next
-     * field first. Cursor placeholders are ignored, and backspace can't revert this expansion.
+     * Expanded text with key presses (%enter%, %tabkey%, marked by [TextExpanderUtils.markKeyPresses]):
+     * text parts and key presses are sent one after another, with a short pause after each key press,
+     * so the app can e.g. move to the next field first. Cursor placeholders are ignored, and backspace
+     * can't revert this expansion.
+     * The steps only go to the app in which the expansion started: if another app gets the focus in
+     * the meantime, or the connection is gone, the remaining steps are dropped.
      */
     private fun commitExpandedTextWithKeys(expanded: String) {
         mLastExpandedText = null
         mLastShortcutText = null
-        val steps = ArrayList<String>()
-        var last = 0
-        for (match in KEY_PRESS_PLACEHOLDER.findAll(expanded)) {
-            if (match.range.first > last) steps.add(expanded.substring(last, match.range.first))
-            steps.add(match.value)
-            last = match.range.last + 1
-        }
-        if (last < expanded.length) steps.add(expanded.substring(last))
-        val cleaned = steps.map { if (KEY_PRESS_PLACEHOLDER.matches(it)) it else it.replace(CURSOR_PATTERN.toRegex(), "").replace("%cursor%", "") }
+        val steps = TextExpanderUtils.splitKeyPresses(expanded)
+            .map { if (isKeyPressStep(it)) it else it.replace(CURSOR_PATTERN.toRegex(), "").replace("%cursor%", "") }
             .filter { it.isNotEmpty() }
+        if (steps.isEmpty()) return
+        val id = mKeyExpansionId
+        val packageName = mLatinIME.currentInputEditorInfo?.packageName
         // the first part goes through the rich connection, so its caches stay correct
-        if (cleaned.isEmpty()) return
-        if (KEY_PRESS_PLACEHOLDER.matches(cleaned[0])) runExpansionSteps(cleaned, 0)
+        if (isKeyPressStep(steps[0])) runExpansionSteps(steps, 0, id, packageName)
         else {
-            mConnection.commitText(cleaned[0], 1)
-            runExpansionSteps(cleaned, 1)
+            mConnection.commitText(steps[0], 1)
+            runExpansionSteps(steps, 1, id, packageName)
         }
     }
 
-    private fun runExpansionSteps(steps: List<String>, index: Int) {
-        if (index >= steps.size) return
-        val step = steps[index]
+    private fun isKeyPressStep(step: String) = step.length == 1 && TextExpanderUtils.isKeyPressMarker(step[0])
+
+    private fun runExpansionSteps(steps: List<String>, index: Int, id: Int, packageName: String?) {
+        if (index >= steps.size || id != mKeyExpansionId) return
+        // never type the rest into another app
+        if (mLatinIME.currentInputEditorInfo?.packageName != packageName) return
         val ic = mLatinIME.currentInputConnection ?: return
-        when (step) {
-            ENTER_PLACEHOLDER -> {
+        val step = steps[index]
+        val isKeyPress = isKeyPressStep(step)
+        when {
+            step[0] == TextExpanderUtils.ENTER_KEY_MARKER && isKeyPress -> {
                 val editorInfo: EditorInfo? = mLatinIME.currentInputEditorInfo
                 val actionId = editorInfo?.let { InputTypeUtils.getImeOptionsActionIdFromEditorInfo(it) } ?: EditorInfo.IME_ACTION_NONE
                 when {
@@ -3264,11 +3271,11 @@ class InputLogic(
                     else -> sendKeyPress(ic, KeyEvent.KEYCODE_ENTER)
                 }
             }
-            TAB_KEY_PLACEHOLDER -> sendKeyPress(ic, KeyEvent.KEYCODE_TAB)
+            step[0] == TextExpanderUtils.TAB_KEY_MARKER && isKeyPress -> sendKeyPress(ic, KeyEvent.KEYCODE_TAB)
             else -> ic.commitText(step, 1)
         }
-        val delay = if (step == ENTER_PLACEHOLDER || step == TAB_KEY_PLACEHOLDER) KEY_PRESS_STEP_DELAY_MS else 0L
-        expansionHandler.postDelayed({ runExpansionSteps(steps, index + 1) }, delay)
+        val delay = if (isKeyPress) KEY_PRESS_STEP_DELAY_MS else 0L
+        expansionHandler.postDelayed({ runExpansionSteps(steps, index + 1, id, packageName) }, delay)
     }
 
     private fun sendKeyPress(ic: android.view.inputmethod.InputConnection, keyCode: Int) {
@@ -3281,9 +3288,6 @@ class InputLogic(
 
     companion object {
         private const val TAG = "InputLogic"
-        const val ENTER_PLACEHOLDER = "%enter%"
-        const val TAB_KEY_PLACEHOLDER = "%tabkey%"
-        private val KEY_PRESS_PLACEHOLDER = Regex("%enter%|%tabkey%")
         private const val KEY_PRESS_STEP_DELAY_MS = 150L
         private const val INLINE_EMOJI_SEARCH_MARKER = ':'
         private const val KEY_REPEAT_INTERVAL_MS = 50
