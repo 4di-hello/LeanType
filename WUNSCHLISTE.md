@@ -22,6 +22,18 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
 - Emoji-Vorschläge zum getippten Wort: prüfen, was LeanType schon kann (`suggest_emojis`, Inline-Emoji-Suche mit Emoji-Wörterbuch), dann entscheiden
 - Getrennte Tipp-Profile pro Daumen bzw. Haltung weiter verfeinern (Idee)
 
+## Sicherheit (Review 18.10.)
+
+- Erledigt 19.10.: Tastendrücke (%enter%, %tabkey%) nur aus dem Baustein selbst, nie aus der Zwischenablage; Rest eines Bausteins wird bei App-Wechsel verworfen (auch in PR #695)
+- Erledigt 19.10.: KI-Fehlerdiagnose kopiert keine Texte mehr, Protokoll nur mit Textlängen
+- Erledigt 19.10.: neutrale Beispiele statt persönlicher (Fork, PR #695, Branches, Releases)
+- Erledigt 19.10.: Pipeline-Bausteine (GitHub Actions) auf feste Versionen festgelegt
+- Signierschlüssel: selbst sichern (Passwortmanager)
+- Automatische Sicherung: Passwort setzen (dann ist alles verschlüsselt)
+- Offen, klein: Pipeline bricht ab, falls das APK Internet-Berechtigung bekommt
+- Offen, optional: Signieren in eigenem Schritt ohne Gradle
+- Offen, PR-Kandidaten: Diktat-Texte nicht ins App-Protokoll; Plugin-Signatur prüfen; unverschlüsselte Sicherung erst prüfen, dann löschen
+
 ## Upstream (LeanBitLab/LeanType)
 
 - PR #680 „Adapt to my typing“ begleiten; nach dem Merge den Fork auf die schlanke Version umstellen (ein Schalter, Daten bleiben)
