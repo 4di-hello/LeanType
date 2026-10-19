@@ -25,6 +25,44 @@ object TextExpanderUtils {
     const val PREF_DATA_PREVIOUS = "pref_text_expander_data_previous"
     const val REGEX_PREFIX = "__regex__:"
 
+    const val ENTER_PLACEHOLDER = "%enter%"
+    const val TAB_KEY_PLACEHOLDER = "%tabkey%"
+    /**
+     * Key presses in expanded text are marked with these Unicode noncharacters, which are reserved
+     * for internal use and don't occur in normal text. The placeholders are replaced by them in the
+     * template, before any text is inserted, so inserted text (e.g. from the clipboard) can never
+     * press keys.
+     */
+    const val ENTER_KEY_MARKER = '\uFDD0'
+    const val TAB_KEY_MARKER = '\uFDD1'
+
+    fun isKeyPressMarker(c: Char) = c == ENTER_KEY_MARKER || c == TAB_KEY_MARKER
+
+    /** [template] with the key press placeholders replaced by markers; only visible placeholders press keys */
+    fun markKeyPresses(template: String): String =
+        withoutKeyPressMarkers(template)
+            .replace(ENTER_PLACEHOLDER, ENTER_KEY_MARKER.toString())
+            .replace(TAB_KEY_PLACEHOLDER, TAB_KEY_MARKER.toString())
+
+    /** [text] without key press markers, for text that is inserted into an expansion */
+    fun withoutKeyPressMarkers(text: String): String =
+        if (text.any(::isKeyPressMarker)) text.filterNot(::isKeyPressMarker) else text
+
+    /** Expanded text split into text parts and key press markers (one per step), in order */
+    fun splitKeyPresses(expanded: String): List<String> {
+        val steps = ArrayList<String>()
+        val part = StringBuilder()
+        for (c in expanded) {
+            if (isKeyPressMarker(c)) {
+                if (part.isNotEmpty()) steps.add(part.toString())
+                part.clear()
+                steps.add(c.toString())
+            } else part.append(c)
+        }
+        if (part.isNotEmpty()) steps.add(part.toString())
+        return steps
+    }
+
     // Pre-compiled regexes for performance
     private val CITATION_REGEX = Regex(
         """\[(?:\s*\d+(?:\s*[,;\-–—]\s*\d+)*\s*|\s*note\s*\d+\s*|\s*citation\s+needed\s*|\s*edit\s*|\s*source\s*)\]""",
@@ -426,7 +464,7 @@ object TextExpanderUtils {
         return try {
             val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
             if (clipboard?.hasPrimaryClip() == true) {
-                val rawText = clipboard.primaryClip?.getItemAt(0)?.text?.toString() ?: ""
+                val rawText = withoutKeyPressMarkers(clipboard.primaryClip?.getItemAt(0)?.text?.toString() ?: "")
                 if (rawText.length > 5000) rawText.substring(0, 5000) else rawText
             } else ""
         } catch (_: Exception) {
@@ -437,7 +475,7 @@ object TextExpanderUtils {
     fun expand(template: String, context: Context): String {
         var result = template
 
-        // tab character; %tabkey% (key press) and %enter% are handled when committing
+        // tab character; key presses (%enter%, %tabkey%) are already marked, see markKeyPresses
         if (result.contains("%tab%")) result = result.replace("%tab%", "\t")
 
         // Resolve %date[:modifiers]%
@@ -605,11 +643,13 @@ object TextExpanderUtils {
             val entry = item.entry
             if (item.isRegex) {
                 val regex = item.regex ?: continue
+                // text from the input field must not press keys when it is inserted by the regex
+                if (fullText.any(::isKeyPressMarker)) continue
                 val prefix = entry.prefix
                 if (word != null) {
                     if (regex.matches(fullText)) {
                         try {
-                            val replaced = regex.replace(fullText, entry.template)
+                            val replaced = regex.replace(fullText, markKeyPresses(entry.template))
                             val prefixLength = if (fullText.length > word.length) fullText.length - word.length else prefix.length
                             return ExpandedResult(expand(replaced, context), prefixLength, fullText, entry.imageUri?.takeIf { it.isNotBlank() })
                         } catch (e: java.lang.Exception) {
@@ -621,7 +661,7 @@ object TextExpanderUtils {
                     val match = regex.findAll(fullText).lastOrNull { it.range.last == fullText.length - 1 }
                     if (match != null && match.value.isNotEmpty()) {
                         val matchedString = match.value
-                        val replaced = regex.replace(matchedString, entry.template)
+                        val replaced = regex.replace(matchedString, markKeyPresses(entry.template))
                         val extraPrefix = if (word != null && matchedString.endsWith(word, ignoreCase = true)) {
                             matchedString.length - word.length
                         } else 0
@@ -649,7 +689,7 @@ object TextExpanderUtils {
                     } else {
                         prefix.length
                     }
-                    return ExpandedResult(expand(entry.template, context), effectivePrefixLength, expectedSuffix, entry.imageUri?.takeIf { it.isNotBlank() })
+                    return ExpandedResult(expand(markKeyPresses(entry.template), context), effectivePrefixLength, expectedSuffix, entry.imageUri?.takeIf { it.isNotBlank() })
                 }
             }
         }
@@ -661,7 +701,7 @@ object TextExpanderUtils {
         val shortcuts = getShortcuts(context)
         val entry = shortcuts[word] ?: shortcuts[word.lowercase(Locale.getDefault())]
         if (entry != null && entry.prefix.isEmpty()) {
-            return expand(entry.template, context)
+            return expand(markKeyPresses(entry.template), context)
         }
         return null
     }
