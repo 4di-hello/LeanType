@@ -30,7 +30,7 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
 - Erledigt 19.10.: Pipeline-Bausteine (GitHub Actions) auf feste Versionen festgelegt
 - Signierschlüssel: selbst sichern (Passwortmanager)
 - Automatische Sicherung: Passwort setzen (dann ist alles verschlüsselt)
-- Offen, klein: Pipeline bricht ab, falls das APK Internet-Berechtigung bekommt
+- Erledigt 19.10.: Pipeline bricht ab, falls das APK Internet-Berechtigung bekommt
 - Offen, optional: Signieren in eigenem Schritt ohne Gradle
 - Offen, PR-Kandidaten: Diktat-Texte nicht ins App-Protokoll; Plugin-Signatur prüfen; unverschlüsselte Sicherung erst prüfen, dann löschen
 
