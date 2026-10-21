@@ -509,8 +509,27 @@ class ClipboardHistoryManager(
 
     fun clearHistory() {
         clipboardDao?.clearNonPinned()
+        cachedScreenshotInfo = null
         ClipboardManagerCompat.clearPrimaryClip(clipboardManager)
         removeClipboardSuggestion()
+    }
+
+    private fun markScreenshotDeleted(imageUri: String) {
+        val prefs = latinIME.prefs()
+        val rawDeletedSet = prefs.getStringSet("deleted_screenshot_uris", emptySet()) ?: emptySet()
+        val deletedSet = rawDeletedSet.filter { it.startsWith("content://") || it.contains("clipboard_images") }.toMutableSet()
+        deletedSet.add(imageUri)
+        val curCached = cachedScreenshotInfo
+        if (curCached != null) {
+            val md = java.security.MessageDigest.getInstance("MD5")
+            val hash = md.digest(curCached.uri.toString().toByteArray()).joinToString("") { "%02x".format(it) }
+            if (imageUri.contains(hash) || curCached.fullPath == imageUri || curCached.uri.toString() == imageUri) {
+                deletedSet.add(curCached.uri.toString())
+                prefs.edit().putString("last_dismissed_screenshot_uri", curCached.uri.toString()).apply()
+                cachedScreenshotInfo = null
+            }
+        }
+        prefs.edit().putStringSet("deleted_screenshot_uris", deletedSet).apply()
     }
 
     fun canRemove(index: Int) = clipboardDao?.isPinned(index) == false
@@ -520,13 +539,7 @@ class ClipboardHistoryManager(
         val entry = clipboardDao?.deleteClipAt(index)
         if (entry != null) {
             if (entry.imageUri != null) {
-                val prefs = latinIME.prefs()
-                val deletedSet = prefs.getStringSet("deleted_screenshot_uris", emptySet())?.toMutableSet() ?: mutableSetOf()
-                deletedSet.add(entry.imageUri)
-                prefs.edit().putStringSet("deleted_screenshot_uris", deletedSet).apply()
-                if (cachedScreenshotInfo?.fullPath == entry.imageUri || cachedScreenshotInfo?.uri?.toString() == entry.imageUri) {
-                    cachedScreenshotInfo = null
-                }
+                markScreenshotDeleted(entry.imageUri)
             }
             try {
                 val primaryText = retrieveClipboardContent().toString()
@@ -543,13 +556,7 @@ class ClipboardHistoryManager(
     fun deleteEntryById(id: Long): ClipboardHistoryEntry? {
         val entry = clipboardDao?.deleteClipById(id) ?: return null
         if (entry.imageUri != null) {
-            val prefs = latinIME.prefs()
-            val deletedSet = prefs.getStringSet("deleted_screenshot_uris", emptySet())?.toMutableSet() ?: mutableSetOf()
-            deletedSet.add(entry.imageUri)
-            prefs.edit().putStringSet("deleted_screenshot_uris", deletedSet).apply()
-            if (cachedScreenshotInfo?.fullPath == entry.imageUri || cachedScreenshotInfo?.uri?.toString() == entry.imageUri) {
-                cachedScreenshotInfo = null
-            }
+            markScreenshotDeleted(entry.imageUri)
         }
         try {
             val primaryText = retrieveClipboardContent().toString()
@@ -617,8 +624,51 @@ class ClipboardHistoryManager(
         if (dontShowCurrentSuggestion) return null
         if (parent == null) return null
 
-        // check for screenshot first if enabled
-        if (latinIME.mSettings.current.mSuggestScreenshots) {
+        val suggestScreenshot = latinIME.mSettings.current.mSuggestScreenshots
+        val suggestText = latinIME.mSettings.current.mSuggestClipboardContent
+
+        // Check text clip availability and timestamp
+        val inputType = editorInfo?.inputType ?: InputType.TYPE_NULL
+        var textClipContent: CharSequence? = null
+        var textClipTimestamp: Long = 0L
+        if (suggestText) {
+            val clipData = clipboardManager.primaryClip
+            if (clipData != null && clipData.itemCount > 0 && clipData.description?.hasMimeType("text/*") != false) {
+                val clipItem = clipData.getItemAt(0)
+                val timeStamp = ClipboardManagerCompat.getClipTimestamp(clipData)
+                if (System.currentTimeMillis() - timeStamp <= RECENT_TIME_MILLIS) {
+                    val content = clipItem?.coerceToText(latinIME)
+                    val prefs = latinIME.prefs()
+                    val lastDismissedText = prefs.getString("last_dismissed_clipboard_text", "")
+                    val numberOk = !InputTypeUtils.isNumberInputType(inputType) || content?.isValidNumber() == true
+                    if (!TextUtils.isEmpty(content) && content.toString() != lastDismissedText && numberOk) {
+                        textClipContent = content
+                        textClipTimestamp = timeStamp
+                    }
+                }
+            }
+        }
+
+        // Check screenshot availability and timestamp
+        var screenshotTimestamp: Long = 0L
+        if (suggestScreenshot) {
+            val screenshotInfo = cachedScreenshotInfo
+            if (screenshotInfo != null) {
+                val prefs = latinIME.prefs()
+                val lastDismissedScreenshotUri = prefs.getString("last_dismissed_screenshot_uri", "")
+                val rawDeletedSet = prefs.getStringSet("deleted_screenshot_uris", emptySet()) ?: emptySet()
+                val isDismissed = screenshotInfo.uri.toString() == lastDismissedScreenshotUri ||
+                    rawDeletedSet.contains(screenshotInfo.uri.toString()) ||
+                    rawDeletedSet.contains(screenshotInfo.fullPath)
+                val diff = System.currentTimeMillis() - screenshotInfo.dateAdded
+                if (diff < RECENT_SCREENSHOT_TIME_MILLIS && !isDismissed) {
+                    screenshotTimestamp = screenshotInfo.dateAdded
+                }
+            }
+        }
+
+        // Prioritize newest: if screenshot is newer than text, try to show screenshot
+        if (screenshotTimestamp > 0L && (textClipContent == null || screenshotTimestamp >= textClipTimestamp)) {
             val screenshotView = getScreenshotSuggestionView(parent)
             if (screenshotView != null) {
                 clipboardSuggestionView = screenshotView
@@ -626,22 +676,26 @@ class ClipboardHistoryManager(
             }
         }
 
-        // get the content, or return null
-        if (!latinIME.mSettings.current.mSuggestClipboardContent) return null
-        val clipData = clipboardManager.primaryClip ?: return null
-        if (clipData.itemCount == 0 || clipData.description?.hasMimeType("text/*") == false) return null
-        val clipItem = clipData.getItemAt(0) ?: return null
-        val timeStamp = ClipboardManagerCompat.getClipTimestamp(clipData)
-        if (System.currentTimeMillis() - timeStamp > RECENT_TIME_MILLIS) return null
-        val content = clipItem.coerceToText(latinIME)
-        if (TextUtils.isEmpty(content)) return null
-        val prefs = latinIME.prefs()
-        val lastDismissedText = prefs.getString("last_dismissed_clipboard_text", "")
-        if (content.toString() == lastDismissedText) return null
-        val inputType = editorInfo?.inputType ?: InputType.TYPE_NULL
-        if (InputTypeUtils.isNumberInputType(inputType) && !content.isValidNumber()) return null
+        // Otherwise show text if available
+        if (textClipContent != null) {
+            val view = buildTextClipboardSuggestionView(textClipContent, inputType, parent)
+            clipboardSuggestionView = view
+            return view
+        }
 
-        // create the view
+        // Fallback to screenshot if text is not available
+        if (suggestScreenshot) {
+            val screenshotView = getScreenshotSuggestionView(parent)
+            if (screenshotView != null) {
+                clipboardSuggestionView = screenshotView
+                return screenshotView
+            }
+        }
+
+        return null
+    }
+
+    private fun buildTextClipboardSuggestionView(content: CharSequence, inputType: Int, parent: ViewGroup): View {
         val binding = ClipboardSuggestionBinding.inflate(LayoutInflater.from(latinIME), parent, false)
         val textView = binding.clipboardSuggestionText
         latinIME.mSettings.getCustomTypeface()?.let { textView.typeface = it }
@@ -671,8 +725,7 @@ class ClipboardHistoryManager(
         colors.setColor(closeButton, ColorType.REMOVE_SUGGESTION_ICON)
         colors.setBackground(binding.root, ColorType.CLIPBOARD_SUGGESTION_BACKGROUND)
 
-        clipboardSuggestionView = binding.root
-        return clipboardSuggestionView
+        return binding.root
     }
 
     private var lastSuggestedScreenshotUri: String? = null
@@ -698,6 +751,12 @@ class ClipboardHistoryManager(
         val prefs = latinIME.prefs()
         val lastDismissedScreenshotUri = prefs.getString("last_dismissed_screenshot_uri", "")
         if (screenshotInfo.uri.toString() == lastDismissedScreenshotUri) return null
+
+        val rawDeletedSet = prefs.getStringSet("deleted_screenshot_uris", emptySet()) ?: emptySet()
+        if (rawDeletedSet.contains(screenshotInfo.uri.toString()) || rawDeletedSet.contains(screenshotInfo.fullPath)) {
+            cachedScreenshotInfo = null
+            return null
+        }
 
         val diff = System.currentTimeMillis() - screenshotInfo.dateAdded
         if (diff >= RECENT_SCREENSHOT_TIME_MILLIS) {
@@ -781,11 +840,19 @@ class ClipboardHistoryManager(
         }
 
         pasteButton.setOnClickListener {
+            val prefs = latinIME.prefs()
+            val rawDeletedSet = prefs.getStringSet("deleted_screenshot_uris", emptySet()) ?: emptySet()
+            val deletedSet = rawDeletedSet.filter { it.startsWith("content://") || it.contains("clipboard_images") }.toMutableSet()
+            deletedSet.add(contentUri.toString())
+            prefs.edit().putStringSet("deleted_screenshot_uris", deletedSet)
+                .putString("last_dismissed_screenshot_uri", contentUri.toString()).apply()
+            cachedScreenshotInfo = null
             dontShowCurrentSuggestion = true
             lastSuggestedScreenshotUri = contentUri.toString()
             latinIME.onImageSelected(contentUri.toString())
             AudioAndHapticFeedbackManager.getInstance().performHapticAndAudioFeedback(KeyCode.NOT_SPECIFIED, it, HapticEvent.KEY_PRESS)
             binding.root.isGone = true
+            removeClipboardSuggestion()
         }
 
         val closeDrawable = latinIME.mKeyboardSwitcher.keyboard?.mIconsSet?.getIconDrawable(ToolbarKey.CLOSE_HISTORY.name.lowercase())
