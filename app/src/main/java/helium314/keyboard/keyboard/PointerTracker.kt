@@ -105,6 +105,7 @@ class PointerTracker private constructor(
     // (automatic or manual) shift of the same alphabet layout. Such a change must not make us
     // re-detect the key on release, see detectAndSendKey.
     private var mOnlyShiftStateHasChanged = true
+    private var mHadOlderNonModifierOnDown = false
     private var keyboardChangeOccupiedHeightDifference = 0
 
     // true if this pointer is no longer triggering any action because it has been canceled.
@@ -250,8 +251,9 @@ class PointerTracker private constructor(
             keyboardChangeOccupiedHeightDifference = keyboard.mOccupiedHeight - oldKeyboard.mOccupiedHeight
         }
         val onlyShiftStateChanged = oldKeyboard != null && isOnlyShiftStateChange(oldKeyboard, keyboard)
-        mOnlyShiftStateHasChanged = if (mKeyboardLayoutHasBeenChanged) mOnlyShiftStateHasChanged && onlyShiftStateChanged
-                                    else onlyShiftStateChanged
+        val shouldPreserveShift = onlyShiftStateChanged && !mHadOlderNonModifierOnDown
+        mOnlyShiftStateHasChanged = if (mKeyboardLayoutHasBeenChanged) mOnlyShiftStateHasChanged && shouldPreserveShift
+                                    else shouldPreserveShift
         mKeyDetector = keyDetector
         mKeyboard = keyboard
         // Mark that keyboard layout has been changed.
@@ -551,8 +553,9 @@ class PointerTracker private constructor(
             mKeySwipeAllowed = true
             sInKeySwipe = true
         }
+        mHadOlderNonModifierOnDown = sPointerTrackerQueue.hasNonModifierKeyOlderThan(this)
         mKeyboardLayoutHasBeenChanged = false
-        mOnlyShiftStateHasChanged = true
+        mOnlyShiftStateHasChanged = !mHadOlderNonModifierOnDown
         mIsTrackingForActionDisabled = false
         resetKeySelectionByDraggingFinger()
         if (key != null) {
