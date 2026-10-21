@@ -987,7 +987,7 @@ class GifPickerView @JvmOverloads constructor(
                     return@launch
                 }
 
-                GifInserter.commit(context.applicationContext, pfd, mime, ic, ei)
+                GifInserter.commit(context.applicationContext, pfd, mime, ic, ei, item.kind)
                 GifRecentManager.addRecent(context.applicationContext, item)
             } finally {
                 adapter.setInsertingId(null)

@@ -3,6 +3,9 @@ package helium314.keyboard.latin.gif
 import android.content.ClipDescription
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
 import android.os.Build
 import android.os.ParcelFileDescriptor
 import android.view.inputmethod.EditorInfo
@@ -12,10 +15,12 @@ import androidx.core.content.FileProvider
 import androidx.core.view.inputmethod.EditorInfoCompat
 import androidx.core.view.inputmethod.InputConnectionCompat
 import androidx.core.view.inputmethod.InputContentInfoCompat
+import com.leanbitlab.leantype.gif.Contract
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.util.UUID
@@ -35,7 +40,8 @@ object GifInserter {
         pfd: ParcelFileDescriptor,
         declaredMime: String,
         ic: InputConnection?,
-        editorInfo: EditorInfo?
+        editorInfo: EditorInfo?,
+        kind: Int = 0
     ): Boolean {
         try {
             if (ic == null || editorInfo == null) {
@@ -48,8 +54,11 @@ object GifInserter {
                 return false
             }
 
+            val supportsWaSticker = acceptedMimes.any { it.equals("image/webp.wasticker", ignoreCase = true) }
+            val supportsWebp = acceptedMimes.any { ClipDescription.compareMimeTypes("image/webp", it) }
+
             val copyResult = withContext(Dispatchers.IO) {
-                copyAndValidate(context, pfd)
+                copyAndValidate(context, pfd, supportsWaSticker, supportsWebp, kind)
             } ?: return false
 
             val (outFile, actualMime) = copyResult
@@ -71,7 +80,8 @@ object GifInserter {
                     }
                     0
                 }
-                val info = InputContentInfoCompat(uri, ClipDescription("GIF", arrayOf(actualMime)), null)
+                val label = if (actualMime.contains("sticker") || actualMime == "image/webp") "Sticker" else "GIF"
+                val info = InputContentInfoCompat(uri, ClipDescription(label, arrayOf(actualMime)), null)
                 val ok = runCatching {
                     InputConnectionCompat.commitContent(ic, editorInfo, info, flags, null)
                 }.getOrDefault(false)
@@ -87,12 +97,18 @@ object GifInserter {
         }
     }
 
-    private suspend fun copyAndValidate(context: Context, pfd: ParcelFileDescriptor): Pair<File, String>? {
+    private suspend fun copyAndValidate(
+        context: Context,
+        pfd: ParcelFileDescriptor,
+        supportsWaSticker: Boolean,
+        supportsWebp: Boolean,
+        kind: Int
+    ): Pair<File, String>? {
         val dir = File(context.cacheDir, "gif_cache").apply { mkdirs() }
         cleanup(dir)
 
         val tempFile = File(dir, "temp_${UUID.randomUUID()}.tmp")
-        val header = ByteArray(16)
+        val header = ByteArray(32)
         var headerRead = 0
         var totalBytes = 0L
 
@@ -110,8 +126,8 @@ object GifInserter {
                             }
                             return null
                         }
-                        if (headerRead < 16) {
-                            val toCopy = (16 - headerRead).coerceAtMost(bytesRead)
+                        if (headerRead < 32) {
+                            val toCopy = (32 - headerRead).coerceAtMost(bytesRead)
                             System.arraycopy(buffer, 0, header, headerRead, toCopy)
                             headerRead += toCopy
                         }
@@ -130,6 +146,32 @@ object GifInserter {
                 return null
             }
 
+            // WhatsApp sticker insertion
+            if (supportsWaSticker && sniffedMime != "image/gif") {
+                val waFile = File(dir, "sticker_${UUID.randomUUID()}.wasticker")
+                val isAnim = isAnimatedWebp(header)
+                val success = if (isAnim) {
+                    tempFile.renameTo(waFile)
+                } else {
+                    normalizeToWebpSticker(tempFile, waFile).also { tempFile.delete() }
+                }
+                if (success && waFile.exists() && waFile.length() > 0) {
+                    return waFile to "image/webp.wasticker"
+                }
+                tempFile.delete()
+                waFile.delete()
+                return null
+            }
+
+            // Telegram or other sticker-capable apps: normalize sticker images (JPEG/PNG) to WebP
+            if (supportsWebp && (kind == Contract.KIND_STICKER || sniffedMime == "image/webp") && sniffedMime in listOf("image/png", "image/jpeg")) {
+                val webpFile = File(dir, "sticker_${UUID.randomUUID()}.webp")
+                if (normalizeToWebpSticker(tempFile, webpFile)) {
+                    tempFile.delete()
+                    return webpFile to "image/webp"
+                }
+            }
+
             val ext = when (sniffedMime) {
                 "image/webp" -> "webp"
                 "image/png" -> "png"
@@ -145,6 +187,99 @@ object GifInserter {
         } catch (_: Exception) {
             tempFile.delete()
             return null
+        }
+    }
+
+    private fun isAnimatedWebp(header: ByteArray): Boolean {
+        if (header.size >= 21 &&
+            header[0] == 'R'.code.toByte() && header[1] == 'I'.code.toByte() &&
+            header[2] == 'F'.code.toByte() && header[3] == 'F'.code.toByte() &&
+            header[8] == 'W'.code.toByte() && header[9] == 'E'.code.toByte() &&
+            header[10] == 'B'.code.toByte() && header[11] == 'P'.code.toByte() &&
+            header[12] == 'V'.code.toByte() && header[13] == 'P'.code.toByte() &&
+            header[14] == '8'.code.toByte() && header[15] == 'X'.code.toByte()
+        ) {
+            val flags = header[20].toInt()
+            return (flags and 0x02) != 0
+        }
+        return false
+    }
+
+    private fun normalizeToWebpSticker(inputFile: File, outputFile: File): Boolean {
+        return try {
+            val options = BitmapFactory.Options().apply {
+                inJustDecodeBounds = true
+            }
+            BitmapFactory.decodeFile(inputFile.absolutePath, options)
+            val w = options.outWidth
+            val h = options.outHeight
+            if (w <= 0 || h <= 0) return false
+
+            if (w == 512 && h == 512 && inputFile.length() <= 100 * 1024) {
+                inputFile.copyTo(outputFile, overwrite = true)
+                return true
+            }
+
+            val maxDim = maxOf(w, h)
+            var sampleSize = 1
+            while (maxDim / sampleSize > 1024) {
+                sampleSize *= 2
+            }
+
+            val decodeOptions = BitmapFactory.Options().apply {
+                inSampleSize = sampleSize
+                inPreferredConfig = Bitmap.Config.ARGB_8888
+            }
+            val bitmap = BitmapFactory.decodeFile(inputFile.absolutePath, decodeOptions) ?: return false
+
+            val currMax = maxOf(bitmap.width, bitmap.height)
+            val scale = 512f / currMax
+            val targetW = (bitmap.width * scale).toInt().coerceIn(1, 512)
+            val targetH = (bitmap.height * scale).toInt().coerceIn(1, 512)
+
+            val scaled = if (targetW != bitmap.width || targetH != bitmap.height) {
+                Bitmap.createScaledBitmap(bitmap, targetW, targetH, true)
+            } else {
+                bitmap
+            }
+
+            val canvasBitmap = Bitmap.createBitmap(512, 512, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(canvasBitmap)
+            val left = (512 - targetW) / 2f
+            val top = (512 - targetH) / 2f
+            canvas.drawBitmap(scaled, left, top, null)
+
+            val baos = ByteArrayOutputStream()
+            var quality = 90
+            var compressedBytes: ByteArray
+            while (true) {
+                baos.reset()
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    val format = if (quality == 90 && canvasBitmap.hasAlpha()) {
+                        Bitmap.CompressFormat.WEBP_LOSSLESS
+                    } else {
+                        Bitmap.CompressFormat.WEBP_LOSSY
+                    }
+                    canvasBitmap.compress(format, quality, baos)
+                } else {
+                    @Suppress("DEPRECATION")
+                    canvasBitmap.compress(Bitmap.CompressFormat.WEBP, quality, baos)
+                }
+                compressedBytes = baos.toByteArray()
+                if (compressedBytes.size <= 100 * 1024 || quality <= 30) {
+                    break
+                }
+                quality -= 15
+            }
+
+            outputFile.writeBytes(compressedBytes)
+
+            if (scaled != bitmap) scaled.recycle()
+            bitmap.recycle()
+            canvasBitmap.recycle()
+            outputFile.exists() && outputFile.length() > 0
+        } catch (_: Exception) {
+            false
         }
     }
 
