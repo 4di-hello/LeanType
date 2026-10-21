@@ -1841,4 +1841,6 @@ Abilita l\'inferenza GGUF / llama.cpp sul dispositivo per correzione e riscrittu
     <string name="clipboard_skip_sensitive_summary">Le voci contrassegnate come riservate (ad esempio dai gestori di password) e i codici monouso da 4 a 8 cifre non vengono aggiunti alla cronologia. Incollare funziona ancora</string>
     <string name="prefs_secondary_font_scale">Scala dei caratteri dei caratteri secondari</string>
     <string name="clipboard_font_scale">Scala dei caratteri della cronologia degli appunti</string>
+    <string name="openai_omit_temperature_title">Omettere la temperatura</string>
+    <string name="openai_omit_temperature_summary">Non inviare il parametro della temperatura (richiesto per i modelli Claude e di ragionamento più recenti)</string>
 </resources>

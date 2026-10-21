@@ -1768,4 +1768,6 @@
     <string name="clipboard_skip_sensitive_summary">Запісы, пазначаныя як канфідэнцыяльныя (напрыклад, з менеджэраў пароляў), і аднаразовыя коды з 4 да 8 лічбаў не дадаюцца ў гісторыю. Уклейка ўсё яшчэ працуе</string>
     <string name="prefs_secondary_font_scale">Шкала шрыфта другаснага сімвала</string>
     <string name="clipboard_font_scale">Маштаб гісторыі буфера абмену</string>
+    <string name="openai_omit_temperature_title">Прапусціць тэмпературу</string>
+    <string name="openai_omit_temperature_summary">Не адпраўляць параметр тэмпературы (патрабуецца для новых мадэляў Claude і разважанняў)</string>
 </resources>

@@ -1756,4 +1756,6 @@ Omogućuje lokalno GGUF / llama.cpp zaključivanje na uređaju za lekturu i prep
     <string name="clipboard_skip_sensitive_summary">Unosi označeni kao povjerljivi (npr. od upravitelja lozinkama) i jednokratni kodovi s 4 do 8 znamenki ne dodaju se u povijest. Lijepljenje i dalje funkcionira</string>
     <string name="prefs_secondary_font_scale">Razmjer fonta sekundarnog znaka</string>
     <string name="clipboard_font_scale">Mjerilo fonta povijesti međuspremnika</string>
+    <string name="openai_omit_temperature_title">Izostaviti temperaturu</string>
+    <string name="openai_omit_temperature_summary">Nemojte slati parametar temperature (potrebno za novije modele Claude i reasoning)</string>
 </resources>

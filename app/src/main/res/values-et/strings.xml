@@ -1763,4 +1763,6 @@ Võimaldab seadmesisese GGUF / llama.cpp järelduse korrektuuri ja ümbersõnast
     <string name="clipboard_skip_sensitive_summary">Ajaloosse ei lisata konfidentsiaalseks märgitud kirjeid (nt paroolihalduritelt) ja ühekordseid 4–8-kohalisi koode. Kleepimine ikka toimib</string>
     <string name="prefs_secondary_font_scale">Sekundaarse tähemärgi skaala</string>
     <string name="clipboard_font_scale">Lõikepuhvri ajaloo fontide skaala</string>
+    <string name="openai_omit_temperature_title">Jäta temperatuur vahele</string>
+    <string name="openai_omit_temperature_summary">Ärge saatke temperatuuri parameetrit (nõutav uuemate Claude\'i ja arutlusmudelite jaoks)</string>
 </resources>

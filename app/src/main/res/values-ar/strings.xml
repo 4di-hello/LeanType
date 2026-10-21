@@ -1839,4 +1839,6 @@
     <string name="clipboard_skip_sensitive_summary">لا تتم إضافة الإدخالات التي تم وضع علامة عليها على أنها سرية (على سبيل المثال من مديري كلمات المرور) والرموز لمرة واحدة المكونة من 4 إلى 8 أرقام إلى السجل. اللصق لا يزال يعمل</string>
     <string name="prefs_secondary_font_scale">مقياس الخط الحرف الثانوي</string>
     <string name="clipboard_font_scale">مقياس الخط التاريخ الحافظة</string>
+    <string name="openai_omit_temperature_title">تجاهل درجة الحرارة</string>
+    <string name="openai_omit_temperature_summary">لا ترسل معلمة درجة الحرارة (مطلوبة لنماذج كلود والاستدلال الأحدث)</string>
 </resources>

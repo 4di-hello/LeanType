@@ -1818,4 +1818,6 @@ Umożliwia lokalne wnioskowanie GGUF / llama.cpp na urządzeniu w celu korekty i
     <string name="clipboard_skip_sensitive_summary">Wpisy oznaczone jako poufne (np. z menedżerów haseł) oraz kody jednorazowe o długości od 4 do 8 cyfr nie są dodawane do historii. Wklejanie nadal działa</string>
     <string name="prefs_secondary_font_scale">Skala czcionki znaku dodatkowego</string>
     <string name="clipboard_font_scale">Skala czcionki historii schowka</string>
+    <string name="openai_omit_temperature_title">Pomiń temperaturę</string>
+    <string name="openai_omit_temperature_summary">Nie wysyłaj parametru temperatury (wymagany w przypadku nowszych modeli Claude i Reasoning)</string>
 </resources>

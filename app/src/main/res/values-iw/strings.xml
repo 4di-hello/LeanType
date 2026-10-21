@@ -1783,4 +1783,6 @@
     <string name="clipboard_skip_sensitive_summary">ערכים המסומנים כסודיים (למשל ממנהלי סיסמאות) וקודים חד פעמיים עם 4 עד 8 ספרות אינם מתווספים להיסטוריה. ההדבקה עדיין עובדת</string>
     <string name="prefs_secondary_font_scale">סולם גופן תווים משניים</string>
     <string name="clipboard_font_scale">סולם גופן היסטוריית הלוח</string>
+    <string name="openai_omit_temperature_title">השמט טמפרטורה</string>
+    <string name="openai_omit_temperature_summary">אל תשלח את פרמטר הטמפרטורה (נדרש עבור דגמי קלוד ודגמים חדשים יותר)</string>
 </resources>

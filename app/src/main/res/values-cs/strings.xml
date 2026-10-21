@@ -1781,4 +1781,6 @@ Umožňuje lokální inferenci GGUF / llama.cpp na zařízení pro korektury a p
     <string name="clipboard_skip_sensitive_summary">Záznamy označené jako důvěrné (např. od správců hesel) a jednorázové kódy se 4 až 8 číslicemi se do historie nepřidávají. Vkládání stále funguje</string>
     <string name="prefs_secondary_font_scale">Měřítko písma sekundárních znaků</string>
     <string name="clipboard_font_scale">Měřítko písma historie schránky</string>
+    <string name="openai_omit_temperature_title">Vynechat teplotu</string>
+    <string name="openai_omit_temperature_summary">Neposílejte parametr teploty (vyžadováno pro novější modely Claude a uvažování)</string>
 </resources>

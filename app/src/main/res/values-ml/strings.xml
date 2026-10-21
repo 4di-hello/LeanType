@@ -1834,4 +1834,6 @@
     <string name="clipboard_skip_sensitive_summary">രഹസ്യസ്വഭാവമുള്ളതായി അടയാളപ്പെടുത്തിയ എൻട്രികളും (ഉദാ. പാസ്‌വേഡ് മാനേജർമാരിൽ നിന്ന്) 4 മുതൽ 8 അക്കങ്ങളുള്ള ഒറ്റത്തവണ കോഡുകളും ചരിത്രത്തിലേക്ക് ചേർക്കില്ല. ഒട്ടിക്കൽ ഇപ്പോഴും പ്രവർത്തിക്കുന്നു</string>
     <string name="prefs_secondary_font_scale">ദ്വിതീയ പ്രതീക ഫോണ്ട് സ്കെയിൽ</string>
     <string name="clipboard_font_scale">ക്ലിപ്പ്ബോർഡ് ചരിത്ര ഫോണ്ട് സ്കെയിൽ</string>
+    <string name="openai_omit_temperature_title">താപനില ഒഴിവാക്കുക</string>
+    <string name="openai_omit_temperature_summary">താപനില പാരാമീറ്റർ അയയ്‌ക്കരുത് (പുതിയ ക്ലോഡിനും ന്യായവാദ മോഡലുകൾക്കും ആവശ്യമാണ്)</string>
 </resources>

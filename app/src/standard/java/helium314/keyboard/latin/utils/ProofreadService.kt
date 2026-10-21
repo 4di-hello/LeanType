@@ -371,6 +371,19 @@ class ProofreadService(private val context: Context) {
         ).apply()
     }
 
+    fun isOpenAiOmitTemperature(): Boolean =
+        context.prefs().getBoolean(
+            helium314.keyboard.latin.settings.Settings.PREF_OPENAI_OMIT_TEMPERATURE,
+            helium314.keyboard.latin.settings.Defaults.PREF_OPENAI_OMIT_TEMPERATURE
+        )
+
+    fun setOpenAiOmitTemperature(omit: Boolean) {
+        context.prefs().edit().putBoolean(
+            helium314.keyboard.latin.settings.Settings.PREF_OPENAI_OMIT_TEMPERATURE,
+            omit
+        ).apply()
+    }
+
 
     /**
      * Tests the API key by making a simple request.
@@ -645,7 +658,19 @@ class ProofreadService(private val context: Context) {
 
             // Auto-recovery fallback if the endpoint explicitly requires the alternate parameter
             if (responseCode == 400) {
-                if (!useMaxCompletion && (responseText.contains("max_completion_tokens", ignoreCase = true) ||
+                if (requestBody.has("temperature") && responseText.contains("temperature", ignoreCase = true) &&
+                        (responseText.contains("deprecated", ignoreCase = true) ||
+                         responseText.contains("not supported", ignoreCase = true) ||
+                         responseText.contains("unrecognized", ignoreCase = true) ||
+                         responseText.contains("extra_forbidden", ignoreCase = true) ||
+                         responseText.contains("invalid", ignoreCase = true))) {
+                    Log.i("ProofreadService", "Retrying without temperature parameter")
+                    requestBody.remove("temperature")
+                    val retryResult = executeOpenAiRequest(endpoint, token, allowInsecure, requestBody)
+                    responseCode = retryResult.first
+                    responseText = retryResult.second
+                }
+                if (responseCode == 400 && !useMaxCompletion && (responseText.contains("max_completion_tokens", ignoreCase = true) ||
                         responseText.contains("max_tokens is not supported", ignoreCase = true))) {
                     Log.i("ProofreadService", "Retrying with max_completion_tokens parameter")
                     useMaxCompletion = true
@@ -653,7 +678,7 @@ class ProofreadService(private val context: Context) {
                     val retryResult = executeOpenAiRequest(endpoint, token, allowInsecure, requestBody)
                     responseCode = retryResult.first
                     responseText = retryResult.second
-                } else if (useMaxCompletion && responseText.contains("max_tokens", ignoreCase = true) &&
+                } else if (responseCode == 400 && useMaxCompletion && responseText.contains("max_tokens", ignoreCase = true) &&
                         responseText.contains("unrecognized", ignoreCase = true)) {
                     Log.i("ProofreadService", "Retrying with legacy max_tokens parameter")
                     useMaxCompletion = false
@@ -682,7 +707,8 @@ class ProofreadService(private val context: Context) {
     private fun isReasoningOrNewerModel(model: String): Boolean {
         val m = model.lowercase(Locale.US)
         return m.startsWith("o1") || m.startsWith("o3") || m.contains("gpt-5") || m.contains("gpt-6") ||
-                m.contains("reasoner") || m.contains("reasoning")
+                m.contains("reasoner") || m.contains("reasoning") ||
+                m.contains("claude-haiku-5") || m.contains("claude-3-7") || m.contains("claude-4")
     }
 
     private fun shouldUseMaxCompletionTokens(modelName: String, isGroq: Boolean): Boolean {
@@ -700,7 +726,7 @@ class ProofreadService(private val context: Context) {
             put("model", modelName)
             put("messages", messagesArray)
             val isReasoning = isReasoningOrNewerModel(modelName)
-            if (!isReasoning) {
+            if (!isReasoning && !isOpenAiOmitTemperature()) {
                 put("temperature", 0.1)
             }
             if (useMaxCompletionTokens) {

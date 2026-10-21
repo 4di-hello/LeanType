@@ -1834,4 +1834,6 @@
     <string name="clipboard_skip_sensitive_summary">Οι καταχωρίσεις που έχουν επισημανθεί ως εμπιστευτικές (π.χ. από διαχειριστές κωδικών πρόσβασης) και οι κωδικοί μιας χρήσης με 4 έως 8 ψηφία δεν προστίθενται στο ιστορικό. Η επικόλληση λειτουργεί ακόμα</string>
     <string name="prefs_secondary_font_scale">Δευτερεύουσα κλίμακα γραμματοσειράς χαρακτήρων</string>
     <string name="clipboard_font_scale">Κλίμακα γραμματοσειράς ιστορικού προχείρου</string>
+    <string name="openai_omit_temperature_title">Παράλειψη θερμοκρασίας</string>
+    <string name="openai_omit_temperature_summary">Μην στέλνετε την παράμετρο θερμοκρασίας (απαιτείται για νεότερα μοντέλα Claude και συλλογισμού)</string>
 </resources>

@@ -1772,4 +1772,6 @@ Lehetővé teszi az eszközön futó GGUF / llama.cpp következtetést a javít�
     <string name="clipboard_skip_sensitive_summary">A bizalmasként megjelölt bejegyzések (például a jelszókezelőktől származó) és a 4-8 számjegyből álló egyszeri kódok nem kerülnek az előzmények közé. A beillesztés továbbra is működik</string>
     <string name="prefs_secondary_font_scale">Másodlagos karakter font skála</string>
     <string name="clipboard_font_scale">Vágólap-előzmények betűméret-skálája</string>
+    <string name="openai_omit_temperature_title">Hőmérséklet elhagyása</string>
+    <string name="openai_omit_temperature_summary">Ne küldje el a hőmérsékleti paramétert (az újabb Claude és érvelési modellekhez szükséges)</string>
 </resources>

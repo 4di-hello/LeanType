@@ -1825,4 +1825,6 @@
     <string name="clipboard_skip_sensitive_summary">خفیہ کے طور پر نشان زد اندراجات (مثلاً پاس ورڈ مینیجرز کی طرف سے) اور 4 سے 8 ہندسوں والے یک وقتی کوڈز کو تاریخ میں شامل نہیں کیا جاتا ہے۔ چسپاں کرنا اب بھی کام کرتا ہے۔</string>
     <string name="prefs_secondary_font_scale">ثانوی کریکٹر فونٹ اسکیل</string>
     <string name="clipboard_font_scale">کلپ بورڈ ہسٹری فونٹ اسکیل</string>
+    <string name="openai_omit_temperature_title">درجہ حرارت کو چھوڑ دیں۔</string>
+    <string name="openai_omit_temperature_summary">درجہ حرارت کا پیرامیٹر نہ بھیجیں (نئے کلاڈ اور استدلال کے ماڈلز کے لیے درکار)</string>
 </resources>

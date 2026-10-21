@@ -1778,4 +1778,6 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="cjk_clear_user_dict_success">CJK-Benutzerverlauf gelöscht</string>
     <string name="prefs_secondary_font_scale">Schriftartenskala für sekundäre Zeichen</string>
     <string name="clipboard_font_scale">Schriftskalierung des Zwischenablageverlaufs</string>
+    <string name="openai_omit_temperature_title">Temperatur weglassen</string>
+    <string name="openai_omit_temperature_summary">Senden Sie den Temperaturparameter nicht (erforderlich für neuere Claude- und Reasoning-Modelle).</string>
 </resources>

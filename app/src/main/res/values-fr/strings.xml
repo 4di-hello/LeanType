@@ -1830,4 +1830,6 @@ Permet l\'inférence GGUF / llama.cpp sur l\'appareil pour la correction et la r
     <string name="clipboard_skip_sensitive_summary">Les entrées marquées comme confidentielles (par exemple provenant de gestionnaires de mots de passe) et les codes à usage unique de 4 à 8 chiffres ne sont pas ajoutés à l\'historique. Le collage fonctionne toujours</string>
     <string name="prefs_secondary_font_scale">Échelle de police des caractères secondaires</string>
     <string name="clipboard_font_scale">Échelle de police de l’historique du Presse-papiers</string>
+    <string name="openai_omit_temperature_title">Omettre la température</string>
+    <string name="openai_omit_temperature_summary">Ne pas envoyer le paramètre de température (obligatoire pour les modèles Claude et raisonnement plus récents)</string>
 </resources>

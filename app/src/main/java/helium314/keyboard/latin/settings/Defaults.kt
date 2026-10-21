@@ -230,6 +230,7 @@ object Defaults {
     const val PREF_OFFLINE_KEEP_MODEL_LOADED = false
     const val PREF_AI_ALLOW_INSECURE_CONNECTIONS = false
     const val PREF_OPENAI_USE_MAX_COMPLETION_TOKENS = false
+    const val PREF_OPENAI_OMIT_TEMPERATURE = false
     const val PREF_CLOUD_AI_MAX_TOKENS = 4096
     const val PREF_ENABLE_CLIPBOARD_HISTORY = true
     const val PREF_CLIPBOARD_HISTORY_RETENTION_TIME = 15 // minutes

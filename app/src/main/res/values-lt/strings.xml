@@ -1764,4 +1764,6 @@ Ar norite atnaujinti?</string>
     <string name="clipboard_skip_sensitive_summary">Įrašai, pažymėti kaip konfidencialūs (pvz., iš slaptažodžių tvarkytuvų), ir vienkartiniai kodai su 4–8 skaitmenimis į istoriją neįtraukiami. Įklijavimas vis dar veikia</string>
     <string name="prefs_secondary_font_scale">Antrinio simbolio šrifto skalė</string>
     <string name="clipboard_font_scale">Iškarpinės istorijos šrifto skalė</string>
+    <string name="openai_omit_temperature_title">Praleiskite temperatūrą</string>
+    <string name="openai_omit_temperature_summary">Nesiųsti temperatūros parametro (būtina naujesniuose Claude ir argumentavimo modeliuose)</string>
 </resources>
