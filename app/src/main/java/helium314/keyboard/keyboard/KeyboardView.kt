@@ -390,6 +390,11 @@ open class KeyboardView @JvmOverloads constructor(
                 -25, -26, -27, -28, -10015, -10016 -> mColors.get(ColorType.EDIT_MODE_JUMP_BACKGROUND)
                 else -> if (key.hasActionKeyBackground()) mColors.get(ColorType.ACTION_KEY_BACKGROUND) else 0
             }
+        } else if (key.hasActionKeyBackground()) {
+            customColor = if (key.isPressed) mColors.getPressedColor(ColorType.ACTION_KEY_BACKGROUND) else mColors.get(ColorType.ACTION_KEY_BACKGROUND)
+        } else if (this is PopupKeysKeyboardView && key.isPressed) {
+            val pressedType = if (key.hasActionKeyBackground()) ColorType.ACTION_KEY_POPUP_KEYS_BACKGROUND else ColorType.POPUP_KEYS_BACKGROUND
+            customColor = mColors.getPressedColor(pressedType)
         }
 
         val editBg = mEditModeKeyBackground
@@ -681,8 +686,9 @@ open class KeyboardView @JvmOverloads constructor(
     }
 
     private fun setKeyIconColor(key: Key, icon: Drawable, keyboard: Keyboard?) {
+        val isTextEditMode = KeyboardActionListenerImpl.sPersistentTextEditModeActive || (keyboard?.mId?.mElementId == KeyboardId.ELEMENT_TEXT_EDIT)
         val customBgColor = mKeyCustomBgColors[key]
-        if (customBgColor != null) {
+        if (customBgColor != null && isTextEditMode) {
             DrawableCompat.setTintList(icon, null)
             icon.setColorFilter(getContrastingColor(customBgColor), PorterDuff.Mode.SRC_IN)
         } else if (key.hasActionKeyBackground() || (keyboard?.isHexagonal == true && key.code == Constants.CODE_ENTER)) {
@@ -691,15 +697,16 @@ open class KeyboardView @JvmOverloads constructor(
             if (keyboard.mId.mElementId == KeyboardId.ELEMENT_ALPHABET_MANUAL_SHIFTED || keyboard.mId.mElementId == KeyboardId.ELEMENT_ALPHABET_SHIFT_LOCKED || keyboard.mId.mElementId == KeyboardId.ELEMENT_ALPHABET_AUTOMATIC_SHIFTED || keyboard.mId.mElementId == KeyboardId.ELEMENT_ALPHABET_SHIFT_LOCK_SHIFTED)
                 mColors.setColor(icon, ColorType.SHIFT_KEY_ICON)
             else mColors.setColor(icon, ColorType.KEY_ICON)
-        } else if (key.backgroundType != Key.BACKGROUND_TYPE_NORMAL) {
-            mColors.setColor(icon, ColorType.KEY_ICON)
         } else if (this is PopupKeysKeyboardView) {
             if (key.isPressed) {
                 val pressedBgColor = mColors.getPressedColor(if (key.hasActionKeyBackground()) ColorType.ACTION_KEY_POPUP_KEYS_BACKGROUND else ColorType.POPUP_KEYS_BACKGROUND)
+                DrawableCompat.setTintList(icon, null)
                 icon.setColorFilter(getContrastingColor(pressedBgColor), PorterDuff.Mode.SRC_IN)
             } else {
                 mColors.setColor(icon, ColorType.POPUP_KEY_ICON)
             }
+        } else if (key.backgroundType != Key.BACKGROUND_TYPE_NORMAL) {
+            mColors.setColor(icon, ColorType.KEY_ICON)
         } else if (key.code == Constants.CODE_SPACE || key.code == KeyCode.ZWNJ) {
             mColors.setColor(icon, ColorType.KEY_ICON)
         } else {
