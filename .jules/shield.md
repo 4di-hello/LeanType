@@ -38,3 +38,7 @@
 **Learning:** Testing string utility logic that handles boundary tracking for punctuation contexts, word connectors, and sentence terminators depends on `SpacingAndPunctuations`. `SpacingAndPunctuations` accesses string arrays using a standard Android `Resources` object. Thus, a valid Android configuration and initialized resources are required.
 **Action:** When adding tests for Ngram processing logic or utility methods that depend on `SpacingAndPunctuations`, use `@RunWith(RobolectricTestRunner::class)` to safely handle any dependencies on framework components such as Context and Resources for configuration arrays.
 
+
+## 2026-10-18 - RecapitalizeMode capitalizeEachWord and sortedSeparators boundary logic
+**Learning:** `StringUtils.capitalizeEachWord` does not automatically capitalize after standard spaces or word connectors unless their character codes are explicitly included in the `sortedSeparators` integer array parameter. Passing an empty array to `RecapitalizeMode.apply("test string", intArrayOf(), Locale.US)` will result in "Test string" rather than the expected "Test String", because the space character was not provided as a boundary.
+**Action:** When adding tests for components wrapping `StringUtils.capitalizeEachWord` or similar tokenizer logic, explicitly pass expected word boundaries (like `' '.code`) into the separator arrays rather than relying on automatic space delimitation, to properly verify boundary edge cases.
