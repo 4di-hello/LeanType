@@ -37,7 +37,11 @@ jobs:
           git config user.name 4di-hello
           git config user.email 4di-hello@users.noreply.github.com
           git remote add upstream https://github.com/LeanBitLab/LeanType.git
-          git fetch -q upstream main
+          # LeanType is no longer developed: if it ever disappears, build my current state
+          if ! git fetch -q upstream main; then
+            echo "::warning::LeanType is not reachable, building without updating"
+            exit 0
+          fi
           if git merge-base --is-ancestor upstream/main HEAD; then
             echo "::notice::already up to date"
           elif git rebase upstream/main; then
@@ -155,15 +159,16 @@ jobs:
         run: |
           git fetch -q --tags origin
           git remote get-url upstream >/dev/null 2>&1 || git remote add upstream https://github.com/LeanBitLab/LeanType.git
-          git fetch -q upstream main
-          prev=$(gh release list --limit 1 --json tagName --jq '.[0].tagName // empty')
+          git fetch -q upstream main || echo "::warning::LeanType is not reachable"
+          # only LeanType+ releases (there is also a backup release of the plugins)
+          prev=$(gh release list --limit 50 --json tagName --jq '[.[].tagName | select(startswith("plus-"))][0] // empty')
           if [ -n "$prev" ] && git rev-parse -q --verify "refs/tags/$prev^{commit}" >/dev/null \
              && git diff --quiet "$prev" HEAD -- app build.gradle.kts gradle settings.gradle.kts; then
             echo "::notice::app unchanged since $prev, no new release"
             exit 0
           fi
           sha=$(git rev-parse --short HEAD)
-          base=$(git rev-parse --short upstream/main)
+          base=$(git rev-parse -q --short --verify upstream/main || echo unknown)
           tag="plus-$(date -u +%Y-%m-%d-%H%M)-$sha"
           cp "$(find app/build/outputs/apk -name '*.apk' | head -1)" "$RUNNER_TEMP/LeanTypePlus.apk"
           {
@@ -185,7 +190,7 @@ jobs:
           } > "$RUNNER_TEMP/notes.md"
           gh release create "$tag" "$RUNNER_TEMP/LeanTypePlus.apk" --target "$(git rev-parse HEAD)" \
             --title "LeanType+ $(date -u +%d.%m.%Y) ($sha)" --notes-file "$RUNNER_TEMP/notes.md" --latest
-          # keep the last 10 releases
-          gh release list --limit 100 --json tagName --jq '.[10:][].tagName' | while read -r old; do
+          # keep the last 10 LeanType+ releases
+          gh release list --limit 100 --json tagName --jq '[.[].tagName | select(startswith("plus-"))] | .[10:][]' | while read -r old; do
             gh release delete "$old" --yes --cleanup-tag
           done
