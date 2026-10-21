@@ -11,7 +11,6 @@ import android.text.InputType
 import android.view.inputmethod.EditorInfo
 import helium314.keyboard.compat.AppQuirksManager
 import helium314.keyboard.latin.common.Constants.ImeOption.NO_FLOATING_GESTURE_PREVIEW
-import helium314.keyboard.latin.common.Constants.ImeOption.NO_MICROPHONE
 import helium314.keyboard.latin.common.containsValueWhenSplit
 import helium314.keyboard.latin.define.DebugFlags
 import helium314.keyboard.latin.utils.InputTypeUtils
@@ -78,7 +77,6 @@ class InputAttributes(
 
             val noMicrophone = mIsPasswordField ||
                     InputTypeUtils.isEmailVariation(variation) ||
-                    hasNoMicrophoneKeyOption() ||
                     !RichInputMethodManager.isInitialized() ||
                     !RichInputMethodManager.getInstance().isShortcutImeReady
             mShouldShowVoiceInputKey = !noMicrophone
@@ -119,10 +117,6 @@ class InputAttributes(
     fun isSameInputType(editorInfo: EditorInfo): Boolean {
         return editorInfo.inputType == mInputType && mEditorInfo != null &&
                 (mEditorInfo.imeOptions and EditorInfo.IME_FLAG_FORCE_ASCII) == (editorInfo.imeOptions and EditorInfo.IME_FLAG_FORCE_ASCII)
-    }
-
-    private fun hasNoMicrophoneKeyOption(): Boolean {
-        return inPrivateImeOptions(mPackageNameForPrivateImeOptions, NO_MICROPHONE, mEditorInfo)
     }
 
     @Suppress("unused")
