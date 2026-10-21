@@ -353,7 +353,7 @@
     <string name="layout_clip_bottom_row" tools:keep="@string/layout_clip_bottom_row">Linha inferior da área de transferência</string>
     <string name="label_enter_key" tools:keep="@string/label_enter_key">Enter</string>
     <string name="label_tab_key" tools:keep="@string/label_tab_key">Tab</string>
-    <string name="label_delete_key" tools:keep="@string/label_delete_key">Delete</string>
+    <string name="label_delete_key" tools:keep="@string/label_delete_key">Excluir</string>
     <string name="label_shift_key" tools:keep="@string/label_shift_key">Shift</string>
     <string name="label_shift_key_shifted" tools:keep="@string/label_shift_key_shifted">Shift (ativado)</string>
     <string name="label_shift_key_locked" tools:keep="@string/label_shift_key_locked">Caps lock</string>
@@ -1777,4 +1777,6 @@ Habilita inferência GGUF / llama.cpp no dispositivo para revisão e reescrita.<
     <string name="clipboard_font_scale">Escala de fonte do histórico da área de transferência</string>
     <string name="openai_omit_temperature_title">Omitir temperatura</string>
     <string name="openai_omit_temperature_summary">Não envie o parâmetro de temperatura (obrigatório para modelos Claude e de raciocínio mais recentes)</string>
+    <string name="floating_keyboard_landscape_title">Modo flutuante em paisagem</string>
+    <string name="floating_keyboard_landscape_summary">Alternar automaticamente para teclado flutuante quando estiver na orientação paisagem</string>
 </resources>

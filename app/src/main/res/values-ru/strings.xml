@@ -1843,4 +1843,6 @@
     <string name="clipboard_font_scale">Масштаб шрифта истории буфера обмена</string>
     <string name="openai_omit_temperature_title">Опустить температуру</string>
     <string name="openai_omit_temperature_summary">Не отправлять параметр температуры (требуется для более новых моделей Клода и рассуждений)</string>
+    <string name="floating_keyboard_landscape_title">Плавающий режим в альбомной ориентации</string>
+    <string name="floating_keyboard_landscape_summary">Автоматически переключаться на плавающую клавиатуру в альбомной ориентации</string>
 </resources>

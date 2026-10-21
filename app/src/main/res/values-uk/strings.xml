@@ -1738,4 +1738,6 @@
     <string name="clipboard_font_scale">Масштаб історії буфера обміну</string>
     <string name="openai_omit_temperature_title">Опустіть температуру</string>
     <string name="openai_omit_temperature_summary">Не надсилайте параметр температури (необхідний для новіших моделей Claude і reasoning)</string>
+    <string name="floating_keyboard_landscape_title">Плаваючий режим у ландшафтному режимі</string>
+    <string name="floating_keyboard_landscape_summary">Автоматично переключатися на плаваючу клавіатуру в альбомній орієнтації</string>
 </resources>

@@ -1820,4 +1820,6 @@ Umożliwia lokalne wnioskowanie GGUF / llama.cpp na urządzeniu w celu korekty i
     <string name="clipboard_font_scale">Skala czcionki historii schowka</string>
     <string name="openai_omit_temperature_title">Pomiń temperaturę</string>
     <string name="openai_omit_temperature_summary">Nie wysyłaj parametru temperatury (wymagany w przypadku nowszych modeli Claude i Reasoning)</string>
+    <string name="floating_keyboard_landscape_title">Tryb pływający w krajobrazie</string>
+    <string name="floating_keyboard_landscape_summary">Automatycznie przełączaj się na pływającą klawiaturę w orientacji poziomej</string>
 </resources>

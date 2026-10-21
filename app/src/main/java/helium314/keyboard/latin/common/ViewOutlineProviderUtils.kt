@@ -30,8 +30,7 @@ class InsetsOutlineProvider(private val mView: View) : ViewOutlineProvider() {
     }
 
     override fun getOutline(view: View, outline: Outline) {
-        val fkm = helium314.keyboard.latin.LatinIME.getInstance()?.floatingKeyboardManager
-        val isFloating = helium314.keyboard.latin.utils.ResourceUtils.getFloatingKeyboardWidth() > 0 || (fkm != null && (fkm.isFloating || (helium314.keyboard.latin.settings.Settings.getValues().mRememberFloatingKeyboard && fkm.wasFloatingLastTime())))
+        val isFloating = helium314.keyboard.latin.FloatingKeyboardManager.isFloatingMode(view.context)
         if (isFloating) {
             outline.setEmpty()
             return

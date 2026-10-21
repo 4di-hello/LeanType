@@ -1762,4 +1762,6 @@
     <string name="clipboard_font_scale">क्लिपबोर्ड इतिहास फ़ॉन्ट स्केल</string>
     <string name="openai_omit_temperature_title">तापमान छोड़ें</string>
     <string name="openai_omit_temperature_summary">तापमान पैरामीटर न भेजें (नए क्लाउड और रीज़निंग मॉडल के लिए आवश्यक)</string>
+    <string name="floating_keyboard_landscape_title">लैंडस्केप में फ्लोटिंग मोड</string>
+    <string name="floating_keyboard_landscape_summary">लैंडस्केप ओरिएंटेशन में होने पर स्वचालित रूप से फ़्लोटिंग कीबोर्ड पर स्विच करें</string>
 </resources>

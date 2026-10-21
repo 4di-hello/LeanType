@@ -1841,4 +1841,6 @@
     <string name="clipboard_font_scale">مقياس الخط التاريخ الحافظة</string>
     <string name="openai_omit_temperature_title">تجاهل درجة الحرارة</string>
     <string name="openai_omit_temperature_summary">لا ترسل معلمة درجة الحرارة (مطلوبة لنماذج كلود والاستدلال الأحدث)</string>
+    <string name="floating_keyboard_landscape_title">الوضع العائم في المناظر الطبيعية</string>
+    <string name="floating_keyboard_landscape_summary">قم بالتبديل تلقائيًا إلى لوحة المفاتيح العائمة عندما تكون في الاتجاه الأفقي</string>
 </resources>

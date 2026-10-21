@@ -1758,4 +1758,6 @@ Omogućuje lokalno GGUF / llama.cpp zaključivanje na uređaju za lekturu i prep
     <string name="clipboard_font_scale">Mjerilo fonta povijesti međuspremnika</string>
     <string name="openai_omit_temperature_title">Izostaviti temperaturu</string>
     <string name="openai_omit_temperature_summary">Nemojte slati parametar temperature (potrebno za novije modele Claude i reasoning)</string>
+    <string name="floating_keyboard_landscape_title">Plutajući način rada u pejzažu</string>
+    <string name="floating_keyboard_landscape_summary">Automatski prijeđi na lebdeću tipkovnicu kada je u pejzažnoj orijentaciji</string>
 </resources>

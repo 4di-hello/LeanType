@@ -155,4 +155,5 @@
     <string name="autospace_after_punctuation_summary">新シー言葉を入力場合に句読点の後で自動にスペースする</string>
     <string name="locales_with_dict">辞書を盛り込む言語</string>
     <string name="url_detection_title">URL 検出</string>
+    <string name="label_delete_key">削除</string>
 </resources>

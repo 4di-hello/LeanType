@@ -154,5 +154,5 @@
     <string name="dictionary_link_text">此處</string>
     <string name="settings_screen_about">關於</string>
     <string name="settings_screen_toolbar">工具列</string>
-    <string name="label_delete_key" tools:keep="@string/label_delete_key">Delete</string>
+    <string name="label_delete_key" tools:keep="@string/label_delete_key">刪除</string>
 </resources>

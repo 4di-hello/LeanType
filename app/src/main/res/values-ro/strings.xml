@@ -1765,4 +1765,6 @@ Activează inferența GGUF / llama.cpp pe dispozitiv pentru corectură și refor
     <string name="clipboard_font_scale">Scala fontului istoric al clipboardului</string>
     <string name="openai_omit_temperature_title">Omiteți temperatura</string>
     <string name="openai_omit_temperature_summary">Nu trimiteți parametrul de temperatură (necesar pentru modelele Claude și raționament mai noi)</string>
+    <string name="floating_keyboard_landscape_title">Modul plutitor în peisaj</string>
+    <string name="floating_keyboard_landscape_summary">Comutați automat la tastatura plutitoare când sunteți în orientare peisaj</string>
 </resources>

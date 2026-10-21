@@ -482,6 +482,7 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
         @Deprecated("Retired with IME-native floating keyboard migration")
         const val PREF_PERSIST_FLOATING_KEYBOARD = "persist_floating_keyboard"
         const val PREF_REMEMBER_FLOATING_KEYBOARD = "remember_floating_keyboard"
+        const val PREF_FLOATING_KEYBOARD_LANDSCAPE = "floating_keyboard_landscape"
         const val PREF_PERSIST_TEXT_EDIT_MODE = "persist_text_edit_mode"
         const val PREF_FORCE_AUTO_CAPS = "force_auto_caps"
         const val PREF_SHIFT_RECAPITALIZES_WORD = "shift_recapitalizes_word"

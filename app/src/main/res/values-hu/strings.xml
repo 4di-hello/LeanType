@@ -1774,4 +1774,6 @@ Lehetővé teszi az eszközön futó GGUF / llama.cpp következtetést a javít�
     <string name="clipboard_font_scale">Vágólap-előzmények betűméret-skálája</string>
     <string name="openai_omit_temperature_title">Hőmérséklet elhagyása</string>
     <string name="openai_omit_temperature_summary">Ne küldje el a hőmérsékleti paramétert (az újabb Claude és érvelési modellekhez szükséges)</string>
+    <string name="floating_keyboard_landscape_title">Lebegő mód tájképben</string>
+    <string name="floating_keyboard_landscape_summary">Automatikus váltás lebegő billentyűzetre fekvő helyzetben</string>
 </resources>

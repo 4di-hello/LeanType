@@ -1765,4 +1765,6 @@ Võimaldab seadmesisese GGUF / llama.cpp järelduse korrektuuri ja ümbersõnast
     <string name="clipboard_font_scale">Lõikepuhvri ajaloo fontide skaala</string>
     <string name="openai_omit_temperature_title">Jäta temperatuur vahele</string>
     <string name="openai_omit_temperature_summary">Ärge saatke temperatuuri parameetrit (nõutav uuemate Claude\'i ja arutlusmudelite jaoks)</string>
+    <string name="floating_keyboard_landscape_title">Ujuv režiim maastikul</string>
+    <string name="floating_keyboard_landscape_summary">Rõhtpaigutuses lülituge automaatselt ujuvale klaviatuurile</string>
 </resources>

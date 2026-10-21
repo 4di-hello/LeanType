@@ -1843,4 +1843,6 @@ Abilita l\'inferenza GGUF / llama.cpp sul dispositivo per correzione e riscrittu
     <string name="clipboard_font_scale">Scala dei caratteri della cronologia degli appunti</string>
     <string name="openai_omit_temperature_title">Omettere la temperatura</string>
     <string name="openai_omit_temperature_summary">Non inviare il parametro della temperatura (richiesto per i modelli Claude e di ragionamento più recenti)</string>
+    <string name="floating_keyboard_landscape_title">Modalità mobile in orizzontale</string>
+    <string name="floating_keyboard_landscape_summary">Passa automaticamente alla tastiera mobile in orientamento orizzontale</string>
 </resources>

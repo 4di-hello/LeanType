@@ -1733,4 +1733,6 @@ Memungkinkan inferensi GGUF / llama.cpp di perangkat untuk koreksi teks dan penu
     <string name="clipboard_font_scale">Skala font riwayat papan klip</string>
     <string name="openai_omit_temperature_title">Abaikan suhu</string>
     <string name="openai_omit_temperature_summary">Jangan kirim parameter suhu (diperlukan untuk model Claude dan penalaran yang lebih baru)</string>
+    <string name="floating_keyboard_landscape_title">Mode mengambang dalam lanskap</string>
+    <string name="floating_keyboard_landscape_summary">Secara otomatis beralih ke keyboard mengambang ketika dalam orientasi lanskap</string>
 </resources>

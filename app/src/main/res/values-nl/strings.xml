@@ -1818,4 +1818,6 @@ Maakt GGUF / llama.cpp-inferentie op het apparaat mogelijk voor proeflezen en he
     <string name="clipboard_font_scale">Lettergrootte van klembordgeschiedenis</string>
     <string name="openai_omit_temperature_title">Laat temperatuur achterwege</string>
     <string name="openai_omit_temperature_summary">Stuur de temperatuurparameter niet (vereist voor nieuwere Claude- en redeneermodellen)</string>
+    <string name="floating_keyboard_landscape_title">Zwevende modus in landschap</string>
+    <string name="floating_keyboard_landscape_summary">Schakel automatisch over naar zwevend toetsenbord in liggende stand</string>
 </resources>

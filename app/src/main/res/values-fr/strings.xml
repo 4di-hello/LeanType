@@ -1832,4 +1832,6 @@ Permet l\'inférence GGUF / llama.cpp sur l\'appareil pour la correction et la r
     <string name="clipboard_font_scale">Échelle de police de l’historique du Presse-papiers</string>
     <string name="openai_omit_temperature_title">Omettre la température</string>
     <string name="openai_omit_temperature_summary">Ne pas envoyer le paramètre de température (obligatoire pour les modèles Claude et raisonnement plus récents)</string>
+    <string name="floating_keyboard_landscape_title">Mode flottant en paysage</string>
+    <string name="floating_keyboard_landscape_summary">Passer automatiquement au clavier flottant en orientation paysage</string>
 </resources>

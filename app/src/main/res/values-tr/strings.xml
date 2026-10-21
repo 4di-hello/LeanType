@@ -1766,4 +1766,6 @@ Metin düzeltme ve yeniden yazma için cihaz üzerinde GGUF / llama.cpp çıkar�
     <string name="clipboard_font_scale">Pano geçmişi yazı tipi ölçeği</string>
     <string name="openai_omit_temperature_title">Sıcaklığı atla</string>
     <string name="openai_omit_temperature_summary">Sıcaklık parametresini göndermeyin (daha yeni Claude ve muhakeme modelleri için gereklidir)</string>
+    <string name="floating_keyboard_landscape_title">Manzarada kayan mod</string>
+    <string name="floating_keyboard_landscape_summary">Yatay yöndeyken kayan klavyeye otomatik olarak geç</string>
 </resources>

@@ -35,11 +35,7 @@ class InputView @JvmOverloads constructor(
     private var mActiveForwarder: MotionEventForwarder<*, *>? = null
     private var mNavBarBottomInsets = 0
 
-    private fun isFloatingMode(): Boolean {
-        if (helium314.keyboard.latin.utils.ResourceUtils.getFloatingKeyboardWidth() > 0) return true
-        val fkm = LatinIME.getInstance()?.floatingKeyboardManager ?: return false
-        return fkm.isFloating || (Settings.getValues().mRememberFloatingKeyboard && fkm.wasFloatingLastTime())
-    }
+    private fun isFloatingMode(): Boolean = FloatingKeyboardManager.isFloatingMode(context)
 
     override fun dispatchApplyWindowInsets(insets: WindowInsets): WindowInsets {
         if (isFloatingMode()) {
@@ -158,7 +154,7 @@ class InputView @JvmOverloads constructor(
     }
 
     override fun onInterceptTouchEvent(me: MotionEvent): Boolean {
-        if (LatinIME.getInstance()?.floatingKeyboardManager?.isFloating == true) {
+        if (isFloatingMode()) {
             return false
         }
         val rect = mInputViewRect

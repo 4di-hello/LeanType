@@ -345,7 +345,7 @@
     <string name="prefs_space_bar_text">空格键上的自定义文本</string>
     <string name="layout_emoji_bottom_row" tools:keep="@string/layout_emoji_bottom_row">表情符号底行</string>
     <string name="layout_clip_bottom_row" tools:keep="@string/layout_clip_bottom_row">剪贴板底行</string>
-    <string name="label_delete_key" tools:keep="@string/label_delete_key">Delete</string>
+    <string name="label_delete_key" tools:keep="@string/label_delete_key">删除</string>
     <string name="label_shift_key_locked" tools:keep="@string/label_shift_key_locked">Caps lock</string>
     <string name="label_shift_key_shifted" tools:keep="@string/label_shift_key_shifted">Shift（已按下）</string>
     <string name="label_stop_onehanded_mode_key" tools:keep="@string/label_stop_onehanded_mode_key">关闭单手模式</string>
@@ -1784,4 +1784,6 @@
     <string name="clipboard_font_scale">剪贴板历史字体比例</string>
     <string name="openai_omit_temperature_title">省略温度</string>
     <string name="openai_omit_temperature_summary">不发送温度参数（较新的 Claude 和推理模型需要）</string>
+    <string name="floating_keyboard_landscape_title">横向浮动模式</string>
+    <string name="floating_keyboard_landscape_summary">横向时自动切换到浮动键盘</string>
 </resources>

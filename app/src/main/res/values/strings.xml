@@ -1746,6 +1746,8 @@ New dictionary:
     <string name="persist_floating_keyboard_summary">Do not hide floating keyboard when input finishes</string>
     <string name="remember_floating_keyboard_title">Remember floating mode</string>
     <string name="remember_floating_keyboard_summary">Reopen the keyboard in floating mode when typing starts again if it was floating last time</string>
+    <string name="floating_keyboard_landscape_title">Floating mode in landscape</string>
+    <string name="floating_keyboard_landscape_summary">Automatically switch to floating keyboard when in landscape orientation</string>
     <!-- ponytail: persist text edit mode strings -->
     <string name="persist_text_edit_mode_title">Persist text editing mode</string>
     <string name="persist_text_edit_mode_summary">Do not exit text editing mode when input finishes</string>

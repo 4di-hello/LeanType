@@ -1827,4 +1827,6 @@
     <string name="clipboard_font_scale">کلپ بورڈ ہسٹری فونٹ اسکیل</string>
     <string name="openai_omit_temperature_title">درجہ حرارت کو چھوڑ دیں۔</string>
     <string name="openai_omit_temperature_summary">درجہ حرارت کا پیرامیٹر نہ بھیجیں (نئے کلاڈ اور استدلال کے ماڈلز کے لیے درکار)</string>
+    <string name="floating_keyboard_landscape_title">زمین کی تزئین میں فلوٹنگ موڈ</string>
+    <string name="floating_keyboard_landscape_summary">زمین کی تزئین کی سمت میں ہونے پر خودکار طور پر فلوٹنگ کی بورڈ پر سوئچ کریں۔</string>
 </resources>

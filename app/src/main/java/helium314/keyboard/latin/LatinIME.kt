@@ -458,8 +458,20 @@ class LatinIME : InputMethodService(),
         
         keyboardSwitcher.onConfigurationChanged(conf)
         keyboardSwitcher.updateKeyboardTheme(displayContext ?: this)
-        floatingKeyboardManager?.resetDragAndResizeState()
-        floatingKeyboardManager?.clampPositionToScreen()
+        val fkm = floatingKeyboardManager
+        if (fkm != null) {
+            val isLandscape = conf.orientation == Configuration.ORIENTATION_LANDSCAPE
+            if (settingsValues.mFloatingKeyboardLandscape && isLandscape) {
+                if (!fkm.isFloating) {
+                    val autoLandscape = !(settingsValues.mRememberFloatingKeyboard && fkm.wasFloatingLastTime())
+                    fkm.show(isAutoLandscape = autoLandscape)
+                }
+            } else if (fkm.isAutoLandscapeFloating && !isLandscape) {
+                fkm.hide(showDockedKeyboard = true)
+            }
+            fkm.resetDragAndResizeState()
+            fkm.clampPositionToScreen()
+        }
         setNavigationBarColor()
     }
 
@@ -534,7 +546,7 @@ class LatinIME : InputMethodService(),
         val decor = window?.window?.decorView as? ViewGroup
         decor?.setOnHierarchyChangeListener(object : ViewGroup.OnHierarchyChangeListener {
             override fun onChildViewAdded(parent: View?, child: View?) {
-                val isFloatingNow = floatingKeyboardManager?.let { it.isFloating || (settings.current.mRememberFloatingKeyboard && it.wasFloatingLastTime()) } == true
+                val isFloatingNow = FloatingKeyboardManager.isFloatingMode(displayContext ?: this@LatinIME)
                 if (isFloatingNow) {
                     updateNavigationBarFrameVisibility(true)
                 }
@@ -690,7 +702,7 @@ class LatinIME : InputMethodService(),
     override fun onStartInputView(editorInfo: EditorInfo, restarting: Boolean) {
         handler.onStartInputView(editorInfo, restarting)
         statsUtilsManager.onStartInputView()
-        val isFloating = floatingKeyboardManager?.let { it.isFloating || (settings.current.mRememberFloatingKeyboard && it.wasFloatingLastTime()) } == true
+        val isFloating = FloatingKeyboardManager.isFloatingMode(displayContext ?: this)
         if (isFloating) {
             updateNavigationBarFrameVisibility(true)
             window?.window?.decorView?.post {
@@ -922,7 +934,13 @@ class LatinIME : InputMethodService(),
         
         val fkm = floatingKeyboardManager
         if (fkm != null) {
-            if (currentSettingsValues.mRememberFloatingKeyboard) {
+            val isLandscape = (displayContext ?: this).resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+            if (currentSettingsValues.mFloatingKeyboardLandscape && isLandscape) {
+                val autoLandscape = !fkm.isFloating && !(currentSettingsValues.mRememberFloatingKeyboard && fkm.wasFloatingLastTime())
+                fkm.show(isAutoLandscape = autoLandscape || fkm.isAutoLandscapeFloating)
+            } else if (fkm.isAutoLandscapeFloating && !isLandscape) {
+                fkm.hide(showDockedKeyboard = true)
+            } else if (currentSettingsValues.mRememberFloatingKeyboard) {
                 if (fkm.isFloating || fkm.wasFloatingLastTime()) {
                     fkm.show()
                 }
@@ -943,7 +961,7 @@ class LatinIME : InputMethodService(),
         super.onWindowShown()
         window?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         clipboardHistoryManager.onPrimaryClipChanged()
-        val isFloating = floatingKeyboardManager?.let { it.isFloating || (settings.current.mRememberFloatingKeyboard && it.wasFloatingLastTime()) } == true
+        val isFloating = FloatingKeyboardManager.isFloatingMode(displayContext ?: this)
         if (isFloating) {
             updateNavigationBarFrameVisibility(true)
             forceInsetsRefresh()
@@ -1131,8 +1149,8 @@ class LatinIME : InputMethodService(),
         val view = inputView ?: return
 
         val fkm = floatingKeyboardManager
-        val isFloating = fkm != null && (fkm.isFloating || (settings.current.mRememberFloatingKeyboard && fkm.wasFloatingLastTime()))
-        if (isFloating && !isFullscreenMode) {
+        val isFloating = FloatingKeyboardManager.isFloatingMode(displayContext ?: this)
+        if (fkm != null && isFloating && !isFullscreenMode) {
             updateNavigationBarFrameVisibility(true)
             val decorHeight = window?.window?.decorView?.height?.takeIf { it > 0 }
                 ?: (displayContext ?: this).resources.displayMetrics.heightPixels
@@ -1274,7 +1292,7 @@ class LatinIME : InputMethodService(),
     }
 
     override fun onEvaluateFullscreenMode(): Boolean {
-        if (floatingKeyboardManager?.isFloating == true) return false
+        if (FloatingKeyboardManager.isFloatingMode(displayContext ?: this)) return false
         if (isImeSuppressedByHardwareKeyboard() || settings.current.mHasHardwareKeyboard) return false
         val isFullscreenModeAllowed = Settings.readFullscreenModeAllowed(resources)
         if (super.onEvaluateFullscreenMode() && isFullscreenModeAllowed) {
@@ -1937,7 +1955,7 @@ class LatinIME : InputMethodService(),
             originalNavBarFlags = window.decorView.systemUiVisibility
             originalNavBarSaved = true
         }
-        if (floatingKeyboardManager?.isFloating == true) {
+        if (FloatingKeyboardManager.isFloatingMode(displayContext ?: this)) {
             window.navigationBarColor = Color.TRANSPARENT
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 window.isNavigationBarContrastEnforced = false
@@ -1984,7 +2002,7 @@ class LatinIME : InputMethodService(),
 
     private fun workaroundForHuaweiStatusBarIssue() {
         val window = window?.window ?: return
-        if (floatingKeyboardManager?.isFloating == true) {
+        if (FloatingKeyboardManager.isFloatingMode(displayContext ?: this)) {
             window.statusBarColor = Color.TRANSPARENT
             return
         }

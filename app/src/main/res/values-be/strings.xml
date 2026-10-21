@@ -1770,4 +1770,6 @@
     <string name="clipboard_font_scale">Маштаб гісторыі буфера абмену</string>
     <string name="openai_omit_temperature_title">Прапусціць тэмпературу</string>
     <string name="openai_omit_temperature_summary">Не адпраўляць параметр тэмпературы (патрабуецца для новых мадэляў Claude і разважанняў)</string>
+    <string name="floating_keyboard_landscape_title">Плаваючы рэжым у альбомным рэжыме</string>
+    <string name="floating_keyboard_landscape_summary">Аўтаматычнае пераключэнне на плаваючую клавіятуру ў альбомнай арыентацыі</string>
 </resources>

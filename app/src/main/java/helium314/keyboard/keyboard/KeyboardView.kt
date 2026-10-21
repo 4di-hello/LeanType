@@ -199,10 +199,7 @@ open class KeyboardView @JvmOverloads constructor(
     }
 
     private fun isFloatingMode(): Boolean {
-        return helium314.keyboard.latin.utils.ResourceUtils.getFloatingKeyboardWidth() > 0 ||
-                (helium314.keyboard.latin.LatinIME.getInstance()?.floatingKeyboardManager?.let {
-                    it.isFloating || (Settings.getValues().mRememberFloatingKeyboard && it.wasFloatingLastTime())
-                } == true)
+        return helium314.keyboard.latin.FloatingKeyboardManager.isFloatingMode(context)
     }
 
     override fun setPadding(left: Int, top: Int, right: Int, bottom: Int) {

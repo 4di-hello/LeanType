@@ -381,7 +381,7 @@
     <string name="layout_functional_keys_symbols" tools:keep="@string/layout_functional_keys_symbols">Teclas funcionais (Símbolos)</string>
     <string name="label_enter_key" tools:keep="@string/label_enter_key">Enter</string>
     <string name="label_tab_key" tools:keep="@string/label_tab_key">Tab</string>
-    <string name="label_delete_key" tools:keep="@string/label_delete_key">Delete</string>
+    <string name="label_delete_key" tools:keep="@string/label_delete_key">Eliminar</string>
     <string name="label_shortcut_key_disabled" tools:keep="@string/label_shortcut_key_disabled">Entrada de voz desativada</string>
     <string name="label_toolbar_key" tools:keep="@string/label_toolbar_key">Mostrar / ocultar barra de ferramentas</string>
     <string name="icon_style">Estilo do ícone</string>
@@ -1773,4 +1773,6 @@ Habilita inferência GGUF / llama.cpp no dispositivo para revisão e reescrita.<
     <string name="clipboard_font_scale">Escala de fonte do histórico da área de transferência</string>
     <string name="openai_omit_temperature_title">Omitir temperatura</string>
     <string name="openai_omit_temperature_summary">Não envie o parâmetro de temperatura (obrigatório para modelos Claude e de raciocínio mais recentes)</string>
+    <string name="floating_keyboard_landscape_title">Modo flutuante em paisagem</string>
+    <string name="floating_keyboard_landscape_summary">Alternar automaticamente para teclado flutuante quando estiver na orientação paisagem</string>
 </resources>

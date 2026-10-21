@@ -1780,4 +1780,6 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="clipboard_font_scale">Schriftskalierung des Zwischenablageverlaufs</string>
     <string name="openai_omit_temperature_title">Temperatur weglassen</string>
     <string name="openai_omit_temperature_summary">Senden Sie den Temperaturparameter nicht (erforderlich für neuere Claude- und Reasoning-Modelle).</string>
+    <string name="floating_keyboard_landscape_title">Schwebemodus im Querformat</string>
+    <string name="floating_keyboard_landscape_summary">Wechseln Sie im Querformat automatisch zur schwebenden Tastatur</string>
 </resources>

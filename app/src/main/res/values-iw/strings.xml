@@ -1785,4 +1785,6 @@
     <string name="clipboard_font_scale">סולם גופן היסטוריית הלוח</string>
     <string name="openai_omit_temperature_title">השמט טמפרטורה</string>
     <string name="openai_omit_temperature_summary">אל תשלח את פרמטר הטמפרטורה (נדרש עבור דגמי קלוד ודגמים חדשים יותר)</string>
+    <string name="floating_keyboard_landscape_title">מצב צף בנוף</string>
+    <string name="floating_keyboard_landscape_summary">עבור אוטומטית למקלדת צפה כאשר אתה נמצא בכיוון לרוחב</string>
 </resources>

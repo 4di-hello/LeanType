@@ -29,9 +29,7 @@ object KeyboardBottomRowGeometry {
     fun getDimensions(context: Context, sv: SettingsValues = Settings.getValues()): Dimensions {
         val res = context.resources
         val totalHeight = ResourceUtils.getSecondaryKeyboardHeight(res, sv)
-        val isFloating = ResourceUtils.getFloatingKeyboardWidth() > 0 || (LatinIME.getInstance()?.floatingKeyboardManager?.let {
-            it.isFloating || (sv.mRememberFloatingKeyboard && it.wasFloatingLastTime())
-        } == true)
+        val isFloating = helium314.keyboard.latin.FloatingKeyboardManager.isFloatingMode(context)
         val topPadding = if (isFloating) 0 else res.getFraction(R.fraction.config_keyboard_top_padding_holo, totalHeight, totalHeight).toInt()
         val bottomPadding = if (isFloating) 0 else (res.getFraction(R.fraction.config_keyboard_bottom_padding_holo, totalHeight, totalHeight) * sv.mBottomPaddingScale).toInt()
 

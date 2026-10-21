@@ -219,6 +219,7 @@ open class SettingsValues(
     @Deprecated("Retired with IME-native floating keyboard migration")
     val mPersistFloatingKeyboard: Boolean
     val mRememberFloatingKeyboard: Boolean
+    val mFloatingKeyboardLandscape: Boolean
     val mPersistTextEditMode: Boolean
     val mBackspaceRevertsAutocorrect: Boolean
     val mBackspaceRepeatDeletesWords: Boolean
@@ -361,6 +362,7 @@ open class SettingsValues(
             prefs.edit().remove(Settings.PREF_PERSIST_FLOATING_KEYBOARD).apply()
         }
         mRememberFloatingKeyboard = prefs.getBoolean(Settings.PREF_REMEMBER_FLOATING_KEYBOARD, Defaults.PREF_REMEMBER_FLOATING_KEYBOARD)
+        mFloatingKeyboardLandscape = prefs.getBoolean(Settings.PREF_FLOATING_KEYBOARD_LANDSCAPE, Defaults.PREF_FLOATING_KEYBOARD_LANDSCAPE)
         mPersistTextEditMode = prefs.getBoolean(Settings.PREF_PERSIST_TEXT_EDIT_MODE, Defaults.PREF_PERSIST_TEXT_EDIT_MODE)
         mBackspaceRevertsAutocorrect = prefs.getBoolean(Settings.PREF_BACKSPACE_REVERTS_AUTOCORRECT, Defaults.PREF_BACKSPACE_REVERTS_AUTOCORRECT)
         mBackspaceRepeatDeletesWords = prefs.getBoolean(Settings.PREF_BACKSPACE_REPEAT_DELETES_WORDS, Defaults.PREF_BACKSPACE_REPEAT_DELETES_WORDS)

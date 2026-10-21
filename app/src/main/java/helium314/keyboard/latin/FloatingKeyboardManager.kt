@@ -3,6 +3,8 @@ package helium314.keyboard.latin
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.GradientDrawable
@@ -41,6 +43,26 @@ class FloatingKeyboardManager(private val context: Context, private val latinIME
         private const val FLOATING_WIDTH_FRACTION = 0.75f
         private const val BOTTOM_BAR_HEIGHT_DP = 28
         private const val CORNER_RADIUS_DP = 16f
+
+        fun isFloatingMode(context: Context? = null): Boolean {
+            if (ResourceUtils.getFloatingKeyboardWidth() > 0) return true
+            val latinIme = LatinIME.getInstance()
+            val fkm = latinIme?.floatingKeyboardManager
+            val ctx = context ?: fkm?.context ?: latinIme
+            val isLandscape = ctx?.resources?.configuration?.orientation == Configuration.ORIENTATION_LANDSCAPE
+            val sv = Settings.getValues()
+            if (fkm != null) {
+                if (fkm.isFloating) {
+                    if (fkm.isAutoLandscapeFloating && !isLandscape) return false
+                    return true
+                }
+                if (sv.mFloatingKeyboardLandscape && isLandscape) return true
+                if (sv.mRememberFloatingKeyboard && fkm.wasFloatingLastTime()) return true
+            } else {
+                if (sv.mFloatingKeyboardLandscape && isLandscape) return true
+            }
+            return false
+        }
     }
 
     private val prefs: SharedPreferences by lazy {
@@ -58,6 +80,22 @@ class FloatingKeyboardManager(private val context: Context, private val latinIME
 
     var isFloating = false
         private set
+
+    var isAutoLandscapeFloating = false
+        private set
+
+    fun isFloatingMode(res: Resources? = null): Boolean {
+        if (ResourceUtils.getFloatingKeyboardWidth() > 0) return true
+        val isLandscape = (res ?: context.resources).configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        val sv = Settings.getValues()
+        if (isFloating) {
+            if (isAutoLandscapeFloating && !isLandscape) return false
+            return true
+        }
+        if (sv.mFloatingKeyboardLandscape && isLandscape) return true
+        if (sv.mRememberFloatingKeyboard && wasFloatingLastTime()) return true
+        return false
+    }
 
     @Volatile
     var isDragging = false
@@ -85,6 +123,7 @@ class FloatingKeyboardManager(private val context: Context, private val latinIME
     private var initialResizeScale = 1.0f
 
     private var wasFloatingBeforeExtract = false
+    private var wasAutoLandscapeBeforeExtract = false
     private val tempLocation = IntArray(2)
 
     private var bottomBar: FrameLayout? = null
@@ -110,7 +149,7 @@ class FloatingKeyboardManager(private val context: Context, private val latinIME
         return !outRect.isEmpty
     }
 
-    fun show() {
+    fun show(isAutoLandscape: Boolean = false) {
         val frame = getKeyboardFrame() ?: return
 
         val dm = context.resources.displayMetrics
@@ -124,7 +163,8 @@ class FloatingKeyboardManager(private val context: Context, private val latinIME
 
         // Set floating state and geometry overrides FIRST before view hierarchy layout passes
         isFloating = true
-        if (Settings.getValues().mRememberFloatingKeyboard) {
+        isAutoLandscapeFloating = isAutoLandscape
+        if (!isAutoLandscape && Settings.getValues().mRememberFloatingKeyboard) {
             prefs.edit().putBoolean(PREF_IS_ACTIVE, true).apply()
         }
         ResourceUtils.setFloatingKeyboardWidth(floatingWidth)
@@ -222,6 +262,7 @@ class FloatingKeyboardManager(private val context: Context, private val latinIME
         }
 
         isFloating = false
+        isAutoLandscapeFloating = false
         isDragging = false
         isResizing = false
 
@@ -265,7 +306,7 @@ class FloatingKeyboardManager(private val context: Context, private val latinIME
         if (isFloating) {
             hide()
         } else {
-            show()
+            show(isAutoLandscape = false)
         }
     }
 
@@ -308,6 +349,7 @@ class FloatingKeyboardManager(private val context: Context, private val latinIME
         resetDragAndResizeState()
         if (isFloating) {
             wasFloatingBeforeExtract = true
+            wasAutoLandscapeBeforeExtract = isAutoLandscapeFloating
             hide(showDockedKeyboard = false)
         }
     }
@@ -315,15 +357,17 @@ class FloatingKeyboardManager(private val context: Context, private val latinIME
     fun onFinishExtractMode() {
         resetDragAndResizeState()
         if (wasFloatingBeforeExtract) {
+            val wasAuto = wasAutoLandscapeBeforeExtract
             wasFloatingBeforeExtract = false
-            show()
+            wasAutoLandscapeBeforeExtract = false
+            show(isAutoLandscape = wasAuto)
         }
     }
 
     fun onInputViewRecreated(newInputView: View) {
         if (!isFloating) return
         Log.i(TAG, "Input view recreated while floating, reapplying floating layout")
-        show()
+        show(isAutoLandscape = isAutoLandscapeFloating)
     }
 
     fun destroy() {
@@ -342,6 +386,7 @@ class FloatingKeyboardManager(private val context: Context, private val latinIME
             ResourceUtils.setFloatingKeyboardWidth(0)
             ResourceUtils.setFloatingKeyboardScale(0.0f)
             isFloating = false
+            isAutoLandscapeFloating = false
         }
     }
 

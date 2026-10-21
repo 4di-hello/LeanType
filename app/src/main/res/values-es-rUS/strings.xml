@@ -1795,4 +1795,6 @@ Permite la inferencia GGUF / llama.cpp en el dispositivo para corrección y rees
     <string name="clipboard_font_scale">Escala de fuente del historial del portapapeles</string>
     <string name="openai_omit_temperature_title">Omitir temperatura</string>
     <string name="openai_omit_temperature_summary">No envíe el parámetro de temperatura (requerido para los modelos Claude y Reasoning más nuevos)</string>
+    <string name="floating_keyboard_landscape_title">Modo flotante en paisaje</string>
+    <string name="floating_keyboard_landscape_summary">Cambia automáticamente a teclado flotante cuando está en orientación horizontal</string>
 </resources>

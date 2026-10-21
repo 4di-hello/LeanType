@@ -1766,4 +1766,6 @@ Ar norite atnaujinti?</string>
     <string name="clipboard_font_scale">Iškarpinės istorijos šrifto skalė</string>
     <string name="openai_omit_temperature_title">Praleiskite temperatūrą</string>
     <string name="openai_omit_temperature_summary">Nesiųsti temperatūros parametro (būtina naujesniuose Claude ir argumentavimo modeliuose)</string>
+    <string name="floating_keyboard_landscape_title">Plūduriuojantis režimas kraštovaizdyje</string>
+    <string name="floating_keyboard_landscape_summary">Automatiškai perjunkite į slankiąją klaviatūrą, kai yra horizontalioje padėtyje</string>
 </resources>

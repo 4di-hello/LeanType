@@ -94,6 +94,7 @@ fun PreferencesScreen(
 
         R.string.settings_category_window_modes,
         Settings.PREF_REMEMBER_FLOATING_KEYBOARD,
+        Settings.PREF_FLOATING_KEYBOARD_LANDSCAPE,
         Settings.PREF_PERSIST_TEXT_EDIT_MODE,
 
         R.string.settings_category_clipboard_history,
@@ -210,6 +211,17 @@ fun createPreferencesSettings(context: Context) = listOf(
                 LatinIME.getInstance()?.floatingKeyboardManager?.clearFloatingActiveState()
                     ?: DeviceProtectedUtils.getSharedPreferences(ctx, "floating_keyboard_prefs")
                         .edit().putBoolean("floating_is_active", false).apply()
+            }
+        })
+    },
+    Setting(context, Settings.PREF_FLOATING_KEYBOARD_LANDSCAPE, R.string.floating_keyboard_landscape_title, R.string.floating_keyboard_landscape_summary) {
+        SwitchPreference(it, Defaults.PREF_FLOATING_KEYBOARD_LANDSCAPE, onCheckedChange = { enabled ->
+            if (!enabled) {
+                LatinIME.getInstance()?.floatingKeyboardManager?.let { fkm ->
+                    if (fkm.isAutoLandscapeFloating) {
+                        fkm.hide(showDockedKeyboard = true)
+                    }
+                }
             }
         })
     },

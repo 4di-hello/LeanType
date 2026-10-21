@@ -398,7 +398,7 @@
     <string name="prefs_side_padding_scale">Měřítko postranního odsazení</string>
     <string name="label_bin" tools:keep="@string/label_bin">Koš</string>
     <string name="key_code">Kód klávesy</string>
-    <string name="label_delete_key" tools:keep="@string/label_delete_key">Delete</string>
+    <string name="label_delete_key" tools:keep="@string/label_delete_key">Smazat</string>
     <string name="label_shift_key" tools:keep="@string/label_shift_key">Shift</string>
     <string name="prefs_language_swipe_distance">Práh horizontálního přejetí</string>
     <string name="pinned_toolbar_keys">Vyberte připnuté klávesy v panelu nástrojů</string>
@@ -1783,4 +1783,6 @@ Umožňuje lokální inferenci GGUF / llama.cpp na zařízení pro korektury a p
     <string name="clipboard_font_scale">Měřítko písma historie schránky</string>
     <string name="openai_omit_temperature_title">Vynechat teplotu</string>
     <string name="openai_omit_temperature_summary">Neposílejte parametr teploty (vyžadováno pro novější modely Claude a uvažování)</string>
+    <string name="floating_keyboard_landscape_title">Plovoucí režim na šířku</string>
+    <string name="floating_keyboard_landscape_summary">Automaticky přepnout na plovoucí klávesnici při orientaci na šířku</string>
 </resources>
