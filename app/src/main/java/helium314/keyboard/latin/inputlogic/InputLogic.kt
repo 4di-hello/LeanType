@@ -364,12 +364,15 @@ class InputLogic(
             }
 
             val isImmediate = settingsValues.mAutospaceAfterSuggestion && settingsValues.mImmediateAutoSpace && settingsValues.shouldInsertSpacesAutomatically() && !mConnection.hasTextAfterCursor()
-            commitChosenWord(
+            val cursorMovedBack = commitChosenWord(
                 settingsValues, suggestion, LastComposedWord.COMMIT_TYPE_MANUAL_PICK,
                 if (isImmediate) Constants.STRING_SPACE else LastComposedWord.NOT_A_SEPARATOR
             )
             mConnection.finishComposingText()
-            if (settingsValues.mAutospaceAfterSuggestion) {
+            if (cursorMovedBack) {
+                resetComposingState(false)
+                mSpaceState = SpaceState.NONE
+            } else if (settingsValues.mAutospaceAfterSuggestion) {
                 if (isImmediate) {
                     mConnection.commitText(" ", 1)
                     mConnection.finishComposingText()
@@ -1332,7 +1335,13 @@ class InputLogic(
                         || !result.matchedString.equals(mJustRevertedExpandedShortcut, ignoreCase = true)
                     ) {
                         mConnection.deleteTextBeforeCursor(result.matchedString.length)
-                        commitExpandedText(result.matchedString, result.expandedText)
+                        val cursorMovedBack = commitExpandedText(result.matchedString, result.expandedText)
+                        if (cursorMovedBack) {
+                            mSpaceState = SpaceState.NONE
+                            resetComposingState(true)
+                            inputTransaction.setRequiresUpdateSuggestions()
+                            return
+                        }
                     }
                 }
             }
@@ -2575,7 +2584,7 @@ class InputLogic(
         chosenWord: String,
         commitType: Int,
         separatorString: String
-    ) {
+    ): Boolean {
         var startTimeMillis = 0L
         if (DebugFlags.DEBUG_ENABLED) {
             startTimeMillis = System.currentTimeMillis()
@@ -2595,9 +2604,9 @@ class InputLogic(
                     } else {
                         mConnection.commitText(getTextWithSuggestionSpan(mLatinIME, chosenWord, mSuggestedWords, getDictionaryFacilitatorLocale()), 1)
                         mConnection.deleteTextBeforeCursor(result.prefixLength + chosenWord.length)
-                        commitExpandedText(result.matchedString, result.expandedText)
+                        val cursorMovedBack = commitExpandedText(result.matchedString, result.expandedText)
                         resetComposingState(true)
-                        return
+                        return cursorMovedBack
                     }
                 }
             }
@@ -2644,6 +2653,7 @@ class InputLogic(
             val runTimeMillis = System.currentTimeMillis() - startTimeMillis
             Log.d(TAG, "commitChosenWord() : $runTimeMillis ms to run WordComposer.commitWord()")
         }
+        return false
     }
 
     private fun wrapSelection(start: Int, end: Int) {
@@ -3059,7 +3069,7 @@ class InputLogic(
         return false
     }
 
-    private fun commitExpandedText(shortcut: String, expanded: String) {
+    private fun commitExpandedText(shortcut: String, expanded: String): Boolean {
         val cursorOffset = expanded.indexOf("%cursor%")
         if (cursorOffset != -1) {
             val finalExpandedText = expanded.replace("%cursor%", "")
@@ -3073,7 +3083,7 @@ class InputLogic(
                 mConnection.setSelection(newCursorPos, newCursorPos)
             }
             mLastExpandedCursorPosition = mConnection.expectedSelectionEnd
-            return
+            return moveBackAmount > 0
         }
 
         val matcher = CURSOR_PATTERN.matcher(expanded)
@@ -3104,13 +3114,16 @@ class InputLogic(
                 val newCursorPos = mConnection.expectedSelectionEnd - moveBackAmount
                 mConnection.setSelection(newCursorPos, newCursorPos)
             }
+            mLastExpandedCursorPosition = mConnection.expectedSelectionEnd
+            return moveBackAmount > 0
         } else {
             mConnection.commitText(expanded, 1)
             mLastExpandedText = expanded
             mLastShortcutText = shortcut
             mLastExpandedCursorOffset = expanded.length
+            mLastExpandedCursorPosition = mConnection.expectedSelectionEnd
+            return false
         }
-        mLastExpandedCursorPosition = mConnection.expectedSelectionEnd
     }
 
     companion object {
