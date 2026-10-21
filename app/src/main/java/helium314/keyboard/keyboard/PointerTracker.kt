@@ -886,13 +886,12 @@ class PointerTracker private constructor(
                 mDeleteRunY = y
                 mDeleteRunX = x
             }
-            if (stepsY < 0 && mInHorizontalSwipe && stepsX > 0) {
-                // Upward step candidate. If it comes from a rightward move that is at least as long
-                // horizontally as it is vertically (<= 45 degrees), it is thumb drift while
-                // swiping right to deselect text, so ignore it and restart vertical tracking.
-                val runDx = x - mDeleteRunX
+            if (stepsY < 0 && mInHorizontalSwipe) {
+                // Upward step candidate. If horizontal motion dominates, it is thumb drift
+                // from swiping left or right across the keyboard, so ignore vertical line delete.
+                val runDx = abs(x - mDeleteRunX)
                 val runDy = mDeleteRunY - y
-                if (runDx > 0 && runDx >= runDy) {
+                if (runDx >= runDy || abs(x - mStartX) >= abs(y - mStartY) || stepsX != 0) {
                     stepsY = 0
                     mStartY = y
                     mDeleteRunX = x

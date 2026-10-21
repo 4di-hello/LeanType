@@ -2053,6 +2053,29 @@ class LatinIME : InputMethodService(),
                 }
                 MSG_UPDATE_TAIL_BATCH_INPUT_COMPLETED -> {
                     val suggestedWords = msg.obj as SuggestedWords
+                    val word = if (suggestedWords.isEmpty) null else suggestedWords.getWord(0)
+                    if (!word.isNullOrEmpty()) {
+                        if (latinIme.keyboardSwitcher.isGifPickerShowing) {
+                            val suffix = if (latinIme.settings.current.mAutospaceAfterGestureTyping) " " else ""
+                            latinIme.keyboardSwitcher.onGifSearchText(word + suffix)
+                            latinIme.onTailBatchInputResultShown(suggestedWords)
+                            return
+                        }
+                        val clip = latinIme.keyboardSwitcher.clipboardHistoryView
+                        if (clip != null && clip.isShown && (clip.inEditMode || clip.inSearchMode)) {
+                            val suffix = if (latinIme.settings.current.mAutospaceAfterGestureTyping) " " else ""
+                            clip.onTextInput(word + suffix)
+                            latinIme.onTailBatchInputResultShown(suggestedWords)
+                            return
+                        }
+                        val emoji = latinIme.keyboardSwitcher.emojiPalettesView
+                        if (emoji != null && emoji.isShown && emoji.isInSearchMode) {
+                            val suffix = if (latinIme.settings.current.mAutospaceAfterGestureTyping) " " else ""
+                            emoji.onSearchTextInput(word + suffix)
+                            latinIme.onTailBatchInputResultShown(suggestedWords)
+                            return
+                        }
+                    }
                     latinIme.inputLogic.onUpdateTailBatchInputCompleted(latinIme.settings.current, suggestedWords, latinIme.keyboardSwitcher)
                     latinIme.onTailBatchInputResultShown(suggestedWords)
                 }

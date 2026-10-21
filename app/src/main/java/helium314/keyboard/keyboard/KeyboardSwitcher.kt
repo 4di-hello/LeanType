@@ -307,6 +307,7 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         }
 
     val gifPickerView: helium314.keyboard.latin.gif.GifPickerView? get() = mGifPickerView
+    val clipboardHistoryView: ClipboardHistoryView? get() = mClipboardHistoryView
 
     fun onGifSearchKey(code: Int): Boolean = isGifPickerShowing && mGifPickerView?.onHostKey(code) == true
 
@@ -462,6 +463,7 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
             mSuggestionStripView?.visibility = stripVisibility
         }
         mClipboardHistoryView?.let {
+            if (it.inEditMode) return@let
             it.animate()?.cancel()
             it.alpha = 1f
             it.translationY = 0f
@@ -930,6 +932,7 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         }
         if (Settings.getValues().mTouchpadFullscreen) {
             mStripContainer?.visibility = View.GONE
+            requestInputViewLayoutAndInsets()
         }
         touchpad.setPadding(
             kbView.paddingLeft,
@@ -960,43 +963,31 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         PointerTracker.sPersistentTouchpadModeActive = false
         val touchpad = mTouchpadView ?: return
         touchpad.animate()?.cancel()
-        touchpad.visibility = View.GONE
-        touchpad.alpha = 1f
-        mKeyboardView?.let { kbView ->
-            kbView.visibility = View.VISIBLE
-            val duration = Settings.getAnimationDuration(100)
-            if (duration > 0L) {
-                kbView.alpha = 0.25f
-                kbView.animate()?.cancel()
-                kbView.animate()
-                    ?.alpha(1f)
-                    ?.setDuration(duration)
-                    ?.setInterpolator(VIEW_SWITCH_ENTER_INTERPOLATOR)
-                    ?.start()
-            } else {
-                kbView.animate()?.cancel()
-                kbView.alpha = 1f
-            }
-        }
-        val shouldRestoreToolbar = mWasToolbarVisibleBeforeTouchpad ||
+        val shouldRestoreToolbar = (mWasToolbarVisibleBeforeTouchpad ||
             mSuggestionStripView?.isToolbarManuallyOpen == true ||
             Settings.getValues().mAutoShowToolbar ||
-            Settings.getValues().mToolbarMode == ToolbarMode.TOOLBAR_KEYS
+            Settings.getValues().mToolbarMode == ToolbarMode.TOOLBAR_KEYS) &&
+            Settings.getValues().mToolbarMode != ToolbarMode.SUGGESTION_STRIP
+
+        mLatinIME?.isCursorGestureActive = false
+        setMainKeyboardFrame(Settings.getValues(), KeyboardSwitchState.OTHER)
+        touchpad.visibility = View.GONE
+        touchpad.alpha = 1f
 
         if (shouldRestoreToolbar) {
             mSuggestionStripView?.isToolbarManuallyOpen = true
-        }
-        mSuggestionStripView?.visibility = View.VISIBLE
-        updateStripVisibility()
-        mSuggestionStripView?.updateSplitToolbarState()
-        mLatinIME?.let { ime ->
-            ime.mHandler.cancelResumeSuggestions()
-            ime.setNeutralSuggestionStrip()
-        }
-        if (shouldRestoreToolbar) {
-            mSuggestionStripView?.isToolbarManuallyOpen = true
             mSuggestionStripView?.setToolbarVisibility(true, saveState = false)
+            mLatinIME?.mHandler?.cancelResumeSuggestions()
+        } else {
+            mSuggestionStripView?.isToolbarManuallyOpen = false
+            mSuggestionStripView?.setToolbarVisibility(false, saveState = false)
+            mLatinIME?.let { ime ->
+                ime.setNeutralSuggestionStrip()
+                ime.mHandler.postResumeSuggestions(false)
+            }
         }
+        mSuggestionStripView?.updateSplitToolbarState()
+        requestInputViewLayoutAndInsets()
         mKeyboardViewWrapper?.let { wrapper ->
             if (wrapper.oneHandedModeEnabled) {
                 wrapper.findViewById<View>(R.id.btn_stop_one_handed_mode)?.visibility = View.VISIBLE
@@ -1356,6 +1347,7 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         val latinIme = mLatinIME ?: return
         if (!latinIme.isInputViewShown) return
 
+        updateKeyboardTheme(mKeyboardView?.context ?: latinIme)
         latinIme.hideWindow()
         try {
             latinIme.showWindow(true)

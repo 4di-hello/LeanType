@@ -445,7 +445,7 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
     }
 
     override fun onVerticalSpaceSwipe(steps: Int, action: Int): Boolean {
-        if (keyboardSwitcher.isGifPickerShowing) return true
+        if (keyboardSwitcher.isGifPickerShowing || keyboardSwitcher.isShowingClipboardHistory || keyboardSwitcher.isShowingEmojiPalettes) return true
         return when (action) {
             KeyboardActionListener.SWIPE_MOVE_CURSOR -> onMoveCursorVertically(steps)
             KeyboardActionListener.SWIPE_SWITCH_LANGUAGE -> onLanguageSlide(steps, isVertical = true)
@@ -1047,6 +1047,54 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
 
         private fun Int.isMetaLock() = this == KeyCode.CTRL_LOCK || this == KeyCode.ALT_LOCK || this == KeyCode.FN_LOCK || this == KeyCode.META_LOCK
 
+        private fun findSegmentBreaksBackwards(text: String, start: Int, end: Int): List<Int> {
+            val breaks = mutableListOf<Int>()
+            var subEnd = end
+            while (subEnd - start > 60) {
+                var breakPoint = -1
+                // Look for sentence terminators (. ! ? …) followed by whitespace
+                for (i in (subEnd - 15) downTo (start + 15)) {
+                    val c = text[i]
+                    if ((c == '.' || c == '!' || c == '?' || c == '…') && i + 1 < subEnd && Character.isWhitespace(text[i + 1])) {
+                        if (c == '.' && i > start && Character.isDigit(text[i - 1])) {
+                            continue
+                        }
+                        var nextStart = i + 1
+                        while (nextStart < subEnd && Character.isWhitespace(text[nextStart])) {
+                            nextStart++
+                        }
+                        if (nextStart < subEnd && nextStart - start >= 15 && subEnd - nextStart >= 15) {
+                            breakPoint = nextStart
+                            break
+                        }
+                    }
+                }
+                // If no sentence break found, check for clause punctuation (: ;)
+                if (breakPoint == -1) {
+                    for (i in (subEnd - 20) downTo (start + 20)) {
+                        val c = text[i]
+                        if ((c == ';' || c == ':') && i + 1 < subEnd && Character.isWhitespace(text[i + 1])) {
+                            var nextStart = i + 1
+                            while (nextStart < subEnd && Character.isWhitespace(text[nextStart])) {
+                                nextStart++
+                            }
+                            if (nextStart < subEnd && nextStart - start >= 15 && subEnd - nextStart >= 15) {
+                                breakPoint = nextStart
+                                break
+                            }
+                        }
+                    }
+                }
+                if (breakPoint != -1 && breakPoint < subEnd) {
+                    breaks.add(breakPoint)
+                    subEnd = breakPoint
+                } else {
+                    break
+                }
+            }
+            return breaks
+        }
+
         internal fun getLineBoundariesBackwards(text: String, endOffset: Int): List<Int> {
             val boundaries = mutableListOf<Int>()
             boundaries.add(endOffset)
@@ -1058,20 +1106,11 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
                 if (lastNewline != -1) {
                     val lineStart = lastNewline + 1
                     if (currentEnd > lineStart) {
-                        val segLength = currentEnd - lineStart
-                        if (segLength > 50) {
-                            var subEnd = currentEnd
-                            while (subEnd - lineStart > 50) {
-                                var breakPoint = (subEnd - 40).coerceAtLeast(lineStart)
-                                while (breakPoint > lineStart && !Character.isWhitespace(text[breakPoint])) {
-                                    breakPoint--
-                                }
-                                if (breakPoint <= lineStart) {
-                                    breakPoint = (subEnd - 40).coerceAtLeast(lineStart)
-                                }
-                                val offset = endOffset - (text.length - breakPoint)
+                        val segBreaks = findSegmentBreaksBackwards(text, lineStart, currentEnd)
+                        for (bp in segBreaks) {
+                            val offset = endOffset - (text.length - bp)
+                            if (boundaries.last() != offset) {
                                 boundaries.add(offset)
-                                subEnd = breakPoint
                             }
                         }
                         val offset = endOffset - (text.length - lineStart)
@@ -1081,24 +1120,19 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
                     }
                     currentEnd = lastNewline
                 } else {
-                    if (currentEnd > 50) {
-                        var subEnd = currentEnd
-                        while (subEnd > 50) {
-                            var breakPoint = (subEnd - 40).coerceAtLeast(0)
-                            while (breakPoint > 0 && !Character.isWhitespace(text[breakPoint])) {
-                                breakPoint--
+                    val lineStart = 0
+                    if (currentEnd > lineStart) {
+                        val segBreaks = findSegmentBreaksBackwards(text, lineStart, currentEnd)
+                        for (bp in segBreaks) {
+                            val offset = endOffset - (text.length - bp)
+                            if (boundaries.last() != offset) {
+                                boundaries.add(offset)
                             }
-                            if (breakPoint <= 0) {
-                                breakPoint = (subEnd - 40).coerceAtLeast(0)
-                            }
-                            val offset = endOffset - (text.length - breakPoint)
-                            boundaries.add(offset)
-                            subEnd = breakPoint
                         }
-                    }
-                    val offset = endOffset - text.length
-                    if (boundaries.last() != offset) {
-                        boundaries.add(offset)
+                        val offset = endOffset - text.length
+                        if (boundaries.last() != offset) {
+                            boundaries.add(offset)
+                        }
                     }
                     break
                 }

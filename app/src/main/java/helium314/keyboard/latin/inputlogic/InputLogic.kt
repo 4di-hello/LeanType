@@ -494,6 +494,13 @@ class InputLogic(
         handler.showGesturePreviewAndSetSuggestions(SuggestedWords.getEmptyBatchInstance(), false)
         handler.cancelUpdateSuggestionStrip()
         ++mAutoCommitSequenceNumber
+        val isInternalField = keyboardSwitcher.isGifPickerShowing ||
+                keyboardSwitcher.isShowingClipboardHistory ||
+                keyboardSwitcher.isShowingEmojiPalettes
+        if (isInternalField) {
+            mWordComposer.reset()
+            return
+        }
         mConnection.beginBatchEdit()
         try {
             if (mWordComposer.isComposingWord()) {

@@ -208,6 +208,17 @@ class EmojiPalettesView @JvmOverloads constructor(
     private var mSearchKeyboardLayoutSet: KeyboardLayoutSet? = null
     private var mSearchAlphabetKeyboardId = KeyboardId.ELEMENT_ALPHABET
 
+    val isInSearchMode: Boolean get() = mInSearchMode
+
+    fun onSearchTextInput(text: String?) {
+        if (!mInSearchMode || text == null) return
+        val searchBar = mSearchBar ?: return
+        val content = searchBar.text ?: return
+        var sel = searchBar.selectionStart
+        if (sel < 0) sel = content.length
+        content.insert(sel, text)
+    }
+
     private var mEditorInfo: EditorInfo? = null
 
     init {
@@ -239,10 +250,7 @@ class EmojiPalettesView @JvmOverloads constructor(
         }
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         val res = context.resources
-        val isFloating = ResourceUtils.getFloatingKeyboardWidth() > 0 ||
-                (helium314.keyboard.latin.LatinIME.getInstance()?.floatingKeyboardManager?.let {
-                    it.isFloating || (Settings.getValues().mRememberFloatingKeyboard && it.wasFloatingLastTime())
-                } == true)
+        val isFloating = helium314.keyboard.latin.FloatingKeyboardManager.isFloatingMode(context)
         val padH = if (isFloating) 0 else (paddingLeft + paddingRight)
         val padV = if (isFloating) 0 else (paddingTop + paddingBottom)
         val width = ResourceUtils.getKeyboardWidth(context, Settings.getValues()) + padH
@@ -490,8 +498,12 @@ class EmojiPalettesView @JvmOverloads constructor(
         bottomRow.setKeyboardActionListener(object : KeyboardActionListener {
             private var mDeleteSwipeStartSel = -1
             private var mCurrentDeleteSwipeStart = -1
+            private var mLastShiftPressTime = 0L
 
             override fun onCodeInput(primaryCode: Int, x: Int, y: Int, isKeyRepeat: Boolean) {
+                if (primaryCode != KeyCode.SHIFT) {
+                    mLastShiftPressTime = 0L
+                }
                 val searchBar = mSearchBar
                 if (primaryCode == KeyCode.DELETE) {
                     val text = searchBar?.text ?: return
@@ -525,14 +537,27 @@ class EmojiPalettesView @JvmOverloads constructor(
                         bottomRow.setKeyboard(layoutSet.getKeyboard(targetId))
                         bottomRow.setKeyPreviewPopupEnabled(Settings.getValues().mKeyPreviewPopupOn)
                     }
-                } else if (primaryCode == KeyCode.SHIFT) {
+                } else if (primaryCode == KeyCode.SHIFT || primaryCode == KeyCode.CAPS_LOCK) {
                     mSearchKeyboardLayoutSet?.let { layoutSet ->
                         val bottomRow = findViewById<MainKeyboardView>(R.id.bottom_row_keyboard)
                         val currentElementId = bottomRow.keyboard?.mId?.mElementId ?: KeyboardId.ELEMENT_ALPHABET
+                        val now = android.os.SystemClock.uptimeMillis()
+                        val isDoubleTap = primaryCode == KeyCode.SHIFT && mLastShiftPressTime > 0L && (now - mLastShiftPressTime < android.view.ViewConfiguration.getDoubleTapTimeout())
+                        mLastShiftPressTime = if (primaryCode == KeyCode.SHIFT && !isDoubleTap) now else 0L
+
                         val targetId = when (currentElementId) {
                             KeyboardId.ELEMENT_SYMBOLS -> KeyboardId.ELEMENT_SYMBOLS_SHIFTED
                             KeyboardId.ELEMENT_SYMBOLS_SHIFTED -> KeyboardId.ELEMENT_SYMBOLS
-                            KeyboardId.ELEMENT_ALPHABET -> KeyboardId.ELEMENT_ALPHABET_MANUAL_SHIFTED
+                            KeyboardId.ELEMENT_ALPHABET -> {
+                                if (primaryCode == KeyCode.CAPS_LOCK) KeyboardId.ELEMENT_ALPHABET_SHIFT_LOCKED
+                                else KeyboardId.ELEMENT_ALPHABET_MANUAL_SHIFTED
+                            }
+                            KeyboardId.ELEMENT_ALPHABET_MANUAL_SHIFTED -> {
+                                if (primaryCode == KeyCode.CAPS_LOCK || isDoubleTap) KeyboardId.ELEMENT_ALPHABET_SHIFT_LOCKED
+                                else mSearchAlphabetKeyboardId
+                            }
+                            KeyboardId.ELEMENT_ALPHABET_AUTOMATIC_SHIFTED,
+                            KeyboardId.ELEMENT_ALPHABET_SHIFT_LOCKED -> mSearchAlphabetKeyboardId
                             else -> mSearchAlphabetKeyboardId
                         }
                         bottomRow.setKeyboard(layoutSet.getKeyboard(targetId))
@@ -586,13 +611,23 @@ class EmojiPalettesView @JvmOverloads constructor(
             }
 
             override fun onImageSelected(imageUri: String) {}
-            override fun onLongPressKey(p: Int) {}
+            override fun onLongPressKey(p: Int) {
+                if (p == KeyCode.SHIFT) {
+                    mSearchKeyboardLayoutSet?.let { layoutSet ->
+                        val bottomRow = findViewById<MainKeyboardView>(R.id.bottom_row_keyboard)
+                        bottomRow.setKeyboard(layoutSet.getKeyboard(KeyboardId.ELEMENT_ALPHABET_SHIFT_LOCKED))
+                        bottomRow.setKeyPreviewPopupEnabled(Settings.getValues().mKeyPreviewPopupOn)
+                    }
+                    return
+                }
+                mOriginalActionListener?.onLongPressKey(p)
+            }
             override fun onKeyDown(k: Int, e: android.view.KeyEvent): Boolean = false
             override fun onKeyUp(k: Int, e: android.view.KeyEvent): Boolean = false
-            override fun onStartBatchInput() {}
-            override fun onUpdateBatchInput(p: helium314.keyboard.latin.common.InputPointers) {}
-            override fun onEndBatchInput(p: helium314.keyboard.latin.common.InputPointers) {}
-            override fun onCancelBatchInput() {}
+            override fun onStartBatchInput() { mOriginalActionListener?.onStartBatchInput() }
+            override fun onUpdateBatchInput(p: helium314.keyboard.latin.common.InputPointers) { mOriginalActionListener?.onUpdateBatchInput(p) }
+            override fun onEndBatchInput(p: helium314.keyboard.latin.common.InputPointers) { mOriginalActionListener?.onEndBatchInput(p) }
+            override fun onCancelBatchInput() { mOriginalActionListener?.onCancelBatchInput() }
             
             override fun onCancelInput() {
                 mDeleteSwipeStartSel = -1
