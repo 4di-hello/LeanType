@@ -22,6 +22,13 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
 - Emoji-Vorschläge zum getippten Wort: prüfen, was LeanType schon kann (`suggest_emojis`, Inline-Emoji-Suche mit Emoji-Wörterbuch), dann entscheiden
 - Getrennte Tipp-Profile pro Daumen bzw. Haltung weiter verfeinern (Idee)
 
+## LeanType wird nicht mehr entwickelt (21.10.)
+
+- Gesichert: Quellcode aller 7 Plugins (Branches `backup/plugins/*`) und alle Plugin-APKs (Release „plugins-backup“)
+- Bauanleitung baut weiter, auch wenn LeanType verschwindet
+- PRs #680/#695 werden wohl nicht mehr übernommen, beides ist im Fork enthalten
+- Umzug auf HeliBoard (aktiv gepflegt): nur bei echtem Bedarf, sehr aufwendig (KI, Sprache, Textbausteine fehlen dort)
+
 ## Sicherheit (Review 18.10.)
 
 - Erledigt 19.10.: Tastendrücke (%enter%, %tabkey%) nur aus dem Baustein selbst, nie aus der Zwischenablage; Rest eines Bausteins wird bei App-Wechsel verworfen (auch in PR #695)
