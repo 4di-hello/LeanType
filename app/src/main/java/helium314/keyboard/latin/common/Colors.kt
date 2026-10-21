@@ -686,11 +686,14 @@ class AllColors(private val colorMap: EnumMap<ColorType, Int>, override val them
         if (view.background == null)
             view.setBackgroundColor(Color.WHITE) // set white to make the color filters work
         when (color) {
+            ColorType.KEY_PREVIEW_BACKGROUND, ColorType.POPUP_KEYS_BACKGROUND, ColorType.MORE_SUGGESTIONS_BACKGROUND -> {
+                view.background.colorFilter = getColorFilter(color)
+            }
             ColorType.ONE_HANDED_MODE_BUTTON -> setColor(view.background, ColorType.MAIN_BACKGROUND) // button has no separate background color
             ColorType.MAIN_BACKGROUND -> {
                 keyboardBackground?.let { bg ->
                     view.background = bg
-                } ?: run { setColor(view.background, color) }
+                } ?: run { view.background.colorFilter = getColorFilter(color) }
             }
             else -> setColor(view.background, color)
         }

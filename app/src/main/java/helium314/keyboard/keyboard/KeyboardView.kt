@@ -397,7 +397,7 @@ open class KeyboardView @JvmOverloads constructor(
             customColor = mColors.getPressedColor(pressedType)
         }
 
-        val editBg = mEditModeKeyBackground
+        val editBg = if (isTextEditMode) mEditModeKeyBackground else null
         val drawBackground = if (customColor != 0 && editBg != null) editBg else background
         val padding = if (customColor != 0 && editBg != null) mEditModeKeyBackgroundPadding else mKeyBackgroundPadding
 
@@ -459,6 +459,8 @@ open class KeyboardView @JvmOverloads constructor(
         if (hasCustomTint) {
             if (drawBackground === background) {
                 val originalType = when {
+                    this is MoreSuggestionsView -> ColorType.MORE_SUGGESTIONS_WORD_BACKGROUND
+                    this is PopupKeysKeyboardView -> if (key.hasActionKeyBackground()) ColorType.ACTION_KEY_POPUP_KEYS_BACKGROUND else ColorType.POPUP_KEYS_BACKGROUND
                     key.hasActionKeyBackground() -> ColorType.ACTION_KEY_BACKGROUND
                     key.hasFunctionalBackground() -> ColorType.FUNCTIONAL_KEY_BACKGROUND
                     key.backgroundType == Key.BACKGROUND_TYPE_SPACEBAR -> ColorType.SPACE_BAR_BACKGROUND
@@ -523,8 +525,9 @@ open class KeyboardView @JvmOverloads constructor(
             }
 
             if (key.isEnabled) {
+                val isTextEditMode = KeyboardActionListenerImpl.sPersistentTextEditModeActive || (keyboard?.mId?.mElementId == KeyboardId.ELEMENT_TEXT_EDIT)
                 val customBgColor = mKeyCustomBgColors[key]
-                if (customBgColor != null) {
+                if (customBgColor != null && isTextEditMode) {
                     paint.color = getContrastingColor(customBgColor)
                 } else if (isEmoji(label)) {
                     paint.color = key.selectTextColor(params) or 0xFF000000.toInt()
