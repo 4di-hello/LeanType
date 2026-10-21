@@ -1,0 +1,39 @@
+name: Watch HeliBoard
+# Only for this fork: LeanType is no longer developed, LeanType+ follows HeliBoard (which LeanType is
+# based on) by hand. Every Monday, a new HeliBoard release is reported as an issue in this repository,
+# so GitHub sends a notification. The changes are then ported to LeanType+ where useful.
+# Needs issues to be enabled (Settings > General > Features > Issues).
+
+on:
+  schedule:
+    - cron: '41 5 * * 1' # Monday morning
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths: [ '.github/workflows/heliboard-watch.yml' ]
+
+permissions:
+  issues: write
+
+jobs:
+  watch:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Report a new HeliBoard release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          tag=$(gh release list -R Helium314/HeliBoard --limit 1 --json tagName --jq '.[0].tagName')
+          echo "::notice::latest HeliBoard release: $tag"
+          if [ "$(gh api "repos/$GH_REPO" --jq .has_issues)" != "true" ]; then
+            echo "::warning::issues are disabled in this repository, enable them to get notified"
+            exit 0
+          fi
+          title="HeliBoard $tag"
+          if gh issue list --state all --limit 200 --json title --jq '.[].title' | grep -qxF "$title"; then
+            echo "::notice::already reported"
+            exit 0
+          fi
+          gh release view "$tag" -R Helium314/HeliBoard --json url,publishedAt,body --jq '"Neue HeliBoard-Version " + .url + " (" + .publishedAt[0:10] + ")\n\nIn Claude sagen: „HeliBoard '"$tag"' nachziehen“ – dann werden die passenden Änderungen geprüft und in LeanType+ übernommen.\n\n---\n\n" + .body' > body.md
+          gh issue create --title "$title" --body-file body.md
