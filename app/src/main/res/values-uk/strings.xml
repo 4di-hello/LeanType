@@ -1734,4 +1734,6 @@
     <string name="backspace_repeat_deletes_words_summary">Утримуючи клавішу видалення на мить, видаляйте слово за словом зі збільшенням швидкості</string>
     <string name="clipboard_skip_sensitive">Не зберігайте паролі та коди</string>
     <string name="clipboard_skip_sensitive_summary">Записи, позначені як конфіденційні (наприклад, від менеджерів паролів), і одноразові коди з 4 до 8 цифр не додаються до історії. Вклеювання все ще працює</string>
+    <string name="prefs_secondary_font_scale">Масштаб шрифту другорядних символів</string>
+    <string name="clipboard_font_scale">Масштаб історії буфера обміну</string>
 </resources>

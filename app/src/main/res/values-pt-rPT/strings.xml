@@ -1769,4 +1769,6 @@ Habilita inferência GGUF / llama.cpp no dispositivo para revisão e reescrita.<
     <string name="backspace_repeat_deletes_words_summary">Depois de segurar a tecla delete por um momento, exclua palavra por palavra com velocidade crescente</string>
     <string name="clipboard_skip_sensitive">Não guarde senhas e códigos</string>
     <string name="clipboard_skip_sensitive_summary">Entradas marcadas como confidenciais (por exemplo, de gerenciadores de senhas) e códigos únicos com 4 a 8 dígitos não são adicionados ao histórico. Colar ainda funciona</string>
+    <string name="prefs_secondary_font_scale">Escala de fonte de caracteres secundários</string>
+    <string name="clipboard_font_scale">Escala de fonte do histórico da área de transferência</string>
 </resources>

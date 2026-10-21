@@ -1816,4 +1816,6 @@ Umożliwia lokalne wnioskowanie GGUF / llama.cpp na urządzeniu w celu korekty i
     <string name="backspace_repeat_deletes_words_summary">Po przytrzymaniu przez chwilę klawisza usuwania, usuwaj słowo po słowie ze wzrastającą szybkością</string>
     <string name="clipboard_skip_sensitive">Nie przechowuj haseł i kodów</string>
     <string name="clipboard_skip_sensitive_summary">Wpisy oznaczone jako poufne (np. z menedżerów haseł) oraz kody jednorazowe o długości od 4 do 8 cyfr nie są dodawane do historii. Wklejanie nadal działa</string>
+    <string name="prefs_secondary_font_scale">Skala czcionki znaku dodatkowego</string>
+    <string name="clipboard_font_scale">Skala czcionki historii schowka</string>
 </resources>

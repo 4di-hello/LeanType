@@ -1776,4 +1776,6 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="cjk_clear_user_dict_title">Löschen Sie den CJK-Benutzerverlauf</string>
     <string name="cjk_clear_user_dict_summary">Zurücksetzen der erlernten Kandidatenrankings und des Benutzerwörterbuch-Cache</string>
     <string name="cjk_clear_user_dict_success">CJK-Benutzerverlauf gelöscht</string>
+    <string name="prefs_secondary_font_scale">Schriftartenskala für sekundäre Zeichen</string>
+    <string name="clipboard_font_scale">Schriftskalierung des Zwischenablageverlaufs</string>
 </resources>

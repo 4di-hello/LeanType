@@ -1828,4 +1828,6 @@ Permet l\'inférence GGUF / llama.cpp sur l\'appareil pour la correction et la r
     <string name="backspace_repeat_deletes_words_summary">Après avoir maintenu la touche Suppr enfoncée pendant un moment, supprimez mot par mot avec une vitesse croissante</string>
     <string name="clipboard_skip_sensitive">Ne conservez pas les mots de passe et les codes</string>
     <string name="clipboard_skip_sensitive_summary">Les entrées marquées comme confidentielles (par exemple provenant de gestionnaires de mots de passe) et les codes à usage unique de 4 à 8 chiffres ne sont pas ajoutés à l\'historique. Le collage fonctionne toujours</string>
+    <string name="prefs_secondary_font_scale">Échelle de police des caractères secondaires</string>
+    <string name="clipboard_font_scale">Échelle de police de l’historique du Presse-papiers</string>
 </resources>

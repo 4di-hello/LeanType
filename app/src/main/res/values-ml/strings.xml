@@ -1832,4 +1832,6 @@
     <string name="backspace_repeat_deletes_words_summary">ഒരു നിമിഷം ഡിലീറ്റ് കീ അമർത്തിപ്പിടിച്ച ശേഷം, വേഗത വർദ്ധിക്കുന്നതോടെ ഓരോ വാക്കും ഇല്ലാതാക്കുക</string>
     <string name="clipboard_skip_sensitive">പാസ്‌വേഡുകളും കോഡുകളും സൂക്ഷിക്കരുത്</string>
     <string name="clipboard_skip_sensitive_summary">രഹസ്യസ്വഭാവമുള്ളതായി അടയാളപ്പെടുത്തിയ എൻട്രികളും (ഉദാ. പാസ്‌വേഡ് മാനേജർമാരിൽ നിന്ന്) 4 മുതൽ 8 അക്കങ്ങളുള്ള ഒറ്റത്തവണ കോഡുകളും ചരിത്രത്തിലേക്ക് ചേർക്കില്ല. ഒട്ടിക്കൽ ഇപ്പോഴും പ്രവർത്തിക്കുന്നു</string>
+    <string name="prefs_secondary_font_scale">ദ്വിതീയ പ്രതീക ഫോണ്ട് സ്കെയിൽ</string>
+    <string name="clipboard_font_scale">ക്ലിപ്പ്ബോർഡ് ചരിത്ര ഫോണ്ട് സ്കെയിൽ</string>
 </resources>

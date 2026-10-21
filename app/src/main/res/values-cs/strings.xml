@@ -1779,4 +1779,6 @@ Umožňuje lokální inferenci GGUF / llama.cpp na zařízení pro korektury a p
     <string name="backspace_repeat_deletes_words_summary">Po chvíli přidržení klávesy Delete mažte slovo po slovu se zvyšující se rychlostí</string>
     <string name="clipboard_skip_sensitive">Neuchovávejte hesla a kódy</string>
     <string name="clipboard_skip_sensitive_summary">Záznamy označené jako důvěrné (např. od správců hesel) a jednorázové kódy se 4 až 8 číslicemi se do historie nepřidávají. Vkládání stále funguje</string>
+    <string name="prefs_secondary_font_scale">Měřítko písma sekundárních znaků</string>
+    <string name="clipboard_font_scale">Měřítko písma historie schránky</string>
 </resources>

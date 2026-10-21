@@ -1832,4 +1832,6 @@
     <string name="backspace_repeat_deletes_words_summary">Αφού κρατήσετε πατημένο το πλήκτρο διαγραφής για λίγο, διαγράψτε λέξη προς λέξη με αυξανόμενη ταχύτητα</string>
     <string name="clipboard_skip_sensitive">Μην κρατάτε κωδικούς και κωδικούς</string>
     <string name="clipboard_skip_sensitive_summary">Οι καταχωρίσεις που έχουν επισημανθεί ως εμπιστευτικές (π.χ. από διαχειριστές κωδικών πρόσβασης) και οι κωδικοί μιας χρήσης με 4 έως 8 ψηφία δεν προστίθενται στο ιστορικό. Η επικόλληση λειτουργεί ακόμα</string>
+    <string name="prefs_secondary_font_scale">Δευτερεύουσα κλίμακα γραμματοσειράς χαρακτήρων</string>
+    <string name="clipboard_font_scale">Κλίμακα γραμματοσειράς ιστορικού προχείρου</string>
 </resources>

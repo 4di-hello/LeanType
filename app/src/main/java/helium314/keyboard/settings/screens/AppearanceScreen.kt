@@ -111,6 +111,7 @@ fun AppearanceScreen(
         Settings.PREF_SPACE_BAR_TEXT,
         SettingsWithoutKey.CUSTOM_FONT,
         Settings.PREF_FONT_SCALE,
+        Settings.PREF_SECONDARY_FONT_SCALE,
         SettingsWithoutKey.CUSTOM_EMOJI_FONT,
         Settings.PREF_EMOJI_FONT_SCALE,
         Settings.PREF_USE_SYSTEM_EMOJI,
@@ -491,6 +492,15 @@ fun createAppearanceSettings(context: Context) = listOf(
             name = def.title,
             key = def.key,
             default = Defaults.PREF_FONT_SCALE,
+            range = 0.5f..1.5f,
+            description = { "${(100 * it).toInt()}%" }
+        ) { KeyboardSwitcher.getInstance().setThemeNeedsReload() }
+    },
+    Setting(context, Settings.PREF_SECONDARY_FONT_SCALE, R.string.prefs_secondary_font_scale) { def ->
+        SliderPreference(
+            name = def.title,
+            key = def.key,
+            default = Defaults.PREF_SECONDARY_FONT_SCALE,
             range = 0.5f..1.5f,
             description = { "${(100 * it).toInt()}%" }
         ) { KeyboardSwitcher.getInstance().setThemeNeedsReload() }

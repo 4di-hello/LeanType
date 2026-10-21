@@ -1814,4 +1814,6 @@ Maakt GGUF / llama.cpp-inferentie op het apparaat mogelijk voor proeflezen en he
     <string name="backspace_repeat_deletes_words_summary">Nadat u de delete-toets even ingedrukt hebt gehouden, verwijdert u woord voor woord met toenemende snelheid</string>
     <string name="clipboard_skip_sensitive">Bewaar geen wachtwoorden en codes</string>
     <string name="clipboard_skip_sensitive_summary">Invoer die als vertrouwelijk is gemarkeerd (bijvoorbeeld van wachtwoordbeheerders) en eenmalige codes met 4 tot 8 cijfers worden niet aan de geschiedenis toegevoegd. Plakken werkt nog steeds</string>
+    <string name="prefs_secondary_font_scale">Lettergrootte van secundaire tekens</string>
+    <string name="clipboard_font_scale">Lettergrootte van klembordgeschiedenis</string>
 </resources>

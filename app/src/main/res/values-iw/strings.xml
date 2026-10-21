@@ -1781,4 +1781,6 @@
     <string name="backspace_repeat_deletes_words_summary">לאחר החזקת מקש המחיקה לרגע, מחק מילה אחר מילה במהירות גוברת</string>
     <string name="clipboard_skip_sensitive">אל תשמור סיסמאות וקודים</string>
     <string name="clipboard_skip_sensitive_summary">ערכים המסומנים כסודיים (למשל ממנהלי סיסמאות) וקודים חד פעמיים עם 4 עד 8 ספרות אינם מתווספים להיסטוריה. ההדבקה עדיין עובדת</string>
+    <string name="prefs_secondary_font_scale">סולם גופן תווים משניים</string>
+    <string name="clipboard_font_scale">סולם גופן היסטוריית הלוח</string>
 </resources>

@@ -1839,4 +1839,6 @@
     <string name="backspace_repeat_deletes_words_summary">Удерживая кнопку удаления на мгновение, удаляйте слово за словом с возрастающей скоростью.</string>
     <string name="clipboard_skip_sensitive">Не храните пароли и коды</string>
     <string name="clipboard_skip_sensitive_summary">В историю не добавляются записи, помеченные как конфиденциальные (например, из менеджеров паролей) и одноразовые коды длиной от 4 до 8 цифр. Вставка все еще работает</string>
+    <string name="prefs_secondary_font_scale">Масштаб шрифта второстепенных символов</string>
+    <string name="clipboard_font_scale">Масштаб шрифта истории буфера обмена</string>
 </resources>

@@ -1729,4 +1729,6 @@ Memungkinkan inferensi GGUF / llama.cpp di perangkat untuk koreksi teks dan penu
     <string name="backspace_repeat_deletes_words_summary">Setelah menahan tombol hapus sejenak, hapus kata demi kata dengan kecepatan yang semakin meningkat</string>
     <string name="clipboard_skip_sensitive">Jangan menyimpan kata sandi dan kode</string>
     <string name="clipboard_skip_sensitive_summary">Entri yang ditandai sebagai rahasia (misalnya dari pengelola kata sandi) dan kode sekali pakai dengan 4 hingga 8 digit tidak ditambahkan ke riwayat. Menempel masih berfungsi</string>
+    <string name="prefs_secondary_font_scale">Skala font karakter sekunder</string>
+    <string name="clipboard_font_scale">Skala font riwayat papan klip</string>
 </resources>

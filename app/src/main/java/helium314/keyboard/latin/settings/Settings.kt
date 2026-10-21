@@ -385,6 +385,7 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
         const val PREF_BOTTOM_PADDING_SCALE_PREFIX = "bottom_padding_scale"
         const val PREF_SIDE_PADDING_SCALE_PREFIX = "side_padding_scale"
         const val PREF_FONT_SCALE = "font_scale"
+        const val PREF_SECONDARY_FONT_SCALE = "secondary_font_scale"
         const val PREF_EMOJI_FONT_SCALE = "emoji_font_scale"
         const val PREF_USE_SYSTEM_EMOJI = "use_system_emoji"
         const val PREF_EMOJI_KEY_FIT = "emoji_key_fit"
@@ -508,6 +509,7 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
         const val PREF_CLIPBOARD_HISTORY_RETENTION_TIME = "clipboard_history_retention_time"
         const val PREF_CLIPBOARD_HISTORY_PINNED_FIRST = "clipboard_history_pinned_first"
         const val PREF_CLIPBOARD_FOLD_PINNED = "clipboard_fold_pinned"
+        const val PREF_CLIPBOARD_FONT_SCALE = "clipboard_font_scale"
         const val PREF_CLEAR_CLIPBOARD_ICON = "clear_clipboard_icon"
 
         const val PREF_ADD_TO_PERSONAL_DICTIONARY = "add_to_personal_dictionary"

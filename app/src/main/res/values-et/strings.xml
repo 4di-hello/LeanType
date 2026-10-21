@@ -1761,4 +1761,6 @@ Võimaldab seadmesisese GGUF / llama.cpp järelduse korrektuuri ja ümbersõnast
     <string name="backspace_repeat_deletes_words_summary">Pärast kustutamisklahvi hetke hoidmist kustutage sõna-sõnalt kasvava kiirusega</string>
     <string name="clipboard_skip_sensitive">Ärge hoidke paroole ja koode</string>
     <string name="clipboard_skip_sensitive_summary">Ajaloosse ei lisata konfidentsiaalseks märgitud kirjeid (nt paroolihalduritelt) ja ühekordseid 4–8-kohalisi koode. Kleepimine ikka toimib</string>
+    <string name="prefs_secondary_font_scale">Sekundaarse tähemärgi skaala</string>
+    <string name="clipboard_font_scale">Lõikepuhvri ajaloo fontide skaala</string>
 </resources>

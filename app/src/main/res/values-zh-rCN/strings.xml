@@ -1780,4 +1780,6 @@
     <string name="backspace_repeat_deletes_words_summary">按住删除键片刻后，逐字逐字删除，速度逐渐加快</string>
     <string name="clipboard_skip_sensitive">不要保留密码和代码</string>
     <string name="clipboard_skip_sensitive_summary">标记为机密的条目（例如来自密码管理器的条目）和 4 到 8 位数字的一次性代码不会添加到历史记录中。粘贴仍然有效</string>
+    <string name="prefs_secondary_font_scale">辅助字符字体比例</string>
+    <string name="clipboard_font_scale">剪贴板历史字体比例</string>
 </resources>

@@ -550,7 +550,7 @@ open class KeyboardView @JvmOverloads constructor(
 
         val hintLabel = key.hintLabel
         if (hintLabel != null && mShowsHints) {
-            paint.textSize = key.selectHintTextSize(params) * mFontSizeMultiplier
+            paint.textSize = key.selectHintTextSize(params) * mFontSizeMultiplier * Settings.getValues().mSecondaryFontScale
             paint.color = key.selectHintTextColor(params)
             val typeface = if (mEmojiTypeface != null && isEmoji(hintLabel)) mEmojiTypeface else mTypeface
             paint.typeface = typeface ?: Typeface.DEFAULT_BOLD

@@ -1761,4 +1761,6 @@ Activează inferența GGUF / llama.cpp pe dispozitiv pentru corectură și refor
     <string name="backspace_repeat_deletes_words_summary">După ce apăsați tasta de ștergere pentru un moment, ștergeți cuvânt cu cuvânt cu o viteză crescândă</string>
     <string name="clipboard_skip_sensitive">Nu păstrați parolele și codurile</string>
     <string name="clipboard_skip_sensitive_summary">Intrările marcate ca confidențiale (de exemplu, de la managerii de parole) și codurile unice cu 4 până la 8 cifre nu sunt adăugate la istoric. Lipirea încă funcționează</string>
+    <string name="prefs_secondary_font_scale">Scara fontului caracterelor secundare</string>
+    <string name="clipboard_font_scale">Scala fontului istoric al clipboardului</string>
 </resources>

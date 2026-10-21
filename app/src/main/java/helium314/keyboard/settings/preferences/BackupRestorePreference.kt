@@ -593,7 +593,7 @@ private fun getCategoryForPrefKey(key: String): BackupCategory {
     val themeKeys = setOf(
         "theme_style", "icon_style", "theme_colors", "theme_colors_night",
         "theme_key_borders", "theme_auto_day_night", "custom_icon_names",
-        "navbar_color", "font_scale", "emoji_font_scale", "narrow_key_gaps",
+        "navbar_color", "font_scale", "secondary_font_scale", "emoji_font_scale", "narrow_key_gaps",
         "narrow_key_gaps_level", "emoji_key_fit", "emoji_skin_tone", "space_bar_text"
     )
     if (themeKeys.contains(key) 
@@ -621,7 +621,7 @@ private fun getCategoryForPrefKey(key: String): BackupCategory {
     val clipboardKeys = setOf(
         "enable_clipboard_history", "suggest_screenshots", "compress_screenshots",
         "clipboard_history_retention_time", "clipboard_history_pinned_first",
-        "clipboard_fold_pinned", "clear_clipboard_icon", "clipboard_skip_sensitive"
+        "clipboard_fold_pinned", "clear_clipboard_icon", "clipboard_skip_sensitive", "clipboard_font_scale"
     )
     if (clipboardKeys.contains(key)) return BackupCategory.CLIPBOARD
     

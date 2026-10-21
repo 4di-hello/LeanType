@@ -102,6 +102,7 @@ fun PreferencesScreen(
         if (clipboardHistoryEnabled) Settings.PREF_CLIPBOARD_SKIP_SENSITIVE else null,
         if (clipboardHistoryEnabled) Settings.PREF_CLIPBOARD_HISTORY_PINNED_FIRST else null,
         if (clipboardHistoryEnabled) Settings.PREF_CLIPBOARD_FOLD_PINNED else null,
+        if (clipboardHistoryEnabled) Settings.PREF_CLIPBOARD_FONT_SCALE else null,
     )
     SearchSettingsScreen(
         onClickBack = onClickBack,
@@ -243,6 +244,15 @@ fun createPreferencesSettings(context: Context) = listOf(
     },
     Setting(context, Settings.PREF_CLIPBOARD_FOLD_PINNED, R.string.clipboard_fold_pinned) {
         SwitchPreference(it, Defaults.PREF_CLIPBOARD_FOLD_PINNED)
+    },
+    Setting(context, Settings.PREF_CLIPBOARD_FONT_SCALE, R.string.clipboard_font_scale) { def ->
+        SliderPreference(
+            name = def.title,
+            key = def.key,
+            default = Defaults.PREF_CLIPBOARD_FONT_SCALE,
+            range = 0.5f..1.5f,
+            description = { "${(100 * it).toInt()}%" }
+        )
     },
     Setting(context, Settings.PREF_HAPTIC_ENGINE, R.string.prefs_haptic_engine) { setting ->
         val items = listOf(

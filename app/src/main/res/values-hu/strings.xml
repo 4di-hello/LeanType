@@ -1770,4 +1770,6 @@ Lehetővé teszi az eszközön futó GGUF / llama.cpp következtetést a javít�
     <string name="backspace_repeat_deletes_words_summary">Miután egy pillanatig lenyomva tartja a törlés billentyűt, szóról szóra, növekvő sebességgel törölje</string>
     <string name="clipboard_skip_sensitive">Ne őrizzen meg jelszavakat és kódokat</string>
     <string name="clipboard_skip_sensitive_summary">A bizalmasként megjelölt bejegyzések (például a jelszókezelőktől származó) és a 4-8 számjegyből álló egyszeri kódok nem kerülnek az előzmények közé. A beillesztés továbbra is működik</string>
+    <string name="prefs_secondary_font_scale">Másodlagos karakter font skála</string>
+    <string name="clipboard_font_scale">Vágólap-előzmények betűméret-skálája</string>
 </resources>

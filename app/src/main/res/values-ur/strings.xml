@@ -1823,4 +1823,6 @@
     <string name="backspace_repeat_deletes_words_summary">ڈیلیٹ کی کو ایک لمحے کے لیے تھامے رکھنے کے بعد، بڑھتی ہوئی رفتار کے ساتھ لفظ بہ لفظ حذف کریں۔</string>
     <string name="clipboard_skip_sensitive">پاس ورڈ اور کوڈز نہ رکھیں</string>
     <string name="clipboard_skip_sensitive_summary">خفیہ کے طور پر نشان زد اندراجات (مثلاً پاس ورڈ مینیجرز کی طرف سے) اور 4 سے 8 ہندسوں والے یک وقتی کوڈز کو تاریخ میں شامل نہیں کیا جاتا ہے۔ چسپاں کرنا اب بھی کام کرتا ہے۔</string>
+    <string name="prefs_secondary_font_scale">ثانوی کریکٹر فونٹ اسکیل</string>
+    <string name="clipboard_font_scale">کلپ بورڈ ہسٹری فونٹ اسکیل</string>
 </resources>

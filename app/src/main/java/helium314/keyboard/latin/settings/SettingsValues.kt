@@ -187,7 +187,9 @@ open class SettingsValues(
     val mRemoveRedundantPopups: Boolean
     val mSpaceBarText: String
     val mFontSizeMultiplier: Float
+    val mSecondaryFontScale: Float
     val mFontSizeMultiplierEmoji: Float
+    val mClipboardFontScale: Float
     val mEmojiKeyFit: Boolean
 
     // Deduced settings
@@ -511,7 +513,9 @@ open class SettingsValues(
         mRemoveRedundantPopups = prefs.getBoolean(Settings.PREF_REMOVE_REDUNDANT_POPUPS, Defaults.PREF_REMOVE_REDUNDANT_POPUPS)
         mSpaceBarText = prefs.getString(Settings.PREF_SPACE_BAR_TEXT, Defaults.PREF_SPACE_BAR_TEXT) ?: Defaults.PREF_SPACE_BAR_TEXT
         mFontSizeMultiplier = prefs.getFloat(Settings.PREF_FONT_SCALE, Defaults.PREF_FONT_SCALE)
+        mSecondaryFontScale = prefs.getFloat(Settings.PREF_SECONDARY_FONT_SCALE, Defaults.PREF_SECONDARY_FONT_SCALE)
         mFontSizeMultiplierEmoji = prefs.getFloat(Settings.PREF_EMOJI_FONT_SCALE, Defaults.PREF_EMOJI_FONT_SCALE)
+        mClipboardFontScale = prefs.getFloat(Settings.PREF_CLIPBOARD_FONT_SCALE, Defaults.PREF_CLIPBOARD_FONT_SCALE)
         mEmojiKeyFit = prefs.getBoolean(Settings.PREF_EMOJI_KEY_FIT, Defaults.PREF_EMOJI_KEY_FIT)
     }
 

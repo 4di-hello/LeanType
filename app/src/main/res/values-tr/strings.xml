@@ -1762,4 +1762,6 @@ Metin düzeltme ve yeniden yazma için cihaz üzerinde GGUF / llama.cpp çıkar�
     <string name="backspace_repeat_deletes_words_summary">Silme tuşuna bir süre basılı tuttuktan sonra artan bir hızla kelime kelime silin</string>
     <string name="clipboard_skip_sensitive">Şifreleri ve kodları saklamayın</string>
     <string name="clipboard_skip_sensitive_summary">Gizli olarak işaretlenen girişler (örneğin şifre yöneticilerinden gelenler) ve 4 ila 8 haneli tek kullanımlık kodlar geçmişe eklenmez. Yapıştırma hâlâ işe yarıyor</string>
+    <string name="prefs_secondary_font_scale">İkincil karakter yazı tipi ölçeği</string>
+    <string name="clipboard_font_scale">Pano geçmişi yazı tipi ölçeği</string>
 </resources>

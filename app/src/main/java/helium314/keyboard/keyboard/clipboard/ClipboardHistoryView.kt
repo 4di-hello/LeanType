@@ -1299,11 +1299,13 @@ class ClipboardHistoryView @JvmOverloads constructor(
     
     private fun setupClipKey(params: KeyDrawParams) {
         val fontMultiplier = Settings.getValues().mFontSizeMultiplier
+        val clipFontScale = Settings.getValues().mClipboardFontScale
+        val baseTextSize = 15.5f * resources.displayMetrics.scaledDensity
         clipboardAdapter.apply {
             itemBackgroundId = keyBackgroundId
             itemTypeFace = params.mTypeface
             itemTextColor = params.mTextColor
-            itemTextSize = (params.mLabelSize.toFloat() * fontMultiplier).coerceAtMost(16.dpToPx(resources).toFloat())
+            itemTextSize = baseTextSize * fontMultiplier * clipFontScale
         }
     }
 

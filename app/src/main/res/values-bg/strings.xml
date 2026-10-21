@@ -1814,4 +1814,6 @@
     <string name="backspace_repeat_deletes_words_summary">След като задържите клавиша за изтриване за момент, изтривайте дума по дума с нарастваща скорост</string>
     <string name="clipboard_skip_sensitive">Не пазете пароли и кодове</string>
     <string name="clipboard_skip_sensitive_summary">Записи, маркирани като поверителни (напр. от мениджъри на пароли) и еднократни кодове с 4 до 8 цифри не се добавят към хронологията. Залепването все още работи</string>
+    <string name="prefs_secondary_font_scale">Мащаб на шрифта на вторичен символ</string>
+    <string name="clipboard_font_scale">Мащаб на шрифта на историята на клипборда</string>
 </resources>

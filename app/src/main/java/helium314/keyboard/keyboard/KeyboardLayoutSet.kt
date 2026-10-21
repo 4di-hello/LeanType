@@ -247,13 +247,14 @@ class KeyboardLayoutSet internal constructor(
             private val EMPTY_EDITOR_INFO = EditorInfo()
 
             fun buildEmojiClipBottomRow(context: Context, ei: EditorInfo?): KeyboardLayoutSet {
+                val sv = Settings.getValues()
                 val builder = Builder(context, ei)
                 builder.mParams.mMode = KeyboardId.MODE_TEXT
-                val width = ResourceUtils.getKeyboardWidth(context, Settings.getValues())
-                val height = ResourceUtils.getSecondaryKeyboardHeight(context.resources, Settings.getValues())
+                val width = ResourceUtils.getKeyboardWidth(context, sv)
+                val height = ResourceUtils.getKeyboardHeight(context.resources, sv)
                 builder.setKeyboardGeometry(width, height)
                 builder.setSubtype(RichInputMethodManager.getInstance().currentSubtype)
-                builder.setSplitLayoutEnabled(Settings.getValues().mIsSplitKeyboardEnabled)
+                builder.setKeyboardOptions(sv)
                 return builder.build()
             }
 

@@ -1762,4 +1762,6 @@ Ar norite atnaujinti?</string>
     <string name="backspace_repeat_deletes_words_summary">Kurį laiką palaikę trynimo klavišą, vis greičiau ištrinkite žodį po žodžio</string>
     <string name="clipboard_skip_sensitive">Nelaikykite slaptažodžių ir kodų</string>
     <string name="clipboard_skip_sensitive_summary">Įrašai, pažymėti kaip konfidencialūs (pvz., iš slaptažodžių tvarkytuvų), ir vienkartiniai kodai su 4–8 skaitmenimis į istoriją neįtraukiami. Įklijavimas vis dar veikia</string>
+    <string name="prefs_secondary_font_scale">Antrinio simbolio šrifto skalė</string>
+    <string name="clipboard_font_scale">Iškarpinės istorijos šrifto skalė</string>
 </resources>

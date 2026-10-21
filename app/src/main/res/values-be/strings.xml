@@ -1766,4 +1766,6 @@
     <string name="backspace_repeat_deletes_words_summary">Утрымліваючы клавішу выдалення на імгненне, выдаляйце слова за словам з усё большай хуткасцю</string>
     <string name="clipboard_skip_sensitive">Не захоўвайце паролі і коды</string>
     <string name="clipboard_skip_sensitive_summary">Запісы, пазначаныя як канфідэнцыяльныя (напрыклад, з менеджэраў пароляў), і аднаразовыя коды з 4 да 8 лічбаў не дадаюцца ў гісторыю. Уклейка ўсё яшчэ працуе</string>
+    <string name="prefs_secondary_font_scale">Шкала шрыфта другаснага сімвала</string>
+    <string name="clipboard_font_scale">Маштаб гісторыі буфера абмену</string>
 </resources>

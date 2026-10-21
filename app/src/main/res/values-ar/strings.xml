@@ -1837,4 +1837,6 @@
     <string name="backspace_repeat_deletes_words_summary">بعد الضغط على مفتاح الحذف للحظة، احذف كلمة بكلمة بسرعة متزايدة</string>
     <string name="clipboard_skip_sensitive">لا تحتفظ بكلمات المرور والرموز</string>
     <string name="clipboard_skip_sensitive_summary">لا تتم إضافة الإدخالات التي تم وضع علامة عليها على أنها سرية (على سبيل المثال من مديري كلمات المرور) والرموز لمرة واحدة المكونة من 4 إلى 8 أرقام إلى السجل. اللصق لا يزال يعمل</string>
+    <string name="prefs_secondary_font_scale">مقياس الخط الحرف الثانوي</string>
+    <string name="clipboard_font_scale">مقياس الخط التاريخ الحافظة</string>
 </resources>
