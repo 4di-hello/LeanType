@@ -24,8 +24,9 @@ class GestureEnabler {
     }
 
     fun setClipboardInlineInputActive(active: Boolean): Boolean {
-        if (mClipboardInlineInputActive == active) return false
-        mClipboardInlineInputActive = active
+        // Kept for backward compatibility but gestures are allowed in clipboard edit/search
+        if (mClipboardInlineInputActive == false) return false
+        mClipboardInlineInputActive = false
         updateGestureHandlingMode()
         return true
     }

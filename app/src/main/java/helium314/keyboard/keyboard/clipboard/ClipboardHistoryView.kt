@@ -1215,10 +1215,10 @@ class ClipboardHistoryView @JvmOverloads constructor(
     override fun onKeyUp(keyCode: Int, keyEvent: android.view.KeyEvent): Boolean {
         return keyboardActionListener.onKeyUp(keyCode, keyEvent)
     }
-    override fun onStartBatchInput() { if (!inEditMode && !inSearchMode) keyboardActionListener.onStartBatchInput() }
-    override fun onUpdateBatchInput(p: helium314.keyboard.latin.common.InputPointers) { if (!inEditMode && !inSearchMode) keyboardActionListener.onUpdateBatchInput(p) }
-    override fun onEndBatchInput(p: helium314.keyboard.latin.common.InputPointers) { if (!inEditMode && !inSearchMode) keyboardActionListener.onEndBatchInput(p) }
-    override fun onCancelBatchInput() { if (!inEditMode && !inSearchMode) keyboardActionListener.onCancelBatchInput() }
+    override fun onStartBatchInput() { keyboardActionListener.onStartBatchInput() }
+    override fun onUpdateBatchInput(p: helium314.keyboard.latin.common.InputPointers) { keyboardActionListener.onUpdateBatchInput(p) }
+    override fun onEndBatchInput(p: helium314.keyboard.latin.common.InputPointers) { keyboardActionListener.onEndBatchInput(p) }
+    override fun onCancelBatchInput() { keyboardActionListener.onCancelBatchInput() }
     override fun onCancelInput() { keyboardActionListener.onCancelInput() }
     override fun onFinishSlidingInput() { keyboardActionListener.onFinishSlidingInput() }
     override fun onCustomRequest(requestCode: Int): Boolean { return keyboardActionListener.onCustomRequest(requestCode) }
@@ -1355,7 +1355,7 @@ class ClipboardHistoryView @JvmOverloads constructor(
         keyboardView.setKeyPreviewPopupEnabled(Settings.getValues().mKeyPreviewPopupOn)
         keyboardView.setKeyboardActionListener(this)  // Set 'this' as listener to intercept
         PointerTracker.switchTo(keyboardView)
-        val kls = KeyboardLayoutSet.Builder.buildEmojiClipBottomRow(context, editorInfo)
+        val kls = KeyboardLayoutSet.Builder.buildEmojiClipBottomRow(context, if (inEditMode || inSearchMode) null else editorInfo)
         val keyboard = kls.getKeyboard(elementId)
         keyboardView.setKeyboard(keyboard)
     }
@@ -1364,6 +1364,7 @@ class ClipboardHistoryView @JvmOverloads constructor(
         if (!enabled) return
         // TODO: Should use LAYER_TYPE_SOFTWARE when hardware acceleration is off?
         setLayerType(LAYER_TYPE_HARDWARE, null)
+        findViewById<MainKeyboardView>(R.id.bottom_row_keyboard)?.setHardwareAcceleratedDrawingEnabled(enabled)
     }
 
     fun startClipboardHistory(
@@ -1669,10 +1670,7 @@ class ClipboardHistoryView @JvmOverloads constructor(
     }
 
     private fun updateClipboardGestureSuppression() {
-        val clipboardStrip = KeyboardSwitcher.getInstance().clipboardStrip
-        val inSearchMode = inSearchMode
-        val active = inEditMode || inSearchMode
-        PointerTracker.setClipboardInlineInputActive(active)
+        PointerTracker.setClipboardInlineInputActive(false)
     }
 
     override fun onDetachedFromWindow() {

@@ -155,6 +155,8 @@ class MainKeyboardView @JvmOverloads constructor(
     }
 
     fun setLanguageOnSpacebarAnimAlpha(alpha: Int) { mLanguageOnSpacebarAnimAlpha = alpha; invalidateKey(mSpaceKey) }
+    val keyboardActionListener: KeyboardActionListener get() = mKeyboardActionListener
+    val keyDetector: KeyDetector get() = mKeyDetector
     fun setKeyboardActionListener(listener: KeyboardActionListener?) {
         val nonNullListener = listener ?: KeyboardActionListener.EMPTY_LISTENER
         mKeyboardActionListener = nonNullListener
@@ -193,6 +195,12 @@ class MainKeyboardView @JvmOverloads constructor(
         mPopupKeysKeyboardCache.clear()
         mSpaceKey = keyboard.getKey(Constants.CODE_SPACE)
         mLanguageOnSpacebarTextSize = (keyboard.mMostCommonKeyHeight - keyboard.mVerticalGap) * mLanguageOnSpacebarTextRatio
+        val sv = Settings.getValues()
+        val isAlpha = keyboard.mId.isAlphabetKeyboard
+        setGesturePreviewMode(
+            isAlpha && sv.mGestureInputEnabled && sv.mGestureTrailEnabled,
+            isAlpha && sv.mGestureInputEnabled && sv.mGestureFloatingPreviewTextEnabled
+        )
 
         if (AccessibilityUtils.instance.isAccessibilityEnabled) {
             if (mAccessibilityDelegate == null) mAccessibilityDelegate = MainKeyboardAccessibilityDelegate(this, mKeyDetector)
@@ -205,16 +213,22 @@ class MainKeyboardView @JvmOverloads constructor(
     fun setKeyPreviewPopupEnabled(previewEnabled: Boolean) { mKeyPreviewDrawParams.setPopupEnabled(previewEnabled) }
     
     private fun locatePreviewPlacerView() {
+        installPreviewPlacerView()
         getLocationInWindow(mOriginCoords)
         mDrawingPreviewPlacerView.setKeyboardViewGeometry(mOriginCoords, width, height)
     }
 
     private fun installPreviewPlacerView() {
         val rootView = rootView ?: return
-        val windowContentView = rootView.findViewById<ViewGroup>(android.R.id.content) ?: return
+        val windowContentView = rootView.findViewById<ViewGroup>(android.R.id.content) ?: (rootView as? ViewGroup) ?: return
         if (mDrawingPreviewPlacerView.parent == null) {
-            windowContentView.addView(mDrawingPreviewPlacerView)
+            val layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+            windowContentView.addView(mDrawingPreviewPlacerView, layoutParams)
         }
+        mDrawingPreviewPlacerView.bringToFront()
     }
 
     override fun onKeyPressed(key: Key, withPreview: Boolean) {
@@ -277,7 +291,8 @@ class MainKeyboardView @JvmOverloads constructor(
 
     fun setGestureHandlingEnabledByUser(isGestureHandlingEnabledByUser: Boolean, isGestureTrailEnabled: Boolean, isGestureFloatingPreviewTextEnabled: Boolean) {
         PointerTracker.setGestureHandlingEnabledByUser(isGestureHandlingEnabledByUser)
-        setGesturePreviewMode(isGestureHandlingEnabledByUser && isGestureTrailEnabled, isGestureHandlingEnabledByUser && isGestureFloatingPreviewTextEnabled)
+        val isAlpha = keyboard?.mId?.isAlphabetKeyboard ?: true
+        setGesturePreviewMode(isAlpha && isGestureHandlingEnabledByUser && isGestureTrailEnabled, isAlpha && isGestureHandlingEnabledByUser && isGestureFloatingPreviewTextEnabled)
     }
 
     override fun onAttachedToWindow() { super.onAttachedToWindow(); installPreviewPlacerView() }

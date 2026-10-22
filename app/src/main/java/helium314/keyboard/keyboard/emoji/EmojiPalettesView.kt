@@ -534,6 +534,7 @@ class EmojiPalettesView @JvmOverloads constructor(
                         val currentElementId = bottomRow.keyboard?.mId?.mElementId ?: KeyboardId.ELEMENT_ALPHABET
                         val isOnSymbols = currentElementId == KeyboardId.ELEMENT_SYMBOLS || currentElementId == KeyboardId.ELEMENT_SYMBOLS_SHIFTED
                         val targetId = if (isOnSymbols) mSearchAlphabetKeyboardId else KeyboardId.ELEMENT_SYMBOLS
+                        PointerTracker.switchTo(bottomRow)
                         bottomRow.setKeyboard(layoutSet.getKeyboard(targetId))
                         bottomRow.setKeyPreviewPopupEnabled(Settings.getValues().mKeyPreviewPopupOn)
                     }
@@ -560,6 +561,7 @@ class EmojiPalettesView @JvmOverloads constructor(
                             KeyboardId.ELEMENT_ALPHABET_SHIFT_LOCKED -> mSearchAlphabetKeyboardId
                             else -> mSearchAlphabetKeyboardId
                         }
+                        PointerTracker.switchTo(bottomRow)
                         bottomRow.setKeyboard(layoutSet.getKeyboard(targetId))
                         bottomRow.setKeyPreviewPopupEnabled(Settings.getValues().mKeyPreviewPopupOn)
                     }
@@ -707,6 +709,7 @@ class EmojiPalettesView @JvmOverloads constructor(
         val searchKeyboardLayoutSet = builder.build()
         mSearchKeyboardLayoutSet = searchKeyboardLayoutSet
         mSearchAlphabetKeyboardId = KeyboardSwitcher.getInstance().activeAlphabetKeyboardId
+        PointerTracker.switchTo(bottomRow)
         bottomRow.setKeyboard(searchKeyboardLayoutSet.getKeyboard(mSearchAlphabetKeyboardId))
         bottomRow.setKeyPreviewPopupEnabled(Settings.getValues().mKeyPreviewPopupOn)
 
@@ -896,6 +899,7 @@ class EmojiPalettesView @JvmOverloads constructor(
     fun setHardwareAcceleratedDrawingEnabled(enabled: Boolean) {
         if (!enabled) return
         setLayerType(LAYER_TYPE_HARDWARE, null)
+        findViewById<MainKeyboardView>(R.id.bottom_row_keyboard)?.setHardwareAcceleratedDrawingEnabled(enabled)
     }
 
     private fun addRecentKey(key: Key) {

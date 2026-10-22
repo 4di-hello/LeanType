@@ -931,6 +931,17 @@ class LatinIME : InputMethodService(),
             currentSettingsValues.mGestureTrailEnabled,
             currentSettingsValues.mGestureFloatingPreviewTextEnabled
         )
+        val activeKbView = keyboardSwitcher.activeMainKeyboardView
+        if (activeKbView != null && activeKbView !== mainKeyboardView) {
+            activeKbView.setMainDictionaryAvailability(dictionaryFacilitator.hasAtLeastOneInitializedMainDictionary())
+            activeKbView.setKeyPreviewPopupEnabled(currentSettingsValues.mKeyPreviewPopupOn)
+            activeKbView.setSlidingKeyInputPreviewEnabled(currentSettingsValues.mSlidingKeyInputPreviewEnabled)
+            activeKbView.setGestureHandlingEnabledByUser(
+                currentSettingsValues.mGestureInputEnabled,
+                currentSettingsValues.mGestureTrailEnabled,
+                currentSettingsValues.mGestureFloatingPreviewTextEnabled
+            )
+        }
         
         val fkm = floatingKeyboardManager
         if (fkm != null) {
@@ -1592,7 +1603,7 @@ class LatinIME : InputMethodService(),
 
     private fun showGesturePreviewAndSetSuggestions(suggestedWords: SuggestedWords, dismissGestureFloatingPreviewText: Boolean) {
         setSuggestions(suggestedWords)
-        keyboardSwitcher.mainKeyboardView?.showGestureFloatingPreviewText(suggestedWords, dismissGestureFloatingPreviewText)
+        keyboardSwitcher.activeMainKeyboardView?.showGestureFloatingPreviewText(suggestedWords, dismissGestureFloatingPreviewText)
     }
 
     private fun hasSuggestionStripView(): Boolean =
@@ -2079,19 +2090,23 @@ class LatinIME : InputMethodService(),
                             latinIme.onTailBatchInputResultShown(suggestedWords)
                             return
                         }
-                        val clip = latinIme.keyboardSwitcher.clipboardHistoryView
-                        if (clip != null && clip.isShown && (clip.inEditMode || clip.inSearchMode)) {
-                            val suffix = if (latinIme.settings.current.mAutospaceAfterGestureTyping) " " else ""
-                            clip.onTextInput(word + suffix)
-                            latinIme.onTailBatchInputResultShown(suggestedWords)
-                            return
+                        if (latinIme.keyboardSwitcher.isShowingClipboardHistory) {
+                            val clip = latinIme.keyboardSwitcher.clipboardHistoryView
+                            if (clip != null && (clip.inEditMode || clip.inSearchMode)) {
+                                val suffix = if (latinIme.settings.current.mAutospaceAfterGestureTyping) " " else ""
+                                clip.onTextInput(word + suffix)
+                                latinIme.onTailBatchInputResultShown(suggestedWords)
+                                return
+                            }
                         }
-                        val emoji = latinIme.keyboardSwitcher.emojiPalettesView
-                        if (emoji != null && emoji.isShown && emoji.isInSearchMode) {
-                            val suffix = if (latinIme.settings.current.mAutospaceAfterGestureTyping) " " else ""
-                            emoji.onSearchTextInput(word + suffix)
-                            latinIme.onTailBatchInputResultShown(suggestedWords)
-                            return
+                        if (latinIme.keyboardSwitcher.isShowingEmojiPalettes) {
+                            val emoji = latinIme.keyboardSwitcher.emojiPalettesView
+                            if (emoji != null && emoji.isInSearchMode) {
+                                val suffix = if (latinIme.settings.current.mAutospaceAfterGestureTyping) " " else ""
+                                emoji.onSearchTextInput(word + suffix)
+                                latinIme.onTailBatchInputResultShown(suggestedWords)
+                                return
+                            }
                         }
                     }
                     latinIme.inputLogic.onUpdateTailBatchInputCompleted(latinIme.settings.current, suggestedWords, latinIme.keyboardSwitcher)

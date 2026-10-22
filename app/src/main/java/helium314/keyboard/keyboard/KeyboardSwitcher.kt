@@ -243,7 +243,26 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         mSuggestionStripView?.updateSplitToolbarState()
     }
 
-    val keyboard: Keyboard? get() = mKeyboardView?.keyboard
+    val activeMainKeyboardView: MainKeyboardView?
+        get() {
+            if (isShowingEmojiPalettes) {
+                val emoji = mEmojiPalettesView
+                if (emoji?.isInSearchMode == true) {
+                    val bottomRow = emoji.findViewById<MainKeyboardView>(R.id.bottom_row_keyboard)
+                    if (bottomRow != null) return bottomRow
+                }
+            }
+            if (isShowingClipboardHistory) {
+                val clip = mClipboardHistoryView
+                if (clip?.inEditMode == true || clip?.inSearchMode == true) {
+                    val bottomRow = clip.findViewById<MainKeyboardView>(R.id.bottom_row_keyboard)
+                    if (bottomRow != null) return bottomRow
+                }
+            }
+            return mKeyboardView
+        }
+
+    val keyboard: Keyboard? get() = activeMainKeyboardView?.keyboard
 
     fun resetKeyboardStateToAlphabet(currentAutoCapsState: Int, currentRecapitalizeState: RecapitalizeMode?) {
         mState?.onResetKeyboardStateToAlphabet(currentAutoCapsState, currentRecapitalizeState)

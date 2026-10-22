@@ -1345,6 +1345,9 @@ class PointerTracker private constructor(
         fun switchTo(drawingProxy: DrawingProxy?) {
             if (drawingProxy == null) return
             sDrawingProxy = drawingProxy
+            (drawingProxy as? MainKeyboardView)?.let {
+                sListener = it.keyboardActionListener
+            }
             val thatArray = sProxyMap[drawingProxy] ?: return
             sParams = thatArray[0] as? PointerTrackerParams
             sGestureStrokeRecognitionParams = thatArray[1] as? GestureStrokeRecognitionParams
@@ -1353,6 +1356,11 @@ class PointerTracker private constructor(
             sTimerProxy = (thatArray[4] as? TimerProxy) ?: TimerProxy.NULL
             @Suppress("UNCHECKED_CAST")
             sTrackers = (thatArray[5] as? ArrayList<PointerTracker>) ?: ArrayList()
+            (drawingProxy as? MainKeyboardView)?.let {
+                if (it.keyboard != null) {
+                    setKeyDetector(it.keyDetector)
+                }
+            }
         }
 
         private fun getTimerProxy(): TimerProxy = sTimerProxy
