@@ -39,6 +39,15 @@ LeanType combines a lightweight, privacy-focused keyboard foundation with cuttin
 | ⌨️ **[Hardware & Physical Keyboard Support](#28-hardware--physical-keyboard-support)** | External Bluetooth/USB keyboard suggestions, shortcuts (`1`,`2`,`3`), D-PAD emoji navigation |
 | 🎨 **[Advanced Appearance & Key Ergonomics](#29-advanced-appearance--key-ergonomics)** | Independent corner radii (normal, functional, action), key gaps, padding scales, Shift icons |
 | ⌨️ **[Comprehensive Keycodes & Actions Reference](#30-comprehensive-keycodes--actions-reference)** | Complete reference table of all functional, navigation, editing, AI, and hardware keycodes |
+| 🎬 **[GIF Search & Media Picker](#31-gif-search--media-picker)** | GIPHY, Tenor, stickers, live preview, and WhatsApp sticker normalization |
+| 🈲 **[CJK (Chinese, Japanese & Korean) Plugin Engine](#32-cjk-plugin-engine)** | Pinyin Chinese, Japanese Kana/Romaji, Hangul combiner & candidate strip |
+| ⬡ **[Hexagonal Honeycomb Layout Engine](#33-hexagonal-honeycomb-layout-engine)** | Authentic Typewise & hex QWERTY layouts with landscape split |
+| 👆 **[Full Keyboard & 2D Backspace Swipe Gestures](#34-full-keyboard--2d-backspace-swipe-gestures)** | Full-surface horizontal swipes and 2D diagonal/vertical deletion |
+| 🪟 **[Auto Floating Keyboard in Landscape](#35-auto-floating-keyboard-in-landscape)** | Automatic floating mode switch in landscape orientation |
+| 💾 **[Storage & Cache Management Screen](#36-storage--cache-management)** | Categorized storage breakdowns and 1-tap cache/dictionary purging |
+| 🖼️ **[Live System Wallpaper & FastBlurEngine](#37-live-system-wallpaper--fastblur)** | Real-time blurred device wallpaper backgrounds with blur intensity slider |
+| 📋 **[In-Keyboard Action Pill & Multi-Select Clipboard](#38-in-keyboard-action-pill--multi-select-clipboard)** | Compact floating action pill, batch deletion, pinning, and sensitive data filtering |
+| 🔐 **[Granular Backup & Encrypted API Key Export](#39-granular-backup--encrypted-api-key-export)** | Separated wordlists vs history and password-protected encrypted API keys |
 
 ---
 
@@ -55,6 +64,16 @@ LeanType combines a lightweight, privacy-focused keyboard foundation with cuttin
 | **Offline Camera & Screenshot OCR** | Live in-keyboard camera scanner and screenshot suggestion pill with rich text cleaners (casing, join styles, dehyphenation). | `OCR & Text Extraction` / `Plugins > OCR` |
 | **Inline Math Calculation** | Instant arithmetic calculation suggestions on typing `=` with 1-tap expression replacement. | `Text correction > Inline math calculation` |
 | **Custom Sound Packs** | Zero-latency key audio engine with 12+ built-in presets, remote catalog downloads, and `.zip` import. | `Plugins > Sound` / `Preferences > Sound on keypress` |
+| **GIF Search & Media Picker** | Search GIFs and stickers via GIPHY/Tenor with live preview and WhatsApp sticker insertion. | `Plugins > GIF Settings` / `Toolbar > GIF Key` |
+| **CJK Plugin Engine** | Chinese Pinyin, Japanese Romaji/Kana, and Korean Hangul with dedicated candidate strip UI. | `Plugins > CJK Settings` |
+| **Hexagonal Honeycomb Layouts** | Typewise and hexagonal QWERTY layouts with axial hit testing and landscape ergonomic thumb split. | `Languages > Layouts (hex_typewise, hex_qwerty)` |
+| **Full Keyboard Swipe Gestures** | Horizontal swipe across entire keyboard to switch languages, move cursor, or toggle numpad. | `Gesture typing > Full keyboard horizontal swipe` |
+| **2D Backspace Swipe Gesture** | Diagonal and vertical line/word selection adjustments from the Backspace key. | `Gesture typing > Delete key swipe gesture` |
+| **Auto Floating in Landscape** | Automatically switch to floating keyboard when rotated to landscape orientation. | `Preferences > Floating keyboard auto in landscape` |
+| **Storage & Cache Management** | Categorized storage breakdowns (models, dicts, sound, cache) with 1-tap purging. | `Plugins > Storage & Cache` |
+| **System Wallpaper Background** | Live or static device wallpaper background with FastBlurEngine blur slider. | `Appearance > Theme > Background > System Wallpaper` |
+| **Clipboard Action Pill & Multi-Select** | Gboard-style compact floating action pill on long press and multi-item batch deletion/pinning. | `Clipboard Toolbar > Long-press clip` |
+| **Granular Backup & API Key Export** | Selectable custom wordlists vs typing history with password-protected encrypted API keys export. | `Backup & restore > Backup` |
 | **Text Editing Panel** | Precision DPAD arrow navigation, Shift selection mode, and clipboard shortcuts. | Toolbar > Text Editing Icon |
 | **Auto-Spanning Toolbar** | Dynamically expands and balances toolbar keys symmetrically across device widths. | `Appearance > Toolbar auto-spacing` |
 | **Touchpad Mode** | Swipe up on Spacebar to activate full cursor control and laptop-style touchpad gestures. | `Gesture typing > Vertical spacebar swipe` |
@@ -167,9 +186,9 @@ LeanType offers a flexible translation architecture supporting all app flavors:
 LeanType integrates high-accuracy, private speech-to-text powered by OpenAI's Whisper architecture via `whisper.cpp` and the [LeanType Voice Plugin](https://github.com/LeanBitLab/LeanType-Voice-Plugin).
 
 ### Available Multilingual Whisper Models
-- **Tiny** (`ggml-tiny.bin`): **~39 MB** — Ultra-fast, minimal memory usage, 99+ languages.
-- **Base** (`ggml-base.bin`): **~74 MB** — Best balance of accuracy and speed for daily typing.
-- **Small** (`ggml-small.bin`): **~244 MB** — High accuracy for complex vocabulary and accents.
+- **Tiny** (`ggml-tiny.bin`): **~39 MB**: Ultra-fast, minimal memory usage, 99+ languages.
+- **Base** (`ggml-base.bin`): **~74 MB**: Best balance of accuracy and speed for daily typing.
+- **Small** (`ggml-small.bin`): **~244 MB**: High accuracy for complex vocabulary and accents.
 - **Custom Model**: Import any standard `.bin` GGML Whisper model from device storage.
 
 ### Setup Instructions
@@ -497,7 +516,7 @@ LeanType is published in two purpose-built flavors to balance cloud AI capabilit
 
 ### 🛡️ Privacy & Engineering Highlights
 - **Zero-Permission Privacy Overhaul (v4.2.5)**: LeanType removed `READ_CONTACTS` (contact dictionary eliminated entirely), `SYSTEM_ALERT_WINDOW` (floating mode runs natively in the IME window), and `REQUEST_INSTALL_PACKAGES` (update checks link directly to verified GitHub releases). The `offline` flavor contains zero network permissions in its manifest.
-- **Ultra-Lightweight Modular Plugin Architecture (v4.1.4 / v4.1.6)**: Heavy machine learning dependencies—including ML Kit (Handwriting, OCR, Translation) and on-device LLM inference (`llama.cpp`)—are completely unbundled into standalone companion plugins. This preserves a sub-11 MB core APK footprint while granting users total on-demand control over local AI models.
+- **Ultra-Lightweight Modular Plugin Architecture (v4.1.4 / v4.1.6)**: Heavy machine learning dependencies (including ML Kit for Handwriting, OCR, Translation, and on-device LLM inference via `llama.cpp`) are completely unbundled into standalone companion plugins. This preserves a sub-11 MB core APK footprint while granting users total on-demand control over local AI models.
 
 ---
 
@@ -727,6 +746,7 @@ and correction rules are unchanged.
 | **`-206`** | `VIEW_PHONE` | Opens the telephone dialer layout. |
 | **`-207`** | `VIEW_PHONE2` | Opens the secondary phone symbols layout. |
 | **`-212`** | `EMOJI` | Opens the interactive Emoji & Media palette. |
+| **`-10086`** | `GIF` | Opens the interactive GIF and sticker media picker view. |
 | **`-113`** | `SPLIT_LAYOUT` | Toggles split keyboard mode for wide screens and landscape. |
 | **`-10072`** | `TOGGLE_FLOATING_KEYBOARD` | Toggles the moveable native IME floating keyboard window. |
 | **`-10073`** | `TOGGLE_TOUCHPAD_MODE` | Toggles the full-keyboard touchpad / trackpad cursor surface. |
@@ -849,5 +869,149 @@ and correction rules are unchanged.
 | **`12288`** | `CJK_SPACE` | CJK Fullwidth Ideographic Space (`\u3000`). |
 | **`-902`** | `MULTIPLE_CODE_POINTS` | Special container key producing multi-character text sequences. |
 | **`-10008`** | `NOT_SPECIFIED` | Structural dummy spacer key (disables key interaction, renders blank). |
+
+---
+
+## 31. GIF Search & Media Picker
+
+LeanType introduces rich media integration with a dedicated, high-performance in-keyboard GIF and sticker media picker view. Access it via the toolbar media icon, custom layout keycode `-10086`, or from the emoji view media tabs.
+
+### 🎬 Key Capabilities
+- **Dual Content Providers**: Integrated support for both **GIPHY** and **Tenor** search backends. Choose your preferred service or configure custom API keys under **Settings → Plugins → GIF Settings**.
+- **Trending & Instant Search**: Browse real-time trending animations or enter keywords into the inline search bar with debounced, instantaneous query resolution.
+- **Stickers Support**: Switch seamlessly between animated GIF clips and transparent sticker graphics.
+- **Recent Media History**: Quick-access recent tray caches your favorite and recently shared media for 1-tap re-insertion without re-querying the network.
+- **Direct Content Insertion**: Dispatches media directly using Android's native `InputConnection.commitContent()` API with MIME type negotiation (`image/gif`, `image/webp`, `image/png`).
+- **WhatsApp Sticker Normalization**: Transparent stickers sent to WhatsApp and compatible messaging clients are automatically normalized and resized to the official WhatsApp sticker specification (512x512 WebP format), preventing awkward black backgrounds or attachment fallbacks.
+- **Offline & Low-Bandwidth Friendly**: Aggressive thumbnail caching minimizes network overhead. Cached media can be purged at any time via the Storage & Cache management screen.
+
+---
+
+## 32. CJK (Chinese, Japanese & Korean) Plugin Engine
+
+LeanType expands multilingual capabilities to East Asian languages through a modular, zero-bloat companion plugin architecture (**LeanType-CJK-Plugin**). This design keeps the core keyboard APK ultra-lightweight while providing state-of-the-art CJK input processing.
+
+### 🈲 Input Engines & Language Support
+- **Chinese (Simplified & Traditional)**:
+  - Smart Pinyin input engine with fuzzy pinyin matching, intelligent syllable segmentation, and contextual multi-character phrase predictions.
+  - Traditional Chinese conversion support.
+- **Japanese**:
+  - Full support for both 12-key Flick input and standard QWERTY Romaji typing.
+  - Dynamic Kana-to-Kanji candidate conversion engine with live dictionary candidate lookups.
+- **Korean**:
+  - 2-Set Hangul (Dubeolsik) and 10-key Chunjiin keyboard layouts.
+  - Real-time Jamo syllable combiner automatically binds Initial consonants (Choseong), Medial vowels (Jungseong), and Final consonants (Jongseong) into completed Hangul syllabic blocks on the fly.
+
+### 🍱 Candidate Strip & Interaction
+- **Dynamic Candidate Strip**: High-performance scrolling candidate bar with horizontal pagination, tone markers, and candidate ranking based on linguistic frequency.
+- **Candidate Expansion Modal**: Tap the expansion chevron to open a grid overlay displaying dozens of matching candidates for rapid selection.
+- **Resource Isolation**: Large dictionary tables and syllable trees load into memory on-demand only when a CJK layout is active, releasing resources when switching back to Latin layouts.
+
+---
+
+## 33. Hexagonal Honeycomb Layout Engine
+
+For users seeking ergonomic thumb typing efficiency on mobile devices, LeanType introduces a built-in hexagonal honeycomb keyboard layout engine inspired by Typewise. By arranging keys in an alternating honeycomb grid, each key provides a significantly larger touch target area, dramatically reducing adjacent-key mistypes.
+
+### ⬡ Features & Layout Modes
+- **`hex_typewise` Layout**: Authentic Typewise-style key arrangement grouping common vowels centrally and placing consonants in natural thumb-arc reaches.
+- **`hex_qwerty` Layout**: Familiar standard QWERTY layout mapped into an alternating hexagonal honeycomb lattice for a zero-learning-curve transition.
+- **Axial Coordinate Hit-Testing**: Custom geometric hit-testing engine calculates exact mathematical distance from the touch point to the hexagonal Voronoi cell center, guaranteeing accurate key disambiguation even on glancing edge strikes.
+- **Ergonomic Landscape Split**: In landscape orientation or on foldables and tablets, hexagonal layouts support an ergonomic split mode that separates keys into left and right thumb clusters, eliminating uncomfortable center reaching.
+- **Swipe Actions**: Natural gesture flicking on hexagonal keys (swipe up for capital letters, swipe down for secondary symbols, swipe left for backspace).
+
+---
+
+## 34. Full Keyboard & 2D Backspace Swipe Gestures
+
+LeanType enhances gesture controls with full-surface keyboard swiping and multi-dimensional backspace selection.
+
+### 👆 Full Keyboard Horizontal Swiping
+Configure full-keyboard horizontal edge-to-edge swipes under **Settings → Gesture typing → Full keyboard horizontal swipe**:
+- **Switch Subtype / Language**: Quickly swipe across the keyboard to toggle between active languages and input scripts.
+- **Cursor Navigation**: Slide horizontally across keys to glide the cursor through text lines with high precision.
+- **Toggle Views**: Rapidly jump between Alphabet, Numeric Numpad, and Symbol keyboards.
+- **Configurable Sensitivity**: Independent velocity thresholds and minimum swipe distance sliders ensure full-keyboard gestures never trigger accidentally during fast typing.
+
+### ⌫ 2D Backspace Swipe Gestures
+Take complete control over text deletion with multidirectional backspace gestures:
+- **Horizontal Swipe Left**: Slide left from the Backspace key to highlight text word-by-word or character-by-character. Lifting your finger instantly deletes the highlighted range.
+- **2D Diagonal & Vertical Adjustment**: Moving your finger diagonally or vertically while sliding adjusts selection granularity across multiple lines or paragraphs.
+- **Abort Gesture**: Slide back toward the Backspace origin key to cancel the deletion without modifying the text.
+
+---
+
+## 35. Auto Floating Keyboard in Landscape
+
+Using a full-width virtual keyboard in landscape orientation on modern wide smartphones often obscures up to 75% of the screen. LeanType solves this with intelligent **Auto Floating in Landscape**.
+
+### 🪟 Key Features
+- **Automatic Orientation Adaptation**: Enable **Settings → Preferences → Floating keyboard auto in landscape**. LeanType automatically detaches into a compact floating window when your device rotates to landscape mode, and docks back to full-width when returning to portrait.
+- **Persistent Geometry Memory**: Position, dimension, and transparency preferences for the floating window are remembered independently for landscape mode.
+- **Zero Dead Space & Touch Passthrough**: Move the floating window anywhere on screen with the drag handle. Unused screen areas remain fully interactive and touch-transparent.
+
+---
+
+## 36. Storage & Cache Management Screen
+
+Keep your keyboard installation clean and inspect on-device storage consumption with the comprehensive **Storage & Cache** management interface (**Settings → Plugins → Storage & Cache**).
+
+### 💾 Storage Insights & Maintenance
+- **Granular Storage Breakdown**: Real-time measurement of disk space utilized by:
+  - **AI & Speech Models**: Whisper quantized speech models, GGUF offline proofreading weights, and offline handwriting models.
+  - **Dictionaries & Lexicons**: Main system dictionaries, user history dictionaries, and custom wordlists.
+  - **Sound Packs**: Downloaded key audio `.zip` archives and unbundled audio effects.
+  - **Media & Thumbnail Cache**: Cached GIF/sticker previews and transient camera OCR frames.
+- **1-Tap Cleanup Actions**:
+  - **Clear Media Cache**: Instantly frees transient GIF, sticker, and image thumbnail storage.
+  - **Purge OCR Cache**: Removes temporary camera captures and preview frames.
+  - **Reset Typing History**: Clears learned word usage frequencies and predictions while safely retaining your custom wordlist entries.
+  - **Direct Model Management**: Jump directly to model managers to delete or update specific offline model files.
+
+---
+
+## 37. Live System Wallpaper & FastBlurEngine
+
+Create a keyboard theme that seamlessly blends with your Android desktop aesthetic using dynamic live system wallpaper backgrounds.
+
+### 🖼️ Visual Personalization
+- **Dynamic Wallpaper Integration**: Enable via **Settings → Appearance → Theme → Background → System Wallpaper**. The keyboard renders a blurred representation of your current home or lock screen wallpaper beneath the keys.
+- **FastBlurEngine**: Powered by an optimized multi-threaded native stack blur engine that renders smoothly at 60/120 FPS without lag, dropped frames, or perceptible battery consumption.
+- **Adjustable Blur Intensity**: Fine-tune background diffusion using the blur radius slider, ranging from subtle frosted glass effects to deep, opaque tinting.
+- **Adaptive Key Contrast**: Key labels, borders, and functional glyphs automatically adapt their contrast and luminosity to ensure effortless legibility across light, dark, and vibrant wallpapers.
+
+---
+
+## 38. In-Keyboard Action Pill & Multi-Select Clipboard
+
+LeanType's clipboard manager receives major productivity upgrades with floating action pills and batch multi-selection.
+
+### 📋 Clipboard Enhancements
+- **Gboard-Style Floating Action Pill**: Long-pressing any clipped item in the clipboard history browser reveals an anchored floating pill directly above the item, providing quick actions:
+  - **Paste**: Commit the snippet to the active field.
+  - **Pin / Unpin**: Keep essential snippets permanently pinned above transient history.
+  - **Delete**: Remove the individual clip.
+  - **Share / Full Preview**: Inspect long text clips or export snippets to external apps.
+- **Multi-Select Batch Management**: Enter multi-select mode to select several clips simultaneously for batch deletion or bulk pinning.
+- **Sensitive Data & OTP Protection**: Intelligent pattern filtering identifies one-time verification passwords (OTP), credit card numbers, and login credentials, offering automatic expiration or zero-trace clipboard retention.
+- **Instant Search**: Filter through hundreds of saved clips in real time using the dedicated clipboard search bar.
+
+---
+
+## 39. Granular Backup & Encrypted API Key Export
+
+Safeguard your personalized keyboard configuration, custom layouts, and linguistic data with granular backup options and encrypted credential export (**Settings → Backup & restore**).
+
+### 🔐 Backup Flexibility & Security
+- **Modular Data Selection**: Choose exactly which components to include in your backup archive:
+  - Keyboard Settings & Custom Preferences.
+  - Custom Keyboard Layouts (`.json` and `.txt` files).
+  - Custom Dictionaries & Wordlists (user-added words).
+  - Learned Typing Prediction History & Frequency Tables.
+  - Quick Text Expander Shortcuts & Dynamic Templates.
+- **Password-Protected Encrypted API Keys**:
+  - Securely export third-party cloud AI and media API keys (Gemini, Groq, OpenAI, GIPHY, Tenor) using robust AES-256 encryption.
+  - Backups can be safely shared across devices or saved to cloud storage without risking credential leakage. Decryption occurs only when the correct user password is provided during restoration.
+
 
 

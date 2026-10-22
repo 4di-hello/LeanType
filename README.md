@@ -26,7 +26,7 @@
 
 ## 🚀 Overview
 
-**LeanType** combines the trusted, lightweight, privacy-focused foundation of HeliBoard with modern productivity features: Multi-Provider Cloud, Self-Hosted & Offline AI proofreading, On-Device Whisper Voice Typing, Handwriting Recognition, In-Keyboard Offline Camera & Screenshot OCR, Real-time Inline Math Calculations, Zero-Latency Custom Sound Packs, Smart Toolbar Auto-Spanning, Built-in Self-Updater, and Rich Text Tools, while keeping you in complete control over your data.
+**LeanType** combines the trusted, lightweight, privacy-focused foundation of HeliBoard with modern productivity features: Multi-Provider Cloud, Self-Hosted & Offline AI proofreading, On-Device Whisper Voice Typing, Handwriting Recognition, In-Keyboard Offline Camera & Screenshot OCR, GIF Search & Media Picker, CJK (Chinese, Japanese & Korean) Engine, Hexagonal Honeycomb Layouts, Real-time Inline Math Calculations, Zero-Latency Custom Sound Packs, Live System Wallpaper Blur, Auto Floating in Landscape, Smart Toolbar Auto-Spanning, Built-in Self-Updater, and Rich Text Tools, while keeping you in complete control over your data.
 
 ---
 
@@ -51,10 +51,6 @@
 ## 📦 Flavor Comparison
 
 LeanType is available in two purpose-built flavors designed to match your exact privacy preferences, hardware specifications, and feature requirements:
-
-> [!NOTE]
-> **Flavor Consolidation (v4.2.6)**:  
-> As announced in v4.2.5, `standardfull` has been completely merged into `standard`. Both editions operate with zero sensitive permissions (no `READ_CONTACTS`, `SYSTEM_ALERT_WINDOW`, or `REQUEST_INSTALL_PACKAGES`). Users previously using `standardfull` can update directly to `standard` with full data and settings preservation.
 
 | Feature / Capability | 🌿 Standard (Recommended)<br>`-standard-release.apk` | 🛡️ Offline<br>`-offline-release.apk` |
 | :--- | :---: | :---: |
@@ -82,9 +78,16 @@ LeanType is available in two purpose-built flavors designed to match your exact 
 ### 🤖 AI Integration & Smart Tools
 - **Multi-Provider Cloud & Self-Hosted AI**: Integrated proofreading, grammar correction, and text rewriting powered by **Google Gemini**, **Groq** (Llama 3.3, Mixtral, DeepSeek), **OpenAI**, or any **Self-Hosted local LLM server** (Ollama, LM Studio, LocalAI, vLLM, or custom OpenAI-compatible endpoints).
 - **Dynamic Model Fetching**: Automatically fetches and populates the latest available model IDs directly from your cloud or self-hosted provider.
-- **🛡️ Offline Neural Proofreading (GGUF)**: Run compact, quantized GGUF language models directly on your device via embedded `llama.cpp`—100% private, zero network access (`offline` flavor).
+- **🛡️ Offline Neural Proofreading (GGUF)**: Run compact, quantized GGUF language models directly on your device via embedded `llama.cpp` (100% private, zero network access in `offline` flavor).
 - **🌐 Multi-Mode In-Keyboard Translation**: Translate text directly into any language without switching apps. Choose between **Offline Translation Plugin** (supported across all flavors), **Built-in Offline Translation (ML Kit)**, or your configured **Cloud / Self-Hosted AI Provider** (Gemini, Groq, OpenAI, Ollama) with seamless fallback.
 - **🧠 Custom AI Keys & Capsules**: Assign custom prompts, personas (`#editor`, `#proofread`), and themed tag capsules to 10 customizable toolbar keys.
+
+### 🈲 Multilingual & CJK Support
+- **CJK (Chinese, Japanese & Korean) Plugin Engine**: Complete East Asian language typing via companion plugin without bloating the core app.
+- **Chinese Pinyin**: Smart Pinyin input engine with fuzzy matching, syllable segmentation, and contextual multi-character phrase predictions (Simplified and Traditional).
+- **Japanese Kana & Romaji**: 12-key Flick input and standard QWERTY Romaji with live Kana-to-Kanji candidate dictionary lookups.
+- **Korean Hangul**: 2-Set (Dubeolsik) and 10-key Chunjiin layouts with real-time on-the-fly Jamo syllable combiner (Choseong, Jungseong, Jongseong).
+- **Dynamic Candidate Strip**: High-performance scrolling candidate bar with expansion grid overlay and frequency-weighted ranking.
 
 ### 📷 Offline Camera & Screenshot OCR
 - **In-Keyboard Camera Viewfinder**: Open a live camera viewfinder directly inside the keyboard to extract printed or handwritten text with 1 tap.
@@ -98,13 +101,17 @@ LeanType is available in two purpose-built flavors designed to match your exact 
 - **✍️ Handwriting Recognition**: Draw characters or words directly on an expansive writing canvas using the [LeanType Handwriting Plugin](https://github.com/LeanBitLab/Leantype-Handwriting-Plugin) (supported across all flavors), with dedicated settings and in-app/offline model management.
 
 ### ⌨️ Layouts, Audio & Typing
+- **⬡ Hexagonal Honeycomb Layout Engine**: Typewise-style (`hex_typewise`) and hexagonal QWERTY (`hex_qwerty`) layouts with enlarged touch targets, mathematical axial hit-testing, gesture flicks, and ergonomic landscape thumb split.
 - **🎵 Custom Sound Packs & Audio Customization**: Native zero-latency key audio engine with 12+ built-in sound styles (iOS Tap, Mechanical Cherry MX, Thocky Mechanical, Vintage Typewriter, Retro CRT Terminal, Bubble Pop, Soft Velvet, Woodblock Minimal, Acoustic Marimba, Modern Crisp Tick, Sci-Fi, 8-Bit Chiptune Arcade), live sample audition, remote sound pack catalog, and custom `.zip` pack import.
 - **👆 Gesture / Glide Typing**: Smooth swipe typing powered by native C++ libraries (`libjni_latinime.so`).
+- **👆 Full Keyboard & 2D Backspace Swipe Gestures**: Edge-to-edge horizontal swipes across the full keyboard to switch languages, glide the cursor, or toggle numpad, plus 2D multidirectional backspace gestures for vertical multi-line text selection.
 - **📐 Smart Auto-Spanning Toolbar**: Dynamically expands and balances toolbar keys symmetrically to prevent awkward gaps across portrait, landscape, and tablet widths.
 - **🧭 Dedicated Text Editing Panel**: Gboard-style precision DPAD arrow navigation, selection mode (Shift + arrows), select word, select all, and editing shortcuts.
 - **🖱️ Touchpad Mode**: Swipe up on the spacebar to control the cursor freely across the screen, including full-screen laptop-style touchpad mode.
 - **🪟 Native IME Floating Window**: Seamless native IME window architecture with zero sensitive permissions (no `SYSTEM_ALERT_WINDOW`), pass-through background touches, bottom control bar (close, center-drag pill, resize drag handle), multi-touch tracking, zero dead space, and persistent mode memory.
-- **⚙️ Per-App Profiles & Compatibility Engine**: Tailor keyboard behavior per application (**Settings → Preferences → App Profiles**)—enable web editor compatibility, automatic incognito, force non-incognito, direct commit mode, symbol composing (preserving underscores `_` in Tasker variables), dialer search field compatibility (`TYPE_NULL`), and custom Enter action overrides.
+- **🪟 Auto Floating Keyboard in Landscape**: Automatically switches to a compact moveable floating window when entering landscape orientation and restores full docked width in portrait.
+- **🖼️ Live System Wallpaper & FastBlurEngine**: Dynamic blurred home/lock screen wallpaper background beneath keys with adjustable blur intensity slider and adaptive contrast.
+- **⚙️ Per-App Profiles & Compatibility Engine**: Tailor keyboard behavior per application (**Settings → Preferences → App Profiles**): enable web editor compatibility, automatic incognito, force non-incognito, direct commit mode, symbol composing (preserving underscores `_` in Tasker variables), dialer search field compatibility (`TYPE_NULL`), and custom Enter action overrides.
 - **⌨️ First-Class Hardware Keyboard Support**: Full predictive text, auto-correction, candidate selection shortcuts (`1`, `2`, `3`), and D-PAD navigation in emoji palettes for external Bluetooth/USB keyboards, with smart toolbar elevation above the navigation bar.
 - **🎨 Advanced Appearance & Key Ergonomics**: Independent corner radius sliders for Normal Keys, Functional Keys (Shift/Backspace), and Action Keys (Enter/Space), adjustable key gaps, customizable padding scales, and distinct Shift/Caps visual state indicators (outline, filled, underlined).
 - **⌨️ Dual Toolbar / Split Suggestions**: Option to split suggestions from the quick-action toolbar.
@@ -112,10 +119,14 @@ LeanType is available in two purpose-built flavors designed to match your exact 
 - **⌨️ Direct Switch Target IME & Custom Keycodes**: Bind keycode `-10076` to any toolbar key to switch directly to a specific target keyboard (e.g. Japanese, Korean, or Chinese IME). See the [Comprehensive Keycodes & Actions Reference](docs/FEATURES.md#30-comprehensive-keycodes--actions-reference) for the full keycodes catalog.
 
 ### 📋 Clipboard & Productivity
+- **🎬 GIF Search & Media Picker**: High-performance in-keyboard GIF and sticker media picker powered by GIPHY and Tenor, with live animated preview, trending search, recent tray, and automatic WhatsApp sticker normalization (512x512 WebP).
+- **📋 In-Keyboard Action Pill & Multi-Select Clipboard**: Gboard-style compact floating action pill on long press (paste, pin, delete, share), multi-select batch deletion/pinning, and sensitive OTP/card data filtering.
 - **🔢 Real-Time Inline Math Calculations**: Automatically evaluates mathematical expressions upon typing `=` (e.g. `25*4=`, `500-15%=`, `(12+8)/4=`) and shows the answer directly in the suggestion strip for 1-tap replacement.
 - **🔍 Smart Clipboard History & Inline Editing**: Search clips in real-time, swipe right to edit text directly in the toolbar with full gesture cursor/deletion, swipe left to delete with 5s undo, and fold pinned items.
 - **📸 Screenshot Suggestions**: Detects recently taken screenshots and offers instant 1-tap sharing via the suggestion strip or clipboard history.
 - **📝 Versatile Text Expander**: Built-in shortcut expansion with dynamic variables (`%date%`, `%time%`, `%clipboard%`, `%cursor%`), composable modifier filters (`%clipboard:clean%`, `:singleline`, `:title`, `:slug`, `:upper`, `:replace`), and automatic Wikipedia / research paper citation cleaner.
+- **💾 Storage & Cache Management**: Visual disk space auditing across AI models, dictionaries, sound packs, and media cache, with 1-tap cache purging and history reset (**Settings → Plugins → Storage & Cache**).
+- **🔐 Granular Backup & Encrypted API Key Export**: Export preferences, layouts, custom wordlists, typing history, and text expander shortcuts separately, with optional AES-256 encrypted export for third-party AI and media API keys.
 - **💾 Selective Category Backup & Restore**: Export and restore your data modularly with independent category checkboxes (**Layouts**, **Theme & Custom Backgrounds**, **Dictionaries & Typing History**, **Clipboard History**, and **General Settings**) without all-or-nothing overwrites.
 - **🔎 In-Palette Emoji Search**: Search emojis instantly by name or keyword directly within the emoji palette view, powered by locale-aware emoji dictionaries.
 - **✉️ Privacy-First OTP Auto-Fill**: Notification-based OTP verification code detection without sensitive SMS permissions, with customizable messaging app selection.
@@ -198,6 +209,16 @@ LeanType is available in two purpose-built flavors designed to match your exact 
 2. **Offline Flavors**: Download `ocr_plugin.apk` from [GitHub Releases](https://github.com/LeanBitLab/LeanType-Ocr-Plugin/releases/latest) and load it in **Settings → Plugins → OCR**.
 3. Tap the **Camera / OCR** icon on the toolbar to open the in-keyboard scanner or take a screenshot to see the instant suggestion pill.
 
+### 8. GIF Search & Media Picker Setup
+1. Open **Settings → Plugins → GIF Settings** (or tap the GIF key on the toolbar).
+2. Select your preferred provider (**GIPHY** or **Tenor**). Optionally configure custom API keys.
+3. Search trending GIFs, browse stickers, or insert media directly into compatible messaging apps.
+
+### 9. CJK (Chinese, Japanese & Korean) Setup
+1. Open **Settings → Languages → Add language** and select Chinese, Japanese, or Korean.
+2. In **Settings → Plugins → CJK Settings**, enable the CJK Engine (or install the companion plugin if prompted).
+3. Select your input style (e.g. Pinyin for Chinese, Flick/Romaji for Japanese, 2-Set Hangul for Korean) and type with the live candidate strip.
+
 ---
 
 ## 🧩 Ecosystem & Plugins
@@ -211,6 +232,8 @@ Expand LeanType with official companion plugins:
 | 📷 **OCR Plugin** | [LeanBitLab/LeanType-Ocr-Plugin](https://github.com/LeanBitLab/LeanType-Ocr-Plugin) | On-device ML Kit camera viewfinder & screenshot text extraction |
 | 🌐 **Translation Plugin** | [LeanBitLab/LeanType-Translation-Plugin](https://github.com/LeanBitLab/LeanType-Translation-Plugin) | Dedicated on-device translation provider engine |
 | ✍️ **Handwriting Plugin** | [LeanBitLab/Leantype-Handwriting-Plugin](https://github.com/LeanBitLab/Leantype-Handwriting-Plugin) | ML Kit Digital Ink canvas recognition engine |
+| 🎬 **GIF Plugin** | [LeanBitLab/LeanType-Gif-Plugin](https://github.com/LeanBitLab/LeanType-Gif-Plugin) | In-keyboard GIF & sticker search engine (GIPHY & Tenor) with WhatsApp normalization |
+| 🈲 **CJK Plugin** | [LeanBitLab/LeanType-CJK-Plugin](https://github.com/LeanBitLab/LeanType-CJK-Plugin) | Pinyin Chinese, Japanese Romaji/Kana & Korean Hangul input engine |
 | 🎵 **Sound Packs** | [LeanBitLab/LeanType-Sound-Packs](https://github.com/LeanBitLab/LeanType-Sound-Packs) | Synthesized and physical modeling keypress sound packs |
 | 🎨 **Community Themes** | [GitHub: `leantype-theme`](https://github.com/topics/leantype-theme) | Browse and share custom color themes |
 
@@ -252,10 +275,10 @@ If LeanType improves your daily typing workflow, please consider sponsoring our 
 
 ## 📜 Credits & Acknowledgments
 
-- **[HeliBoard](https://github.com/Helium314/HeliBoard)** by Helium314 — the foundational keyboard project
+- **[HeliBoard](https://github.com/Helium314/HeliBoard)** by Helium314: the foundational keyboard project
 - **[OpenBoard](https://github.com/openboard-team/openboard)** & **[AOSP LatinIME](https://android.googlesource.com/platform/packages/inputmethods/LatinIME/)**
-- **[llama.cpp](https://github.com/ggerganov/llama.cpp)** & **[llamacpp-kotlin](https://github.com/ljcamargo/llamacpp-kotlin)** — on-device local LLM execution
-- **[whisper.cpp](https://github.com/ggerganov/whisper.cpp)** — on-device speech recognition
+- **[llama.cpp](https://github.com/ggerganov/llama.cpp)** & **[llamacpp-kotlin](https://github.com/ljcamargo/llamacpp-kotlin)**: on-device local LLM execution
+- **[whisper.cpp](https://github.com/ggerganov/whisper.cpp)**: on-device speech recognition
 - All [contributors](https://github.com/LeanBitLab/LeanType/graphs/contributors) and open-source supporters!
 
 ---

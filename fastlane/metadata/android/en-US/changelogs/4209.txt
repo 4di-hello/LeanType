@@ -1,7 +1,11 @@
-- Prevented memory trim and deallocation from tearing down active clipboard view.
-- Routed spacebar swipe and arrow keys to GIF search query cursor.
-- Committed host text on open, restored shift unshift, and fixed Android 9 GIF crash.
-- Fixed standalone auto-spacing after suggestions and backspace undo off-by-one.
-- Supported horizontal-right swipe deselect immediately after a vertical swipe.
-- Restored suggestion strip after touchpad mode and fixed split toolbar state.
-- Pulled active theme defaults in Show All Colors and preserved child toolbar settings.
+- Integrated companion GIF plugin with GIPHY/Tenor search, live preview, and WhatsApp stickers.
+- Added CJK companion engine for Chinese, Japanese, and Korean with dedicated candidate strip UI.
+- Added full keyboard horizontal swipe gestures and 2D backspace swipe selection adjustments.
+- Enabled gesture typing trails and floating preview in emoji and clipboard search/edit fields.
+- Fixed suggestion replacement and cursor desync in Chrome, Brave, and web browser editors.
+- Hardened batch edit lifecycle integrity, ContentObserver leaks, and clipboard memory protection.
+- Added Gboard-style clipboard long-press action pill, multi-select, and hold delete whole words.
+- Added auto-floating keyboard option in landscape orientation.
+- Added acoustic wave visualizer with traveling shimmer and voice screen wake lock.
+- Added granular backup categories and password-protected encrypted API keys export.
+- Completed 100% translation coverage across 30 supported languages.

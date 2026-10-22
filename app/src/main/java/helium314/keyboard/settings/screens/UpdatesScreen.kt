@@ -63,14 +63,18 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 private val currentChangelogItems = listOf(
-    "• Clipboard Lifecycle & Trim Protection: Prevented memory trim and deallocation from tearing down active clipboard view",
-    "• GIF Cursor & Search Navigation: Routed spacebar swipe and arrow keys to GIF search query cursor",
-    "• GIF Picker Stability: Committed host text on open, restored shift unshift, and fixed Android 9 crash",
-    "• Input Auto-Space & Backspace Undo: Fixed standalone auto-spacing after suggestions and backspace undo offset",
-    "• 2D Delete Swipe Deselection: Supported horizontal-right swipe deselect immediately after vertical swipe",
-    "• Toolbar & Touchpad Recovery: Restored suggestion strip after touchpad mode and fixed split toolbar state",
-    "• Theme Color Defaults: Pulled active theme defaults in Show All Colors and preserved child toolbar settings",
-    "• Language Detector Tests: Added comprehensive unit test suite covering multilingual script and diacritic detection"
+    "• GIF Search & Media Plugin: Integrated companion GIF plugin with GIPHY/Tenor search, live preview, and WhatsApp stickers",
+    "• CJK Companion Engine: Added modular support for Chinese, Japanese, and Korean typing with dedicated candidate strip UI",
+    "• Full Keyboard Swipe Gestures: Added configurable full-keyboard horizontal swipe gestures with sensitivity threshold",
+    "• 2D Delete Swipe & Hold-to-Delete: Added 2D swipe selection adjustments and continuous whole-word deletion on backspace hold",
+    "• Internal Fields Gesture Typing: Enabled gesture typing trails and floating preview in emoji and clipboard search/edit",
+    "• Web Editor Suggestion Replacement: Resolved text duplication and cursor desync in Chromium and web browser inputs",
+    "• Core Stability & Memory Protection: Hardened batch edit lifecycle, ContentObserver leaks, and clipboard trim protection",
+    "• Clipboard Action Pill & Multi-Select: Added Gboard-style long-press action pill, multi-select, and sensitive data filtering",
+    "• Landscape Auto-Floating: Added option to automatically float the keyboard in landscape and restore in portrait",
+    "• Dynamic Sound Wave Visualizer: Added acoustic harmonic waves, shimmer animation, and voice recording wake lock",
+    "• Granular Backup & Encrypted API Keys: Added selectable dictionaries/history and encrypted API keys export",
+    "• 100% Global Translations: Completed 100% translation coverage across 30 supported languages"
 )
 
 @Composable
