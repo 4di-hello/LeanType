@@ -1838,4 +1838,9 @@
     <string name="openai_omit_temperature_summary">Μην στέλνετε την παράμετρο θερμοκρασίας (απαιτείται για νεότερα μοντέλα Claude και συλλογισμού)</string>
     <string name="floating_keyboard_landscape_title">Λειτουργία αιώρησης σε τοπίο</string>
     <string name="floating_keyboard_landscape_summary">Αυτόματη εναλλαγή σε αιωρούμενο πληκτρολόγιο όταν βρίσκεται σε οριζόντιο προσανατολισμό</string>
+    <string name="keycodes_reference_title">Αναφορά κωδικών κλειδιών και ενεργειών</string>
+    <string name="keycodes_reference_summary">Δείτε τις πλήρεις τιμές του κωδικού κλειδιού για προσαρμοσμένες διατάξεις και συντομεύσεις γραμμής εργαλείων</string>
+    <string name="keycodes_reference_button">Κωδικοί κλειδιών</string>
+    <string name="keycodes_link_text">Οδηγός κλειδιών</string>
+    <string name="message_keycodes_reference">Αναφορά κωδικών κλειδιών και ενεργειών:%s</string>
 </resources>

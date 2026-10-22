@@ -1776,4 +1776,9 @@ Lehetővé teszi az eszközön futó GGUF / llama.cpp következtetést a javít�
     <string name="openai_omit_temperature_summary">Ne küldje el a hőmérsékleti paramétert (az újabb Claude és érvelési modellekhez szükséges)</string>
     <string name="floating_keyboard_landscape_title">Lebegő mód tájképben</string>
     <string name="floating_keyboard_landscape_summary">Automatikus váltás lebegő billentyűzetre fekvő helyzetben</string>
+    <string name="keycodes_reference_title">Kulcskódok és műveletek hivatkozása</string>
+    <string name="keycodes_reference_summary">Tekintse meg az egyéni elrendezések és az eszköztár-parancsikonok teljes kulcskódértékeit</string>
+    <string name="keycodes_reference_button">Kulcskódok</string>
+    <string name="keycodes_link_text">Kulcskódok útmutató</string>
+    <string name="message_keycodes_reference">Kulcskódok és műveletek hivatkozása:%s</string>
 </resources>

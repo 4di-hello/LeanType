@@ -1820,4 +1820,9 @@ Maakt GGUF / llama.cpp-inferentie op het apparaat mogelijk voor proeflezen en he
     <string name="openai_omit_temperature_summary">Stuur de temperatuurparameter niet (vereist voor nieuwere Claude- en redeneermodellen)</string>
     <string name="floating_keyboard_landscape_title">Zwevende modus in landschap</string>
     <string name="floating_keyboard_landscape_summary">Schakel automatisch over naar zwevend toetsenbord in liggende stand</string>
+    <string name="keycodes_reference_title">Referentiecodes en acties</string>
+    <string name="keycodes_reference_summary">Bekijk de volledige sleutelcodewaarden voor aangepaste lay-outs en snelkoppelingen op de werkbalk</string>
+    <string name="keycodes_reference_button">Sleutelcodes</string>
+    <string name="keycodes_link_text">Gids voor sleutelcodes</string>
+    <string name="message_keycodes_reference">Referentie van sleutelcodes en acties:%s</string>
 </resources>

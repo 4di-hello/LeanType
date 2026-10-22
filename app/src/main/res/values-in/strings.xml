@@ -1735,4 +1735,9 @@ Memungkinkan inferensi GGUF / llama.cpp di perangkat untuk koreksi teks dan penu
     <string name="openai_omit_temperature_summary">Jangan kirim parameter suhu (diperlukan untuk model Claude dan penalaran yang lebih baru)</string>
     <string name="floating_keyboard_landscape_title">Mode mengambang dalam lanskap</string>
     <string name="floating_keyboard_landscape_summary">Secara otomatis beralih ke keyboard mengambang ketika dalam orientasi lanskap</string>
+    <string name="keycodes_reference_title">Referensi kode kunci &amp; tindakan</string>
+    <string name="keycodes_reference_summary">Lihat nilai kode kunci lengkap untuk tata letak khusus dan pintasan bilah alat</string>
+    <string name="keycodes_reference_button">Kode kunci</string>
+    <string name="keycodes_link_text">Panduan Kode Kunci</string>
+    <string name="message_keycodes_reference">Referensi kode kunci &amp; tindakan:%s</string>
 </resources>

@@ -1771,4 +1771,9 @@ Permite la inferencia GGUF / llama.cpp en el dispositivo para corrección y rees
     <string name="openai_omit_temperature_summary">No envíe el parámetro de temperatura (requerido para los modelos Claude y Reasoning más nuevos)</string>
     <string name="floating_keyboard_landscape_title">Modo flotante en paisaje</string>
     <string name="floating_keyboard_landscape_summary">Cambia automáticamente a teclado flotante cuando está en orientación horizontal</string>
+    <string name="keycodes_reference_title">Referencia de códigos clave y acciones</string>
+    <string name="keycodes_reference_summary">Ver valores completos de códigos clave para diseños personalizados y accesos directos a la barra de herramientas</string>
+    <string name="keycodes_reference_button">Códigos clave</string>
+    <string name="keycodes_link_text">Guía de códigos clave</string>
+    <string name="message_keycodes_reference">Referencia de códigos clave y acciones:%s</string>
 </resources>

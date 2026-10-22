@@ -1820,4 +1820,9 @@
     <string name="openai_omit_temperature_summary">Не изпращайте температурния параметър (изисква се за по-новите модели Claude и reasoning)</string>
     <string name="floating_keyboard_landscape_title">Плаващ режим в пейзаж</string>
     <string name="floating_keyboard_landscape_summary">Автоматично превключване към плаваща клавиатура, когато сте в пейзажна ориентация</string>
+    <string name="keycodes_reference_title">Ключови кодове и справка за действия</string>
+    <string name="keycodes_reference_summary">Вижте пълните стойности на клавишния код за персонализирани оформления и преки пътища в лентата с инструменти</string>
+    <string name="keycodes_reference_button">Ключови кодове</string>
+    <string name="keycodes_link_text">Ръководство за ключови кодове</string>
+    <string name="message_keycodes_reference">Ключови кодове и справка за действия:%s</string>
 </resources>

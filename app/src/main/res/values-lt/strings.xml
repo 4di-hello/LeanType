@@ -1768,4 +1768,9 @@ Ar norite atnaujinti?</string>
     <string name="openai_omit_temperature_summary">Nesiųsti temperatūros parametro (būtina naujesniuose Claude ir argumentavimo modeliuose)</string>
     <string name="floating_keyboard_landscape_title">Plūduriuojantis režimas kraštovaizdyje</string>
     <string name="floating_keyboard_landscape_summary">Automatiškai perjunkite į slankiąją klaviatūrą, kai yra horizontalioje padėtyje</string>
+    <string name="keycodes_reference_title">Klavišų kodų ir veiksmų nuoroda</string>
+    <string name="keycodes_reference_summary">Peržiūrėkite visas pasirinktinių išdėstymų ir įrankių juostos sparčiųjų klavišų raktų kodų reikšmes</string>
+    <string name="keycodes_reference_button">Klavišų kodai</string>
+    <string name="keycodes_link_text">Keycodes vadovas</string>
+    <string name="message_keycodes_reference">Klavišų kodų ir veiksmų nuoroda:%s</string>
 </resources>

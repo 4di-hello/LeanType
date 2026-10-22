@@ -207,7 +207,7 @@ object KeyCode {
     const val OCR =                       -10077
     const val TOGGLE_AUTO_CAP =           -10079
     const val TOGGLE_FORCE_AUTO_CAPS =    -10080
-    const val GIF =                       -10085
+    const val GIF =                       -10086
 
 
     // Intents

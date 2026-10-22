@@ -1767,4 +1767,9 @@ Activează inferența GGUF / llama.cpp pe dispozitiv pentru corectură și refor
     <string name="openai_omit_temperature_summary">Nu trimiteți parametrul de temperatură (necesar pentru modelele Claude și raționament mai noi)</string>
     <string name="floating_keyboard_landscape_title">Modul plutitor în peisaj</string>
     <string name="floating_keyboard_landscape_summary">Comutați automat la tastatura plutitoare când sunteți în orientare peisaj</string>
+    <string name="keycodes_reference_title">Referință pentru coduri cheie și acțiuni</string>
+    <string name="keycodes_reference_summary">Vizualizați valorile complete ale codurilor de cheie pentru aspecte personalizate și comenzi rapide din bara de instrumente</string>
+    <string name="keycodes_reference_button">Coduri cheie</string>
+    <string name="keycodes_link_text">Ghidul codurilor cheie</string>
+    <string name="message_keycodes_reference">Referință coduri cheie și acțiuni:%s</string>
 </resources>

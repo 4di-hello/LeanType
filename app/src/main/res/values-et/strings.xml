@@ -1767,4 +1767,9 @@ Võimaldab seadmesisese GGUF / llama.cpp järelduse korrektuuri ja ümbersõnast
     <string name="openai_omit_temperature_summary">Ärge saatke temperatuuri parameetrit (nõutav uuemate Claude\'i ja arutlusmudelite jaoks)</string>
     <string name="floating_keyboard_landscape_title">Ujuv režiim maastikul</string>
     <string name="floating_keyboard_landscape_summary">Rõhtpaigutuses lülituge automaatselt ujuvale klaviatuurile</string>
+    <string name="keycodes_reference_title">Võtmekoodide ja toimingute viide</string>
+    <string name="keycodes_reference_summary">Vaadake kohandatud paigutuste ja tööriistariba otseteede täielikke klahvikoodi väärtusi</string>
+    <string name="keycodes_reference_button">Võtmekoodid</string>
+    <string name="keycodes_link_text">Võtmekoodide juhend</string>
+    <string name="message_keycodes_reference">Võtmekoodide ja toimingute viide:%s</string>
 </resources>

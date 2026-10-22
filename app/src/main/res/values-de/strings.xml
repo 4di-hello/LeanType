@@ -1782,4 +1782,9 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="openai_omit_temperature_summary">Senden Sie den Temperaturparameter nicht (erforderlich für neuere Claude- und Reasoning-Modelle).</string>
     <string name="floating_keyboard_landscape_title">Schwebemodus im Querformat</string>
     <string name="floating_keyboard_landscape_summary">Wechseln Sie im Querformat automatisch zur schwebenden Tastatur</string>
+    <string name="keycodes_reference_title">Referenz zu Schlüsselcodes und Aktionen</string>
+    <string name="keycodes_reference_summary">Vollständige Tastencodewerte für benutzerdefinierte Layouts und Symbolleistenverknüpfungen anzeigen</string>
+    <string name="keycodes_reference_button">Schlüsselcodes</string>
+    <string name="keycodes_link_text">Schlüsselcode-Anleitung</string>
+    <string name="message_keycodes_reference">Referenz zu Schlüsselcodes und Aktionen:%s</string>
 </resources>

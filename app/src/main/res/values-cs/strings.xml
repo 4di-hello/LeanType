@@ -1785,4 +1785,9 @@ Umožňuje lokální inferenci GGUF / llama.cpp na zařízení pro korektury a p
     <string name="openai_omit_temperature_summary">Neposílejte parametr teploty (vyžadováno pro novější modely Claude a uvažování)</string>
     <string name="floating_keyboard_landscape_title">Plovoucí režim na šířku</string>
     <string name="floating_keyboard_landscape_summary">Automaticky přepnout na plovoucí klávesnici při orientaci na šířku</string>
+    <string name="keycodes_reference_title">Referenční kódy a akce</string>
+    <string name="keycodes_reference_summary">Zobrazte úplné hodnoty kódu kláves pro vlastní rozvržení a zkratky panelu nástrojů</string>
+    <string name="keycodes_reference_button">Klíčové kódy</string>
+    <string name="keycodes_link_text">Průvodce kódy klíčů</string>
+    <string name="message_keycodes_reference">Referenční kódy a akce:%s</string>
 </resources>

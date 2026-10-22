@@ -1845,4 +1845,9 @@ Abilita l\'inferenza GGUF / llama.cpp sul dispositivo per correzione e riscrittu
     <string name="openai_omit_temperature_summary">Non inviare il parametro della temperatura (richiesto per i modelli Claude e di ragionamento più recenti)</string>
     <string name="floating_keyboard_landscape_title">Modalità mobile in orizzontale</string>
     <string name="floating_keyboard_landscape_summary">Passa automaticamente alla tastiera mobile in orientamento orizzontale</string>
+    <string name="keycodes_reference_title">Codici chiave e riferimento alle azioni</string>
+    <string name="keycodes_reference_summary">Visualizza i valori completi dei codici chiave per layout personalizzati e scorciatoie della barra degli strumenti</string>
+    <string name="keycodes_reference_button">Codici chiave</string>
+    <string name="keycodes_link_text">Guida ai codici chiave</string>
+    <string name="message_keycodes_reference">Riferimento a codici chiave e azioni:%s</string>
 </resources>

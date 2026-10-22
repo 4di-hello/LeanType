@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-only
 package helium314.keyboard.settings.dialogs
 
+import android.content.Intent
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.exclude
@@ -26,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import helium314.keyboard.keyboard.KeyboardSwitcher
 import helium314.keyboard.latin.R
+import helium314.keyboard.latin.common.Links
 import helium314.keyboard.latin.utils.LayoutType
 import helium314.keyboard.latin.utils.LayoutUtilsCustom
 import helium314.keyboard.latin.utils.Log
@@ -92,6 +95,11 @@ fun LayoutEditDialog(
             KeyboardSwitcher.getInstance().setThemeNeedsReload()
         },
         confirmButtonText = stringResource(R.string.save),
+        neutralButtonText = stringResource(R.string.keycodes_reference_button),
+        onNeutral = {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Links.KEYCODES_URL)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            ctx.startActivity(intent)
+        },
         initialText = startContent ?: LayoutUtilsCustom.getLayoutFile(initialLayoutName, layoutType, ctx).readText(),
         singleLine = false,
         title = {

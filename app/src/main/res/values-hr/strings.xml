@@ -1760,4 +1760,9 @@ Omogućuje lokalno GGUF / llama.cpp zaključivanje na uređaju za lekturu i prep
     <string name="openai_omit_temperature_summary">Nemojte slati parametar temperature (potrebno za novije modele Claude i reasoning)</string>
     <string name="floating_keyboard_landscape_title">Plutajući način rada u pejzažu</string>
     <string name="floating_keyboard_landscape_summary">Automatski prijeđi na lebdeću tipkovnicu kada je u pejzažnoj orijentaciji</string>
+    <string name="keycodes_reference_title">Ključni kodovi i reference radnji</string>
+    <string name="keycodes_reference_summary">Pregledajte potpune vrijednosti šifre tipki za prilagođene izglede i prečace alatne trake</string>
+    <string name="keycodes_reference_button">Šifre tipki</string>
+    <string name="keycodes_link_text"></string>
+    <string name="message_keycodes_reference">Referenca kodova ključeva i radnji:%s</string>
 </resources>

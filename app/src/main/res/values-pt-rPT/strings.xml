@@ -1775,4 +1775,9 @@ Habilita inferência GGUF / llama.cpp no dispositivo para revisão e reescrita.<
     <string name="openai_omit_temperature_summary">Não envie o parâmetro de temperatura (obrigatório para modelos Claude e de raciocínio mais recentes)</string>
     <string name="floating_keyboard_landscape_title">Modo flutuante em paisagem</string>
     <string name="floating_keyboard_landscape_summary">Alternar automaticamente para teclado flutuante quando estiver na orientação paisagem</string>
+    <string name="keycodes_reference_title">Referência de códigos-chave e ações</string>
+    <string name="keycodes_reference_summary">Visualize valores completos de código-chave para layouts personalizados e atalhos da barra de ferramentas</string>
+    <string name="keycodes_reference_button">Códigos-chave</string>
+    <string name="keycodes_link_text">Guia de códigos de acesso</string>
+    <string name="message_keycodes_reference">Referência de códigos-chave e ações:%s</string>
 </resources>

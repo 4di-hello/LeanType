@@ -2,6 +2,8 @@
 package helium314.keyboard.settings.screens
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.material3.Surface
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Icon
@@ -20,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import helium314.keyboard.keyboard.KeyboardLayoutSet
 import helium314.keyboard.keyboard.KeyboardSwitcher
 import helium314.keyboard.latin.R
+import helium314.keyboard.latin.common.Links
 import helium314.keyboard.latin.settings.Settings
 import helium314.keyboard.latin.utils.LayoutType
 import helium314.keyboard.latin.utils.LayoutType.Companion.displayNameId
@@ -65,6 +68,7 @@ fun SecondaryLayoutScreen(
         if (customCount < 5) {
             list.add("add_custom_layout")
         }
+        list.add("keycodes_reference")
         list
     }
 
@@ -186,6 +190,23 @@ fun createLayoutSettings(context: Context): List<Setting> {
                             it.prefChanged.value = it.prefChanged.value + 1
                         }
                     }
+                }
+            )
+        }
+    )
+
+    // Add the "keycodes_reference" Setting
+    list.add(
+        Setting(context, "keycodes_reference", R.string.keycodes_reference_title, R.string.keycodes_reference_summary) { setting ->
+            val ctx = LocalContext.current
+            Preference(
+                name = setting.title,
+                description = setting.description,
+                icon = R.drawable.ic_settings_about_wiki,
+                onClick = {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Links.KEYCODES_URL))
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    ctx.startActivity(intent)
                 }
             )
         }

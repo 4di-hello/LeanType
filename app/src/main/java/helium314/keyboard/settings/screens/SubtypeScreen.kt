@@ -579,7 +579,9 @@ private fun MainLayoutRow(
             val layoutText = stringResource(R.string.message_add_custom_layout, wikiLink).htmlToAnnotated()
             val discussionLink = stringResource(R.string.discussion_section_link).withHtmlLink(Links.CUSTOM_LAYOUTS)
             val discussionSectionText = stringResource(R.string.get_layouts_message, discussionLink).htmlToAnnotated()
-            val annotated = layoutText + AnnotatedString("\n") + discussionSectionText
+            val keycodesLink = stringResource(R.string.keycodes_link_text).withHtmlLink(Links.KEYCODES_URL)
+            val keycodesSectionText = stringResource(R.string.message_keycodes_reference, keycodesLink).htmlToAnnotated()
+            val annotated = layoutText + AnnotatedString("\n") + discussionSectionText + AnnotatedString("\n") + keycodesSectionText
 
             ConfirmationDialog(
                 onDismissRequest = { showAddLayoutDialog = false },

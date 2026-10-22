@@ -1838,4 +1838,9 @@
     <string name="openai_omit_temperature_summary">താപനില പാരാമീറ്റർ അയയ്‌ക്കരുത് (പുതിയ ക്ലോഡിനും ന്യായവാദ മോഡലുകൾക്കും ആവശ്യമാണ്)</string>
     <string name="floating_keyboard_landscape_title">ലാൻഡ്‌സ്‌കേപ്പിൽ ഫ്ലോട്ടിംഗ് മോഡ്</string>
     <string name="floating_keyboard_landscape_summary">ലാൻഡ്‌സ്‌കേപ്പ് ഓറിയൻ്റേഷനിലായിരിക്കുമ്പോൾ സ്വയമേവ ഫ്ലോട്ടിംഗ് കീബോർഡിലേക്ക് മാറുക</string>
+    <string name="keycodes_reference_title">കീകോഡുകളും പ്രവർത്തനങ്ങളും റഫറൻസ്</string>
+    <string name="keycodes_reference_summary">ഇഷ്‌ടാനുസൃത ലേഔട്ടുകൾക്കും ടൂൾബാർ കുറുക്കുവഴികൾക്കുമുള്ള സമ്പൂർണ്ണ കീകോഡ് മൂല്യങ്ങൾ കാണുക</string>
+    <string name="keycodes_reference_button">കീകോഡുകൾ</string>
+    <string name="keycodes_link_text">കീകോഡ് ഗൈഡ്</string>
+    <string name="message_keycodes_reference">കീകോഡുകളും പ്രവർത്തനങ്ങളും റഫറൻസ്:%s</string>
 </resources>

@@ -1843,4 +1843,9 @@
     <string name="openai_omit_temperature_summary">لا ترسل معلمة درجة الحرارة (مطلوبة لنماذج كلود والاستدلال الأحدث)</string>
     <string name="floating_keyboard_landscape_title">الوضع العائم في المناظر الطبيعية</string>
     <string name="floating_keyboard_landscape_summary">قم بالتبديل تلقائيًا إلى لوحة المفاتيح العائمة عندما تكون في الاتجاه الأفقي</string>
+    <string name="keycodes_reference_title">رموز المفاتيح ومرجع الإجراءات</string>
+    <string name="keycodes_reference_summary">عرض قيم رمز المفاتيح الكاملة للتخطيطات المخصصة واختصارات شريط الأدوات</string>
+    <string name="keycodes_reference_button">رموز المفاتيح</string>
+    <string name="keycodes_link_text">دليل رموز المفاتيح</string>
+    <string name="message_keycodes_reference">مرجع الرموز الأساسية والإجراءات:%s</string>
 </resources>

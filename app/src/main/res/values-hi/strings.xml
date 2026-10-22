@@ -1764,4 +1764,9 @@
     <string name="openai_omit_temperature_summary">तापमान पैरामीटर न भेजें (नए क्लाउड और रीज़निंग मॉडल के लिए आवश्यक)</string>
     <string name="floating_keyboard_landscape_title">लैंडस्केप में फ्लोटिंग मोड</string>
     <string name="floating_keyboard_landscape_summary">लैंडस्केप ओरिएंटेशन में होने पर स्वचालित रूप से फ़्लोटिंग कीबोर्ड पर स्विच करें</string>
+    <string name="keycodes_reference_title">कुंजीकोड और क्रियाएँ संदर्भ</string>
+    <string name="keycodes_reference_summary">कस्टम लेआउट और टूलबार शॉर्टकट के लिए संपूर्ण कीकोड मान देखें</string>
+    <string name="keycodes_reference_button">कुंजीकोड</string>
+    <string name="keycodes_link_text">कीकोड गाइड</string>
+    <string name="message_keycodes_reference">कुंजीकोड और क्रियाएँ संदर्भ:%s</string>
 </resources>

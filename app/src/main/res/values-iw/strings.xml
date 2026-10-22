@@ -1787,4 +1787,9 @@
     <string name="openai_omit_temperature_summary">אל תשלח את פרמטר הטמפרטורה (נדרש עבור דגמי קלוד ודגמים חדשים יותר)</string>
     <string name="floating_keyboard_landscape_title">מצב צף בנוף</string>
     <string name="floating_keyboard_landscape_summary">עבור אוטומטית למקלדת צפה כאשר אתה נמצא בכיוון לרוחב</string>
+    <string name="keycodes_reference_title">הפניה לקודי מפתח ופעולות</string>
+    <string name="keycodes_reference_summary">הצג ערכי קוד מפתח מלאים עבור פריסות מותאמות אישית וקיצורי דרך בסרגל הכלים</string>
+    <string name="keycodes_reference_button">קודי מפתח</string>
+    <string name="keycodes_link_text">מדריך קודי מפתח</string>
+    <string name="message_keycodes_reference">הפניה לקודי מפתח ופעולות:%s</string>
 </resources>

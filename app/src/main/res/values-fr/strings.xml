@@ -1834,4 +1834,9 @@ Permet l\'inférence GGUF / llama.cpp sur l\'appareil pour la correction et la r
     <string name="openai_omit_temperature_summary">Ne pas envoyer le paramètre de température (obligatoire pour les modèles Claude et raisonnement plus récents)</string>
     <string name="floating_keyboard_landscape_title">Mode flottant en paysage</string>
     <string name="floating_keyboard_landscape_summary">Passer automatiquement au clavier flottant en orientation paysage</string>
+    <string name="keycodes_reference_title">Référence des codes clés et des actions</string>
+    <string name="keycodes_reference_summary">Afficher les valeurs complètes du code clé pour les mises en page personnalisées et les raccourcis de la barre d\'outils</string>
+    <string name="keycodes_reference_button">Codes clés</string>
+    <string name="keycodes_link_text">Guide des codes clés</string>
+    <string name="message_keycodes_reference">Référence des codes clés et des actions :%s</string>
 </resources>

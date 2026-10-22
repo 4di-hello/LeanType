@@ -1768,4 +1768,9 @@ Metin düzeltme ve yeniden yazma için cihaz üzerinde GGUF / llama.cpp çıkar�
     <string name="openai_omit_temperature_summary">Sıcaklık parametresini göndermeyin (daha yeni Claude ve muhakeme modelleri için gereklidir)</string>
     <string name="floating_keyboard_landscape_title">Manzarada kayan mod</string>
     <string name="floating_keyboard_landscape_summary">Yatay yöndeyken kayan klavyeye otomatik olarak geç</string>
+    <string name="keycodes_reference_title">Anahtar kodlar ve işlemler referansı</string>
+    <string name="keycodes_reference_summary">Özel düzenler ve araç çubuğu kısayolları için anahtar kod değerlerinin tamamını görüntüleyin</string>
+    <string name="keycodes_reference_button">Anahtar kodlar</string>
+    <string name="keycodes_link_text">Anahtar Kodları Kılavuzu</string>
+    <string name="message_keycodes_reference">Anahtar kodlar ve işlemler referansı:%s</string>
 </resources>

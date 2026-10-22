@@ -1829,4 +1829,9 @@
     <string name="openai_omit_temperature_summary">درجہ حرارت کا پیرامیٹر نہ بھیجیں (نئے کلاڈ اور استدلال کے ماڈلز کے لیے درکار)</string>
     <string name="floating_keyboard_landscape_title">زمین کی تزئین میں فلوٹنگ موڈ</string>
     <string name="floating_keyboard_landscape_summary">زمین کی تزئین کی سمت میں ہونے پر خودکار طور پر فلوٹنگ کی بورڈ پر سوئچ کریں۔</string>
+    <string name="keycodes_reference_title">کی کوڈز اور ایکشنز کا حوالہ</string>
+    <string name="keycodes_reference_summary">حسب ضرورت لے آؤٹ اور ٹول بار شارٹ کٹس کے لیے کلی کوڈ کی مکمل قدریں دیکھیں</string>
+    <string name="keycodes_reference_button">کی کوڈز</string>
+    <string name="keycodes_link_text">کی کوڈز گائیڈ</string>
+    <string name="message_keycodes_reference">کلیدی کوڈز اور اعمال کا حوالہ:%s</string>
 </resources>

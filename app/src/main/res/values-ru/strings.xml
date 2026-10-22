@@ -1845,4 +1845,9 @@
     <string name="openai_omit_temperature_summary">Не отправлять параметр температуры (требуется для более новых моделей Клода и рассуждений)</string>
     <string name="floating_keyboard_landscape_title">Плавающий режим в альбомной ориентации</string>
     <string name="floating_keyboard_landscape_summary">Автоматически переключаться на плавающую клавиатуру в альбомной ориентации</string>
+    <string name="keycodes_reference_title">Справочник по кодам клавиш и действиям</string>
+    <string name="keycodes_reference_summary">Просмотр полных значений кодов клавиш для пользовательских макетов и ярлыков панели инструментов.</string>
+    <string name="keycodes_reference_button">Коды клавиш</string>
+    <string name="keycodes_link_text">Руководство по кодам клавиш</string>
+    <string name="message_keycodes_reference">Ссылка на коды клавиш и действия:%s</string>
 </resources>

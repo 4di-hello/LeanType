@@ -1069,6 +1069,11 @@ language, hence "No language". -->
     <string name="layout_custom3">Custom layout 3</string>
     <string name="layout_custom4">Custom layout 4</string>
     <string name="layout_custom5">Custom layout 5</string>
+    <string name="keycodes_reference_title">Keycodes &amp; actions reference</string>
+    <string name="keycodes_reference_summary">View complete keycode values for custom layouts and toolbar shortcuts</string>
+    <string name="keycodes_reference_button">Keycodes</string>
+    <string name="keycodes_link_text">Keycodes Guide</string>
+    <string name="message_keycodes_reference">Keycodes &amp; actions reference: %s</string>
     <!-- Name for functional keys layout -->
     <string name="layout_functional_keys" tools:keep="@string/layout_functional_keys">Functional keys</string>
     <!-- Name for functional keys layout for tablets -->

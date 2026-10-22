@@ -1772,4 +1772,9 @@
     <string name="openai_omit_temperature_summary">Не адпраўляць параметр тэмпературы (патрабуецца для новых мадэляў Claude і разважанняў)</string>
     <string name="floating_keyboard_landscape_title">Плаваючы рэжым у альбомным рэжыме</string>
     <string name="floating_keyboard_landscape_summary">Аўтаматычнае пераключэнне на плаваючую клавіятуру ў альбомнай арыентацыі</string>
+    <string name="keycodes_reference_title">Даведка па кодах ключоў і дзеяннях</string>
+    <string name="keycodes_reference_summary">Прагляд поўных значэнняў кода клавіш для карыстацкіх раскладак і спалучэнняў на панэлі інструментаў</string>
+    <string name="keycodes_reference_button">Ключавыя коды</string>
+    <string name="keycodes_link_text">Кіраўніцтва па кодах ключоў</string>
+    <string name="message_keycodes_reference">Спасылка на коды ключоў і дзеянні:%s</string>
 </resources>
