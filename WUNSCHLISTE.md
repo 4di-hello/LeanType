@@ -22,7 +22,7 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
 - Emoji-Vorschläge zum getippten Wort: prüfen, was LeanType schon kann (`suggest_emojis`, Inline-Emoji-Suche mit Emoji-Wörterbuch), dann entscheiden
 - Getrennte Tipp-Profile pro Daumen bzw. Haltung weiter verfeinern (Idee)
 
-## LeanType wird nicht mehr entwickelt (21.10.)
+## Zukunft von LeanType unsicher (21.10.; am 22.10. kam trotzdem v4.2.9)
 
 - Gesichert: Quellcode aller 7 Plugins (Branches `backup/plugins/*`) und alle Plugin-APKs (Release „plugins-backup“)
 - Bauanleitung baut weiter, auch wenn LeanType verschwindet
