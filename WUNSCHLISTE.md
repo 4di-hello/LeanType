@@ -25,7 +25,8 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
   - Erledigt 24.10.: Chip-Anweisungen vor den Prompt (vorher dahinter, störte „Antwort:“ am Ende)
   - Erledigt 24.10.: Platzhalter `{clipboard}` (Zwischenablage, auch bei leerem Feld)
   - ~~Getestete Anweisungen festhalten~~ erledigt: `prompts/KI-TASTEN.md`
-  - PR-Kandidat: Branch `fix/ai-key-result-spacing` (Leerzeile bei #append, Anweisungen vor den Prompt), Tests grün
+  - PR #725 bei LeanType (24.10.): Branch `fix/ai-key-result-spacing` (Leerzeile bei #append, Anweisungen vor den Prompt)
+  - Antwort-Tasten (Fa) ohne „Text bearbeiten“: dessen Anweisung lässt das Modell die Nachricht umschreiben statt zu antworten
 - Emoji-Vorschläge zum getippten Wort: prüfen, was LeanType schon kann (`suggest_emojis`, Inline-Emoji-Suche mit Emoji-Wörterbuch), dann entscheiden
 - Getrennte Tipp-Profile pro Daumen bzw. Haltung weiter verfeinern (Idee)
 
