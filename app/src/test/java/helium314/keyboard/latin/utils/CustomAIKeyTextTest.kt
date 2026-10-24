@@ -28,6 +28,12 @@ class CustomAIKeyTextTest {
     }
 
     @Test
+    fun placeholdersIgnoreCase() {
+        assertEquals("Nachricht: {text}\nKopie: {clipboard}", CustomAIKeyText.normalizePlaceholders("Nachricht: {Text}\nKopie: { CLIPBOARD }"))
+        assertEquals("{texte}", CustomAIKeyText.normalizePlaceholders("{texte}"))
+    }
+
+    @Test
     fun appendedResultStartsANewParagraph() {
         assertEquals("\n\nAntwort", CustomAIKeyText.resultToInsert("Antwort", "Gruß, Sandra", ""))
         assertEquals("\nAntwort", CustomAIKeyText.resultToInsert("Antwort", "Gruß, Sandra\n", ""))
