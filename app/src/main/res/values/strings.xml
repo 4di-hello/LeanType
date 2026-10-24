@@ -1878,7 +1878,7 @@ New dictionary:
     <string name="custom_ai_keys_show_tags_summary">When enabled, custom tags will show as themed capsules on the keyboard toolbar instead of the default AI icon.</string>
     <string name="custom_ai_keys_not_configured">Not configured</string>
     <string name="custom_ai_keys_configure_title">Configure Key %1$d</string>
-    <string name="custom_ai_keys_config_instruction">Select keywords to define behavior, and combine them with your custom instructions.\n\nExample: Choose #editor and type "Translate to French" to create a specialized translation key.\n\nNote: You must provide both a custom prompt and select at least one keyword to save.</string>
+    <string name="custom_ai_keys_config_instruction">Select keywords to define behavior, and combine them with your custom instructions.\n\nExample: Choose #editor and type "Translate to French" to create a specialized translation key.\n\nNote: You must provide both a custom prompt and select at least one keyword to save.\n\nPlaceholders: {text} puts the text at this position in the prompt, {clipboard} puts the clipboard there.</string>
     <string name="custom_ai_keys_prompt_label">Custom Prompt for Key %1$d</string>
     <string name="custom_ai_keys_tag_label">Tag / Label (e.g. \'French\', \'Grammar\', \'Rewrite\')</string>
     <string name="custom_ai_keys_selected_functions">Selected Keyword Functions:</string>
@@ -2227,6 +2227,7 @@ New dictionary:
     <string name="custom_ai_10">Custom AI 10</string>
     <string name="custom_ai_key_format">Key %1$d</string>
     <string name="custom_ai_key_not_set">Custom AI key is not set. Long-press to configure.</string>
+    <string name="custom_ai_key_clipboard_empty">The clipboard is empty. Copy the text for {clipboard} first.</string>
     <string name="proofread_output_truncated">Proofread output truncated by model; replacement aborted.</string>
     <string name="translation_output_truncated">Translation output truncated by model; replacement aborted.</string>
     <string name="translation_unchanged">Translation unchanged or identical to source text.</string>
@@ -2248,6 +2249,7 @@ New dictionary:
     <string name="custom_ai_keyword_generate_label">Generate</string>
     <string name="custom_ai_keyword_outputonly_label">Result only</string>
     <string name="custom_ai_keyword_append_label">Append result</string>
+    <string name="custom_ai_keyword_prepend_label">Result before</string>
     <string name="custom_ai_keyword_showthought_label">Show reasoning</string>
     <string name="custom_ai_keyword_editor_desc">Free-form editing and formatting of text according to prompt.</string>
     <string name="custom_ai_keyword_proofread_desc">Corrects grammar, spelling, and punctuation.</string>
@@ -2258,6 +2260,7 @@ New dictionary:
     <string name="custom_ai_keyword_generate_desc">Generates new text completely ignoring selected text.</string>
     <string name="custom_ai_keyword_outputonly_desc">Returns only the modified text, without conversational fillers.</string>
     <string name="custom_ai_keyword_append_desc">Appends the result to the end of the original text, separated by an empty line.</string>
+    <string name="custom_ai_keyword_prepend_desc">Puts the result before the original text, separated by an empty line.</string>
     <string name="custom_ai_keyword_showthought_desc">Includes AI\'s reasoning process along with result.</string>
 
     <!-- Text Editing Layout Keys -->

@@ -867,7 +867,7 @@
     <string name="custom_ai_keys_show_tags_summary">Wenn aktiviert, werden benutzerdefinierte Tags als thematische Kapseln in der Tastatur-Werkzeugleiste anstelle des standardmäßigen AI-Symbols angezeigt.</string>
     <string name="custom_ai_keys_not_configured">Nicht konfiguriert</string>
     <string name="custom_ai_keys_configure_title">Taste %1$d konfigurieren</string>
-    <string name="custom_ai_keys_config_instruction">Wählen Sie Schlüsselwörter, um das Verhalten zu definieren, und kombinieren Sie diese mit Ihren benutzerdefinierten Anweisungen.\n\nBeispiel: Wählen Sie #editor und geben Sie „Übersetzen ins Französische“ ein, um eine spezielle Übersetzungstaste zu erstellen.\n\nHinweis: Sie müssen sowohl einen benutzerdefinierten Prompt angeben als auch mindestens ein Schlüsselwort auswählen, um zu speichern.</string>
+    <string name="custom_ai_keys_config_instruction">Wählen Sie Schlüsselwörter, um das Verhalten zu definieren, und kombinieren Sie diese mit Ihren benutzerdefinierten Anweisungen.\n\nBeispiel: Wählen Sie #editor und geben Sie „Übersetzen ins Französische“ ein, um eine spezielle Übersetzungstaste zu erstellen.\n\nHinweis: Sie müssen sowohl einen benutzerdefinierten Prompt angeben als auch mindestens ein Schlüsselwort auswählen, um zu speichern.\n\nPlatzhalter: {text} setzt den Text an diese Stelle im Prompt, {clipboard} die Zwischenablage.</string>
     <string name="custom_ai_keys_prompt_label">Benutzerdefinierter Prompt für Taste %1$d</string>
     <string name="custom_ai_keys_tag_label">Tag / Bezeichnung (z. B. \'Französisch\', \'Grammatik\', \'Umschreiben\')</string>
     <string name="custom_ai_keys_selected_functions">Ausgewählte Schlüsselwort-Funktionen:</string>
@@ -1425,6 +1425,7 @@
     <string name="custom_ai_10">Benutzerdefinierte AI 10</string>
     <string name="custom_ai_key_format">Taste %1$d</string>
     <string name="custom_ai_key_not_set">Benutzerdefinierte AI-Taste ist nicht belegt. Lange drücken zum Konfigurieren.</string>
+    <string name="custom_ai_key_clipboard_empty">Die Zwischenablage ist leer. Kopieren Sie zuerst den Text für {clipboard}.</string>
     <string name="proofread_output_truncated">Korrektur-Ausgabe vom Modell abgeschnitten; Ersetzung abgebrochen.</string>
     <string name="translation_output_truncated">Übersetzungs-Ausgabe vom Modell abgeschnitten; Ersetzung abgebrochen.</string>
     <string name="translation_unchanged">Übersetzung unverändert oder identisch mit dem Ausgangstext.</string>
@@ -1446,6 +1447,7 @@
     <string name="custom_ai_keyword_generate_label">Generieren</string>
     <string name="custom_ai_keyword_outputonly_label">Nur Ergebnis</string>
     <string name="custom_ai_keyword_append_label">Ergebnis anfügen</string>
+    <string name="custom_ai_keyword_prepend_label">Ergebnis davor</string>
     <string name="custom_ai_keyword_showthought_label">Gedankengang anzeigen</string>
     <string name="custom_ai_keyword_editor_desc">Freie Bearbeitung und Formatierung des Textes gemäß Aufforderung.</string>
     <string name="custom_ai_keyword_proofread_desc">Korrigiert Grammatik, Rechtschreibung und Zeichensetzung.</string>
@@ -1455,7 +1457,8 @@
     <string name="custom_ai_keyword_toneshift_desc">Ändert den Tonfall (z. B. professionell, ungezwungen).</string>
     <string name="custom_ai_keyword_generate_desc">Generiert neuen Text völlig unabhängig vom ausgewählten Text.</string>
     <string name="custom_ai_keyword_outputonly_desc">Gibt nur den modifizierten Text zurück, ohne einleitende oder abschließende Floskeln.</string>
-    <string name="custom_ai_keyword_append_desc">Fügt das Ergebnis an das Ende des ursprünglichen Textes an.</string>
+    <string name="custom_ai_keyword_append_desc">Fügt das Ergebnis mit einer Leerzeile an das Ende des ursprünglichen Textes an.</string>
+    <string name="custom_ai_keyword_prepend_desc">Setzt das Ergebnis mit einer Leerzeile vor den ursprünglichen Text.</string>
     <string name="custom_ai_keyword_showthought_desc">Enthält den Denkprozess der AI zusammen mit dem Ergebnis.</string>
     <string name="label_select">Auswählen</string>
     <string name="label_all">Alle</string>
