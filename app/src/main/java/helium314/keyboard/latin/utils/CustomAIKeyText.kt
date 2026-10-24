@@ -17,6 +17,12 @@ object CustomAIKeyText {
         return if (trimmed.isEmpty()) prompt else "$trimmed\n\n$prompt"
     }
 
+    private val PLACEHOLDERS = Regex("""\{\s*(text|clipboard)\s*\}""", RegexOption.IGNORE_CASE)
+
+    /** `{Text}`, `{ TEXT }` and the like are meant as placeholders too */
+    fun normalizePlaceholders(prompt: String): String =
+        PLACEHOLDERS.replace(prompt) { "{" + it.groupValues[1].lowercase() + "}" }
+
     fun usesClipboard(prompt: String) = prompt.contains(CLIPBOARD_PLACEHOLDER)
 
     /** Text in the clipboard, or null if it is empty or can't be read */
