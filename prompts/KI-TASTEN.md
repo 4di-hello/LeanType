@@ -32,7 +32,7 @@ Kürze jeden Satz, ohne Sätze oder Informationen wegzulassen. Schreibe in ganze
 
 ## Taste 3 – Fa (Antwort entwerfen)
 
-Chip: **nur** Ergebnis anfügen (Text bearbeiten aus)
+Chip: **nur** Ergebnis anfügen oder Ergebnis voranstellen (Text bearbeiten aus, sonst schreibt das Modell die Nachricht um statt zu antworten)
 
 ```
 Schreibe meine kurze Antwort auf eine Nachricht. Beantworte jede Frage mit einem eigenen Satz. Tage, Uhrzeiten, Orte und Preise ersetze immer durch [?].
