@@ -77,6 +77,7 @@ object ProofreadHelper {
         noTextErrorResId: Int,
         errorResId: Int,
         skipModelCheck: Boolean = false,
+        allowEmptyInput: Boolean = false,
         apiCall: suspend (ProofreadService) -> Result<String>,
         onSuccess: (String) -> Unit,
         onError: (String) -> Unit
@@ -94,7 +95,7 @@ object ProofreadHelper {
             return
         }
 
-        if (text.isBlank()) {
+        if (!allowEmptyInput && text.isBlank()) {
             mainHandler.post {
                 KeyboardSwitcher.getInstance().showToast(
                     context.getString(noTextErrorResId),
@@ -461,6 +462,7 @@ object ProofreadHelper {
         prompt: String,
         hasSelection: Boolean,
         showThinking: Boolean,
+        allowEmptyInput: Boolean = false,
         onSuccess: (String) -> Unit,
         onError: (String) -> Unit
     ) {
@@ -469,6 +471,7 @@ object ProofreadHelper {
             text = text,
             noTextErrorResId = R.string.proofread_no_text,
             errorResId = R.string.proofread_error,
+            allowEmptyInput = allowEmptyInput,
             apiCall = { service -> service.proofread(text, overridePrompt = prompt, showThinking = showThinking) },
             onSuccess = onSuccess,
             onError = onError
