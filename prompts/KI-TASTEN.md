@@ -117,4 +117,4 @@ Sehr geehrte Damen und Herren, hiermit möchte ich Sie darüber informieren, das
 
 ## Textbausteine
 
-Die Prompt-Textbausteine für den Text-Expander liegen in [textbausteine.txt](textbausteine.txt). Einfügen: Einstellungen → Textbausteine → Alle Textbausteine, ganz ans Ende tippen, Inhalt einfügen (nicht „Alles einfügen“, das ersetzt alles), Speichern.
+Die Prompt-Textbausteine für den Text-Expander liegen in [LeanType-Textbausteine.txt](LeanType-Textbausteine.txt). Einfügen: Einstellungen → Textbausteine → Alle Textbausteine, ganz ans Ende tippen, Inhalt einfügen (nicht „Alles einfügen“, das ersetzt alles), Speichern.
