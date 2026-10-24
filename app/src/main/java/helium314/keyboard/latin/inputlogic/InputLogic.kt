@@ -3081,7 +3081,7 @@ class InputLogic(
             return
         }
 
-        prompt = CustomAIKeyText.withInstructions(prompt, systemInstruction)
+        prompt = CustomAIKeyText.withInstructions(CustomAIKeyText.normalizePlaceholders(prompt), systemInstruction)
 
         val usesClipboard = CustomAIKeyText.usesClipboard(prompt)
         if (usesClipboard) {
