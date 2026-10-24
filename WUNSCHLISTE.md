@@ -20,9 +20,12 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
   - Qwen3.5 (2B/4B) lädt nicht: llama.cpp im Plugin (April 2026) lehnt die Dateien ab. Nur mit eigenem Plugin und aktueller llama.cpp – optional, falls Qwen3 nicht reicht
   - Qwen3.8-Flash-Next (125B MoE, ~100 GB) passt nicht aufs Handy
 - KI-Tasten (Benutzerdefinierte AI-Tasten):
-  - Ergebnis vor den markierten Text setzen statt dahinter (Antwort oben, Originalnachricht darunter), mit Leerzeile dazwischen
-  - `#append`: automatisch eine Leerzeile vor das Ergebnis
-  - Getestete Anweisungen (Qwen3-4B, Temperatur 0) in einer Notiz festhalten
+  - ~~Ergebnis vor den Text setzen~~ erledigt 24.10.: Chip „Ergebnis davor“ (#prepend), mit Leerzeile
+  - ~~`#append` mit Leerzeile~~ erledigt 24.10.
+  - Erledigt 24.10.: Chip-Anweisungen vor den Prompt (vorher dahinter, störte „Antwort:“ am Ende)
+  - Erledigt 24.10.: Platzhalter `{clipboard}` (Zwischenablage, auch bei leerem Feld)
+  - ~~Getestete Anweisungen festhalten~~ erledigt: `prompts/KI-TASTEN.md`
+  - PR-Kandidat: Branch `fix/ai-key-result-spacing` (Leerzeile bei #append, Anweisungen vor den Prompt), Tests grün
 - Emoji-Vorschläge zum getippten Wort: prüfen, was LeanType schon kann (`suggest_emojis`, Inline-Emoji-Suche mit Emoji-Wörterbuch), dann entscheiden
 - Getrennte Tipp-Profile pro Daumen bzw. Haltung weiter verfeinern (Idee)
 
