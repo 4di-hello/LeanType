@@ -10,7 +10,7 @@ Einstellungen → Benutzerdefinierte AI-Tasten → Taste N. Jede Taste braucht e
 - `{text}` im Prompt setzt den Text genau an diese Stelle. Ohne `{text}` wird der Text getrennt hinter den Prompt geschickt.
 - `{clipboard}` im Prompt setzt die Zwischenablage an diese Stelle (ab Build vom 24.10. abends). Funktioniert auch bei leerem Feld.
 - Chips wie „Text bearbeiten" (#editor) setzen ihre englische Anweisung **vor** den Prompt (ab Build vom 24.10. abends; vorher dahinter, was „Antwort:" am Ende störte).
-- „Ergebnis anfügen" (#append) setzt das Ergebnis mit Leerzeile hinter den Text, „Ergebnis davor" (#prepend) mit Leerzeile davor. Es geht nur eins von beiden.
+- „Ergebnis anfügen" (#append) setzt das Ergebnis mit Leerzeile hinter den Text, „Ergebnis voranstellen" (#prepend) mit Leerzeile davor. Es geht nur eins von beiden.
 - Bei Qwen3-4B hilft ein kurzes Beispiel im Prompt mehr als zusätzliche Regeln.
 - Zum Testen eine Notiz-App nehmen, keinen echten Chat.
 
