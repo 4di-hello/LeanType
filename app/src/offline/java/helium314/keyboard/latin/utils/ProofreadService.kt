@@ -370,6 +370,8 @@ class ProofreadService(private val context: Context) {
                 // Chat models get the instruction as system message and the text as user message,
                 // the few-shot examples below would end up in their answer
                 if (systemPrompt.contains("{text}")) chatFormat.build(null, systemPrompt.replace("{text}", text))
+                // no text, e.g. a custom key that only uses the clipboard: the prompt is the request
+                else if (text.isBlank()) chatFormat.build(null, systemPrompt.trim())
                 else chatFormat.build(systemPrompt.trim(), text)
             } else if (systemPrompt.contains("{text}")) {
                 systemPrompt.replace("{text}", text)
