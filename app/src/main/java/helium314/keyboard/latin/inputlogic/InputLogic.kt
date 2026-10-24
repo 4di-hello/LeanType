@@ -3150,6 +3150,10 @@ class InputLogic(
             }
         }
 
+        // a prompt with the clipboard but without {text} is complete: the text in the field only decides
+        // where the result goes, sending it too would make the model answer the wrong text
+        if (usesClipboard && !prompt.contains("{text}")) textToProcess = ""
+
         val targetEditorInfo = getCurrentInputEditorInfo()
         val targetPackage = targetEditorInfo?.packageName
         val targetFieldId = targetEditorInfo?.fieldId
