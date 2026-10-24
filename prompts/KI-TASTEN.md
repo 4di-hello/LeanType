@@ -6,10 +6,11 @@ Einstellungen → Benutzerdefinierte AI-Tasten → Taste N. Jede Taste braucht e
 
 ## Grundregeln
 
-- Die Taste verarbeitet den markierten Text, ohne Markierung den ganzen Feldinhalt. Die Zwischenablage liest sie nicht.
+- Die Taste verarbeitet den markierten Text, ohne Markierung den ganzen Feldinhalt.
 - `{text}` im Prompt setzt den Text genau an diese Stelle. Ohne `{text}` wird der Text getrennt hinter den Prompt geschickt.
-- Der Chip „Text bearbeiten" (#editor) hängt eine englische Anweisung **hinter** den Prompt. Bei Prompts mit `{text}` und „Antwort:" am Ende deshalb abwählen.
-- „Ergebnis anfügen" (#append) hängt das Ergebnis ohne Leerzeile an den Text an.
+- `{clipboard}` im Prompt setzt die Zwischenablage an diese Stelle (ab Build vom 24.10. abends). Funktioniert auch bei leerem Feld.
+- Chips wie „Text bearbeiten" (#editor) setzen ihre englische Anweisung **vor** den Prompt (ab Build vom 24.10. abends; vorher dahinter, was „Antwort:" am Ende störte).
+- „Ergebnis anfügen" (#append) setzt das Ergebnis mit Leerzeile hinter den Text, „Ergebnis davor" (#prepend) mit Leerzeile davor. Es geht nur eins von beiden.
 - Bei Qwen3-4B hilft ein kurzes Beispiel im Prompt mehr als zusätzliche Regeln.
 - Zum Testen eine Notiz-App nehmen, keinen echten Chat.
 
@@ -44,6 +45,8 @@ Antwort:
 ```
 
 Ablauf: Nachricht ins Feld einfügen, Taste tippen, Antwort steht dahinter, Nachricht oben löschen. Bei leerem Feld kommt die Beispielantwort heraus.
+
+Variante mit Zwischenablage (ab Build vom 24.10. abends): `{text}` durch `{clipboard}` ersetzen. Dann Nachricht kopieren, im leeren Antwortfeld Fa tippen, fertig.
 
 ## Taste 4 – Fz (zusammenfassen)
 
