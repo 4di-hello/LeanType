@@ -528,6 +528,7 @@ object ProofreadHelper {
         prompt: String,
         hasSelection: Boolean,
         showThinking: Boolean,
+        @Suppress("UNUSED_PARAMETER") allowEmptyInput: Boolean = false, // online, custom keys always allow an empty input
         onSuccess: (String) -> Unit,
         onError: (String) -> Unit
     ) {
