@@ -3102,6 +3102,12 @@ class InputLogic(
             shouldAppend = true
             prompt = prompt.replace("#append", "").trim()
         }
+        var shouldPrepend = false
+        if (prompt.contains("#prepend")) {
+            shouldPrepend = true
+            shouldAppend = false // the result goes before the text, not after it
+            prompt = prompt.replace("#prepend", "").trim()
+        }
 
         var showThinking = false
         if (prompt.contains("#showthought")) {
@@ -3116,6 +3122,18 @@ class InputLogic(
 
         prompt = CustomAIKeyText.withInstructions(prompt, systemInstruction)
 
+        val usesClipboard = CustomAIKeyText.usesClipboard(prompt)
+        if (usesClipboard) {
+            val clipboard = CustomAIKeyText.readClipboard(mLatinIME)
+            if (clipboard.isNullOrBlank()) {
+                KeyboardSwitcher.getInstance().showToast(mLatinIME.getString(R.string.custom_ai_key_clipboard_empty), true)
+                return
+            }
+            prompt = CustomAIKeyText.insertClipboard(prompt, clipboard)
+        }
+        // the original text stays when the result goes before or after it
+        val keepsOriginal = shouldAppend || shouldPrepend
+
         var textToProcess: String
         val hasSelection = mConnection.hasSelection()
 
@@ -3124,6 +3142,8 @@ class InputLogic(
             textToProcess = selectedText?.toString() ?: ""
             if (shouldAppend) {
                 mConnection.setSelection(mConnection.expectedSelectionEnd, mConnection.expectedSelectionEnd)
+            } else if (shouldPrepend) {
+                mConnection.setSelection(mConnection.expectedSelectionStart, mConnection.expectedSelectionStart)
             }
         } else {
             val maxChars = 60000
@@ -3150,7 +3170,12 @@ class InputLogic(
             val after = textAfter?.toString() ?: ""
             textToProcess = before + after
 
-            if (!shouldAppend) {
+            if (shouldPrepend) {
+                if (before.isNotEmpty() && mConnection.expectedSelectionStart >= before.length) {
+                    val newPos = mConnection.expectedSelectionStart - before.length
+                    mConnection.setSelection(newPos, newPos)
+                }
+            } else if (!shouldAppend) {
                 mConnection.selectAll()
             } else {
                 if (textToProcess.isNotEmpty()) {
@@ -3169,6 +3194,7 @@ class InputLogic(
         ProofreadHelper.customAsync(
             mLatinIME,
             textToProcess, prompt, hasSelection, showThinking,
+            allowEmptyInput = usesClipboard,
             onSuccess = { resultText ->
                 if (!mLatinIME.isInputViewShown || !mConnection.isConnected()) {
                     Log.w(TAG, "Input view hidden or disconnected during custom AI operation, ignoring result")
@@ -3179,9 +3205,10 @@ class InputLogic(
                     Log.w(TAG, "Target editor changed during custom AI operation, ignoring result")
                     return@customAsync
                 }
-                if (shouldAppend) {
-                    val textBefore = mConnection.getTextBeforeCursor(2, 0) ?: ""
-                    mLatinIME.onTextInput(CustomAIKeyText.separatorBefore(textBefore) + resultText.trim())
+                if (keepsOriginal) {
+                    val textBefore = mConnection.getTextBeforeCursor(SEPARATOR_CONTEXT, 0) ?: ""
+                    val textAfter = mConnection.getTextAfterCursor(SEPARATOR_CONTEXT, 0) ?: ""
+                    mLatinIME.onTextInput(CustomAIKeyText.resultToInsert(resultText, textBefore, textAfter))
                 } else if (!hasSelection) {
                     mConnection.replaceEntireText(resultText)
                 } else {
@@ -3402,6 +3429,8 @@ class InputLogic(
         private const val BACKSPACE_WORD_LOOKBACK = 200
         private val THAI_LOCALE = Locale.forLanguageTag("th")
         private val THAI_WORD_BREAK_ITERATOR = ThreadLocal.withInitial { BreakIterator.getWordInstance(THAI_LOCALE) }
+        /** characters around the cursor that decide which line breaks go around an inserted AI result */
+        private const val SEPARATOR_CONTEXT = 64
         private val CURSOR_PATTERN = java.util.regex.Pattern.compile("%cursor(\\d+)%")
 
         /**

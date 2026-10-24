@@ -244,6 +244,7 @@ fun ConfigCustomAIKeyScreen(
     val modifiersList = listOf(
         "#outputonly" to stringResource(R.string.custom_ai_keyword_outputonly_label),
         "#append" to stringResource(R.string.custom_ai_keyword_append_label),
+        "#prepend" to stringResource(R.string.custom_ai_keyword_prepend_label),
         "#showthought" to stringResource(R.string.custom_ai_keyword_showthought_label)
     )
 
@@ -268,6 +269,7 @@ fun ConfigCustomAIKeyScreen(
         "#generate" to stringResource(R.string.custom_ai_keyword_generate_desc),
         "#outputonly" to stringResource(R.string.custom_ai_keyword_outputonly_desc),
         "#append" to stringResource(R.string.custom_ai_keyword_append_desc),
+        "#prepend" to stringResource(R.string.custom_ai_keyword_prepend_desc),
         "#showthought" to stringResource(R.string.custom_ai_keyword_showthought_desc)
     )
 
@@ -419,7 +421,13 @@ fun ConfigCustomAIKeyScreen(
                             selectedKeywords = if (isSelected) {
                                 selectedKeywords - keyword
                             } else {
-                                selectedKeywords + keyword
+                                // the result goes either after or before the text
+                                val exclusive = when (keyword) {
+                                    "#append" -> "#prepend"
+                                    "#prepend" -> "#append"
+                                    else -> null
+                                }
+                                selectedKeywords - setOfNotNull(exclusive) + keyword
                             }
                         },
                         label = { Text(label) },
