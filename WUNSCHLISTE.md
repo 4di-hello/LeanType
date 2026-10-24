@@ -20,7 +20,7 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
   - Qwen3.5 (2B/4B) lädt nicht: llama.cpp im Plugin (April 2026) lehnt die Dateien ab. Nur mit eigenem Plugin und aktueller llama.cpp – optional, falls Qwen3 nicht reicht
   - Qwen3.8-Flash-Next (125B MoE, ~100 GB) passt nicht aufs Handy
 - KI-Tasten (Benutzerdefinierte AI-Tasten):
-  - ~~Ergebnis vor den Text setzen~~ erledigt 24.10.: Chip „Ergebnis davor“ (#prepend), mit Leerzeile
+  - ~~Ergebnis vor den Text setzen~~ erledigt 24.10.: Chip „Ergebnis voranstellen“ (#prepend), mit Leerzeile
   - ~~`#append` mit Leerzeile~~ erledigt 24.10.
   - Erledigt 24.10.: Chip-Anweisungen vor den Prompt (vorher dahinter, störte „Antwort:“ am Ende)
   - Erledigt 24.10.: Platzhalter `{clipboard}` (Zwischenablage, auch bei leerem Feld)
