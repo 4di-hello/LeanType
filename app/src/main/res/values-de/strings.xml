@@ -1447,7 +1447,7 @@
     <string name="custom_ai_keyword_generate_label">Generieren</string>
     <string name="custom_ai_keyword_outputonly_label">Nur Ergebnis</string>
     <string name="custom_ai_keyword_append_label">Ergebnis anfügen</string>
-    <string name="custom_ai_keyword_prepend_label">Ergebnis davor</string>
+    <string name="custom_ai_keyword_prepend_label">Ergebnis voranstellen</string>
     <string name="custom_ai_keyword_showthought_label">Gedankengang anzeigen</string>
     <string name="custom_ai_keyword_editor_desc">Freie Bearbeitung und Formatierung des Textes gemäß Aufforderung.</string>
     <string name="custom_ai_keyword_proofread_desc">Korrigiert Grammatik, Rechtschreibung und Zeichensetzung.</string>
