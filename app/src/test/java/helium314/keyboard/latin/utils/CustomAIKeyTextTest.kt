@@ -1,0 +1,52 @@
+// SPDX-License-Identifier: GPL-3.0-only
+package helium314.keyboard.latin.utils
+
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
+import org.junit.Test
+
+class CustomAIKeyTextTest {
+
+    @Test
+    fun instructionsGoBeforeThePrompt() {
+        val prompt = "Nachricht: {text}\nAntwort:"
+        assertEquals("Output ONLY the result.\n\n$prompt", CustomAIKeyText.withInstructions(prompt, " Output ONLY the result."))
+    }
+
+    @Test
+    fun noInstructionsKeepThePrompt() {
+        assertEquals("Fasse zusammen.", CustomAIKeyText.withInstructions("Fasse zusammen.", ""))
+    }
+
+    @Test
+    fun clipboardIsInserted() {
+        val prompt = "Nachricht: {clipboard}\nAntwort:"
+        assertTrue(CustomAIKeyText.usesClipboard(prompt))
+        assertFalse(CustomAIKeyText.usesClipboard("Nachricht: {text}"))
+        assertEquals("Nachricht: Hast du Zeit?\nAntwort:", CustomAIKeyText.insertClipboard(prompt, "  Hast du Zeit?\n"))
+    }
+
+    @Test
+    fun appendedResultStartsANewParagraph() {
+        assertEquals("\n\nAntwort", CustomAIKeyText.resultToInsert("Antwort", "Gruß, Sandra", ""))
+        assertEquals("\nAntwort", CustomAIKeyText.resultToInsert("Antwort", "Gruß, Sandra\n", ""))
+        assertEquals("Antwort", CustomAIKeyText.resultToInsert("Antwort", "Gruß, Sandra\n\n", ""))
+    }
+
+    @Test
+    fun prependedResultIsFollowedByANewParagraph() {
+        assertEquals("Antwort\n\n", CustomAIKeyText.resultToInsert("Antwort", "", "Hallo Max"))
+        assertEquals("Antwort\n", CustomAIKeyText.resultToInsert("Antwort", "", "\nHallo Max"))
+    }
+
+    @Test
+    fun resultInEmptyFieldHasNoBreaks() {
+        assertEquals("Antwort", CustomAIKeyText.resultToInsert("  Antwort\n", "", ""))
+    }
+
+    @Test
+    fun resultBetweenTextIsSeparatedOnBothSides() {
+        assertEquals("\n\nAntwort\n\n", CustomAIKeyText.resultToInsert("Antwort", "erster Absatz", "zweiter Absatz"))
+    }
+}
