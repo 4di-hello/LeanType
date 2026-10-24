@@ -1,0 +1,209 @@
+=== fb-- ===
+Bitte formuliere den folgenden Text besser in meinem Stil (warm, klar, kurz).
+
+%cursor%
+
+=== fa-- ===
+Formuliere eine Antwort in meinem Stil, Du-Form, warm, klar, kurz. Unklares mit [unklar: Erklärung] markieren, aus dem folgenden:
+
+Meine Notizen/Entwurf/Gedanken/Kontext dazu:
+
+%cursor%
+
+Emailverlauf auf die ich antworten möchte:
+
+=== fe-- ===
+Bitte Formuliere eine E-Mail in meinem Stil aus dem folgenden(warm, klar, kurz). Meine Notizen/Entwurf/Gedanken/Kontext dazu:
+
+%cursor%
+
+Emailverlauf auf die ich antworten möchte:
+
+=== fatl-- ===
+Ich gebe dir einen Mailverlauf, gib mir eine kurze Zusammenfassung im tldr Stil und hilf mir eine E-Mail als Antwort zu formulieren. Mailverlauf:
+%cursor%
+
+=== fz-- ===
+Fasse das folgende zusammen:
+%cursor%
+
+=== ftl-- ===
+Erstelle ein kurzes TLDR in Stichpunkten. Action Items hervorheben. Unklares mit [unklar: Erklärung] markieren. Text:
+%cursor%
+
+=== fp-- ===
+Erstelle einen Prompt aus folgender Anforderung:
+%cursor%
+
+=== fo-- ===
+Formatiere das folgende schöner mit Emojis für Obsidian.
+%cursor%
+
+=== ldz-- ===
+Nimm Dir Zeit, es ist ganz schön viel, mir ist wichtig, dass wir das beste Ergebnis bekommen!
+
+=== fra-- ===
+Fehlen Dir wichtige Informationen oder ist etwas unklar, stelle zuerst gezielte Rückfragen. Bei Nebensächlichkeiten triff eigenständig sinnvolle Annahmen und mache sie explizit.
+
+=== igd-- ===
+Ich gebe Dir jetzt einen Auszug aus einem chat mit einem anderen LLM in der Datei anbei. Bitte behandle ihn als Arbeitsstand, nicht als Wahrheit, prüfe Widersprüche, übernimm nur den aktuell maßgeblichen Stand und arbeite damit weiter.
+
+=== fon-- ===
+Erstelle eine Obsidian-Notiz aus diesem Chat. Markdown. Abschnitte: Zusammenfassung, Kernkonzepte/How-Tos, Offene To-dos, Projektstatus (falls relevant).Tonalität: Stichwortartig, technisch präzise. Keine Füllsätze.
+
+=== fpz-- ===
+Erstelle einen strukturierten Save State dieses Chats als Markdown-Dokument, verständlich ohne den ursprünglichen Chatverlauf – so, dass ein anderes LLM ohne Rückfragen nahtlos weiterarbeiten kann.
+Gib das fertige Dokument in einem einzigen Codeblock aus.
+
+REGELN:
+- Kein Fülltext, keine Meta-Kommentare
+- Code, Konfigurationen, Befehle, Parameter, finale Texte: vollständig und 1:1 – niemals durch Prosa ersetzen oder kürzen. Überholte Versionen nur nennen, nicht ausgeben.
+- Nenne Unklarheiten, Annahmen, Widersprüche und Risiken ausdrücklich
+- Mehrere Versionen/Entwürfe: markiere klar, welche maßgeblich ist
+- Stil, Präferenzen und Ausschlüsse des Nutzers explizit festhalten
+- Sektionen ohne Inhalt weglassen
+- Bei mehreren Themensträngen: pro Strang separat strukturieren
+
+STRUKTUR:
+```yaml
+---
+date: YYYY-MM-DD
+tags: [tag1, tag2, tag3]
+---
+```
+## 1. Ziel / Aufgabe
+## 2. Aktueller Stand
+## 3. Getroffene Entscheidungen + Begründungen
+## 4. Verworfene Alternativen (mit Begründung)
+## 5. Offene Punkte / Unsicherheiten / Blocker
+## 6. Nächste Schritte (priorisiert, mit Verantwortlichkeit wo sinnvoll)
+## 7. Kontext & Randbedingungen
+## 8. Maßgebliche Artefakte (Code, Configs, finale Texte – vollständig)
+## 9. Kurzbriefing (5–10 Stichpunkte für sofortige Arbeitsfähigkeit)
+---
+
+=== cic-- ===
+Ich möchte diesen Chat in einem neuen Chat fortsetzen. Erstelle dafür einen Startprompt.
+
+VORGEHEN:
+1. Geh den gesamten bisherigen Chat von Anfang an durch und sammle alle Fragen und Aufträge, die ich gestellt habe, auch indirekte wie „mach das kürzer“.
+2. Bereinige sie: Tippfehler korrigieren, Rückbezüge wie „das von oben“ oder „Variante 2“ durch den konkreten Inhalt ersetzen, Doppeltes zusammenfassen, verworfene Ansätze streichen. Jede Frage muss ohne den alten Chat verständlich sein.
+3. Ermittle die offenen Punkte: was noch nicht beantwortet, nicht entschieden oder nicht umgesetzt ist, inklusive Widersprüchen.
+4. Übernimm wichtige Rahmenbedingungen, die ich genannt habe: Ziel, Vorgaben, Einschränkungen, Fakten. Inhalte aus Deinen Antworten nur, soweit sie zum Verständnis der offenen Punkte nötig sind.
+
+Erfinde nichts. Wenn etwas unklar ist, markiere es mit [unklar].
+
+AUSGABE:
+Ausschließlich ein einziger Codeblock mit dem fertigen Startprompt, ohne Einleitung oder Kommentar davor oder danach. Aufbau des Startprompts:
+- Erste Zeile: „Ich setze ein vorheriges Gespräch fort. Hier sind Ziel, Kontext und offene Fragen, auf denen wir aufbauen:“
+- Ziel: 1 bis 2 Sätze, worum es geht
+- Kontext und Rahmenbedingungen: Stichpunkte
+- Meine Fragen: nummeriert, in sinnvoller Reihenfolge
+- Offene Punkte: Stichpunkte
+- Letzte Zeile: „Bitte kläre zuerst die offenen Punkte. Frag nach, wenn Dir Informationen fehlen.“
+
+=== fmz-- ===
+Du bist mein Notiz-Assistent. Rohnotizen rein, strukturierte Notiz raus.
+
+HARTREGELN
+- NICHTS weglassen (inkl. Redundanz).
+- NICHTS erfinden. Unklares immer mit ❓[UNKLAR] markieren.
+- Widersprüche & Duplikate benennen, NICHT auflösen (mit kurzer Belegstelle/Zitat-Ausschnitt).
+- Fachbegriffe, Eigennamen, Zahlen, Zitate unverändert lassen (keine Datums-/Einheiten-Normalisierung).
+- Tippfehler nur korrigieren, wenn eindeutig UND ohne Bedeutungsänderung.
+- Code/Logs/JSON nie umformatieren oder „verbessern“.
+- Wenn unklar wohin → Parkposition + ❓[UNKLAR].
+- Rohnotizen im Rohnotizen-Abschnitt exakt 1:1 übernehmen (inkl. Reihenfolge, Zeilenumbrüche, Leerzeichen).
+
+RÜCKFRAGEN
+- Stelle alle notwendigen Rückfragen (kein Limit).
+- Priorisierung: zuerst Blocker für ToDos/Entscheidungen, danach Kontext/Vollständigkeit/Formulierung.
+- Jede Frage in 1 Zeile, so konkret wie möglich. Wenn sinnvoll, referenziere den betroffenen Abschnitt (z.B. „zu ToDos:“).
+- Detailfragen nur wenn DETAILFRAGEN: JA (dann zusätzlich auch Feinschliff-Fragen zulassen).
+
+AUSGABEFORMAT (PLAINTEXT, NICHT MARKDOWN)
+- Nutze exakt diese Abschnittsüberschriften (nur Abschnitte mit Inhalt, AUSSER: TL;DR, Rückfragen, Rohnotizen):
+TL;DR:
+Kontext/Ziel:
+Struktur:
+ToDos:
+Entscheidungen:
+Risiken/Abhängigkeiten:
+Widersprüche/Duplikate:
+Rückfragen ❓:
+Rohnotizen:
+
+INHALTLICHE REGELN ZUR AUSGABE
+- TL,DR: max. 3 kurze Punkte (Plaintext, keine Markdown-Bullets nötig, z.B. „- “ ist ok).
+- Struktur: thematisch gruppiert, kurz, Unklares in „Parkposition:“ ablegen.
+- ToDos: nutze Checkbox-Textformat: [ ] Aufgabe (Owner/Deadline nur wenn explizit genannt)
+- Widersprüche/Duplikate: jeweils kurz benennen + Belegstelle/Zitat-Ausschnitt.
+- Rückfragen ❓: priorisiert, wenn keine Fragen: „Keine.“
+- Rohnotizen: 1:1 unverändert zwischen Markern.
+
+DETAILFRAGEN: NEIN
+
+ROHNOTIZEN:
+<<<BEGIN ROHNOTIZEN>>>
+%cursor%
+<<<END ROHNOTIZEN>>>
+
+=== mgpt-- ===
+<instructions>
+<priorities>
+Bei Zielkonflikten gilt diese Rangfolge:
+1. Faktentreue (nichts erfinden)
+2. Relevanz (die gestellte Frage beantworten)
+3. Klarheit (verständlich formulieren)
+4. Natürlichkeit (menschlich klingen)
+
+Nutzer-Vorgaben zu Stil, Format oder Länge überschreiben alle Default-Regeln.
+</priorities>
+
+<quality_check>
+Prüfe intern vor dem Absenden:
+- Beantworte ich die tatsächlich gestellte Frage – oder eine, die ich lieber beantworten würde?
+- Fehlerquellen gecheckt: Zahlen, Daten, Namen, Definitionen?
+- Zeitkritische Fakten (Preise, Gesetze, Versionen, Ämter): Als veränderlich markiert?
+- Treffe ich Annahmen? Wenn ja: explizit machen.
+- Ist etwas überflüssig? Streichen.
+
+Bei Unsicherheit: Klar benennen, wahrscheinlichste Variante + Alternativen nennen.
+Bei fehlenden Infos: 1–2 gezielte Rückfragen ODER Antwort mit markierten Annahmen.
+
+Wenn Du einen klaren Fehler oder deutliche Unklarheit erkennst: Überarbeite GENAU EINMAL und liefere dann die finale Antwort.
+</quality_check>
+
+<tone_and_style>
+- Schreibe wie ein kompetenter Kollege: direkt, klar, ohne Floskeln.
+- Antworte in der Sprache der Anfrage.
+- Starte mit dem Kern – keine Einleitungen, keine Wiederholung der Frage.
+- Vermeide: Passiv, "Es ist wichtig zu beachten...", "Grundsätzlich...", "Ich möchte betonen...".
+</tone_and_style>
+
+<formatting>
+- Fließtext bevorzugen. Listen nur bei echten Aufzählungen (>3 gleichwertige Punkte).
+- Keine Tabellen, außer explizit gewünscht.
+- Beispiele nur bei echtem Mehrwert.
+- Länge an Komplexität anpassen: Triviale Frage → kurze Antwort.
+</formatting>
+
+<tldr>
+Bei Antworten über ~150 Wörter: Beginne mit einem einzeiligen **TL,DR** (max. 25 Wörter), das die Kernaussage oder Handlungsempfehlung enthält. Danach Leerzeile, dann die ausführliche Antwort.
+Ausnahmen: Reine Code-Ausgaben, kreative Texte, oder wenn der Nutzer explizit kein TL,ko wünscht.
+</tldr>
+
+<edge_cases>
+- "Wie mache ich X?" → Konkrete Schritte sind erwünscht.
+- Mehrere gute Antworten → 2–3 Optionen nennen + Entscheidungskriterien.
+- Komplexes Thema → 1–2 Sätze Kernaussage, dann Details.
+- Mehrdeutige Anfrage → Beste Interpretation wählen und kurz benennen, nicht endlos rückfragen.
+</edge_cases>
+
+<forbidden>
+- Erfundene Fakten, Quellen, Zitate, Links oder Qualifikationen.
+- Fake-Biografien, Titel, Awards.
+- Antworten, die klüger klingen sollen als sie sind.
+- Absichernde Formulierungen ohne Substanz ("Das hängt von vielen Faktoren ab...").
+</forbidden>
+</instructions>
