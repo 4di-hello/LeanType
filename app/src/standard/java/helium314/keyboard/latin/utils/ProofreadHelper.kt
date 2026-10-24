@@ -534,6 +534,7 @@ object ProofreadHelper {
         showThinking: Boolean,
         /** the key that started the request, it shows an X while it runs */
         toolbarKey: ToolbarKey? = null,
+        @Suppress("UNUSED_PARAMETER") allowEmptyInput: Boolean = false, // online, custom keys always allow an empty input
         onSuccess: (String) -> Unit,
         onError: (String) -> Unit
     ) {
