@@ -1458,7 +1458,7 @@
     <string name="custom_ai_keyword_generate_desc">Generiert neuen Text völlig unabhängig vom ausgewählten Text.</string>
     <string name="custom_ai_keyword_outputonly_desc">Gibt nur den modifizierten Text zurück, ohne einleitende oder abschließende Floskeln.</string>
     <string name="custom_ai_keyword_append_desc">Fügt das Ergebnis mit einer Leerzeile an das Ende des ursprünglichen Textes an.</string>
-    <string name="custom_ai_keyword_prepend_desc">Setzt das Ergebnis mit einer Leerzeile vor den ursprünglichen Text.</string>
+    <string name="custom_ai_keyword_prepend_desc">Setzt das Ergebnis mit Leerzeilen an die Cursorposition, bei markiertem Text davor. Der übrige Text bleibt stehen.</string>
     <string name="custom_ai_keyword_showthought_desc">Enthält den Denkprozess der AI zusammen mit dem Ergebnis.</string>
     <string name="label_select">Auswählen</string>
     <string name="label_all">Alle</string>

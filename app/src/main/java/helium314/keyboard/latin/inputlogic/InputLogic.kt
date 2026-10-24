@@ -3164,12 +3164,7 @@ class InputLogic(
             textToProcess = before + after
 
             if (shouldPrepend) {
-                // to the start of the field; the expected cursor position can be outdated, e.g. after pasting
-                if (before.isNotEmpty()) {
-                    val newPos = if (before.length < maxChars) 0
-                        else (mConnection.expectedSelectionStart - before.length).coerceAtLeast(0)
-                    mConnection.setSelection(newPos, newPos)
-                }
+                // the result goes where the cursor is, the text after the cursor stays below it
             } else if (!shouldAppend) {
                 mConnection.selectAll()
             } else {
