@@ -100,7 +100,7 @@ fun SuggestionsScreen(
             Settings.PREF_SUGGEST_SCREENSHOTS,
             if (prefs.getBoolean(Settings.PREF_SUGGEST_SCREENSHOTS, Defaults.PREF_SUGGEST_SCREENSHOTS))
                 Settings.PREF_COMPRESS_SCREENSHOTS else null,
-            Settings.PREF_AUTO_READ_OTP,
+            // Settings.PREF_AUTO_READ_OTP,
             Settings.PREF_INLINE_MATH_CALCULATION,
             Settings.PREF_USE_APPS,
         )
@@ -284,6 +284,7 @@ fun createSuggestionsSettings(context: Context) = listOf(
     ) {
         SwitchPreference(it, Defaults.PREF_COMPRESS_SCREENSHOTS)
     },
+    /*
     Setting(context, Settings.PREF_AUTO_READ_OTP,
         R.string.auto_read_otp, R.string.auto_read_otp_summary
     ) { setting ->
@@ -344,6 +345,7 @@ fun createSuggestionsSettings(context: Context) = listOf(
             }
         )
     },
+    */
     Setting(context, Settings.PREF_INLINE_MATH_CALCULATION,
         R.string.pref_inline_calculator_suggestions, R.string.pref_inline_calculator_suggestions_summary
     ) {

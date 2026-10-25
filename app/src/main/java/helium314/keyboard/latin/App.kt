@@ -49,7 +49,8 @@ class App : Application(), Configuration.Provider {
         Defaults.initDynamicDefaults(this)
         LayoutUtilsCustom.removeMissingLayouts(this) // only after version upgrade
         SupportedEmojis.load(this)
-        PermissionsUtil.updateNotificationListenerComponent(this, prefs().getBoolean(Settings.PREF_AUTO_READ_OTP, false))
+        // Disabled: OtpNotificationListenerService removed to prevent Play Protect installation blocks
+        // PermissionsUtil.updateNotificationListenerComponent(this, prefs().getBoolean(Settings.PREF_AUTO_READ_OTP, false))
         helium314.keyboard.latin.gif.GifPluginManager.get(this).start()
 
         val packageInfo = packageManager.getPackageInfo(packageName, 0)
