@@ -27,8 +27,8 @@ import helium314.keyboard.settings.screens.createToolbarSettings
 import helium314.keyboard.latin.voice.createVoiceSettings
 
 class SettingsContainer(context: Context) {
-    private val entries = createSettings(context)
-    private val list = entries.map { it.first }
+    private val settingsWithScreens = createSettings(context)
+    private val list = settingsWithScreens.map { it.first }
     private val map: Map<String, Setting> = HashMap<String, Setting>(list.size).apply {
         list.forEach {
             putIfAbsent(it.key, it)
@@ -36,7 +36,7 @@ class SettingsContainer(context: Context) {
     }
     /** settings screen (destination) that shows a setting, for jumping there from the search */
     private val screens: Map<String, String> = HashMap<String, String>().apply {
-        entries.forEach { (setting, destination) -> if (destination != null) putIfAbsent(setting.key, destination) }
+        settingsWithScreens.forEach { (setting, destination) -> if (destination != null) putIfAbsent(setting.key, destination) }
     }
 
     operator fun get(key: Any): Setting? = map[key]
