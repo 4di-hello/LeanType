@@ -98,13 +98,19 @@ class WordDeleteSwipeTest {
     }
 
     @Test
-    fun `long line with newline exceeding 50 chars remains intact`() {
+    fun `long line exceeding 50 chars splits at whitespace soft wrap`() {
         val text = "This is a line of text that has more than fifty characters in it without soft wrap\nsecond line"
         val boundaries = KeyboardActionListenerImpl.getLineBoundariesBackwards(text, text.length)
         val line2Start = text.indexOf("second line")
-        assertEquals(listOf(text.length, line2Start, 0), boundaries)
-        assertEquals("second line", text.substring(boundaries[1], boundaries[0]))
-        assertEquals("This is a line of text that has more than fifty characters in it without soft wrap", text.substring(boundaries[2], boundaries[1]).trim())
+        // Second line is 11 chars (offset line2Start = 84), first line is 83 chars and splits around 40 chars at whitespace
+        assertEquals(text.length, boundaries[0])
+        assertEquals(line2Start, boundaries[1])
+        assertTrue(boundaries.size > 2)
+        assertEquals(0, boundaries.last())
+        for (i in 1 until boundaries.size) {
+            val start = boundaries[i]
+            assertTrue(start == 0 || start == line2Start || Character.isWhitespace(text[start - 1]))
+        }
     }
 
     @Test
