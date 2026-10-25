@@ -6,7 +6,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="spoken_use_headphones">"插入耳机可听到输入密码时的按键提示音。"</string>
     <string name="spoken_current_text_is">"当前文字为%s"</string>
-    <string name="spoken_no_text_entered">"未输入文字"</string>
     <string name="spoken_auto_correct">"按<xliff:g id="KEY_NAME">%1$s</xliff:g>键可将<xliff:g id="ORIGINAL_WORD">%2$s</xliff:g>更正为<xliff:g id="CORRECTED_WORD">%3$s</xliff:g>"</string>
     <string name="spoken_auto_correct_obscured">"按<xliff:g id="KEY_NAME">%1$s</xliff:g>键可进行自动更正"</string>
     <string name="spoken_empty_suggestion">"没有任何建议"</string>

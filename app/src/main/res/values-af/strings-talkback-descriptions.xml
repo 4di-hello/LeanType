@@ -6,7 +6,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="spoken_use_headphones">"Koppel \'n kopstuk om te hoor hoe wagwoordsleutels hardop gesê word."</string>
     <string name="spoken_current_text_is">"Huidige teks is %s"</string>
-    <string name="spoken_no_text_entered">"Geen teks is ingevoer nie"</string>
     <string name="spoken_auto_correct">"<xliff:g id="KEY_NAME">%1$s</xliff:g> korrigeer <xliff:g id="ORIGINAL_WORD">%2$s</xliff:g> na <xliff:g id="CORRECTED_WORD">%3$s</xliff:g>"</string>
     <string name="spoken_auto_correct_obscured">"<xliff:g id="KEY_NAME">%1$s</xliff:g> voer outokorrigering uit"</string>
     <string name="spoken_empty_suggestion">"Geen voorstel nie"</string>

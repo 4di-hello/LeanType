@@ -6,7 +6,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="spoken_use_headphones">"Pasang headset untuk mendengar tombol sandi yang diucapkan dengan lantang."</string>
     <string name="spoken_current_text_is">"Teks saat ini adalah %s"</string>
-    <string name="spoken_no_text_entered">"Tidak ada teks yang dimasukkan"</string>
     <string name="spoken_auto_correct">"<xliff:g id="KEY_NAME">%1$s</xliff:g> mengoreksi <xliff:g id="ORIGINAL_WORD">%2$s</xliff:g> menjadi <xliff:g id="CORRECTED_WORD">%3$s</xliff:g>"</string>
     <string name="spoken_auto_correct_obscured">"<xliff:g id="KEY_NAME">%1$s</xliff:g> melakukan koreksi otomatis"</string>
     <string name="spoken_empty_suggestion">"Tidak ada saran"</string>

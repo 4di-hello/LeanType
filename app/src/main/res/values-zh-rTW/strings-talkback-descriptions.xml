@@ -6,7 +6,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="spoken_use_headphones">"連接耳機即可聽取系統朗讀密碼按鍵。"</string>
     <string name="spoken_current_text_is">"目前文字為 %s"</string>
-    <string name="spoken_no_text_entered">"未輸入文字"</string>
     <string name="spoken_auto_correct">"按下「<xliff:g id="KEY_NAME">%1$s</xliff:g>」可將「<xliff:g id="ORIGINAL_WORD">%2$s</xliff:g>」修正為「<xliff:g id="CORRECTED_WORD">%3$s</xliff:g>」"</string>
     <string name="spoken_auto_correct_obscured">"按下「<xliff:g id="KEY_NAME">%1$s</xliff:g>」可執行自動修正"</string>
     <string name="spoken_empty_suggestion">"沒有任何建議"</string>

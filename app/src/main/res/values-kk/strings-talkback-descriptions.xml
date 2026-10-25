@@ -6,7 +6,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="spoken_use_headphones">"Дауыстап айтылған құпия сөз пернелерін есту үшін гарнитураны қосыңыз."</string>
     <string name="spoken_current_text_is">"Ағымдағы мәтін – %s"</string>
-    <string name="spoken_no_text_entered">"Мәтін енгізілмеген"</string>
     <string name="spoken_auto_correct">"<xliff:g id="KEY_NAME">%1$s</xliff:g> <xliff:g id="ORIGINAL_WORD">%2$s</xliff:g> дегенді <xliff:g id="CORRECTED_WORD">%3$s</xliff:g> деп түзетеді"</string>
     <string name="spoken_auto_correct_obscured">"<xliff:g id="KEY_NAME">%1$s</xliff:g> автоматты түрде түзетуді орындайды"</string>
     <string name="spoken_empty_suggestion">"Ұсыныс жоқ"</string>
