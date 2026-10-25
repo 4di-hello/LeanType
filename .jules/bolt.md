@@ -27,3 +27,7 @@
 ## 2024-05-18 - Optimize Regex pattern detection in DictionaryFacilitatorImpl
 **Learning:** `DictionaryFacilitatorImpl.isRegexPattern` used chained `String.contains()` and `String.startsWith()` calls, which internally execute full loops over the string (or delegate to regex). Replacing these chained calls with a single manual O(N) iteration reduces overhead and prevents repeatedly traversing the string.
 **Action:** Replace chained string detection methods (`contains`, `startsWith`, `endsWith`) with a single manual loop over the string's indices when checking multiple characters in performance hot paths.
+
+## 2024-05-18 - Cache Drawables in RecyclerView Adapters
+**Learning:** `ClipboardAdapter` was allocating new `GradientDrawable` and `RippleDrawable` instances inside `onBindViewHolder` hot-paths (`HeaderViewHolder.bind` and `ClipViewHolder.setContent`). Since these methods are called frequently during scrolling, creating UI objects repeatedly causes unnecessary garbage collection pressure and scrolling jank.
+**Action:** Always initialize and cache static UI components like backgrounds and drawables in the `ViewHolder`'s `init` block rather than recreating them during `onBindViewHolder`.
