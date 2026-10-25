@@ -31,3 +31,7 @@
 ## 2024-05-18 - Cache Drawables in RecyclerView Adapters
 **Learning:** `ClipboardAdapter` was allocating new `GradientDrawable` and `RippleDrawable` instances inside `onBindViewHolder` hot-paths (`HeaderViewHolder.bind` and `ClipViewHolder.setContent`). Since these methods are called frequently during scrolling, creating UI objects repeatedly causes unnecessary garbage collection pressure and scrolling jank.
 **Action:** Always initialize and cache static UI components like backgrounds and drawables in the `ViewHolder`'s `init` block rather than recreating them during `onBindViewHolder`.
+
+## 2024-05-18 - Optimize Regex split overhead
+**Learning:** `LanguageDetector.detectByHeuristics` used `text.lowercase().split(Regex("[^\\p{L}]+")).filter { it.length >= 2 }`. While the Regex was pre-compiled, the split and filter operations still allocated intermediate lists and required regex engine execution, causing GC pressure in a frequently invoked text processing path.
+**Action:** Replace `Regex.split` combined with `.filter` in hot paths with manual O(N) string index iteration using character checks (like `char.isLetter()`) and a `StringBuilder` to eliminate regex execution and avoid allocating intermediate collections.
