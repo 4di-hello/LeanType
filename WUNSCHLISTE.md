@@ -27,6 +27,10 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
   - ~~Getestete Anweisungen festhalten~~ erledigt: `prompts/KI-TASTEN.md`
   - PR #725 bei LeanType (24.10.): Branch `fix/ai-key-result-spacing` (Leerzeile bei #append, Anweisungen vor den Prompt)
   - Antwort-Tasten (Fa) ohne „Text bearbeiten“: dessen Anweisung lässt das Modell die Nachricht umschreiben statt zu antworten
+- Erledigt 25.10.: Löschen per Wischen mit echten Bildschirmzeilen (übernommen aus PR #716 von Zokii0, Schalter „Genaue Zeilen …“ unter Gesten-Tippen)
+- Erledigt 25.10.: Einstellungssuche – langer Druck auf ein Ergebnis springt zur Option (scrollt, klappt auf, hebt hervor)
+- Fremde PRs geprüft 25.10.: #434 (Screenshot-Absturz) schon in LeanType enthalten; #574 (Wörtlich-Tippen) nicht nötig, Autokorrektur-Knopf reicht; #571 offen
+- Screenshots in der Zwischenablage: nur mit Fotos-Berechtigung „Alle erlauben“ und Tastatur innerhalb von 5 Minuten geöffnet; Idee: ältere Screenshots beim Öffnen des Verlaufs einsammeln
 - Emoji-Vorschläge zum getippten Wort: prüfen, was LeanType schon kann (`suggest_emojis`, Inline-Emoji-Suche mit Emoji-Wörterbuch), dann entscheiden
 - Getrennte Tipp-Profile pro Daumen bzw. Haltung weiter verfeinern (Idee)
 
