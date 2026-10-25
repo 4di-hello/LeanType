@@ -3,7 +3,12 @@ package helium314.keyboard.settings
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -105,7 +110,19 @@ fun SearchSettingsScreen(
                         result.filter { it.second.isNotEmpty() }
                     }
 
+                    // jump from a long press in the search results: scroll to the setting and highlight it
+                    val listState = androidx.compose.foundation.lazy.rememberLazyListState()
+                    var highlightKey by remember { mutableStateOf<String?>(null) }
+                    LaunchedEffect(groups) {
+                        val jumpKey = SettingsJump.take(groups.flatMap { it.second }) ?: return@LaunchedEffect
+                        val index = groups.indexOfFirst { jumpKey in it.second }
+                        highlightKey = jumpKey
+                        listState.animateScrollToItem(index + if (headerContent != null) 1 else 0)
+                        kotlinx.coroutines.delay(2500)
+                        highlightKey = null
+                    }
                     LazyColumn(
+                        state = listState,
                         modifier = Modifier
                             .padding(innerPadding)
                             .fillMaxSize(),
@@ -129,6 +146,7 @@ fun SearchSettingsScreen(
                                     // sections with a title can be collapsed, this is remembered
                                     val sectionId = titleRes?.let { "$title/" + runCatching { context.resources.getResourceEntryName(it) }.getOrDefault(it.toString()) }
                                     var collapsed by remember(sectionId) { mutableStateOf(sectionId != null && isSectionCollapsed(context, sectionId)) }
+                                    LaunchedEffect(highlightKey) { if (highlightKey != null && highlightKey in keys) collapsed = false }
                                     if (titleRes != null) {
                                         androidx.compose.foundation.layout.Row(
                                             verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
@@ -153,7 +171,14 @@ fun SearchSettingsScreen(
                                     if (!collapsed) {
                                         keys.forEach { key ->
                                             androidx.compose.runtime.key(key) {
-                                                SettingsActivity.settingsContainer[key]?.Preference()
+                                                val highlight by androidx.compose.animation.animateColorAsState(
+                                                    if (key == highlightKey) MaterialTheme.colorScheme.primaryContainer
+                                                    else androidx.compose.ui.graphics.Color.Transparent,
+                                                    label = "jump highlight"
+                                                )
+                                                Box(Modifier.background(highlight)) {
+                                                    SettingsActivity.settingsContainer[key]?.Preference()
+                                                }
                                             }
                                         }
                                     } else {
@@ -187,8 +212,63 @@ fun SearchSettingsScreen(
                 }
             } 
         },
-        itemContent = { it.Preference() }
+        // long press on a search result opens the screen where the setting is
+        itemContent = { setting -> JumpOnLongPress(setting.key) { setting.Preference() } }
     )
+}
+
+/** A setting to show and highlight on its screen after a long press in the search results */
+object SettingsJump {
+    private const val VALID_MS = 3000L
+    private var key: String? = null
+    private var time = 0L
+
+    fun request(key: String) {
+        this.key = key
+        time = android.os.SystemClock.uptimeMillis()
+    }
+
+    /** The requested key if it is on this screen; it is then used up */
+    fun take(keysOnScreen: Collection<String>): String? {
+        val k = key ?: return null
+        if (android.os.SystemClock.uptimeMillis() - time > VALID_MS) { key = null; return null }
+        if (k !in keysOnScreen) return null
+        key = null
+        return k
+    }
+}
+
+@Composable
+private fun JumpOnLongPress(key: String, content: @Composable () -> Unit) {
+    val destination = SettingsActivity.settingsContainer.screenOf(key)
+    if (destination == null) {
+        content()
+        return
+    }
+    val haptic = androidx.compose.ui.platform.LocalHapticFeedback.current
+    Box(Modifier.pointerInput(key) {
+        awaitEachGesture {
+            val down = awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
+            // null on timeout: the finger stayed down without moving, a long press
+            val endedEarly = withTimeoutOrNull(viewConfiguration.longPressTimeoutMillis) {
+                while (true) {
+                    val change = awaitPointerEvent(PointerEventPass.Initial).changes.firstOrNull { it.id == down.id } ?: break
+                    if (!change.pressed || (change.position - down.position).getDistance() > viewConfiguration.touchSlop) break
+                }
+                true
+            }
+            if (endedEarly == null) {
+                haptic.performHapticFeedback(androidx.compose.ui.hapticfeedback.HapticFeedbackType.LongPress)
+                SettingsJump.request(key)
+                SettingsDestination.navigateTo(destination)
+                // the setting itself must not react to this touch
+                do {
+                    val event = awaitPointerEvent(PointerEventPass.Initial)
+                    event.changes.forEach { it.consume() }
+                } while (event.changes.any { it.pressed })
+            }
+        }
+    }) { content() }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
