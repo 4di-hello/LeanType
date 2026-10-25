@@ -1763,4 +1763,7 @@ Omogućuje lokalno GGUF / llama.cpp zaključivanje na uređaju za lekturu i prep
     <string name="keycodes_reference_button">Šifre tipki</string>
     <string name="keycodes_link_text"></string>
     <string name="message_keycodes_reference">Referenca kodova ključeva i radnji:%s</string>
+    <string name="updates_plugins_title">Popratni dodaci</string>
+    <string name="updates_plugin_update_available">Dostupna je nova verzija%s</string>
+    <string name="updates_plugin_updates_found">Dostupna su ažuriranja dodataka</string>
 </resources>

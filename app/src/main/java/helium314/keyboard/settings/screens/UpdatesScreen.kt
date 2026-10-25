@@ -4,6 +4,7 @@ package helium314.keyboard.settings.screens
 import android.content.Context
 import android.content.Intent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -32,6 +34,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,6 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -54,13 +58,10 @@ import helium314.keyboard.settings.SearchSettingsScreen
 import helium314.keyboard.settings.Setting
 import helium314.keyboard.settings.preferences.ListPreference
 import helium314.keyboard.settings.preferences.Preference
+import helium314.keyboard.settings.preferences.PreferenceCategory
 import helium314.keyboard.settings.preferences.SwitchPreference
-import kotlinx.coroutines.Dispatchers
+import helium314.keyboard.settings.updates.AppUpdatesManager
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import org.json.JSONObject
-import java.net.HttpURLConnection
-import java.net.URL
 
 private val currentChangelogItems = listOf(
     "• GIF Search & Media Plugin: Integrated companion GIF plugin with GIPHY/Tenor search, live preview, and WhatsApp stickers",
@@ -87,64 +88,43 @@ fun UpdatesScreen(
 
     val isOnlineFlavor = BuildConfig.FLAVOR == "standard"
 
+    val updateTrigger by AppUpdatesManager.updateState.collectAsState()
     var isCheckingUpdates by remember { mutableStateOf(false) }
     var updateCheckStatus by remember { mutableStateOf<String?>(null) }
-    var latestVersionTag by remember { mutableStateOf<String?>(null) }
-    var isUpdateAvailable by remember { mutableStateOf(false) }
-    var isAutoCheckEnabled by remember { mutableStateOf(prefs.getBoolean("pref_auto_check_updates", true)) }
+    val isAppUpdateAvailable = remember(updateTrigger) { AppUpdatesManager.hasAppUpdate(context) }
+    val latestVersionTag = remember(updateTrigger) { AppUpdatesManager.getAppLatestVersion(context) }
+    val hasAnyPluginUpdate = remember(updateTrigger) { AppUpdatesManager.hasAnyPluginUpdate(context) }
+    val pluginStatuses = remember(updateTrigger) { AppUpdatesManager.getInstalledPluginStatuses(context) }
+    var isAutoCheckEnabled by remember { mutableStateOf(prefs.getBoolean(AppUpdatesManager.PREF_AUTO_CHECK, true)) }
 
     fun checkForUpdates() {
         if (!isOnlineFlavor) return
 
         isCheckingUpdates = true
         updateCheckStatus = null
-        scope.launch(Dispatchers.IO) {
+        scope.launch {
             try {
-                val url = URL(Links.GITHUB_RELEASES_API)
-                val conn = url.openConnection() as HttpURLConnection
-                conn.connectTimeout = 8000
-                conn.readTimeout = 8000
-                conn.setRequestProperty("User-Agent", "LeanType-Android")
-                conn.connect()
-
-                if (conn.responseCode == 200) {
-                    val response = conn.inputStream.bufferedReader().use { it.readText() }
-                    val json = JSONObject(response)
-                    val tag = json.optString("tag_name", "").trim()
-
-                    withContext(Dispatchers.Main) {
-                        latestVersionTag = tag
-                        val cleanCurrent = BuildConfig.VERSION_NAME.removePrefix("v").trim()
-                        val cleanRemote = tag.removePrefix("v").trim()
-
-                        if (cleanRemote.isNotBlank() && isNewerVersion(cleanCurrent, cleanRemote)) {
-                            isUpdateAvailable = true
-                            updateCheckStatus = context.getString(R.string.updates_update_available, tag)
-                        } else {
-                            isUpdateAvailable = false
-                            updateCheckStatus = context.getString(R.string.updates_up_to_date)
-                        }
-                    }
+                val (appUpdate, plugins) = AppUpdatesManager.checkAllUpdates(context)
+                val anyPluginUpdate = plugins.any { it.isUpdateAvailable }
+                if (appUpdate) {
+                    val tag = AppUpdatesManager.getAppLatestVersion(context)
+                    updateCheckStatus = context.getString(R.string.updates_update_available, tag ?: "")
+                } else if (anyPluginUpdate) {
+                    updateCheckStatus = context.getString(R.string.updates_plugin_updates_found)
                 } else {
-                    withContext(Dispatchers.Main) {
-                        updateCheckStatus = context.getString(R.string.updates_check_failed_http, conn.responseCode)
-                    }
+                    updateCheckStatus = context.getString(R.string.updates_up_to_date)
                 }
             } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    updateCheckStatus = context.getString(R.string.updates_network_error)
-                }
+                updateCheckStatus = context.getString(R.string.updates_network_error)
             } finally {
-                withContext(Dispatchers.Main) {
-                    isCheckingUpdates = false
-                }
+                isCheckingUpdates = false
             }
         }
     }
 
     val autoCheckSetting = remember {
         Setting(
-            key = "pref_auto_check_updates",
+            key = AppUpdatesManager.PREF_AUTO_CHECK,
             title = context.getString(R.string.updates_auto_check_title),
             description = context.getString(R.string.updates_auto_check_summary)
         ) {
@@ -158,7 +138,7 @@ fun UpdatesScreen(
 
     val frequencySetting = remember {
         Setting(
-            key = "pref_auto_check_updates_frequency",
+            key = AppUpdatesManager.PREF_FREQUENCY,
             title = context.getString(R.string.updates_frequency_title)
         ) {
             ListPreference(
@@ -188,7 +168,7 @@ fun UpdatesScreen(
                 // Section 1: App Updates (OMITTED entirely on offline flavor)
                 if (isOnlineFlavor) {
                     // Minimal Update Indicator Banner if update is available
-                    if (isUpdateAvailable && latestVersionTag != null) {
+                    if (isAppUpdateAvailable && latestVersionTag != null) {
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -252,6 +232,8 @@ fun UpdatesScreen(
                             val checkDescription = when {
                                 isCheckingUpdates -> stringResource(R.string.updates_checking)
                                 status != null -> status
+                                isAppUpdateAvailable && latestVersionTag != null -> stringResource(R.string.updates_update_available, latestVersionTag)
+                                hasAnyPluginUpdate -> stringResource(R.string.updates_plugin_updates_found)
                                 else -> currentVersionText
                             }
 
@@ -267,20 +249,30 @@ fun UpdatesScreen(
                                             strokeWidth = 2.dp,
                                             color = MaterialTheme.colorScheme.primary
                                         )
-                                    } else if (isUpdateAvailable) {
-                                        Surface(
-                                            shape = RoundedCornerShape(8.dp),
-                                            color = MaterialTheme.colorScheme.primaryContainer
+                                    } else if (isAppUpdateAvailable || hasAnyPluginUpdate) {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.spacedBy(6.dp)
                                         ) {
-                                            Text(
-                                                text = stringResource(R.string.updates_badge_update),
-                                                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                                style = MaterialTheme.typography.labelMedium,
-                                                fontWeight = FontWeight.SemiBold,
-                                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                                            Box(
+                                                modifier = Modifier
+                                                    .size(8.dp)
+                                                    .background(Color(0xFFE53935), CircleShape)
                                             )
+                                            Surface(
+                                                shape = RoundedCornerShape(8.dp),
+                                                color = MaterialTheme.colorScheme.primaryContainer
+                                            ) {
+                                                Text(
+                                                    text = stringResource(R.string.updates_badge_update),
+                                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                                    style = MaterialTheme.typography.labelMedium,
+                                                    fontWeight = FontWeight.SemiBold,
+                                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                                                )
+                                            }
                                         }
-                                    } else if (updateCheckStatus != null) {
+                                    } else if (updateCheckStatus != null || AppUpdatesManager.getAppLatestVersion(context) != null) {
                                         Surface(
                                             shape = RoundedCornerShape(8.dp),
                                             color = MaterialTheme.colorScheme.surfaceVariant
@@ -301,6 +293,84 @@ fun UpdatesScreen(
 
                             if (isAutoCheckEnabled) {
                                 frequencySetting.Preference()
+                            }
+                        }
+                    }
+
+                    // Section 2: Companion Plugins Updates
+                    if (pluginStatuses.isNotEmpty()) {
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 8.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceContainer
+                            )
+                        ) {
+                            Column(modifier = Modifier.padding(vertical = 4.dp)) {
+                                PreferenceCategory(stringResource(R.string.updates_plugins_title))
+
+                                for (pluginStatus in pluginStatuses) {
+                                    val pluginName = stringResource(pluginStatus.plugin.nameRes)
+                                    val desc = if (pluginStatus.isUpdateAvailable && pluginStatus.latestVersion != null) {
+                                        stringResource(R.string.updates_plugin_update_available, pluginStatus.latestVersion)
+                                    } else {
+                                        "v${pluginStatus.installedVersion}"
+                                    }
+
+                                    Preference(
+                                        name = pluginName,
+                                        description = desc,
+                                        icon = pluginStatus.plugin.iconRes,
+                                        onClick = {
+                                            val intent = Intent(Intent.ACTION_VIEW, pluginStatus.plugin.releasesPageUrl.toUri())
+                                            context.startActivity(intent)
+                                        },
+                                        value = {
+                                            if (pluginStatus.isUpdateAvailable) {
+                                                Row(
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                                ) {
+                                                    Box(
+                                                        modifier = Modifier
+                                                            .size(8.dp)
+                                                            .background(Color(0xFFE53935), CircleShape)
+                                                    )
+                                                    Surface(
+                                                        shape = RoundedCornerShape(8.dp),
+                                                        color = MaterialTheme.colorScheme.primaryContainer,
+                                                        modifier = Modifier.clickable {
+                                                            val intent = Intent(Intent.ACTION_VIEW, pluginStatus.plugin.releasesPageUrl.toUri())
+                                                            context.startActivity(intent)
+                                                        }
+                                                    ) {
+                                                        Text(
+                                                            text = stringResource(R.string.updates_badge_update),
+                                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                                            style = MaterialTheme.typography.labelMedium,
+                                                            fontWeight = FontWeight.SemiBold,
+                                                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                                                        )
+                                                    }
+                                                }
+                                            } else if (pluginStatus.latestVersion != null) {
+                                                Surface(
+                                                    shape = RoundedCornerShape(8.dp),
+                                                    color = MaterialTheme.colorScheme.surfaceVariant
+                                                ) {
+                                                    Text(
+                                                        text = stringResource(R.string.updates_badge_latest),
+                                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                                        style = MaterialTheme.typography.labelMedium,
+                                                        fontWeight = FontWeight.SemiBold,
+                                                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    )
+                                }
                             }
                         }
                     }
@@ -501,17 +571,4 @@ fun UpdatesScreen(
             }
         }
     }
-}
-
-private fun isNewerVersion(current: String, remote: String): Boolean {
-    val currentParts = current.split(".").mapNotNull { it.takeWhile { c -> c.isDigit() }.toIntOrNull() }
-    val remoteParts = remote.split(".").mapNotNull { it.takeWhile { c -> c.isDigit() }.toIntOrNull() }
-    val maxLen = maxOf(currentParts.size, remoteParts.size)
-    for (i in 0 until maxLen) {
-        val c = currentParts.getOrElse(i) { 0 }
-        val r = remoteParts.getOrElse(i) { 0 }
-        if (r > c) return true
-        if (r < c) return false
-    }
-    return false
 }

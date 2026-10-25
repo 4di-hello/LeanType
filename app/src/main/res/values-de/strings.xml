@@ -1785,4 +1785,7 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="keycodes_reference_button">Schlüsselcodes</string>
     <string name="keycodes_link_text">Schlüsselcode-Anleitung</string>
     <string name="message_keycodes_reference">Referenz zu Schlüsselcodes und Aktionen:%s</string>
+    <string name="updates_plugins_title">Begleit-Plugins</string>
+    <string name="updates_plugin_update_available">Neue Version%sverfügbar</string>
+    <string name="updates_plugin_updates_found">Plugin-Updates verfügbar</string>
 </resources>

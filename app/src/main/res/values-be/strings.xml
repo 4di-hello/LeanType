@@ -1775,4 +1775,7 @@
     <string name="keycodes_reference_button">Ключавыя коды</string>
     <string name="keycodes_link_text">Кіраўніцтва па кодах ключоў</string>
     <string name="message_keycodes_reference">Спасылка на коды ключоў і дзеянні:%s</string>
+    <string name="updates_plugins_title">Убудовы-кампаньёны</string>
+    <string name="updates_plugin_update_available">Даступная новая версія%s</string>
+    <string name="updates_plugin_updates_found">Даступныя абнаўленні плагінаў</string>
 </resources>

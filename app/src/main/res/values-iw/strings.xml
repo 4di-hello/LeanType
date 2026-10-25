@@ -1790,4 +1790,7 @@
     <string name="keycodes_reference_button">קודי מפתח</string>
     <string name="keycodes_link_text">מדריך קודי מפתח</string>
     <string name="message_keycodes_reference">הפניה לקודי מפתח ופעולות:%s</string>
+    <string name="updates_plugins_title">תוספים נלווים</string>
+    <string name="updates_plugin_update_available">גרסה חדשה%sזמינה</string>
+    <string name="updates_plugin_updates_found">עדכוני פלאגין זמינים</string>
 </resources>

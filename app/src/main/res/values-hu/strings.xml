@@ -1779,4 +1779,7 @@ Lehetővé teszi az eszközön futó GGUF / llama.cpp következtetést a javít�
     <string name="keycodes_reference_button">Kulcskódok</string>
     <string name="keycodes_link_text">Kulcskódok útmutató</string>
     <string name="message_keycodes_reference">Kulcskódok és műveletek hivatkozása:%s</string>
+    <string name="updates_plugins_title">Kísérő bővítmények</string>
+    <string name="updates_plugin_update_available">Új verzió%selérhető</string>
+    <string name="updates_plugin_updates_found">Beépülő modulok frissítései elérhetők</string>
 </resources>

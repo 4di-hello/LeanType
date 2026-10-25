@@ -1965,6 +1965,9 @@ New dictionary:
     <string name="updates_check_failed_http">Check failed (HTTP %d)</string>
     <string name="updates_network_error">Network error checking updates</string>
     <string name="updates_update_available">Update available: %s</string>
+    <string name="updates_plugins_title">Companion plugins</string>
+    <string name="updates_plugin_update_available">New version %s available</string>
+    <string name="updates_plugin_updates_found">Plugin updates available</string>
 
     <!-- Sponsor Buttons -->
     <string name="sponsor_github_button">Sponsor on GitHub</string>

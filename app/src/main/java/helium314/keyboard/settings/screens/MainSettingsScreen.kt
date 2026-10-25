@@ -15,6 +15,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,6 +39,7 @@ import helium314.keyboard.latin.settings.Defaults
 import helium314.keyboard.latin.settings.Settings
 import helium314.keyboard.settings.NextScreenIcon
 import helium314.keyboard.settings.SearchSettingsScreen
+import helium314.keyboard.settings.updates.AppUpdatesManager
 import helium314.keyboard.settings.Theme
 import helium314.keyboard.settings.dialogs.SponsorDialog
 import helium314.keyboard.settings.initPreview
@@ -86,7 +88,11 @@ fun MainSettingsScreen(
             val newCount = settingsOpenCount + 1
             prefs.edit { putInt("settings_open_count", newCount) }
             settingsOpenCount = newCount
+            AppUpdatesManager.checkUpdatesIfNeeded(ctx)
         }
+        val updateTrigger by AppUpdatesManager.updateState.collectAsState()
+        val hasAnyUpdate = remember(updateTrigger) { AppUpdatesManager.hasAnyUpdate(ctx) }
+        val hasPluginUpdate = remember(updateTrigger) { AppUpdatesManager.hasAnyPluginUpdate(ctx) }
         val sixDaysMs = 6L * 24 * 60 * 60 * 1000
         val shouldShow = !neverShowAgain && (
             (lastShown == 0L && settingsOpenCount >= 2) ||
@@ -150,7 +156,7 @@ fun MainSettingsScreen(
                             name = stringResource(R.string.plugins_title),
                             onClick = onClickLibraries,
                             icon = R.drawable.ic_emoji_objects
-                        ) { NextScreenIcon() }
+                        ) { NextScreenIcon(hasUpdateBadge = hasPluginUpdate) }
                         Preference(
                             name = stringResource(R.string.language_and_layouts_title),
                             description = enabledSubtypesDescription,
@@ -227,7 +233,7 @@ fun MainSettingsScreen(
                             name = stringResource(R.string.settings_screen_updates),
                             onClick = onClickUpdates,
                             icon = R.drawable.ic_settings_updates
-                        ) { NextScreenIcon() }
+                        ) { NextScreenIcon(hasUpdateBadge = hasAnyUpdate) }
                         Preference(
                             name = stringResource(R.string.settings_screen_about),
                             onClick = onClickAbout,

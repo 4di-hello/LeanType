@@ -1846,4 +1846,7 @@
     <string name="keycodes_reference_button">رموز المفاتيح</string>
     <string name="keycodes_link_text">دليل رموز المفاتيح</string>
     <string name="message_keycodes_reference">مرجع الرموز الأساسية والإجراءات:%s</string>
+    <string name="updates_plugins_title">الإضافات المصاحبة</string>
+    <string name="updates_plugin_update_available">الإصدار الجديد%sمتاح</string>
+    <string name="updates_plugin_updates_found">تحديثات البرنامج المساعد المتاحة</string>
 </resources>

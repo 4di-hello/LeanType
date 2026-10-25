@@ -1825,4 +1825,7 @@ Umożliwia lokalne wnioskowanie GGUF / llama.cpp na urządzeniu w celu korekty i
     <string name="keycodes_reference_button">Kody klawiszowe</string>
     <string name="keycodes_link_text">Przewodnik po kodach klawiszowych</string>
     <string name="message_keycodes_reference">Odniesienie do kodów klawiszy i działań:%s</string>
+    <string name="updates_plugins_title">Wtyczki towarzyszące</string>
+    <string name="updates_plugin_update_available">Dostępna nowa wersja%s</string>
+    <string name="updates_plugin_updates_found">Dostępne aktualizacje wtyczek</string>
 </resources>

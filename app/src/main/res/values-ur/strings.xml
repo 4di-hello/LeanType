@@ -1832,4 +1832,7 @@
     <string name="keycodes_reference_button">کی کوڈز</string>
     <string name="keycodes_link_text">کی کوڈز گائیڈ</string>
     <string name="message_keycodes_reference">کلیدی کوڈز اور اعمال کا حوالہ:%s</string>
+    <string name="updates_plugins_title">ساتھی پلگ انز</string>
+    <string name="updates_plugin_update_available">نیا ورژن%sدستیاب ہے۔</string>
+    <string name="updates_plugin_updates_found">پلگ ان اپڈیٹس دستیاب ہیں۔</string>
 </resources>

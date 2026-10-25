@@ -1770,4 +1770,7 @@ Activează inferența GGUF / llama.cpp pe dispozitiv pentru corectură și refor
     <string name="keycodes_reference_button">Coduri cheie</string>
     <string name="keycodes_link_text">Ghidul codurilor cheie</string>
     <string name="message_keycodes_reference">Referință coduri cheie și acțiuni:%s</string>
+    <string name="updates_plugins_title">Pluginuri însoțitoare</string>
+    <string name="updates_plugin_update_available">Noua versiune%sdisponibilă</string>
+    <string name="updates_plugin_updates_found">Actualizări de plugin disponibile</string>
 </resources>

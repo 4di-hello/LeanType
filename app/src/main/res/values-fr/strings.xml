@@ -1837,4 +1837,7 @@ Permet l\'inférence GGUF / llama.cpp sur l\'appareil pour la correction et la r
     <string name="keycodes_reference_button">Codes clés</string>
     <string name="keycodes_link_text">Guide des codes clés</string>
     <string name="message_keycodes_reference">Référence des codes clés et des actions :%s</string>
+    <string name="updates_plugins_title">Plugins compagnons</string>
+    <string name="updates_plugin_update_available">Nouvelle version%sdisponible</string>
+    <string name="updates_plugin_updates_found">Mises à jour du plugin disponibles</string>
 </resources>

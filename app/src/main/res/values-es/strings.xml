@@ -1774,4 +1774,7 @@ Permite la inferencia GGUF / llama.cpp en el dispositivo para corrección y rees
     <string name="keycodes_reference_button">Códigos clave</string>
     <string name="keycodes_link_text">Guía de códigos clave</string>
     <string name="message_keycodes_reference">Referencia de códigos clave y acciones:%s</string>
+    <string name="updates_plugins_title">Complementos complementarios</string>
+    <string name="updates_plugin_update_available">Nueva versión%sdisponible</string>
+    <string name="updates_plugin_updates_found">Actualizaciones de complementos disponibles</string>
 </resources>

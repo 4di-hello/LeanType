@@ -1823,4 +1823,7 @@
     <string name="keycodes_reference_button">Ключови кодове</string>
     <string name="keycodes_link_text">Ръководство за ключови кодове</string>
     <string name="message_keycodes_reference">Ключови кодове и справка за действия:%s</string>
+    <string name="updates_plugins_title">Придружаващи добавки</string>
+    <string name="updates_plugin_update_available">Налична е нова версия%s</string>
+    <string name="updates_plugin_updates_found">Налични са актуализации на приставки</string>
 </resources>

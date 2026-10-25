@@ -1841,4 +1841,7 @@
     <string name="keycodes_reference_button">Κωδικοί κλειδιών</string>
     <string name="keycodes_link_text">Οδηγός κλειδιών</string>
     <string name="message_keycodes_reference">Αναφορά κωδικών κλειδιών και ενεργειών:%s</string>
+    <string name="updates_plugins_title">Συνοδευτικά πρόσθετα</string>
+    <string name="updates_plugin_update_available">Νέα έκδοση%sδιαθέσιμη</string>
+    <string name="updates_plugin_updates_found">Διαθέσιμες ενημερώσεις προσθηκών</string>
 </resources>

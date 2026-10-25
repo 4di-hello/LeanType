@@ -1771,4 +1771,7 @@ Metin düzeltme ve yeniden yazma için cihaz üzerinde GGUF / llama.cpp çıkar�
     <string name="keycodes_reference_button">Anahtar kodlar</string>
     <string name="keycodes_link_text">Anahtar Kodları Kılavuzu</string>
     <string name="message_keycodes_reference">Anahtar kodlar ve işlemler referansı:%s</string>
+    <string name="updates_plugins_title">Tamamlayıcı eklentiler</string>
+    <string name="updates_plugin_update_available">Yeni sürüm%smevcut</string>
+    <string name="updates_plugin_updates_found">Eklenti güncellemeleri mevcut</string>
 </resources>

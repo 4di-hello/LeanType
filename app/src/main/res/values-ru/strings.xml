@@ -1848,4 +1848,7 @@
     <string name="keycodes_reference_button">Коды клавиш</string>
     <string name="keycodes_link_text">Руководство по кодам клавиш</string>
     <string name="message_keycodes_reference">Ссылка на коды клавиш и действия:%s</string>
+    <string name="updates_plugins_title">Сопутствующие плагины</string>
+    <string name="updates_plugin_update_available">Доступна новая версия%s.</string>
+    <string name="updates_plugin_updates_found">Доступны обновления плагина</string>
 </resources>

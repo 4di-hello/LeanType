@@ -11,6 +11,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -39,6 +40,7 @@ import helium314.keyboard.settings.SettingsWithoutKey
 import helium314.keyboard.settings.preferences.Preference
 import helium314.keyboard.settings.preferences.PreferenceCategory
 import helium314.keyboard.settings.preferences.SwitchPreference
+import helium314.keyboard.settings.updates.AppUpdatesManager
 
 @Composable
 fun LibrariesHubScreen(
@@ -61,6 +63,15 @@ fun LibrariesHubScreen(
     if ((b?.value ?: 0) < 0) {
         // Trigger recomposition on preference changes
     }
+
+    val updateTrigger by AppUpdatesManager.updateState.collectAsState()
+    val isOfflineAiUpdate = remember(updateTrigger) { AppUpdatesManager.isPluginUpdateAvailable(context, "offline_ai") }
+    val isHandwritingUpdate = remember(updateTrigger) { AppUpdatesManager.isPluginUpdateAvailable(context, "handwriting") }
+    val isOcrUpdate = remember(updateTrigger) { AppUpdatesManager.isPluginUpdateAvailable(context, "ocr") }
+    val isVoiceUpdate = remember(updateTrigger) { AppUpdatesManager.isPluginUpdateAvailable(context, "voice") }
+    val isTranslationUpdate = remember(updateTrigger) { AppUpdatesManager.isPluginUpdateAvailable(context, "translation") }
+    val isCjkUpdate = remember(updateTrigger) { AppUpdatesManager.isPluginUpdateAvailable(context, "cjk") }
+    val isGifUpdate = remember(updateTrigger) { AppUpdatesManager.isPluginUpdateAvailable(context, "gif") }
 
     SearchSettingsScreen(
         onClickBack = onClickBack,
@@ -102,7 +113,7 @@ fun LibrariesHubScreen(
                                 description = aiSummary,
                                 onClick = onClickAIIntegration,
                                 icon = R.drawable.ic_proofread
-                            ) { NextScreenIcon() }
+                            ) { NextScreenIcon(hasUpdateBadge = isOfflineAiUpdate) }
                         }
 
                         // Handwriting Input Plugin (ML Kit based)
@@ -119,7 +130,7 @@ fun LibrariesHubScreen(
                             onClick = if (isHandwritingSupported) onClickHandwriting else ({}),
                             enabled = isHandwritingSupported,
                             icon = R.drawable.ic_edit
-                        ) { if (isHandwritingSupported) NextScreenIcon() }
+                        ) { if (isHandwritingSupported) NextScreenIcon(hasUpdateBadge = isHandwritingUpdate) }
 
                         // Text Recognition (OCR) Plugin (ML Kit based)
                         val isOcrSupported = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O
@@ -135,7 +146,7 @@ fun LibrariesHubScreen(
                             onClick = if (isOcrSupported) onClickOcr else ({}),
                             enabled = isOcrSupported,
                             icon = R.drawable.ic_ocr
-                        ) { if (isOcrSupported) NextScreenIcon() }
+                        ) { if (isOcrSupported) NextScreenIcon(hasUpdateBadge = isOcrUpdate) }
 
                         // Voice Input
                         val richImm = remember { helium314.keyboard.latin.RichInputMethodManager.getInstance() }
@@ -157,7 +168,7 @@ fun LibrariesHubScreen(
                             description = voiceSummary,
                             onClick = onClickOfflineVoice,
                             icon = R.drawable.sym_keyboard_voice_holo
-                        ) { NextScreenIcon() }
+                        ) { NextScreenIcon(hasUpdateBadge = isVoiceUpdate) }
 
                         // Translation Settings Screen (available for all flavors)
                         val isTranslationSupported = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N
@@ -173,7 +184,7 @@ fun LibrariesHubScreen(
                             onClick = if (isTranslationSupported) onClickTranslation else ({}),
                             enabled = isTranslationSupported,
                             icon = R.drawable.ic_translate
-                        ) { if (isTranslationSupported) NextScreenIcon() }
+                        ) { if (isTranslationSupported) NextScreenIcon(hasUpdateBadge = isTranslationUpdate) }
 
                         // CJK Input Plugin (Chinese, Japanese, Korean)
                         val cjkInstalled = CjkPluginLoader.hasPlugin(context)
@@ -190,7 +201,7 @@ fun LibrariesHubScreen(
                             description = cjkSummary,
                             onClick = onClickCjk,
                             icon = R.drawable.ic_settings_languages
-                        ) { NextScreenIcon() }
+                        ) { NextScreenIcon(hasUpdateBadge = isCjkUpdate) }
 
                         // GIF Search Plugin
                         val gifManager = remember { helium314.keyboard.latin.gif.GifPluginManager.get(context) }
@@ -206,7 +217,7 @@ fun LibrariesHubScreen(
                             description = gifSummary,
                             onClick = onClickGif,
                             icon = R.drawable.ic_gif
-                        ) { NextScreenIcon() }
+                        ) { NextScreenIcon(hasUpdateBadge = isGifUpdate) }
 
                         // Keypress Audio & Sound Packs Plugin
                         val currentSoundStyle = prefs.getString(Settings.PREF_KEYPRESS_SOUND_STYLE, Defaults.PREF_KEYPRESS_SOUND_STYLE) ?: Defaults.PREF_KEYPRESS_SOUND_STYLE

@@ -1823,4 +1823,7 @@ Maakt GGUF / llama.cpp-inferentie op het apparaat mogelijk voor proeflezen en he
     <string name="keycodes_reference_button">Sleutelcodes</string>
     <string name="keycodes_link_text">Gids voor sleutelcodes</string>
     <string name="message_keycodes_reference">Referentie van sleutelcodes en acties:%s</string>
+    <string name="updates_plugins_title">Companion-plug-ins</string>
+    <string name="updates_plugin_update_available">Nieuwe versie%sbeschikbaar</string>
+    <string name="updates_plugin_updates_found">Plugin-updates beschikbaar</string>
 </resources>

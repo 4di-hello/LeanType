@@ -1789,4 +1789,7 @@
     <string name="keycodes_reference_button">键码</string>
     <string name="keycodes_link_text">键码指南</string>
     <string name="message_keycodes_reference">键码和操作参考：%s</string>
+    <string name="updates_plugins_title">配套插件</string>
+    <string name="updates_plugin_update_available">新版本%s可用</string>
+    <string name="updates_plugin_updates_found">可用插件更新</string>
 </resources>

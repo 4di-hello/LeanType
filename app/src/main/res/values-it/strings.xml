@@ -1848,4 +1848,7 @@ Abilita l\'inferenza GGUF / llama.cpp sul dispositivo per correzione e riscrittu
     <string name="keycodes_reference_button">Codici chiave</string>
     <string name="keycodes_link_text">Guida ai codici chiave</string>
     <string name="message_keycodes_reference">Riferimento a codici chiave e azioni:%s</string>
+    <string name="updates_plugins_title">Plugin complementari</string>
+    <string name="updates_plugin_update_available">Nuova versione%sdisponibile</string>
+    <string name="updates_plugin_updates_found">Aggiornamenti del plugin disponibili</string>
 </resources>

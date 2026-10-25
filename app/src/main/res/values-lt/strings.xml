@@ -1771,4 +1771,7 @@ Ar norite atnaujinti?</string>
     <string name="keycodes_reference_button">Klavišų kodai</string>
     <string name="keycodes_link_text">Keycodes vadovas</string>
     <string name="message_keycodes_reference">Klavišų kodų ir veiksmų nuoroda:%s</string>
+    <string name="updates_plugins_title">Papildomi papildiniai</string>
+    <string name="updates_plugin_update_available">Yra nauja versija%s</string>
+    <string name="updates_plugin_updates_found">Galimi papildinio atnaujinimai</string>
 </resources>

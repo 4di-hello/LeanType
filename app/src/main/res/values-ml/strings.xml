@@ -1841,4 +1841,7 @@
     <string name="keycodes_reference_button">കീകോഡുകൾ</string>
     <string name="keycodes_link_text">കീകോഡ് ഗൈഡ്</string>
     <string name="message_keycodes_reference">കീകോഡുകളും പ്രവർത്തനങ്ങളും റഫറൻസ്:%s</string>
+    <string name="updates_plugins_title">കമ്പാനിയൻ പ്ലഗിനുകൾ</string>
+    <string name="updates_plugin_update_available">പുതിയ പതിപ്പ്%sലഭ്യമാണ്</string>
+    <string name="updates_plugin_updates_found">പ്ലഗിൻ അപ്ഡേറ്റുകൾ ലഭ്യമാണ്</string>
 </resources>

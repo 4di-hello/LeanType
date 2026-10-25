@@ -1738,4 +1738,7 @@ Memungkinkan inferensi GGUF / llama.cpp di perangkat untuk koreksi teks dan penu
     <string name="keycodes_reference_button">Kode kunci</string>
     <string name="keycodes_link_text">Panduan Kode Kunci</string>
     <string name="message_keycodes_reference">Referensi kode kunci &amp; tindakan:%s</string>
+    <string name="updates_plugins_title">Plugin pendamping</string>
+    <string name="updates_plugin_update_available">Versi baru%stersedia</string>
+    <string name="updates_plugin_updates_found">Pembaruan plugin tersedia</string>
 </resources>

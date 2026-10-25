@@ -1778,4 +1778,7 @@ Habilita inferência GGUF / llama.cpp no dispositivo para revisão e reescrita.<
     <string name="keycodes_reference_button">Códigos-chave</string>
     <string name="keycodes_link_text">Guia de códigos de acesso</string>
     <string name="message_keycodes_reference">Referência de códigos-chave e ações:%s</string>
+    <string name="updates_plugins_title">Plug-ins complementares</string>
+    <string name="updates_plugin_update_available">Nova versão%sdisponível</string>
+    <string name="updates_plugin_updates_found">Atualizações de plug-in disponíveis</string>
 </resources>

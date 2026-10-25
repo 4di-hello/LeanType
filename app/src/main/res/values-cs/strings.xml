@@ -1788,4 +1788,7 @@ Umožňuje lokální inferenci GGUF / llama.cpp na zařízení pro korektury a p
     <string name="keycodes_reference_button">Klíčové kódy</string>
     <string name="keycodes_link_text">Průvodce kódy klíčů</string>
     <string name="message_keycodes_reference">Referenční kódy a akce:%s</string>
+    <string name="updates_plugins_title">Doprovodné pluginy</string>
+    <string name="updates_plugin_update_available">K dispozici je nová verze%s</string>
+    <string name="updates_plugin_updates_found">Dostupné aktualizace pluginů</string>
 </resources>

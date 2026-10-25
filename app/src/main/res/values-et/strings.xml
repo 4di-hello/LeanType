@@ -1770,4 +1770,7 @@ Võimaldab seadmesisese GGUF / llama.cpp järelduse korrektuuri ja ümbersõnast
     <string name="keycodes_reference_button">Võtmekoodid</string>
     <string name="keycodes_link_text">Võtmekoodide juhend</string>
     <string name="message_keycodes_reference">Võtmekoodide ja toimingute viide:%s</string>
+    <string name="updates_plugins_title">Kaaspistikprogrammid</string>
+    <string name="updates_plugin_update_available">Uus versioon%son saadaval</string>
+    <string name="updates_plugin_updates_found">Saadaval on pistikprogrammi värskendused</string>
 </resources>

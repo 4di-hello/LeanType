@@ -1743,4 +1743,7 @@
     <string name="keycodes_reference_button">Ключові коди</string>
     <string name="keycodes_link_text">Керівництво по кодам клавіш</string>
     <string name="message_keycodes_reference">Коди клавіш і посилання на дії:%s</string>
+    <string name="updates_plugins_title">Додаткові модулі</string>
+    <string name="updates_plugin_update_available">Доступна нова версія%s</string>
+    <string name="updates_plugin_updates_found">Доступні оновлення плагінів</string>
 </resources>

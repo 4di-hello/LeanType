@@ -1767,4 +1767,7 @@
     <string name="keycodes_reference_button">कुंजीकोड</string>
     <string name="keycodes_link_text">कीकोड गाइड</string>
     <string name="message_keycodes_reference">कुंजीकोड और क्रियाएँ संदर्भ:%s</string>
+    <string name="updates_plugins_title">सहयोगी प्लगइन्स</string>
+    <string name="updates_plugin_update_available">नया संस्करण%sउपलब्ध है</string>
+    <string name="updates_plugin_updates_found">प्लगइन अद्यतन उपलब्ध हैं</string>
 </resources>
