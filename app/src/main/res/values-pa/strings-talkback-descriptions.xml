@@ -6,7 +6,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="spoken_use_headphones">"ਉੱਚੀ ਬੋਲੀਆਂ ਗਈਆਂ ਪਾਸਵਰਡ ਕੁੰਜੀਆਂ ਸੁਣਨ ਲਈ ਇੱਕ ਹੈਡਸੈੱਟ ਪਲੱਗ-ਇਨ ਕਰੋ।"</string>
     <string name="spoken_current_text_is">"ਮੌਜੂਦਾ ਟੈਕਸਟ %s ਹੈ"</string>
-    <string name="spoken_no_text_entered">"ਕੋਈ ਟੈਕਸਟ ਦਰਜ ਨਹੀਂ ਕੀਤਾ"</string>
     <string name="spoken_auto_correct">"<xliff:g id="KEY_NAME">%1$s</xliff:g> <xliff:g id="ORIGINAL_WORD">%2$s</xliff:g> ਦਾ <xliff:g id="CORRECTED_WORD">%3$s</xliff:g> ਵਿੱਚ ਸੋਧ ਕਰਦਾ ਹੈ"</string>
     <string name="spoken_auto_correct_obscured">"<xliff:g id="KEY_NAME">%1$s</xliff:g> ਆਟੋ-ਸੁਧਾਈ ਕਰਦੀ ਹੈ"</string>
     <string name="spoken_empty_suggestion">"ਕੋਈ ਸੁਝਾਅ ਨਹੀਂ"</string>

@@ -6,7 +6,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="spoken_use_headphones">"Вклучете слушалки за да ги слушнете копчињата за лозинката гласно изговорени."</string>
     <string name="spoken_current_text_is">"Тековниот текст е %s"</string>
-    <string name="spoken_no_text_entered">"Не е внесен текст"</string>
     <string name="spoken_auto_correct">"<xliff:g id="KEY_NAME">%1$s</xliff:g> го поправи <xliff:g id="ORIGINAL_WORD">%2$s</xliff:g> со <xliff:g id="CORRECTED_WORD">%3$s</xliff:g>"</string>
     <string name="spoken_auto_correct_obscured">"<xliff:g id="KEY_NAME">%1$s</xliff:g> врши автоматска корекција"</string>
     <string name="spoken_empty_suggestion">"Нема предлог"</string>

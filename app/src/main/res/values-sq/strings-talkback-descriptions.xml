@@ -6,7 +6,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="spoken_use_headphones">"Fut kufjet për të dëgjuar me zë të lartë tastet e fjalëkalimit"</string>
     <string name="spoken_current_text_is">"Teksti aktual është %s"</string>
-    <string name="spoken_no_text_entered">"Nuk ka tekst"</string>
     <string name="spoken_auto_correct">"<xliff:g id="KEY_NAME">%1$s</xliff:g> korrigjon <xliff:g id="ORIGINAL_WORD">%2$s</xliff:g> në <xliff:g id="CORRECTED_WORD">%3$s</xliff:g>"</string>
     <string name="spoken_auto_correct_obscured">"<xliff:g id="KEY_NAME">%1$s</xliff:g> kryen auto-korrigjim"</string>
     <string name="spoken_empty_suggestion">"Nuk ka asnjë sugjerim"</string>

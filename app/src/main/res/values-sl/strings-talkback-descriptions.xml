@@ -6,7 +6,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="spoken_use_headphones">"Priključite slušalke, če želite slišati izgovorjene tipke gesla."</string>
     <string name="spoken_current_text_is">"Trenutno besedilo je %s"</string>
-    <string name="spoken_no_text_entered">"Ni vnesenega besedila"</string>
     <string name="spoken_auto_correct">"Tipka <xliff:g id="KEY_NAME">%1$s</xliff:g> popravi <xliff:g id="ORIGINAL_WORD">%2$s</xliff:g> v <xliff:g id="CORRECTED_WORD">%3$s</xliff:g>"</string>
     <string name="spoken_auto_correct_obscured">"Tipka <xliff:g id="KEY_NAME">%1$s</xliff:g> izvede samopopravek"</string>
     <string name="spoken_empty_suggestion">"Ni predlogov"</string>

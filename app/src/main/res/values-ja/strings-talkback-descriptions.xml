@@ -6,7 +6,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="spoken_use_headphones">"パスワードのキーが音声出力されるのでヘッドセットを接続してください。"</string>
     <string name="spoken_current_text_is">"現在のテキスト: %s"</string>
-    <string name="spoken_no_text_entered">"テキストが入力されていません"</string>
     <string name="spoken_auto_correct">"<xliff:g id="KEY_NAME">%1$s</xliff:g>は<xliff:g id="ORIGINAL_WORD">%2$s</xliff:g>を<xliff:g id="CORRECTED_WORD">%3$s</xliff:g>に修正します"</string>
     <string name="spoken_auto_correct_obscured">"<xliff:g id="KEY_NAME">%1$s</xliff:g>で自動修正が実行されます"</string>
     <string name="spoken_empty_suggestion">"候補はありません"</string>

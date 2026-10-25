@@ -6,7 +6,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="spoken_use_headphones">"Chomeka kifaa cha sauti ili usikie vitufe vya nenosiri vikitamkwa kwa sauti."</string>
     <string name="spoken_current_text_is">"Maandishi ya sasa ni %s"</string>
-    <string name="spoken_no_text_entered">"Hakuna maandishi yaliyoingizwa"</string>
     <string name="spoken_auto_correct">"<xliff:g id="KEY_NAME">%1$s</xliff:g> hurekebisha <xliff:g id="ORIGINAL_WORD">%2$s</xliff:g> kuwa <xliff:g id="CORRECTED_WORD">%3$s</xliff:g>"</string>
     <string name="spoken_auto_correct_obscured">"<xliff:g id="KEY_NAME">%1$s</xliff:g> hufanya marekebisho otomatiki"</string>
     <string name="spoken_empty_suggestion">"Hakuna pendekezo"</string>

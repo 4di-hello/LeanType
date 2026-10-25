@@ -6,7 +6,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="spoken_use_headphones">"Нууц үгний дуудлагыг сонсох бол чихэвчийг залгана уу."</string>
     <string name="spoken_current_text_is">"Одоогийн текст %s"</string>
-    <string name="spoken_no_text_entered">"Текст оруулаагүй"</string>
     <string name="spoken_auto_correct">"<xliff:g id="KEY_NAME">%1$s</xliff:g> нь <xliff:g id="ORIGINAL_WORD">%2$s</xliff:g>-г <xliff:g id="CORRECTED_WORD">%3$s</xliff:g> руу залруулна"</string>
     <string name="spoken_auto_correct_obscured">"<xliff:g id="KEY_NAME">%1$s</xliff:g> авто-залруулалт хийдэг"</string>
     <string name="spoken_empty_suggestion">"Зөвлөмж байхгүй"</string>

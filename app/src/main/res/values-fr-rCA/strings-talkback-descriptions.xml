@@ -6,7 +6,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="spoken_use_headphones">"Branchez des écouteurs pour entendre l\'énoncé à haute voix des touches lors de l\'entrée du mot de passe."</string>
     <string name="spoken_current_text_is">"Le texte actuel est %s"</string>
-    <string name="spoken_no_text_entered">"Aucun texte entré"</string>
     <string name="spoken_auto_correct">"La touche <xliff:g id="KEY_NAME">%1$s</xliff:g> permet de remplacer <xliff:g id="ORIGINAL_WORD">%2$s</xliff:g> par <xliff:g id="CORRECTED_WORD">%3$s</xliff:g>"</string>
     <string name="spoken_auto_correct_obscured">"La touche <xliff:g id="KEY_NAME">%1$s</xliff:g> permet d\'effectuer une correction automatique"</string>
     <string name="spoken_empty_suggestion">"Aucune suggestion"</string>

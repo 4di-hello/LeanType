@@ -6,7 +6,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="spoken_use_headphones">"ដោត​កាស ដើម្បី​ស្ដាប់​ពាក្យ​សម្ងាត់​ដែល​និយាយ​​ឮ​ៗ។"</string>
     <string name="spoken_current_text_is">"អត្ថបទ​បច្ចុប្បន្ន​គឺ %s"</string>
-    <string name="spoken_no_text_entered">"គ្មាន​អត្ថបទ​​​បាន​បញ្ចូល"</string>
     <string name="spoken_auto_correct">"<xliff:g id="KEY_NAME">%1$s</xliff:g> កែ <xliff:g id="ORIGINAL_WORD">%2$s</xliff:g> ទៅ​ជា <xliff:g id="CORRECTED_WORD">%3$s</xliff:g>"</string>
     <string name="spoken_auto_correct_obscured">"<xliff:g id="KEY_NAME">%1$s</xliff:g> អនុវត្ត​ការ​កែ​ស្វ័យ​ប្រវត្តិ"</string>
     <string name="spoken_empty_suggestion">"គ្មានការផ្តល់យោបល់ទេ"</string>

@@ -11,7 +11,6 @@
     <!-- Spoken description for the currently entered text -->
     <string name="spoken_current_text_is">Current text is "%s"</string>
     <!-- Spoken description when there is no text entered -->
-    <string name="spoken_no_text_entered">No text entered</string>
 
     <!-- Spoken description to let the user know what auto-correction will be performed when a key is pressed. An auto-correction replaces a single word with one or more words. -->
     <string name="spoken_auto_correct"><xliff:g id="KEY_NAME" example="Space">%1$s</xliff:g> corrects <xliff:g id="ORIGINAL_WORD">%2$s</xliff:g> to <xliff:g id="CORRECTED_WORD">%3$s</xliff:g></string>

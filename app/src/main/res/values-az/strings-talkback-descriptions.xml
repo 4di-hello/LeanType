@@ -6,7 +6,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="spoken_use_headphones">"Parolu səsli eşitmək üçün qulaqlığı taxın."</string>
     <string name="spoken_current_text_is">"Cari mətn %s\'dir"</string>
-    <string name="spoken_no_text_entered">"Mətn daxil edilməyib"</string>
     <string name="spoken_auto_correct">"<xliff:g id="KEY_NAME">%1$s</xliff:g> <xliff:g id="ORIGINAL_WORD">%2$s</xliff:g> sözünü <xliff:g id="CORRECTED_WORD">%3$s</xliff:g> sözü ilə əvəzləyərək düzəldir"</string>
     <string name="spoken_auto_correct_obscured">"<xliff:g id="KEY_NAME">%1$s</xliff:g> avto-korreksiyanı həyata keçirir"</string>
     <string name="spoken_empty_suggestion">"Təklif yoxdur"</string>
