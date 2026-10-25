@@ -242,7 +242,7 @@ class ClipboardAdapter(
     }
 
     inner class HeaderViewHolder(val textView: TextView) : RecyclerView.ViewHolder(textView) {
-        fun bind(header: ClipboardDisplayItem.Header) {
+        init {
             textView.apply {
                 typeface = itemTypeFace
                 setTextColor(itemTextColor)
@@ -250,17 +250,21 @@ class ClipboardAdapter(
                 background = createCardBackground(this)
                 clipToOutline = true
                 
+                setOnClickListener {
+                    isPinnedFolded = !isPinnedFolded
+                    refresh()
+                }
+            }
+        }
+
+        fun bind(header: ClipboardDisplayItem.Header) {
+            textView.apply {
                 text = buildString {
                     append(if (header.isFolded) "▶  " else "▼  ")
                     append(context.getString(R.string.clipboard_pinned))
                     append(" (")
                     append(header.count)
                     append(")")
-                }
-                
-                setOnClickListener {
-                    isPinnedFolded = !isPinnedFolded
-                    refresh()
                 }
             }
         }
@@ -289,6 +293,15 @@ class ClipboardAdapter(
             }
             selectIconView = view.findViewById(R.id.clipboard_entry_select_icon)
             selectedOverlay = view.findViewById(R.id.clipboard_entry_selected_overlay)
+            selectedOverlay?.background = GradientDrawable().apply {
+                val colors = Settings.getValues().mColors
+                val accentColor = colors.get(ColorType.ACTION_KEY_BACKGROUND)
+                val radiusDp = Settings.getValues().mKeyBorderRadius.takeIf { it >= 0f } ?: 8f
+                val radiusPx = radiusDp * view.resources.displayMetrics.density
+                shape = GradientDrawable.RECTANGLE
+                cornerRadius = radiusPx
+                setColor(ColorUtils.setAlphaComponent(accentColor, 0x26))
+            }
             pinnedIconView = view.findViewById<ImageView>(R.id.clipboard_entry_pinned_icon).apply {
                 visibility = View.GONE
                 if (pinnedIconResId != 0) {
@@ -325,15 +338,6 @@ class ClipboardAdapter(
                     selectIconView.alpha = 1.0f
                     colors.setColor(selectIconView, ColorType.ACTION_KEY_BACKGROUND)
                     selectedOverlay?.visibility = View.VISIBLE
-                    val accentColor = colors.get(ColorType.ACTION_KEY_BACKGROUND)
-                    val radiusDp = Settings.getValues().mKeyBorderRadius.takeIf { it >= 0f } ?: 8f
-                    val radiusPx = radiusDp * itemView.resources.displayMetrics.density
-                    val overlayDrawable = GradientDrawable().apply {
-                        shape = GradientDrawable.RECTANGLE
-                        cornerRadius = radiusPx
-                        setColor(ColorUtils.setAlphaComponent(accentColor, 0x26))
-                    }
-                    selectedOverlay?.background = overlayDrawable
                 } else {
                     selectIconView.setImageResource(R.drawable.ic_check_circle_outline)
                     selectIconView.alpha = 0.5f
