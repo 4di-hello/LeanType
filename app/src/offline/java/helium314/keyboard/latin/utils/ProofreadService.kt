@@ -559,8 +559,7 @@ class ProofreadService(private val context: Context) {
 
     /**
      * Why llama.cpp generated nothing: its warnings and errors since [since], from the log of this
-     * process. Lines with prompt text or prompt tokens are never used. The relevant lines are copied
-     * to the clipboard (marked as sensitive), the most telling one is returned.
+     * process. Lines with prompt text or prompt tokens are never used. The most telling line is returned.
      */
     private fun inferenceDetails(since: Long): String? = try {
         val pid = android.os.Process.myPid().toString()
@@ -581,20 +580,7 @@ class ProofreadService(private val context: Context) {
         val key = relevant.lastOrNull { it.contains("context full", true) || it.contains("truncated", true) }
             ?: relevant.lastOrNull { it.contains("failed", true) || it.contains("error", true) || it.contains("exception", true) }
             ?: relevant.lastOrNull()
-        if (key == null) null
-        else {
-            runCatching {
-                val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
-                val clip = android.content.ClipData.newPlainText("LeanType AI log", relevant.joinToString("\n"))
-                if (android.os.Build.VERSION.SDK_INT >= 24) {
-                    clip.description.extras = android.os.PersistableBundle().apply {
-                        putBoolean("android.content.extra.IS_SENSITIVE", true)
-                    }
-                }
-                cm.setPrimaryClip(clip)
-            }
-            key.substringAfter(": ").trim().take(160) + " (log copied to the clipboard)"
-        }
+        key?.substringAfter(": ")?.trim()?.take(160)
     } catch (e: Exception) {
         Log.w(TAG, "Could not read the log", e)
         null
