@@ -1,11 +1,16 @@
 // SPDX-License-Identifier: GPL-3.0-only
 package helium314.keyboard.keyboard
 
+import android.graphics.RectF
+import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.os.SystemClock
 import android.text.InputType
 import android.util.SparseArray
 import android.view.KeyEvent
 import android.view.inputmethod.InputMethodSubtype
+import android.view.inputmethod.TextBoundsInfo
 import androidx.core.util.forEach
 import helium314.keyboard.event.Event
 import helium314.keyboard.event.HangulEventDecoder
@@ -31,6 +36,7 @@ import helium314.keyboard.latin.inputlogic.InputLogic
 import helium314.keyboard.latin.settings.Defaults
 import helium314.keyboard.latin.settings.Settings
 import helium314.keyboard.latin.utils.SubtypeSettings
+import helium314.keyboard.latin.utils.VisualLines
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -526,11 +532,30 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
     private var deleteSwipeCharOffset = 0
     private var deleteSwipeStepCount = 0
 
+    // Exact visual lines (Android 14+): the editor is asked once per swipe, asynchronously, where its lines
+    // break. Until the answer arrives vertical movement is held back (and applied afterwards); if there is no answer
+    // the estimated boundaries above are used, exactly as without this setting.
+    private val deleteSwipeHandler = Handler(Looper.getMainLooper())
+    private var deleteSwipeGeneration = 0
+    private var deleteSwipeExactRequested = false
+    private var deleteSwipeExactPending = false
+    private var deleteSwipePendingStepsY = 0
+    private var deleteSwipeExactRetried = false
+    // geometry the editor reported: vertical steps then keep the horizontal position (column) of the selection start
+    private var exactGeometry: VisualLines.LineGeometry? = null
+    private var exactDesiredX = Float.NaN
+    private var exactHorizontalMoved = false
+    private var deleteSwipeCurrentStart = -1
+    private var deleteSwipeTimeout: Runnable? = null
+    // Editor (app) that didn't answer or doesn't support it: don't ask again there until the keyboard is restarted
+    private var noTextBoundsPackage: String? = null
+
     override fun onMoveDeletePointer(steps: Int) {
         onMoveDeletePointer(steps, 0)
     }
 
     override fun onMoveDeletePointer(stepsX: Int, stepsY: Int) {
+        var stepsY = stepsY
         if (keyboardSwitcher.isGifPickerShowing) {
             keyboardSwitcher.onGifMoveDeletePointer(stepsX, stepsY)
             return
@@ -548,8 +573,20 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
             deleteSwipeLineIndex = 0
             deleteSwipeCharOffset = 0
             deleteSwipeStepCount = 0
+            resetDeleteSwipeExactLines()
         }
 
+        if (stepsY != 0 && !deleteSwipeExactRequested) requestExactLines()
+        if (deleteSwipeExactPending && stepsY != 0) {
+            // wait for the editor's answer, vertical movement is applied then
+            deleteSwipePendingStepsY += stepsY
+            stepsY = 0
+        }
+        if (stepsX == 0 && stepsY == 0) return
+        moveDeletePointer(stepsX, stepsY)
+    }
+
+    private fun moveDeletePointer(stepsX: Int, stepsY: Int) {
         if (settings.current.mDeleteSwipeWordByWord) {
             onMoveDeletePointerWords2D(stepsX, stepsY)
         } else {
@@ -557,9 +594,164 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
         }
     }
 
+    /**
+     * Before a vertical step, when the editor's geometry is known: the lines above are the offsets with the same
+     * horizontal position as the selection start has now (or had when the swipe began), so up moves "straight up".
+     * After a horizontal move the position is taken from where the selection start is at that moment.
+     */
+    private fun prepareExactVertical() {
+        val g = exactGeometry ?: return
+        val baseStart = deleteSwipeSelectionAnchor()
+        if (exactDesiredX.isNaN() || exactHorizontalMoved) {
+            val current = (if (deleteSwipeCurrentStart >= 0) deleteSwipeCurrentStart else baseStart).coerceIn(0, baseStart)
+            exactDesiredX = g.xAt(current)
+            exactHorizontalMoved = false
+            val boundaries = g.boundaries(baseStart, exactDesiredX)
+            if (boundaries.size > 1) {
+                deleteSwipeLineBoundaries = boundaries
+                val currentLine = g.lineIndexOf(current)
+                val baseLine = g.lineIndexOf(baseStart)
+                deleteSwipeLineIndex = if (currentLine < 0 || baseLine < 0 || currentLine >= baseLine) 0
+                    else (baseLine - currentLine).coerceAtMost(boundaries.size - 1)
+            }
+        }
+        // the horizontal position is already part of the line start now
+        deleteSwipeCharOffset = 0
+        deleteSwipeWordIndex = 0
+    }
+
+    private fun resetDeleteSwipeExactLines() {
+        deleteSwipeGeneration++
+        deleteSwipeExactRequested = false
+        deleteSwipeExactPending = false
+        deleteSwipeExactRetried = false
+        exactGeometry = null
+        exactDesiredX = Float.NaN
+        exactHorizontalMoved = false
+        deleteSwipeCurrentStart = -1
+        deleteSwipePendingStepsY = 0
+        deleteSwipeTimeout?.let { deleteSwipeHandler.removeCallbacks(it) }
+        deleteSwipeTimeout = null
+    }
+
+    /**
+     * Once per swipe, on the first vertical movement: asks the editor where its visual lines break
+     * (`requestTextBoundsInfo`, Android 14+), for the lines just above the cursor. No key events and no
+     * selection changes are involved, and nothing blocks: the answer is handled in [onExactLinesResult].
+     */
+    private fun requestExactLines() {
+        deleteSwipeExactRequested = true
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) return
+        val keyboardId = keyboardSwitcher.keyboard?.mId ?: return
+        if (!keyboardId.isMultiLine) return
+        val editorPackage = keyboardId.mEditorInfo.packageName
+        if (editorPackage != null && editorPackage == noTextBoundsPackage) return
+        // where the cursor line is, as reported by the editor (needs cursor updates, see InputLogic.startInput)
+        val anchor = connection.lastCursorAnchorInfo ?: return
+        val markerTop = anchor.insertionMarkerTop
+        val markerBottom = anchor.insertionMarkerBottom
+        val lineHeight = markerBottom - markerTop
+        if (markerTop.isNaN() || markerBottom.isNaN() || lineHeight <= 0f) return
+
+        val generation = deleteSwipeGeneration
+        val baseStart = deleteSwipeStartForExactLines()
+        val bounds = RectF(-HUGE_HORIZONTAL, markerTop - EXACT_LINES_LOOKUP * lineHeight, HUGE_HORIZONTAL, markerBottom)
+        sendExactLinesRequest(bounds, generation, baseStart, editorPackage)
+    }
+
+    private fun sendExactLinesRequest(bounds: RectF, generation: Int, baseStart: Int, editorPackage: String?): Boolean {
+        deleteSwipeExactPending = true
+        val sent = connection.requestTextBoundsInfo(bounds) { info ->
+            if (generation == deleteSwipeGeneration && deleteSwipeExactPending)
+                onExactLinesResult(info, baseStart, editorPackage)
+        }
+        if (!sent) {
+            deleteSwipeExactPending = false
+            return false
+        }
+        deleteSwipeTimeout?.let { deleteSwipeHandler.removeCallbacks(it) }
+        val timeout = Runnable {
+            if (generation == deleteSwipeGeneration && deleteSwipeExactPending) {
+                onExactLinesResult(null, baseStart, editorPackage)
+            }
+        }
+        deleteSwipeTimeout = timeout
+        deleteSwipeHandler.postDelayed(timeout, EXACT_LINES_TIMEOUT_MILLIS)
+        return true
+    }
+
+    private fun deleteSwipeStartForExactLines() = deleteSwipeLineBoundaries.firstOrNull() ?: deleteSwipeInitialEnd
+
+    private fun onExactLinesResult(info: TextBoundsInfo?, baseStart: Int, editorPackage: String?) {
+        deleteSwipeExactPending = false
+        deleteSwipeTimeout?.let { deleteSwipeHandler.removeCallbacks(it) }
+        deleteSwipeTimeout = null
+        // some editors answer with only part of the area (seen: only the first line). If the answer does not reach
+        // the swipe's start, ask once more for the whole text
+        if (info != null && !deleteSwipeExactRetried && (info.endIndex < baseStart || info.startIndex > baseStart)) {
+            deleteSwipeExactRetried = true
+            val whole = RectF(-HUGE_HORIZONTAL, -HUGE_HORIZONTAL, HUGE_HORIZONTAL, HUGE_HORIZONTAL)
+            if (sendExactLinesRequest(whole, deleteSwipeGeneration, baseStart, editorPackage)) return
+        }
+        // vertical movement was held back while waiting, so the line index is still 0 and swapping is safe
+        if (info == null) {
+            noTextBoundsPackage = editorPackage
+        } else if (deleteSwipeLineIndex == 0 && deleteSwipeLineBoundaries.firstOrNull() == baseStart) {
+            val geometry = geometryFromTextBoundsInfo(info, baseStart)
+            val boundaries = geometry?.boundaries(baseStart, geometry.xAt(baseStart))
+            if (geometry != null && boundaries != null && boundaries.size > 1) {
+                exactGeometry = geometry
+                exactDesiredX = Float.NaN // taken from the selection start at the first vertical step
+                exactHorizontalMoved = false
+            } else if (deleteSwipeExactRetried) {
+                noTextBoundsPackage = editorPackage
+            }
+        }
+        val pending = deleteSwipePendingStepsY
+        deleteSwipePendingStepsY = 0
+        if (pending != 0) moveDeletePointer(0, pending)
+    }
+
+    /** Geometry of the characters the editor reported (up to the swipe's start), or null if unusable. */
+    private fun geometryFromTextBoundsInfo(info: TextBoundsInfo, baseStart: Int): VisualLines.LineGeometry? {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) return null
+        if (info.endIndex <= info.startIndex || info.startIndex > baseStart || info.endIndex < baseStart) {
+            return null
+        }
+        // characters up to and including the one at the swipe's start (its position is the column to keep)
+        val end = minOf(info.endIndex, baseStart + 1)
+        val start = maxOf(info.startIndex, end - MAX_EXACT_LINES_CHARS)
+        val count = end - start
+        if (count <= 0) return null
+        val tops = FloatArray(count)
+        val bottoms = FloatArray(count)
+        val lefts = FloatArray(count)
+        val rights = FloatArray(count)
+        val lineFeed = BooleanArray(count)
+        val rect = RectF()
+        for (i in 0 until count) {
+            info.getCharacterBounds(start + i, rect)
+            tops[i] = rect.top
+            bottoms[i] = rect.bottom
+            lefts[i] = rect.left
+            rights[i] = rect.right
+            lineFeed[i] = info.getCharacterFlags(start + i) and TextBoundsInfo.FLAG_CHARACTER_LINEFEED != 0
+        }
+        val starts = VisualLines.lineStarts(start, tops, bottoms, lineFeed)
+        if (starts.isEmpty()) return null
+        val textStartOffset = deleteSwipeInitialEnd - deleteSwipeInitialText.length
+        val charBefore = (start - 1 - textStartOffset).takeIf { it in deleteSwipeInitialText.indices }?.let { deleteSwipeInitialText[it] }
+        val firstIsRealLineStart = start == 0 || charBefore == '\n'
+        // the first line is only complete if the range starts at a real line start
+        val realStarts = if (firstIsRealLineStart) starts else starts.drop(1)
+        if (realStarts.isEmpty()) return null
+        return VisualLines.LineGeometry(start, lefts, rights, lineFeed, realStarts)
+    }
+
     private fun onMoveDeletePointerChars2D(stepsX: Int, stepsY: Int) {
         val oldLineIndex = deleteSwipeLineIndex
         val oldCharOffset = deleteSwipeCharOffset
+        if (stepsY != 0) prepareExactVertical()
 
         if (stepsY != 0 && deleteSwipeLineBoundaries.isNotEmpty()) {
             deleteSwipeLineIndex = (deleteSwipeLineIndex - stepsY).coerceIn(0, deleteSwipeLineBoundaries.size - 1)
@@ -570,6 +762,7 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
 
         if (stepsX != 0) {
             val actual = actualSteps(stepsX)
+            exactHorizontalMoved = true
             // Positive offset: selection start is left of the line start (selected more by swiping left).
             // Negative offset: selection start is right of the line start (deselected by swiping right
             // after a vertical swipe). It can never go past the position where the swipe started.
@@ -584,14 +777,27 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
             if (deleteSwipeStepCount % 2 != 0) {
                 performHapticFeedback(HapticEvent.GESTURE_MOVE)
             }
+            deleteSwipeCurrentStart = finalStart
             connection.setSelection(finalStart, deleteSwipeInitialEnd)
         }
     }
 
     /** Start of the line currently used as base of the delete swipe selection. */
-    private fun deleteSwipeLineBase(): Int =
-        if (deleteSwipeLineBoundaries.isNotEmpty()) deleteSwipeLineBoundaries[deleteSwipeLineIndex]
-        else deleteSwipeInitialEnd
+    private fun deleteSwipeLineBase(): Int {
+        if (deleteSwipeLineBoundaries.isEmpty()) return deleteSwipeInitialEnd
+        // back on the line the swipe started in: that line's position for the kept column, not the swipe's start
+        if (deleteSwipeLineIndex == 0) exactBaseLinePosition()?.let { return it }
+        return deleteSwipeLineBoundaries[deleteSwipeLineIndex]
+    }
+
+    private fun exactBaseLinePosition(): Int? {
+        val g = exactGeometry ?: return null
+        if (exactDesiredX.isNaN() || deleteSwipeLineBoundaries.isEmpty()) return null
+        val baseStart = deleteSwipeLineBoundaries[0]
+        val line = g.lineIndexOf(baseStart)
+        if (line < 0) return null
+        return minOf(g.columnOffset(line, exactDesiredX), baseStart)
+    }
 
     /** Selection start when the delete swipe began, i.e. the right-most point the selection start may be moved to. */
     private fun deleteSwipeSelectionAnchor(): Int =
@@ -601,6 +807,7 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
     private fun onMoveDeletePointerWords2D(stepsX: Int, stepsY: Int) {
         val oldLineIndex = deleteSwipeLineIndex
         val oldWordIndex = deleteSwipeWordIndex
+        if (stepsY != 0) prepareExactVertical()
 
         // Negative stepsY moves UP (select more lines), positive stepsY moves DOWN (deselect lines)
         if (stepsY != 0 && deleteSwipeLineBoundaries.isNotEmpty()) {
@@ -613,6 +820,7 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
         // Positive index: words to the left of the line start. Negative index: words to the right of the
         // line start that are deselected again (limited to what lies before the swipe's start point).
         if (stepsX != 0) {
+            exactHorizontalMoved = true
             val minIndex = -getWordBoundariesForwards(
                 deleteSwipeInitialText, deleteSwipeSelectionAnchor(), deleteSwipeLineBase()
             ).size
@@ -634,7 +842,7 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
                     lineBaseStart
                 }
             } else {
-                val wordsBeforeLine = if (deleteSwipeLineIndex == 0) {
+                val wordsBeforeLine = if (deleteSwipeLineIndex == 0 && lineBaseStart == deleteSwipeSelectionAnchor()) {
                     deleteSwipeWordBoundaries
                 } else {
                     val textStartOffset = deleteSwipeInitialEnd - deleteSwipeInitialText.length
@@ -653,7 +861,8 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
             if (deleteSwipeStepCount % 2 != 0) {
                 performHapticFeedback(HapticEvent.GESTURE_MOVE)
             }
-            connection.setSelection(finalStart.coerceAtMost(deleteSwipeInitialEnd), deleteSwipeInitialEnd)
+            deleteSwipeCurrentStart = finalStart.coerceAtMost(deleteSwipeInitialEnd)
+            connection.setSelection(deleteSwipeCurrentStart, deleteSwipeInitialEnd)
         }
     }
 
@@ -689,6 +898,7 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
         deleteSwipeLineIndex = 0
         deleteSwipeCharOffset = 0
         deleteSwipeStepCount = 0
+        resetDeleteSwipeExactLines()
         if (!connection.hasSelection()) return
         inputLogic.finishInput()
         onCodeInput(KeyCode.DELETE, Constants.NOT_A_COORDINATE, Constants.NOT_A_COORDINATE, false)
@@ -709,6 +919,7 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
         deleteSwipeLineIndex = 0
         deleteSwipeCharOffset = 0
         deleteSwipeStepCount = 0
+        resetDeleteSwipeExactLines()
     }
 
     private fun onLanguageSlide(steps: Int, isVertical: Boolean = false): Boolean {
@@ -1046,6 +1257,15 @@ class KeyboardActionListenerImpl(private val latinIME: LatinIME, private val inp
         }
 
         private fun Int.isMetaLock() = this == KeyCode.CTRL_LOCK || this == KeyCode.ALT_LOCK || this == KeyCode.FN_LOCK || this == KeyCode.META_LOCK
+
+        /** How many lines above the cursor line the editor is asked about for exact lines (beyond that: estimate). */
+        private const val EXACT_LINES_LOOKUP = 40
+        /** At most this many characters of the editor's answer are looked at. */
+        private const val MAX_EXACT_LINES_CHARS = 4000
+        /** No answer from the editor within this time (ms): use the estimate for this swipe and app. */
+        private const val EXACT_LINES_TIMEOUT_MILLIS = 150L
+        /** Covers the full width of the editor, whatever its scroll position. */
+        private const val HUGE_HORIZONTAL = 100_000f
 
         internal fun getLineBoundariesBackwards(text: String, endOffset: Int): List<Int> {
             val boundaries = mutableListOf<Int>()
