@@ -731,6 +731,14 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
         fun readSplitKeyboardEnabled(prefs: SharedPreferences, isLandscape: Boolean, profile: helium314.keyboard.latin.utils.ScreenProfile): Boolean {
             val basePref = if (isLandscape) PREF_ENABLE_SPLIT_KEYBOARD_LANDSCAPE else PREF_ENABLE_SPLIT_KEYBOARD
             val defaultValue = profile.isLarge() || if (isLandscape) Defaults.PREF_ENABLE_SPLIT_KEYBOARD_LANDSCAPE else Defaults.PREF_ENABLE_SPLIT_KEYBOARD
+            if (profile.isLarge()) {
+                val profileKey = getProfileAwarePrefKey(basePref, profile)
+                if (prefs.contains(profileKey)) return prefs.getBoolean(profileKey, defaultValue)
+                val portraitPref = getProfileAwarePrefKey(PREF_ENABLE_SPLIT_KEYBOARD, profile)
+                if (prefs.contains(portraitPref)) return prefs.getBoolean(portraitPref, defaultValue)
+                if (prefs.contains(PREF_ENABLE_SPLIT_KEYBOARD)) return prefs.getBoolean(PREF_ENABLE_SPLIT_KEYBOARD, defaultValue)
+                return defaultValue
+            }
             return getProfileAwareBoolean(prefs, basePref, profile, defaultValue)
         }
 
@@ -764,6 +772,13 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
             val defaults = Defaults.PREF_KEYBOARD_HEIGHT_SCALE
             val defaultValue = defaults[index]
             val basePref = createPrefKeyForBooleanSettings(PREF_KEYBOARD_HEIGHT_SCALE_PREFIX, index, 1)
+            if (profile.isLarge() && landscape) {
+                val profileKey = getProfileAwarePrefKey(basePref, profile)
+                if (prefs.contains(profileKey)) return prefs.getFloat(profileKey, defaultValue)
+                val portraitProfilePref = getProfileAwarePrefKey(PREF_KEYBOARD_HEIGHT_SCALE_PREFIX, profile)
+                if (prefs.contains(portraitProfilePref)) return prefs.getFloat(portraitProfilePref, defaults[0])
+                if (prefs.contains(PREF_KEYBOARD_HEIGHT_SCALE_PREFIX)) return prefs.getFloat(PREF_KEYBOARD_HEIGHT_SCALE_PREFIX, defaults[0])
+            }
             return getProfileAwareFloat(prefs, basePref, profile, defaultValue)
         }
 

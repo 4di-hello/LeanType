@@ -27,13 +27,6 @@ object ScreenProfileProvider {
         configuration: Configuration? = null,
         settingsValues: SettingsValues? = null
     ): ScreenProfile {
-        val isFoldableModeEnabled = settingsValues?.mFoldableMode
-            ?: context.prefs().getBoolean(Settings.PREF_FOLDABLE_MODE, false)
-
-        if (!isFoldableModeEnabled) {
-            return ScreenProfile.COMPACT
-        }
-
         val config = configuration ?: context.resources.configuration
         val currentHash = config.hashCode()
         cachedProfile?.let {
@@ -44,6 +37,16 @@ object ScreenProfileProvider {
         val density = context.resources.displayMetrics.density
         val calculatedDp = if (density > 0f) (widthPx / density).roundToInt() else 0
         val availableWidthDp = if (config.screenWidthDp > 0) config.screenWidthDp else calculatedDp
+        val heightPx = context.resources.displayMetrics.heightPixels
+        val availableHeightDp = if (config.screenHeightDp > 0) config.screenHeightDp else if (density > 0f) (heightPx / density).roundToInt() else 0
+
+        val isBothDimensionsLarge = availableWidthDp >= 600 && availableHeightDp >= 600
+        val isFoldableModeEnabled = settingsValues?.mFoldableMode
+            ?: context.prefs().getBoolean(Settings.PREF_FOLDABLE_MODE, false)
+
+        if (!isFoldableModeEnabled && !isBothDimensionsLarge) {
+            return ScreenProfile.COMPACT
+        }
 
         val profile = when {
             availableWidthDp >= 600 -> ScreenProfile.LARGE
