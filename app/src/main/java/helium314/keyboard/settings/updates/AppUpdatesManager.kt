@@ -150,10 +150,12 @@ object AppUpdatesManager {
     )
 
     fun hasAppUpdate(context: Context): Boolean {
+        if (BuildConfig.FLAVOR != "standard") return false
         return context.prefs().getBoolean(PREF_APP_UPDATE_AVAILABLE, false)
     }
 
     fun hasAnyPluginUpdate(context: Context): Boolean {
+        if (BuildConfig.FLAVOR != "standard") return false
         val prefs = context.prefs()
         return PLUGINS.any { plugin ->
             prefs.getBoolean("$PREF_PLUGIN_UPDATE_PREFIX${plugin.id}", false)
@@ -161,18 +163,22 @@ object AppUpdatesManager {
     }
 
     fun hasAnyUpdate(context: Context): Boolean {
+        if (BuildConfig.FLAVOR != "standard") return false
         return hasAppUpdate(context) || hasAnyPluginUpdate(context)
     }
 
     fun isPluginUpdateAvailable(context: Context, pluginId: String): Boolean {
+        if (BuildConfig.FLAVOR != "standard") return false
         return context.prefs().getBoolean("$PREF_PLUGIN_UPDATE_PREFIX$pluginId", false)
     }
 
     fun getPluginLatestVersion(context: Context, pluginId: String): String? {
+        if (BuildConfig.FLAVOR != "standard") return null
         return context.prefs().getString("$PREF_PLUGIN_LATEST_PREFIX$pluginId", null)
     }
 
     fun getAppLatestVersion(context: Context): String? {
+        if (BuildConfig.FLAVOR != "standard") return null
         return context.prefs().getString(PREF_APP_LATEST_TAG, null)
     }
 
