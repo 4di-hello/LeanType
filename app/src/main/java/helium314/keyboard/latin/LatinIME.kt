@@ -1058,7 +1058,8 @@ class LatinIME : InputMethodService(),
         keyboardSwitcher.hideGifPicker()
         keyboardSwitcher.hideOcrPanels()
         clipboardHistoryManager.onWindowHidden()
-        ProofreadHelper.cancelCurrentJob()
+        // an AI request keeps running: its result is inserted when the keyboard is back in the same field,
+        // some editors (e.g. Nine Mail) hide the keyboard when the cursor is moved for the result
         val fkm = floatingKeyboardManager
         if (fkm != null) {
             if (!settings.current.mRememberFloatingKeyboard) {
@@ -1091,7 +1092,6 @@ class LatinIME : InputMethodService(),
         if (keyboardSwitcher.isOcrShowing) {
             keyboardSwitcher.hideOcrPanels()
         }
-        ProofreadHelper.cancelCurrentJob()
         voiceInputManager?.cancelVoice()
         updateVoiceKeepScreenOn(VoiceInputManager.VoiceState.IDLE)
         releaseVoicePluginOnIdle(preserveExistingSchedule = true)
