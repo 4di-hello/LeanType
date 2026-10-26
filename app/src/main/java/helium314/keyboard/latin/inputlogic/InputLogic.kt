@@ -1985,9 +1985,13 @@ class InputLogic(
             return false
         }
         val codePoints = StringUtils.toCodePointArray(replacement)
+        // keys are found by their lower case letter, upper case letters would have no position
+        val coordinates = mLatinIME.getCoordinatesForCurrentKeyboard(codePoints.map { Character.toLowerCase(it) }.toIntArray())
+        // still the typed word, not one from existing text: suggestions and auto-correction as before the shift
+        val wasResumed = mWordComposer.isResumed()
         mConnection.beginBatchEdit()
         try {
-            mWordComposer.setComposingWord(codePoints, mLatinIME.getCoordinatesForCurrentKeyboard(codePoints))
+            mWordComposer.setComposingWord(codePoints, coordinates, isResumed = wasResumed)
             setComposingTextInternal(replacement, 1)
         } finally {
             mConnection.endBatchEdit()
