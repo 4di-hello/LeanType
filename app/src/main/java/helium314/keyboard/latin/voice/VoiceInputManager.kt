@@ -22,6 +22,7 @@ import com.leanbitlab.leantype.voice.VoiceSessionConfig
 import helium314.keyboard.latin.LatinIME
 import helium314.keyboard.latin.R
 import helium314.keyboard.latin.RichInputMethodManager
+import helium314.keyboard.latin.utils.InputTypeUtils
 import helium314.keyboard.latin.utils.Log
 import helium314.keyboard.latin.utils.ProofreadService
 import helium314.keyboard.latin.utils.prefs
@@ -1070,13 +1071,7 @@ class VoiceInputManager(
 
         fun isBlockedEditor(info: EditorInfo?): Boolean {
             if (info == null) return false
-
-            val variation = info.inputType and InputType.TYPE_MASK_VARIATION
-
-            return variation == InputType.TYPE_TEXT_VARIATION_PASSWORD ||
-                    variation == InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD ||
-                    variation == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD ||
-                    variation == InputType.TYPE_NUMBER_VARIATION_PASSWORD
+            return InputTypeUtils.isAnyPasswordInputType(info.inputType)
         }
     }
 
