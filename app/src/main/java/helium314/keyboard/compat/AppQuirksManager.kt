@@ -51,6 +51,12 @@ object AppQuirksManager {
                 packageName = packageName,
                 forceWebEditor = true
             )
+            // Acode is a web-based code editor using Ace editor which relies on TYPE_NULL inputs.
+            packageName == "com.foxdebug.acode" || packageName.startsWith("com.foxdebug.acode") || packageName.contains("acode") -> AppQuirk(
+                packageName = packageName,
+                forceWebEditor = true,
+                allowTypeNullKeyboard = true
+            )
             else -> null
         }
     }
@@ -161,6 +167,8 @@ object AppQuirksManager {
         val pkg = packageName.lowercase()
         if (pkg == "com.termux" || pkg.startsWith("com.termux.") || pkg.endsWith(".termux") || pkg.contains("terminal")) return true
         if (pkg.contains("dialer") || pkg.contains("contacts") || pkg.contains("phone")) return true
+        if (pkg.contains("acode") || pkg.contains("editor") || pkg.contains("ide") || pkg.contains("code") || pkg.contains("edit")) return true
+        if (pkg.contains("dict") || pkg.contains("lexicon")) return true
         if (isWebEditor(packageName)) return true
         return getEffectiveQuirk(packageName)?.allowTypeNullKeyboard == true
     }
