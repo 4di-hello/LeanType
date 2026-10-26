@@ -85,6 +85,13 @@ class ProofreadService(private val context: Context) {
             isModelAvailable = true
         }
 
+        /**
+         * Tokens the model can see at once: prompt, text and answer together. 2048 were too few for
+         * a long text (about 5000 characters of German), the model then generated nothing. 4096 need
+         * roughly 300 MB more memory for a 4B model.
+         */
+        const val CONTEXT_TOKENS = 4096
+
         suspend fun loadModel(
             context: Context,
             modelPath: String
@@ -110,7 +117,7 @@ class ProofreadService(private val context: Context) {
                 val threads = if (cores <= 4) cores else 4
                 
                 Log.i(TAG, "Loading GGUF model via AI Plugin: path=$modelPath threads=$threads")
-                val success = provider.loadModel(context, modelPath, threads, 2048)
+                val success = provider.loadModel(context, modelPath, threads, CONTEXT_TOKENS)
                 if (success) {
                     currentModelPath = modelPath
                     isModelLoaded = true
@@ -448,6 +455,9 @@ class ProofreadService(private val context: Context) {
             } else {
                 // say why: the model generated nothing, or our cleanup removed what it generated
                 val reason = when {
+                    // roughly 3 characters per token for German; prompt and answer have to fit together
+                    output.isBlank() && fullPrompt.length / 3 + maxTokens > ModelHolder.CONTEXT_TOKENS ->
+                        "the text is probably too long for the model (prompt ${fullPrompt.length} chars, room for about ${ModelHolder.CONTEXT_TOKENS * 3} chars including the answer)"
                     output.isBlank() -> "the model ended without generating text (prompt ${fullPrompt.length} chars, chat format ${chatFormat ?: "none"})"
                     else -> "the cleanup removed the generated text (${output.length} chars): \"${output.trim().take(60).replace('\n', ' ')}\""
                 }
