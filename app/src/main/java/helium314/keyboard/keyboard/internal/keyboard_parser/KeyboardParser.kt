@@ -84,10 +84,6 @@ class KeyboardParser(private val params: KeyboardParams, private val context: Co
             // 5 rows × 0.75 pitch + 1 full row = 4.0 × rowHeight = mBaseHeight
             heightRescale = 1f
         } else {
-            if ((params.mId.mElementId == KeyboardId.ELEMENT_NUMPAD || params.mId.mElementId == KeyboardId.ELEMENT_TEXT_EDIT)
-                && Settings.getValues().mShowsNumberRow && keysInRows.size == 4) {
-                keysInRows.add(0, arrayListOf(KeyParams.newSpacer(params, 1f)))
-            }
             // rescale height if we have anything but the usual 4 rows
             heightRescale = if (keysInRows.size != 4) 4f / keysInRows.size else 1f
         }
