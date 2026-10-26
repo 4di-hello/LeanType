@@ -32,6 +32,7 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
 - Fremde PRs geprüft 25.10.: #434 (Screenshot-Absturz) schon in LeanType enthalten; #574 (Wörtlich-Tippen) nicht nötig, Autokorrektur-Knopf reicht; #571 offen
 - Screenshots in der Zwischenablage: nur mit Fotos-Berechtigung „Alle erlauben“ und Tastatur innerhalb von 5 Minuten geöffnet; Idee: ältere Screenshots beim Öffnen des Verlaufs einsammeln
 - Erledigt 26.10.: Shift auf das getippte Wort (Großschreibung ändern) behielt das Wort nicht als getippt, Vorschläge wie „Rad Umfang“; PR-Branch `fix/shift-recapitalize-typed-word`, Tests grün
+- Erledigt 26.10.: Lokale KI – „no output“ bei langen Texten: Kontext 4096 statt 2048 Token, Fehlermeldung nennt den Grund (Text zu lang / nichts erzeugt / beim Aufräumen entfernt). Umlaute im Prompt waren nicht die Ursache
 - Emoji-Vorschläge zum getippten Wort: prüfen, was LeanType schon kann (`suggest_emojis`, Inline-Emoji-Suche mit Emoji-Wörterbuch), dann entscheiden
 - Getrennte Tipp-Profile pro Daumen bzw. Haltung weiter verfeinern (Idee)
 
