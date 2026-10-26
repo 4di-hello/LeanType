@@ -446,7 +446,13 @@ class ProofreadService(private val context: Context) {
             if (finalOutput.isNotBlank()) {
                 Result.success(finalOutput)
             } else {
-                Result.failure(ProofreadException("Model produced no output"))
+                // say why: the model generated nothing, or our cleanup removed what it generated
+                val reason = when {
+                    output.isBlank() -> "the model ended without generating text (prompt ${fullPrompt.length} chars, chat format ${chatFormat ?: "none"})"
+                    else -> "the cleanup removed the generated text (${output.length} chars): \"${output.trim().take(60).replace('\n', ' ')}\""
+                }
+                Log.w(TAG, "no output: " + if (output.isBlank()) "nothing generated" else "cleanup removed ${output.length} chars")
+                Result.failure(ProofreadException("Model produced no output: $reason"))
             }
 
         } catch (e: Throwable) {
