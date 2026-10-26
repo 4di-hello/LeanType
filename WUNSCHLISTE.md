@@ -33,6 +33,7 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
 - Screenshots in der Zwischenablage: nur mit Fotos-Berechtigung „Alle erlauben“ und Tastatur innerhalb von 5 Minuten geöffnet; Idee: ältere Screenshots beim Öffnen des Verlaufs einsammeln
 - Erledigt 26.10.: Shift auf das getippte Wort (Großschreibung ändern) behielt das Wort nicht als getippt, Vorschläge wie „Rad Umfang“; PR #733 bei LeanType
 - Erledigt 26.10.: Lokale KI – „no output“ bei langen Texten: Kontext 4096 statt 2048 Token, Fehlermeldung nennt den Grund (Text zu lang / nichts erzeugt / beim Aufräumen entfernt). Umlaute im Prompt waren nicht die Ursache
+- Bekannt, nicht weiter verfolgt (26.10.): KI-Tasten in Nine Mail – der Editor klappt die Tastatur ein, wenn sie den Cursor verschiebt, das Ergebnis kommt nicht an. Umgehung: Cursor vorher ans Textende setzen oder „Ergebnis voranstellen“ nutzen; andere Apps (Obsidian, Notizen) funktionieren
 - Emoji-Vorschläge zum getippten Wort: prüfen, was LeanType schon kann (`suggest_emojis`, Inline-Emoji-Suche mit Emoji-Wörterbuch), dann entscheiden
 - Getrennte Tipp-Profile pro Daumen bzw. Haltung weiter verfeinern (Idee)
 
