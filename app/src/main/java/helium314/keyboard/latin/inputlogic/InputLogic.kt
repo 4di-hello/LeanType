@@ -166,6 +166,9 @@ class InputLogic(
         mInputLogicHandler.reset()
         mConnection.requestCursorUpdates(true, true)
         setInlineEmojiSearchAction(false)
+        // an AI result that arrived while the keyboard was hidden, once the field is ready again
+        if (mPendingAIResult != null)
+            android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({ insertPendingAIResult() }, 300)
     }
 
     fun onSubtypeChanged(combiningSpec: String?, settingsValues: SettingsValues) {
@@ -3197,8 +3200,12 @@ class InputLogic(
             textToProcess, prompt, hasSelection, showThinking,
             allowEmptyInput = usesClipboard,
             onSuccess = { resultText ->
+                val result = PendingAIResult(resultText, targetPackage, targetFieldId, hasSelection, shouldAppend, keepsOriginal,
+                    android.os.SystemClock.uptimeMillis())
                 if (!mLatinIME.isInputViewShown || !mConnection.isConnected()) {
-                    Log.w(TAG, "Input view hidden or disconnected during custom AI operation, ignoring result")
+                    // some editors (e.g. Nine Mail) hide the keyboard meanwhile: insert when it is back in this field
+                    Log.i(TAG, "Input view hidden during custom AI operation, keeping the result")
+                    mPendingAIResult = result
                     return@customAsync
                 }
                 val currentEditor = getCurrentInputEditorInfo()
@@ -3206,29 +3213,53 @@ class InputLogic(
                     Log.w(TAG, "Target editor changed during custom AI operation, ignoring result")
                     return@customAsync
                 }
-                if (keepsOriginal) {
-                    if (shouldAppend && !hasSelection) {
-                        // the cursor may have moved meanwhile, e.g. when the keyboard was hidden and the field tapped again
-                        val after = mConnection.getTextAfterCursor(60000, 0)?.length ?: 0
-                        if (after > 0 && mConnection.expectedSelectionEnd >= 0) {
-                            val end = mConnection.expectedSelectionEnd + after
-                            mConnection.setSelection(end, end)
-                        }
-                    }
-                    val textBefore = mConnection.getTextBeforeCursor(SEPARATOR_CONTEXT, 0) ?: ""
-                    val textAfter = mConnection.getTextAfterCursor(SEPARATOR_CONTEXT, 0) ?: ""
-                    mLatinIME.onTextInput(CustomAIKeyText.resultToInsert(resultText, textBefore, textAfter))
-                } else if (!hasSelection) {
-                    mConnection.replaceEntireText(resultText)
-                } else {
-                    mLatinIME.onTextInput(resultText)
-                }
+                insertAIResult(result)
             },
             onError = { errorMessage ->
                 Log.e(TAG, "Custom AI Error: $errorMessage")
                 KeyboardSwitcher.getInstance().showToast(mLatinIME.getString(R.string.ai_error_format, errorMessage), true)
             }
         )
+    }
+
+    /** result of a custom AI key, kept while the keyboard is hidden */
+    private class PendingAIResult(
+        val text: String, val packageName: String?, val fieldId: Int?,
+        val hasSelection: Boolean, val shouldAppend: Boolean, val keepsOriginal: Boolean, val time: Long
+    )
+    private var mPendingAIResult: PendingAIResult? = null
+
+    private fun insertAIResult(result: PendingAIResult) {
+        if (result.keepsOriginal) {
+            if (result.shouldAppend && !result.hasSelection) {
+                // the cursor may have moved meanwhile, e.g. when the keyboard was hidden and the field tapped again
+                val after = mConnection.getTextAfterCursor(60000, 0)?.length ?: 0
+                if (after > 0 && mConnection.expectedSelectionEnd >= 0) {
+                    val end = mConnection.expectedSelectionEnd + after
+                    mConnection.setSelection(end, end)
+                }
+            }
+            val textBefore = mConnection.getTextBeforeCursor(SEPARATOR_CONTEXT, 0) ?: ""
+            val textAfter = mConnection.getTextAfterCursor(SEPARATOR_CONTEXT, 0) ?: ""
+            mLatinIME.onTextInput(CustomAIKeyText.resultToInsert(result.text, textBefore, textAfter))
+        } else if (!result.hasSelection) {
+            mConnection.replaceEntireText(result.text)
+        } else {
+            mLatinIME.onTextInput(result.text)
+        }
+    }
+
+    /** Inserts a result that arrived while the keyboard was hidden, if the keyboard is back in the same field soon. */
+    private fun insertPendingAIResult() {
+        val pending = mPendingAIResult ?: return
+        mPendingAIResult = null
+        if (android.os.SystemClock.uptimeMillis() - pending.time > PENDING_AI_RESULT_MS) return
+        if (!mLatinIME.isInputViewShown || !mConnection.isConnected()) return
+        val editor = getCurrentInputEditorInfo()
+        if (editor?.packageName != pending.packageName || editor?.fieldId != pending.fieldId) return
+        // a replaced selection is gone, there is nothing left to replace safely
+        if (pending.hasSelection && !pending.keepsOriginal) return
+        insertAIResult(pending)
     }
 
     private fun tryJumpToNextPlaceholder(): Boolean {
@@ -3440,6 +3471,8 @@ class InputLogic(
         private val THAI_WORD_BREAK_ITERATOR = ThreadLocal.withInitial { BreakIterator.getWordInstance(THAI_LOCALE) }
         /** characters around the cursor that decide which line breaks go around an inserted AI result */
         private const val SEPARATOR_CONTEXT = 64
+        /** how long a result waits for the keyboard to come back into its field */
+        private const val PENDING_AI_RESULT_MS = 2 * 60 * 1000L
         private val CURSOR_PATTERN = java.util.regex.Pattern.compile("%cursor(\\d+)%")
 
         /**
