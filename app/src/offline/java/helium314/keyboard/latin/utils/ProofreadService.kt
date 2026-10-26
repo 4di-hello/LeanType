@@ -92,6 +92,13 @@ class ProofreadService(private val context: Context) {
          */
         const val CONTEXT_TOKENS = 4096
 
+        /**
+         * One generation at a time. A cancelled request (e.g. the keyboard was closed) keeps running in
+         * the plugin until it is done, and a new one would fail with "Context is busy" and give no
+         * output. It waits here instead. A plain lock, as it is held by the thread blocked in the plugin.
+         */
+        val generateLock = Any()
+
         suspend fun loadModel(
             context: Context,
             modelPath: String
@@ -423,13 +430,13 @@ class ProofreadService(private val context: Context) {
             
             // Use provider to generate completion
             val inferenceStart = System.currentTimeMillis()
-            val output = provider.generate(fullPrompt, mapOf(
+            val output = synchronized(ModelHolder.generateLock) { provider.generate(fullPrompt, mapOf(
                 "temperature" to temp.toDouble(),
                 "top_p" to topP.toDouble(),
                 "top_k" to topK,
                 "min_p" to minP.toDouble(),
                 "max_tokens" to effectiveMaxTokens
-            ))
+            )) }
 
             // Schedule unload after work is done
             ModelHolder.scheduleUnload(context)
@@ -465,7 +472,7 @@ class ProofreadService(private val context: Context) {
                 // say why: the model generated nothing, or our cleanup removed what it generated
                 val reason = when {
                     // roughly 3 characters per token for German; prompt and answer have to fit together
-                    output.isBlank() && fullPrompt.length / 3 + maxTokens > ModelHolder.CONTEXT_TOKENS ->
+                    output.isBlank() && fullPrompt.length / 3 + effectiveMaxTokens > ModelHolder.CONTEXT_TOKENS ->
                         "the text is probably too long for the model (prompt ${fullPrompt.length} chars, room for about ${ModelHolder.CONTEXT_TOKENS * 3} chars including the answer)"
                     output.isBlank() -> "the model ended without generating text (prompt ${fullPrompt.length} chars, chat format ${chatFormat ?: "none"})"
                     else -> "the cleanup removed the generated text (${output.length} chars): \"${output.trim().take(60).replace('\n', ' ')}\""
