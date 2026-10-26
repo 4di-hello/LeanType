@@ -31,6 +31,7 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
 - Erledigt 25.10.: Einstellungssuche – langer Druck auf ein Ergebnis springt zur Option (scrollt, klappt auf, hebt hervor)
 - Fremde PRs geprüft 25.10.: #434 (Screenshot-Absturz) schon in LeanType enthalten; #574 (Wörtlich-Tippen) nicht nötig, Autokorrektur-Knopf reicht; #571 offen
 - Screenshots in der Zwischenablage: nur mit Fotos-Berechtigung „Alle erlauben“ und Tastatur innerhalb von 5 Minuten geöffnet; Idee: ältere Screenshots beim Öffnen des Verlaufs einsammeln
+- Erledigt 26.10.: Shift auf das getippte Wort (Großschreibung ändern) behielt das Wort nicht als getippt, Vorschläge wie „Rad Umfang“; PR-Branch `fix/shift-recapitalize-typed-word`, Tests grün
 - Emoji-Vorschläge zum getippten Wort: prüfen, was LeanType schon kann (`suggest_emojis`, Inline-Emoji-Suche mit Emoji-Wörterbuch), dann entscheiden
 - Getrennte Tipp-Profile pro Daumen bzw. Haltung weiter verfeinern (Idee)
 
