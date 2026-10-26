@@ -303,7 +303,8 @@ class WordComposer {
      * @param codePoints the code points to set as the composing word.
      * @param coordinates the x, y coordinates of the key in the CoordinateUtils format
      */
-    fun setComposingWord(codePoints: IntArray, coordinates: IntArray) {
+    /** [isResumed]: the word comes from existing text (no auto-correction, the typed word is not added to the suggestions) */
+    fun setComposingWord(codePoints: IntArray, coordinates: IntArray, isResumed: Boolean = true) {
         reset()
 
         for (i in codePoints.indices) {
@@ -317,7 +318,7 @@ class WordComposer {
             applyProcessedEvent(processedEvent)
         }
 
-        mIsResumed = true
+        mIsResumed = isResumed
     }
 
     /**
