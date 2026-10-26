@@ -13,7 +13,7 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
   - Empfohlen: Qwen3-4B-Instruct-2507 **Q4_0** (schnellstes Format auf dem Handy-Prozessor), langer Absatz (~320 Wörter) ca. 30 s, kurze Nachrichten wenige Sekunden
   - Getestet 18.10.: Qwen3-1.7B Q4_K_M ca. 24 s, ok aber schwächer; Qwen3-1.7B **Q4_0 kaputt** (nur Punkte); IQ4_XS langsamer als Q4_0
   - Einstellungen: max. Tokens 1024 (sonst werden lange Texte abgeschnitten), Modell geladen halten
-  - Behoben in LeanType+: Chat-Format für Qwen ohne Denkmodus, Diagnose zeigt den echten Ladefehler
+  - Behoben in LeanType+: Chat-Format für Qwen ohne Denkmodus (Ladefehler-Diagnose am 26.10. wieder entfernt, war nicht im Original)
   - 18.10.: Anweisung und Text getrennt (System-/Nutzernachricht), kein eingebautes Beispiel mehr („großes Haus“); `{text}` nicht mehr nötig
   - LFM2 (Liquid, z. B. LFM2-2.6B Q4_K_M) wird erkannt (Dateiname enthält „lfm“) – testen
   - Idee: Modus „Nur Korrekturen“ (Modell gibt nur „alt → neu“ aus, deutlich schneller)
