@@ -148,6 +148,7 @@ class ClipboardHistoryManager(
         }
 
         ExecutorUtils.getBackgroundExecutor(ExecutorUtils.KEYBOARD).execute {
+            if (latinIME.mSettings.current.mClipboardHistoryEnabled) addOlderScreenshotsToHistory()
             val projection = mutableListOf(
                 android.provider.MediaStore.Images.Media._ID,
                 android.provider.MediaStore.Images.Media.DISPLAY_NAME,
@@ -438,6 +439,64 @@ class ClipboardHistoryManager(
             if (latinIME.mSettings.current.mClipboardSkipSensitive && imageUri == null
                 && isSensitiveForHistory(clipData.description, content)) return
             clipboardDao?.addClip(timeStamp, false, content, imageUri)
+        }
+    }
+
+    /**
+     * Screenshots of the last [OLDER_SCREENSHOT_TIME_MILLIS] (at most as long as the history keeps clips) that are not in the history yet, e.g. because
+     * the keyboard was not opened within [RECENT_SCREENSHOT_TIME_MILLIS] after taking them. They get the
+     * time they were taken, so they are sorted in and don't push newer clips down. Only real screenshots
+     * (name or folder "Screenshot"), never other photos, and never ones the user deleted from the history.
+     * Called on a background thread.
+     */
+    private fun addOlderScreenshotsToHistory() {
+        val dao = clipboardDao ?: return
+        try {
+            val projection = mutableListOf(
+                android.provider.MediaStore.Images.Media._ID,
+                android.provider.MediaStore.Images.Media.DISPLAY_NAME,
+                android.provider.MediaStore.Images.Media.DATE_ADDED
+            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                projection.add(android.provider.MediaStore.Images.Media.RELATIVE_PATH)
+            // not older than the history keeps clips, they would be removed right away (121 minutes: keep forever)
+            val retentionMinutes = latinIME.mSettings.current.mClipboardHistoryRetentionTime
+            val window = if (retentionMinutes > 120) OLDER_SCREENSHOT_TIME_MILLIS
+                else minOf(OLDER_SCREENSHOT_TIME_MILLIS, retentionMinutes * 60 * 1000L)
+            if (window <= RECENT_SCREENSHOT_TIME_MILLIS) return
+            val since = (System.currentTimeMillis() - window) / 1000L
+            val cursor = latinIME.contentResolver.query(
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                projection.toTypedArray(),
+                "${android.provider.MediaStore.Images.Media.DATE_ADDED} >= ?",
+                arrayOf(since.toString()),
+                "${android.provider.MediaStore.Images.Media.DATE_ADDED} DESC"
+            ) ?: return
+            val deletedSet = latinIME.prefs().getStringSet("deleted_screenshot_uris", emptySet()) ?: emptySet()
+            val inHistory = dao.getClips().mapNotNull { it.imageUri }.toSet()
+            var added = 0
+            cursor.use {
+                val idIndex = it.getColumnIndexOrThrow(android.provider.MediaStore.Images.Media._ID)
+                val nameIndex = it.getColumnIndexOrThrow(android.provider.MediaStore.Images.Media.DISPLAY_NAME)
+                val dateIndex = it.getColumnIndexOrThrow(android.provider.MediaStore.Images.Media.DATE_ADDED)
+                val pathIndex = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                    it.getColumnIndexOrThrow(android.provider.MediaStore.Images.Media.RELATIVE_PATH) else -1
+                while (it.moveToNext() && added < MAX_OLDER_SCREENSHOTS_PER_CHECK) {
+                    val name = it.getString(nameIndex) ?: ""
+                    val path = if (pathIndex >= 0) it.getString(pathIndex) ?: "" else ""
+                    if (!name.contains("screenshot", true) && !path.contains("screenshot", true)) continue
+                    val uri = android.content.ContentUris.withAppendedId(
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, it.getLong(idIndex)
+                    )
+                    if (deletedSet.contains(uri.toString())) continue
+                    val cachedPath = cacheImage(uri) ?: continue
+                    if (cachedPath in inHistory || deletedSet.contains(cachedPath)) continue
+                    dao.addClip(it.getLong(dateIndex) * 1000L, false, "[Screenshot]", cachedPath)
+                    added++
+                }
+            }
+        } catch (e: Exception) {
+            helium314.keyboard.latin.utils.Log.d("ClipboardHistoryManager", "Older screenshots not added: ${e.message}")
         }
     }
 
@@ -891,6 +950,9 @@ class ClipboardHistoryManager(
     companion object {
         const val RECENT_TIME_MILLIS = 1 * 60 * 1000L // 1 minute (for clipboard suggestions)
         const val RECENT_SCREENSHOT_TIME_MILLIS = 5 * 60 * 1000L // 5 minutes
+        /** screenshots up to this age are added to the history even if they are not suggested any more */
+        const val OLDER_SCREENSHOT_TIME_MILLIS = 24 * 60 * 60 * 1000L
+        const val MAX_OLDER_SCREENSHOTS_PER_CHECK = 10
         private val ONE_TIME_CODE = Regex("\\d{4,8}")
         fun isOneTimeCode(text: String) = ONE_TIME_CODE.matches(text.trim())
     }
