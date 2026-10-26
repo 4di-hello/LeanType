@@ -386,6 +386,17 @@ class InputLogicTest {
         assertEquals("hello ", text)
     }
 
+    @Test fun `shift on a typed word keeps it a typed word`() {
+        reset()
+        latinIME.prefs().edit { putBoolean(Settings.PREF_SHIFT_RECAPITALIZES_WORD, true) }
+        chainInput("radumfang")
+        shiftTap()
+        assertEquals("Radumfang", composingText)
+        // not treated like a word from existing text, which would change suggestions and auto-correction
+        assertEquals(false, composer.isResumed())
+        assertEquals("Radumfang", composer.getTypedWord())
+    }
+
     @Test fun `caps lock from shift on a word ends with the word`() {
         reset()
         latinIME.prefs().edit { putBoolean(Settings.PREF_SHIFT_RECAPITALIZES_WORD, true) }
