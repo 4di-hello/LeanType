@@ -565,6 +565,10 @@ class ProofreadService(private val context: Context) {
         val relevant = lines.filter { line ->
             keywords.any { line.contains(it, ignoreCase = true) } && withText.none { line.contains(it, ignoreCase = true) }
                 && !line.contains("\tat ") && !Regex(":\\s+at ").containsMatchIn(line)
+        }.map { line ->
+            // "failed to eval ... embd: <text>" ends with the text that was evaluated, keep only the numbers before it
+            val textStart = line.indexOf("embd:")
+            if (textStart >= 0) line.substring(0, textStart).trimEnd(' ', ',') else line
         }.takeLast(30)
         val key = relevant.lastOrNull { it.contains("context full", true) || it.contains("truncated", true) }
             ?: relevant.lastOrNull { it.contains("failed", true) || it.contains("error", true) || it.contains("exception", true) }
