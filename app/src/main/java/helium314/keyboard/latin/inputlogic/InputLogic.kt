@@ -3168,6 +3168,14 @@ class InputLogic(
                     return@customAsync
                 }
                 if (keepsOriginal) {
+                    if (shouldAppend && !hasSelection) {
+                        // the cursor may have moved meanwhile, e.g. when the keyboard was hidden and the field tapped again
+                        val after = mConnection.getTextAfterCursor(60000, 0)?.length ?: 0
+                        if (after > 0 && mConnection.expectedSelectionEnd >= 0) {
+                            val end = mConnection.expectedSelectionEnd + after
+                            mConnection.setSelection(end, end)
+                        }
+                    }
                     val textBefore = mConnection.getTextBeforeCursor(SEPARATOR_CONTEXT, 0) ?: ""
                     val textAfter = mConnection.getTextAfterCursor(SEPARATOR_CONTEXT, 0) ?: ""
                     mLatinIME.onTextInput(CustomAIKeyText.resultToInsert(resultText, textBefore, textAfter))
