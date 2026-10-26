@@ -43,6 +43,9 @@ fun createPopupKeysArray(popupSet: PopupSet<*>?, params: KeyboardParams, label: 
     }
     if (!popupKeysDelegate.isInitialized() || popupKeys.isEmpty())
         return null
+    if (params.mId.locale.language == "fa" && label == "ا") {
+        popupKeys.remove("&")
+    }
     val fco = popupKeys.firstOrNull { it.startsWith(Key.POPUP_KEYS_FIXED_ORDER) }
     if (fco != null) {
         val actualKeyCount = popupKeys.count { !it.startsWith("!") || !it.endsWith("!") }
@@ -81,7 +84,10 @@ fun getHintLabel(popupSet: PopupSet<*>?, params: KeyboardParams, label: String):
         when (type) {
             POPUP_KEYS_NUMBER -> popupSet?.numberLabel?.let { hintLabel = it }
             POPUP_KEYS_LAYOUT -> popupSet?.getPopupKeyLabels(params)?.let { hintLabel = it.firstOrNull() }
-            POPUP_KEYS_SYMBOLS -> popupSet?.symbols?.let { hintLabel = it.firstOrNull() }
+            POPUP_KEYS_SYMBOLS -> popupSet?.symbols?.let {
+                val filtered = if (params.mId.locale.language == "fa" && label == "ا") it.filterNot { s -> s == "&" } else it
+                hintLabel = filtered.firstOrNull()
+            }
             POPUP_KEYS_LANGUAGE -> params.mLocaleKeyboardInfos.getPopupKeys(label)?.let { hintLabel = it.firstOrNull() }
             POPUP_KEYS_LANGUAGE_PRIORITY -> params.mLocaleKeyboardInfos.getPriorityPopupKeys(label)?.let { hintLabel = it.firstOrNull() }
         }
