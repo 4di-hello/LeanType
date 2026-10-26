@@ -1184,8 +1184,11 @@ class InputLogic(
                                 mConnection.commitText("", 1)
                                 mConnection.deleteTextBeforeCursor(result.prefixLength)
                             }
-                            commitExpandedText(result.matchedString, result.expandedText)
+                            val cursorMovedBack = commitExpandedText(result.matchedString, result.expandedText)
                             resetComposingState(true)
+                            if (cursorMovedBack) {
+                                mSpaceState = SpaceState.NONE
+                            }
                             didExpand = true
                         }
                     }
@@ -1226,7 +1229,10 @@ class InputLogic(
                             // Skip re-expanding
                         } else {
                             mConnection.deleteTextBeforeCursor(result.matchedString.length)
-                            commitExpandedText(result.matchedString, result.expandedText)
+                            val cursorMovedBack = commitExpandedText(result.matchedString, result.expandedText)
+                            if (cursorMovedBack) {
+                                mSpaceState = SpaceState.NONE
+                            }
                         }
                     }
                 }
@@ -1327,12 +1333,19 @@ class InputLogic(
                     shouldTriggerAutoCorrect = !Character.isWhitespace(codePoint)
                 }
             }
-            if (shouldTriggerAutoCorrect && !isInlineEmojiSearchAction()) {
+            val cursorMovedBack = if (shouldTriggerAutoCorrect && !isInlineEmojiSearchAction()) {
                 val separator = if (shouldAvoidSendingCode) LastComposedWord.NOT_A_SEPARATOR else StringUtils.newSingleCodePointString(codePoint)
-                commitCurrentAutoCorrection(settingsValues, separator, handler)
+                val moved = commitCurrentAutoCorrection(settingsValues, separator, handler)
                 inputTransaction.setDidAutoCorrect()
+                moved
             } else {
                 commitTyped(settingsValues, StringUtils.newSingleCodePointString(codePoint))
+            }
+            if (cursorMovedBack) {
+                mSpaceState = SpaceState.NONE
+                resetComposingState(true)
+                inputTransaction.setRequiresUpdateSuggestions()
+                return
             }
         } else if (TextExpanderUtils.isEnabled(mLatinIME)) {
             val textBefore = mConnection.getTextBeforeCursor(50, 0)
@@ -1608,8 +1621,11 @@ class InputLogic(
                                     mConnection.commitText("", 1)
                                     mConnection.deleteTextBeforeCursor(result.prefixLength)
                                 }
-                                commitExpandedText(result.matchedString, result.expandedText)
+                                val cursorMovedBack = commitExpandedText(result.matchedString, result.expandedText)
                                 resetComposingState(true)
+                                if (cursorMovedBack) {
+                                    mSpaceState = SpaceState.NONE
+                                }
                             }
                         }
                     }
@@ -2543,21 +2559,23 @@ class InputLogic(
         }
     }
 
-    fun commitTyped(settingsValues: SettingsValues, separatorString: String) {
-        if (!mWordComposer.isComposingWord()) return
+    fun commitTyped(settingsValues: SettingsValues, separatorString: String): Boolean {
+        if (!mWordComposer.isComposingWord()) return false
         val typedWord = mWordComposer.getTypedWord()
         if (typedWord.isNotEmpty()) {
             val isBatchMode = mWordComposer.isBatchMode()
-            commitChosenWord(settingsValues, typedWord, LastComposedWord.COMMIT_TYPE_USER_TYPED_WORD, separatorString)
+            val cursorMovedBack = commitChosenWord(settingsValues, typedWord, LastComposedWord.COMMIT_TYPE_USER_TYPED_WORD, separatorString)
             StatsUtils.onWordCommitUserTyped(typedWord, isBatchMode)
+            return cursorMovedBack
         }
+        return false
     }
 
     private fun commitCurrentAutoCorrection(
         settingsValues: SettingsValues,
         separator: String,
         handler: LatinIME.UIHandler
-    ) {
+    ): Boolean {
         if (handler.hasPendingUpdateSuggestions()) {
             handler.cancelUpdateSuggestionStrip()
             performUpdateSuggestionStripSync(settingsValues, SuggestedWords.INPUT_STYLE_TYPING)
@@ -2567,7 +2585,7 @@ class InputLogic(
         val stringToCommit = autoCorrectionOrNull?.mWord ?: typedWord
         if (!stringToCommit.isNullOrEmpty()) {
             val isBatchMode = mWordComposer.isBatchMode()
-            commitChosenWord(settingsValues, stringToCommit, LastComposedWord.COMMIT_TYPE_DECIDED_WORD, separator)
+            val cursorMovedBack = commitChosenWord(settingsValues, stringToCommit, LastComposedWord.COMMIT_TYPE_DECIDED_WORD, separator)
             if (typedWord != stringToCommit) {
                 mConnection.commitCorrection(
                     CorrectionInfo(
@@ -2584,7 +2602,9 @@ class InputLogic(
             } else {
                 StatsUtils.onWordCommitUserTyped(stringToCommit, isBatchMode)
             }
+            return cursorMovedBack
         }
+        return false
     }
 
     private fun commitChosenWord(
@@ -2614,6 +2634,9 @@ class InputLogic(
                         mConnection.deleteTextBeforeCursor(result.prefixLength + chosenWord.length)
                         val cursorMovedBack = commitExpandedText(result.matchedString, result.expandedText)
                         resetComposingState(true)
+                        if (cursorMovedBack) {
+                            mSpaceState = SpaceState.NONE
+                        }
                         return cursorMovedBack
                     }
                 }
