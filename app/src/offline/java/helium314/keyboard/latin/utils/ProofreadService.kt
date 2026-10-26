@@ -414,6 +414,7 @@ class ProofreadService(private val context: Context) {
             }
             
             // Use provider to generate completion
+            val inferenceStart = System.currentTimeMillis()
             val output = provider.generate(fullPrompt, mapOf(
                 "temperature" to temp.toDouble(),
                 "top_p" to topP.toDouble(),
@@ -462,7 +463,9 @@ class ProofreadService(private val context: Context) {
                     else -> "the cleanup removed the generated text (${output.length} chars): \"${output.trim().take(60).replace('\n', ' ')}\""
                 }
                 Log.w(TAG, "no output: " + if (output.isBlank()) "nothing generated" else "cleanup removed ${output.length} chars")
-                Result.failure(ProofreadException("Model produced no output: $reason"))
+                // what llama.cpp logged meanwhile, e.g. a full context
+                val engine = if (output.isBlank()) inferenceDetails(inferenceStart) else null
+                Result.failure(ProofreadException("Model produced no output: $reason" + (engine?.let { "; engine: $it" } ?: "")))
             }
 
         } catch (e: Throwable) {
@@ -540,6 +543,45 @@ class ProofreadService(private val context: Context) {
             }
             // without the logcat prefix (date, pid, tag)
             key.substringAfter(": ").trim().take(200) to all
+        }
+    } catch (e: Exception) {
+        Log.w(TAG, "Could not read the log", e)
+        null
+    }
+
+    /**
+     * Why llama.cpp generated nothing: its warnings and errors since [since], from the log of this
+     * process. Lines with prompt text or prompt tokens are never used. The relevant lines are copied
+     * to the clipboard (marked as sensitive), the most telling one is returned.
+     */
+    private fun inferenceDetails(since: Long): String? = try {
+        val pid = android.os.Process.myPid().toString()
+        val sinceTime = java.text.SimpleDateFormat("MM-dd HH:mm:ss.SSS", java.util.Locale.US).format(java.util.Date(since - 1000))
+        val process = ProcessBuilder("logcat", "-d", "-t", sinceTime, "--pid", pid).redirectErrorStream(true).start()
+        val lines = process.inputStream.bufferedReader().readLines()
+        process.waitFor()
+        val keywords = listOf("context full", "truncated", "n_ctx", "failed", "error", "warning", "exception", "eos", "stopped")
+        val withText = listOf("prompt", "token_text", "stopping_word", "inference via plugin", "input='", "onPartial", "onFinal")
+        val relevant = lines.filter { line ->
+            keywords.any { line.contains(it, ignoreCase = true) } && withText.none { line.contains(it, ignoreCase = true) }
+                && !line.contains("\tat ") && !Regex(":\\s+at ").containsMatchIn(line)
+        }.takeLast(30)
+        val key = relevant.lastOrNull { it.contains("context full", true) || it.contains("truncated", true) }
+            ?: relevant.lastOrNull { it.contains("failed", true) || it.contains("error", true) || it.contains("exception", true) }
+            ?: relevant.lastOrNull()
+        if (key == null) null
+        else {
+            runCatching {
+                val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+                val clip = android.content.ClipData.newPlainText("LeanType AI log", relevant.joinToString("\n"))
+                if (android.os.Build.VERSION.SDK_INT >= 24) {
+                    clip.description.extras = android.os.PersistableBundle().apply {
+                        putBoolean("android.content.extra.IS_SENSITIVE", true)
+                    }
+                }
+                cm.setPrimaryClip(clip)
+            }
+            key.substringAfter(": ").trim().take(160) + " (log copied to the clipboard)"
         }
     } catch (e: Exception) {
         Log.w(TAG, "Could not read the log", e)
