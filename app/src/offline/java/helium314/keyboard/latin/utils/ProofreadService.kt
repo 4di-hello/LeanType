@@ -360,9 +360,14 @@ class ProofreadService(private val context: Context) {
             ?: return@withContext Result.failure(ProofreadException("Offline AI plugin not installed. Please install the plugin in Settings."))
 
         // Load model (or get cached)
+        val loadStart = System.currentTimeMillis()
         if (!ModelHolder.loadModel(context, modelPath)) {
              Log.e(TAG, "Model load failed")
-             return@withContext Result.failure(ProofreadException("Failed to load model in AI plugin."))
+             val details = loadFailureDetails(loadStart)
+             return@withContext Result.failure(ProofreadException(
+                 if (details == null) "Failed to load model in AI plugin."
+                 else "Failed to load model in AI plugin: $details"
+             ))
         }
 
         // Cancel unload timer while working
@@ -510,6 +515,38 @@ class ProofreadService(private val context: Context) {
             name.contains("lfm") -> ChatFormat.LFM2
             else -> null
         }
+    }
+
+    /**
+     * The plugin only logs why loading failed. Read the log of this process (the plugin runs in it)
+     * to show the actual llama.cpp error.
+     * Only lines logged since [since] (the start of loading) are used, and never lines that may
+     * contain typed or dictated text.
+     * Returns the most telling line, or null if nothing was found.
+     */
+    private fun loadFailureDetails(since: Long): String? = try {
+        val pid = android.os.Process.myPid().toString()
+        // logcat time format, one second earlier to be safe
+        val sinceTime = java.text.SimpleDateFormat("MM-dd HH:mm:ss.SSS", java.util.Locale.US).format(java.util.Date(since - 1000))
+        val process = ProcessBuilder("logcat", "-d", "-t", sinceTime, "--pid", pid).redirectErrorStream(true).start()
+        val lines = process.inputStream.bufferedReader().readLines()
+        process.waitFor()
+        val keywords = listOf("llama", "gguf", "OfflineAi", "plugin", "Exception", "error", "Caused by", "tensor")
+        val withText = listOf("inference via plugin", "VoiceInputManager", "input='", "onPartial", "onFinal")
+        // without stack trace lines, which would push out the actual error messages
+        val relevant = lines.filter { line ->
+            keywords.any { line.contains(it, ignoreCase = true) } && !line.contains("\tat ") && !Regex(":\\s+at ").containsMatchIn(line)
+                && !line.contains("... ") && withText.none { line.contains(it, ignoreCase = true) }
+        }.takeLast(60)
+        val key = relevant.lastOrNull { it.contains("error loading model", true) || it.contains("llama_model_load", true) }
+            ?: relevant.lastOrNull { it.contains("Error initializing context", true) }
+                ?.let { init -> relevant.getOrNull(relevant.indexOf(init) + 1)?.takeIf { it.contains("Exception") } ?: init }
+            ?: relevant.lastOrNull { it.contains("Exception", true) || it.contains("error", true) }
+        // without the logcat prefix (date, pid, tag)
+        key?.substringAfter(": ")?.trim()?.take(200)
+    } catch (e: Exception) {
+        Log.w(TAG, "Could not read the log", e)
+        null
     }
 
     /**
