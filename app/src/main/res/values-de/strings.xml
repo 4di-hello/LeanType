@@ -1173,8 +1173,6 @@
     <string name="physical_keyboard_layout_system_default">Systemstandard</string>
     <string name="delete_swipe_word_by_word">Wort für Wort löschen</string>
     <string name="delete_swipe_word_by_word_summary">Ganze Wörter auswählen und löschen, wenn von der Löschtaste nach links gewischt wird</string>
-    <string name="delete_swipe_exact_lines">Genaue Zeilen beim Wischen nach oben (experimentell)</string>
-    <string name="delete_swipe_exact_lines_summary">Das Textfeld fragen, wo seine Zeilen umbrechen (ab Android 14, mehrzeilige Felder). Antwortet das Feld nicht, werden die Zeilen wie bisher geschätzt</string>
     <string name="download_dictionary_for_language">%1$s-Wörterbuch herunterladen</string>
     <string name="download_dictionary_prompt_description">Tippen, um Wörterbuch für Wortvorschläge und Gesteneingabe herunterzuladen</string>
     <string name="download_dictionary_chip">Wörterbuch laden</string>
