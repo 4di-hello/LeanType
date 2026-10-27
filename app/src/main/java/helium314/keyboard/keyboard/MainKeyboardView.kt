@@ -367,8 +367,10 @@ class MainKeyboardView @JvmOverloads constructor(
         val id = event.getPointerId(index)
         val tracker = PointerTracker.getPointerTracker(id)
         val action = event.actionMasked
-        if (action != MotionEvent.ACTION_UP && action != MotionEvent.ACTION_POINTER_UP && action != MotionEvent.ACTION_CANCEL) {
-            if (isShowingPopupKeysPanel() && !tracker.isShowingPopupKeysPanel() && PointerTracker.getActivePointerTrackerCount() == 1) return true
+        if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
+            if (isShowingPopupKeysPanel() && !tracker.isShowingPopupKeysPanel()) {
+                onCancelPopupKeysPanel()
+            }
         }
         tracker.processMotionEvent(event, mKeyDetector)
         return true
@@ -378,6 +380,12 @@ class MainKeyboardView @JvmOverloads constructor(
     fun cancelAllOngoingEvents() {
         mTimerHandler.cancelAllMessages()
         PointerTracker.setReleasedKeyGraphicsToAllKeys()
+        keyboard?.sortedKeys?.forEach { key ->
+            if (key.isPressed) {
+                key.onReleased()
+                invalidateKey(key)
+            }
+        }
         mGestureFloatingTextDrawingPreview.dismissGestureFloatingPreviewText()
         mSlidingKeyInputDrawingPreview.dismissSlidingKeyInputPreview()
         PointerTracker.dismissAllPopupKeysPanels()

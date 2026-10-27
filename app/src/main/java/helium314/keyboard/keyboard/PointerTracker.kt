@@ -1119,7 +1119,7 @@ class PointerTracker private constructor(
 
     override fun cancelTrackingForAction() {
         if (isShowingPopupKeysPanel()) {
-            return
+            dismissPopupKeysPanel()
         }
         mIsTrackingForActionDisabled = true
     }
@@ -1196,7 +1196,9 @@ class PointerTracker private constructor(
         mInVerticalSwipe = false
         mVerticalSwipeAction = KeyboardActionListener.SWIPE_NO_ACTION
         getTimerProxy().cancelKeyTimersOf(this)
-        setReleasedKeyGraphics(mCurrentKey, true)
+        val currentKey = mCurrentKey
+        mCurrentKey = null
+        setReleasedKeyGraphics(currentKey, true)
         resetKeySelectionByDraggingFinger()
         dismissPopupKeysPanel()
     }
@@ -1488,6 +1490,7 @@ class PointerTracker private constructor(
             for (i in 0 until trackersSize) {
                 val tracker = sTrackers[i]
                 tracker.setReleasedKeyGraphics(tracker.key, true)
+                tracker.mCurrentKey = null
             }
         }
 

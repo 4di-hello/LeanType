@@ -163,6 +163,7 @@ class PointerTrackerQueue {
             for (index in 0 until arraySize) {
                 mExpandableArrayOfActivePointers[index].cancelTrackingForAction()
             }
+            mArraySize = 0
         }
     }
 
