@@ -324,7 +324,7 @@ class VoiceInputManager(
             }
 
             override fun onPartial(text: String?) {
-                Log.i(TAG, "Received onPartial from plugin: '$text'")
+                Log.i(TAG, "Received onPartial from plugin: ${text?.length ?: 0} chars")
                 mainHandler.post {
                     if (activeSessionId == sessionId && isRecording.get()) {
                         syncRecognizedText(text.orEmpty(), isFinal = false)
@@ -333,7 +333,7 @@ class VoiceInputManager(
             }
 
             override fun onFinal(text: String?) {
-                Log.i(TAG, "Received onFinal: '$text' (isRecording=${isRecording.get()})")
+                Log.i(TAG, "Received onFinal: ${text?.length ?: 0} chars (isRecording=${isRecording.get()})")
                 mainHandler.post {
                     if (activeSessionId == sessionId) {
                         syncRecognizedText(text.orEmpty(), isFinal = true)
@@ -694,7 +694,7 @@ class VoiceInputManager(
             mainHandler.post {
                 if (activeSessionId == sessionId) {
                     result.onSuccess { transcribedText ->
-                        Log.i(TAG, "Online transcription success: '$transcribedText'")
+                        Log.i(TAG, "Online transcription success: ${transcribedText.length} chars")
                         lastFailedOnlineAudio = null
                         syncRecognizedText(transcribedText, isFinal = true)
                         lastPartialText = null
@@ -861,7 +861,7 @@ class VoiceInputManager(
             return
         }
 
-        Log.i(TAG, "syncRecognizedText: current='$current', target='$fullTargetText', commonPrefixLen=$commonPrefixLen, delete=$charsToDelete, append='$textToAppend', isFinal=$isFinal")
+        Log.i(TAG, "syncRecognizedText: current=${current.length} chars, target=${fullTargetText.length} chars, commonPrefixLen=$commonPrefixLen, delete=$charsToDelete, append=${textToAppend.length} chars, isFinal=$isFinal")
 
         ic.beginBatchEdit()
         try {
