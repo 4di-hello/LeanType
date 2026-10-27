@@ -108,17 +108,27 @@ private val appliedRadii = java.util.WeakHashMap<Drawable, Float>()
 @RequiresApi(Build.VERSION_CODES.S)
 class DynamicColors(context: Context, override val themeStyle: String, override val hasKeyBorders: Boolean, private var keyboardBackground: Drawable? = null) : Colors {
 
-    private val isNight = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+    companion object {
+        fun getFreshContext(context: Context): Context =
+            try {
+                context.createConfigurationContext(context.resources.configuration)
+            } catch (_: Exception) {
+                context
+            }
+    }
 
-    private val accent = getAccent(context)
-    private val gesture = getGesture(context)
-    private val background = getBackground(context)
-    private val keyBackground = getKeyBackground(context)
-    private val functionalKey = getFunctionalKey(context)
-    private val spaceBar = getKeyBackground(context)
-    private val keyText = getKeyText(context)
-    private val keyHintText = getKeyHintText(context)
-    private val spaceBarText = getSpaceBarText(context)
+    private val freshContext = getFreshContext(context)
+    private val isNight = freshContext.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+
+    private val accent = getAccent(freshContext)
+    private val gesture = getGesture(freshContext)
+    private val background = getBackground(freshContext)
+    private val keyBackground = getKeyBackground(freshContext)
+    private val functionalKey = getFunctionalKey(freshContext)
+    private val spaceBar = getKeyBackground(freshContext)
+    private val keyText = getKeyText(freshContext)
+    private val keyHintText = getKeyHintText(freshContext)
+    private val spaceBarText = getSpaceBarText(freshContext)
 
     private fun isNight(context: Context) =
         context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
@@ -155,15 +165,17 @@ class DynamicColors(context: Context, override val themeStyle: String, override 
     private fun getSpaceBarText(context: Context) = if (isNight(context)) ColorUtils.setAlphaComponent(ContextCompat.getColor(context, android.R.color.system_neutral1_50), 127)
         else ColorUtils.setAlphaComponent(getKeyText(context), 127)
 
-    override fun haveColorsChanged(context: Context) =
-        accent != getAccent(context)
-                || gesture != getGesture(context)
-                || background != getBackground(context)
-                || keyBackground != getKeyBackground(context)
-                || functionalKey != getFunctionalKey(context)
-                || keyText != getKeyText(context)
-                || keyHintText != getKeyHintText(context)
-                || spaceBarText != getSpaceBarText(context)
+    override fun haveColorsChanged(context: Context): Boolean {
+        val fresh = getFreshContext(context)
+        return accent != getAccent(fresh)
+                || gesture != getGesture(fresh)
+                || background != getBackground(fresh)
+                || keyBackground != getKeyBackground(fresh)
+                || functionalKey != getFunctionalKey(fresh)
+                || keyText != getKeyText(fresh)
+                || keyHintText != getKeyHintText(fresh)
+                || spaceBarText != getSpaceBarText(fresh)
+    }
 
     private val navBar: Int
     /** brightened or darkened variant of [background], to be used if exact background color would be
