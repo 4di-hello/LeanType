@@ -120,14 +120,16 @@ fun MissingDictionaryDialog(onDismissRequest: () -> Unit, locale: Locale) {
     }
     val languageDisplayName = locale.localizedDisplayName(context.resources)
     val availableDicts = createDictionaryTextAnnotated(locale)
-    val repositoryLink = stringResource(R.string.dictionary_link_text).withHtmlLink(Links.DICTIONARY_URL)
-    val dictionaryLink = stringResource(R.string.dictionary_link_text).withHtmlLink("${Links.DICTIONARY_URL}/src/branch/main/dictionaries/main_$locale.dict")
-    val message = stringResource(R.string.no_dictionary_message, repositoryLink, languageDisplayName, dictionaryLink)
-    var annotatedString = message.htmlToAnnotated()
-    // ponytail: in standard flavor, if there are known dicts we show them as downloadable rows instead of bullet links
     val knownDicts = remember {
         getKnownDictionariesForLocale(locale, context)
     }
+    val bestDictLink = knownDicts.firstOrNull()?.second?.replace("/raw/branch/", "/src/branch/")
+        ?: "${Links.DICTIONARY_URL}/src/branch/main/dictionaries/main_$locale.dict"
+    val repositoryLink = stringResource(R.string.dictionary_link_text).withHtmlLink(Links.DICTIONARY_URL)
+    val dictionaryLink = stringResource(R.string.dictionary_link_text).withHtmlLink(bestDictLink)
+    val message = stringResource(R.string.no_dictionary_message, repositoryLink, languageDisplayName, dictionaryLink)
+    var annotatedString = message.htmlToAnnotated()
+    // ponytail: in standard flavor, if there are known dicts we show them as downloadable rows instead of bullet links
     if (availableDicts.isNotEmpty() && knownDicts.isEmpty())
         annotatedString += AnnotatedString("\n") + availableDicts
 
@@ -174,7 +176,12 @@ fun getKnownDictionariesForLocale(locale: Locale, context: Context): List<Pair<S
     val knownDicts = mutableListOf<Pair<String, String>>()
     context.assets.open("dictionaries_in_dict_repo.csv").reader().forEachLine {
         if (it.isBlank()) return@forEachLine
-        val (type, localeString, experimental) = it.split(",")
+        val parts = it.split(",")
+        if (parts.size < 2) return@forEachLine
+        val type = parts[0]
+        val localeString = parts[1]
+        val kind = parts.getOrElse(2) { "" }
+        val relPath = parts.getOrNull(3)
         // we use a locale string here because that's in the dictionaries repo
         // ideally the repo would switch to language tag, but not sure how this is handled in the dictionary header
         // further, the dicts in the dictionaries repo should be compatible with other AOSP-based keyboards
@@ -186,15 +193,22 @@ fun getKnownDictionariesForLocale(locale: Locale, context: Context): List<Pair<S
             else -> type
         }
         val rawDictString = "$typeDisplayName: ${dictLocale.localizedDisplayName(context.resources)}"
-        val dictString = if (experimental != "exp") rawDictString
-            else context.getString(R.string.available_dictionary_experimental, rawDictString)
-        val dictLinkSuffix = when (experimental) {
-            "cldr" -> Links.DICTIONARY_EMOJI_CLDR_SUFFIX
-            "exp"  -> Links.DICTIONARY_EXPERIMENTAL_SUFFIX
-            else   -> Links.DICTIONARY_NORMAL_SUFFIX
+        val dictString = when (kind) {
+            "exp" -> context.getString(R.string.available_dictionary_experimental, rawDictString)
+            "legacy" -> "$rawDictString (legacy)"
+            else -> rawDictString
         }
-        val dictBaseUrl = Links.DICTIONARY_URL + Links.DICTIONARY_DOWNLOAD_SUFFIX + dictLinkSuffix
-        val dictLink = dictBaseUrl + type + "_" + localeString.lowercase() + ".dict"
+        val dictLink = if (!relPath.isNullOrBlank()) {
+            Links.DICTIONARY_URL + Links.DICTIONARY_DOWNLOAD_SUFFIX + relPath
+        } else {
+            val dictLinkSuffix = when (kind) {
+                "cldr" -> Links.DICTIONARY_EMOJI_CLDR_SUFFIX
+                "exp"  -> Links.DICTIONARY_EXPERIMENTAL_SUFFIX
+                else   -> Links.DICTIONARY_NORMAL_SUFFIX
+            }
+            val dictBaseUrl = Links.DICTIONARY_URL + Links.DICTIONARY_DOWNLOAD_SUFFIX + dictLinkSuffix
+            dictBaseUrl + type + "_" + localeString.lowercase() + ".dict"
+        }
         knownDicts.add(dictString to dictLink)
     }
     return knownDicts
@@ -336,7 +350,7 @@ fun DownloadableDictionaryRow(locale: Locale, desc: String, link: String, refres
     // ponytail: extract the specific dictionary locale from the download link to avoid directory collision
     val dictLocale = remember(link) {
         val fileName = link.substringAfterLast("/")
-        fileName.substringAfter("_").substringBefore(".dict").constructLocale()
+        fileName.substringAfter("_").substringBefore(".dict").substringBefore("__").constructLocale()
     }
     val cacheDir = remember(dictLocale) { DictionaryInfoUtils.getCacheDirectoryForLocale(dictLocale, ctx) }
     val file = remember(cacheDir, type) { cacheDir?.let { File(it, "$type.dict") } }
@@ -344,7 +358,7 @@ fun DownloadableDictionaryRow(locale: Locale, desc: String, link: String, refres
     var downloadProgress by remember { mutableFloatStateOf(0f) }
     val downloadedLink = remember(link, refreshTrigger) { ctx.prefs().getString("pref_dict_download_link_${type}_${dictLocale}", "") ?: "" }
     val isInstalled = remember(file, downloadedLink, link, refreshTrigger) {
-        file?.exists() == true && (downloadedLink == link || (downloadedLink.isEmpty() && !link.contains("experimental")))
+        file?.exists() == true && (downloadedLink == link || (downloadedLink.isEmpty() && !link.contains("experimental") && !link.contains("legacy")))
     }
     var onlineLastModified by remember(link) { mutableStateOf(0L) }
     LaunchedEffect(link, isInstalled) {

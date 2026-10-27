@@ -94,21 +94,49 @@ def update_dict_list():
             mode = 1
         if mode == 0 or not line.startswith("|") or line.startswith("| Language |") or line.startswith("| --- |"):
             continue
-        split = line.split("|")
-        dict_name = split[2].split("]")[1].split("(")[1].split(")")[0].split("/")[-1].split(".dict")[0]
-        (dict_type, locale) = dict_name.split("_", 1)
-        if "_" in locale:
-            sp = locale.split("_")
-            locale = sp[0]
-            for s in sp[1:]:
-                locale = locale + "_" + s.upper()
-        if split[3].strip() == "yes":
-            extra = "exp"
-        elif "UNICODE LICENSE V3 (CLDR)" in split[7]:
-            extra = "cldr"
+        split = [s.strip() for s in line.split("|")]
+        if len(split) < 8:
+            continue
+        type_col = split[2]
+        if "(" not in type_col or ")" not in type_col:
+            continue
+        url = type_col.split("(")[-1].split(")")[0]
+        if "/raw/branch/main/" in url:
+            rel_path = url.split("/raw/branch/main/")[-1]
+        elif "/src/branch/main/" in url:
+            rel_path = url.split("/src/branch/main/")[-1]
         else:
-            extra = ""
-        dicts.append(f"{dict_type},{locale},{extra}\n")
+            rel_path = url.split("codeberg.org/Helium314/aosp-dictionaries/")[-1]
+
+        filename = rel_path.split("/")[-1]
+        dict_name = filename.split(".dict")[0]
+        dict_type = dict_name.split("_")[0]
+        rest = dict_name[len(dict_type) + 1:]
+
+        kind_col = split[3].lower()
+        source_col = split[7]
+
+        if "__" in rest:
+            loc_str, suffix = rest.split("__", 1)
+            kind = "exp" if "experimental" in suffix else ("legacy" if "legacy" in suffix else suffix)
+        else:
+            loc_str = rest
+            if "UNICODE LICENSE V3 (CLDR)" in source_col or "cldr" in rel_path:
+                kind = "cldr"
+            elif kind_col == "experimental" or kind_col == "yes":
+                kind = "exp"
+            elif kind_col == "legacy":
+                kind = "legacy"
+            else:
+                kind = ""
+
+        if "_" in loc_str:
+            sp = loc_str.split("_")
+            locale = sp[0] + "_" + "_".join(s.upper() for s in sp[1:])
+        else:
+            locale = loc_str
+
+        dicts.append(f"{dict_type},{locale},{kind},{rel_path}\n")
     target_file = "app/src/main/assets/dictionaries_in_dict_repo.csv"
     with open(target_file, 'w') as f:
         f.writelines(dicts)
