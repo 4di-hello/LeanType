@@ -191,6 +191,7 @@ object CjkPluginLoader {
 
             extractPluginAssetsAndLibs(apkFile, nativeLibDir, sharedDir)
 
+            helium314.keyboard.latin.utils.PluginTrust.requireTrusted(context, apkFile)
             val classLoader = PluginClassLoader(
                 apkFile.absolutePath,
                 context.codeCacheDir.absolutePath,
