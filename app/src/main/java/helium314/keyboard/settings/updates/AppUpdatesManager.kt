@@ -14,6 +14,7 @@ import helium314.keyboard.latin.handwriting.HandwritingLoader
 import helium314.keyboard.latin.ocr.OcrPluginLoader
 import helium314.keyboard.latin.translation.TranslationLoader
 import helium314.keyboard.latin.utils.Log
+import helium314.keyboard.latin.utils.NetworkUtils
 import helium314.keyboard.latin.utils.prefs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -209,6 +210,7 @@ object AppUpdatesManager {
         val intervalMs = freqDays * 24 * 60 * 60 * 1000L
 
         if (now - lastCheck >= intervalMs) {
+            if (!NetworkUtils.isNetworkAvailable(context)) return
             checkAllUpdates(context)
         }
     }

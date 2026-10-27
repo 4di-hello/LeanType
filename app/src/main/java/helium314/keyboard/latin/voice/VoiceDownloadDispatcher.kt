@@ -13,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import com.leanbitlab.leantype.voice.ModelImportRequest
 import helium314.keyboard.latin.R
 import helium314.keyboard.latin.utils.Log
+import helium314.keyboard.latin.utils.NetworkUtils
 import helium314.keyboard.latin.utils.prefs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -53,6 +54,13 @@ object VoiceDownloadDispatcher {
         if (!hasInternetPermission(context)) {
             withContext(Dispatchers.Main) {
                 fallbackToBrowser(context, model)
+            }
+            return@withContext
+        }
+
+        if (!NetworkUtils.isNetworkAvailable(context)) {
+            withContext(Dispatchers.Main) {
+                onError(context.getString(R.string.voice_no_internet_warning))
             }
             return@withContext
         }

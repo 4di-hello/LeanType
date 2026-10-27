@@ -124,6 +124,16 @@ object ProofreadHelper {
             return
         }
 
+        if (!NetworkUtils.isNetworkAvailable(context)) {
+            mainHandler.post {
+                KeyboardSwitcher.getInstance().showToast(
+                    context.getString(R.string.voice_no_internet_warning),
+                    true
+                )
+            }
+            return
+        }
+
         // Store original text for undo
         lastOriginalText = text
 
