@@ -422,6 +422,7 @@ class KeyboardState(private val switchActions: SwitchActions) {
             // Because the double tap shift key timer is to detect two consecutive shift key press,
             // it should be canceled when a non-shift key is pressed.
             switchActions.cancelDoubleTapShiftKeyTimer()
+            isInAlphabetUnshiftedFromShifted = false
         }
         when (code) {
             KeyCode.SHIFT -> {
