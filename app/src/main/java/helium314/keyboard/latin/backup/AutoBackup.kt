@@ -136,6 +136,13 @@ object AutoBackup {
                 runCatching { DocumentsContract.deleteDocument(resolver, file) }
                 throw e
             }
+            // old backups are only removed once the new one is known to be readable
+            if (!isReadable(context, file, password)) {
+                runCatching { DocumentsContract.deleteDocument(resolver, file) }
+                return "the new backup could not be read back, the old ones are kept"
+            }
+            // with a password, older unencrypted backups would keep the data readable for everyone
+            if (password != null) removeUnencryptedBackups(context, tree)
             removeOldBackups(context, tree)
             null
         } catch (e: SecurityException) {
@@ -145,6 +152,45 @@ object AutoBackup {
             e.message ?: e.javaClass.simpleName
         } finally {
             password?.fill(' ')
+        }
+    }
+
+    /** Whether [file] can be opened as a backup: decrypted with [password] if set, and a zip with content */
+    private fun isReadable(context: Context, file: Uri, password: CharArray?): Boolean {
+        val resolver = context.contentResolver
+        return try {
+            if (password == null) {
+                resolver.openInputStream(file)?.use { input ->
+                    java.util.zip.ZipInputStream(input).use { it.nextEntry != null }
+                } ?: false
+            } else {
+                val temp = java.io.File.createTempFile("backup_check", ".zip", context.cacheDir)
+                try {
+                    resolver.openInputStream(file)?.use { BackupCrypto.decryptToFile(it, password, temp) } ?: return false
+                    java.util.zip.ZipFile(temp).use { it.size() > 0 }
+                } finally {
+                    temp.delete()
+                }
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "backup check failed", e)
+            false
+        }
+    }
+
+    private fun removeUnencryptedBackups(context: Context, tree: Uri) {
+        val resolver = context.contentResolver
+        val children = DocumentsContract.buildChildDocumentsUriUsingTree(tree, DocumentsContract.getTreeDocumentId(tree))
+        val ids = mutableListOf<String>()
+        resolver.query(children, arrayOf(DocumentsContract.Document.COLUMN_DOCUMENT_ID, DocumentsContract.Document.COLUMN_DISPLAY_NAME),
+            null, null, null)?.use { c ->
+            while (c.moveToNext()) {
+                val name = c.getString(1) ?: continue
+                if (name.startsWith(FILE_PREFIX) && name.endsWith(".zip")) ids.add(c.getString(0))
+            }
+        }
+        ids.forEach { id ->
+            runCatching { DocumentsContract.deleteDocument(resolver, DocumentsContract.buildDocumentUriUsingTree(tree, id)) }
         }
     }
 
