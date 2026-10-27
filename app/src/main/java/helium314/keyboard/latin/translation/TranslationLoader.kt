@@ -125,6 +125,7 @@ object TranslationLoader {
             val nativeLibDir = getNativeLibDir(context, apkFile)
             extractNativeLibs(apkFile, nativeLibDir)
             val cachedLoader = cachedClassLoader
+            helium314.keyboard.latin.utils.PluginTrust.requireTrusted(context, apkFile)
             val classLoader = if (cachedLoader != null && cachedApkModified == apkFile.lastModified()) {
                 cachedLoader
             } else {
@@ -235,6 +236,7 @@ object TranslationLoader {
             ensureWorkManagerInitialized(context)
             val nativeLibDir = getNativeLibDir(context, apkFile)
             extractNativeLibs(apkFile, nativeLibDir)
+            helium314.keyboard.latin.utils.PluginTrust.requireTrusted(context, apkFile)
             val classLoader = PluginClassLoader(
                 apkFile.absolutePath,
                 context.codeCacheDir.absolutePath,
