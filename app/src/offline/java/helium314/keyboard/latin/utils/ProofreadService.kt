@@ -360,8 +360,10 @@ class ProofreadService(private val context: Context) {
         val provider = OfflineAiLoader.getProvider(context)
             ?: return@withContext Result.failure(ProofreadException("Offline AI plugin not installed. Please install the plugin in Settings."))
 
+        val progress = coroutineContext[AiProgress]
         // Load model (or get cached)
         val loadStart = System.currentTimeMillis()
+        if (!ModelHolder.isModelLoaded || ModelHolder.currentModelPath != modelPath) progress?.phase = AiProgress.Phase.LOADING
         if (!ModelHolder.loadModel(context, modelPath)) {
              Log.e(TAG, "Model load failed")
              val details = loadFailureDetails(loadStart)
@@ -432,6 +434,7 @@ class ProofreadService(private val context: Context) {
             
             // Use provider to generate completion
             val inferenceStart = System.currentTimeMillis()
+            progress?.phase = AiProgress.Phase.WAITING
             val output = synchronized(ModelHolder.generateLock) {
                 // cancelled while waiting for the previous generation: don't start one, it can't be stopped
                 if (!isActive) {
@@ -440,6 +443,7 @@ class ProofreadService(private val context: Context) {
                 }
                 // set and cleared inside the lock: a waiting request can't clear it while another one runs
                 OfflineAiLoader.isBusy = true
+                progress?.phase = AiProgress.Phase.GENERATING
                 try {
                     provider.generate(fullPrompt, mapOf(
                         "temperature" to temp.toDouble(),

@@ -3391,6 +3391,12 @@ class InputLogic(
         var prompt = prefs.getString("pref_custom_ai_prompt_$index", "") ?: ""
         val systemInstructionBuilder = StringBuilder()
         var shouldAppend = false
+        // only corrections: the model lists the mistakes, they are fixed here in the text
+        val onlyCorrections = prompt.contains("#corrections")
+        if (onlyCorrections) {
+            systemInstructionBuilder.append(" ").append(CustomAIKeyText.CORRECTIONS_INSTRUCTION)
+            prompt = prompt.replace("#corrections", "").trim()
+        }
 
         if (prompt.contains("#editor")) {
             systemInstructionBuilder.append(" You are a text editor tool. Output ONLY the edited text. Do not add any conversational filler.")
@@ -3441,6 +3447,13 @@ class InputLogic(
         if (prompt.contains("#showthought")) {
             showThinking = true
             prompt = prompt.replace("#showthought", "").trim()
+        }
+        if (onlyCorrections) {
+            // the text itself is corrected, nothing goes before or after it
+            shouldAppend = false
+            shouldPrepend = false
+            showThinking = false
+            if (prompt.isEmpty()) prompt = CustomAIKeyText.CORRECTIONS_DEFAULT_PROMPT
         }
 
         if (TextUtils.isEmpty(prompt)) {
@@ -3525,7 +3538,19 @@ class InputLogic(
             textToProcess, prompt, hasSelection, showThinking,
             toolbarKey = ToolbarKey.entries.firstOrNull { it.name == "CUSTOM_AI_$index" },
             allowEmptyInput = usesClipboard,
-            onSuccess = { resultText ->
+            onSuccess = { modelOutput ->
+                val resultText = if (onlyCorrections) {
+                    val (corrected, count) = CustomAIKeyText.applyCorrections(textToProcess, modelOutput)
+                    Log.i(TAG, "only corrections: $count applied")
+                    if (count == 0) {
+                        // the text stays as it is; a selection made for the whole text is removed again
+                        if (!hasSelection) mConnection.setSelection(mConnection.expectedSelectionEnd, mConnection.expectedSelectionEnd)
+                        KeyboardSwitcher.getInstance().showToast(mLatinIME.getString(R.string.custom_ai_corrections_none), true)
+                        return@customAsync
+                    }
+                    KeyboardSwitcher.getInstance().showToast(mLatinIME.getString(R.string.custom_ai_corrections_done, count), true)
+                    corrected
+                } else modelOutput
                 val result = PendingAIResult(resultText, targetPackage, targetFieldId, hasSelection, shouldAppend, keepsOriginal,
                     android.os.SystemClock.uptimeMillis())
                 if (!mLatinIME.isInputViewShown || !mConnection.isConnected()) {
