@@ -3,6 +3,7 @@ package helium314.keyboard.keyboard
 
 import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class WordDeleteSwipeTest {
 
