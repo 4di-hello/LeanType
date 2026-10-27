@@ -364,7 +364,8 @@ fun ConfigCustomAIKeyScreen(
                             updateToolbarKeyStatus(context, keyEnum, finalPrompt.isNotEmpty())
                             onClickBack()
                         },
-                        enabled = customText.isNotBlank() && selectedKeywords.isNotEmpty(),
+                        // "only corrections" works without a prompt of its own
+                        enabled = (customText.isNotBlank() || "#corrections" in selectedKeywords) && selectedKeywords.isNotEmpty(),
                         modifier = if (initialPrompt.isNotBlank()) Modifier.weight(1f) else Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp)
                     ) {
