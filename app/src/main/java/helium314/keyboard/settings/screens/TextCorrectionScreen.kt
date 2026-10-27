@@ -31,6 +31,7 @@ import helium314.keyboard.settings.Setting
 import helium314.keyboard.settings.SettingsActivity
 import helium314.keyboard.settings.Theme
 import helium314.keyboard.settings.initPreview
+import helium314.keyboard.settings.preferences.ExpandablePreference
 import helium314.keyboard.settings.preferences.ListPreference
 import helium314.keyboard.settings.preferences.Preference
 import helium314.keyboard.settings.preferences.SliderPreference
@@ -134,29 +135,8 @@ fun createCorrectionSettings(context: Context) = listOf(
     },
     Setting(context, Settings.PREF_EXPAND_FINE_TUNE_AUTOCORRECT,
         R.string.fine_tune_autocorrect_title, R.string.fine_tune_autocorrect_summary
-    ) { setting ->
-        val ctx = LocalContext.current
-        val prefs = ctx.prefs()
-        val activity = ctx.getActivity() as? SettingsActivity
-        val prefChanged = (activity?.prefChanged ?: MutableStateFlow(0)).collectAsState()
-        val expanded = remember(prefChanged.value) {
-            prefs.getBoolean(setting.key, Defaults.PREF_EXPAND_FINE_TUNE_AUTOCORRECT)
-        }
-        Preference(
-            name = setting.title,
-            description = setting.description,
-            onClick = {
-                val newExpanded = !expanded
-                prefs.edit { putBoolean(setting.key, newExpanded) }
-                activity?.prefChanged()
-            }
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_arrow_right),
-                contentDescription = null,
-                modifier = Modifier.rotate(if (expanded) 90f else 0f)
-            )
-        }
+    ) {
+        ExpandablePreference(it, Defaults.PREF_EXPAND_FINE_TUNE_AUTOCORRECT)
     },
     Setting(context, Settings.PREF_AUTO_CORRECT_TRIGGER, R.string.auto_correction_trigger) {
         val items = listOf(
