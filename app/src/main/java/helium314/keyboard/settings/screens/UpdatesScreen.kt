@@ -65,12 +65,13 @@ import kotlinx.coroutines.launch
 
 private val currentChangelogItems = listOf(
     "• Web & Remote Editors: Permitted keyboard display on active TYPE_NULL fields in browsers and remote IDEs",
-    "• Touch Queue & Freeze Fix: Cleared pointer queues and prevented touch dropping and frozen keys on popup dismissal",
+    "• Exact Visual Line Delete Swipe: Used Android 14+ text bounds to track exact visual line wraps and columns",
+    "• Settings Progressive Disclosure: Organized settings with expandable fine-tune sections for simpler navigation",
     "• Fast Typing Capitalization: Reset shift state on typing to prevent accidental caps lock and preserved initial uppercase",
+    "• Touch Queue & Freeze Fix: Cleared pointer queues and prevented touch dropping and frozen keys on popup dismissal",
     "• Dynamic Colors Refresh: Re-queried configuration context to immediately apply system Material You color changes",
     "• Custom Emoji Font Validation: Added glyph compatibility checks on pre-Android 13 devices to prevent blank emoji rendering",
-    "• Edge Key Popups: Used key hitbox bounds in distance checks for reliable popup activation along keyboard edges",
-    "• Shift Recapitalization: Preserved actively typed word state when cycling capitalization with the Shift key"
+    "• Complete Translations: 100% translation coverage across all 30 languages for all settings and features"
 )
 
 @Composable
