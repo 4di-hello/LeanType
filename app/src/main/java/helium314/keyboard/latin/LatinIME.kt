@@ -1273,10 +1273,13 @@ class LatinIME : InputMethodService(),
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             return false
         }
-        // If cursor position is -1, -1 and inputType is TYPE_NULL (0),
-        // it is a non-editable focusable widget (e.g. Sort, Filter, Menu button, or container view).
-        // Opening the keyboard here causes transient open/close flicker.
-        return editorInfo.initialSelStart < 0 && editorInfo.initialSelEnd < 0
+        // A view with an active InputConnection can receive keystrokes or text commits.
+        // If currentInputConnection is null, the view returned null from onCreateInputConnection()
+        // (e.g. non-editable focusable Button, Menu, or container).
+        if (currentInputConnection == null) {
+            return true
+        }
+        return false
     }
 
     override fun onShowInputRequested(flags: Int, configChange: Boolean): Boolean {
@@ -1285,11 +1288,10 @@ class LatinIME : InputMethodService(),
             return true
         }
         if (isImeSuppressedByHardwareKeyboard()) return true
-        val isExplicit = (flags and (android.view.inputmethod.InputMethod.SHOW_EXPLICIT or android.view.inputmethod.InputMethod.SHOW_FORCED)) != 0
-        isExplicitShowRequested = isExplicit
+        isExplicitShowRequested = true
         val editorInfo = currentInputEditorInfo
-        if (!isExplicit && isTransientFocusTypeNull(editorInfo)) {
-            Log.d(TAG, "onShowInputRequested: ignoring implicit transient TYPE_NULL focus for ${editorInfo?.packageName}")
+        if (isTransientFocusTypeNull(editorInfo)) {
+            Log.d(TAG, "onShowInputRequested: ignoring transient TYPE_NULL focus without input connection for ${editorInfo?.packageName}")
             return false
         }
         return super.onShowInputRequested(flags, configChange)
