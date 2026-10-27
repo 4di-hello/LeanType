@@ -59,6 +59,7 @@ import androidx.compose.ui.unit.dp
 import helium314.keyboard.latin.R
 import helium314.keyboard.settings.preferences.PreferenceCategory
 
+import helium314.keyboard.latin.utils.getActivity
 import helium314.keyboard.latin.utils.prefs
 
 @Composable
@@ -113,8 +114,24 @@ fun SearchSettingsScreen(
                     // jump from a long press in the search results: scroll to the setting and highlight it
                     val listState = androidx.compose.foundation.lazy.rememberLazyListState()
                     var highlightKey by remember { mutableStateOf<String?>(null) }
+                    // fine-tune sections opened only to find the setting, and the setting to scroll to
+                    var openedForJump by remember { mutableStateOf(emptySet<String>()) }
+                    var scrollKey by remember { mutableStateOf<String?>(null) }
                     LaunchedEffect(groups) {
-                        val jumpKey = SettingsJump.take(groups.flatMap { it.second }) ?: return@LaunchedEffect
+                        val keysOnScreen = groups.flatMap { it.second }
+                        if (scrollKey == null) {
+                            val found = SettingsJump.take(keysOnScreen)
+                            val step = jumpThroughFineTuneSections(context, settings, openedForJump, found)
+                            openedForJump = step.opened
+                            if (step.prefsChanged) (context.getActivity() as? SettingsActivity)?.prefChanged()
+                            if (found == null) return@LaunchedEffect
+                            scrollKey = found
+                            // closing the other sections changes the list, scroll after that
+                            if (step.prefsChanged) return@LaunchedEffect
+                        }
+                        val jumpKey = scrollKey ?: return@LaunchedEffect
+                        scrollKey = null
+                        if (jumpKey !in keysOnScreen) return@LaunchedEffect
                         val index = groups.indexOfFirst { jumpKey in it.second }
                         highlightKey = jumpKey
                         listState.animateScrollToItem(index + if (headerContent != null) 1 else 0)
@@ -217,6 +234,43 @@ fun SearchSettingsScreen(
     )
 }
 
+private const val FINE_TUNE_SECTION_PREFIX = "expand_fine_tune_"
+
+internal class JumpStep(val opened: Set<String>, val prefsChanged: Boolean)
+
+/**
+ * A setting in a closed fine-tune section is not in the list. Then all closed sections of the screen are
+ * opened; once the setting is [found], only the section that contains it stays open. If the setting is
+ * still missing (hidden for another reason), the sections are closed again.
+ */
+internal fun jumpThroughFineTuneSections(
+    context: android.content.Context,
+    settings: List<Any?>,
+    opened: Set<String>,
+    found: String?,
+): JumpStep {
+    val prefs = context.prefs()
+    fun close(keys: Collection<String>) = prefs.edit().apply { keys.forEach { putBoolean(it, false) } }.apply()
+    if (found != null) {
+        if (opened.isEmpty()) return JumpStep(emptySet(), false)
+        val index = settings.indexOf(found)
+        val owner = settings.subList(0, index.coerceAtLeast(0)).lastOrNull { it is String && it in opened }
+        val toClose = opened - setOfNotNull(owner as String?)
+        close(toClose)
+        return JumpStep(emptySet(), toClose.isNotEmpty())
+    }
+    if (opened.isNotEmpty()) {
+        close(opened)
+        return JumpStep(emptySet(), true)
+    }
+    if (!SettingsJump.isPending()) return JumpStep(emptySet(), false)
+    val closed = settings.filterIsInstance<String>()
+        .filter { it.startsWith(FINE_TUNE_SECTION_PREFIX) && !prefs.getBoolean(it, false) }
+    if (closed.isEmpty()) return JumpStep(emptySet(), false)
+    prefs.edit().apply { closed.forEach { putBoolean(it, true) } }.apply()
+    return JumpStep(closed.toSet(), true)
+}
+
 /** A setting to show and highlight on its screen after a long press in the search results */
 object SettingsJump {
     private const val VALID_MS = 3000L
@@ -227,6 +281,8 @@ object SettingsJump {
         this.key = key
         time = android.os.SystemClock.uptimeMillis()
     }
+
+    fun isPending() = key != null && android.os.SystemClock.uptimeMillis() - time <= VALID_MS
 
     /** The requested key if it is on this screen; it is then used up */
     fun take(keysOnScreen: Collection<String>): String? {
