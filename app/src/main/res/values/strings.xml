@@ -1400,6 +1400,21 @@ New dictionary:
     <string name="theme_name_leanbitlab_light" tools:keep="@string/theme_name_leanbitlab_light">LeanBitLab Light</string>
     <!-- Theme name for LeanBitLab Dark theme -->
     <string name="theme_name_leanbitlab_dark" tools:keep="@string/theme_name_leanbitlab_dark">LeanBitLab Dark</string>
+    <string name="theme_name_dynamic_subtle" tools:keep="@string/theme_name_dynamic_subtle">Dynamic colors (subtle)</string>
+    <string name="theme_name_dynamic_vivid" tools:keep="@string/theme_name_dynamic_vivid">Dynamic colors (vivid)</string>
+    <string name="theme_name_clean_light" tools:keep="@string/theme_name_clean_light">Clean Light</string>
+    <string name="theme_name_clean_dark" tools:keep="@string/theme_name_clean_dark">Clean Dark</string>
+    <string name="theme_name_graphite" tools:keep="@string/theme_name_graphite">Graphite</string>
+    <string name="theme_name_pure_black" tools:keep="@string/theme_name_pure_black">Pure Black (dimmed)</string>
+    <string name="theme_name_warm_night" tools:keep="@string/theme_name_warm_night">Warm Night</string>
+    <string name="theme_name_high_contrast_light" tools:keep="@string/theme_name_high_contrast_light">High Contrast Light</string>
+    <string name="theme_name_high_contrast_dark" tools:keep="@string/theme_name_high_contrast_dark">High Contrast Dark</string>
+    <string name="theme_name_arctic" tools:keep="@string/theme_name_arctic">Arctic</string>
+    <string name="theme_name_solar_light" tools:keep="@string/theme_name_solar_light">Solar Light</string>
+    <string name="theme_name_solar_dark" tools:keep="@string/theme_name_solar_dark">Solar Dark</string>
+    <string name="theme_name_ocean" tools:keep="@string/theme_name_ocean">Ocean</string>
+    <string name="theme_name_deep_sea" tools:keep="@string/theme_name_deep_sea">Deep Sea</string>
+    <string name="theme_name_pastel" tools:keep="@string/theme_name_pastel">Pastel</string>
     <!-- Theme name for user-defined theme night mode theme -->
     <!-- Text when determining color automatically -->
     <string name="auto_user_color">Choose color automatically</string>

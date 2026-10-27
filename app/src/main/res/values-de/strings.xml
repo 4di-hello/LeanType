@@ -696,6 +696,21 @@
     <string name="theme_name_mint_and_pink">Minze und Pink</string>
     <string name="theme_name_leanbitlab_light">LeanBitLab Hell</string>
     <string name="theme_name_leanbitlab_dark">LeanBitLab Dunkel</string>
+    <string name="theme_name_dynamic_subtle" tools:keep="@string/theme_name_dynamic_subtle">Dynamische Farben (dezent)</string>
+    <string name="theme_name_dynamic_vivid" tools:keep="@string/theme_name_dynamic_vivid">Dynamische Farben (kräftig)</string>
+    <string name="theme_name_clean_light" tools:keep="@string/theme_name_clean_light">Klar Hell</string>
+    <string name="theme_name_clean_dark" tools:keep="@string/theme_name_clean_dark">Klar Dunkel</string>
+    <string name="theme_name_graphite" tools:keep="@string/theme_name_graphite">Graphit</string>
+    <string name="theme_name_pure_black" tools:keep="@string/theme_name_pure_black">Tiefschwarz (gedimmt)</string>
+    <string name="theme_name_warm_night" tools:keep="@string/theme_name_warm_night">Warme Nacht</string>
+    <string name="theme_name_high_contrast_light" tools:keep="@string/theme_name_high_contrast_light">Hoher Kontrast Hell</string>
+    <string name="theme_name_high_contrast_dark" tools:keep="@string/theme_name_high_contrast_dark">Hoher Kontrast Dunkel</string>
+    <string name="theme_name_arctic" tools:keep="@string/theme_name_arctic">Arktis</string>
+    <string name="theme_name_solar_light" tools:keep="@string/theme_name_solar_light">Solar Hell</string>
+    <string name="theme_name_solar_dark" tools:keep="@string/theme_name_solar_dark">Solar Dunkel</string>
+    <string name="theme_name_ocean" tools:keep="@string/theme_name_ocean">Ozean</string>
+    <string name="theme_name_deep_sea" tools:keep="@string/theme_name_deep_sea">Tiefsee</string>
+    <string name="theme_name_pastel" tools:keep="@string/theme_name_pastel">Pastell</string>
     <string name="sponsor_dialog_title">Dieses Projekt sponsern</string>
     <string name="sponsor_dialog_message">Dieses Projekt ist vollständig community-getrieben und auf Spenden angewiesen, um die Entwicklung am Leben zu erhalten. Wenn Sie diese Tastatur nützlich finden, denken Sie bitte über eine Unterstützung nach!</string>
     <string name="sponsor_dialog_never_show_again">Nicht mehr anzeigen</string>
