@@ -1781,4 +1781,24 @@ Lehetővé teszi az eszközön futó GGUF / llama.cpp következtetést a javít�
     <string name="updates_plugins_title">Kísérő bővítmények</string>
     <string name="updates_plugin_update_available">Új verzió%selérhető</string>
     <string name="updates_plugin_updates_found">Beépülő modulok frissítései elérhetők</string>
+    <string name="fine_tune_theme_title">A téma és a szegélyek finomhangolása</string>
+    <string name="fine_tune_theme_summary">Állítsa be a sarok sugarát, a navigációs sáv színét, a háttér elmosódását és az egyéni ikonokat</string>
+    <string name="fine_tune_key_previews_title">A gombok előugró ablakainak és előnézeteinek finomhangolása</string>
+    <string name="fine_tune_key_previews_summary">Konfigurálja a felugró előnézet méretét, sugarát, függőleges eltolását és az animáció sebességét</string>
+    <string name="fine_tune_keyboard_layout_title">A billentyűzet méretének és betűtípusainak finomhangolása</string>
+    <string name="fine_tune_keyboard_layout_summary">Állítsa be az oldalsó és alsó párnázást, szűkítse a billentyűközöket, a felosztási távolságot és a betűméretarányt</string>
+    <string name="fine_tune_haptics_title">Finomhangolja a tapintást és a vibrációt</string>
+    <string name="fine_tune_haptics_summary">Konfigurálja a haptikus motor kiválasztását, a rezgés amplitúdóját és a Ne zavarjanak felülírást</string>
+    <string name="fine_tune_additional_keys_title">Finomítsa a másodlagos és az elrendezési billentyűket</string>
+    <string name="fine_tune_additional_keys_summary">Konfigurálja a lokalizált számjegyeket, a szimbólumok sorait, a kapcsológombokat és a felugró ablakok viselkedését</string>
+    <string name="fine_tune_clipboard_title">A vágólap viselkedésének finomhangolása</string>
+    <string name="fine_tune_clipboard_summary">Állítsa be a rögzített tételek sorrendjét, a hajtogatást és a vágólap betűméretét</string>
+    <string name="fine_tune_toolbar_title">Az eszköztár viselkedésének finomhangolása</string>
+    <string name="fine_tune_toolbar_summary">Konfigurálja az automatikus bővítést, a gépelés automatikus elrejtését, a billentyűk igazítását és a hardveres billentyűzet módokat</string>
+    <string name="fine_tune_gesture_title">A kézmozdulatokkal történő gépelés finomhangolása</string>
+    <string name="fine_tune_gesture_summary">Konfigurálja a lebegő előnézeti pozíciót, a nyomvonal eltüntetési sebességét és a helyismeretes kézmozdulatokkal történő gépelést</string>
+    <string name="fine_tune_swipes_title">A csúsztatási kézmozdulatok és az érintőpad finomhangolása</string>
+    <string name="fine_tune_swipes_summary">Konfigurálja a függőleges csúsztatási műveleteket, a csúsztatási távolságokat, az érzékenységet és az érintőpad beállításait</string>
+    <string name="fine_tune_advanced_title">Fizikai és kísérleti billentyűzetek finomhangolása</string>
+    <string name="fine_tune_advanced_summary">Konfigurálja a hardveres billentyűzetkiosztásokat, az URL-észlelést és a kísérleti jelzőket</string>
 </resources>

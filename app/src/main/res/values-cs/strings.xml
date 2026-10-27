@@ -1790,4 +1790,24 @@ Umožňuje lokální inferenci GGUF / llama.cpp na zařízení pro korektury a p
     <string name="updates_plugins_title">Doprovodné pluginy</string>
     <string name="updates_plugin_update_available">K dispozici je nová verze%s</string>
     <string name="updates_plugin_updates_found">Dostupné aktualizace pluginů</string>
+    <string name="fine_tune_theme_title">Dolaďte téma a okraje</string>
+    <string name="fine_tune_theme_summary">Upravte poloměr rohů, barvu navigačního panelu, rozostření pozadí a vlastní ikony</string>
+    <string name="fine_tune_key_previews_title">Dolaďte vyskakovací okna a náhledy kláves</string>
+    <string name="fine_tune_key_previews_summary">Nakonfigurujte velikost náhledu, poloměr, vertikální odsazení a rychlost animace</string>
+    <string name="fine_tune_keyboard_layout_title">Dolaďte velikost klávesnice a písma</string>
+    <string name="fine_tune_keyboard_layout_summary">Upravte boční a spodní výplň, zužte mezery mezi klávesami, dělené mezery a měřítko písma</string>
+    <string name="fine_tune_haptics_title">Dolaďte haptiku a vibrace</string>
+    <string name="fine_tune_haptics_summary">Nakonfigurujte výběr haptického motoru, amplitudu vibrací a potlačení funkce Nerušit</string>
+    <string name="fine_tune_additional_keys_title">Dolaďte sekundární klávesy a klávesy rozložení</string>
+    <string name="fine_tune_additional_keys_summary">Nakonfigurujte lokalizované číslice, řádky čísel symbolů, přepínací klávesy a chování vyskakovacích oken</string>
+    <string name="fine_tune_clipboard_title">Dolaďte chování schránky</string>
+    <string name="fine_tune_clipboard_summary">Upravte pořadí připnutých položek, skládání a velikost písma schránky</string>
+    <string name="fine_tune_toolbar_title">Dolaďte chování panelu nástrojů</string>
+    <string name="fine_tune_toolbar_summary">Nakonfigurujte režimy automatického rozšíření, automatického skrytí psaní, zarovnání kláves a hardwarové klávesnice</string>
+    <string name="fine_tune_gesture_title">Dolaďte psaní gesty</string>
+    <string name="fine_tune_gesture_summary">Nakonfigurujte polohu plovoucího náhledu, rychlost prolínání stopy a psaní gesty s ohledem na mezeru</string>
+    <string name="fine_tune_swipes_title">Dolaďte gesta přejetí a touchpad</string>
+    <string name="fine_tune_swipes_summary">Nakonfigurujte akce svislého přejetí, vzdálenosti přejetí, citlivost a nastavení touchpadu</string>
+    <string name="fine_tune_advanced_title">Dolaďte fyzické klávesnice a experimentální</string>
+    <string name="fine_tune_advanced_summary">Konfigurace rozložení hardwarové klávesnice, detekce URL a experimentální příznaky</string>
 </resources>

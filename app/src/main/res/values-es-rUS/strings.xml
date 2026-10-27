@@ -1802,4 +1802,24 @@ Permite la inferencia GGUF / llama.cpp en el dispositivo para corrección y rees
     <string name="updates_plugins_title">Complementos complementarios</string>
     <string name="updates_plugin_update_available">Nueva versión%sdisponible</string>
     <string name="updates_plugin_updates_found">Actualizaciones de complementos disponibles</string>
+    <string name="fine_tune_theme_title">Afinar el tema y los bordes</string>
+    <string name="fine_tune_theme_summary">Ajuste el radio de las esquinas, el color de la barra de navegación, el desenfoque del fondo y los íconos personalizados</string>
+    <string name="fine_tune_key_previews_title">Ajustar ventanas emergentes y vistas previas de teclas</string>
+    <string name="fine_tune_key_previews_summary">Configure el tamaño de la vista previa emergente, el radio, el desplazamiento vertical y la velocidad de la animación</string>
+    <string name="fine_tune_keyboard_layout_title">Ajustar el tamaño y las fuentes del teclado</string>
+    <string name="fine_tune_keyboard_layout_summary">Ajuste el relleno lateral e inferior, reduzca los espacios entre teclas, el espaciado dividido y la escala de fuente</string>
+    <string name="fine_tune_haptics_title">Ajuste la háptica y la vibración</string>
+    <string name="fine_tune_haptics_summary">Configure la selección del motor háptico, la amplitud de la vibración y la anulación de No molestar</string>
+    <string name="fine_tune_additional_keys_title">Ajustar las teclas secundarias y de diseño</string>
+    <string name="fine_tune_additional_keys_summary">Configure dígitos localizados, filas de números de símbolos, teclas de cambio y comportamiento de ventanas emergentes</string>
+    <string name="fine_tune_clipboard_title">Ajustar el comportamiento del portapapeles</string>
+    <string name="fine_tune_clipboard_summary">Ajustar el orden de los elementos fijados, el plegado y el tamaño de fuente del portapapeles</string>
+    <string name="fine_tune_toolbar_title">Ajustar el comportamiento de la barra de herramientas</string>
+    <string name="fine_tune_toolbar_summary">Configure los modos de expansión automática, ocultación automática de escritura, alineación de teclas y teclado de hardware</string>
+    <string name="fine_tune_gesture_title">Ajustar la escritura por gestos</string>
+    <string name="fine_tune_gesture_summary">Configure la posición de vista previa flotante, la velocidad de desvanecimiento del rastro y la escritura por gestos con reconocimiento de espacio</string>
+    <string name="fine_tune_swipes_title">Ajuste los gestos de deslizamiento y el panel táctil</string>
+    <string name="fine_tune_swipes_summary">Configure acciones de deslizamiento vertical, distancias de deslizamiento, sensibilidad y ajustes del panel táctil</string>
+    <string name="fine_tune_advanced_title">Afinar teclados físicos y experimentales.</string>
+    <string name="fine_tune_advanced_summary">Configure diseños de teclado de hardware, detección de URL e indicadores experimentales</string>
 </resources>

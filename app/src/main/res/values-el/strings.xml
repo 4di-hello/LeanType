@@ -1843,4 +1843,24 @@
     <string name="updates_plugins_title">Συνοδευτικά πρόσθετα</string>
     <string name="updates_plugin_update_available">Νέα έκδοση%sδιαθέσιμη</string>
     <string name="updates_plugin_updates_found">Διαθέσιμες ενημερώσεις προσθηκών</string>
+    <string name="fine_tune_theme_title">Βελτιώστε το θέμα και τα περιγράμματα</string>
+    <string name="fine_tune_theme_summary">Προσαρμόστε την ακτίνα γωνίας, το χρώμα της γραμμής πλοήγησης, το θάμπωμα φόντου και τα προσαρμοσμένα εικονίδια</string>
+    <string name="fine_tune_key_previews_title">Βελτιστοποιήστε τα αναδυόμενα παράθυρα και τις προεπισκοπήσεις πλήκτρων</string>
+    <string name="fine_tune_key_previews_summary">Διαμορφώστε το μέγεθος προεπισκόπησης αναδυόμενου παραθύρου, την ακτίνα, την κατακόρυφη μετατόπιση και την ταχύτητα κίνησης</string>
+    <string name="fine_tune_keyboard_layout_title">Βελτιώστε το μέγεθος και τις γραμματοσειρές του πληκτρολογίου</string>
+    <string name="fine_tune_keyboard_layout_summary">Προσαρμόστε την πλαϊνή και την κάτω επένδυση, τα στενά κενά πλήκτρων, το διαχωρισμό του διαστήματος και την κλίμακα γραμματοσειράς</string>
+    <string name="fine_tune_haptics_title">Βελτιώστε τα απτικά και τις δονήσεις</string>
+    <string name="fine_tune_haptics_summary">Διαμορφώστε την επιλογή απτικής μηχανής, το πλάτος κραδασμών και την παράκαμψη «Μην ενοχλείτε».</string>
+    <string name="fine_tune_additional_keys_title">Βελτιώστε τα δευτερεύοντα πλήκτρα και τα πλήκτρα διάταξης</string>
+    <string name="fine_tune_additional_keys_summary">Διαμορφώστε τοπικά ψηφία, σειρές αριθμών συμβόλων, πλήκτρα εναλλαγής και συμπεριφορά αναδυόμενων παραθύρων</string>
+    <string name="fine_tune_clipboard_title">Βελτιώστε τη συμπεριφορά του προχείρου</string>
+    <string name="fine_tune_clipboard_summary">Προσαρμόστε τη σειρά των καρφιτσωμένων στοιχείων, την αναδίπλωση και το μέγεθος γραμματοσειράς του προχείρου</string>
+    <string name="fine_tune_toolbar_title">Βελτιώστε τη συμπεριφορά της γραμμής εργαλείων</string>
+    <string name="fine_tune_toolbar_summary">Διαμόρφωση λειτουργίας αυτόματης επέκτασης, αυτόματης απόκρυψης πληκτρολόγησης, στοίχισης πλήκτρων και πληκτρολογίου υλικού</string>
+    <string name="fine_tune_gesture_title">Βελτιώστε την πληκτρολόγηση με χειρονομίες</string>
+    <string name="fine_tune_gesture_summary">Διαμόρφωση αιωρούμενης θέσης προεπισκόπησης, ταχύτητας εξασθένισης διαδρομής και πληκτρολόγηση με χειρονομία που αντιλαμβάνεται το χώρο</string>
+    <string name="fine_tune_swipes_title">Βελτιώστε τις χειρονομίες και την επιφάνεια αφής</string>
+    <string name="fine_tune_swipes_summary">Διαμορφώστε τις ενέργειες κατακόρυφης ολίσθησης, τις αποστάσεις ολίσθησης, την ευαισθησία και τις ρυθμίσεις επιφάνειας αφής</string>
+    <string name="fine_tune_advanced_title">Βελτιώστε φυσικά πληκτρολόγια και πειραματικά</string>
+    <string name="fine_tune_advanced_summary">Διαμορφώστε τις διατάξεις πληκτρολογίου υλικού, τον εντοπισμό URL και τις πειραματικές σημαίες</string>
 </resources>

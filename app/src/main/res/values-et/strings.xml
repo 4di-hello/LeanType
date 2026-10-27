@@ -1772,4 +1772,24 @@ Võimaldab seadmesisese GGUF / llama.cpp järelduse korrektuuri ja ümbersõnast
     <string name="updates_plugins_title">Kaaspistikprogrammid</string>
     <string name="updates_plugin_update_available">Uus versioon%son saadaval</string>
     <string name="updates_plugin_updates_found">Saadaval on pistikprogrammi värskendused</string>
+    <string name="fine_tune_theme_title">Teema ja ääriste viimistlemine</string>
+    <string name="fine_tune_theme_summary">Reguleerige nurga raadiust, navigeerimisriba värvi, tausta hägusust ja kohandatud ikoone</string>
+    <string name="fine_tune_key_previews_title">Täpsustage klahvi hüpikaknaid ja eelvaateid</string>
+    <string name="fine_tune_key_previews_summary">Seadistage hüpikakna eelvaate suurus, raadius, vertikaalne nihe ja animatsiooni kiirus</string>
+    <string name="fine_tune_keyboard_layout_title">Täpsustage klaviatuuri suurust ja fonte</string>
+    <string name="fine_tune_keyboard_layout_summary">Reguleerige külgmist ja alumist polsterdust, kitsaid klahvivahesid, jaotatud vahesid ja fondi skaalat</string>
+    <string name="fine_tune_haptics_title">Haptika ja vibratsiooni peenhäälestus</string>
+    <string name="fine_tune_haptics_summary">Saate seadistada haptilise mootori valiku, vibratsiooni amplituudi ja režiimi Mitte segada alistamise</string>
+    <string name="fine_tune_additional_keys_title">Sekundaarsete ja paigutusklahvide peenhäälestus</string>
+    <string name="fine_tune_additional_keys_summary">Konfigureerige lokaliseeritud numbreid, sümbolinumbri ridu, lülitusnuppe ja hüpikakende käitumist</string>
+    <string name="fine_tune_clipboard_title">Lõikepuhvri käitumise peenhäälestus</string>
+    <string name="fine_tune_clipboard_summary">Reguleerige kinnitatud üksuste järjekorda, voltimist ja lõikelaua fondi suurust</string>
+    <string name="fine_tune_toolbar_title">Tööriistariba käitumise peenhäälestus</string>
+    <string name="fine_tune_toolbar_summary">Automaatse laiendamise, sisestamise automaatse peitmise, klahvide joondamise ja riistvaralise klaviatuuri režiimide seadistamine</string>
+    <string name="fine_tune_gesture_title">Viipetega sisestamise peenhäälestus</string>
+    <string name="fine_tune_gesture_summary">Konfigureerige ujuva eelvaate asendit, raja hääbumise kiirust ja ruumiteadlikku viipetega sisestamist</string>
+    <string name="fine_tune_swipes_title">Täpsustage pühkimisliigutusi ja puuteplaati</string>
+    <string name="fine_tune_swipes_summary">Konfigureerige vertikaalsed pühkimistoimingud, pühkimiskaugused, tundlikkus ja puuteplaadi seaded</string>
+    <string name="fine_tune_advanced_title">Füüsiliste ja eksperimentaalsete klaviatuuride peenhäälestus</string>
+    <string name="fine_tune_advanced_summary">Konfigureerige riistvara klaviatuuripaigutusi, URL-i tuvastamist ja eksperimentaalseid lippe</string>
 </resources>

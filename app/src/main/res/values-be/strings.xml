@@ -1777,4 +1777,24 @@
     <string name="updates_plugins_title">Убудовы-кампаньёны</string>
     <string name="updates_plugin_update_available">Даступная новая версія%s</string>
     <string name="updates_plugin_updates_found">Даступныя абнаўленні плагінаў</string>
+    <string name="fine_tune_theme_title">Адрэгулюйце тэму і межы</string>
+    <string name="fine_tune_theme_summary">Адрэгулюйце радыус кута, колер панэлі навігацыі, размыццё фону і карыстальніцкія значкі</string>
+    <string name="fine_tune_key_previews_title">Дакладна наладзьце ўсплывальныя вокны і папярэдні прагляд клавіш</string>
+    <string name="fine_tune_key_previews_summary">Наладзьце памер папярэдняга прагляду, радыус, вертыкальнае зрушэнне і хуткасць анімацыі</string>
+    <string name="fine_tune_keyboard_layout_title">Дакладна наладзьце памер і шрыфты клавіятуры</string>
+    <string name="fine_tune_keyboard_layout_summary">Адрэгулюйце прастору збоку і знізу, зменшце прамежкі паміж клавішамі, падзяліце інтэрвал і маштаб шрыфта</string>
+    <string name="fine_tune_haptics_title">Дакладная налада тактыльных адчуванняў і вібрацыі</string>
+    <string name="fine_tune_haptics_summary">Наладзьце выбар тактыльнага рухавіка, амплітуду вібрацыі і перавызначэнне рэжыму \"Не турбаваць\".</string>
+    <string name="fine_tune_additional_keys_title">Дакладная налада другасных клавіш і клавіш раскладкі</string>
+    <string name="fine_tune_additional_keys_summary">Наладзьце лакалізаваныя лічбы, радкі нумароў сімвалаў, клавішы пераключэння і паводзіны ўсплывальных вокнаў</string>
+    <string name="fine_tune_clipboard_title">Дакладная налада паводзін буфера абмену</string>
+    <string name="fine_tune_clipboard_summary">Наладзьце парадак замацаваных элементаў, памер складання і памер шрыфта буфера абмену</string>
+    <string name="fine_tune_toolbar_title">Дакладная налада паводзін панэлі інструментаў</string>
+    <string name="fine_tune_toolbar_summary">Наладзьце рэжымы аўтаматычнага разгортвання, аўтаматычнага схавання ўводу, выраўноўвання клавіш і апаратнай клавіятуры</string>
+    <string name="fine_tune_gesture_title">Дакладная налада ўводу жэстамі</string>
+    <string name="fine_tune_gesture_summary">Наладзьце становішча плаваючага папярэдняга прагляду, хуткасць згасання следу і ўвод жэстамі з улікам прасторы</string>
+    <string name="fine_tune_swipes_title">Дакладна наладзьце жэсты правядзення пальцам і сэнсарную панэль</string>
+    <string name="fine_tune_swipes_summary">Наладзьце дзеянні вертыкальнага правядзення пальцам, адлегласць правядзення пальцам, адчувальнасць і параметры сэнсарнай панэлі</string>
+    <string name="fine_tune_advanced_title">Дакладная налада фізічных і эксперыментальных клавіятур</string>
+    <string name="fine_tune_advanced_summary">Наладзьце апаратныя раскладкі клавіятуры, выяўленне URL і эксперыментальныя сцягі</string>
 </resources>

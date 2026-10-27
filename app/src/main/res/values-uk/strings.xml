@@ -1745,4 +1745,24 @@
     <string name="updates_plugins_title">Додаткові модулі</string>
     <string name="updates_plugin_update_available">Доступна нова версія%s</string>
     <string name="updates_plugin_updates_found">Доступні оновлення плагінів</string>
+    <string name="fine_tune_theme_title">Налаштуйте тему та межі</string>
+    <string name="fine_tune_theme_summary">Налаштуйте радіус кута, колір навігаційної панелі, розмиття фону та спеціальні значки</string>
+    <string name="fine_tune_key_previews_title">Налаштуйте спливаючі вікна клавіш і попередній перегляд</string>
+    <string name="fine_tune_key_previews_summary">Налаштуйте розмір попереднього перегляду спливаючого вікна, радіус, вертикальне зміщення та швидкість анімації</string>
+    <string name="fine_tune_keyboard_layout_title">Налаштуйте розмір клавіатури та шрифти</string>
+    <string name="fine_tune_keyboard_layout_summary">Налаштуйте відступи збоку та знизу, звузьте проміжки між клавішами, розділіть інтервали та масштаб шрифту</string>
+    <string name="fine_tune_haptics_title">Точне налаштування тактильних відчуттів і вібрації</string>
+    <string name="fine_tune_haptics_summary">Налаштуйте вибір тактильного двигуна, амплітуду вібрації та перевизначення режиму \"Не турбувати\".</string>
+    <string name="fine_tune_additional_keys_title">Точне налаштування вторинних клавіш і клавіш розкладки</string>
+    <string name="fine_tune_additional_keys_summary">Налаштуйте локалізовані цифри, рядки номерів символів, клавіші перемикання та поведінку спливаючих вікон</string>
+    <string name="fine_tune_clipboard_title">Точне налаштування поведінки буфера обміну</string>
+    <string name="fine_tune_clipboard_summary">Налаштуйте порядок закріплених елементів, згортання та розмір шрифту буфера обміну</string>
+    <string name="fine_tune_toolbar_title">Точне налаштування поведінки панелі інструментів</string>
+    <string name="fine_tune_toolbar_summary">Налаштування режимів автоматичного розгортання, автоматичного приховування введення, вирівнювання клавіш і апаратної клавіатури</string>
+    <string name="fine_tune_gesture_title"></string>
+    <string name="fine_tune_gesture_summary">Налаштуйте положення плаваючого попереднього перегляду, швидкість згасання сліду та введення жестами з урахуванням простору</string>
+    <string name="fine_tune_swipes_title">Налаштуйте жести гортання та сенсорну панель</string>
+    <string name="fine_tune_swipes_summary">Налаштуйте дії вертикального гортання, відстані, чутливість і параметри сенсорної панелі</string>
+    <string name="fine_tune_advanced_title">Точне налаштування фізичних і експериментальних клавіатур</string>
+    <string name="fine_tune_advanced_summary">Налаштуйте апаратну розкладку клавіатури, виявлення URL-адреси та експериментальні позначки</string>
 </resources>

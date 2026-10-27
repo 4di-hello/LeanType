@@ -1839,4 +1839,24 @@ Permet l\'inférence GGUF / llama.cpp sur l\'appareil pour la correction et la r
     <string name="updates_plugins_title">Plugins compagnons</string>
     <string name="updates_plugin_update_available">Nouvelle version%sdisponible</string>
     <string name="updates_plugin_updates_found">Mises à jour du plugin disponibles</string>
+    <string name="fine_tune_theme_title">Affiner le thème et les bordures</string>
+    <string name="fine_tune_theme_summary">Ajustez le rayon des coins, la couleur de la barre de navigation, le flou d\'arrière-plan et les icônes personnalisées</string>
+    <string name="fine_tune_key_previews_title">Affiner les fenêtres contextuelles et les aperçus clés</string>
+    <string name="fine_tune_key_previews_summary">Configurer la taille de l\'aperçu contextuel, le rayon, le décalage vertical et la vitesse d\'animation</string>
+    <string name="fine_tune_keyboard_layout_title">Ajustez la taille du clavier et les polices</string>
+    <string name="fine_tune_keyboard_layout_summary">Ajustez le rembourrage latéral et inférieur, réduisez les espaces entre les touches, l\'espacement divisé et l\'échelle de police.</string>
+    <string name="fine_tune_haptics_title">Affiner l\'haptique et les vibrations</string>
+    <string name="fine_tune_haptics_summary">Configurer la sélection du moteur haptique, l\'amplitude des vibrations et la priorité Ne pas déranger</string>
+    <string name="fine_tune_additional_keys_title">Affiner les clés secondaires et de mise en page</string>
+    <string name="fine_tune_additional_keys_summary">Configurer les chiffres localisés, les lignes de numéros de symboles, les touches de commutation et le comportement des fenêtres contextuelles</string>
+    <string name="fine_tune_clipboard_title">Affiner le comportement du presse-papiers</string>
+    <string name="fine_tune_clipboard_summary">Ajustez l’ordre des éléments épinglés, le pliage et la taille de la police du presse-papiers</string>
+    <string name="fine_tune_toolbar_title">Affiner le comportement de la barre d\'outils</string>
+    <string name="fine_tune_toolbar_summary">Configurer les modes d\'expansion automatique, de masquage automatique de saisie, d\'alignement des touches et de clavier matériel</string>
+    <string name="fine_tune_gesture_title">Affiner la saisie gestuelle</string>
+    <string name="fine_tune_gesture_summary"></string>
+    <string name="fine_tune_swipes_title">Affinez les gestes de balayage et le pavé tactile</string>
+    <string name="fine_tune_swipes_summary">Configurer les actions de balayage vertical, les distances de balayage, la sensibilité et les paramètres du pavé tactile</string>
+    <string name="fine_tune_advanced_title">Affiner les claviers physiques et expérimentaux</string>
+    <string name="fine_tune_advanced_summary">Configurer la disposition du clavier matériel, la détection d\'URL et les indicateurs expérimentaux</string>
 </resources>

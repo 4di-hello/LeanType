@@ -1843,4 +1843,24 @@
     <string name="updates_plugins_title">കമ്പാനിയൻ പ്ലഗിനുകൾ</string>
     <string name="updates_plugin_update_available">പുതിയ പതിപ്പ്%sലഭ്യമാണ്</string>
     <string name="updates_plugin_updates_found">പ്ലഗിൻ അപ്ഡേറ്റുകൾ ലഭ്യമാണ്</string>
+    <string name="fine_tune_theme_title">തീമും ബോർഡറുകളും മികച്ചതാക്കുക</string>
+    <string name="fine_tune_theme_summary">കോർണർ റേഡിയസ്, നവബാർ നിറം, പശ്ചാത്തല മങ്ങൽ, ഇഷ്‌ടാനുസൃത ഐക്കണുകൾ എന്നിവ ക്രമീകരിക്കുക</string>
+    <string name="fine_tune_key_previews_title">കീ പോപ്പ്അപ്പുകളും പ്രിവ്യൂകളും ഫൈൻ-ട്യൂൺ ചെയ്യുക</string>
+    <string name="fine_tune_key_previews_summary">പോപ്പ്അപ്പ് പ്രിവ്യൂ വലുപ്പം, ആരം, ലംബമായ ഓഫ്‌സെറ്റ്, ആനിമേഷൻ വേഗത എന്നിവ കോൺഫിഗർ ചെയ്യുക</string>
+    <string name="fine_tune_keyboard_layout_title">കീബോർഡ് വലുപ്പവും ഫോണ്ടുകളും മികച്ച ട്യൂൺ ചെയ്യുക</string>
+    <string name="fine_tune_keyboard_layout_summary">വശത്തും താഴെയുമുള്ള പാഡിംഗ്, ഇടുങ്ങിയ കീ വിടവുകൾ, സ്പ്ലിറ്റ് സ്പേസിംഗ്, ഫോണ്ട് സ്കെയിൽ എന്നിവ ക്രമീകരിക്കുക</string>
+    <string name="fine_tune_haptics_title">ഫൈൻ-ട്യൂൺ ഹാപ്റ്റിക്സും വൈബ്രേഷനും</string>
+    <string name="fine_tune_haptics_summary">ഹാപ്‌റ്റിക് എഞ്ചിൻ തിരഞ്ഞെടുക്കൽ, വൈബ്രേഷൻ ആംപ്ലിറ്റ്യൂഡ്, ശല്യപ്പെടുത്തരുത് ഓവർറൈഡ് എന്നിവ കോൺഫിഗർ ചെയ്യുക</string>
+    <string name="fine_tune_additional_keys_title">ദ്വിതീയ, ലേഔട്ട് കീകൾ ഫൈൻ-ട്യൂൺ ചെയ്യുക</string>
+    <string name="fine_tune_additional_keys_summary">പ്രാദേശികവൽക്കരിച്ച അക്കങ്ങൾ, ചിഹ്ന നമ്പർ വരികൾ, സ്വിച്ച് കീകൾ, പോപ്പ്അപ്പ് പെരുമാറ്റം എന്നിവ കോൺഫിഗർ ചെയ്യുക</string>
+    <string name="fine_tune_clipboard_title">ഫൈൻ-ട്യൂൺ ക്ലിപ്പ്ബോർഡ് പെരുമാറ്റം</string>
+    <string name="fine_tune_clipboard_summary">പിൻ ചെയ്‌ത ഇനത്തിൻ്റെ ക്രമം, ഫോൾഡിംഗ്, ക്ലിപ്പ്ബോർഡ് ഫോണ്ട് വലുപ്പം എന്നിവ ക്രമീകരിക്കുക</string>
+    <string name="fine_tune_toolbar_title">ഫൈൻ-ട്യൂൺ ടൂൾബാർ പെരുമാറ്റം</string>
+    <string name="fine_tune_toolbar_summary">യാന്ത്രിക-വിപുലീകരണം, ടൈപ്പിംഗ് സ്വയമേവ മറയ്ക്കൽ, കീ വിന്യാസം, ഹാർഡ്‌വെയർ കീബോർഡ് മോഡുകൾ എന്നിവ കോൺഫിഗർ ചെയ്യുക</string>
+    <string name="fine_tune_gesture_title">മികച്ച ട്യൂൺ ആംഗ്യ ടൈപ്പിംഗ്</string>
+    <string name="fine_tune_gesture_summary">ഫ്ലോട്ടിംഗ് പ്രിവ്യൂ പൊസിഷൻ, ട്രയൽ ഫേഡ്ഔട്ട് സ്പീഡ്, സ്പേസ്-അവയർ ജെസ്റ്റർ ടൈപ്പിംഗ് എന്നിവ കോൺഫിഗർ ചെയ്യുക</string>
+    <string name="fine_tune_swipes_title">സ്വൈപ്പ് ആംഗ്യങ്ങളും ടച്ച്പാഡും നന്നായി ട്യൂൺ ചെയ്യുക</string>
+    <string name="fine_tune_swipes_summary">ലംബമായ സ്വൈപ്പ് പ്രവർത്തനങ്ങൾ, സ്വൈപ്പ് ദൂരങ്ങൾ, സെൻസിറ്റിവിറ്റി, ടച്ച്പാഡ് ക്രമീകരണങ്ങൾ എന്നിവ കോൺഫിഗർ ചെയ്യുക</string>
+    <string name="fine_tune_advanced_title">ഫിസിക്കൽ കീബോർഡുകളും പരീക്ഷണാത്മകവും മികച്ചതാക്കുക</string>
+    <string name="fine_tune_advanced_summary">ഹാർഡ്‌വെയർ കീബോർഡ് ലേഔട്ടുകൾ, URL കണ്ടെത്തൽ, പരീക്ഷണാത്മക ഫ്ലാഗുകൾ എന്നിവ കോൺഫിഗർ ചെയ്യുക</string>
 </resources>

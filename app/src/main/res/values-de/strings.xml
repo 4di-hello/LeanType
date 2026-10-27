@@ -1787,4 +1787,24 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="updates_plugins_title">Begleit-Plugins</string>
     <string name="updates_plugin_update_available">Neue Version%sverfügbar</string>
     <string name="updates_plugin_updates_found">Plugin-Updates verfügbar</string>
+    <string name="fine_tune_theme_title">Optimieren Sie das Thema und die Ränder</string>
+    <string name="fine_tune_theme_summary">Passen Sie den Eckenradius, die Farbe der Navigationsleiste, die Hintergrundunschärfe und benutzerdefinierte Symbole an</string>
+    <string name="fine_tune_key_previews_title">Optimieren Sie wichtige Popups und Vorschauen</string>
+    <string name="fine_tune_key_previews_summary">Konfigurieren Sie Popup-Vorschaugröße, Radius, vertikalen Versatz und Animationsgeschwindigkeit</string>
+    <string name="fine_tune_keyboard_layout_title">Passen Sie Tastaturgröße und Schriftarten an</string>
+    <string name="fine_tune_keyboard_layout_summary">Passen Sie den seitlichen und unteren Abstand an, verkleinern Sie die Tastenabstände, den Teilungsabstand und die Schriftskalierung</string>
+    <string name="fine_tune_haptics_title">Feinabstimmung von Haptik und Vibration</string>
+    <string name="fine_tune_haptics_summary">Konfigurieren Sie die Auswahl des haptischen Motors, die Vibrationsamplitude und die Überschreibung „Bitte nicht stören“.</string>
+    <string name="fine_tune_additional_keys_title">Feinabstimmung der Sekundär- und Layouttasten</string>
+    <string name="fine_tune_additional_keys_summary">Konfigurieren Sie lokalisierte Ziffern, Symbolnummernzeilen, Umschalttasten und Popup-Verhalten</string>
+    <string name="fine_tune_clipboard_title">Optimieren Sie das Verhalten der Zwischenablage</string>
+    <string name="fine_tune_clipboard_summary">Passen Sie die Reihenfolge, Faltung und Schriftgröße der angehefteten Elemente an</string>
+    <string name="fine_tune_toolbar_title">Optimieren Sie das Verhalten der Symbolleiste</string>
+    <string name="fine_tune_toolbar_summary">Konfigurieren Sie die automatische Erweiterung, das automatische Ausblenden von Eingaben, die Tastenausrichtung und die Hardware-Tastaturmodi</string>
+    <string name="fine_tune_gesture_title">Feinabstimmung der Gesteneingabe</string>
+    <string name="fine_tune_gesture_summary">Konfigurieren Sie die schwebende Vorschauposition, die Ausblendgeschwindigkeit der Spur und die raumbezogene Gesteneingabe</string>
+    <string name="fine_tune_swipes_title">Feinabstimmung von Wischgesten und Touchpad</string>
+    <string name="fine_tune_swipes_summary">Konfigurieren Sie vertikale Wischaktionen, Wischabstände, Empfindlichkeit und Touchpad-Einstellungen</string>
+    <string name="fine_tune_advanced_title">Feinabstimmung physischer und experimenteller Tastaturen</string>
+    <string name="fine_tune_advanced_summary">Konfigurieren Sie Hardware-Tastaturlayouts, URL-Erkennung und experimentelle Flags</string>
 </resources>

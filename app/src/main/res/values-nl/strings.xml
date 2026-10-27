@@ -1825,4 +1825,24 @@ Maakt GGUF / llama.cpp-inferentie op het apparaat mogelijk voor proeflezen en he
     <string name="updates_plugins_title">Companion-plug-ins</string>
     <string name="updates_plugin_update_available">Nieuwe versie%sbeschikbaar</string>
     <string name="updates_plugin_updates_found">Plugin-updates beschikbaar</string>
+    <string name="fine_tune_theme_title">Verfijn het thema en de randen</string>
+    <string name="fine_tune_theme_summary">Pas de hoekradius, de kleur van de navigatiebalk, de achtergrondvervaging en aangepaste pictogrammen aan</string>
+    <string name="fine_tune_key_previews_title">Verfijn belangrijke pop-ups en voorbeelden</string>
+    <string name="fine_tune_key_previews_summary">Configureer de pop-upvoorbeeldgrootte, straal, verticale offset en animatiesnelheid</string>
+    <string name="fine_tune_keyboard_layout_title">Pas de toetsenbordgrootte en lettertypen nauwkeurig aan</string>
+    <string name="fine_tune_keyboard_layout_summary">Pas de opvulling aan de zijkant en onderkant, de smalle toetsafstanden, de splitsafstand en de lettertypeschaal aan</string>
+    <string name="fine_tune_haptics_title">Stem de haptiek en trillingen nauwkeurig af</string>
+    <string name="fine_tune_haptics_summary">Configureer haptische motorselectie, trillingsamplitude en niet storen-override</string>
+    <string name="fine_tune_additional_keys_title">Secundaire en lay-outtoetsen nauwkeurig afstemmen</string>
+    <string name="fine_tune_additional_keys_summary">Configureer gelokaliseerde cijfers, symboolnummerrijen, schakeltoetsen en pop-upgedrag</string>
+    <string name="fine_tune_clipboard_title">Verfijn het klembordgedrag</string>
+    <string name="fine_tune_clipboard_summary">Pas de volgorde van vastgezette items, het vouwen en de lettergrootte van het klembord aan</string>
+    <string name="fine_tune_toolbar_title">Werkbalkgedrag verfijnen</string>
+    <string name="fine_tune_toolbar_summary">Configureer automatisch uitbreiden, automatisch verbergen van typen, toetsuitlijning en hardwaretoetsenbordmodi</string>
+    <string name="fine_tune_gesture_title">Verfijn het typen met gebaren</string>
+    <string name="fine_tune_gesture_summary">Configureer de zwevende voorbeeldpositie, de fade-outsnelheid en ruimtebewust typen met gebaren</string>
+    <string name="fine_tune_swipes_title">Stem veegbewegingen en touchpad nauwkeurig af</string>
+    <string name="fine_tune_swipes_summary">Configureer verticale veegacties, veegafstanden, gevoeligheid en touchpad-instellingen</string>
+    <string name="fine_tune_advanced_title">Verfijn fysieke toetsenborden en experimenteel</string>
+    <string name="fine_tune_advanced_summary">Configureer hardwaretoetsenbordindelingen, URL-detectie en experimentele vlaggen</string>
 </resources>

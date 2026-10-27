@@ -1850,4 +1850,24 @@
     <string name="updates_plugins_title">Сопутствующие плагины</string>
     <string name="updates_plugin_update_available">Доступна новая версия%s.</string>
     <string name="updates_plugin_updates_found">Доступны обновления плагина</string>
+    <string name="fine_tune_theme_title">Точная настройка темы и границ</string>
+    <string name="fine_tune_theme_summary">Отрегулируйте радиус угла, цвет панели навигации, размытие фона и пользовательские значки.</string>
+    <string name="fine_tune_key_previews_title">Точная настройка всплывающих окон и предварительного просмотра клавиш</string>
+    <string name="fine_tune_key_previews_summary">Настройте размер предварительного просмотра всплывающего окна, радиус, вертикальное смещение и скорость анимации.</string>
+    <string name="fine_tune_keyboard_layout_title">Точная настройка размера клавиатуры и шрифтов</string>
+    <string name="fine_tune_keyboard_layout_summary">Отрегулируйте боковые и нижние отступы, узкие промежутки между клавишами, разделенный интервал и масштаб шрифта.</string>
+    <string name="fine_tune_haptics_title">Точная настройка тактильных ощущений и вибрации</string>
+    <string name="fine_tune_haptics_summary">Настройте выбор тактильного механизма, амплитуду вибрации и переопределение режима «Не беспокоить».</string>
+    <string name="fine_tune_additional_keys_title">Точная настройка дополнительных клавиш и клавиш раскладки</string>
+    <string name="fine_tune_additional_keys_summary">Настройте локализованные цифры, строки номеров символов, клавиши переключения и поведение всплывающих окон.</string>
+    <string name="fine_tune_clipboard_title">Точная настройка поведения буфера обмена</string>
+    <string name="fine_tune_clipboard_summary">Настройте порядок закрепленных элементов, их складку и размер шрифта в буфере обмена.</string>
+    <string name="fine_tune_toolbar_title">Точная настройка поведения панели инструментов</string>
+    <string name="fine_tune_toolbar_summary">Настройка автоматического расширения, автоматического скрытия ввода, выравнивания клавиш и режимов аппаратной клавиатуры.</string>
+    <string name="fine_tune_gesture_title">Точная настройка набора текста жестами</string>
+    <string name="fine_tune_gesture_summary">Настройте плавающее положение предварительного просмотра, скорость затухания следа и ввод жестов с учетом пробела.</string>
+    <string name="fine_tune_swipes_title">Точная настройка жестов смахивания и сенсорной панели</string>
+    <string name="fine_tune_swipes_summary">Настройте действия вертикального смахивания, расстояние смахивания, чувствительность и настройки сенсорной панели.</string>
+    <string name="fine_tune_advanced_title">Точная настройка физических клавиатур и экспериментальные</string>
+    <string name="fine_tune_advanced_summary">Настройка раскладки аппаратной клавиатуры, обнаружение URL-адресов и экспериментальные флаги.</string>
 </resources>

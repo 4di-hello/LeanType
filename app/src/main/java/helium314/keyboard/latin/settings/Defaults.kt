@@ -89,6 +89,16 @@ object Defaults {
     const val PREF_AUTO_CORRECT_AGGRESSIVENESS = 2
     const val PREF_EXPAND_FINE_TUNE_AUTOCORRECT = false
     const val PREF_EXPAND_FINE_TUNE_PREDICTION = false
+    const val PREF_EXPAND_FINE_TUNE_THEME = false
+    const val PREF_EXPAND_FINE_TUNE_KEY_PREVIEWS = false
+    const val PREF_EXPAND_FINE_TUNE_KEYBOARD_LAYOUT = false
+    const val PREF_EXPAND_FINE_TUNE_HAPTICS = false
+    const val PREF_EXPAND_FINE_TUNE_ADDITIONAL_KEYS = false
+    const val PREF_EXPAND_FINE_TUNE_CLIPBOARD = false
+    const val PREF_EXPAND_FINE_TUNE_TOOLBAR = false
+    const val PREF_EXPAND_FINE_TUNE_GESTURE = false
+    const val PREF_EXPAND_FINE_TUNE_SWIPES = false
+    const val PREF_EXPAND_FINE_TUNE_ADVANCED = false
     const val PREF_AUTO_CORRECT_TRIGGER = "both"
     const val PREF_MORE_AUTO_CORRECTION = false
     const val PREF_AUTO_CORRECT_THRESHOLD = 0.185f

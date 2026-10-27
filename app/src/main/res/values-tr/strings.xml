@@ -1773,4 +1773,24 @@ Metin düzeltme ve yeniden yazma için cihaz üzerinde GGUF / llama.cpp çıkar�
     <string name="updates_plugins_title">Tamamlayıcı eklentiler</string>
     <string name="updates_plugin_update_available">Yeni sürüm%smevcut</string>
     <string name="updates_plugin_updates_found">Eklenti güncellemeleri mevcut</string>
+    <string name="fine_tune_theme_title">Tema ve kenarlıklarda ince ayar yapın</string>
+    <string name="fine_tune_theme_summary">Köşe yarıçapını, gezinme çubuğu rengini, arka plan bulanıklığını ve özel simgeleri ayarlayın</string>
+    <string name="fine_tune_key_previews_title">Anahtar açılır pencerelere ve önizlemelere ince ayar yapın</string>
+    <string name="fine_tune_key_previews_summary">Açılır pencere önizleme boyutunu, yarıçapını, dikey uzaklığını ve animasyon hızını yapılandırın</string>
+    <string name="fine_tune_keyboard_layout_title">Klavye boyutuna ve yazı tiplerine ince ayar yapın</string>
+    <string name="fine_tune_keyboard_layout_summary">Yan ve alt dolguyu ayarlayın, tuş boşluklarını daraltın, aralığı bölün ve yazı tipi ölçeğini ayarlayın</string>
+    <string name="fine_tune_haptics_title">Dokunsal ve titreşime ince ayar yapın</string>
+    <string name="fine_tune_haptics_summary">Dokunsal motor seçimini, titreşim genliğini ve Rahatsız Etmeyin seçeneğini geçersiz kılmayı yapılandırın</string>
+    <string name="fine_tune_additional_keys_title">İkincil tuşlara ve düzen tuşlarına ince ayar yapın</string>
+    <string name="fine_tune_additional_keys_summary">Yerelleştirilmiş rakamları, sembol numarası satırlarını, anahtar tuşlarını ve açılır pencere davranışını yapılandırın</string>
+    <string name="fine_tune_clipboard_title">Pano davranışına ince ayar yapın</string>
+    <string name="fine_tune_clipboard_summary">Sabitlenmiş öğe sırasını, katlamayı ve pano yazı tipi boyutunu ayarlayın</string>
+    <string name="fine_tune_toolbar_title">Araç çubuğu davranışında ince ayar yapın</string>
+    <string name="fine_tune_toolbar_summary">Otomatik genişletme, otomatik yazma gizleme, tuş hizalama ve donanım klavye modlarını yapılandırma</string>
+    <string name="fine_tune_gesture_title">Hareketle yazmaya ince ayar yapın</string>
+    <string name="fine_tune_gesture_summary">Kayan önizleme konumunu, iz kaybolma hızını ve alana duyarlı hareket yazmayı yapılandırın</string>
+    <string name="fine_tune_swipes_title">Kaydırma hareketlerine ve dokunmatik yüzeye ince ayar yapın</string>
+    <string name="fine_tune_swipes_summary">Dikey kaydırma eylemlerini, kaydırma mesafelerini, hassasiyeti ve dokunmatik yüzey ayarlarını yapılandırın</string>
+    <string name="fine_tune_advanced_title">Fiziksel klavyelere ince ayar yapın ve deneysel</string>
+    <string name="fine_tune_advanced_summary">Donanım klavye düzenlerini, URL algılamayı ve deneysel bayrakları yapılandırma</string>
 </resources>

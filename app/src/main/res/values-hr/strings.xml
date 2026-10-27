@@ -1765,4 +1765,24 @@ Omogućuje lokalno GGUF / llama.cpp zaključivanje na uređaju za lekturu i prep
     <string name="updates_plugins_title">Popratni dodaci</string>
     <string name="updates_plugin_update_available">Dostupna je nova verzija%s</string>
     <string name="updates_plugin_updates_found">Dostupna su ažuriranja dodataka</string>
+    <string name="fine_tune_theme_title">Fino podesite temu i obrube</string>
+    <string name="fine_tune_theme_summary">Podesite polumjer kuta, boju navigacijske trake, zamućenje pozadine i prilagođene ikone</string>
+    <string name="fine_tune_key_previews_title">Fino podesite skočne prozore i preglede tipki</string>
+    <string name="fine_tune_key_previews_summary">Konfigurirajte veličinu pretpregleda skočnog prozora, radijus, okomiti pomak i brzinu animacije</string>
+    <string name="fine_tune_keyboard_layout_title">Fino podesite veličinu tipkovnice i fontove</string>
+    <string name="fine_tune_keyboard_layout_summary">Prilagodite bočne i donje ispune, suzite razmake između tipki, razmak između tipki i veličinu fonta</string>
+    <string name="fine_tune_haptics_title">Fino podesite opip i vibraciju</string>
+    <string name="fine_tune_haptics_summary">Konfigurirajte odabir haptičkog motora, amplitudu vibracije i nadjačavanje Ne uznemiravaj</string>
+    <string name="fine_tune_additional_keys_title">Fino podesite sekundarne tipke i tipke za raspored</string>
+    <string name="fine_tune_additional_keys_summary">Konfigurirajte lokalizirane znamenke, retke brojeva simbola, tipke za prebacivanje i ponašanje skočnih prozora</string>
+    <string name="fine_tune_clipboard_title">Fino podesite ponašanje međuspremnika</string>
+    <string name="fine_tune_clipboard_summary">Podesite redoslijed prikvačenih stavki, presavijanje i veličinu fonta međuspremnika</string>
+    <string name="fine_tune_toolbar_title">Fino podesite ponašanje alatne trake</string>
+    <string name="fine_tune_toolbar_summary">Konfigurirajte načine automatskog proširenja, automatskog skrivanja tipka, poravnanja tipki i hardverske tipkovnice</string>
+    <string name="fine_tune_gesture_title">Fino podesite tipkanje gestama</string>
+    <string name="fine_tune_gesture_summary">Konfigurirajte položaj plutajućeg pregleda, brzinu zatamnjenja traga i tipkanje gestama s obzirom na prostor</string>
+    <string name="fine_tune_swipes_title">Fino podesite pokrete prevlačenja i dodirnu podlogu</string>
+    <string name="fine_tune_swipes_summary">Konfigurirajte radnje okomitog prelaska prstom, udaljenosti prijelaza, osjetljivost i postavke dodirne podloge</string>
+    <string name="fine_tune_advanced_title">Fino podesite fizičke i eksperimentalne tipkovnice</string>
+    <string name="fine_tune_advanced_summary">Konfigurirajte hardverski raspored tipkovnice, otkrivanje URL-a i eksperimentalne oznake</string>
 </resources>

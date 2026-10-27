@@ -1850,4 +1850,24 @@ Abilita l\'inferenza GGUF / llama.cpp sul dispositivo per correzione e riscrittu
     <string name="updates_plugins_title">Plugin complementari</string>
     <string name="updates_plugin_update_available">Nuova versione%sdisponibile</string>
     <string name="updates_plugin_updates_found">Aggiornamenti del plugin disponibili</string>
+    <string name="fine_tune_theme_title">Perfeziona tema e bordi</string>
+    <string name="fine_tune_theme_summary">Regola il raggio dell\'angolo, il colore della barra di navigazione, la sfocatura dello sfondo e le icone personalizzate</string>
+    <string name="fine_tune_key_previews_title">Ottimizza i popup e le anteprime principali</string>
+    <string name="fine_tune_key_previews_summary">Configura le dimensioni dell\'anteprima popup, il raggio, l\'offset verticale e la velocità dell\'animazione</string>
+    <string name="fine_tune_keyboard_layout_title">Perfeziona il dimensionamento e i caratteri della tastiera</string>
+    <string name="fine_tune_keyboard_layout_summary">Regola l\'imbottitura laterale e inferiore, riduci gli spazi tra i tasti, la spaziatura divisa e la scala dei caratteri</string>
+    <string name="fine_tune_haptics_title">Perfeziona l\'aspetto tattile e le vibrazioni</string>
+    <string name="fine_tune_haptics_summary">Configura la selezione del motore tattile, l\'ampiezza della vibrazione e l\'esclusione della funzione Non disturbare</string>
+    <string name="fine_tune_additional_keys_title">Perfeziona i tasti secondari e di layout</string>
+    <string name="fine_tune_additional_keys_summary">Configura cifre localizzate, righe di numeri di simboli, tasti di commutazione e comportamento dei popup</string>
+    <string name="fine_tune_clipboard_title">Ottimizza il comportamento degli appunti</string>
+    <string name="fine_tune_clipboard_summary">Regola l\'ordine degli elementi appuntati, la piegatura e la dimensione del carattere degli appunti</string>
+    <string name="fine_tune_toolbar_title">Ottimizza il comportamento della barra degli strumenti</string>
+    <string name="fine_tune_toolbar_summary">Configura le modalità di espansione automatica, nascondere automaticamente la digitazione, allineamento dei tasti e tastiera hardware</string>
+    <string name="fine_tune_gesture_title">Perfeziona la digitazione tramite gesti</string>
+    <string name="fine_tune_gesture_summary">Configura la posizione dell\'anteprima mobile, la velocità di dissolvenza della traccia e la digitazione gestuale sensibile allo spazio</string>
+    <string name="fine_tune_swipes_title">Perfeziona i gesti di scorrimento e il touchpad</string>
+    <string name="fine_tune_swipes_summary">Configura le azioni di scorrimento verticale, le distanze di scorrimento, la sensibilità e le impostazioni del touchpad</string>
+    <string name="fine_tune_advanced_title">Perfeziona tastiere fisiche e sperimentali</string>
+    <string name="fine_tune_advanced_summary">Configura layout di tastiera hardware, rilevamento URL e flag sperimentali</string>
 </resources>

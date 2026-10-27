@@ -1834,4 +1834,24 @@
     <string name="updates_plugins_title">ساتھی پلگ انز</string>
     <string name="updates_plugin_update_available">نیا ورژن%sدستیاب ہے۔</string>
     <string name="updates_plugin_updates_found">پلگ ان اپڈیٹس دستیاب ہیں۔</string>
+    <string name="fine_tune_theme_title">فائن ٹیون تھیم اور بارڈرز</string>
+    <string name="fine_tune_theme_summary">کونے کا رداس، نوبار رنگ، پس منظر کا دھندلاپن، اور حسب ضرورت آئیکنز کو ایڈجسٹ کریں۔</string>
+    <string name="fine_tune_key_previews_title">کلیدی پاپ اپ اور پیش نظارہ کو ٹھیک ٹیون کریں۔</string>
+    <string name="fine_tune_key_previews_summary">پاپ اپ پیش نظارہ سائز، رداس، عمودی آفسیٹ، اور حرکت پذیری کی رفتار کو ترتیب دیں۔</string>
+    <string name="fine_tune_keyboard_layout_title">کی بورڈ کے سائز اور فونٹس کو ٹھیک ٹیون کریں۔</string>
+    <string name="fine_tune_keyboard_layout_summary">سائیڈ اور نچلی پیڈنگ، تنگ کلیدی خلا، سپلٹ اسپیسنگ، اور فونٹ اسکیل کو ایڈجسٹ کریں۔</string>
+    <string name="fine_tune_haptics_title">فائن ٹیون ہیپٹکس اور وائبریشن</string>
+    <string name="fine_tune_haptics_summary">ہیپٹک انجن سلیکشن، وائبریشن ایمپلیٹیوڈ اور ڈو ڈسٹرب اوور رائڈ کو ترتیب دیں</string>
+    <string name="fine_tune_additional_keys_title">ثانوی اور لے آؤٹ کیز کو ٹھیک کریں۔</string>
+    <string name="fine_tune_additional_keys_summary">مقامی ہندسوں، علامت نمبر کی قطاریں، سوئچ کیز، اور پاپ اپ رویے کو ترتیب دیں</string>
+    <string name="fine_tune_clipboard_title">ٹھیک ٹیون کلپ بورڈ سلوک</string>
+    <string name="fine_tune_clipboard_summary">پن کیے ہوئے آئٹم آرڈر، فولڈنگ اور کلپ بورڈ فونٹ سائز کو ایڈجسٹ کریں۔</string>
+    <string name="fine_tune_toolbar_title">فائن ٹیون ٹول بار کا برتاؤ</string>
+    <string name="fine_tune_toolbar_summary">خودکار توسیع، ٹائپنگ آٹو-ہائیڈ، کلیدی سیدھ، اور ہارڈویئر کی بورڈ موڈز کو ترتیب دیں</string>
+    <string name="fine_tune_gesture_title">ٹھیک ٹیون اشارہ ٹائپنگ</string>
+    <string name="fine_tune_gesture_summary">فلوٹنگ پیش نظارہ پوزیشن، ٹریل فیڈ آؤٹ اسپیڈ، اور اسپیس سے آگاہ اشارہ ٹائپنگ کو ترتیب دیں</string>
+    <string name="fine_tune_swipes_title">ٹھیک ٹیون سوائپ اشاروں اور ٹچ پیڈ</string>
+    <string name="fine_tune_swipes_summary">عمودی سوائپ ایکشنز، سوائپ فاصلے، حساسیت، اور ٹچ پیڈ کی ترتیبات کو ترتیب دیں</string>
+    <string name="fine_tune_advanced_title">فزیکل کی بورڈز کو ٹھیک بنائیں اور تجرباتی</string>
+    <string name="fine_tune_advanced_summary">ہارڈ ویئر کی بورڈ لے آؤٹ، یو آر ایل کا پتہ لگانے، اور تجرباتی جھنڈوں کو ترتیب دیں۔</string>
 </resources>

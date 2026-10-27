@@ -1827,4 +1827,24 @@ Umożliwia lokalne wnioskowanie GGUF / llama.cpp na urządzeniu w celu korekty i
     <string name="updates_plugins_title">Wtyczki towarzyszące</string>
     <string name="updates_plugin_update_available">Dostępna nowa wersja%s</string>
     <string name="updates_plugin_updates_found">Dostępne aktualizacje wtyczek</string>
+    <string name="fine_tune_theme_title">Dostosuj motyw i obramowania</string>
+    <string name="fine_tune_theme_summary">Dostosuj promień narożnika, kolor paska nawigacyjnego, rozmycie tła i niestandardowe ikony</string>
+    <string name="fine_tune_key_previews_title">Dostosuj kluczowe wyskakujące okienka i podglądy</string>
+    <string name="fine_tune_key_previews_summary">Skonfiguruj rozmiar podglądu wyskakującego okienka, promień, przesunięcie pionowe i szybkość animacji</string>
+    <string name="fine_tune_keyboard_layout_title">Dostosuj rozmiar klawiatury i czcionki</string>
+    <string name="fine_tune_keyboard_layout_summary">Dostosuj dopełnienie boczne i dolne, wąskie odstępy między klawiszami, odstępy podziału i skalę czcionki</string>
+    <string name="fine_tune_haptics_title">Dostosuj wrażenia dotykowe i wibracje</string>
+    <string name="fine_tune_haptics_summary">Skonfiguruj wybór silnika dotykowego, amplitudę wibracji i obejście trybu Nie przeszkadzać</string>
+    <string name="fine_tune_additional_keys_title">Dostosuj klucze dodatkowe i układowe</string>
+    <string name="fine_tune_additional_keys_summary">Skonfiguruj zlokalizowane cyfry, rzędy numerów symboli, klawisze przełączników i zachowanie wyskakujących okienek</string>
+    <string name="fine_tune_clipboard_title">Dostosuj zachowanie schowka</string>
+    <string name="fine_tune_clipboard_summary">Dostosuj kolejność przypiętych elementów, składanie i rozmiar czcionki schowka</string>
+    <string name="fine_tune_toolbar_title">Dostosuj zachowanie paska narzędzi</string>
+    <string name="fine_tune_toolbar_summary">Skonfiguruj automatyczne rozwijanie, automatyczne ukrywanie pisania, wyrównanie klawiszy i tryby klawiatury sprzętowej</string>
+    <string name="fine_tune_gesture_title">Dostosuj pisanie gestami</string>
+    <string name="fine_tune_gesture_summary">Skonfiguruj pływającą pozycję podglądu, prędkość zanikania śladu i pisanie gestami uwzględniającymi przestrzeń</string>
+    <string name="fine_tune_swipes_title">Dostosuj gesty przesuwania i touchpad</string>
+    <string name="fine_tune_swipes_summary">Skonfiguruj czynności przesuwania w pionie, odległości przesuwania, czułość i ustawienia touchpada</string>
+    <string name="fine_tune_advanced_title">Dostosuj klawiatury fizyczne i eksperymentalne</string>
+    <string name="fine_tune_advanced_summary">Skonfiguruj układy klawiatury sprzętowej, wykrywanie adresów URL i flagi eksperymentalne</string>
 </resources>

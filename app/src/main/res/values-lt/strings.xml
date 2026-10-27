@@ -1773,4 +1773,24 @@ Ar norite atnaujinti?</string>
     <string name="updates_plugins_title">Papildomi papildiniai</string>
     <string name="updates_plugin_update_available">Yra nauja versija%s</string>
     <string name="updates_plugin_updates_found">Galimi papildinio atnaujinimai</string>
+    <string name="fine_tune_theme_title">Tiksliai sureguliuokite temą ir kraštines</string>
+    <string name="fine_tune_theme_summary">Sureguliuokite kampo spindulį, naršymo juostos spalvą, fono suliejimą ir pasirinktines piktogramas</string>
+    <string name="fine_tune_key_previews_title">Tiksliai sureguliuokite klavišų iššokančiuosius langus ir peržiūras</string>
+    <string name="fine_tune_key_previews_summary">Konfigūruokite iššokančiojo lango peržiūros dydį, spindulį, vertikalųjį poslinkį ir animacijos greitį</string>
+    <string name="fine_tune_keyboard_layout_title">Tiksliai sureguliuokite klaviatūros dydį ir šriftus</string>
+    <string name="fine_tune_keyboard_layout_summary">Sureguliuokite šoninį ir apatinį užpildymą, siaurus klavišų tarpus, padalijimo tarpus ir šrifto skalę</string>
+    <string name="fine_tune_haptics_title">Tiksliai sureguliuokite haptiką ir vibraciją</string>
+    <string name="fine_tune_haptics_summary">Konfigūruokite haptinio variklio pasirinkimą, vibracijos amplitudę ir režimo „Netrukdyti“ nepaisymą</string>
+    <string name="fine_tune_additional_keys_title">Tiksliai sureguliuokite antrinius ir išdėstymo klavišus</string>
+    <string name="fine_tune_additional_keys_summary">Konfigūruokite lokalizuotus skaitmenis, simbolių skaičių eilutes, perjungimo klavišus ir iššokančiųjų langų veikimą</string>
+    <string name="fine_tune_clipboard_title">Tiksliai sureguliuokite iškarpinės elgseną</string>
+    <string name="fine_tune_clipboard_summary">Koreguokite prisegtų elementų tvarką, sulankstymą ir iškarpinės šrifto dydį</string>
+    <string name="fine_tune_toolbar_title">Tiksliai sureguliuokite įrankių juostos elgseną</string>
+    <string name="fine_tune_toolbar_summary">Konfigūruokite automatinio išplėtimo, automatinio įvedimo slėpimo, klavišų lygiavimo ir aparatinės įrangos klaviatūros režimus</string>
+    <string name="fine_tune_gesture_title">Tiksliai sureguliuokite įvedimą gestais</string>
+    <string name="fine_tune_gesture_summary">Konfigūruokite slankiąją peržiūros padėtį, išnykimo greitį ir vietos žinią įvesdami gestais</string>
+    <string name="fine_tune_swipes_title">Tiksliai sureguliuokite braukimo gestus ir jutiklinę dalį</string>
+    <string name="fine_tune_swipes_summary">Konfigūruokite vertikalaus braukimo veiksmus, braukimo atstumus, jautrumą ir jutiklinės dalies nustatymus</string>
+    <string name="fine_tune_advanced_title">Tiksliai sureguliuokite fizines ir eksperimentines klaviatūras</string>
+    <string name="fine_tune_advanced_summary">Konfigūruokite aparatinės įrangos klaviatūros išdėstymus, URL aptikimą ir eksperimentines vėliavėles</string>
 </resources>

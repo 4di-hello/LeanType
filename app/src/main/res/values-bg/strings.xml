@@ -1825,4 +1825,24 @@
     <string name="updates_plugins_title">Придружаващи добавки</string>
     <string name="updates_plugin_update_available">Налична е нова версия%s</string>
     <string name="updates_plugin_updates_found">Налични са актуализации на приставки</string>
+    <string name="fine_tune_theme_title">Фина настройка на темата и границите</string>
+    <string name="fine_tune_theme_summary">Коригирайте радиуса на ъгъла, цвета на навигационната лента, замъгляването на фона и персонализираните икони</string>
+    <string name="fine_tune_key_previews_title">Фина настройка на изскачащи прозорци и визуализации на клавиши</string>
+    <string name="fine_tune_key_previews_summary">Конфигурирайте размера на изскачащия преглед, радиуса, вертикалното отместване и скоростта на анимацията</string>
+    <string name="fine_tune_keyboard_layout_title">Фина настройка на размера и шрифтовете на клавиатурата</string>
+    <string name="fine_tune_keyboard_layout_summary">Коригирайте страничните и долните подложки, стеснявайте празнините между клавишите, разделяйте разстоянието и мащаба на шрифта</string>
+    <string name="fine_tune_haptics_title">Настройте фино усещането и вибрациите</string>
+    <string name="fine_tune_haptics_summary">Конфигурирайте избор на хаптичен двигател, амплитуда на вибрациите и отмяна на режима „Не безпокойте“.</string>
+    <string name="fine_tune_additional_keys_title">Фина настройка на вторичните и клавишите за оформление</string>
+    <string name="fine_tune_additional_keys_summary">Конфигурирайте локализирани цифри, редове с номера на символи, клавиши за превключване и поведение на изскачащи прозорци</string>
+    <string name="fine_tune_clipboard_title">Фина настройка на поведението на клипборда</string>
+    <string name="fine_tune_clipboard_summary">Коригирайте реда на фиксираните елементи, сгъването и размера на шрифта в клипборда</string>
+    <string name="fine_tune_toolbar_title">Фина настройка на поведението на лентата с инструменти</string>
+    <string name="fine_tune_toolbar_summary">Конфигуриране на автоматично разширяване, автоматично скриване при въвеждане, подравняване на клавишите и хардуерни режими на клавиатурата</string>
+    <string name="fine_tune_gesture_title">Фина настройка на въвеждането с жестове</string>
+    <string name="fine_tune_gesture_summary">Конфигурирайте плаваща позиция за предварителен преглед, скорост на затихване на следите и въвеждане с жестове, съобразени с пространството</string>
+    <string name="fine_tune_swipes_title">Фина настройка на жестовете за плъзгане и тъчпада</string>
+    <string name="fine_tune_swipes_summary">Конфигурирайте действия с вертикално плъзгане, разстояния на плъзгане, чувствителност и настройки на тъчпада</string>
+    <string name="fine_tune_advanced_title">Фина настройка на физически клавиатури и експериментални</string>
+    <string name="fine_tune_advanced_summary">Конфигурирайте хардуерни клавиатурни подредби, разпознаване на URL адреси и експериментални флагове</string>
 </resources>

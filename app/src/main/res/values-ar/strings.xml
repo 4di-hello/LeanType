@@ -1848,4 +1848,24 @@
     <string name="updates_plugins_title">الإضافات المصاحبة</string>
     <string name="updates_plugin_update_available">الإصدار الجديد%sمتاح</string>
     <string name="updates_plugin_updates_found">تحديثات البرنامج المساعد المتاحة</string>
+    <string name="fine_tune_theme_title">صقل الموضوع والحدود</string>
+    <string name="fine_tune_theme_summary">اضبط نصف قطر الزاوية ولون شريط التنقل وطمس الخلفية والأيقونات المخصصة</string>
+    <string name="fine_tune_key_previews_title">ضبط النوافذ المنبثقة الرئيسية والمعاينات</string>
+    <string name="fine_tune_key_previews_summary">قم بتكوين حجم معاينة النافذة المنبثقة ونصف القطر والإزاحة الرأسية وسرعة الرسوم المتحركة</string>
+    <string name="fine_tune_keyboard_layout_title">ضبط حجم لوحة المفاتيح والخطوط بدقة</string>
+    <string name="fine_tune_keyboard_layout_summary">اضبط الحشو الجانبي والسفلي، والفجوات الرئيسية الضيقة، والتباعد المقسم، وحجم الخط</string>
+    <string name="fine_tune_haptics_title">ضبط اللمس والاهتزاز</string>
+    <string name="fine_tune_haptics_summary">قم بتكوين اختيار المحرك اللمسي، وسعة الاهتزاز، وتجاوز عدم الإزعاج</string>
+    <string name="fine_tune_additional_keys_title">ضبط المفاتيح الثانوية ومفاتيح التخطيط</string>
+    <string name="fine_tune_additional_keys_summary">قم بتكوين الأرقام المحلية وصفوف أرقام الرموز ومفاتيح التبديل والسلوك المنبثق</string>
+    <string name="fine_tune_clipboard_title">ضبط سلوك الحافظة</string>
+    <string name="fine_tune_clipboard_summary">ضبط ترتيب العناصر المثبتة، والطي، وحجم الخط في الحافظة</string>
+    <string name="fine_tune_toolbar_title">ضبط سلوك شريط الأدوات</string>
+    <string name="fine_tune_toolbar_summary">قم بتكوين التوسيع التلقائي، وكتابة الإخفاء التلقائي، ومحاذاة المفاتيح، وأوضاع لوحة مفاتيح الأجهزة</string>
+    <string name="fine_tune_gesture_title">ضبط الكتابة بالإيماءات</string>
+    <string name="fine_tune_gesture_summary">قم بتكوين موضع المعاينة العائمة، وسرعة التلاشي، والكتابة بالإيماءات مع مراعاة المساحة</string>
+    <string name="fine_tune_swipes_title">ضبط إيماءات التمرير ولوحة اللمس</string>
+    <string name="fine_tune_swipes_summary">قم بتكوين إجراءات السحب العمودي، ومسافات السحب، والحساسية، وإعدادات لوحة اللمس</string>
+    <string name="fine_tune_advanced_title">ضبط لوحات المفاتيح الفعلية والتجريبية</string>
+    <string name="fine_tune_advanced_summary">قم بتكوين تخطيطات لوحة مفاتيح الأجهزة واكتشاف عنوان URL والعلامات التجريبية</string>
 </resources>

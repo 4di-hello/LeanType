@@ -1792,4 +1792,24 @@
     <string name="updates_plugins_title">תוספים נלווים</string>
     <string name="updates_plugin_update_available">גרסה חדשה%sזמינה</string>
     <string name="updates_plugin_updates_found">עדכוני פלאגין זמינים</string>
+    <string name="fine_tune_theme_title">כוונן את הנושא והגבולות</string>
+    <string name="fine_tune_theme_summary">התאם את רדיוס הפינות, צבע סרגל הניווט, טשטוש הרקע וסמלים מותאמים אישית</string>
+    <string name="fine_tune_key_previews_title">כוונן עדין חלונות קופצים ותצוגות מקדימות</string>
+    <string name="fine_tune_key_previews_summary">הגדר את גודל התצוגה המקדימה של קופצים, רדיוס, היסט אנכי ומהירות הנפשה</string>
+    <string name="fine_tune_keyboard_layout_title">כוונן את גודל המקלדת והגופנים</string>
+    <string name="fine_tune_keyboard_layout_summary">התאם את ריפוד הצד והתחתון, צמצם את מרווחי המקשים, המרווחים המפוצלים וקנה המידה של הגופן</string>
+    <string name="fine_tune_haptics_title">כוונן עדין הפטיקה ורטט</string>
+    <string name="fine_tune_haptics_summary">הגדר את בחירת המנוע ההפטי, משרעת הרטט ועקוף \'נא לא להפריע\'</string>
+    <string name="fine_tune_additional_keys_title">כוונן את המקשים המשניים והפריסה</string>
+    <string name="fine_tune_additional_keys_summary">הגדר ספרות מקומיות, שורות מספרי סמלים, מקשי בורר והתנהגות קופצת</string>
+    <string name="fine_tune_clipboard_title">כוונן את התנהגות הלוח</string>
+    <string name="fine_tune_clipboard_summary">התאם את סדר הפריטים המוצמדים, הקיפול וגודל הגופן של הלוח</string>
+    <string name="fine_tune_toolbar_title">כוונן את התנהגות סרגל הכלים</string>
+    <string name="fine_tune_toolbar_summary">הגדר הרחבה אוטומטית, הקלדת הסתרה אוטומטית, יישור מקשים ומצבי מקלדת חומרה</string>
+    <string name="fine_tune_gesture_title">כוונן את הקלדת המחוות</string>
+    <string name="fine_tune_gesture_summary">הגדר מיקום תצוגה מקדימה צפה, מהירות דהיית שובל והקלדת תנועות מודעות למרחב</string>
+    <string name="fine_tune_swipes_title">כוונן תנועות החלקה ומשטח מגע</string>
+    <string name="fine_tune_swipes_summary">הגדר פעולות החלקה אנכית, מרחקי החלקה, רגישות והגדרות משטח מגע</string>
+    <string name="fine_tune_advanced_title">כוונן מקלדות פיזיות וניסיוניות</string>
+    <string name="fine_tune_advanced_summary">הגדר פריסות מקלדת חומרה, זיהוי כתובות אתרים ודגלים ניסיוניים</string>
 </resources>
