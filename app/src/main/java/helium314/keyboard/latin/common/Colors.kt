@@ -118,9 +118,7 @@ class DynamicColors(
         const val VARIANT_DEFAULT = 0
         const val VARIANT_SUBTLE = 1
         const val VARIANT_VIVID = 2
-    }
 
-    companion object {
         fun getFreshContext(context: Context): Context =
             try {
                 context.createConfigurationContext(context.resources.configuration)
