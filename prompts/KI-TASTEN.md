@@ -1,6 +1,6 @@
 # KI-Tasten (lokale KI) – Prompts
 
-Stand: 24.10.2026, getestet mit Qwen3-4B Q4_0, Temperatur 0.
+Stand: 27.10.2026, getestet mit Qwen3-4B Q4_0, Temperatur 0 (Korrektur-Taste noch ungetestet).
 
 Einstellungen → Benutzerdefinierte AI-Tasten → Taste N. Jede Taste braucht einen Prompt und mindestens einen Chip.
 
@@ -11,6 +11,7 @@ Einstellungen → Benutzerdefinierte AI-Tasten → Taste N. Jede Taste braucht e
 - `{clipboard}` im Prompt setzt die Zwischenablage an diese Stelle (ab Build vom 24.10. abends). Funktioniert auch bei leerem Feld.
 - Chips wie „Text bearbeiten" (#editor) setzen ihre englische Anweisung **vor** den Prompt (ab Build vom 24.10. abends; vorher dahinter, was „Antwort:" am Ende störte).
 - „Ergebnis anfügen" (#append) setzt das Ergebnis mit Leerzeile hinter den Text, „Ergebnis voranstellen" (#prepend) setzt es an die Cursorposition (bei Markierung davor), der Text dahinter rutscht nach unten. Es geht nur eins von beiden.
+- Läuft die KI länger als 2 Sekunden, zeigt die Tastatur, was sie gerade tut („Modell wird geladen“, „wartet“, „schreibt … 12 s“). Die Taste noch einmal tippen bricht ab (ab Build vom 27.10.).
 - Bei Qwen3-4B hilft ein kurzes Beispiel im Prompt mehr als zusätzliche Regeln.
 - Zum Testen eine Notiz-App nehmen, keinen echten Chat.
 
@@ -100,6 +101,24 @@ Chip: Text bearbeiten
 
 ```
 Schreibe den folgenden Text als höfliche, sachliche Ich-Nachricht in der Sie-Form, ohne Floskeln. Beginne mit „Sehr geehrte Damen und Herren," und ende mit „Mit freundlichen Grüßen" und [Name]. Behalte alle Angaben, erfinde nichts dazu. Gib nur die Nachricht aus.
+```
+
+## Korrektur-Taste – Nur Korrekturen (ab Build vom 27.10.)
+
+Chip: **nur** „Nur Korrekturen“ (kein „Text bearbeiten“, kein Anfügen/Voranstellen). Der Prompt darf leer bleiben, dann gilt: Rechtschreibung, Grammatik, Satzzeichen und Groß-/Kleinschreibung korrigieren.
+
+Das Modell schreibt nur die Fehler als „falsch → richtig“, LeanType+ setzt sie im Text ein. Das ist deutlich schneller als „Fb“, weil das Modell nicht den ganzen Text neu schreibt, und der Rest des Textes bleibt garantiert unverändert. Ohne Fehler kommt „Keine Fehler gefunden“.
+
+Optionaler Prompt, wenn nur bestimmte Fehler korrigiert werden sollen:
+
+```
+Korrigiere nur Rechtschreibung und Satzzeichen, nicht den Stil.
+```
+
+Testtext:
+
+```
+ich hab gestern mit tom telefoniert, er kommt am montag nicht weil sein Auto kaputt ist. Kanst du ihm bescheid geben das wir das Treffen verschieben?
 ```
 
 ## Testtexte
