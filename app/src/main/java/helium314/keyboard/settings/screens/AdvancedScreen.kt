@@ -57,10 +57,12 @@ import helium314.keyboard.settings.preferences.SwitchPreference
 import helium314.keyboard.settings.Theme
 
 import helium314.keyboard.settings.preferences.BackupRestorePreference
+import helium314.keyboard.settings.preferences.ExpandablePreference
 import helium314.keyboard.settings.preferences.LoadGestureLibPreference
 import helium314.keyboard.settings.preferences.TextInputPreference
 import helium314.keyboard.settings.previewDark
 import androidx.core.content.edit
+import kotlinx.coroutines.flow.MutableStateFlow
 import helium314.keyboard.settings.FeedbackManager
 import helium314.keyboard.latin.utils.Log
 import helium314.keyboard.latin.utils.getActivity
@@ -76,29 +78,38 @@ import androidx.compose.material3.Text
 fun AdvancedSettingsScreen(
     onClickBack: () -> Unit,
 ) {
-    val prefs = LocalContext.current.prefs()
-    val b = (LocalContext.current.getActivity() as? SettingsActivity)?.prefChanged?.collectAsState()
-    if ((b?.value ?: 0) < 0)
-        Log.v("irrelevant", "stupid way to trigger recomposition on preference change")
-    val items = listOfNotNull(
-        Settings.PREF_ALWAYS_INCOGNITO_MODE,
-        Settings.PREF_DISABLE_NETWORK,
-        if (Settings.readHorizontalSpaceSwipe(prefs) == KeyboardActionListener.SWIPE_SWITCH_LANGUAGE
-            || Settings.readFullKeyboardSwipe(prefs) != KeyboardActionListener.SWIPE_NO_ACTION)
-            Settings.PREF_LANGUAGE_SWIPE_DISTANCE else null,
-        Settings.PREF_PHYSICAL_KEYBOARD_LAYOUT,
-        Settings.PREF_ENABLE_EMOJI_ALT_PHYSICAL_KEY,
-        Settings.PREF_PHYSICAL_KEYBOARD_SUGGESTION_SHORTCUTS,
-        Settings.PREF_CUSTOM_CURRENCY_KEY,
-        Settings.PREF_TIMESTAMP_FORMAT,
-        SettingsWithoutKey.BACKGROUND_SERVICES,
-        SettingsWithoutKey.BACKUP_RESTORE,
-        if (BuildConfig.DEBUG || prefs.getBoolean(DebugSettings.PREF_SHOW_DEBUG_SETTINGS, Defaults.PREF_SHOW_DEBUG_SETTINGS))
-            SettingsWithoutKey.DEBUG_SETTINGS else null,
-        R.string.settings_category_experimental,
-        Settings.PREF_EMOJI_MAX_SDK,
-        Settings.PREF_URL_DETECTION,
-    )
+    val ctx = LocalContext.current
+    val prefs = ctx.prefs()
+    val activity = ctx.getActivity() as? SettingsActivity
+    val prefChanged = (activity?.prefChanged ?: MutableStateFlow(0)).collectAsState()
+
+    val fineTuneAdvancedExpanded = prefs.getBoolean(Settings.PREF_EXPAND_FINE_TUNE_ADVANCED, Defaults.PREF_EXPAND_FINE_TUNE_ADVANCED)
+
+    val items = remember(fineTuneAdvancedExpanded, prefChanged.value) {
+        listOfNotNull(
+            // Primary
+            Settings.PREF_ALWAYS_INCOGNITO_MODE,
+            Settings.PREF_DISABLE_NETWORK,
+            SettingsWithoutKey.BACKGROUND_SERVICES,
+            SettingsWithoutKey.BACKUP_RESTORE,
+            if (BuildConfig.DEBUG || prefs.getBoolean(DebugSettings.PREF_SHOW_DEBUG_SETTINGS, Defaults.PREF_SHOW_DEBUG_SETTINGS))
+                SettingsWithoutKey.DEBUG_SETTINGS else null,
+            Settings.PREF_EXPAND_FINE_TUNE_ADVANCED,
+
+            // Fine-tune physical keyboards & experimental
+            if (fineTuneAdvancedExpanded && (Settings.readHorizontalSpaceSwipe(prefs) == KeyboardActionListener.SWIPE_SWITCH_LANGUAGE
+                || Settings.readFullKeyboardSwipe(prefs) != KeyboardActionListener.SWIPE_NO_ACTION))
+                Settings.PREF_LANGUAGE_SWIPE_DISTANCE else null,
+            if (fineTuneAdvancedExpanded) Settings.PREF_PHYSICAL_KEYBOARD_LAYOUT else null,
+            if (fineTuneAdvancedExpanded) Settings.PREF_ENABLE_EMOJI_ALT_PHYSICAL_KEY else null,
+            if (fineTuneAdvancedExpanded) Settings.PREF_PHYSICAL_KEYBOARD_SUGGESTION_SHORTCUTS else null,
+            if (fineTuneAdvancedExpanded) Settings.PREF_CUSTOM_CURRENCY_KEY else null,
+            if (fineTuneAdvancedExpanded) Settings.PREF_TIMESTAMP_FORMAT else null,
+            if (fineTuneAdvancedExpanded) R.string.settings_category_experimental else null,
+            if (fineTuneAdvancedExpanded) Settings.PREF_EMOJI_MAX_SDK else null,
+            if (fineTuneAdvancedExpanded) Settings.PREF_URL_DETECTION else null,
+        )
+    }
     SearchSettingsScreen(
         onClickBack = onClickBack,
         title = stringResource(R.string.settings_screen_advanced),
@@ -228,6 +239,11 @@ fun createAdvancedSettings(context: Context) = listOfNotNull(
     },
     Setting(context, Settings.PREF_URL_DETECTION, R.string.url_detection_title, R.string.url_detection_summary) {
         SwitchPreference(it, Defaults.PREF_URL_DETECTION)
+    },
+    Setting(context, Settings.PREF_EXPAND_FINE_TUNE_ADVANCED,
+        R.string.fine_tune_advanced_title, R.string.fine_tune_advanced_summary
+    ) {
+        ExpandablePreference(it, Defaults.PREF_EXPAND_FINE_TUNE_ADVANCED)
     },
 
     Setting(context, SettingsWithoutKey.GEMINI_API_KEY, R.string.gemini_api_key_title, R.string.gemini_api_key_summary) { setting ->

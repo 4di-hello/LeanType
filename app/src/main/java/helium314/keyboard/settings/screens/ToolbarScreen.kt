@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -46,11 +47,13 @@ import helium314.keyboard.settings.SettingsActivity
 import helium314.keyboard.settings.Theme
 import helium314.keyboard.settings.dialogs.ToolbarKeysCustomizer
 import helium314.keyboard.settings.initPreview
+import helium314.keyboard.settings.preferences.ExpandablePreference
 import helium314.keyboard.settings.preferences.ListPreference
 import helium314.keyboard.settings.preferences.Preference
 import helium314.keyboard.settings.preferences.ReorderSwitchPreference
 import helium314.keyboard.settings.preferences.SwitchPreference
 import helium314.keyboard.settings.previewDark
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun ToolbarScreen(
@@ -58,37 +61,54 @@ fun ToolbarScreen(
 ) {
     val context = LocalContext.current
     val prefs = context.prefs()
+    val activity = context.getActivity() as? SettingsActivity
+    val prefChanged = (activity?.prefChanged ?: MutableStateFlow(0)).collectAsState()
+
     LaunchedEffect(Unit) {
         upgradeToolbarPrefs(prefs)
     }
-    val b = (context.getActivity() as? SettingsActivity)?.prefChanged?.collectAsState()
-    if ((b?.value ?: 0) < 0)
-        Log.v("irrelevant", "stupid way to trigger recomposition on preference change")
+
     val toolbarMode = Settings.readToolbarMode(prefs)
-    val clipboardToolbarVisible = toolbarMode != ToolbarMode.HIDDEN
-        || !prefs.getBoolean(Settings.PREF_TOOLBAR_HIDING_GLOBAL, Defaults.PREF_TOOLBAR_HIDING_GLOBAL)
     val isSplitToolbar = prefs.getBoolean(Settings.PREF_SPLIT_TOOLBAR, Defaults.PREF_SPLIT_TOOLBAR)
-    val items = listOf(
-        if (!isSplitToolbar) Settings.PREF_TOOLBAR_MODE else null,
-        Settings.PREF_SPLIT_TOOLBAR,
-        Settings.PREF_AUTO_SPAN_TOOLBAR_KEYS,
-        if (toolbarMode == ToolbarMode.HIDDEN) Settings.PREF_TOOLBAR_HIDING_GLOBAL else null,
-        Settings.PREF_TOOLBAR_KEYS,
-        Settings.PREF_PINNED_TOOLBAR_KEYS,
-        Settings.PREF_CLIPBOARD_TOOLBAR_KEYS,
-        Settings.PREF_TOOLBAR_KEYS_ALIGNMENT,
-        Settings.PREF_TOOLBAR_CUSTOM_KEY_CODES,
-        Settings.PREF_TOOLBAR_LONG_PRESS_HINT,
-        if (toolbarMode == ToolbarMode.EXPANDABLE) Settings.PREF_QUICK_PIN_TOOLBAR_KEYS else null,
-        if (toolbarMode == ToolbarMode.EXPANDABLE) Settings.PREF_AUTO_SHOW_TOOLBAR else null,
-        if (toolbarMode == ToolbarMode.EXPANDABLE) Settings.PREF_AUTO_SHOW_TOOLBAR_ON_SELECT else null,
-        if (toolbarMode == ToolbarMode.EXPANDABLE) Settings.PREF_AUTO_HIDE_TOOLBAR else null,
-        if (toolbarMode == ToolbarMode.EXPANDABLE) Settings.PREF_AUTO_SHOW_TOOLBAR_NO_SUGGESTIONS else null,
-        if (toolbarMode == ToolbarMode.EXPANDABLE) Settings.PREF_AUTO_HIDE_PINNED_KEYS else null,
-        if (toolbarMode == ToolbarMode.EXPANDABLE) Settings.PREF_REMEMBER_TOOLBAR_STATE else null,
-        if (toolbarMode != ToolbarMode.HIDDEN) Settings.PREF_SHOW_ONLY_TOOLBAR_WITH_HARDWARE_KEYBOARD else null,
-        if (toolbarMode != ToolbarMode.HIDDEN) Settings.PREF_VARIABLE_TOOLBAR_DIRECTION else null,
-    )
+    val fineTuneToolbarExpanded = prefs.getBoolean(Settings.PREF_EXPAND_FINE_TUNE_TOOLBAR, Defaults.PREF_EXPAND_FINE_TUNE_TOOLBAR)
+
+    val items = remember(toolbarMode, isSplitToolbar, fineTuneToolbarExpanded, prefChanged.value) {
+        listOf(
+            // Primary
+            if (!isSplitToolbar) Settings.PREF_TOOLBAR_MODE else null,
+            Settings.PREF_SPLIT_TOOLBAR,
+            Settings.PREF_TOOLBAR_KEYS,
+            Settings.PREF_PINNED_TOOLBAR_KEYS,
+            Settings.PREF_CLIPBOARD_TOOLBAR_KEYS,
+            Settings.PREF_EXPAND_FINE_TUNE_TOOLBAR,
+
+            // Fine-tune toolbar behavior
+            if (fineTuneToolbarExpanded) Settings.PREF_AUTO_SPAN_TOOLBAR_KEYS else null,
+            if (fineTuneToolbarExpanded) Settings.PREF_TOOLBAR_KEYS_ALIGNMENT else null,
+            if (fineTuneToolbarExpanded && toolbarMode == ToolbarMode.EXPANDABLE)
+                Settings.PREF_QUICK_PIN_TOOLBAR_KEYS else null,
+            if (fineTuneToolbarExpanded && toolbarMode == ToolbarMode.EXPANDABLE)
+                Settings.PREF_AUTO_SHOW_TOOLBAR else null,
+            if (fineTuneToolbarExpanded && toolbarMode == ToolbarMode.EXPANDABLE)
+                Settings.PREF_AUTO_SHOW_TOOLBAR_ON_SELECT else null,
+            if (fineTuneToolbarExpanded && toolbarMode == ToolbarMode.EXPANDABLE)
+                Settings.PREF_AUTO_HIDE_TOOLBAR else null,
+            if (fineTuneToolbarExpanded && toolbarMode == ToolbarMode.EXPANDABLE)
+                Settings.PREF_AUTO_SHOW_TOOLBAR_NO_SUGGESTIONS else null,
+            if (fineTuneToolbarExpanded && toolbarMode == ToolbarMode.EXPANDABLE)
+                Settings.PREF_AUTO_HIDE_PINNED_KEYS else null,
+            if (fineTuneToolbarExpanded && toolbarMode == ToolbarMode.EXPANDABLE)
+                Settings.PREF_REMEMBER_TOOLBAR_STATE else null,
+            if (fineTuneToolbarExpanded) Settings.PREF_TOOLBAR_LONG_PRESS_HINT else null,
+            if (fineTuneToolbarExpanded) Settings.PREF_TOOLBAR_CUSTOM_KEY_CODES else null,
+            if (fineTuneToolbarExpanded && toolbarMode != ToolbarMode.HIDDEN)
+                Settings.PREF_SHOW_ONLY_TOOLBAR_WITH_HARDWARE_KEYBOARD else null,
+            if (fineTuneToolbarExpanded && toolbarMode != ToolbarMode.HIDDEN)
+                Settings.PREF_VARIABLE_TOOLBAR_DIRECTION else null,
+            if (fineTuneToolbarExpanded && toolbarMode == ToolbarMode.HIDDEN)
+                Settings.PREF_TOOLBAR_HIDING_GLOBAL else null,
+        )
+    }
     SearchSettingsScreen(
         onClickBack = onClickBack,
         title = stringResource(R.string.settings_screen_toolbar),
@@ -246,6 +266,14 @@ fun createToolbarSettings(context: Context): List<Setting> {
             SwitchPreference(it, Defaults.PREF_SHOW_DOWNLOAD_BUTTON_IN_TOOLBAR) {
                 KeyboardSwitcher.getInstance().setThemeNeedsReload()
             }
+        },
+        Setting(
+            context,
+            Settings.PREF_EXPAND_FINE_TUNE_TOOLBAR,
+            R.string.fine_tune_toolbar_title,
+            R.string.fine_tune_toolbar_summary
+        ) {
+            ExpandablePreference(it, Defaults.PREF_EXPAND_FINE_TUNE_TOOLBAR)
         }
     )
 }

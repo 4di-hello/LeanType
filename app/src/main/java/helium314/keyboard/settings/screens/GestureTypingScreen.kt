@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,12 +21,14 @@ import helium314.keyboard.latin.utils.prefs
 import helium314.keyboard.settings.Setting
 import helium314.keyboard.settings.SearchSettingsScreen
 import helium314.keyboard.settings.SettingsActivity
+import helium314.keyboard.settings.preferences.ExpandablePreference
 import helium314.keyboard.settings.preferences.SliderPreference
 import helium314.keyboard.settings.preferences.SwitchPreference
 import helium314.keyboard.settings.Theme
 import helium314.keyboard.settings.initPreview
 import helium314.keyboard.settings.previewDark
 import androidx.core.content.edit
+import kotlinx.coroutines.flow.MutableStateFlow
 import helium314.keyboard.settings.SettingsWithoutKey
 import helium314.keyboard.settings.preferences.ListPreference
 import androidx.compose.foundation.layout.Column
@@ -60,55 +63,68 @@ fun GestureTypingScreen(
 ) {
     val ctx = LocalContext.current
     val prefs = ctx.prefs()
-    val b = (ctx.getActivity() as? SettingsActivity)?.prefChanged?.collectAsState()
-    if ((b?.value ?: 0) < 0)
-        Log.v("irrelevant", "stupid way to trigger recomposition on preference change")
+    val activity = ctx.getActivity() as? SettingsActivity
+    val prefChanged = (activity?.prefChanged ?: MutableStateFlow(0)).collectAsState()
+
     val hasGestureLib = JniUtils.sHaveNativeGestureLib
-    val gestureFloatingPreviewEnabled = prefs.getBoolean(Settings.PREF_GESTURE_FLOATING_PREVIEW_TEXT, Defaults.PREF_GESTURE_FLOATING_PREVIEW_TEXT)
     val gestureEnabled = prefs.getBoolean(Settings.PREF_GESTURE_INPUT, Defaults.PREF_GESTURE_INPUT)
+    val gestureFloatingPreviewEnabled = prefs.getBoolean(Settings.PREF_GESTURE_FLOATING_PREVIEW_TEXT, Defaults.PREF_GESTURE_FLOATING_PREVIEW_TEXT)
+    val previewTrailEnabled = prefs.getBoolean(Settings.PREF_GESTURE_PREVIEW_TRAIL, Defaults.PREF_GESTURE_PREVIEW_TRAIL)
     val enabledSubtypes = SubtypeSettings.getEnabledSubtypes(true)
     val missingDict = enabledSubtypes.any { isMainDictionaryMissing(ctx, it.locale()) }
-    
-    val items = buildList {
-        add(R.string.settings_category_configuration)
-        add(Settings.PREF_GESTURE_INPUT)
-        if (helium314.keyboard.latin.BuildConfig.BUILD_TYPE != "nouserlib") {
-            add(SettingsWithoutKey.LOAD_GESTURE_LIB)
+
+    val fineTuneGestureExpanded = prefs.getBoolean(Settings.PREF_EXPAND_FINE_TUNE_GESTURE, Defaults.PREF_EXPAND_FINE_TUNE_GESTURE)
+    val fineTuneSwipesExpanded = prefs.getBoolean(Settings.PREF_EXPAND_FINE_TUNE_SWIPES, Defaults.PREF_EXPAND_FINE_TUNE_SWIPES)
+
+    val items = remember(
+        hasGestureLib, gestureEnabled, gestureFloatingPreviewEnabled, previewTrailEnabled,
+        fineTuneGestureExpanded, fineTuneSwipesExpanded, prefChanged.value
+    ) {
+        buildList {
+            add(R.string.settings_category_configuration)
+            add(Settings.PREF_GESTURE_INPUT)
+            if (helium314.keyboard.latin.BuildConfig.BUILD_TYPE != "nouserlib") {
+                add(SettingsWithoutKey.LOAD_GESTURE_LIB)
+            }
+
+            if (hasGestureLib && gestureEnabled) {
+                add(R.string.settings_category_visuals)
+                add(Settings.PREF_GESTURE_PREVIEW_TRAIL)
+                add(Settings.PREF_GESTURE_FLOATING_PREVIEW_TEXT)
+                add(Settings.PREF_EXPAND_FINE_TUNE_GESTURE)
+                if (fineTuneGestureExpanded && gestureFloatingPreviewEnabled) {
+                    add(Settings.PREF_GESTURE_FLOATING_PREVIEW_DYNAMIC)
+                }
+                if (fineTuneGestureExpanded && (previewTrailEnabled || gestureFloatingPreviewEnabled)) {
+                    add(Settings.PREF_GESTURE_TRAIL_FADEOUT_DURATION)
+                }
+                if (fineTuneGestureExpanded) {
+                    add(Settings.PREF_GESTURE_SPACE_AWARE)
+                    add(Settings.PREF_GESTURE_FAST_TYPING_COOLDOWN)
+                    add(Settings.PREF_AUTOSPACE_BEFORE_GESTURE_TYPING)
+                    add(Settings.PREF_AUTOSPACE_AFTER_GESTURE_TYPING)
+                }
+            }
+
+            add(R.string.settings_category_gestures_advanced)
+            add(Settings.PREF_SPACE_HORIZONTAL_SWIPE)
+            add(Settings.PREF_DELETE_SWIPE)
+            add(Settings.PREF_FULL_KEYBOARD_SWIPE)
+            add(Settings.PREF_TOUCHPAD_FULLSCREEN)
+            add(Settings.PREF_EXPAND_FINE_TUNE_SWIPES)
+            if (fineTuneSwipesExpanded) {
+                if (Settings.readFullKeyboardSwipe(prefs) != KeyboardActionListener.SWIPE_NO_ACTION
+                    || Settings.readHorizontalSpaceSwipe(prefs) == KeyboardActionListener.SWIPE_SWITCH_LANGUAGE) {
+                    add(Settings.PREF_LANGUAGE_SWIPE_DISTANCE)
+                }
+                add(Settings.PREF_VERTICAL_SWIPE_THRESHOLD)
+                add(Settings.PREF_SPACE_VERTICAL_SWIPE)
+                add(Settings.PREF_SPACE_VERTICAL_DOWN_SWIPE)
+                add(Settings.PREF_TOOLBAR_SWIPE_UP_GESTURE)
+                add(Settings.PREF_TOOLBAR_SWIPE_DOWN_GESTURE)
+                add(Settings.PREF_TOUCHPAD_SENSITIVITY)
+            }
         }
-
-        if (hasGestureLib && gestureEnabled) {
-            add(R.string.settings_category_visuals)
-            add(Settings.PREF_GESTURE_PREVIEW_TRAIL)
-            add(Settings.PREF_GESTURE_FLOATING_PREVIEW_TEXT)
-            if (gestureFloatingPreviewEnabled)
-                add(Settings.PREF_GESTURE_FLOATING_PREVIEW_DYNAMIC)
-            if (prefs.getBoolean(Settings.PREF_GESTURE_PREVIEW_TRAIL, Defaults.PREF_GESTURE_PREVIEW_TRAIL) || gestureFloatingPreviewEnabled)
-                add(Settings.PREF_GESTURE_TRAIL_FADEOUT_DURATION)
-
-            add(R.string.settings_category_behavior)
-            add(Settings.PREF_GESTURE_SPACE_AWARE)
-            add(Settings.PREF_GESTURE_FAST_TYPING_COOLDOWN)
-            add(Settings.PREF_AUTOSPACE_BEFORE_GESTURE_TYPING)
-            add(Settings.PREF_AUTOSPACE_AFTER_GESTURE_TYPING)
-        }
-
-        add(R.string.settings_category_gestures_advanced)
-        add(Settings.PREF_FULL_KEYBOARD_SWIPE)
-        if (Settings.readFullKeyboardSwipe(prefs) != KeyboardActionListener.SWIPE_NO_ACTION
-            || Settings.readHorizontalSpaceSwipe(prefs) == KeyboardActionListener.SWIPE_SWITCH_LANGUAGE) {
-            add(Settings.PREF_LANGUAGE_SWIPE_DISTANCE)
-        }
-        add(Settings.PREF_SPACE_HORIZONTAL_SWIPE)
-        add(Settings.PREF_SPACE_VERTICAL_SWIPE)
-        add(Settings.PREF_SPACE_VERTICAL_DOWN_SWIPE)
-        add(Settings.PREF_TOOLBAR_SWIPE_UP_GESTURE)
-        add(Settings.PREF_TOOLBAR_SWIPE_DOWN_GESTURE)
-        add(Settings.PREF_VERTICAL_SWIPE_THRESHOLD)
-        add(Settings.PREF_DELETE_SWIPE)
-
-        add(R.string.settings_category_touchpad)
-        add(Settings.PREF_TOUCHPAD_SENSITIVITY)
-        add(Settings.PREF_TOUCHPAD_FULLSCREEN)
     }
     SearchSettingsScreen(
         onClickBack = onClickBack,
@@ -355,6 +371,16 @@ fun createGestureTypingSettings(context: Context) = listOf(
             Defaults.PREF_DELETE_SWIPE_WORD_BY_WORD,
             enabled = prefs.getBoolean(Settings.PREF_DELETE_SWIPE, Defaults.PREF_DELETE_SWIPE)
         )
+    },
+    Setting(context, Settings.PREF_EXPAND_FINE_TUNE_GESTURE,
+        R.string.fine_tune_gesture_title, R.string.fine_tune_gesture_summary
+    ) {
+        ExpandablePreference(it, Defaults.PREF_EXPAND_FINE_TUNE_GESTURE)
+    },
+    Setting(context, Settings.PREF_EXPAND_FINE_TUNE_SWIPES,
+        R.string.fine_tune_swipes_title, R.string.fine_tune_swipes_summary
+    ) {
+        ExpandablePreference(it, Defaults.PREF_EXPAND_FINE_TUNE_SWIPES)
     },
 )
 

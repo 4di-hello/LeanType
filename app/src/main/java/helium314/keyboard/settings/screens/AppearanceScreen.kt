@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
@@ -22,6 +23,7 @@ import helium314.keyboard.latin.utils.Log
 import helium314.keyboard.latin.utils.getActivity
 import helium314.keyboard.latin.utils.getStringResourceOrName
 import helium314.keyboard.latin.utils.prefs
+import helium314.keyboard.settings.preferences.ExpandablePreference
 import helium314.keyboard.settings.preferences.ListPreference
 import helium314.keyboard.settings.SettingsWithoutKey
 import helium314.keyboard.settings.Setting
@@ -45,6 +47,7 @@ import helium314.keyboard.settings.previewDark
 import androidx.core.content.edit
 import helium314.keyboard.latin.settings.Settings
 import helium314.keyboard.latin.utils.WallpaperFetcher
+import kotlinx.coroutines.flow.MutableStateFlow
 import java.util.Locale
 
 @Composable
@@ -53,72 +56,95 @@ fun AppearanceScreen(
 ) {
     val ctx = LocalContext.current
     val prefs = ctx.prefs()
-    val b = (LocalContext.current.getActivity() as? SettingsActivity)?.prefChanged?.collectAsState()
-    if ((b?.value ?: 0) < 0)
-        Log.v("irrelevant", "stupid way to trigger recomposition on preference change")
+    val activity = ctx.getActivity() as? SettingsActivity
+    val prefChanged = (activity?.prefChanged ?: MutableStateFlow(0)).collectAsState()
+
     val dayNightMode = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && prefs.getBoolean(Settings.PREF_THEME_DAY_NIGHT, Defaults.PREF_THEME_DAY_NIGHT)
-    val items = listOf(
-        R.string.settings_screen_theme,
-        Settings.PREF_THEME_STYLE,
-        Settings.PREF_ICON_STYLE,
-        Settings.PREF_CUSTOM_ICON_NAMES,
-        Settings.PREF_CLEAR_CLIPBOARD_ICON,
-        Settings.PREF_THEME_COLORS,
-        Settings.PREF_THEME_KEY_BORDERS,
-        if (prefs.getBoolean(Settings.PREF_THEME_KEY_BORDERS, Defaults.PREF_THEME_KEY_BORDERS))
-            Settings.PREF_KEY_BORDER_RADIUS else null,
-        if (prefs.getBoolean(Settings.PREF_THEME_KEY_BORDERS, Defaults.PREF_THEME_KEY_BORDERS))
-            Settings.PREF_KEY_BORDER_RADIUS_FUNCTIONAL else null,
-        if (prefs.getBoolean(Settings.PREF_THEME_KEY_BORDERS, Defaults.PREF_THEME_KEY_BORDERS))
-            Settings.PREF_KEY_BORDER_RADIUS_ACTION else null,
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-            Settings.PREF_THEME_DAY_NIGHT else null,
-        if (dayNightMode) Settings.PREF_THEME_COLORS_NIGHT else null,
-        Settings.PREF_NAVBAR_COLOR,
-        SettingsWithoutKey.BACKGROUND_IMAGE,
-        SettingsWithoutKey.BACKGROUND_IMAGE_LANDSCAPE,
-        Settings.PREF_BACKGROUND_BLUR_AMOUNT,
-        Settings.PREF_USE_SYSTEM_WALLPAPER,
-        R.string.settings_category_key_appearance,
-        Settings.PREF_SHOW_HINTS,
-        if (prefs.getBoolean(Settings.PREF_SHOW_HINTS, Defaults.PREF_SHOW_HINTS))
-            Settings.PREF_POPUP_KEYS_LABELS_ORDER else null,
-        Settings.PREF_POPUP_KEYS_ORDER,
-        Settings.PREF_SHOW_POPUP_HINTS,
-        Settings.PREF_SHOW_TLD_POPUP_KEYS,
-        Settings.PREF_POPUP_KEYS_VERTICAL_OFFSET_PERCENT,
-        Settings.PREF_ANIMATION_SPEED_SCALE,
-        Settings.PREF_POPUP_ON,
-        if (prefs.getBoolean(Settings.PREF_POPUP_ON, Defaults.PREF_POPUP_ON))
-            Settings.PREF_KEY_PREVIEW_WIDTH_SCALE else null,
-        if (prefs.getBoolean(Settings.PREF_POPUP_ON, Defaults.PREF_POPUP_ON))
-            Settings.PREF_KEY_PREVIEW_HEIGHT_SCALE else null,
-        if (prefs.getBoolean(Settings.PREF_POPUP_ON, Defaults.PREF_POPUP_ON))
-            Settings.PREF_KEY_PREVIEW_RADIUS else null,
-        R.string.settings_category_miscellaneous,
-        Settings.PREF_ENABLE_SPLIT_KEYBOARD,
-        Settings.PREF_FOLDABLE_MODE,
-        Settings.PREF_ENABLE_SPLIT_KEYBOARD_LANDSCAPE,
-        if (prefs.getBoolean(Settings.PREF_ENABLE_SPLIT_KEYBOARD_LANDSCAPE, Defaults.PREF_ENABLE_SPLIT_KEYBOARD_LANDSCAPE)
-            || prefs.getBoolean(Settings.PREF_ENABLE_SPLIT_KEYBOARD, Defaults.PREF_ENABLE_SPLIT_KEYBOARD))
-            Settings.PREF_SPLIT_SPACER_SCALE_PREFIX else null,
-        Settings.PREF_NARROW_KEY_GAPS,
-        if (prefs.getBoolean(Settings.PREF_NARROW_KEY_GAPS, Defaults.PREF_NARROW_KEY_GAPS))
-            Settings.PREF_NARROW_KEY_GAPS_LEVEL else null,
-        Settings.PREF_KEYBOARD_HEIGHT_SCALE_PREFIX,
-        Settings.PREF_BOTTOM_PADDING_SCALE_PREFIX,
-        Settings.PREF_SIDE_PADDING_SCALE_PREFIX,
-        Settings.PREF_SPACE_BAR_TEXT,
-        SettingsWithoutKey.CUSTOM_FONT,
-        Settings.PREF_FONT_SCALE,
-        Settings.PREF_SECONDARY_FONT_SCALE,
-        SettingsWithoutKey.CUSTOM_EMOJI_FONT,
-        Settings.PREF_EMOJI_FONT_SCALE,
-        Settings.PREF_USE_SYSTEM_EMOJI,
-        Settings.PREF_SHOW_EMOJI_DESCRIPTIONS,
-        if (prefs.getFloat(Settings.PREF_EMOJI_FONT_SCALE, Defaults.PREF_EMOJI_FONT_SCALE) != 1f)
-            Settings.PREF_EMOJI_KEY_FIT else null,
-    )
+    val themeBordersEnabled = prefs.getBoolean(Settings.PREF_THEME_KEY_BORDERS, Defaults.PREF_THEME_KEY_BORDERS)
+    val popupOnEnabled = prefs.getBoolean(Settings.PREF_POPUP_ON, Defaults.PREF_POPUP_ON)
+    val showHintsEnabled = prefs.getBoolean(Settings.PREF_SHOW_HINTS, Defaults.PREF_SHOW_HINTS)
+    val narrowGapsEnabled = prefs.getBoolean(Settings.PREF_NARROW_KEY_GAPS, Defaults.PREF_NARROW_KEY_GAPS)
+    val splitEnabled = prefs.getBoolean(Settings.PREF_ENABLE_SPLIT_KEYBOARD_LANDSCAPE, Defaults.PREF_ENABLE_SPLIT_KEYBOARD_LANDSCAPE)
+        || prefs.getBoolean(Settings.PREF_ENABLE_SPLIT_KEYBOARD, Defaults.PREF_ENABLE_SPLIT_KEYBOARD)
+
+    val fineTuneThemeExpanded = prefs.getBoolean(Settings.PREF_EXPAND_FINE_TUNE_THEME, Defaults.PREF_EXPAND_FINE_TUNE_THEME)
+    val fineTuneKeyPreviewsExpanded = prefs.getBoolean(Settings.PREF_EXPAND_FINE_TUNE_KEY_PREVIEWS, Defaults.PREF_EXPAND_FINE_TUNE_KEY_PREVIEWS)
+    val fineTuneKeyboardLayoutExpanded = prefs.getBoolean(Settings.PREF_EXPAND_FINE_TUNE_KEYBOARD_LAYOUT, Defaults.PREF_EXPAND_FINE_TUNE_KEYBOARD_LAYOUT)
+
+    val items = remember(
+        dayNightMode, themeBordersEnabled, popupOnEnabled, showHintsEnabled, narrowGapsEnabled, splitEnabled,
+        fineTuneThemeExpanded, fineTuneKeyPreviewsExpanded, fineTuneKeyboardLayoutExpanded, prefChanged.value
+    ) {
+        listOf(
+            // Theme
+            R.string.settings_screen_theme,
+            Settings.PREF_THEME_STYLE,
+            Settings.PREF_THEME_COLORS,
+            Settings.PREF_THEME_KEY_BORDERS,
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+                Settings.PREF_THEME_DAY_NIGHT else null,
+            if (dayNightMode) Settings.PREF_THEME_COLORS_NIGHT else null,
+            SettingsWithoutKey.BACKGROUND_IMAGE,
+            Settings.PREF_USE_SYSTEM_WALLPAPER,
+            Settings.PREF_EXPAND_FINE_TUNE_THEME,
+            if (fineTuneThemeExpanded && themeBordersEnabled)
+                Settings.PREF_KEY_BORDER_RADIUS else null,
+            if (fineTuneThemeExpanded && themeBordersEnabled)
+                Settings.PREF_KEY_BORDER_RADIUS_FUNCTIONAL else null,
+            if (fineTuneThemeExpanded && themeBordersEnabled)
+                Settings.PREF_KEY_BORDER_RADIUS_ACTION else null,
+            if (fineTuneThemeExpanded) Settings.PREF_NAVBAR_COLOR else null,
+            if (fineTuneThemeExpanded) SettingsWithoutKey.BACKGROUND_IMAGE_LANDSCAPE else null,
+            if (fineTuneThemeExpanded) Settings.PREF_BACKGROUND_BLUR_AMOUNT else null,
+            if (fineTuneThemeExpanded) Settings.PREF_ICON_STYLE else null,
+            if (fineTuneThemeExpanded) Settings.PREF_CUSTOM_ICON_NAMES else null,
+            if (fineTuneThemeExpanded) Settings.PREF_CLEAR_CLIPBOARD_ICON else null,
+
+            // Key appearance
+            R.string.settings_category_key_appearance,
+            Settings.PREF_SHOW_HINTS,
+            Settings.PREF_POPUP_KEYS_ORDER,
+            Settings.PREF_POPUP_ON,
+            Settings.PREF_EXPAND_FINE_TUNE_KEY_PREVIEWS,
+            if (fineTuneKeyPreviewsExpanded && popupOnEnabled)
+                Settings.PREF_KEY_PREVIEW_WIDTH_SCALE else null,
+            if (fineTuneKeyPreviewsExpanded && popupOnEnabled)
+                Settings.PREF_KEY_PREVIEW_HEIGHT_SCALE else null,
+            if (fineTuneKeyPreviewsExpanded && popupOnEnabled)
+                Settings.PREF_KEY_PREVIEW_RADIUS else null,
+            if (fineTuneKeyPreviewsExpanded) Settings.PREF_POPUP_KEYS_VERTICAL_OFFSET_PERCENT else null,
+            if (fineTuneKeyPreviewsExpanded) Settings.PREF_ANIMATION_SPEED_SCALE else null,
+            if (fineTuneKeyPreviewsExpanded && showHintsEnabled)
+                Settings.PREF_POPUP_KEYS_LABELS_ORDER else null,
+            if (fineTuneKeyPreviewsExpanded) Settings.PREF_SHOW_POPUP_HINTS else null,
+            if (fineTuneKeyPreviewsExpanded) Settings.PREF_SHOW_TLD_POPUP_KEYS else null,
+
+            // Keyboard sizing, layout & fonts
+            R.string.settings_category_miscellaneous,
+            Settings.PREF_KEYBOARD_HEIGHT_SCALE_PREFIX,
+            SettingsWithoutKey.CUSTOM_FONT,
+            SettingsWithoutKey.CUSTOM_EMOJI_FONT,
+            Settings.PREF_SPACE_BAR_TEXT,
+            Settings.PREF_ENABLE_SPLIT_KEYBOARD,
+            Settings.PREF_FOLDABLE_MODE,
+            Settings.PREF_EXPAND_FINE_TUNE_KEYBOARD_LAYOUT,
+            if (fineTuneKeyboardLayoutExpanded) Settings.PREF_BOTTOM_PADDING_SCALE_PREFIX else null,
+            if (fineTuneKeyboardLayoutExpanded) Settings.PREF_SIDE_PADDING_SCALE_PREFIX else null,
+            if (fineTuneKeyboardLayoutExpanded) Settings.PREF_NARROW_KEY_GAPS else null,
+            if (fineTuneKeyboardLayoutExpanded && narrowGapsEnabled)
+                Settings.PREF_NARROW_KEY_GAPS_LEVEL else null,
+            if (fineTuneKeyboardLayoutExpanded) Settings.PREF_ENABLE_SPLIT_KEYBOARD_LANDSCAPE else null,
+            if (fineTuneKeyboardLayoutExpanded && splitEnabled)
+                Settings.PREF_SPLIT_SPACER_SCALE_PREFIX else null,
+            if (fineTuneKeyboardLayoutExpanded) Settings.PREF_FONT_SCALE else null,
+            if (fineTuneKeyboardLayoutExpanded) Settings.PREF_SECONDARY_FONT_SCALE else null,
+            if (fineTuneKeyboardLayoutExpanded) Settings.PREF_EMOJI_FONT_SCALE else null,
+            if (fineTuneKeyboardLayoutExpanded) Settings.PREF_USE_SYSTEM_EMOJI else null,
+            if (fineTuneKeyboardLayoutExpanded) Settings.PREF_SHOW_EMOJI_DESCRIPTIONS else null,
+            if (fineTuneKeyboardLayoutExpanded && prefs.getFloat(Settings.PREF_EMOJI_FONT_SCALE, Defaults.PREF_EMOJI_FONT_SCALE) != 1f)
+                Settings.PREF_EMOJI_KEY_FIT else null,
+        )
+    }
     SearchSettingsScreen(
         onClickBack = onClickBack,
         title = stringResource(R.string.settings_screen_appearance),
@@ -529,6 +555,21 @@ fun createAppearanceSettings(context: Context) = listOf(
     },
     Setting(context, Settings.PREF_SHOW_EMOJI_DESCRIPTIONS, R.string.show_emoji_descriptions) {
         SwitchPreferenceWithEmojiDictWarning(it, Defaults.PREF_SHOW_EMOJI_DESCRIPTIONS)
+    },
+    Setting(context, Settings.PREF_EXPAND_FINE_TUNE_THEME,
+        R.string.fine_tune_theme_title, R.string.fine_tune_theme_summary
+    ) {
+        ExpandablePreference(it, Defaults.PREF_EXPAND_FINE_TUNE_THEME)
+    },
+    Setting(context, Settings.PREF_EXPAND_FINE_TUNE_KEY_PREVIEWS,
+        R.string.fine_tune_key_previews_title, R.string.fine_tune_key_previews_summary
+    ) {
+        ExpandablePreference(it, Defaults.PREF_EXPAND_FINE_TUNE_KEY_PREVIEWS)
+    },
+    Setting(context, Settings.PREF_EXPAND_FINE_TUNE_KEYBOARD_LAYOUT,
+        R.string.fine_tune_keyboard_layout_title, R.string.fine_tune_keyboard_layout_summary
+    ) {
+        ExpandablePreference(it, Defaults.PREF_EXPAND_FINE_TUNE_KEYBOARD_LAYOUT)
     },
 )
 
