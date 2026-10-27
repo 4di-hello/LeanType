@@ -276,6 +276,7 @@ object HandwritingLoader {
 
         try {
             ensureWorkManagerInitialized(context)
+            helium314.keyboard.latin.utils.PluginTrust.requireTrusted(context, apkFile)
             val classLoader = getOrCreateClassLoader(context, apkFile)
             val clazz = classLoader.loadClass(PLUGIN_CLASS_NAME)
             val recognizer = clazz.getDeclaredConstructor().newInstance() as HandwritingRecognizer
@@ -376,6 +377,7 @@ object HandwritingLoader {
 
             // Verify the plugin loads successfully
             ensureWorkManagerInitialized(context)
+            helium314.keyboard.latin.utils.PluginTrust.requireTrusted(context, apkFile)
             val classLoader = getOrCreateClassLoader(context, apkFile)
             val clazz = classLoader.loadClass(PLUGIN_CLASS_NAME)
             val recognizer = clazz.getDeclaredConstructor().newInstance() as HandwritingRecognizer
