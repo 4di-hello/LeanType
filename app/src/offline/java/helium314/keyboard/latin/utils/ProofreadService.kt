@@ -85,6 +85,20 @@ class ProofreadService(private val context: Context) {
             isModelAvailable = true
         }
 
+        /**
+         * Tokens the model can see at once: prompt, text and answer together. 2048 were too few for
+         * a long text (about 5000 characters of German), the model then generated nothing. 4096 need
+         * roughly 300 MB more memory for a 4B model.
+         */
+        const val CONTEXT_TOKENS = 4096
+
+        /**
+         * One generation at a time. A cancelled request keeps running in the plugin until it is done,
+         * and a new one would fail with "Context is busy" and give no output. It waits here instead.
+         * A plain lock, as it is held by the thread blocked in the plugin.
+         */
+        val generateLock = Any()
+
         suspend fun loadModel(
             context: Context,
             modelPath: String
@@ -110,7 +124,7 @@ class ProofreadService(private val context: Context) {
                 val threads = if (cores <= 4) cores else 4
                 
                 Log.i(TAG, "Loading GGUF model via AI Plugin: path=$modelPath threads=$threads")
-                val success = provider.loadModel(context, modelPath, threads, 4096)
+                val success = provider.loadModel(context, modelPath, threads, CONTEXT_TOKENS)
                 if (success) {
                     currentModelPath = modelPath
                     isModelLoaded = true
@@ -402,13 +416,15 @@ class ProofreadService(private val context: Context) {
             }
             
             // Use provider to generate completion
-            val output = provider.generate(fullPrompt, mapOf(
-                "temperature" to temp.toDouble(),
-                "top_p" to topP.toDouble(),
-                "top_k" to topK,
-                "min_p" to minP.toDouble(),
-                "max_tokens" to effectiveMaxTokens
-            ))
+            val output = synchronized(ModelHolder.generateLock) {
+                provider.generate(fullPrompt, mapOf(
+                    "temperature" to temp.toDouble(),
+                    "top_p" to topP.toDouble(),
+                    "top_k" to topK,
+                    "min_p" to minP.toDouble(),
+                    "max_tokens" to effectiveMaxTokens
+                ))
+            }
 
             // Schedule unload after work is done
             ModelHolder.scheduleUnload(context)
@@ -436,11 +452,20 @@ class ProofreadService(private val context: Context) {
                 cleanProofreadOutput(text, cleanedOutput)
             }
 
-            Log.i(TAG, "inference via plugin: input='$text' generated='$output' final='$finalOutput'")
+            // only the lengths: the texts are private and the system log can be read by other tools
+            Log.i(TAG, "inference via plugin: input ${text.length} chars, generated ${output.length} chars, result ${finalOutput.length} chars")
             if (finalOutput.isNotBlank()) {
                 Result.success(finalOutput)
             } else {
-                Result.failure(ProofreadException("Model produced no output"))
+                // say why: the text was too long, the model generated nothing, or the cleanup removed it
+                val reason = when {
+                    // roughly 3 characters per token; prompt and answer have to fit together
+                    output.isBlank() && fullPrompt.length / 3 + effectiveMaxTokens > ModelHolder.CONTEXT_TOKENS ->
+                        "the text is probably too long for the model (prompt ${fullPrompt.length} chars, room for about ${ModelHolder.CONTEXT_TOKENS * 3} chars including the answer)"
+                    output.isBlank() -> "the model ended without generating text"
+                    else -> "the cleanup removed the generated text (${output.length} chars)"
+                }
+                Result.failure(ProofreadException("Model produced no output: $reason"))
             }
 
         } catch (e: Throwable) {

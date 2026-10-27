@@ -155,6 +155,9 @@ class InputLogic(
         mInputLogicHandler.reset()
         mConnection.requestCursorUpdates(true, true)
         setInlineEmojiSearchAction(false)
+        // an AI result that arrived while the keyboard was hidden, once the field is ready again
+        if (mPendingAIResult != null)
+            android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({ insertPendingAIResult() }, 300)
     }
 
     fun onSubtypeChanged(combiningSpec: String?, settingsValues: SettingsValues) {
@@ -3051,8 +3054,12 @@ class InputLogic(
             mLatinIME,
             textToProcess, prompt, hasSelection, showThinking,
             onSuccess = { resultText ->
+                val result = PendingAIResult(resultText, targetPackage, targetFieldId, hasSelection, shouldAppend,
+                    android.os.SystemClock.uptimeMillis())
                 if (!mLatinIME.isInputViewShown || !mConnection.isConnected()) {
-                    Log.w(TAG, "Input view hidden or disconnected during custom AI operation, ignoring result")
+                    // some editors hide the keyboard meanwhile: insert when it is back in this field
+                    Log.i(TAG, "Input view hidden during custom AI operation, keeping the result")
+                    mPendingAIResult = result
                     return@customAsync
                 }
                 val currentEditor = getCurrentInputEditorInfo()
@@ -3060,20 +3067,52 @@ class InputLogic(
                     Log.w(TAG, "Target editor changed during custom AI operation, ignoring result")
                     return@customAsync
                 }
-                if (shouldAppend) {
-                    val textBefore = mConnection.getTextBeforeCursor(2, 0) ?: ""
-                    mLatinIME.onTextInput(CustomAIKeyText.separatorBefore(textBefore) + resultText.trim())
-                } else if (!hasSelection) {
-                    mConnection.replaceEntireText(resultText)
-                } else {
-                    mLatinIME.onTextInput(resultText)
-                }
+                insertAIResult(result)
             },
             onError = { errorMessage ->
                 Log.e(TAG, "Custom AI Error: $errorMessage")
                 KeyboardSwitcher.getInstance().showToast(mLatinIME.getString(R.string.ai_error_format, errorMessage), true)
             }
         )
+    }
+
+    /** result of a custom AI key, kept while the keyboard is hidden */
+    private class PendingAIResult(
+        val text: String, val packageName: String?, val fieldId: Int?,
+        val hasSelection: Boolean, val shouldAppend: Boolean, val time: Long
+    )
+    private var mPendingAIResult: PendingAIResult? = null
+
+    private fun insertAIResult(result: PendingAIResult) {
+        if (result.shouldAppend) {
+            if (!result.hasSelection) {
+                // the cursor may have moved meanwhile, e.g. when the keyboard was hidden and the field tapped again
+                val after = mConnection.getTextAfterCursor(60000, 0)?.length ?: 0
+                if (after > 0 && mConnection.expectedSelectionEnd >= 0) {
+                    val end = mConnection.expectedSelectionEnd + after
+                    mConnection.setSelection(end, end)
+                }
+            }
+            val textBefore = mConnection.getTextBeforeCursor(2, 0) ?: ""
+            mLatinIME.onTextInput(CustomAIKeyText.separatorBefore(textBefore) + result.text.trim())
+        } else if (!result.hasSelection) {
+            mConnection.replaceEntireText(result.text)
+        } else {
+            mLatinIME.onTextInput(result.text)
+        }
+    }
+
+    /** Inserts a result that arrived while the keyboard was hidden, if the keyboard is back in the same field soon. */
+    private fun insertPendingAIResult() {
+        val pending = mPendingAIResult ?: return
+        mPendingAIResult = null
+        if (android.os.SystemClock.uptimeMillis() - pending.time > PENDING_AI_RESULT_MS) return
+        if (!mLatinIME.isInputViewShown || !mConnection.isConnected()) return
+        val editor = getCurrentInputEditorInfo()
+        if (editor?.packageName != pending.packageName || editor?.fieldId != pending.fieldId) return
+        // a replaced selection is gone, there is nothing left to replace safely
+        if (pending.hasSelection && !pending.shouldAppend) return
+        insertAIResult(pending)
     }
 
     private fun tryJumpToNextPlaceholder(): Boolean {
@@ -3197,6 +3236,8 @@ class InputLogic(
     }
 
     companion object {
+        /** how long a custom AI key result waits for the keyboard to come back into its field */
+        private const val PENDING_AI_RESULT_MS = 2 * 60 * 1000L
         private const val TAG = "InputLogic"
         private const val INLINE_EMOJI_SEARCH_MARKER = ':'
         private const val KEY_REPEAT_INTERVAL_MS = 50
