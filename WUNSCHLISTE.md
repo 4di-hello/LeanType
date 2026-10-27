@@ -16,7 +16,9 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
   - Behoben in LeanType+: Chat-Format für Qwen ohne Denkmodus, Diagnose zeigt den echten Ladefehler (seit 26.10. nur in der Meldung, nichts in der Zwischenablage)
   - 18.10.: Anweisung und Text getrennt (System-/Nutzernachricht), kein eingebautes Beispiel mehr („großes Haus“); `{text}` nicht mehr nötig
   - LFM2 (Liquid, z. B. LFM2-2.6B Q4_K_M) wird erkannt (Dateiname enthält „lfm“) – testen
-  - Idee: Modus „Nur Korrekturen“ (Modell gibt nur „alt → neu“ aus, deutlich schneller)
+  - Erledigt 27.10.: Chip „Nur Korrekturen“ (#corrections) für KI-Tasten – Modell nennt nur „falsch → richtig“, LeanType+ setzt es ein; Prompt optional
+  - Erledigt 27.10.: KI-Taste, Korrektur- oder Übersetzen-Taste nochmal tippen bricht ab (Plugin rechnet im Hintergrund zu Ende, Ergebnis wird verworfen)
+  - Erledigt 27.10.: Fortschritt ab 2 s („Modell wird geladen“ / „wartet auf die vorige Anfrage“ / „schreibt … s“). Echte Token-Zahl geht nicht, das Plugin meldet keine Zwischenstände
   - Qwen3.5 (2B/4B) lädt nicht: llama.cpp im Plugin (April 2026) lehnt die Dateien ab. Nur mit eigenem Plugin und aktueller llama.cpp – optional, falls Qwen3 nicht reicht
   - Qwen3.8-Flash-Next (125B MoE, ~100 GB) passt nicht aufs Handy
 - KI-Tasten (Benutzerdefinierte AI-Tasten):
@@ -35,8 +37,13 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
 - Erledigt 26.10.: Lokale KI – „no output“ bei langen Texten: Kontext 4096 statt 2048 Token, Fehlermeldung nennt den Grund (Text zu lang / nichts erzeugt / beim Aufräumen entfernt). Umlaute im Prompt waren nicht die Ursache
 - Bekannt, nicht weiter verfolgt (26.10.): KI-Tasten in Nine Mail – der Editor klappt die Tastatur ein, wenn sie den Cursor verschiebt, das Ergebnis kommt nicht an. Umgehung: Cursor vorher ans Textende setzen oder „Ergebnis voranstellen“ nutzen; andere Apps (Obsidian, Notizen) funktionieren
 - 27.10.: Auf LeanType-Stand vom 27.10. aktualisiert (Konflikte gelöst: gelernte Großschreibung, KI-Tasten, Löschen per Wischen mit #716). Sicherung davor: Branch `backup/daily-2026-10-27`
-- Emoji-Vorschläge zum getippten Wort: prüfen, was LeanType schon kann (`suggest_emojis`, Inline-Emoji-Suche mit Emoji-Wörterbuch), dann entscheiden
+- Emoji-Vorschläge zum getippten Wort: geprüft 27.10. – LeanType kann das schon („Emojis vorschlagen“, Standard an), braucht aber das Emoji-Wörterbuch der Sprache (z. B. `emoji_de.dict` aus Helium314/aosp-dictionaries, Ordner `emoji_cldr_signal_dictionaries`), über Wörterbücher → Wörterbuch hinzufügen. Nichts zu bauen
 - Getrennte Tipp-Profile pro Daumen bzw. Haltung weiter verfeinern (Idee)
+
+## Updates (seit 27.10.)
+- Automatisch (montags): Workflow setzt `daily` auf LeanType neu auf, testet, baut und schiebt erst dann
+- Mit Konflikten: von Hand lösen, auf `update/<name>` pushen. Der Workflow baut und testet dort, nur wenn alles grün ist, ersetzt er `daily` und veröffentlicht. Sicherung des alten Stands vorher als `backup/…`
+- 27.10.: Auf LeanType 4.3.0-beta1 aktualisiert (Sicherung `backup/daily-2026-10-27b`)
 
 ## Zukunft von LeanType unsicher (21.10.; am 22.10. kam trotzdem v4.2.9)
 
@@ -55,12 +62,16 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
 - Automatische Sicherung: Passwort setzen (dann ist alles verschlüsselt)
 - Erledigt 19.10.: Pipeline bricht ab, falls das APK Internet-Berechtigung bekommt
 - Offen, optional: Signieren in eigenem Schritt ohne Gradle
-- Offen, PR-Kandidaten: Diktat-Texte nicht ins App-Protokoll; Plugin-Signatur prüfen; unverschlüsselte Sicherung erst prüfen, dann löschen
+- Erledigt 27.10.: Diktat-Texte nicht mehr im App-Protokoll (nur Längen)
+- Erledigt 27.10.: Plugins in der Tastatur (KI, Übersetzung, OCR, Handschrift, CJK) nur noch mit bekanntem LeanBitLab-Schlüssel; Handschrift-Plugin ist unsigniert, dort zählen die bekannten Release-Dateien (v1.0.0–1.0.6). Neues Plugin mit unbekanntem Schlüssel → Meldung „Plugin not loaded“, dann Schlüssel/Datei in `PluginTrust.kt` ergänzen. Sprach- und GIF-Plugin sind eigene Apps, nicht betroffen
+- Erledigt 27.10.: Automatische Sicherung prüft die neue Datei (entschlüsseln, ZIP lesbar), erst dann werden alte gelöscht; mit Passwort werden alte unverschlüsselte Sicherungen entfernt
 
 ## Upstream (LeanBitLab/LeanType)
 
-- PR #680 „Adapt to my typing“ begleiten; nach dem Merge den Fork auf die schlanke Version umstellen (ein Schalter, Daten bleiben)
-- Danach einzeln vorschlagen: zuerst Themes (ohne Menüänderungen), eventuell verschlüsselte Backups
+- PR #680 „Adapt to my typing“ begleiten; nach dem Merge den Fork auf die schlanke Version umstellen (ein Schalter, Daten bleiben). 27.10. auf 4.3 neu aufgesetzt
+- PR #739 (Einstellungssprung) 27.10. auf 4.3 angepasst: öffnet auch zugeklappte Feinabstimmungs-Bereiche
+- PR-Branches 27.10. vorbereitet (Texte in `PR-TEXTE.md`): `fix/offline-ai-busy` (kein „Context is busy“, Ergebnis bleibt bei eingeklappter Tastatur, Kontext 4096, Grund bei „no output“, keine Texte im Log), `feature/ai-key-clipboard-prepend` ({clipboard}, Ergebnis voranstellen), `feature/more-themes` (Themes ohne Menüänderungen)
+- Später: verschlüsselte Backups
 
 ## Prüfen / Testen
 
