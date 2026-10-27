@@ -1449,6 +1449,14 @@
     <string name="custom_ai_keyword_generate_label">Generieren</string>
     <string name="custom_ai_keyword_outputonly_label">Nur Ergebnis</string>
     <string name="custom_ai_keyword_append_label">Ergebnis anfügen</string>
+    <string name="custom_ai_keyword_corrections_label">Nur Korrekturen</string>
+    <string name="custom_ai_keyword_corrections_desc">Das Modell nennt nur die Fehler, LeanType korrigiert sie im Text. Viel schneller als den ganzen Text neu zu schreiben, korrigiert auch Satzzeichen und Groß-/Kleinschreibung. Geht auch ohne Prompt.</string>
+    <string name="custom_ai_corrections_none">Keine Fehler gefunden</string>
+    <string name="custom_ai_corrections_done">Korrigierte Stellen: %d</string>
+    <string name="ai_status_loading">KI: Modell wird geladen … %1$d s</string>
+    <string name="ai_status_waiting">KI: wartet auf die vorige Anfrage … %1$d s</string>
+    <string name="ai_status_generating">KI schreibt … %1$d s · Taste nochmal tippen bricht ab</string>
+    <string name="ai_cancelled">KI-Anfrage abgebrochen</string>
     <string name="custom_ai_keyword_prepend_label">Ergebnis voranstellen</string>
     <string name="custom_ai_keyword_showthought_label">Gedankengang anzeigen</string>
     <string name="custom_ai_keyword_editor_desc">Freie Bearbeitung und Formatierung des Textes gemäß Aufforderung.</string>

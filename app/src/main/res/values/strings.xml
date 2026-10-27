@@ -2232,6 +2232,14 @@ New dictionary:
     <string name="custom_ai_keyword_generate_label">Generate</string>
     <string name="custom_ai_keyword_outputonly_label">Result only</string>
     <string name="custom_ai_keyword_append_label">Append result</string>
+    <string name="custom_ai_keyword_corrections_label">Only corrections</string>
+    <string name="custom_ai_keyword_corrections_desc">The model only lists the mistakes, LeanType fixes them in the text. Much faster than rewriting the whole text, also fixes punctuation and capitalization. Works without a prompt.</string>
+    <string name="custom_ai_corrections_none">No mistakes found</string>
+    <string name="custom_ai_corrections_done">Corrected: %d</string>
+    <string name="ai_status_loading">AI: loading the model … %1$d s</string>
+    <string name="ai_status_waiting">AI: waiting for the previous request … %1$d s</string>
+    <string name="ai_status_generating">AI is writing … %1$d s · tap the key again to cancel</string>
+    <string name="ai_cancelled">AI request cancelled</string>
     <string name="custom_ai_keyword_prepend_label">Prepend result</string>
     <string name="custom_ai_keyword_showthought_label">Show reasoning</string>
     <string name="custom_ai_keyword_editor_desc">Free-form editing and formatting of text according to prompt.</string>
