@@ -23,9 +23,9 @@ android {
         applicationId = "com.leanbitlab.leantype"
         minSdk = 21
         targetSdk = 35
-        // ponytail: release version 4.2.9
-        versionCode = 4209
-        versionName = "4.2.9"
+        // ponytail: release version 4.3.0
+        versionCode = 4300
+        versionName = "4.3.0"
 
         proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         

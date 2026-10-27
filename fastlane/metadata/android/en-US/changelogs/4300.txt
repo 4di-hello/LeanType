@@ -1,0 +1,7 @@
+- Fixed keyboard failing to open in web editors, remote IDEs, and TYPE_NULL fields.
+- Prevented touch dropping, keyboard lockups, and stuck key visuals on popup dismissal.
+- Prevented accidental caps lock switch and preserved initial capital on fast typing.
+- Enabled immediate dynamic Material You theme color updates on Android 12+.
+- Added glyph validation for custom emoji fonts and fixed blank emoji keyboard.
+- Improved edge key popup detection using precise hitbox distance calculation.
+- Preserved typed word status during Shift key recapitalization.

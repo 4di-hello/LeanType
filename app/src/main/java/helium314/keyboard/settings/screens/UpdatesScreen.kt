@@ -64,18 +64,13 @@ import helium314.keyboard.settings.updates.AppUpdatesManager
 import kotlinx.coroutines.launch
 
 private val currentChangelogItems = listOf(
-    "• GIF Search & Media Plugin: Integrated companion GIF plugin with GIPHY/Tenor search, live preview, and WhatsApp stickers",
-    "• CJK Companion Engine: Added modular support for Chinese, Japanese, and Korean typing with dedicated candidate strip UI",
-    "• Full Keyboard Swipe Gestures: Added configurable full-keyboard horizontal swipe gestures with sensitivity threshold",
-    "• 2D Delete Swipe & Hold-to-Delete: Added 2D swipe selection adjustments and continuous whole-word deletion on backspace hold",
-    "• Internal Fields Gesture Typing: Enabled gesture typing trails and floating preview in emoji and clipboard search/edit",
-    "• Web Editor Suggestion Replacement: Resolved text duplication and cursor desync in Chromium and web browser inputs",
-    "• Core Stability & Memory Protection: Hardened batch edit lifecycle, ContentObserver leaks, and clipboard trim protection",
-    "• Clipboard Action Pill & Multi-Select: Added Gboard-style long-press action pill, multi-select, and sensitive data filtering",
-    "• Landscape Auto-Floating: Added option to automatically float the keyboard in landscape and restore in portrait",
-    "• Dynamic Sound Wave Visualizer: Added acoustic harmonic waves, shimmer animation, and voice recording wake lock",
-    "• Granular Backup & Encrypted API Keys: Added selectable dictionaries/history and encrypted API keys export",
-    "• 100% Global Translations: Completed 100% translation coverage across 30 supported languages"
+    "• Web & Remote Editors: Permitted keyboard display on active TYPE_NULL fields in browsers and remote IDEs",
+    "• Touch Queue & Freeze Fix: Cleared pointer queues and prevented touch dropping and frozen keys on popup dismissal",
+    "• Fast Typing Capitalization: Reset shift state on typing to prevent accidental caps lock and preserved initial uppercase",
+    "• Dynamic Colors Refresh: Re-queried configuration context to immediately apply system Material You color changes",
+    "• Custom Emoji Font Validation: Added glyph compatibility checks on pre-Android 13 devices to prevent blank emoji rendering",
+    "• Edge Key Popups: Used key hitbox bounds in distance checks for reliable popup activation along keyboard edges",
+    "• Shift Recapitalization: Preserved actively typed word state when cycling capitalization with the Shift key"
 )
 
 @Composable
