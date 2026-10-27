@@ -57,9 +57,11 @@ object ProofreadHelper {
      */
     fun cancelCurrentOperation() {
         if (currentJob?.isActive == true) {
+            // the plugin can't be stopped: it finishes the text in the background, the result is dropped
             currentJob?.cancel()
             currentJob = null
             mainHandler.post {
+                KeyboardSwitcher.getInstance().hideStatus()
                 KeyboardSwitcher.getInstance().hideLoadingAnimation()
                 // Toast removed as visual feedback (stopping animation) is sufficient
             }
@@ -113,11 +115,13 @@ object ProofreadHelper {
         }
 
         // Launch coroutine for inference and track it for cancellation
-        currentJob = scope.launch {
+        val progress = AiProgress()
+        val job = scope.launch(progress) {
             val result = apiCall(service)
 
             mainHandler.post {
                 currentJob = null
+                KeyboardSwitcher.getInstance().hideStatus()
                 // Hide loading animation
                 KeyboardSwitcher.getInstance().hideLoadingAnimation()
 
@@ -135,6 +139,29 @@ object ProofreadHelper {
                 )
             }
         }
+        currentJob = job
+        showProgress(context, job, progress)
+    }
+
+    /** Shows what the local AI does, every second while [job] runs */
+    private fun showProgress(context: Context, job: Job, progress: AiProgress) {
+        val update = object : Runnable {
+            override fun run() {
+                // done or cancelled (both on this thread, so the status can't come back after it was hidden)
+                if (currentJob !== job || !job.isActive) return
+                val textId = when (progress.phase) {
+                    AiProgress.Phase.LOADING -> R.string.ai_status_loading
+                    AiProgress.Phase.WAITING -> R.string.ai_status_waiting
+                    AiProgress.Phase.GENERATING -> R.string.ai_status_generating
+                    null -> null
+                }
+                // short requests are done before anything is shown
+                if (textId != null && progress.seconds >= 2)
+                    KeyboardSwitcher.getInstance().showStatus(context.getString(textId, progress.seconds))
+                mainHandler.postDelayed(this, 1000)
+            }
+        }
+        mainHandler.postDelayed(update, 1000)
     }
 
     private fun getKeyboardLanguage(): String {
