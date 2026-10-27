@@ -3,7 +3,9 @@ package helium314.keyboard.settings.preferences
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Paint
 import android.graphics.Typeface
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.Text
@@ -15,10 +17,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import helium314.keyboard.keyboard.KeyboardSwitcher
+import helium314.keyboard.keyboard.emoji.SupportedEmojis
 import helium314.keyboard.latin.R
 import helium314.keyboard.latin.common.FileUtils
 import helium314.keyboard.latin.settings.Settings
 import helium314.keyboard.latin.utils.DeviceProtectedUtils
+import helium314.keyboard.latin.utils.prefs
 import helium314.keyboard.settings.Setting
 import helium314.keyboard.settings.dialogs.ConfirmationDialog
 import helium314.keyboard.settings.dialogs.InfoDialog
@@ -35,10 +39,23 @@ fun CustomFontPreference(setting: Setting, fontFile: File, title: Int) {
         val tempFile = File(DeviceProtectedUtils.getFilesDir(ctx), "temp_file")
         FileUtils.copyContentUriToNewFile(uri, ctx, tempFile)
         try {
-            Typeface.createFromFile(tempFile)
+            val tf = Typeface.createFromFile(tempFile)
+            val isEmojiFont = fontFile.name == "custom_emoji_font"
+            if (isEmojiFont && Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                val paint = Paint().apply { typeface = tf }
+                if (!paint.hasGlyph("😀")) {
+                    showErrorDialog = true
+                    tempFile.delete()
+                    return@rememberLauncherForActivityResult
+                }
+            }
             fontFile.delete()
             tempFile.renameTo(fontFile)
             Settings.clearCachedTypeface()
+            if (isEmojiFont) {
+                ctx.prefs().edit().remove(Settings.PREF_EMOJI_MAX_SDK).apply()
+                SupportedEmojis.load(ctx)
+            }
             KeyboardSwitcher.getInstance().setThemeNeedsReload()
         } catch (_: Exception) {
             showErrorDialog = true
@@ -64,6 +81,10 @@ fun CustomFontPreference(setting: Setting, fontFile: File, title: Int) {
                 showDialog = false
                 fontFile.delete()
                 Settings.clearCachedTypeface()
+                if (fontFile.name == "custom_emoji_font") {
+                    ctx.prefs().edit().remove(Settings.PREF_EMOJI_MAX_SDK).apply()
+                    SupportedEmojis.load(ctx)
+                }
                 KeyboardSwitcher.getInstance().setThemeNeedsReload()
             },
             neutralButtonText = stringResource(R.string.delete),
