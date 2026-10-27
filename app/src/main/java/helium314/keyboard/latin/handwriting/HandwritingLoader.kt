@@ -251,6 +251,7 @@ object HandwritingLoader {
             val libFile = File(nativeLibDir, "libdigitalink.so")
             val nativeLoaderDex = getNativeLoaderDex(context)
             val dexPaths = "${apkFile.absolutePath}${File.pathSeparator}${nativeLoaderDex.absolutePath}"
+            helium314.keyboard.latin.utils.PluginTrust.requireTrusted(context, apkFile)
             val classLoader = PluginClassLoader(
                 dexPaths,
                 context.codeCacheDir.absolutePath,
@@ -362,6 +363,7 @@ object HandwritingLoader {
             val libFile = File(nativeLibDir, "libdigitalink.so")
             val nativeLoaderDex = getNativeLoaderDex(context)
             val dexPaths = "${apkFile.absolutePath}${File.pathSeparator}${nativeLoaderDex.absolutePath}"
+            helium314.keyboard.latin.utils.PluginTrust.requireTrusted(context, apkFile)
             val classLoader = PluginClassLoader(
                 dexPaths,
                 context.codeCacheDir.absolutePath,
