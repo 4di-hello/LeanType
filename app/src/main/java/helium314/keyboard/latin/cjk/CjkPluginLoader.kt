@@ -207,6 +207,7 @@ object CjkPluginLoader {
 
             extractPluginAssetsAndLibs(apkFile, nativeLibDir, sharedDir)
 
+            helium314.keyboard.latin.utils.PluginTrust.requireTrusted(context, apkFile)
             val apkModified = apkFile.lastModified()
             val classLoader = cachedClassLoader?.takeIf { cachedLoaderApkModified == apkModified }
                 ?: PluginClassLoader(
