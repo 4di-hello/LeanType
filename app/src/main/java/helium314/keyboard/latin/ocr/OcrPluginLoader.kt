@@ -209,6 +209,7 @@ object OcrPluginLoader {
             extractNativeLibs(apkFile, nativeLibDir)
 
             val cachedLoader = cachedClassLoader
+            helium314.keyboard.latin.utils.PluginTrust.requireTrusted(context, apkFile)
             val classLoader = if (cachedLoader != null && cachedApkModified == apkLastModified) {
                 cachedLoader
             } else {
