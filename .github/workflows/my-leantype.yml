@@ -3,6 +3,8 @@ name: My LeanType build
 # - weekly (and on demand): rebase the branch "daily" with my features onto the current LeanType,
 #   run the tests and build the APK
 # - on every push to "daily": run the tests and build the APK
+# - on a push to "update/<name>" (an update with conflicts I resolved by hand): run the tests and build the APK,
+#   and only if everything passes, replace "daily" with it and publish. A broken state never reaches "daily".
 # The APK is published as a GitHub release (latest: releases/latest/download/LeanTypePlus.apk) when the app
 # changed, and also stored on the branch apk-out. A failed run (e.g. a conflict) is reported by GitHub by mail.
 
@@ -11,7 +13,7 @@ on:
     - cron: '17 3 * * 1' # Monday morning
   workflow_dispatch:
   push:
-    branches: [ daily ]
+    branches: [ daily, 'update/**' ]
 
 permissions:
   contents: write
@@ -28,8 +30,12 @@ jobs:
       # third-party actions are pinned to a commit: a tag could later point to other code
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
-          ref: daily
+          ref: ${{ github.event_name == 'push' && github.ref || 'daily' }}
           fetch-depth: 0
+
+      - name: Checked update branch
+        if: startsWith(github.ref, 'refs/heads/update/')
+        run: echo "UPDATED=1" >> "$GITHUB_ENV"
 
       - name: Update with the current LeanType
         if: github.event_name != 'push'
@@ -140,7 +146,12 @@ jobs:
 
       - name: Store updated branch
         if: env.UPDATED == '1'
-        run: git push --force-with-lease origin HEAD:daily
+        run: |
+          git push --force-with-lease=daily:"$(git rev-parse origin/daily)" origin HEAD:daily
+          # the update branch has done its job
+          if [[ "$GITHUB_REF" == refs/heads/update/* ]]; then
+            git push origin --delete "${GITHUB_REF#refs/heads/}" || true
+          fi
 
       - name: Push APK to branch apk-out
         run: |
