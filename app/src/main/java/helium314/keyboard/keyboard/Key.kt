@@ -601,10 +601,10 @@ open class Key : Comparable<Key> {
     fun isOnKey(x: Int, y: Int): Boolean = hitBox.contains(x, y)
 
     fun squaredDistanceToEdge(x: Int, y: Int): Int {
-        val left = this.x
-        val right = left + width
-        val top = this.y
-        val bottom = top + height
+        val left = hitBox.left
+        val right = hitBox.right - 1
+        val top = hitBox.top
+        val bottom = hitBox.bottom - 1
         val edgeX = if (x < left) left else minOf(x, right)
         val edgeY = if (y < top) top else minOf(y, bottom)
         val dx = x - edgeX
