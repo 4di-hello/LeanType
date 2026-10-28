@@ -1086,28 +1086,10 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         mSuggestionStripView?.showLoadingAnimation()
     }
 
-    /** A message that stays until [hideStatus], e.g. what the local AI is doing; it can be updated */
-    fun showStatus(text: String) {
-        val view = mFakeToastView ?: return
-        // a message shown meanwhile stays readable
-        if (android.os.SystemClock.uptimeMillis() < mToastShownUntil) return
-        mStatusShown = true
-        view.text = text
-        if (view.visibility != View.VISIBLE) {
-            view.clearAnimation()
-            view.visibility = View.VISIBLE
-            view.bringToFront()
-        }
+    /** Progress of the local AI in the loading border, see [SuggestionStripView.setLoadingProgress] */
+    fun setLoadingProgress(shown: Boolean, progress: Float?) {
+        mSuggestionStripView?.setLoadingProgress(shown, progress)
     }
-
-    fun hideStatus() {
-        if (!mStatusShown) return
-        mStatusShown = false
-        mFakeToastView?.visibility = View.GONE
-    }
-
-    private var mStatusShown = false
-    private var mToastShownUntil = 0L
 
     fun hideLoadingAnimation() {
         mSuggestionStripView?.hideLoadingAnimation()
@@ -1116,8 +1098,6 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
     private fun showFakeToast(text: String, timeMillis: Int) {
         val fakeToastView = mFakeToastView ?: return
         val latinIme = mLatinIME ?: return
-        // a status (see showStatus) gives way to the message and is shown again with its next update
-        if (mStatusShown) hideStatus()
         if (fakeToastView.visibility == View.VISIBLE) return
 
         val appIcon = fakeToastView.compoundDrawables[0]
@@ -1126,7 +1106,6 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
             appIcon.setBounds(0, 0, bound, bound)
             fakeToastView.setCompoundDrawables(appIcon, null, null, null)
         }
-        mToastShownUntil = android.os.SystemClock.uptimeMillis() + timeMillis + 300
         fakeToastView.text = text
         fakeToastView.visibility = View.VISIBLE
         fakeToastView.bringToFront()
