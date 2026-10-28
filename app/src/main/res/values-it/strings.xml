@@ -1870,4 +1870,10 @@ Abilita l\'inferenza GGUF / llama.cpp sul dispositivo per correzione e riscrittu
     <string name="fine_tune_swipes_summary">Configura le azioni di scorrimento verticale, le distanze di scorrimento, la sensibilità e le impostazioni del touchpad</string>
     <string name="fine_tune_advanced_title">Perfeziona tastiere fisiche e sperimentali</string>
     <string name="fine_tune_advanced_summary">Configura layout di tastiera hardware, rilevamento URL e flag sperimentali</string>
+    <string name="fine_tune_foldable_title">Display pieghevole e ampio</string>
+    <string name="fine_tune_foldable_summary">Configura l\'altezza della tastiera, il layout diviso e l\'imbottitura quando è aperta</string>
+    <string name="unfolded_keyboard_height_scale">Altezza della tastiera aperta</string>
+    <string name="unfolded_bottom_padding_scale">Imbottitura inferiore spiegata</string>
+    <string name="unfolded_split_keyboard">Tastiera divisa quando aperta</string>
+    <string name="unfolded_split_spacer_scale">Scala del distanziatore divisa aperta</string>
 </resources>

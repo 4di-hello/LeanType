@@ -1859,4 +1859,10 @@ Permet l\'inférence GGUF / llama.cpp sur l\'appareil pour la correction et la r
     <string name="fine_tune_swipes_summary">Configurer les actions de balayage vertical, les distances de balayage, la sensibilité et les paramètres du pavé tactile</string>
     <string name="fine_tune_advanced_title">Affiner les claviers physiques et expérimentaux</string>
     <string name="fine_tune_advanced_summary">Configurer la disposition du clavier matériel, la détection d\'URL et les indicateurs expérimentaux</string>
+    <string name="fine_tune_foldable_title">Écran pliable et grand</string>
+    <string name="fine_tune_foldable_summary">Configurez la hauteur du clavier, la disposition divisée et le rembourrage une fois déplié</string>
+    <string name="unfolded_keyboard_height_scale">Hauteur du clavier déplié</string>
+    <string name="unfolded_bottom_padding_scale">Rembourrage inférieur déplié</string>
+    <string name="unfolded_split_keyboard">Clavier divisé une fois déplié</string>
+    <string name="unfolded_split_spacer_scale">Échelle d\'espacement divisée dépliée</string>
 </resources>

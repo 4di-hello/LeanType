@@ -1863,4 +1863,10 @@
     <string name="fine_tune_swipes_summary">Διαμορφώστε τις ενέργειες κατακόρυφης ολίσθησης, τις αποστάσεις ολίσθησης, την ευαισθησία και τις ρυθμίσεις επιφάνειας αφής</string>
     <string name="fine_tune_advanced_title">Βελτιώστε φυσικά πληκτρολόγια και πειραματικά</string>
     <string name="fine_tune_advanced_summary">Διαμορφώστε τις διατάξεις πληκτρολογίου υλικού, τον εντοπισμό URL και τις πειραματικές σημαίες</string>
+    <string name="fine_tune_foldable_title">Αναδιπλούμενη και μεγάλη οθόνη</string>
+    <string name="fine_tune_foldable_summary">Διαμορφώστε το ύψος του πληκτρολογίου, τη χωριστή διάταξη και το padding όταν ξεδιπλωθεί</string>
+    <string name="unfolded_keyboard_height_scale">Ξεδιπλωμένο ύψος πληκτρολογίου</string>
+    <string name="unfolded_bottom_padding_scale">Ξεδιπλωμένη κάτω επένδυση</string>
+    <string name="unfolded_split_keyboard">Διαχωρίστε το πληκτρολόγιο όταν ξεδιπλώνεται</string>
+    <string name="unfolded_split_spacer_scale">Ξεδιπλωμένη κλίμακα διαχωρισμού</string>
 </resources>

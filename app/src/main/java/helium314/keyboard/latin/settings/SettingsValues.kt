@@ -386,7 +386,7 @@ open class SettingsValues(
         val displayWidthDp = TypedValueCompat.pxToDp(res.displayMetrics.widthPixels.toFloat(), res.displayMetrics)
         mIsSplitKeyboardEnabled = Settings.readSplitKeyboardEnabled(prefs, isLandscape, mScreenProfile)
         mSplitKeyboardSpacerRelativeWidth = if (mIsSplitKeyboardEnabled)
-            minOf(maxOf((displayWidthDp - 600f) / 600f + 0.15f, 0.15f), 0.35f) * Settings.readSplitSpacerScale(prefs, isLandscape)
+            minOf(maxOf((displayWidthDp - 600f) / 600f + 0.15f, 0.15f), 0.35f) * Settings.readSplitSpacerScale(prefs, isLandscape, mScreenProfile)
         else 0f
 
         mQuickPinToolbarKeys = mToolbarMode == ToolbarMode.EXPANDABLE && !mSplitToolbar && prefs.getBoolean(Settings.PREF_QUICK_PIN_TOOLBAR_KEYS, Defaults.PREF_QUICK_PIN_TOOLBAR_KEYS)
@@ -484,7 +484,7 @@ open class SettingsValues(
         mKeyBorderRadiusAction = prefs.getFloat(Settings.PREF_KEY_BORDER_RADIUS_ACTION, Defaults.PREF_KEY_BORDER_RADIUS_ACTION)
         mSettingsValuesForSuggestion = SettingsValuesForSuggestion(mBlockPotentiallyOffensive, prefs.getBoolean(Settings.PREF_GESTURE_SPACE_AWARE, Defaults.PREF_GESTURE_SPACE_AWARE), mGestureMethod)
         mSpacingAndPunctuations = SpacingAndPunctuations(res, mUrlDetectionEnabled, isSymbolComposingApp)
-        mBottomPaddingScale = Settings.readBottomPaddingScale(prefs, isLandscape)
+        mBottomPaddingScale = Settings.readBottomPaddingScale(prefs, isLandscape, mScreenProfile)
         mSidePaddingScale = Settings.readSidePaddingScale(prefs, isLandscape, mIsSplitKeyboardEnabled)
         mLongPressSymbolsForNumpad = prefs.getBoolean(Settings.PREFS_LONG_PRESS_SYMBOLS_FOR_NUMPAD, Defaults.PREFS_LONG_PRESS_SYMBOLS_FOR_NUMPAD)
         mAutoShowToolbarOnSelect = mToolbarMode == ToolbarMode.EXPANDABLE && !mSplitToolbar && prefs.getBoolean(Settings.PREF_AUTO_SHOW_TOOLBAR_ON_SELECT, Defaults.PREF_AUTO_SHOW_TOOLBAR_ON_SELECT)

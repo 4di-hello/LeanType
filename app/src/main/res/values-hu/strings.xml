@@ -1801,4 +1801,10 @@ Lehetővé teszi az eszközön futó GGUF / llama.cpp következtetést a javít�
     <string name="fine_tune_swipes_summary">Konfigurálja a függőleges csúsztatási műveleteket, a csúsztatási távolságokat, az érzékenységet és az érintőpad beállításait</string>
     <string name="fine_tune_advanced_title">Fizikai és kísérleti billentyűzetek finomhangolása</string>
     <string name="fine_tune_advanced_summary">Konfigurálja a hardveres billentyűzetkiosztásokat, az URL-észlelést és a kísérleti jelzőket</string>
+    <string name="fine_tune_foldable_title">Összecsukható és nagy kijelző</string>
+    <string name="fine_tune_foldable_summary">Konfigurálja a billentyűzet magasságát, az osztott elrendezést és a párnázást, amikor ki van hajtva</string>
+    <string name="unfolded_keyboard_height_scale">Kihajtott billentyűzet magasság</string>
+    <string name="unfolded_bottom_padding_scale">Kibontott alsó párnázás</string>
+    <string name="unfolded_split_keyboard">Osztott billentyűzet kibontott állapotban</string>
+    <string name="unfolded_split_spacer_scale">Kibontott osztott távtartó skála</string>
 </resources>

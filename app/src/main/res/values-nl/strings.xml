@@ -1845,4 +1845,10 @@ Maakt GGUF / llama.cpp-inferentie op het apparaat mogelijk voor proeflezen en he
     <string name="fine_tune_swipes_summary">Configureer verticale veegacties, veegafstanden, gevoeligheid en touchpad-instellingen</string>
     <string name="fine_tune_advanced_title">Verfijn fysieke toetsenborden en experimenteel</string>
     <string name="fine_tune_advanced_summary">Configureer hardwaretoetsenbordindelingen, URL-detectie en experimentele vlaggen</string>
+    <string name="fine_tune_foldable_title">Opvouwbaar en groot display</string>
+    <string name="fine_tune_foldable_summary">Configureer de toetsenbordhoogte, gesplitste lay-out en opvulling wanneer deze is uitgevouwen</string>
+    <string name="unfolded_keyboard_height_scale">Uitgevouwen toetsenbordhoogte</string>
+    <string name="unfolded_bottom_padding_scale">Uitgevouwen bodemvulling</string>
+    <string name="unfolded_split_keyboard">Gesplitst toetsenbord wanneer uitgeklapt</string>
+    <string name="unfolded_split_spacer_scale">Uitgevouwen gedeelde afstandsschaal</string>
 </resources>

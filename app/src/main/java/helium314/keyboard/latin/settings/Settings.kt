@@ -341,6 +341,7 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
         const val PREF_EXPAND_FINE_TUNE_THEME = "expand_fine_tune_theme"
         const val PREF_EXPAND_FINE_TUNE_KEY_PREVIEWS = "expand_fine_tune_key_previews"
         const val PREF_EXPAND_FINE_TUNE_KEYBOARD_LAYOUT = "expand_fine_tune_keyboard_layout"
+        const val PREF_EXPAND_FINE_TUNE_FOLDABLE = "expand_fine_tune_foldable"
         const val PREF_EXPAND_FINE_TUNE_HAPTICS = "expand_fine_tune_haptics"
         const val PREF_EXPAND_FINE_TUNE_ADDITIONAL_KEYS = "expand_fine_tune_additional_keys"
         const val PREF_EXPAND_FINE_TUNE_CLIPBOARD = "expand_fine_tune_clipboard"
@@ -388,11 +389,15 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
             prefs.edit().putBoolean("${PREF_GIF_PROVIDER_ENABLED_PREFIX}$providerId", enabled).apply()
         }
         const val PREF_FOLDABLE_MODE = "pref_foldable_mode"
+        const val PREF_ENABLE_SPLIT_KEYBOARD_UNFOLDED = "enable_split_keyboard_large"
         const val PREF_ENABLE_SPLIT_KEYBOARD = "split_keyboard"
         const val PREF_ENABLE_SPLIT_KEYBOARD_LANDSCAPE = "split_keyboard_landscape"
         const val PREF_SPLIT_SPACER_SCALE_PREFIX = "split_spacer_scale"
+        const val PREF_UNFOLDED_SPLIT_SPACER_SCALE_PREFIX = "split_spacer_scale_large"
         const val PREF_KEYBOARD_HEIGHT_SCALE_PREFIX = "keyboard_height_scale"
+        const val PREF_UNFOLDED_KEYBOARD_HEIGHT_SCALE_PREFIX = "keyboard_height_scale_large"
         const val PREF_BOTTOM_PADDING_SCALE_PREFIX = "bottom_padding_scale"
+        const val PREF_UNFOLDED_BOTTOM_PADDING_SCALE_PREFIX = "bottom_padding_scale_large"
         const val PREF_SIDE_PADDING_SCALE_PREFIX = "side_padding_scale"
         const val PREF_FONT_SCALE = "font_scale"
         const val PREF_SECONDARY_FONT_SCALE = "secondary_font_scale"
@@ -740,30 +745,41 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
 
         fun readSplitKeyboardEnabled(prefs: SharedPreferences, isLandscape: Boolean, profile: helium314.keyboard.latin.utils.ScreenProfile): Boolean {
             val basePref = if (isLandscape) PREF_ENABLE_SPLIT_KEYBOARD_LANDSCAPE else PREF_ENABLE_SPLIT_KEYBOARD
-            val defaultValue = profile.isLarge() || if (isLandscape) Defaults.PREF_ENABLE_SPLIT_KEYBOARD_LANDSCAPE else Defaults.PREF_ENABLE_SPLIT_KEYBOARD
+            val defaultValue = if (isLandscape) Defaults.PREF_ENABLE_SPLIT_KEYBOARD_LANDSCAPE else Defaults.PREF_ENABLE_SPLIT_KEYBOARD
             if (profile.isLarge()) {
                 val profileKey = getProfileAwarePrefKey(basePref, profile)
                 if (prefs.contains(profileKey)) return prefs.getBoolean(profileKey, defaultValue)
+                if (prefs.contains(PREF_ENABLE_SPLIT_KEYBOARD_UNFOLDED)) return prefs.getBoolean(PREF_ENABLE_SPLIT_KEYBOARD_UNFOLDED, defaultValue)
                 val portraitPref = getProfileAwarePrefKey(PREF_ENABLE_SPLIT_KEYBOARD, profile)
                 if (prefs.contains(portraitPref)) return prefs.getBoolean(portraitPref, defaultValue)
                 if (prefs.contains(PREF_ENABLE_SPLIT_KEYBOARD)) return prefs.getBoolean(PREF_ENABLE_SPLIT_KEYBOARD, defaultValue)
-                return defaultValue
+                return Defaults.PREF_ENABLE_SPLIT_KEYBOARD_UNFOLDED
             }
             return getProfileAwareBoolean(prefs, basePref, profile, defaultValue)
         }
 
         fun readSplitSpacerScale(prefs: SharedPreferences, landscape: Boolean): Float {
+            return readSplitSpacerScale(prefs, landscape, helium314.keyboard.latin.utils.ScreenProfile.COMPACT)
+        }
+
+        fun readSplitSpacerScale(prefs: SharedPreferences, landscape: Boolean, profile: helium314.keyboard.latin.utils.ScreenProfile): Float {
             val index = findIndexOfDefaultSetting(landscape)
             val defaults = Defaults.PREF_SPLIT_SPACER_SCALE
             val defaultValue = defaults[index]
-            return prefs.getFloat(createPrefKeyForBooleanSettings(PREF_SPLIT_SPACER_SCALE_PREFIX, index, 1), defaultValue)
+            val basePref = createPrefKeyForBooleanSettings(PREF_SPLIT_SPACER_SCALE_PREFIX, index, 1)
+            return getProfileAwareFloat(prefs, basePref, profile, defaultValue)
         }
 
         fun readBottomPaddingScale(prefs: SharedPreferences, landscape: Boolean): Float {
+            return readBottomPaddingScale(prefs, landscape, helium314.keyboard.latin.utils.ScreenProfile.COMPACT)
+        }
+
+        fun readBottomPaddingScale(prefs: SharedPreferences, landscape: Boolean, profile: helium314.keyboard.latin.utils.ScreenProfile): Float {
             val index = findIndexOfDefaultSetting(landscape)
-            val defaults = Defaults.PREF_BOTTOM_PADDING_SCALE
+            val defaults = if (profile.isLarge()) Defaults.PREF_UNFOLDED_BOTTOM_PADDING_SCALE else Defaults.PREF_BOTTOM_PADDING_SCALE
             val defaultValue = defaults[index]
-            return prefs.getFloat(createPrefKeyForBooleanSettings(PREF_BOTTOM_PADDING_SCALE_PREFIX, index, 1), defaultValue)
+            val basePref = createPrefKeyForBooleanSettings(PREF_BOTTOM_PADDING_SCALE_PREFIX, index, 1)
+            return getProfileAwareFloat(prefs, basePref, profile, defaultValue)
         }
 
         fun readSidePaddingScale(prefs: SharedPreferences, landscape: Boolean, split: Boolean): Float {
@@ -779,16 +795,9 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
 
         fun readHeightScale(prefs: SharedPreferences, landscape: Boolean, profile: helium314.keyboard.latin.utils.ScreenProfile): Float {
             val index = findIndexOfDefaultSetting(landscape)
-            val defaults = Defaults.PREF_KEYBOARD_HEIGHT_SCALE
+            val defaults = if (profile.isLarge()) Defaults.PREF_UNFOLDED_KEYBOARD_HEIGHT_SCALE else Defaults.PREF_KEYBOARD_HEIGHT_SCALE
             val defaultValue = defaults[index]
             val basePref = createPrefKeyForBooleanSettings(PREF_KEYBOARD_HEIGHT_SCALE_PREFIX, index, 1)
-            if (profile.isLarge() && landscape) {
-                val profileKey = getProfileAwarePrefKey(basePref, profile)
-                if (prefs.contains(profileKey)) return prefs.getFloat(profileKey, defaultValue)
-                val portraitProfilePref = getProfileAwarePrefKey(PREF_KEYBOARD_HEIGHT_SCALE_PREFIX, profile)
-                if (prefs.contains(portraitProfilePref)) return prefs.getFloat(portraitProfilePref, defaults[0])
-                if (prefs.contains(PREF_KEYBOARD_HEIGHT_SCALE_PREFIX)) return prefs.getFloat(PREF_KEYBOARD_HEIGHT_SCALE_PREFIX, defaults[0])
-            }
             return getProfileAwareFloat(prefs, basePref, profile, defaultValue)
         }
 
@@ -1021,6 +1030,14 @@ fun getProfileAwarePrefKey(key: String, profile: helium314.keyboard.latin.utils.
 fun getProfileAwareBoolean(prefs: SharedPreferences, key: String, profile: helium314.keyboard.latin.utils.ScreenProfile, defaultValue: Boolean): Boolean {
     val profileKey = getProfileAwarePrefKey(key, profile)
     if (prefs.contains(profileKey)) return prefs.getBoolean(profileKey, defaultValue)
+    if (profile.isLarge()) {
+        val profileKeyVariant = if (key.contains("_")) {
+            val prefix = key.substringBeforeLast("_")
+            val suffix = key.substringAfterLast("_")
+            "${prefix}_${profile.name.lowercase()}_$suffix"
+        } else null
+        if (profileKeyVariant != null && prefs.contains(profileKeyVariant)) return prefs.getBoolean(profileKeyVariant, defaultValue)
+    }
     if (prefs.contains(key)) return prefs.getBoolean(key, defaultValue)
     return defaultValue
 }
@@ -1028,6 +1045,16 @@ fun getProfileAwareBoolean(prefs: SharedPreferences, key: String, profile: heliu
 fun getProfileAwareFloat(prefs: SharedPreferences, key: String, profile: helium314.keyboard.latin.utils.ScreenProfile, defaultValue: Float): Float {
     val profileKey = getProfileAwarePrefKey(key, profile)
     if (prefs.contains(profileKey)) return prefs.getFloat(profileKey, defaultValue)
+    if (profile.isLarge()) {
+        val profileKeyVariant = if (key.contains("_")) {
+            val prefix = key.substringBeforeLast("_")
+            val suffix = key.substringAfterLast("_")
+            "${prefix}_${profile.name.lowercase()}_$suffix"
+        } else null
+        if (profileKeyVariant != null && prefs.contains(profileKeyVariant)) return prefs.getFloat(profileKeyVariant, defaultValue)
+        val profilePrefix = "${key}_large"
+        if (prefs.contains(profilePrefix)) return prefs.getFloat(profilePrefix, defaultValue)
+    }
     if (prefs.contains(key)) return prefs.getFloat(key, defaultValue)
     return defaultValue
 }

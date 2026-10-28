@@ -1785,4 +1785,10 @@ Omogućuje lokalno GGUF / llama.cpp zaključivanje na uređaju za lekturu i prep
     <string name="fine_tune_swipes_summary">Konfigurirajte radnje okomitog prelaska prstom, udaljenosti prijelaza, osjetljivost i postavke dodirne podloge</string>
     <string name="fine_tune_advanced_title">Fino podesite fizičke i eksperimentalne tipkovnice</string>
     <string name="fine_tune_advanced_summary">Konfigurirajte hardverski raspored tipkovnice, otkrivanje URL-a i eksperimentalne oznake</string>
+    <string name="fine_tune_foldable_title">Sklopivi i veliki zaslon</string>
+    <string name="fine_tune_foldable_summary">Konfigurirajte visinu tipkovnice, podijeljeni raspored i podstavu kada je otklopljena</string>
+    <string name="unfolded_keyboard_height_scale">Visina rasklopljene tipkovnice</string>
+    <string name="unfolded_bottom_padding_scale">Otklopljena donja podstava</string>
+    <string name="unfolded_split_keyboard">Razdvojena tipkovnica kada je rasklopljena</string>
+    <string name="unfolded_split_spacer_scale">Otklopljena podijeljena razmaknica</string>
 </resources>

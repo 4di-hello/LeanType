@@ -1793,4 +1793,10 @@ Metin düzeltme ve yeniden yazma için cihaz üzerinde GGUF / llama.cpp çıkar�
     <string name="fine_tune_swipes_summary">Dikey kaydırma eylemlerini, kaydırma mesafelerini, hassasiyeti ve dokunmatik yüzey ayarlarını yapılandırın</string>
     <string name="fine_tune_advanced_title">Fiziksel klavyelere ince ayar yapın ve deneysel</string>
     <string name="fine_tune_advanced_summary">Donanım klavye düzenlerini, URL algılamayı ve deneysel bayrakları yapılandırma</string>
+    <string name="fine_tune_foldable_title">Katlanabilir ve geniş ekran</string>
+    <string name="fine_tune_foldable_summary">Açıldığında klavye yüksekliğini, bölünmüş düzeni ve dolguyu yapılandırın</string>
+    <string name="unfolded_keyboard_height_scale">Açılmış klavye yüksekliği</string>
+    <string name="unfolded_bottom_padding_scale">Açılmış alt dolgu</string>
+    <string name="unfolded_split_keyboard">Açıldığında klavyeyi bölme</string>
+    <string name="unfolded_split_spacer_scale">Açılmış bölünmüş aralayıcı ölçeği</string>
 </resources>

@@ -1792,4 +1792,10 @@ Võimaldab seadmesisese GGUF / llama.cpp järelduse korrektuuri ja ümbersõnast
     <string name="fine_tune_swipes_summary">Konfigureerige vertikaalsed pühkimistoimingud, pühkimiskaugused, tundlikkus ja puuteplaadi seaded</string>
     <string name="fine_tune_advanced_title">Füüsiliste ja eksperimentaalsete klaviatuuride peenhäälestus</string>
     <string name="fine_tune_advanced_summary">Konfigureerige riistvara klaviatuuripaigutusi, URL-i tuvastamist ja eksperimentaalseid lippe</string>
+    <string name="fine_tune_foldable_title">Kokkupandav ja suur ekraan</string>
+    <string name="fine_tune_foldable_summary">Konfigureerige klaviatuuri kõrgust, poolitatud paigutust ja polsterdust lahtivoldituna</string>
+    <string name="unfolded_keyboard_height_scale">Kokkupandamata klaviatuuri kõrgus</string>
+    <string name="unfolded_bottom_padding_scale">Voldimata põhja polsterdus</string>
+    <string name="unfolded_split_keyboard">Lahtipanemisel poolitatud klaviatuur</string>
+    <string name="unfolded_split_spacer_scale">Kokkuvoldimata split spacer skaala</string>
 </resources>

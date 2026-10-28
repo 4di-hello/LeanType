@@ -1815,4 +1815,10 @@ Habilita inferência GGUF / llama.cpp no dispositivo para revisão e reescrita.<
     <string name="fine_tune_swipes_summary">Configure ações de deslizamento vertical, distâncias de deslizamento, sensibilidade e configurações do touchpad</string>
     <string name="fine_tune_advanced_title">Ajuste teclados físicos e experimentais</string>
     <string name="fine_tune_advanced_summary">Configurar layouts de teclado de hardware, detecção de URL e sinalizadores experimentais</string>
+    <string name="fine_tune_foldable_title">Tela dobrável e grande</string>
+    <string name="fine_tune_foldable_summary">Configure a altura do teclado, o layout dividido e o preenchimento quando desdobrado</string>
+    <string name="unfolded_keyboard_height_scale">Altura do teclado desdobrado</string>
+    <string name="unfolded_bottom_padding_scale">Preenchimento inferior desdobrado</string>
+    <string name="unfolded_split_keyboard">Teclado dividido quando desdobrado</string>
+    <string name="unfolded_split_spacer_scale">Escala espaçadora dividida desdobrada</string>
 </resources>

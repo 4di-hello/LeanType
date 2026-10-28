@@ -1792,4 +1792,10 @@ Activează inferența GGUF / llama.cpp pe dispozitiv pentru corectură și refor
     <string name="fine_tune_swipes_summary">Configurați acțiunile de glisare verticală, distanțele de glisare, sensibilitatea și setările touchpadului</string>
     <string name="fine_tune_advanced_title">Ajustați tastaturile fizice și experimentale</string>
     <string name="fine_tune_advanced_summary">Configurați aspectul tastaturii hardware, detectarea URL-urilor și semnalizatoarele experimentale</string>
+    <string name="fine_tune_foldable_title">Display pliabil și mare</string>
+    <string name="fine_tune_foldable_summary">Configurați înălțimea tastaturii, aspectul împărțit și umplutura atunci când este desfășurată</string>
+    <string name="unfolded_keyboard_height_scale">Înălțimea tastaturii deschise</string>
+    <string name="unfolded_bottom_padding_scale">Captuseala inferioara desfasurata</string>
+    <string name="unfolded_split_keyboard">Împărțiți tastatura când este desfășurată</string>
+    <string name="unfolded_split_spacer_scale">Scală distanțier desfăcută</string>
 </resources>

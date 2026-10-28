@@ -1854,4 +1854,10 @@
     <string name="fine_tune_swipes_summary">عمودی سوائپ ایکشنز، سوائپ فاصلے، حساسیت، اور ٹچ پیڈ کی ترتیبات کو ترتیب دیں</string>
     <string name="fine_tune_advanced_title">فزیکل کی بورڈز کو ٹھیک بنائیں اور تجرباتی</string>
     <string name="fine_tune_advanced_summary">ہارڈ ویئر کی بورڈ لے آؤٹ، یو آر ایل کا پتہ لگانے، اور تجرباتی جھنڈوں کو ترتیب دیں۔</string>
+    <string name="fine_tune_foldable_title">فولڈ ایبل اور بڑا ڈسپلے</string>
+    <string name="fine_tune_foldable_summary">کھولے جانے پر کی بورڈ کی اونچائی، اسپلٹ لے آؤٹ، اور پیڈنگ کو ترتیب دیں۔</string>
+    <string name="unfolded_keyboard_height_scale">کھولی ہوئی کی بورڈ کی اونچائی</string>
+    <string name="unfolded_bottom_padding_scale">کھولی ہوئی نیچے کی پیڈنگ</string>
+    <string name="unfolded_split_keyboard">کھولنے پر کی بورڈ کو تقسیم کریں۔</string>
+    <string name="unfolded_split_spacer_scale">کھولا ہوا اسپلٹ اسپیسر اسکیل</string>
 </resources>

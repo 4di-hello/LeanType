@@ -1796,4 +1796,10 @@ Permite la inferencia GGUF / llama.cpp en el dispositivo para corrección y rees
     <string name="fine_tune_swipes_summary">Configure acciones de deslizamiento vertical, distancias de deslizamiento, sensibilidad y ajustes del panel táctil</string>
     <string name="fine_tune_advanced_title">Afinar teclados físicos y experimentales.</string>
     <string name="fine_tune_advanced_summary">Configure diseños de teclado de hardware, detección de URL e indicadores experimentales</string>
+    <string name="fine_tune_foldable_title">Pantalla plegable y grande</string>
+    <string name="fine_tune_foldable_summary">Configure la altura del teclado, el diseño dividido y el relleno cuando esté desplegado</string>
+    <string name="unfolded_keyboard_height_scale">Altura del teclado desplegado</string>
+    <string name="unfolded_bottom_padding_scale">Acolchado inferior desplegado</string>
+    <string name="unfolded_split_keyboard">Teclado dividido cuando está desplegado</string>
+    <string name="unfolded_split_spacer_scale">Escala espaciadora dividida desplegada</string>
 </resources>

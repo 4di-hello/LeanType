@@ -1793,4 +1793,10 @@ Ar norite atnaujinti?</string>
     <string name="fine_tune_swipes_summary">Konfigūruokite vertikalaus braukimo veiksmus, braukimo atstumus, jautrumą ir jutiklinės dalies nustatymus</string>
     <string name="fine_tune_advanced_title">Tiksliai sureguliuokite fizines ir eksperimentines klaviatūras</string>
     <string name="fine_tune_advanced_summary">Konfigūruokite aparatinės įrangos klaviatūros išdėstymus, URL aptikimą ir eksperimentines vėliavėles</string>
+    <string name="fine_tune_foldable_title">Sulankstomas ir didelis ekranas</string>
+    <string name="fine_tune_foldable_summary">Konfigūruokite klaviatūros aukštį, padalintą išdėstymą ir užpildymą išskleidus</string>
+    <string name="unfolded_keyboard_height_scale">Išskleistos klaviatūros aukštis</string>
+    <string name="unfolded_bottom_padding_scale">Išskleistas apatinis paminkštinimas</string>
+    <string name="unfolded_split_keyboard">Išskleista klaviatūra padalinta</string>
+    <string name="unfolded_split_spacer_scale">Išskleista padalinta tarpinė skalė</string>
 </resources>

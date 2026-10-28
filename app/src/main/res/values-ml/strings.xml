@@ -1863,4 +1863,10 @@
     <string name="fine_tune_swipes_summary">ലംബമായ സ്വൈപ്പ് പ്രവർത്തനങ്ങൾ, സ്വൈപ്പ് ദൂരങ്ങൾ, സെൻസിറ്റിവിറ്റി, ടച്ച്പാഡ് ക്രമീകരണങ്ങൾ എന്നിവ കോൺഫിഗർ ചെയ്യുക</string>
     <string name="fine_tune_advanced_title">ഫിസിക്കൽ കീബോർഡുകളും പരീക്ഷണാത്മകവും മികച്ചതാക്കുക</string>
     <string name="fine_tune_advanced_summary">ഹാർഡ്‌വെയർ കീബോർഡ് ലേഔട്ടുകൾ, URL കണ്ടെത്തൽ, പരീക്ഷണാത്മക ഫ്ലാഗുകൾ എന്നിവ കോൺഫിഗർ ചെയ്യുക</string>
+    <string name="fine_tune_foldable_title">മടക്കാവുന്നതും വലുതുമായ ഡിസ്‌പ്ലേ</string>
+    <string name="fine_tune_foldable_summary">കീബോർഡ് ഉയരം, സ്പ്ലിറ്റ് ലേഔട്ട്, തുറക്കുമ്പോൾ പാഡിംഗ് എന്നിവ ക്രമീകരിക്കുക</string>
+    <string name="unfolded_keyboard_height_scale">മടക്കാത്ത കീബോർഡ് ഉയരം</string>
+    <string name="unfolded_bottom_padding_scale">മടക്കാത്ത താഴെയുള്ള പാഡിംഗ്</string>
+    <string name="unfolded_split_keyboard">തുറക്കുമ്പോൾ കീബോർഡ് വിഭജിക്കുക</string>
+    <string name="unfolded_split_spacer_scale">അൺഫോൾഡ് സ്പ്ലിറ്റ് സ്‌പെയ്‌സർ സ്കെയിൽ</string>
 </resources>

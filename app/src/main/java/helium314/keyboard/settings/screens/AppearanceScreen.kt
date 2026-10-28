@@ -71,10 +71,11 @@ fun AppearanceScreen(
     val fineTuneThemeExpanded = prefs.getBoolean(Settings.PREF_EXPAND_FINE_TUNE_THEME, Defaults.PREF_EXPAND_FINE_TUNE_THEME)
     val fineTuneKeyPreviewsExpanded = prefs.getBoolean(Settings.PREF_EXPAND_FINE_TUNE_KEY_PREVIEWS, Defaults.PREF_EXPAND_FINE_TUNE_KEY_PREVIEWS)
     val fineTuneKeyboardLayoutExpanded = prefs.getBoolean(Settings.PREF_EXPAND_FINE_TUNE_KEYBOARD_LAYOUT, Defaults.PREF_EXPAND_FINE_TUNE_KEYBOARD_LAYOUT)
+    val fineTuneFoldableExpanded = prefs.getBoolean(Settings.PREF_EXPAND_FINE_TUNE_FOLDABLE, Defaults.PREF_EXPAND_FINE_TUNE_FOLDABLE)
 
     val items = remember(
         dayNightMode, themeBordersEnabled, popupOnEnabled, showHintsEnabled, narrowGapsEnabled, splitEnabled,
-        fineTuneThemeExpanded, fineTuneKeyPreviewsExpanded, fineTuneKeyboardLayoutExpanded, prefChanged.value
+        fineTuneThemeExpanded, fineTuneKeyPreviewsExpanded, fineTuneKeyboardLayoutExpanded, fineTuneFoldableExpanded, prefChanged.value
     ) {
         listOf(
             // Theme
@@ -127,7 +128,12 @@ fun AppearanceScreen(
             SettingsWithoutKey.CUSTOM_EMOJI_FONT,
             Settings.PREF_SPACE_BAR_TEXT,
             Settings.PREF_ENABLE_SPLIT_KEYBOARD,
-            Settings.PREF_FOLDABLE_MODE,
+            Settings.PREF_EXPAND_FINE_TUNE_FOLDABLE,
+            if (fineTuneFoldableExpanded) Settings.PREF_FOLDABLE_MODE else null,
+            if (fineTuneFoldableExpanded) Settings.PREF_UNFOLDED_KEYBOARD_HEIGHT_SCALE_PREFIX else null,
+            if (fineTuneFoldableExpanded) Settings.PREF_ENABLE_SPLIT_KEYBOARD_UNFOLDED else null,
+            if (fineTuneFoldableExpanded) Settings.PREF_UNFOLDED_SPLIT_SPACER_SCALE_PREFIX else null,
+            if (fineTuneFoldableExpanded) Settings.PREF_UNFOLDED_BOTTOM_PADDING_SCALE_PREFIX else null,
             Settings.PREF_EXPAND_FINE_TUNE_KEYBOARD_LAYOUT,
             if (fineTuneKeyboardLayoutExpanded) Settings.PREF_BOTTOM_PADDING_SCALE_PREFIX else null,
             if (fineTuneKeyboardLayoutExpanded) Settings.PREF_SIDE_PADDING_SCALE_PREFIX else null,
@@ -364,11 +370,49 @@ fun createAppearanceSettings(context: Context) = listOf(
     Setting(context, Settings.PREF_ENABLE_SPLIT_KEYBOARD, R.string.enable_split_keyboard) {
         SwitchPreference(it, Defaults.PREF_ENABLE_SPLIT_KEYBOARD) { KeyboardSwitcher.getInstance().reloadKeyboard() }
     },
+    Setting(context, Settings.PREF_EXPAND_FINE_TUNE_FOLDABLE,
+        R.string.fine_tune_foldable_title, R.string.fine_tune_foldable_summary
+    ) {
+        ExpandablePreference(it, Defaults.PREF_EXPAND_FINE_TUNE_FOLDABLE)
+    },
     Setting(context, Settings.PREF_FOLDABLE_MODE, R.string.pref_foldable_mode_title, R.string.pref_foldable_mode_summary) {
         SwitchPreference(it, false) {
             helium314.keyboard.latin.utils.ScreenProfileProvider.invalidateCache()
             KeyboardSwitcher.getInstance().reloadKeyboard()
         }
+    },
+    Setting(context, Settings.PREF_UNFOLDED_KEYBOARD_HEIGHT_SCALE_PREFIX, R.string.unfolded_keyboard_height_scale) { setting ->
+        MultiSliderPreference(
+            name = setting.title,
+            baseKey = setting.key,
+            dimensions = listOf(stringResource(R.string.landscape)),
+            defaults = Defaults.PREF_UNFOLDED_KEYBOARD_HEIGHT_SCALE,
+            range = 0.3f..1.5f,
+            description = { "${(100 * it).roundToInt()}%" }
+        ) { KeyboardSwitcher.getInstance().setThemeNeedsReload() }
+    },
+    Setting(context, Settings.PREF_ENABLE_SPLIT_KEYBOARD_UNFOLDED, R.string.unfolded_split_keyboard) {
+        SwitchPreference(it, Defaults.PREF_ENABLE_SPLIT_KEYBOARD_UNFOLDED) { KeyboardSwitcher.getInstance().reloadKeyboard() }
+    },
+    Setting(context, Settings.PREF_UNFOLDED_SPLIT_SPACER_SCALE_PREFIX, R.string.unfolded_split_spacer_scale) { setting ->
+        MultiSliderPreference(
+            name = setting.title,
+            baseKey = setting.key,
+            dimensions = listOf(stringResource(R.string.landscape)),
+            defaults = Defaults.PREF_SPLIT_SPACER_SCALE,
+            range = 0.5f..2f,
+            description = { "${(100 * it).roundToInt()}%" }
+        ) { KeyboardSwitcher.getInstance().setThemeNeedsReload() }
+    },
+    Setting(context, Settings.PREF_UNFOLDED_BOTTOM_PADDING_SCALE_PREFIX, R.string.unfolded_bottom_padding_scale) { setting ->
+        MultiSliderPreference(
+            name = setting.title,
+            baseKey = setting.key,
+            dimensions = listOf(stringResource(R.string.landscape)),
+            defaults = Defaults.PREF_UNFOLDED_BOTTOM_PADDING_SCALE,
+            range = 0f..5f,
+            description = { "${(100 * it).roundToInt()}%" }
+        ) { KeyboardSwitcher.getInstance().setThemeNeedsReload() }
     },
     Setting(context, Settings.PREF_SHOW_HINTS, R.string.show_hints, R.string.show_hints_summary) {
         SwitchPreference(it, Defaults.PREF_SHOW_HINTS) { KeyboardSwitcher.getInstance().reloadKeyboard() }

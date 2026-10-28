@@ -1847,4 +1847,10 @@ Umożliwia lokalne wnioskowanie GGUF / llama.cpp na urządzeniu w celu korekty i
     <string name="fine_tune_swipes_summary">Skonfiguruj czynności przesuwania w pionie, odległości przesuwania, czułość i ustawienia touchpada</string>
     <string name="fine_tune_advanced_title">Dostosuj klawiatury fizyczne i eksperymentalne</string>
     <string name="fine_tune_advanced_summary">Skonfiguruj układy klawiatury sprzętowej, wykrywanie adresów URL i flagi eksperymentalne</string>
+    <string name="fine_tune_foldable_title">Składany i duży wyświetlacz</string>
+    <string name="fine_tune_foldable_summary">Skonfiguruj wysokość klawiatury, układ podziału i wyściółkę po rozłożeniu</string>
+    <string name="unfolded_keyboard_height_scale">Wysokość klawiatury po rozłożeniu</string>
+    <string name="unfolded_bottom_padding_scale">Rozłożona dolna wyściółka</string>
+    <string name="unfolded_split_keyboard">Dzielona klawiatura po rozłożeniu</string>
+    <string name="unfolded_split_spacer_scale">Rozłożona, dzielona skala dystansowa</string>
 </resources>

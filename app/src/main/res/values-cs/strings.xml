@@ -1810,4 +1810,10 @@ Umožňuje lokální inferenci GGUF / llama.cpp na zařízení pro korektury a p
     <string name="fine_tune_swipes_summary">Nakonfigurujte akce svislého přejetí, vzdálenosti přejetí, citlivost a nastavení touchpadu</string>
     <string name="fine_tune_advanced_title">Dolaďte fyzické klávesnice a experimentální</string>
     <string name="fine_tune_advanced_summary">Konfigurace rozložení hardwarové klávesnice, detekce URL a experimentální příznaky</string>
+    <string name="fine_tune_foldable_title">Skládací a velký displej</string>
+    <string name="fine_tune_foldable_summary">Nakonfigurujte výšku klávesnice, rozdělení rozložení a odsazení při rozloženém stavu</string>
+    <string name="unfolded_keyboard_height_scale">Výška rozložené klávesnice</string>
+    <string name="unfolded_bottom_padding_scale">Rozložené spodní polstrování</string>
+    <string name="unfolded_split_keyboard">Rozdělená klávesnice při rozložení</string>
+    <string name="unfolded_split_spacer_scale">Rozložená dělená distanční stupnice</string>
 </resources>

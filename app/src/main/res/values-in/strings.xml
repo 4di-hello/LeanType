@@ -1760,4 +1760,10 @@ Memungkinkan inferensi GGUF / llama.cpp di perangkat untuk koreksi teks dan penu
     <string name="fine_tune_swipes_summary">Konfigurasikan tindakan gesek vertikal, jarak gesek, sensitivitas, dan pengaturan panel sentuh</string>
     <string name="fine_tune_advanced_title">Sempurnakan keyboard fisik dan eksperimental</string>
     <string name="fine_tune_advanced_summary">Konfigurasikan tata letak keyboard perangkat keras, deteksi URL, dan tanda eksperimental</string>
+    <string name="fine_tune_foldable_title">Layar lipat &amp; besar</string>
+    <string name="fine_tune_foldable_summary">Konfigurasikan tinggi keyboard, tata letak terpisah, dan bantalan saat dibuka</string>
+    <string name="unfolded_keyboard_height_scale">Ketinggian keyboard terbuka</string>
+    <string name="unfolded_bottom_padding_scale">Bantalan bawah terbuka</string>
+    <string name="unfolded_split_keyboard">Pisahkan keyboard saat dibuka</string>
+    <string name="unfolded_split_spacer_scale">Skala pengatur jarak terpisah yang terbuka</string>
 </resources>

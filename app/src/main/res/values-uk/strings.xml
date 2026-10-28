@@ -1765,4 +1765,10 @@
     <string name="fine_tune_swipes_summary">Налаштуйте дії вертикального гортання, відстані, чутливість і параметри сенсорної панелі</string>
     <string name="fine_tune_advanced_title">Точне налаштування фізичних і експериментальних клавіатур</string>
     <string name="fine_tune_advanced_summary">Налаштуйте апаратну розкладку клавіатури, виявлення URL-адреси та експериментальні позначки</string>
+    <string name="fine_tune_foldable_title">Складний і великий дисплей</string>
+    <string name="fine_tune_foldable_summary">Налаштуйте висоту клавіатури, розділену розкладку та відступ у розгорнутому стані</string>
+    <string name="unfolded_keyboard_height_scale">Висота клавіатури в розкладеному вигляді</string>
+    <string name="unfolded_bottom_padding_scale">Набивка знизу в розгорнутому вигляді</string>
+    <string name="unfolded_split_keyboard">Розділена клавіатура в розкладеному вигляді</string>
+    <string name="unfolded_split_spacer_scale">Розкладена роздільна шкала</string>
 </resources>

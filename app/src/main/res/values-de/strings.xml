@@ -1807,4 +1807,10 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="fine_tune_swipes_summary">Konfigurieren Sie vertikale Wischaktionen, Wischabstände, Empfindlichkeit und Touchpad-Einstellungen</string>
     <string name="fine_tune_advanced_title">Feinabstimmung physischer und experimenteller Tastaturen</string>
     <string name="fine_tune_advanced_summary">Konfigurieren Sie Hardware-Tastaturlayouts, URL-Erkennung und experimentelle Flags</string>
+    <string name="fine_tune_foldable_title">Zusammenklappbares und großes Display</string>
+    <string name="fine_tune_foldable_summary">Konfigurieren Sie die Tastaturhöhe, das geteilte Layout und die Polsterung im aufgeklappten Zustand</string>
+    <string name="unfolded_keyboard_height_scale">Höhe der ausgeklappten Tastatur</string>
+    <string name="unfolded_bottom_padding_scale">Aufgeklappte Bodenpolsterung</string>
+    <string name="unfolded_split_keyboard">Geteilte Tastatur im aufgeklappten Zustand</string>
+    <string name="unfolded_split_spacer_scale">Aufgeklappte, geteilte Distanzskala</string>
 </resources>

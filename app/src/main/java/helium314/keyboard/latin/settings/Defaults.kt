@@ -92,6 +92,8 @@ object Defaults {
     const val PREF_EXPAND_FINE_TUNE_THEME = false
     const val PREF_EXPAND_FINE_TUNE_KEY_PREVIEWS = false
     const val PREF_EXPAND_FINE_TUNE_KEYBOARD_LAYOUT = false
+    const val PREF_EXPAND_FINE_TUNE_FOLDABLE = false
+    const val PREF_FOLDABLE_MODE = false
     const val PREF_EXPAND_FINE_TUNE_HAPTICS = false
     const val PREF_EXPAND_FINE_TUNE_ADDITIONAL_KEYS = false
     const val PREF_EXPAND_FINE_TUNE_CLIPBOARD = false
@@ -135,7 +137,10 @@ object Defaults {
     const val PREF_DISABLE_MULTI_WORD_SUGGESTIONS = false
     val PREF_SPLIT_SPACER_SCALE = Array(2) { DEFAULT_SIZE_SCALE }
     val PREF_KEYBOARD_HEIGHT_SCALE = arrayOf(0.77f, 0.45f)
+    val PREF_UNFOLDED_KEYBOARD_HEIGHT_SCALE = arrayOf(0.65f, 0.40f)
     val PREF_BOTTOM_PADDING_SCALE = arrayOf(1.05f, 0f)
+    val PREF_UNFOLDED_BOTTOM_PADDING_SCALE = arrayOf(0.5f, 0f)
+    const val PREF_ENABLE_SPLIT_KEYBOARD_UNFOLDED = true
     val PREF_SIDE_PADDING_SCALE = Array(4) { 0.15f }
     const val PREF_FONT_SCALE = 0.85f
     const val PREF_SECONDARY_FONT_SCALE = 1.0f
