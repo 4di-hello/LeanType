@@ -667,6 +667,7 @@ class InputLogic(
         val targetPackage = targetEditorInfo?.packageName
         val targetFieldId = targetEditorInfo?.fieldId
 
+        helium314.keyboard.latin.suggestions.nextLoadingKey = helium314.keyboard.latin.utils.ToolbarKey.PROOFREAD
         ProofreadHelper.proofreadAsync(
             mLatinIME,
             textToProofread,
@@ -760,6 +761,7 @@ class InputLogic(
         val targetPackage = targetEditorInfo?.packageName
         val targetFieldId = targetEditorInfo?.fieldId
 
+        helium314.keyboard.latin.suggestions.nextLoadingKey = helium314.keyboard.latin.utils.ToolbarKey.TRANSLATE
         ProofreadHelper.translateAsync(
             mLatinIME,
             textToTranslate,
@@ -3300,6 +3302,8 @@ class InputLogic(
         val targetPackage = targetEditorInfo?.packageName
         val targetFieldId = targetEditorInfo?.fieldId
 
+        helium314.keyboard.latin.suggestions.nextLoadingKey =
+            helium314.keyboard.latin.utils.ToolbarKey.entries.firstOrNull { it.name == "CUSTOM_AI_$index" }
         ProofreadHelper.customAsync(
             mLatinIME,
             textToProcess, prompt, hasSelection, showThinking,
