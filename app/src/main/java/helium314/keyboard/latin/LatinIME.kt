@@ -27,6 +27,7 @@ import android.util.Printer
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.view.WindowManager
 import android.view.inputmethod.CompletionInfo
 import android.view.inputmethod.EditorInfo
@@ -230,7 +231,12 @@ class LatinIME : InputMethodService(),
         voicePluginManager = vpm
         voiceInputManager = VoiceInputManager(this, vpm)
         
+        setTheme(R.style.platformInputMethodTheme)
         super.onCreate()
+        window?.window?.let { win ->
+            win.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            win.setWindowAnimations(0)
+        }
 
         loadSettings()
         settings.startListener()
@@ -968,9 +974,18 @@ class LatinIME : InputMethodService(),
         if (TRACE) Debug.startMethodTracing("/data/trace/latinime")
     }
 
+    override fun onConfigureWindow(win: Window, isFullscreen: Boolean, isCandidatesOnly: Boolean) {
+        super.onConfigureWindow(win, isFullscreen, isCandidatesOnly)
+        win.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        win.setWindowAnimations(0)
+    }
+
     override fun onWindowShown() {
         super.onWindowShown()
-        window?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        window?.window?.let { win ->
+            win.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            win.setWindowAnimations(0)
+        }
         clipboardHistoryManager.onPrimaryClipChanged()
         val isFloating = FloatingKeyboardManager.isFloatingMode(displayContext ?: this)
         if (isFloating) {
