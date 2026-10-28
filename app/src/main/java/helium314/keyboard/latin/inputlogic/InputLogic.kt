@@ -1978,24 +1978,51 @@ class InputLogic(
         val typedWordOnShiftPress = mTypedWordOnShiftPress
         mTypedWordOnShiftPress = null
         if (!settingsValues.mShiftRecapitalizesWord) return false
-        if (mConnection.hasSelection() || !mWordComposer.isComposingWord()
-            || mWordComposer.isCursorFrontOrMiddleOfComposingWord()) return false
-        val typedWord = mWordComposer.getTypedWord()
-        // the word changed while shift was held: shift was used for typing an upper case letter
-        if (typedWord != typedWordOnShiftPress) return false
-        val wordStart = mConnection.expectedSelectionEnd - typedWord.length
-        if (typedWord.isEmpty() || wordStart < 0) return false
+        if (mConnection.hasSelection()) return false
+
+        val isComposing = mWordComposer.isComposingWord()
+        if (isComposing && mWordComposer.isCursorFrontOrMiddleOfComposingWord()) return false
+
+        val targetWord: String
+        val wordStart: Int
+        val deleteLength: Int
+
+        if (isComposing) {
+            targetWord = mWordComposer.getTypedWord()
+            if (targetWord != typedWordOnShiftPress) return false
+            wordStart = mConnection.expectedSelectionEnd - targetWord.length
+            deleteLength = 0
+        } else {
+            if (typedWordOnShiftPress.isNullOrEmpty()) return false
+            val wordLen = typedWordOnShiftPress.length
+            val expectedEnd = mConnection.expectedSelectionEnd
+            val hasTrailingSpace = mSpaceState == SpaceState.DOUBLE ||
+                (mSpaceState == SpaceState.PHANTOM && mConnection.codePointBeforeCursor == Constants.CODE_SPACE)
+            val trailingOffset = if (hasTrailingSpace) 1 else 0
+            val textBefore = mConnection.getTextBeforeCursor(wordLen + trailingOffset, 0)?.toString() ?: return false
+            val actualWord = if (trailingOffset > 0 && textBefore.endsWith(" ")) {
+                textBefore.substring(0, textBefore.length - 1)
+            } else {
+                textBefore
+            }
+            if (!actualWord.endsWith(typedWordOnShiftPress)) return false
+            targetWord = typedWordOnShiftPress
+            wordStart = expectedEnd - wordLen - trailingOffset
+            deleteLength = wordLen + trailingOffset
+        }
+
+        if (targetWord.isEmpty() || wordStart < 0) return false
         mRecapitalizeStatus.enable()
         if (!isRecapitalizingComposingWord()) {
             mRecapitalizeStatus.start(
-                typedWord, wordStart, settingsValues.mLocale,
+                targetWord, wordStart, settingsValues.mLocale,
                 settingsValues.mSpacingAndPunctuations.mSortedWordSeparators
             )
             if (!mRecapitalizeStatus.isStarted()) return false
         }
         mRecapitalizeStatus.rotate()
         val replacement = mRecapitalizeStatus.textReplacement().text
-        if (replacement == typedWord) {
+        if (replacement == targetWord) {
             // nothing to change (e.g. no letters), let shift do its normal work
             mRecapitalizeStatus.stop()
             return false
@@ -2004,14 +2031,19 @@ class InputLogic(
         // keys are found by their lower case letter, upper case letters would have no position
         val coordinates = mLatinIME.getCoordinatesForCurrentKeyboard(codePoints.map { Character.toLowerCase(it) }.toIntArray())
         // still the typed word, not one from existing text: suggestions and auto-correction as before the shift
-        val wasResumed = mWordComposer.isResumed()
+        val wasResumed = if (isComposing) mWordComposer.isResumed() else false
         mConnection.beginBatchEdit()
         try {
+            if (deleteLength > 0) {
+                mConnection.deleteTextBeforeCursor(deleteLength)
+            }
             mWordComposer.setComposingWord(codePoints, coordinates, isResumed = wasResumed)
             setComposingTextInternal(replacement, 1)
         } finally {
             mConnection.endBatchEdit()
         }
+        mSpaceState = SpaceState.NONE
+        mLastComposedWord = LastComposedWord.NOT_A_COMPOSED_WORD
         // typing should continue in the same case: caps lock for an upper case word, lower case otherwise
         mCapsLockFromRecapitalize = mRecapitalizeStatus.getCurrentMode() == RecapitalizeMode.ALL_UPPER
         KeyboardSwitcher.getInstance().setCapsLock(mCapsLockFromRecapitalize)
@@ -2020,7 +2052,14 @@ class InputLogic(
 
     /** To be called when the shift key is pressed down, necessary for [recapitalizeComposingWord]. */
     fun onShiftKeyPressed() {
-        mTypedWordOnShiftPress = if (mWordComposer.isComposingWord()) mWordComposer.getTypedWord() else null
+        mTypedWordOnShiftPress = if (mWordComposer.isComposingWord()) {
+            mWordComposer.getTypedWord()
+        } else if (mLastComposedWord.isActive && mLastComposedWord.mCommittedWord.isNotEmpty()) {
+            mLastComposedWord.mCommittedWord.toString()
+        } else {
+            val range = mConnection.getWordRangeAtCursor(Settings.getValues().mSpacingAndPunctuations, Settings.getValues().mCurrentKeyboardScript)
+            range?.mWord?.toString()
+        }
     }
 
     /** whether the last recapitalization was done by [recapitalizeComposingWord] and the word is unchanged since */
@@ -2240,7 +2279,7 @@ class InputLogic(
                 return
             }
         }
-        if (suggestions.size <= 1) {
+        if (range.getNumberOfCharsInWordAfterCursor() == 0 || suggestions.size <= 1) {
             mInputLogicHandler.getSuggestedWords {
                 getSuggestedWords(
                     SuggestedWords.INPUT_STYLE_TYPING,

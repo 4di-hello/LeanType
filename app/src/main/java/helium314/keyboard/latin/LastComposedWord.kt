@@ -29,6 +29,7 @@ class LastComposedWord(
     val mInputPointers: InputPointers = InputPointers(DecoderSpecificConstants.DICTIONARY_MAX_WORD_LENGTH)
 
     private var mActive: Boolean = true
+    val isActive: Boolean get() = mActive
 
     init {
         if (inputPointers != null) {

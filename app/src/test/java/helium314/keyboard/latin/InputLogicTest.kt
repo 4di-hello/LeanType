@@ -439,6 +439,22 @@ class InputLogicTest {
         assertEquals("leanT", composingText)
     }
 
+    @Test fun `shift on a word chosen from suggestions rotates capitalization`() {
+        reset()
+        latinIME.prefs().edit { putBoolean(Settings.PREF_SHIFT_RECAPITALIZES_WORD, true) }
+        chainInput("hel")
+        pickSuggestion("hello")
+        shiftTap()
+        assertEquals("Hello", text)
+        assertEquals("Hello", composingText)
+        shiftTap()
+        assertEquals("HELLO", text)
+        assertEquals("HELLO", composingText)
+        shiftTap()
+        assertEquals("hello", text)
+        assertEquals("hello", composingText)
+    }
+
     @Test fun delete() {
         reset()
         setText("hello there ")
