@@ -93,7 +93,6 @@ object Defaults {
     const val PREF_EXPAND_FINE_TUNE_KEY_PREVIEWS = false
     const val PREF_EXPAND_FINE_TUNE_KEYBOARD_LAYOUT = false
     const val PREF_EXPAND_FINE_TUNE_FOLDABLE = false
-    const val PREF_FOLDABLE_MODE = false
     const val PREF_EXPAND_FINE_TUNE_HAPTICS = false
     const val PREF_EXPAND_FINE_TUNE_ADDITIONAL_KEYS = false
     const val PREF_EXPAND_FINE_TUNE_CLIPBOARD = false

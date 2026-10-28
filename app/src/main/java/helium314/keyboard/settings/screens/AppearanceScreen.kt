@@ -129,7 +129,6 @@ fun AppearanceScreen(
             Settings.PREF_SPACE_BAR_TEXT,
             Settings.PREF_ENABLE_SPLIT_KEYBOARD,
             Settings.PREF_EXPAND_FINE_TUNE_FOLDABLE,
-            if (fineTuneFoldableExpanded) Settings.PREF_FOLDABLE_MODE else null,
             if (fineTuneFoldableExpanded) Settings.PREF_UNFOLDED_KEYBOARD_HEIGHT_SCALE_PREFIX else null,
             if (fineTuneFoldableExpanded) Settings.PREF_ENABLE_SPLIT_KEYBOARD_UNFOLDED else null,
             if (fineTuneFoldableExpanded) Settings.PREF_UNFOLDED_SPLIT_SPACER_SCALE_PREFIX else null,
@@ -374,12 +373,6 @@ fun createAppearanceSettings(context: Context) = listOf(
         R.string.fine_tune_foldable_title, R.string.fine_tune_foldable_summary
     ) {
         ExpandablePreference(it, Defaults.PREF_EXPAND_FINE_TUNE_FOLDABLE)
-    },
-    Setting(context, Settings.PREF_FOLDABLE_MODE, R.string.pref_foldable_mode_title, R.string.pref_foldable_mode_summary) {
-        SwitchPreference(it, false) {
-            helium314.keyboard.latin.utils.ScreenProfileProvider.invalidateCache()
-            KeyboardSwitcher.getInstance().reloadKeyboard()
-        }
     },
     Setting(context, Settings.PREF_UNFOLDED_KEYBOARD_HEIGHT_SCALE_PREFIX, R.string.unfolded_keyboard_height_scale) { setting ->
         MultiSliderPreference(

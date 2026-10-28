@@ -4,6 +4,7 @@ package helium314.keyboard.latin.utils
 import android.content.Context
 import android.content.res.Configuration
 import android.util.Log
+import androidx.annotation.VisibleForTesting
 import kotlin.math.roundToInt
 
 import helium314.keyboard.latin.settings.Settings
@@ -20,6 +21,22 @@ enum class ScreenProfile {
 object ScreenProfileProvider {
     private var cachedProfile: ScreenProfile? = null
     private var cachedConfigHash: Int = 0
+    private var isFoldableDeviceCached: Boolean? = null
+
+    @VisibleForTesting
+    var isFoldableDeviceOverride: Boolean? = null
+
+    fun isFoldableDevice(context: Context): Boolean {
+        isFoldableDeviceOverride?.let { return it }
+        isFoldableDeviceCached?.let { return it }
+        val hasHingeSensor = try {
+            context.packageManager.hasSystemFeature("android.hardware.sensor.hinge_angle")
+        } catch (_: Exception) {
+            false
+        }
+        isFoldableDeviceCached = hasHingeSensor
+        return hasHingeSensor
+    }
 
     @JvmOverloads
     fun getScreenProfile(
@@ -41,10 +58,11 @@ object ScreenProfileProvider {
         val availableHeightDp = if (config.screenHeightDp > 0) config.screenHeightDp else if (density > 0f) (heightPx / density).roundToInt() else 0
 
         val isBothDimensionsLarge = availableWidthDp >= 600 && availableHeightDp >= 600
-        val isFoldableModeEnabled = settingsValues?.mFoldableMode
-            ?: context.prefs().getBoolean(Settings.PREF_FOLDABLE_MODE, false)
+        val isFoldable = isFoldableDevice(context)
 
-        if (!isFoldableModeEnabled && !isBothDimensionsLarge) {
+        // For regular candybar phones in landscape: availableWidthDp may be >= 600,
+        // but availableHeightDp is < 600 and the device is neither a foldable nor tablet.
+        if (!isFoldable && !isBothDimensionsLarge) {
             return ScreenProfile.COMPACT
         }
 
@@ -65,5 +83,7 @@ object ScreenProfileProvider {
     fun invalidateCache() {
         cachedProfile = null
         cachedConfigHash = 0
+        isFoldableDeviceCached = null
+        isFoldableDeviceOverride = null
     }
 }
