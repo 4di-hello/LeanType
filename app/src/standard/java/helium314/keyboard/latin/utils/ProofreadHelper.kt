@@ -535,6 +535,7 @@ object ProofreadHelper {
         /** the key that started the request, it shows an X while it runs */
         toolbarKey: ToolbarKey? = null,
         @Suppress("UNUSED_PARAMETER") allowEmptyInput: Boolean = false, // online, custom keys always allow an empty input
+        @Suppress("UNUSED_PARAMETER") durationKey: String? = null, // only for the progress of the local AI
         onSuccess: (String) -> Unit,
         onError: (String) -> Unit
     ) {
