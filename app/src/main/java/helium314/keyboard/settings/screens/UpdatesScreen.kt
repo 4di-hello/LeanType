@@ -64,14 +64,14 @@ import helium314.keyboard.settings.updates.AppUpdatesManager
 import kotlinx.coroutines.launch
 
 private val currentChangelogItems = listOf(
-    "• Web & Remote Editors: Permitted keyboard display on active TYPE_NULL fields in browsers and remote IDEs",
-    "• Exact Visual Line Delete Swipe: Used Android 14+ text bounds to track exact visual line wraps and columns",
-    "• Settings Progressive Disclosure: Organized settings with expandable fine-tune sections for simpler navigation",
-    "• Fast Typing Capitalization: Reset shift state on typing to prevent accidental caps lock and preserved initial uppercase",
-    "• Touch Queue & Freeze Fix: Cleared pointer queues and prevented touch dropping and frozen keys on popup dismissal",
-    "• Dynamic Colors Refresh: Re-queried configuration context to immediately apply system Material You color changes",
-    "• Custom Emoji Font Validation: Added glyph compatibility checks on pre-Android 13 devices to prevent blank emoji rendering",
-    "• Complete Translations: 100% translation coverage across all 30 languages for all settings and features"
+    "• Foldable & Tablet Controls: Added display fine-tuning (scale factor, side padding, split gap) with auto-detection",
+    "• Window Focus Retention: Prevented keyboard closing and focus loss on input picker dialogs in web browsers",
+    "• Window Open Flash Fix: Eliminated white/black window background flash on keyboard launch with zero-delay theme",
+    "• Suggestion Recapitalization: Enabled Shift recapitalization on suggestions and restored backspace completions",
+    "• Caps Lock Cold Start Fix: Prevented caps lock state from persisting across cold starts and new input fields",
+    "• Tamil V4 Layout Support: Added Tamil V4 layout option dynamically available across Tamil locales",
+    "• Decoupled Font Scaling: Independent secondary symbol font scaling and fixed slider stepping precision",
+    "• Animation Tightening: Instant key preview feedback with 35ms fade and eliminated view-switching jump"
 )
 
 @Composable

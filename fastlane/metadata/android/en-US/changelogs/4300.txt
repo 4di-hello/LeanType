@@ -1,8 +1,8 @@
-- Fixed keyboard failing to open in web editors, remote IDEs, and TYPE_NULL fields.
-- Added exact visual line delete swipe using Android 14+ text bounds info (#731).
-- Reorganized settings categories with expandable fine-tuning sections for cleaner navigation.
-- Prevented accidental caps lock switch and preserved initial capital on fast typing (#598).
-- Prevented touch dropping, keyboard lockups, and stuck key visuals on popup dismissal (#542).
-- Enabled immediate dynamic Material You theme color updates on Android 12+ (#560).
-- Added glyph validation for custom emoji fonts and fixed blank emoji keyboard (#528).
-- 100% translation coverage across all 30 supported languages.
+- Added foldable and tablet display fine-tuning (scale factor, side padding, split gap) with auto-detection (#400).
+- Prevented keyboard auto-closing and focus loss on input picker dialogs in web browsers.
+- Eliminated white/black window background flash on keyboard open with zero-delay transparent theme.
+- Enabled Shift recapitalization on suggestions and restored backspace completions (#692).
+- Prevented caps lock from persisting on cold start input connections (#743).
+- Added Tamil V4 layout option dynamically available across Tamil locales.
+- Decoupled secondary symbol font scale and fixed slider stepping precision (#589).
+- Tightened key preview animations with 35ms fade and eliminated view-switching jump.
