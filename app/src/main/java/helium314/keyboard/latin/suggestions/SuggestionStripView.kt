@@ -174,6 +174,8 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
         setColor(Color.TRANSPARENT)
     }
     private var isLoadingAnimationActive = false
+    /** thin progress line of the local AI inside the loading border */
+    private val loadingProgressDrawable = LoadingProgressDrawable(resources.displayMetrics.density)
 
     private val keyDimension: Int
         get() {
@@ -660,8 +662,9 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
         if (isLoadingAnimationActive) return
         isLoadingAnimationActive = true
         
-        // Set loading border on the whole toolbar view
-        this.foreground = loadingBorderDrawable
+        // Set loading border on the whole toolbar view, with the progress line inside
+        loadingProgressDrawable.shown = false
+        this.foreground = android.graphics.drawable.LayerDrawable(arrayOf(loadingBorderDrawable, loadingProgressDrawable))
 
         // Change proofread key icon to cancel/close icon
         val closeIcon = KeyboardIconsSet.instance.getNewDrawable(ToolbarKey.CLOSE_HISTORY.name.lowercase(java.util.Locale.US), context)
@@ -676,6 +679,7 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
         
         // Get accent color from theme (GESTURE_TRAIL is the accent color)
         val accentColor = Settings.getValues().mColors.get(ColorType.GESTURE_TRAIL) 
+        loadingProgressDrawable.color = accentColor
         
         // Create pulse animation
         loadingAnimator = ValueAnimator.ofFloat(0.25f, 1f).apply {
@@ -686,9 +690,54 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
                 val alpha = (animator.animatedValue as Float * 255).toInt()
                 val animatedColor = (alpha shl 24) or (accentColor and 0x00FFFFFF)
                 loadingBorderDrawable.setStroke(4, animatedColor)
+                // the line runs back and forth while the remaining time is unknown
+                loadingProgressDrawable.sweep = (animator.animatedValue as Float - 0.25f) / 0.75f
+                if (loadingProgressDrawable.shown && loadingProgressDrawable.progress == null) loadingProgressDrawable.invalidateSelf()
             }
             start()
         }
+    }
+
+    /**
+     * Progress of the local AI as a thin line inside the loading border: [progress] from 0 to 1, or null
+     * if the remaining time is unknown (then a short piece runs back and forth). Not [shown] e.g. while a
+     * translation plugin works.
+     */
+    fun setLoadingProgress(shown: Boolean, progress: Float?) {
+        if (!isLoadingAnimationActive) return
+        loadingProgressDrawable.shown = shown
+        loadingProgressDrawable.progress = progress?.coerceIn(0f, 1f)
+        loadingProgressDrawable.invalidateSelf()
+    }
+
+    private class LoadingProgressDrawable(density: Float) : Drawable() {
+        private val paint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG)
+        private val height = 3 * density
+        private val inset = 6 * density
+        var shown = false
+        var progress: Float? = null
+        var sweep = 0f
+        var color: Int
+            get() = paint.color
+            set(value) { paint.color = value }
+
+        override fun draw(canvas: android.graphics.Canvas) {
+            if (!shown) return
+            val b = bounds
+            val width = b.width() - 2 * inset
+            if (width <= 0) return
+            val top = b.bottom - inset - height
+            val left = b.left + inset
+            val p = progress
+            val (start, end) = if (p != null) left to left + width * p
+                else (left + width * 0.75f * sweep).let { it to it + width * 0.25f }
+            canvas.drawRoundRect(start, top, end, top + height, height / 2, height / 2, paint)
+        }
+
+        override fun setAlpha(alpha: Int) { paint.alpha = alpha }
+        override fun setColorFilter(colorFilter: android.graphics.ColorFilter?) { paint.colorFilter = colorFilter }
+        @Deprecated("Deprecated in Java")
+        override fun getOpacity() = android.graphics.PixelFormat.TRANSLUCENT
     }
 
     /**

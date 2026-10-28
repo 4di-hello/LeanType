@@ -68,6 +68,12 @@ object CustomAIKeyText {
     private val ARROW = Regex("""\s*(?:→|->|=>|⇒|➔)\s*""")
     private val LIST_MARK = Regex("""^\s*(?:[-*•]|\d+[.)])\s*""")
 
+    /** Whether the model answered that there is nothing to correct, e.g. "OK" or "Keine Fehler." */
+    fun saysNoMistakes(output: String): Boolean {
+        val t = output.trim().trimEnd('.', '!').trim().lowercase()
+        return t == "ok" || t.startsWith("ok ") || t.startsWith("ok,") || t.startsWith("keine fehler") || t.startsWith("no mistakes")
+    }
+
     /** wrong → right pairs from the model output, in their order */
     fun parseCorrections(output: String): List<Pair<String, String>> = output.lines().mapNotNull { line ->
         val parts = line.replace(LIST_MARK, "").split(ARROW, limit = 2)
