@@ -1451,9 +1451,9 @@
     <string name="custom_ai_keyword_corrections_desc">Das Modell nennt nur die Fehler, LeanType korrigiert sie im Text. Viel schneller als den ganzen Text neu zu schreiben, korrigiert auch Satzzeichen und Groß-/Kleinschreibung. Geht auch ohne Prompt.</string>
     <string name="custom_ai_corrections_none">Keine Fehler gefunden</string>
     <string name="custom_ai_corrections_done">Korrigierte Stellen: %d</string>
-    <string name="ai_status_loading">KI: Modell wird geladen … %1$d s</string>
-    <string name="ai_status_waiting">KI: wartet auf die vorige Anfrage … %1$d s</string>
-    <string name="ai_status_generating">KI schreibt … %1$d s · Taste nochmal tippen bricht ab</string>
+    <string name="custom_ai_corrections_partly">Korrigierte Stellen: %1$d (%2$d nicht im Text gefunden)</string>
+    <string name="custom_ai_corrections_not_found">Die %d Korrekturen der KI passen nicht zum Text, nichts geändert</string>
+    <string name="custom_ai_corrections_unreadable">Die KI hat keine Korrekturliste geliefert, nichts geändert: „%s“</string>
     <string name="ai_cancelled">KI-Anfrage abgebrochen</string>
     <string name="custom_ai_keyword_prepend_label">Ergebnis voranstellen</string>
     <string name="custom_ai_keyword_showthought_label">Gedankengang anzeigen</string>

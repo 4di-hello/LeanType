@@ -61,7 +61,6 @@ object ProofreadHelper {
             currentJob?.cancel()
             currentJob = null
             mainHandler.post {
-                KeyboardSwitcher.getInstance().hideStatus()
                 KeyboardSwitcher.getInstance().hideLoadingAnimation()
                 // Toast removed as visual feedback (stopping animation) is sufficient
             }
@@ -79,6 +78,10 @@ object ProofreadHelper {
         errorResId: Int,
         skipModelCheck: Boolean = false,
         allowEmptyInput: Boolean = false,
+        /** requests with the same key take about the same time per character, see [AiDuration] */
+        durationKey: String,
+        /** how much the model has to read: the text, and for custom keys the prompt with the clipboard */
+        inputLength: Int = text.length,
         apiCall: suspend (ProofreadService) -> Result<String>,
         onSuccess: (String) -> Unit,
         onError: (String) -> Unit
@@ -118,10 +121,10 @@ object ProofreadHelper {
         val progress = AiProgress()
         val job = scope.launch(progress) {
             val result = apiCall(service)
+            if (result.isSuccess) AiDuration.learn(context, durationKey, inputLength, progress)
 
             mainHandler.post {
                 currentJob = null
-                KeyboardSwitcher.getInstance().hideStatus()
                 // Hide loading animation
                 KeyboardSwitcher.getInstance().hideLoadingAnimation()
 
@@ -140,28 +143,30 @@ object ProofreadHelper {
             }
         }
         currentJob = job
-        showProgress(context, job, progress)
+        showProgress(context, job, progress, AiDuration.estimate(context, durationKey, inputLength))
     }
 
-    /** Shows what the local AI does, every second while [job] runs */
-    private fun showProgress(context: Context, job: Job, progress: AiProgress) {
+    /**
+     * Shows the progress of the local AI as a line in the loading border while [job] runs: how much of the
+     * [estimatedMillis] (null: unknown) has passed since the model started on the request. While the model
+     * is loaded, waits for the previous request, or the time is unknown, the line runs back and forth.
+     */
+    private fun showProgress(context: Context, job: Job, progress: AiProgress, estimatedMillis: Long?) {
         val update = object : Runnable {
             override fun run() {
-                // done or cancelled (both on this thread, so the status can't come back after it was hidden)
+                // done or cancelled (both on this thread, so the line can't come back after it was hidden)
                 if (currentJob !== job || !job.isActive) return
-                val textId = when (progress.phase) {
-                    AiProgress.Phase.LOADING -> R.string.ai_status_loading
-                    AiProgress.Phase.WAITING -> R.string.ai_status_waiting
-                    AiProgress.Phase.GENERATING -> R.string.ai_status_generating
-                    null -> null
-                }
-                // short requests are done before anything is shown
-                if (textId != null && progress.seconds >= 2)
-                    KeyboardSwitcher.getInstance().showStatus(context.getString(textId, progress.seconds))
-                mainHandler.postDelayed(this, 1000)
+                val phase = progress.phase
+                val since = progress.generatingSince
+                val fraction = if (phase == AiProgress.Phase.GENERATING && since > 0 && estimatedMillis != null)
+                    // never full before it is done
+                    ((android.os.SystemClock.uptimeMillis() - since).toFloat() / estimatedMillis).coerceAtMost(0.95f)
+                else null
+                KeyboardSwitcher.getInstance().setLoadingProgress(phase != null, fraction)
+                mainHandler.postDelayed(this, 200)
             }
         }
-        mainHandler.postDelayed(update, 1000)
+        mainHandler.post(update)
     }
 
     private fun getKeyboardLanguage(): String {
@@ -303,6 +308,7 @@ object ProofreadHelper {
             text = text,
             noTextErrorResId = R.string.proofread_no_text,
             errorResId = R.string.proofread_error,
+            durationKey = "proofread",
             apiCall = { service -> service.proofread(text) },
             onSuccess = onSuccess,
             onError = onError
@@ -348,6 +354,7 @@ object ProofreadHelper {
             noTextErrorResId = R.string.translate_no_text,
             errorResId = R.string.translate_error,
             skipModelCheck = usePlugin,
+            durationKey = "translate",
             apiCall = { service ->
                 val pluginProvider = if (usePlugin) TranslationLoader.getProvider(context) else null
                 val targetLang = service.getTargetLanguage()
@@ -489,6 +496,7 @@ object ProofreadHelper {
         hasSelection: Boolean,
         showThinking: Boolean,
         allowEmptyInput: Boolean = false,
+        durationKey: String? = null,
         onSuccess: (String) -> Unit,
         onError: (String) -> Unit
     ) {
@@ -498,6 +506,9 @@ object ProofreadHelper {
             noTextErrorResId = R.string.proofread_no_text,
             errorResId = R.string.proofread_error,
             allowEmptyInput = allowEmptyInput,
+            // per key: a key that rewrites the text takes much longer than one that only lists corrections
+            durationKey = durationKey ?: ("custom_" + prompt.hashCode()),
+            inputLength = text.length + prompt.length,
             apiCall = { service -> service.proofread(text, overridePrompt = prompt, showThinking = showThinking) },
             onSuccess = onSuccess,
             onError = onError
@@ -521,5 +532,32 @@ object ProofreadHelper {
             onSuccess = { callback.onSuccess(it) },
             onError = { callback.onError(it) }
         )
+    }
+}
+
+/**
+ * How long the local AI took per character of input, per kind of request, to estimate the progress of
+ * the next one. Learned only from requests that worked; the time to load the model is not counted.
+ */
+internal object AiDuration {
+    private const val PREF_PREFIX = "ai_duration_per_char_"
+    /** short texts still take a moment for the prompt */
+    private const val MIN_LENGTH = 50
+
+    fun estimate(context: Context, key: String, inputLength: Int): Long? {
+        val perChar = context.prefs().getFloat(PREF_PREFIX + key, 0f)
+        if (perChar <= 0f) return null
+        return (perChar * inputLength.coerceAtLeast(MIN_LENGTH)).toLong().coerceAtLeast(500)
+    }
+
+    fun learn(context: Context, key: String, inputLength: Int, progress: AiProgress) {
+        val since = progress.generatingSince
+        if (since <= 0) return
+        val perChar = (android.os.SystemClock.uptimeMillis() - since).toFloat() / inputLength.coerceAtLeast(MIN_LENGTH)
+        val prefs = context.prefs()
+        val old = prefs.getFloat(PREF_PREFIX + key, 0f)
+        // the last requests count most, single outliers don't spoil the estimate
+        val new = if (old <= 0f) perChar else old * 0.6f + perChar * 0.4f
+        prefs.edit().putFloat(PREF_PREFIX + key, new).apply()
     }
 }
