@@ -138,12 +138,21 @@ object SubtypeLocaleUtils {
             )
         }
         // if it's a default layout, we want to use the nameResId instead of explicitly showing the layout name
-        if (keyboardLayoutToDisplayName.containsKey(layoutName)
+        val layoutDisplayName = getMainLayoutDisplayName(layoutName.orEmpty())
+        if (layoutDisplayName != null
             && SubtypeSettings.getResourceSubtypesForLocale(locale()).none { it.mainLayoutName() == layoutName }) {
+            val localeDisplayName = locale().localizedDisplayName(resources, displayLocale)
+            val languageDisplayName = locale().getDisplayLanguage(displayLocale ?: resources.configuration.locale())
+            val shortLayoutDisplayName = layoutDisplayName
+                .removePrefix(languageDisplayName)
+                .trim()
+                .let {
+                    if (it.startsWith("(") && it.endsWith(")")) it.substring(1, it.length - 1) else it
+                }
             return resources.getString(
                 R.string.subtype_with_layout_generic,
-                locale().localizedDisplayName(resources, displayLocale),
-                keyboardLayoutToDisplayName[layoutName]
+                localeDisplayName,
+                shortLayoutDisplayName
             )
         }
 
@@ -162,9 +171,15 @@ object SubtypeLocaleUtils {
         return displayName
     }
 
-    fun getMainLayoutDisplayName(layoutName: String): String? =
-        if (LayoutUtilsCustom.isCustomLayout(layoutName)) LayoutUtilsCustom.getDisplayName(layoutName)
-        else keyboardLayoutToDisplayName[layoutName]
+    fun getMainLayoutDisplayName(layoutName: String): String? {
+        if (LayoutUtilsCustom.isCustomLayout(layoutName)) return LayoutUtilsCustom.getDisplayName(layoutName)
+        keyboardLayoutToDisplayName[layoutName]?.let { return it }
+        if (!::resources.isInitialized) return null
+        return runCatching {
+            val id = resources.getIdentifier("layout_$layoutName", "string", resources.getResourcePackageName(R.string.subtype_generic))
+            if (id != 0) resources.getString(id) else null
+        }.getOrNull()
+    }
 
     fun getLayoutDisplayNameInSystemLocale(mainLayoutName: String, locale: Locale): String {
         getMainLayoutDisplayName(mainLayoutName)?.let { return it } // works for custom and latin layouts

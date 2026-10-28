@@ -60,4 +60,37 @@ class SubtypeLocaleUtilsTest {
         val displayName = SubtypeLocaleUtils.run { subtype.displayName() }
         assert(displayName.isNotEmpty())
     }
+
+    @Test
+    fun testTamilV4LayoutAndSubtypeName() {
+        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
+        SubtypeSettings.init(context)
+
+        // Resource subtypes should only have the base subtype (no duplicate language rows)
+        val taInResourceSubtypes = SubtypeSettings.getResourceSubtypesForLocale(Locale("ta", "IN"))
+        assertEquals(1, taInResourceSubtypes.size)
+        assertEquals("tamil", taInResourceSubtypes.first().mainLayoutName())
+
+        val taSgResourceSubtypes = SubtypeSettings.getResourceSubtypesForLocale(Locale("ta", "SG"))
+        assertEquals(1, taSgResourceSubtypes.size)
+        assertEquals("tamil", taSgResourceSubtypes.first().mainLayoutName())
+
+        // Available layouts for Tamil locales must include tamil and tamil_v4
+        val taInLayouts = LayoutUtils.getAvailableLayouts(LayoutType.MAIN, context, Locale("ta", "IN"))
+        assert(taInLayouts.contains("tamil"))
+        assert(taInLayouts.contains("tamil_v4"))
+
+        val taSgLayouts = LayoutUtils.getAvailableLayouts(LayoutType.MAIN, context, Locale("ta", "SG"))
+        assert(taSgLayouts.contains("tamil"))
+        assert(taSgLayouts.contains("tamil_v4"))
+
+        // Display name for layout
+        assertEquals("Tamil (V4)", SubtypeLocaleUtils.getMainLayoutDisplayName("tamil_v4"))
+        assertEquals("Tamil (V4)", SubtypeLocaleUtils.getLayoutDisplayNameInSystemLocale("tamil_v4", Locale("ta", "IN")))
+
+        // Additional subtype displayName
+        val v4Subtype = SubtypeUtilsAdditional.createEmojiCapableAdditionalSubtype(Locale.forLanguageTag("ta-IN"), "tamil_v4", false)
+        val v4DisplayName = SubtypeLocaleUtils.run { v4Subtype.displayName(Locale.ENGLISH) }
+        assertEquals("Tamil (India) (V4)", v4DisplayName)
+    }
 }

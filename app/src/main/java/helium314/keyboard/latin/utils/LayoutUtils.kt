@@ -20,10 +20,15 @@ object LayoutUtils {
         if (locale == null)
             return SubtypeSettings.getAllAvailableSubtypes()
                 .mapTo(HashSet()) { it.mainLayoutNameOrQwerty().substringBefore("+") }
-                .apply { addAll(context.resources.getStringArray(R.array.predefined_layouts)) }
+                .apply {
+                    addAll(context.resources.getStringArray(R.array.predefined_layouts))
+                    add("tamil_v4")
+                }
         val layouts = SubtypeSettings.getResourceSubtypesForLocale(locale).mapNotNullTo(mutableSetOf()) { it.mainLayoutName() }
         if (locale.script() == ScriptUtils.SCRIPT_LATIN)
             layouts.addAll(context.resources.getStringArray(R.array.predefined_layouts))
+        if (locale.language == "ta" || locale.script() == ScriptUtils.SCRIPT_TAMIL)
+            layouts.add("tamil_v4")
         return layouts
     }
 
