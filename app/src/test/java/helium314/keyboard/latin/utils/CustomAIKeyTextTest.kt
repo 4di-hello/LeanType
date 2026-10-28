@@ -82,4 +82,11 @@ class CustomAIKeyTextTest {
     fun correctionsPreferWholeWords() {
         assertEquals("mich freut, dass Ich komme" to 1, CustomAIKeyText.applyCorrections("mich freut, dass ich komme", "ich → Ich"))
     }
+
+    @Test
+    fun noMistakesAnswerIsRecognized() {
+        assertTrue(CustomAIKeyText.saysNoMistakes(" OK."))
+        assertTrue(CustomAIKeyText.saysNoMistakes("Keine Fehler gefunden."))
+        assertFalse(CustomAIKeyText.saysNoMistakes("Ich habe den Text überarbeitet: ..."))
+    }
 }
