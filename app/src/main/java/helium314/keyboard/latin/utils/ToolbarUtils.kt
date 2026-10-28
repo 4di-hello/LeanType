@@ -443,6 +443,15 @@ fun removePinnedKey(prefs: SharedPreferences, key: ToolbarKey) {
     prefs.edit { putString(Settings.PREF_PINNED_TOOLBAR_KEYS, result) }
 }
 
+fun isCustomAiKeyConfigured(prefs: SharedPreferences, keyName: String): Boolean {
+    if (!keyName.startsWith("CUSTOM_AI_", ignoreCase = true)) return true
+    val index = keyName.substringAfterLast("_").toIntOrNull() ?: return false
+    return prefs.getString("pref_custom_ai_prompt_$index", "")?.isNotBlank() == true
+}
+
+fun isCustomAiKeyConfigured(prefs: SharedPreferences, key: ToolbarKey): Boolean =
+    isCustomAiKeyConfigured(prefs, key.name)
+
 private fun getEnabledToolbarKeys(prefs: SharedPreferences, pref: String, default: String, exclusions: Collection<ToolbarKey> = excludedKeys): List<ToolbarKey> {
     val string = prefs.getString(pref, default) ?: default
     return string.split(Separators.ENTRY).mapNotNull {
@@ -450,7 +459,9 @@ private fun getEnabledToolbarKeys(prefs: SharedPreferences, pref: String, defaul
         if (split.last() == "true") {
             try {
                 val key = ToolbarKey.valueOf(split.first())
-                if (key in exclusions) null else key
+                if (key in exclusions) null
+                else if (!isCustomAiKeyConfigured(prefs, key)) null
+                else key
             } catch (_: IllegalArgumentException) {
                 null
             }

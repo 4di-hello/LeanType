@@ -51,7 +51,10 @@ fun ReorderSwitchPreference(
         }
         ReorderDialog(
             onConfirmed = { reorderedItems ->
-                val value = reorderedItems.joinToString(Separators.ENTRY) { it.name + Separators.KV + it.state }
+                val allRawEntries = (prefs.getString(setting.key, default) ?: default).split(Separators.ENTRY)
+                val hiddenEntries = allRawEntries.filterNot { filter(it.split(Separators.KV).first()) }
+                val reorderedEntries = reorderedItems.map { it.name + Separators.KV + it.state }
+                val value = (reorderedEntries + hiddenEntries).joinToString(Separators.ENTRY)
                 prefs.edit { putString(setting.key, value) }
                 KeyboardSwitcher.getInstance().setThemeNeedsReload()
             },
@@ -64,9 +67,17 @@ fun ReorderSwitchPreference(
                 var checked by rememberSaveable(item.name) { mutableStateOf(item.state) }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     KeyboardIconsSet.instance.GetIcon(item.name)
-                    val text = item.name.lowercase().getStringResourceOrName("", ctx)
-                    val actualText = if (text != item.name.lowercase()) text
+                    val customTag = if (item.name.startsWith("CUSTOM_AI_")) {
+                        val index = item.name.removePrefix("CUSTOM_AI_").toIntOrNull()
+                        if (index != null) prefs.getString("pref_custom_ai_tag_$index", "") ?: "" else ""
+                    } else ""
+                    val actualText = if (customTag.isNotBlank()) {
+                        "$customTag (${item.name.lowercase().getStringResourceOrName("", ctx)})"
+                    } else {
+                        val text = item.name.lowercase().getStringResourceOrName("", ctx)
+                        if (text != item.name.lowercase()) text
                         else item.name.lowercase().getStringResourceOrName("popup_keys_", ctx)
+                    }
                     Text(actualText, Modifier.weight(1f))
                     Switch(
                         checked = checked,

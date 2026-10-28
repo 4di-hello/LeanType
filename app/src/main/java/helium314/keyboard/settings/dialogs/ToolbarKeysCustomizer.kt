@@ -13,6 +13,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -30,6 +31,7 @@ import helium314.keyboard.latin.utils.ToolbarKey
 import helium314.keyboard.latin.utils.getCodeForToolbarKey
 import helium314.keyboard.latin.utils.getCodeForToolbarKeyLongClick
 import helium314.keyboard.latin.utils.getStringResourceOrName
+import helium314.keyboard.latin.utils.isCustomAiKeyConfigured
 import helium314.keyboard.latin.utils.prefs
 import helium314.keyboard.latin.utils.readCustomKeyCodes
 import helium314.keyboard.latin.utils.writeCustomKeyCodes
@@ -57,16 +59,28 @@ fun ToolbarKeysCustomizer(
         onNeutral = { showDeletePrefConfirmDialog = true },
         title = { Text(stringResource(R.string.customize_toolbar_key_codes)) },
         content = {
+            val configuredKeys = remember(prefs) {
+                ToolbarKey.entries.filter { isCustomAiKeyConfigured(prefs, it) }
+            }
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                items(ToolbarKey.entries, key = { it.name }) {
+                items(items = configuredKeys, key = { it.name }) { keyItem ->
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.clickable { showKeyCustomizer = it }.fillParentMaxWidth()
+                        modifier = Modifier.clickable { showKeyCustomizer = keyItem }.fillParentMaxWidth()
                     ) {
-                        KeyboardIconsSet.instance.GetIcon(it.name)
-                        Text(it.name.lowercase().getStringResourceOrName("", ctx))
+                        KeyboardIconsSet.instance.GetIcon(keyItem.name)
+                        val customTag = if (keyItem.name.startsWith("CUSTOM_AI_")) {
+                            val index = keyItem.name.removePrefix("CUSTOM_AI_").toIntOrNull()
+                            if (index != null) prefs.getString("pref_custom_ai_tag_$index", "") ?: "" else ""
+                        } else ""
+                        val actualText = if (customTag.isNotBlank()) {
+                            "$customTag (${keyItem.name.lowercase().getStringResourceOrName("", ctx)})"
+                        } else {
+                            keyItem.name.lowercase().getStringResourceOrName("", ctx)
+                        }
+                        Text(actualText)
                     }
                 }
             }
@@ -115,7 +129,18 @@ private fun ToolbarKeyCustomizer(
             keys.remove(key)
             writeCustomKeyCodes(prefs, keys)
         },
-        title = { Text(key.name.lowercase().getStringResourceOrName("", ctx)) },
+        title = {
+            val customTag = if (key.name.startsWith("CUSTOM_AI_")) {
+                val index = key.name.removePrefix("CUSTOM_AI_").toIntOrNull()
+                if (index != null) prefs.getString("pref_custom_ai_tag_$index", "") ?: "" else ""
+            } else ""
+            val titleText = if (customTag.isNotBlank()) {
+                "$customTag (${key.name.lowercase().getStringResourceOrName("", ctx)})"
+            } else {
+                key.name.lowercase().getStringResourceOrName("", ctx)
+            }
+            Text(titleText)
+        },
         content = {
             Column {
                 Row(verticalAlignment = Alignment.CenterVertically) {

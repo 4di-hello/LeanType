@@ -39,6 +39,7 @@ import helium314.keyboard.latin.utils.ToolbarMode
 import helium314.keyboard.latin.utils.dpToPx
 import helium314.keyboard.latin.utils.getActivity
 import helium314.keyboard.latin.utils.getStringResourceOrName
+import helium314.keyboard.latin.utils.isCustomAiKeyConfigured
 import helium314.keyboard.latin.utils.prefs
 import helium314.keyboard.latin.utils.upgradeToolbarPrefs
 import helium314.keyboard.settings.SearchSettingsScreen
@@ -120,7 +121,15 @@ fun createToolbarSettings(context: Context): List<Setting> {
     val filter = { name: String ->
         val lowerName = name.lowercase()
         when {
-            lowerName.startsWith("custom_ai_") || lowerName == "proofread" -> {
+            lowerName.startsWith("custom_ai_") -> {
+                val isSupportedFlavor = if (BuildConfig.FLAVOR == "offline") {
+                    android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O
+                } else {
+                    BuildConfig.FLAVOR == "standard" || BuildConfig.FLAVOR == "standardfull"
+                }
+                isSupportedFlavor && isCustomAiKeyConfigured(context.prefs(), name)
+            }
+            lowerName == "proofread" -> {
                 if (BuildConfig.FLAVOR == "offline") {
                     android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O
                 } else {
