@@ -5,6 +5,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -81,11 +82,13 @@ fun SwitchPreference(
         icon = icon.takeIf { it != 0 },
         description = description
     ) {
-        Switch(
-            checked = value,
-            onCheckedChange = { switched(it) },
-            enabled = enabled,
-        )
+        key(key) {
+            Switch(
+                checked = value,
+                onCheckedChange = { switched(it) },
+                enabled = enabled,
+            )
+        }
     }
 }
 

@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -106,12 +107,14 @@ fun <T: Any> MultiListPickerDialog(
                                     text = getItemName(item),
                                     modifier = Modifier.weight(1f),
                                 )
-                                Switch(
-                                    checked = item in selected,
-                                    onCheckedChange = {
-                                        selected = if (it) selected + item else selected - item
-                                    }
-                                )
+                                key(item) {
+                                    Switch(
+                                        checked = item in selected,
+                                        onCheckedChange = {
+                                            selected = if (it) selected + item else selected - item
+                                        }
+                                    )
+                                }
                             }
                         }
                     }

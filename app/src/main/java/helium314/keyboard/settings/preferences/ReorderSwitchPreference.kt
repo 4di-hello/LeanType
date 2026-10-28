@@ -6,6 +6,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -64,7 +65,6 @@ fun ReorderSwitchPreference(
             items = items,
             title = { Text(setting.title) },
             displayItem = { item ->
-                var checked by rememberSaveable(item.name) { mutableStateOf(item.state) }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     KeyboardIconsSet.instance.GetIcon(item.name)
                     val customTag = if (item.name.startsWith("CUSTOM_AI_")) {
@@ -79,13 +79,14 @@ fun ReorderSwitchPreference(
                         else item.name.lowercase().getStringResourceOrName("popup_keys_", ctx)
                     }
                     Text(actualText, Modifier.weight(1f))
-                    Switch(
-                        checked = checked,
-                        onCheckedChange = {
-                            item.state = it
-                            checked = it
-                        }
-                    )
+                    key(item.name) {
+                        Switch(
+                            checked = item.state,
+                            onCheckedChange = {
+                                item.state = it
+                            }
+                        )
+                    }
                 }
             },
             getKey = { it.name }
@@ -93,4 +94,6 @@ fun ReorderSwitchPreference(
     }
 }
 
-private class KeyAndState(val name: String, var state: Boolean)
+private class KeyAndState(val name: String, initialState: Boolean) {
+    var state by mutableStateOf(initialState)
+}

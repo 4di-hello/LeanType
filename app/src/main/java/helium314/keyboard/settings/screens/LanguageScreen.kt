@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -181,16 +182,18 @@ private fun SubtypeRow(subtype: InputMethodSubtype, isEnabled: Boolean) {
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
         }
-        Switch(
-            checked = isEnabled,
-            onCheckedChange = {
-                if (it && !dictsAvailable(subtype.locale(), ctx))
-                    showNoDictDialog = true
-                if (it) SubtypeSettings.addEnabledSubtype(ctx.prefs(), subtype)
-                else SubtypeSettings.removeEnabledSubtype(ctx, subtype)
-                (ctx.getActivity() as? SettingsActivity)?.prefChanged()
-            }
-        )
+        key(subtype) {
+            Switch(
+                checked = isEnabled,
+                onCheckedChange = {
+                    if (it && !dictsAvailable(subtype.locale(), ctx))
+                        showNoDictDialog = true
+                    if (it) SubtypeSettings.addEnabledSubtype(ctx.prefs(), subtype)
+                    else SubtypeSettings.removeEnabledSubtype(ctx, subtype)
+                    (ctx.getActivity() as? SettingsActivity)?.prefChanged()
+                }
+            )
+        }
         if (showNoDictDialog)
             MissingDictionaryDialog({ showNoDictDialog = false }, subtype.locale())
     }

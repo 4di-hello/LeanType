@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -458,9 +459,13 @@ private fun PopupOrderDialog(
     title: String,
     showDefault: Boolean
 ) {
-    class KeyAndState(var name: String, var state: Boolean)
-    val items = initialValue.split(Separators.ENTRY).map {
-        KeyAndState(it.substringBefore(Separators.KV), it.substringAfter(Separators.KV).toBoolean())
+    class KeyAndState(var name: String, initialState: Boolean) {
+        var state by mutableStateOf(initialState)
+    }
+    val items = remember(initialValue) {
+        initialValue.split(Separators.ENTRY).map {
+            KeyAndState(it.substringBefore(Separators.KV), it.substringAfter(Separators.KV).toBoolean())
+        }
     }
     val ctx = LocalContext.current
     ReorderDialog(
@@ -474,15 +479,16 @@ private fun PopupOrderDialog(
         items = items,
         title = { Text(title) },
         displayItem = { item ->
-            var checked by rememberSaveable { mutableStateOf(item.state) }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 KeyboardIconsSet.instance.GetIcon(item.name)
                 val text = item.name.lowercase().getStringResourceOrName("popup_keys_", ctx)
                 Text(text, Modifier.weight(1f))
-                Switch(
-                    checked = checked,
-                    onCheckedChange = { item.state = it; checked = it }
-                )
+                key(item.name) {
+                    Switch(
+                        checked = item.state,
+                        onCheckedChange = { item.state = it }
+                    )
+                }
             }
         },
         getKey = { it.name }
