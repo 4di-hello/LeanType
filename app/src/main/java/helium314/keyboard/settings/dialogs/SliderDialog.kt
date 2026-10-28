@@ -86,7 +86,7 @@ fun SliderDialog(
                         if (intermediateSteps == null) {
                             Slider(
                                 value = sliderPosition,
-                                onValueChange = { sliderPosition = it },
+                                onValueChange = { sliderPosition = snapToStep(it) },
                                 onValueChangeFinished = { onValueChanged(sliderPosition) },
                                 valueRange = range,
                                 modifier = Modifier.weight(1f)

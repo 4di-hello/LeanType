@@ -49,6 +49,7 @@ import helium314.keyboard.latin.settings.Settings
 import helium314.keyboard.latin.utils.WallpaperFetcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import java.util.Locale
+import kotlin.math.roundToInt
 
 @Composable
 fun AppearanceScreen(
@@ -425,7 +426,7 @@ fun createAppearanceSettings(context: Context) = listOf(
             key = setting.key,
             default = Defaults.PREF_KEY_PREVIEW_WIDTH_SCALE,
             range = 0.5f..1.5f,
-            description = { "${(100 * it).toInt()}%" }
+            description = { "${(100 * it).roundToInt()}%" }
         ) { KeyboardSwitcher.getInstance().reloadKeyboard() }
     },
     Setting(context, Settings.PREF_KEY_PREVIEW_HEIGHT_SCALE, R.string.key_preview_height_scale) { setting ->
@@ -434,7 +435,7 @@ fun createAppearanceSettings(context: Context) = listOf(
             key = setting.key,
             default = Defaults.PREF_KEY_PREVIEW_HEIGHT_SCALE,
             range = 0.5f..2.0f,
-            description = { "${(100 * it).toInt()}%" }
+            description = { "${(100 * it).roundToInt()}%" }
         ) { KeyboardSwitcher.getInstance().reloadKeyboard() }
     },
     Setting(context, Settings.PREF_KEY_PREVIEW_RADIUS, R.string.key_preview_radius) { setting ->
@@ -458,7 +459,7 @@ fun createAppearanceSettings(context: Context) = listOf(
             dimensions = listOf(stringResource(R.string.landscape)),
             defaults = Defaults.PREF_SPLIT_SPACER_SCALE,
             range = 0.5f..2f,
-            description = { "${(100 * it).toInt()}%" }
+            description = { "${(100 * it).roundToInt()}%" }
         ) { KeyboardSwitcher.getInstance().setThemeNeedsReload() }
     },
     Setting(context, Settings.PREF_ENABLE_SPLIT_KEYBOARD_LANDSCAPE, R.string.enable_split_keyboard_landscape) {
@@ -484,7 +485,7 @@ fun createAppearanceSettings(context: Context) = listOf(
             dimensions = listOf(stringResource(R.string.landscape)),
             defaults = Defaults.PREF_KEYBOARD_HEIGHT_SCALE,
             range = 0.3f..1.5f,
-            description = { "${(100 * it).toInt()}%" }
+            description = { "${(100 * it).roundToInt()}%" }
         ) { KeyboardSwitcher.getInstance().setThemeNeedsReload() }
     },
     Setting(context, Settings.PREF_BOTTOM_PADDING_SCALE_PREFIX, R.string.prefs_bottom_padding_scale) { setting ->
@@ -494,7 +495,7 @@ fun createAppearanceSettings(context: Context) = listOf(
             dimensions = listOf(stringResource(R.string.landscape)),
             defaults = Defaults.PREF_BOTTOM_PADDING_SCALE,
             range = 0f..5f,
-            description = { "${(100 * it).toInt()}%" }
+            description = { "${(100 * it).roundToInt()}%" }
         ) { KeyboardSwitcher.getInstance().setThemeNeedsReload() }
     },
     Setting(context, Settings.PREF_SIDE_PADDING_SCALE_PREFIX, R.string.prefs_side_padding_scale) { setting ->
@@ -504,7 +505,7 @@ fun createAppearanceSettings(context: Context) = listOf(
             dimensions = listOf(stringResource(R.string.landscape), stringResource(R.string.split)),
             defaults = Defaults.PREF_SIDE_PADDING_SCALE,
             range = 0f..3f,
-            description = { "${(100 * it).toInt()}%" }
+            description = { "${(100 * it).roundToInt()}%" }
         ) { KeyboardSwitcher.getInstance().setThemeNeedsReload() }
     },
     Setting(context, Settings.PREF_SPACE_BAR_TEXT, R.string.prefs_space_bar_text) {
@@ -519,7 +520,7 @@ fun createAppearanceSettings(context: Context) = listOf(
             key = def.key,
             default = Defaults.PREF_FONT_SCALE,
             range = 0.5f..1.5f,
-            description = { "${(100 * it).toInt()}%" }
+            description = { "${(100 * it).roundToInt()}%" }
         ) { KeyboardSwitcher.getInstance().setThemeNeedsReload() }
     },
     Setting(context, Settings.PREF_SECONDARY_FONT_SCALE, R.string.prefs_secondary_font_scale) { def ->
@@ -528,7 +529,7 @@ fun createAppearanceSettings(context: Context) = listOf(
             key = def.key,
             default = Defaults.PREF_SECONDARY_FONT_SCALE,
             range = 0.5f..1.5f,
-            description = { "${(100 * it).toInt()}%" }
+            description = { "${(100 * it).roundToInt()}%" }
         ) { KeyboardSwitcher.getInstance().setThemeNeedsReload() }
     },
     Setting(context, SettingsWithoutKey.CUSTOM_EMOJI_FONT, R.string.custom_emoji_font) {
@@ -540,7 +541,7 @@ fun createAppearanceSettings(context: Context) = listOf(
             key = setting.key,
             default = Defaults.PREF_EMOJI_FONT_SCALE,
             range = 0.5f..1.5f,
-            description = { "${(100 * it).toInt()}%" }
+            description = { "${(100 * it).roundToInt()}%" }
         ) { KeyboardSwitcher.getInstance().setThemeNeedsReload() }
     },
     Setting(context, Settings.PREF_USE_SYSTEM_EMOJI, R.string.prefs_use_system_emoji, R.string.prefs_use_system_emoji_summary) { setting ->

@@ -48,6 +48,7 @@ import helium314.keyboard.settings.preferences.SliderPreference
 import helium314.keyboard.settings.preferences.SwitchPreference
 import helium314.keyboard.settings.previewDark
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlin.math.roundToInt
 
 @Composable
 fun PreferencesScreen(
@@ -286,7 +287,7 @@ fun createPreferencesSettings(context: Context) = listOf(
             key = def.key,
             default = Defaults.PREF_CLIPBOARD_FONT_SCALE,
             range = 0.5f..1.5f,
-            description = { "${(100 * it).toInt()}%" }
+            description = { "${(100 * it).roundToInt()}%" }
         )
     },
     Setting(context, Settings.PREF_HAPTIC_ENGINE, R.string.prefs_haptic_engine) { setting ->

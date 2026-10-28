@@ -72,6 +72,7 @@ import helium314.keyboard.settings.preferences.SwitchPreference
 import helium314.keyboard.settings.preferences.TextInputPreference
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 @Composable
 fun WelcomeWizard(
@@ -595,7 +596,7 @@ fun WelcomeWizard(
                                     dimensions = listOf(stringResource(R.string.landscape)),
                                     defaults = Defaults.PREF_KEYBOARD_HEIGHT_SCALE,
                                     range = 0.3f..1.5f,
-                                    description = { "${(100 * it).toInt()}%" }
+                                    description = { "${(100 * it).roundToInt()}%" }
                                 ) {}
                             }.Preference()
                             
