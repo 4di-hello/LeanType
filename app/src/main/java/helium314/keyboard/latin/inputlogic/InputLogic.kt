@@ -3217,17 +3217,28 @@ class InputLogic(
             mLatinIME,
             textToProcess, prompt, hasSelection, showThinking,
             allowEmptyInput = usesClipboard,
+            durationKey = "key_$index",
             onSuccess = { modelOutput ->
                 val resultText = if (onlyCorrections) {
                     val (corrected, count) = CustomAIKeyText.applyCorrections(textToProcess, modelOutput)
-                    Log.i(TAG, "only corrections: $count applied")
+                    val listed = CustomAIKeyText.parseCorrections(modelOutput).size
+                    Log.i(TAG, "only corrections: $count of $listed applied")
                     if (count == 0) {
                         // the text stays as it is; a selection made for the whole text is removed again
                         if (!hasSelection) mConnection.setSelection(mConnection.expectedSelectionEnd, mConnection.expectedSelectionEnd)
-                        KeyboardSwitcher.getInstance().showToast(mLatinIME.getString(R.string.custom_ai_corrections_none), true)
+                        // say whether there was nothing to correct or the answer was of no use, so a bad answer is noticed
+                        val message = when {
+                            listed > 0 -> mLatinIME.getString(R.string.custom_ai_corrections_not_found, listed)
+                            CustomAIKeyText.saysNoMistakes(modelOutput) -> mLatinIME.getString(R.string.custom_ai_corrections_none)
+                            else -> mLatinIME.getString(R.string.custom_ai_corrections_unreadable,
+                                modelOutput.trim().replace('\n', ' ').take(60))
+                        }
+                        KeyboardSwitcher.getInstance().showToast(message, false)
                         return@customAsync
                     }
-                    KeyboardSwitcher.getInstance().showToast(mLatinIME.getString(R.string.custom_ai_corrections_done, count), true)
+                    KeyboardSwitcher.getInstance().showToast(
+                        if (count < listed) mLatinIME.getString(R.string.custom_ai_corrections_partly, count, listed - count)
+                        else mLatinIME.getString(R.string.custom_ai_corrections_done, count), true)
                     corrected
                 } else modelOutput
                 val result = PendingAIResult(resultText, targetPackage, targetFieldId, hasSelection, shouldAppend, keepsOriginal,
