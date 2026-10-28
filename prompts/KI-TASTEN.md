@@ -11,7 +11,7 @@ Einstellungen → Benutzerdefinierte AI-Tasten → Taste N. Jede Taste braucht e
 - `{clipboard}` im Prompt setzt die Zwischenablage an diese Stelle (ab Build vom 24.10. abends). Funktioniert auch bei leerem Feld.
 - Chips wie „Text bearbeiten" (#editor) setzen ihre englische Anweisung **vor** den Prompt (ab Build vom 24.10. abends; vorher dahinter, was „Antwort:" am Ende störte).
 - „Ergebnis anfügen" (#append) setzt das Ergebnis mit Leerzeile hinter den Text, „Ergebnis voranstellen" (#prepend) setzt es an die Cursorposition (bei Markierung davor), der Text dahinter rutscht nach unten. Es geht nur eins von beiden.
-- Während die KI arbeitet, läuft unten im leuchtenden Rahmen über den Vorschlägen ein dünner Balken: hin und her, solange die Dauer unbekannt ist (Modell lädt, wartet auf die vorige Anfrage, erster Lauf einer Taste), danach als Fortschritt, geschätzt aus den letzten Läufen derselben Taste. Die Taste noch einmal tippen bricht ab (ab Build vom 28.10.).
+- Während die KI arbeitet, läuft unten im leuchtenden Rahmen über den Vorschlägen ein dünner Balken: hin und her, solange die Dauer unbekannt ist (Modell lädt, wartet auf die vorige Anfrage, erster Lauf einer Taste), danach als Fortschritt, geschätzt aus den letzten Läufen derselben Taste. Die gedrückte Taste zeigt solange ein X: noch einmal tippen bricht ab (ab Build vom 28.10.).
 - Bei Qwen3-4B hilft ein kurzes Beispiel im Prompt mehr als zusätzliche Regeln.
 - Zum Testen eine Notiz-App nehmen, keinen echten Chat.
 
