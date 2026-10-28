@@ -115,8 +115,10 @@
     sv: Swedish/qwerty+
     sw: Swahili/qwerty
     ta_IN: Tamil (India)/tamil
+    ta_IN: Tamil (India) (V4)/tamil_v4
     ta_LK: Tamil (Sri Lanka)/tamil # Disabled in conjunction with si_LK.
     ta_SG: Tamil (Singapore)/tamil
+    ta_SG: Tamil (Singapore) (V4)/tamil_v4
     te_IN: Telugu (India)/telugu
     th: Thai/thai
     tl: Tagalog/qwerty+
@@ -1179,6 +1181,15 @@
         android:imeSubtypeExtraValue="KeyboardLayoutSet=MAIN:tamil,NoShiftKey,EmojiCapable"
         android:isAsciiCapable="false"
     />
+    <subtype android:icon="@drawable/ic_ime_switcher"
+        android:label="@string/subtype_tamil_v4"
+        android:subtypeId="0x67acea2b"
+        android:imeSubtypeLocale="ta_IN"
+        android:languageTag="ta-IN"
+        android:imeSubtypeMode="keyboard"
+        android:imeSubtypeExtraValue="KeyboardLayoutSet=MAIN:tamil_v4,EmojiCapable"
+        android:isAsciiCapable="false"
+    />
     <!-- TODO: Enabling/Disabling ta_LK subtype must be aligned with si_LK subtype. -->
     <!-- ta_LK disabled alongside si_LK subtype due to lack of combination rules.
     <subtype android:icon="@drawable/ic_ime_switcher_dark"
@@ -1198,6 +1209,15 @@
         android:languageTag="ta-SG"
         android:imeSubtypeMode="keyboard"
         android:imeSubtypeExtraValue="KeyboardLayoutSet=MAIN:tamil,NoShiftKey,EmojiCapable"
+        android:isAsciiCapable="false"
+    />
+    <subtype android:icon="@drawable/ic_ime_switcher"
+        android:label="@string/subtype_tamil_v4"
+        android:subtypeId="0x785abbda"
+        android:imeSubtypeLocale="ta_SG"
+        android:languageTag="ta-SG"
+        android:imeSubtypeMode="keyboard"
+        android:imeSubtypeExtraValue="KeyboardLayoutSet=MAIN:tamil_v4,EmojiCapable"
         android:isAsciiCapable="false"
     />
     <subtype android:icon="@drawable/ic_ime_switcher"

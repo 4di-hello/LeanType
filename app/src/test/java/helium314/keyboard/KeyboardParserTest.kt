@@ -568,6 +568,17 @@ f""", // no newline at the end
         }
     }
 
+    @Test fun `tamil_v4 layout builds successfully`() {
+        val editorInfo = EditorInfo()
+        val subtype = SubtypeUtilsAdditional.createEmojiCapableAdditionalSubtype(Locale.forLanguageTag("ta-IN"), "tamil_v4", false)
+        val (kb, keys) = buildKeyboard(editorInfo, subtype, KeyboardId.ELEMENT_ALPHABET)
+        assertEquals(5, keys.size)
+        assertTrue(kb.sortedKeys.isNotEmpty())
+        val (kbShifted, keysShifted) = buildKeyboard(editorInfo, subtype, KeyboardId.ELEMENT_ALPHABET_MANUAL_SHIFTED)
+        assertEquals(5, keysShifted.size)
+        assertTrue(kbShifted.sortedKeys.isNotEmpty())
+    }
+
     @Test fun parseExistingLayouts() {
         val dir = File("src/main/assets/layouts")
         dir.walk().forEach {
