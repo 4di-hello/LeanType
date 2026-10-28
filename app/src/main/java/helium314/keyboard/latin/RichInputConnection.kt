@@ -253,9 +253,6 @@ class RichInputConnection(private val mParent: InputMethodService) : PrivateComm
     }
 
     private fun reloadTextCache(): Boolean {
-        mCommittedTextBeforeComposingText.setLength(0)
-        mComposingText.setLength(0)
-
         mIC = mParent.currentInputConnection
 
         if (!isConnected()) {
@@ -270,12 +267,16 @@ class RichInputConnection(private val mParent: InputMethodService) : PrivateComm
         )
 
         if (textBeforeCursor == null) {
-            mExpectedSelStart = INVALID_CURSOR_POSITION
-            mExpectedSelEnd = INVALID_CURSOR_POSITION
+            if (mExpectedSelStart == INVALID_CURSOR_POSITION) {
+                mExpectedSelStart = INVALID_CURSOR_POSITION
+                mExpectedSelEnd = INVALID_CURSOR_POSITION
+            }
             Log.d(TAG, "Unable to retrieve text before cursor (connection inactive or pending retry).")
             return false
         }
 
+        mCommittedTextBeforeComposingText.setLength(0)
+        mComposingText.setLength(0)
         mCommittedTextBeforeComposingText.append(textBeforeCursor)
         return true
     }
@@ -467,11 +468,17 @@ class RichInputConnection(private val mParent: InputMethodService) : PrivateComm
             val t = getTextBeforeCursor(Constants.EDITOR_CONTENTS_CACHE_SIZE, 0)
             if (t == null) {
                 Log.d(TAG, "Setting caps mode with default fallback (text cache unavailable).")
-                return ei?.initialCapsMode ?: Constants.TextUtils.CAP_MODE_OFF
+                val fallbackCaps = if (mExpectedSelStart <= 0) (ei?.initialCapsMode ?: Constants.TextUtils.CAP_MODE_OFF) else Constants.TextUtils.CAP_MODE_OFF
+                return fallbackCaps or (TextUtils.CAP_MODE_CHARACTERS and inputType)
             }
             t.toString()
         } else {
-            if (mCommittedTextBeforeComposingText.isEmpty() && mExpectedSelStart != 0) {
+            if (mCommittedTextBeforeComposingText.isEmpty() && mExpectedSelStart > 0) {
+                if (!reloadTextCache()) {
+                    Log.d(TAG, "Setting caps mode with default fallback (text cache unavailable).")
+                    return TextUtils.CAP_MODE_CHARACTERS and inputType
+                }
+            } else if (mCommittedTextBeforeComposingText.isEmpty() && mExpectedSelStart < 0) {
                 if (!reloadTextCache()) {
                     Log.d(TAG, "Setting caps mode with default fallback (text cache unavailable).")
                     return ei?.initialCapsMode ?: Constants.TextUtils.CAP_MODE_OFF
@@ -583,7 +590,7 @@ class RichInputConnection(private val mParent: InputMethodService) : PrivateComm
         detectLaggyConnection(operation, timeout, startTime)
 
         val isWeb = InputTypeUtils.isWebEditor(mParent.currentInputEditorInfo)
-        if (!isWeb && (mCommittedTextBeforeComposingText.isNotEmpty() || mComposingText.isNotEmpty()) &&
+        if (operation != OPERATION_RELOAD_TEXT_CACHE && !isWeb && (mCommittedTextBeforeComposingText.isNotEmpty() || mComposingText.isNotEmpty()) &&
             result != null &&
             !checkTextBeforeCursorConsistency(result)
         ) {
