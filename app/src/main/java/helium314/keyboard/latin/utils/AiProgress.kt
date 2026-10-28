@@ -14,11 +14,16 @@ class AiProgress : AbstractCoroutineContextElement(Key) {
 
     companion object Key : CoroutineContext.Key<AiProgress>
 
-    val start = android.os.SystemClock.uptimeMillis()
-
     /** null while nothing worth showing happens, e.g. a translation by the translation plugin */
     @Volatile
     var phase: Phase? = null
+        set(value) {
+            if (value == Phase.GENERATING && field != Phase.GENERATING) generatingSince = android.os.SystemClock.uptimeMillis()
+            field = value
+        }
 
-    val seconds get() = ((android.os.SystemClock.uptimeMillis() - start) / 1000).toInt()
+    /** when the model started on this request, 0 if not yet */
+    @Volatile
+    var generatingSince = 0L
+        private set
 }
