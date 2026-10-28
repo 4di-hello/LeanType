@@ -11,7 +11,7 @@ Einstellungen → Benutzerdefinierte AI-Tasten → Taste N. Jede Taste braucht e
 - `{clipboard}` im Prompt setzt die Zwischenablage an diese Stelle (ab Build vom 24.10. abends). Funktioniert auch bei leerem Feld.
 - Chips wie „Text bearbeiten" (#editor) setzen ihre englische Anweisung **vor** den Prompt (ab Build vom 24.10. abends; vorher dahinter, was „Antwort:" am Ende störte).
 - „Ergebnis anfügen" (#append) setzt das Ergebnis mit Leerzeile hinter den Text, „Ergebnis voranstellen" (#prepend) setzt es an die Cursorposition (bei Markierung davor), der Text dahinter rutscht nach unten. Es geht nur eins von beiden.
-- Läuft die KI länger als 2 Sekunden, zeigt die Tastatur, was sie gerade tut („Modell wird geladen“, „wartet“, „schreibt … 12 s“). Die Taste noch einmal tippen bricht ab (ab Build vom 27.10.).
+- Während die KI arbeitet, läuft unten im leuchtenden Rahmen über den Vorschlägen ein dünner Balken: hin und her, solange die Dauer unbekannt ist (Modell lädt, wartet auf die vorige Anfrage, erster Lauf einer Taste), danach als Fortschritt, geschätzt aus den letzten Läufen derselben Taste. Die Taste noch einmal tippen bricht ab (ab Build vom 28.10.).
 - Bei Qwen3-4B hilft ein kurzes Beispiel im Prompt mehr als zusätzliche Regeln.
 - Zum Testen eine Notiz-App nehmen, keinen echten Chat.
 
@@ -107,7 +107,14 @@ Schreibe den folgenden Text als höfliche, sachliche Ich-Nachricht in der Sie-Fo
 
 Chip: **nur** „Nur Korrekturen“ (kein „Text bearbeiten“, kein Anfügen/Voranstellen). Der Prompt darf leer bleiben, dann gilt: Rechtschreibung, Grammatik, Satzzeichen und Groß-/Kleinschreibung korrigieren.
 
-Das Modell schreibt nur die Fehler als „falsch → richtig“, LeanType+ setzt sie im Text ein. Das ist deutlich schneller als „Fb“, weil das Modell nicht den ganzen Text neu schreibt, und der Rest des Textes bleibt garantiert unverändert. Ohne Fehler kommt „Keine Fehler gefunden“.
+Das Modell schreibt nur die Fehler als „falsch → richtig“, LeanType+ setzt sie im Text ein. Das ist deutlich schneller als „Fb“, weil das Modell nicht den ganzen Text neu schreibt, und der Rest des Textes bleibt garantiert unverändert.
+
+Meldungen danach:
+
+- „Korrigierte Stellen: N“ – alles eingesetzt
+- „Korrigierte Stellen: N (M nicht im Text gefunden)“ – die KI hat bei M Stellen den falschen Text nicht genau abgeschrieben, diese fehlen
+- „Keine Fehler gefunden“ – die KI hat ausdrücklich „OK“ geantwortet
+- „Die N Korrekturen der KI passen nicht zum Text“ oder „Die KI hat keine Korrekturliste geliefert: …“ – nichts geändert; die Antwort war unbrauchbar (beim zweiten Fall steht ihr Anfang in der Meldung)
 
 Optionaler Prompt, wenn nur bestimmte Fehler korrigiert werden sollen:
 
