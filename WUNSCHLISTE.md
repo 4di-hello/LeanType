@@ -18,7 +18,7 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
   - LFM2 (Liquid, z. B. LFM2-2.6B Q4_K_M) wird erkannt (Dateiname enthält „lfm“) – testen
   - Erledigt 27.10.: Chip „Nur Korrekturen“ (#corrections) für KI-Tasten – Modell nennt nur „falsch → richtig“, LeanType+ setzt es ein; Prompt optional
   - Erledigt 27.10.: KI-Taste, Korrektur- oder Übersetzen-Taste nochmal tippen bricht ab (Plugin rechnet im Hintergrund zu Ende, Ergebnis wird verworfen)
-  - Erledigt 27.10.: Fortschritt ab 2 s („Modell wird geladen“ / „wartet auf die vorige Anfrage“ / „schreibt … s“). Echte Token-Zahl geht nicht, das Plugin meldet keine Zwischenstände
+  - Erledigt 28.10.: Fortschritt als dünner Balken im Ladesrahmen (geschätzt aus den letzten Läufen derselben Taste), die gestartete Taste zeigt ein X. Wortzähler geht nicht, das Plugin liefert erst am Ende Text
   - Qwen3.5 (2B/4B) lädt nicht: llama.cpp im Plugin (April 2026) lehnt die Dateien ab. Nur mit eigenem Plugin und aktueller llama.cpp – optional, falls Qwen3 nicht reicht
   - Qwen3.8-Flash-Next (125B MoE, ~100 GB) passt nicht aufs Handy
 - KI-Tasten (Benutzerdefinierte AI-Tasten):
@@ -44,6 +44,7 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
 - Automatisch (montags): Workflow setzt `daily` auf LeanType neu auf, testet, baut und schiebt erst dann
 - Mit Konflikten: von Hand lösen, auf `update/<name>` pushen. Der Workflow baut und testet dort, nur wenn alles grün ist, ersetzt er `daily` und veröffentlicht. Sicherung des alten Stands vorher als `backup/…`
 - 27.10.: Auf LeanType 4.3.0-beta1 aktualisiert (Sicherung `backup/daily-2026-10-27b`)
+- 28.10.: Auf LeanType 4.3.0-beta2 aktualisiert, nur Konflikte in den deutschen Texten (Sicherung `backup/daily-2026-10-28`); #680 ebenfalls auf beta2
 
 ## Zukunft von LeanType unsicher (21.10.; am 22.10. kam trotzdem v4.2.9)
 
