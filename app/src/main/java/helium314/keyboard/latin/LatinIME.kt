@@ -1378,13 +1378,25 @@ class LatinIME : InputMethodService(),
 
     fun displaySettingsDialog() { launchSettings() }
 
+    fun onOptionDialogDismissed() {
+        optionsDialog = null
+    }
+
     fun showInputPickerDialog(): Boolean {
         if (isShowingOptionDialog()) return false
         if (richImm.hasMultipleEnabledIMEsOrSubtypes(true)) {
-            val token = keyboardSwitcher.mainKeyboardView?.windowToken ?: return false
-            optionsDialog = createInputMethodPickerDialog(this, richImm, token)
-            optionsDialog?.show()
-            return true
+            val token = keyboardSwitcher.mainKeyboardView?.windowToken
+                ?: window?.window?.decorView?.windowToken ?: return false
+            val dialog = createInputMethodPickerDialog(this, richImm, token)
+            optionsDialog = dialog
+            try {
+                dialog.show()
+                return true
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to show optionsDialog", e)
+                optionsDialog = null
+                return false
+            }
         }
         return false
     }
@@ -1892,6 +1904,11 @@ class LatinIME : InputMethodService(),
     }
 
     override fun onKeyDown(keyCode: Int, keyEvent: KeyEvent): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK && isShowingOptionDialog()) {
+            optionsDialog?.dismiss()
+            optionsDialog = null
+            return true
+        }
         if (keyCode == KeyEvent.KEYCODE_BACK && keyboardSwitcher.isOcrShowing) {
             keyboardSwitcher.hideOcrPanels()
             return true
@@ -1905,6 +1922,9 @@ class LatinIME : InputMethodService(),
     }
 
     override fun onKeyUp(keyCode: Int, keyEvent: KeyEvent): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK && isShowingOptionDialog()) {
+            return true
+        }
         if (keyCode == KeyEvent.KEYCODE_BACK && keyboardSwitcher.isOcrShowing) {
             return true
         }

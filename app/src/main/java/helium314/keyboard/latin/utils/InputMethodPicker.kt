@@ -76,11 +76,20 @@ fun createInputMethodPickerDialog(latinIme: LatinIME, richImm: RichInputMethodMa
         }
         .create()
 
+    dialog.setCanceledOnTouchOutside(true)
+    dialog.setOnDismissListener {
+        latinIme.onOptionDialogDismissed()
+    }
+
     val window = dialog.window
     val layoutParams = window?.attributes
     layoutParams?.token = windowToken
     layoutParams?.type = WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG
     window?.attributes = layoutParams
-    window?.addFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM)
+    window?.addFlags(
+        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+        WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
+        WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
+    )
     return dialog
 }
