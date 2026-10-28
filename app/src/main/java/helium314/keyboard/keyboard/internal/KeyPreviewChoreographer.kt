@@ -19,7 +19,6 @@ import java.util.ArrayDeque
 import java.util.HashMap
 import kotlin.math.roundToInt
 
-private val PREVIEW_ENTER_INTERPOLATOR = PathInterpolator(0.1f, 0.9f, 0.2f, 1.0f)
 private val PREVIEW_EXIT_INTERPOLATOR = PathInterpolator(0.3f, 0f, 0.8f, 0.15f)
 
 class KeyPreviewChoreographer(private val mParams: KeyPreviewDrawParams) {
@@ -55,7 +54,7 @@ class KeyPreviewChoreographer(private val mParams: KeyPreviewDrawParams) {
 
     fun dismissKeyPreview(key: Key?) {
         if (key == null) return
-        val duration = Settings.getAnimationDuration(55)
+        val duration = Settings.getAnimationDuration(35)
         if (duration == 0L) {
             dismissKeyPreviewWithoutDelay(key)
             return
@@ -75,11 +74,8 @@ class KeyPreviewChoreographer(private val mParams: KeyPreviewDrawParams) {
                 mFreeKeyPreviewViews.add(keyPreviewView)
             }
         }
-        keyPreviewView.postDelayed(safetyRunnable, duration + 30L)
+        keyPreviewView.postDelayed(safetyRunnable, duration + 20L)
         keyPreviewView.animate()
-            .scaleX(0.92f)
-            .scaleY(0.92f)
-            .translationY(keyPreviewView.measuredHeight * 0.04f)
             .alpha(0f)
             .setDuration(duration)
             .setInterpolator(PREVIEW_EXIT_INTERPOLATOR)
@@ -170,28 +166,12 @@ class KeyPreviewChoreographer(private val mParams: KeyPreviewDrawParams) {
     }
 
     private fun showKeyPreview(key: Key, keyPreviewView: KeyPreviewView) {
-        val duration = Settings.getAnimationDuration(85)
         keyPreviewView.visibility = View.VISIBLE
         keyPreviewView.animate().cancel()
-        if (duration == 0L) {
-            keyPreviewView.scaleX = 1f
-            keyPreviewView.scaleY = 1f
-            keyPreviewView.translationY = 0f
-            keyPreviewView.alpha = 1f
-        } else {
-            keyPreviewView.scaleX = 0.84f
-            keyPreviewView.scaleY = 0.84f
-            keyPreviewView.translationY = keyPreviewView.measuredHeight * 0.06f
-            keyPreviewView.alpha = 0.4f
-            keyPreviewView.animate()
-                .scaleX(1f)
-                .scaleY(1f)
-                .translationY(0f)
-                .alpha(1f)
-                .setDuration(duration)
-                .setInterpolator(PREVIEW_ENTER_INTERPOLATOR)
-                .start()
-        }
+        keyPreviewView.scaleX = 1f
+        keyPreviewView.scaleY = 1f
+        keyPreviewView.translationY = 0f
+        keyPreviewView.alpha = 1f
         mShowingKeyPreviewViews[key] = keyPreviewView
     }
 

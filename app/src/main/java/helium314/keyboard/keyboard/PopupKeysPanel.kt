@@ -148,15 +148,15 @@ interface PopupKeysPanel {
             removeFromParent()
             parentView.addView(containerView)
         }
-        val enterDuration = Settings.getAnimationDuration(110)
+        val enterDuration = Settings.getAnimationDuration(65)
         if (enterDuration == 0L) {
             containerView.alpha = 1f
             containerView.scaleX = 1f
             containerView.scaleY = 1f
         } else {
-            containerView.alpha = 0.35f
-            containerView.scaleX = 0.84f
-            containerView.scaleY = 0.84f
+            containerView.alpha = 0.6f
+            containerView.scaleX = 0.95f
+            containerView.scaleY = 0.95f
             containerView.animate()
                 .alpha(1f)
                 .scaleX(1f)
@@ -177,7 +177,7 @@ interface PopupKeysPanel {
             onEnd()
             return
         }
-        val exitDuration = Settings.getAnimationDuration(70)
+        val exitDuration = Settings.getAnimationDuration(45)
         containerView.animate().cancel()
         if (exitDuration == 0L) {
             removeFromParent()
@@ -185,8 +185,8 @@ interface PopupKeysPanel {
         } else {
             containerView.animate()
                 .alpha(0f)
-                .scaleX(0.92f)
-                .scaleY(0.92f)
+                .scaleX(0.96f)
+                .scaleY(0.96f)
                 .setDuration(exitDuration)
                 .setInterpolator(POPUP_EXIT_INTERPOLATOR)
                 .withEndAction {

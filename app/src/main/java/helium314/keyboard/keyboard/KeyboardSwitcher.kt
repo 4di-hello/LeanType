@@ -449,9 +449,9 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
                     mKeyboardView?.animate()?.cancel()
                     mKeyboardView?.alpha = 0.5f
                 } else {
-                    val duration = Settings.getAnimationDuration(100)
+                    val duration = Settings.getAnimationDuration(60)
                     if (duration > 0L && wasSecondaryShowing) {
-                        mKeyboardView?.alpha = 0.25f
+                        mKeyboardView?.alpha = 0.5f
                         mKeyboardView?.animate()?.cancel()
                         mKeyboardView?.animate()?.alpha(1f)?.setDuration(duration)?.setInterpolator(VIEW_SWITCH_ENTER_INTERPOLATOR)?.start()
                     } else {
@@ -547,10 +547,10 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         mEmojiPalettesView?.let {
             it.startEmojiPalettes(mKeyboardView?.keyVisualAttribute, mLatinIME?.currentInputEditorInfo, mLatinIME?.mKeyboardActionListener)
             it.visibility = View.VISIBLE
-            val duration = Settings.getAnimationDuration(110)
+            val duration = Settings.getAnimationDuration(60)
             if (duration > 0L) {
-                it.alpha = 0.25f
-                it.translationY = 10f * it.resources.displayMetrics.density
+                it.alpha = 0.5f
+                it.translationY = 0f
                 it.animate()?.cancel()
                 it.animate()
                     ?.alpha(1f)
@@ -608,10 +608,10 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
                 latinIme.mKeyboardActionListener
             )
             it.visibility = View.VISIBLE
-            val duration = Settings.getAnimationDuration(110)
+            val duration = Settings.getAnimationDuration(60)
             if (duration > 0L) {
-                it.alpha = 0.25f
-                it.translationY = 10f * it.resources.displayMetrics.density
+                it.alpha = 0.5f
+                it.translationY = 0f
                 it.animate()?.cancel()
                 it.animate()
                     ?.alpha(1f)
@@ -961,9 +961,9 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         )
         touchpad.applyColors(Settings.getValues().mColors)
         touchpad.visibility = View.VISIBLE
-        val duration = Settings.getAnimationDuration(100)
+        val duration = Settings.getAnimationDuration(50)
         if (duration > 0L) {
-            touchpad.alpha = 0.25f
+            touchpad.alpha = 0.5f
             touchpad.animate()?.cancel()
             touchpad.animate()
                 ?.alpha(1f)

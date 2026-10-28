@@ -401,7 +401,7 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
             val forceToolbar = mode == ToolbarMode.TOOLBAR_KEYS
             val effectiveToolbarVisible = forceToolbar || toolbarVisible
             val showPinned = !locked && !effectiveToolbarVisible && mode != ToolbarMode.SUGGESTION_STRIP
-            val duration = Settings.getAnimationDuration(100)
+            val duration = Settings.getAnimationDuration(60)
             val prevToolbarVisible = toolbarContainer.isVisible
             val nextToolbarVisible = !locked && effectiveToolbarVisible
             val prevSuggestionsVisible = suggestionsStrip.isVisible
@@ -411,8 +411,8 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
             if (nextToolbarVisible) {
                 toolbarContainer.isVisible = true
                 if (duration > 0L && isAttachedToWindow && !prevToolbarVisible) {
-                    toolbarContainer.alpha = 0.25f
-                    toolbarContainer.translationX = 8f * resources.displayMetrics.density * direction
+                    toolbarContainer.alpha = 0.5f
+                    toolbarContainer.translationX = 4f * resources.displayMetrics.density * direction
                     toolbarContainer.animate()?.cancel()
                     toolbarContainer.animate()
                         ?.alpha(1f)
@@ -433,7 +433,7 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
             if (nextSuggestionsVisible) {
                 suggestionsStrip.isVisible = true
                 if (duration > 0L && isAttachedToWindow && !prevSuggestionsVisible) {
-                    suggestionsStrip.alpha = 0.25f
+                    suggestionsStrip.alpha = 0.5f
                     suggestionsStrip.animate()?.cancel()
                     suggestionsStrip.animate()
                         ?.alpha(1f)
@@ -452,7 +452,7 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
             if (showPinned) {
                 pinnedKeys.isVisible = true
                 if (duration > 0L && isAttachedToWindow && !prevPinnedVisible) {
-                    pinnedKeys.alpha = 0.25f
+                    pinnedKeys.alpha = 0.5f
                     pinnedKeys.animate()?.cancel()
                     pinnedKeys.animate()
                         ?.alpha(1f)
@@ -476,7 +476,7 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
         }
 
         val targetScaleX = (if (toolbarVisible && !locked) -1f else 1f) * direction
-        val duration = Settings.getAnimationDuration(100)
+        val duration = Settings.getAnimationDuration(60)
         if (duration > 0L && isAttachedToWindow && toolbarExpandKey.scaleX != targetScaleX) {
             toolbarExpandKey.animate()?.cancel()
             toolbarExpandKey.animate()
