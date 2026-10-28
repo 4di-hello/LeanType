@@ -205,15 +205,15 @@
     <string name="auto_correct_aggressiveness_desc_3">Aggressive\nExtends auto-correction across more apps and unassisted text fields.</string>
     <string name="auto_correct_aggressiveness_desc_4">Very aggressive\nUnconditional correction for any close match across all fields.</string>
     <!-- Expandable fine-tuning drawer titles and summaries -->
-    <string name="fine_tune_autocorrect_title">Fine-tune auto-correction</string>
+    <string name="fine_tune_autocorrect_title">Auto-correction</string>
     <string name="fine_tune_autocorrect_summary">Configure triggers, extra situations, and shortcut expansions</string>
-    <string name="fine_tune_prediction_title">Fine-tune prediction details</string>
+    <string name="fine_tune_prediction_title">Prediction details</string>
     <string name="fine_tune_prediction_summary">Manually adjust personal word priority, context matches, and sentence starts</string>
-    <string name="fine_tune_theme_title">Fine-tune theme and borders</string>
+    <string name="fine_tune_theme_title">Theme and borders</string>
     <string name="fine_tune_theme_summary">Adjust corner radius, navbar color, background blur, and custom icons</string>
-    <string name="fine_tune_key_previews_title">Fine-tune key popups and previews</string>
+    <string name="fine_tune_key_previews_title">Key popups and previews</string>
     <string name="fine_tune_key_previews_summary">Configure popup preview size, radius, vertical offset, and animation speed</string>
-    <string name="fine_tune_keyboard_layout_title">Fine-tune keyboard sizing and fonts</string>
+    <string name="fine_tune_keyboard_layout_title">Keyboard sizing and fonts</string>
     <string name="fine_tune_keyboard_layout_summary">Adjust side and bottom padding, narrow key gaps, split spacing, and font scale</string>
     <string name="fine_tune_foldable_title">Foldable &amp; large display</string>
     <string name="fine_tune_foldable_summary">Configure keyboard height, split layout, and padding when unfolded</string>
@@ -221,19 +221,19 @@
     <string name="unfolded_bottom_padding_scale">Unfolded bottom padding</string>
     <string name="unfolded_split_keyboard">Split keyboard when unfolded</string>
     <string name="unfolded_split_spacer_scale">Unfolded split spacer scale</string>
-    <string name="fine_tune_haptics_title">Fine-tune haptics and vibration</string>
+    <string name="fine_tune_haptics_title">Haptics and vibration</string>
     <string name="fine_tune_haptics_summary">Configure haptic engine selection, vibration amplitude, and Do Not Disturb override</string>
-    <string name="fine_tune_additional_keys_title">Fine-tune secondary and layout keys</string>
+    <string name="fine_tune_additional_keys_title">Secondary and layout keys</string>
     <string name="fine_tune_additional_keys_summary">Configure localized digits, symbol number rows, switch keys, and popup behavior</string>
-    <string name="fine_tune_clipboard_title">Fine-tune clipboard behavior</string>
+    <string name="fine_tune_clipboard_title">Clipboard behavior</string>
     <string name="fine_tune_clipboard_summary">Adjust pinned item order, folding, and clipboard font size</string>
-    <string name="fine_tune_toolbar_title">Fine-tune toolbar behavior</string>
+    <string name="fine_tune_toolbar_title">Toolbar behavior</string>
     <string name="fine_tune_toolbar_summary">Configure auto-expansion, typing auto-hide, key alignment, and hardware keyboard modes</string>
-    <string name="fine_tune_gesture_title">Fine-tune gesture typing</string>
+    <string name="fine_tune_gesture_title">Gesture typing</string>
     <string name="fine_tune_gesture_summary">Configure floating preview position, trail fadeout speed, and space-aware gesture typing</string>
-    <string name="fine_tune_swipes_title">Fine-tune swipe gestures and touchpad</string>
+    <string name="fine_tune_swipes_title">Swipe gestures and touchpad</string>
     <string name="fine_tune_swipes_summary">Configure vertical swipe actions, swipe distances, sensitivity, and touchpad settings</string>
-    <string name="fine_tune_advanced_title">Fine-tune physical keyboards and experimental</string>
+    <string name="fine_tune_advanced_title">Physical keyboards and experimental</string>
     <string name="fine_tune_advanced_summary">Configure hardware keyboard layouts, URL detection, and experimental flags</string>
     <!-- Option to show the text to be entered as the middle middle suggestion -->
     <string name="center_suggestion_text_to_enter">Always use middle suggestion</string>
