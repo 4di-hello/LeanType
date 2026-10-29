@@ -289,18 +289,16 @@ fun createToolbarSettings(context: Context): List<Setting> {
 
 @Composable
 fun KeyboardIconsSet.GetIcon(name: String?) {
+    val ctx = LocalContext.current
+    val drawable = remember(name) { getNewDrawable(name, ctx) }
     val iconId = getIconResourceId(name)
     Box(Modifier.size(40.dp), contentAlignment = Alignment.Center) {
-        if (iconId != null) {
+        if (iconId != null && drawable is VectorDrawable) {
             Icon(painterResource(iconId), name, Modifier.fillMaxSize(0.8f))
-        } else {
-            val ctx = LocalContext.current
-            val drawable = remember(name) { getNewDrawable(name, ctx) }
-            if (drawable != null) {
-                val px = with(LocalDensity.current) { 40.dp.toPx() }.toInt()
-                val bitmap = remember(name, px) { drawable.toBitmap(px, px).asImageBitmap() }
-                Icon(bitmap, name, Modifier.fillMaxSize(0.8f))
-            }
+        } else if (drawable != null) {
+            val px = with(LocalDensity.current) { 40.dp.toPx() }.toInt()
+            val bitmap = remember(drawable, px) { drawable.toBitmap(px, px).asImageBitmap() }
+            Icon(bitmap, name, Modifier.fillMaxSize(0.8f))
         }
     }
 }
