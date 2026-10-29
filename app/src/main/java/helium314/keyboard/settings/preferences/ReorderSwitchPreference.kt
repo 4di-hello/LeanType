@@ -45,15 +45,32 @@ fun ReorderSwitchPreference(
         val ctx = LocalContext.current
         val prefs = ctx.prefs()
         val items = remember(setting.key) {
-            (prefs.getString(setting.key, default) ?: default).split(Separators.ENTRY).map {
-                val both = it.split(Separators.KV)
-                KeyAndState(both.first(), both.last().toBoolean())
-            }.filter { filter(it.name) }
+            val raw = prefs.getString(setting.key, default) ?: default
+            val normalized = if (raw.contains(";") || raw.contains(",")) {
+                raw.replace(";", Separators.ENTRY).replace(",", Separators.KV)
+            } else raw
+            normalized.split(Separators.ENTRY)
+                .filter { it.contains(Separators.KV) }
+                .map {
+                    val both = it.split(Separators.KV)
+                    KeyAndState(both.first(), both.last().toBoolean())
+                }
+                .distinctBy { it.name }
+                .filter { filter(it.name) }
         }
         ReorderDialog(
             onConfirmed = { reorderedItems ->
-                val allRawEntries = (prefs.getString(setting.key, default) ?: default).split(Separators.ENTRY)
-                val hiddenEntries = allRawEntries.filterNot { filter(it.split(Separators.KV).first()) }
+                val raw = prefs.getString(setting.key, default) ?: default
+                val normalized = if (raw.contains(";") || raw.contains(",")) {
+                    raw.replace(";", Separators.ENTRY).replace(",", Separators.KV)
+                } else raw
+                val allRawEntries = normalized.split(Separators.ENTRY)
+                    .filter { it.contains(Separators.KV) }
+                val reorderedNames = reorderedItems.map { it.name }.toSet()
+                val hiddenEntries = allRawEntries
+                    .filterNot { filter(it.split(Separators.KV).first()) }
+                    .filterNot { it.split(Separators.KV).first() in reorderedNames }
+                    .distinctBy { it.split(Separators.KV).first() }
                 val reorderedEntries = reorderedItems.map { it.name + Separators.KV + it.state }
                 val value = (reorderedEntries + hiddenEntries).joinToString(Separators.ENTRY)
                 prefs.edit { putString(setting.key, value) }

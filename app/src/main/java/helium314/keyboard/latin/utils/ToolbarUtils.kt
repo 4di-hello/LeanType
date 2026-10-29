@@ -393,8 +393,14 @@ fun upgradeToolbarPrefs(prefs: SharedPreferences) {
 
 private fun upgradeToolbarPref(prefs: SharedPreferences, pref: String, default: String) {
     if (!prefs.contains(pref)) return
-    val originalString = prefs.getString(pref, default) ?: default
-    val list = originalString.split(Separators.ENTRY).toMutableList()
+    var originalString = prefs.getString(pref, default) ?: default
+    if (originalString.contains(";") || originalString.contains(",")) {
+        originalString = originalString.replace(";", Separators.ENTRY).replace(",", Separators.KV)
+    }
+    val list = originalString.split(Separators.ENTRY)
+        .filter { it.contains(Separators.KV) }
+        .distinctBy { it.substringBefore(Separators.KV) }
+        .toMutableList()
     val splitDefault = default.split(Separators.ENTRY)
     splitDefault.forEach { entry ->
         val keyWithSeparator = entry.substringBefore(Separators.KV) + Separators.KV
@@ -410,7 +416,7 @@ private fun upgradeToolbarPref(prefs: SharedPreferences, pref: String, default: 
             true
         }
     }
-    val newString = list.joinToString(Separators.ENTRY)
+    val newString = list.distinctBy { it.substringBefore(Separators.KV) }.joinToString(Separators.ENTRY)
     if (newString != originalString) {
         prefs.edit { putString(pref, newString) }
     }
@@ -446,7 +452,14 @@ fun removePinnedKey(prefs: SharedPreferences, key: ToolbarKey) {
 fun isCustomAiKeyConfigured(prefs: SharedPreferences, keyName: String): Boolean {
     if (!keyName.startsWith("CUSTOM_AI_", ignoreCase = true)) return true
     val index = keyName.substringAfterLast("_").toIntOrNull() ?: return false
-    return prefs.getString("pref_custom_ai_prompt_$index", "")?.isNotBlank() == true
+    val hasPrompt = prefs.getString("pref_custom_ai_prompt_$index", "")?.isNotBlank() == true
+    if (hasPrompt) return true
+    val key = runCatching { ToolbarKey.valueOf(keyName.uppercase(Locale.US)) }.getOrNull()
+    if (key != null) {
+        val hasCustomCode = getCustomKeyCode(key, prefs) != null || getCustomLongpressKeyCode(key, prefs) != null
+        if (hasCustomCode) return true
+    }
+    return false
 }
 
 fun isCustomAiKeyConfigured(prefs: SharedPreferences, key: ToolbarKey): Boolean =

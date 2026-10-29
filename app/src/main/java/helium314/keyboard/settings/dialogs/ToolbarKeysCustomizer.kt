@@ -31,7 +31,6 @@ import helium314.keyboard.latin.utils.ToolbarKey
 import helium314.keyboard.latin.utils.getCodeForToolbarKey
 import helium314.keyboard.latin.utils.getCodeForToolbarKeyLongClick
 import helium314.keyboard.latin.utils.getStringResourceOrName
-import helium314.keyboard.latin.utils.isCustomAiKeyConfigured
 import helium314.keyboard.latin.utils.prefs
 import helium314.keyboard.latin.utils.readCustomKeyCodes
 import helium314.keyboard.latin.utils.writeCustomKeyCodes
@@ -59,13 +58,10 @@ fun ToolbarKeysCustomizer(
         onNeutral = { showDeletePrefConfirmDialog = true },
         title = { Text(stringResource(R.string.customize_toolbar_key_codes)) },
         content = {
-            val configuredKeys = remember(prefs) {
-                ToolbarKey.entries.filter { isCustomAiKeyConfigured(prefs, it) }
-            }
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                items(items = configuredKeys, key = { it.name }) { keyItem ->
+                items(ToolbarKey.entries, key = { it.name }) { keyItem ->
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.clickable { showKeyCustomizer = keyItem }.fillParentMaxWidth()

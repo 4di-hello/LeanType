@@ -51,6 +51,7 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.foundation.ScrollState
 import androidx.core.content.edit
 import helium314.keyboard.latin.R
+import helium314.keyboard.latin.common.Constants.Separators
 import helium314.keyboard.latin.settings.Settings
 import helium314.keyboard.latin.utils.ToolbarKey
 import helium314.keyboard.latin.utils.defaultToolbarPref
@@ -492,16 +493,24 @@ private val CUSTOM_AI_KEY_ICONS = intArrayOf(
 private fun updateToolbarKeyStatus(context: Context, key: ToolbarKey, enable: Boolean) {
     val prefs = context.prefs()
     val toolbarKeys = prefs.getString(Settings.PREF_TOOLBAR_KEYS, defaultToolbarPref) ?: ""
-    val entries = toolbarKeys.split(";").toMutableList()
-    val keyEntryPrefix = "${key.name},"
+    val normalizedToolbarKeys = if (toolbarKeys.contains(";") || toolbarKeys.contains(",")) {
+        toolbarKeys.replace(";", Separators.ENTRY).replace(",", Separators.KV)
+    } else {
+        toolbarKeys
+    }
+    val entries = normalizedToolbarKeys.split(Separators.ENTRY)
+        .filter { it.contains(Separators.KV) }
+        .distinctBy { it.substringBefore(Separators.KV) }
+        .toMutableList()
+    val keyEntryPrefix = "${key.name}${Separators.KV}"
     val existingIndex = entries.indexOfFirst { it.startsWith(keyEntryPrefix) }
     if (enable) {
-        if (existingIndex != -1) entries[existingIndex] = "${key.name},true"
-        else entries.add("${key.name},true")
+        if (existingIndex != -1) entries[existingIndex] = "${key.name}${Separators.KV}true"
+        else entries.add("${key.name}${Separators.KV}true")
     } else {
-        if (existingIndex != -1) entries[existingIndex] = "${key.name},false"
+        if (existingIndex != -1) entries[existingIndex] = "${key.name}${Separators.KV}false"
     }
-    prefs.edit { putString(Settings.PREF_TOOLBAR_KEYS, entries.joinToString(";")) }
+    prefs.edit { putString(Settings.PREF_TOOLBAR_KEYS, entries.joinToString(Separators.ENTRY)) }
 }
 
 private class KeywordVisualTransformation(private val color: androidx.compose.ui.graphics.Color) : VisualTransformation {
