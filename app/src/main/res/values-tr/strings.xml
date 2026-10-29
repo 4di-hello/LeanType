@@ -1800,4 +1800,13 @@ Metin düzeltme ve yeniden yazma için cihaz üzerinde GGUF / llama.cpp çıkar�
     <string name="fine_tune_swipes_title"></string>
     <string name="fine_tune_advanced_title">Fiziksel klavyeler ve deneysel</string>
     <string name="layout_symbols_cjk">Semboller (Çince / CJK)</string>
+    <string name="import_blocked_words">Engellenen kelimeleri içe aktar</string>
+    <string name="export_blocked_words">Engellenen kelimeleri dışa aktar</string>
+    <string name="blocked_words_imported_count">%1$dengellenen kelime içe aktarıldı (%2$dkopya atlandı)</string>
+    <string name="blocked_words_exported_count">%1$dengellenen kelimeyi dışa aktardı</string>
+    <string name="blocked_words_no_words_to_export">Dışa aktarılacak engellenen kelime yok</string>
+    <string name="blocked_words_import_failed">Engellenen kelimeler içe aktarılamadı:%1$s</string>
+    <string name="blocked_words_export_failed">Engellenen kelimeler dışa aktarılamadı:%1$s</string>
+    <string name="select_import_language">Dil etiketi olmayan içe aktarılan kelimeler için varsayılan dili seçin:</string>
+    <string name="select_file">Dosya seç</string>
 </resources>

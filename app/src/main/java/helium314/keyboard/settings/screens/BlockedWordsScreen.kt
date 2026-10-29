@@ -2,6 +2,10 @@
 package helium314.keyboard.settings.screens
 
 import android.content.Context
+import android.net.Uri
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,6 +26,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,8 +44,15 @@ import helium314.keyboard.settings.DropDownField
 import helium314.keyboard.settings.SearchScreen
 import helium314.keyboard.settings.dialogs.ThreeButtonAlertDialog
 import helium314.keyboard.settings.dialogs.ConfirmationDialog
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
+import java.io.InputStreamReader
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 private data class BlockedWord(val word: String, val locale: Locale)
@@ -111,15 +123,188 @@ private fun notifyKeyboardToReload() {
     KeyboardSwitcher.getInstance().latinIME?.reloadBlacklist()
 }
 
+private data class ImportResult(val addedCount: Int, val skippedCount: Int)
+
+private suspend fun exportBlockedWords(context: Context, uri: Uri): Int {
+    val blockedWords = loadBlockedWords(context)
+    if (blockedWords.isEmpty()) return 0
+    withContext(Dispatchers.IO) {
+        context.contentResolver.openOutputStream(uri)?.use { outputStream ->
+            outputStream.bufferedWriter().use { writer ->
+                writer.write("# LeanType Blocked Words Export\n")
+                writer.write("# Format: word,language_tag\n")
+                for (item in blockedWords) {
+                    writer.write("${item.word},${item.locale.toLanguageTag()}\n")
+                }
+            }
+        } ?: throw IOException("Could not open output stream")
+    }
+    return blockedWords.size
+}
+
+private suspend fun importBlockedWords(
+    context: Context,
+    uri: Uri,
+    defaultLocale: Locale
+): ImportResult {
+    return withContext(Dispatchers.IO) {
+        val newWordsByLocale = mutableMapOf<Locale, MutableSet<String>>()
+        var totalRead = 0
+        val maxWordsLimit = 20000
+
+        context.contentResolver.openInputStream(uri)?.use { inputStream ->
+            BufferedReader(InputStreamReader(inputStream)).useLines { lines ->
+                for (rawLine in lines) {
+                    if (totalRead >= maxWordsLimit) break
+                    val line = rawLine.trim()
+                    if (line.isEmpty() || line.startsWith("#") || line.startsWith("//") || line.startsWith(";")) {
+                        continue
+                    }
+                    val delimiter = if (line.contains(",")) "," else if (line.contains("\t")) "\t" else null
+                    val rawWord: String
+                    val wordLocale: Locale
+                    if (delimiter != null) {
+                        val parts = line.split(delimiter, limit = 2)
+                        rawWord = parts[0].trim().removeSurrounding("\"")
+                        val tag = parts.getOrNull(1)?.trim()?.removeSurrounding("\"") ?: ""
+                        wordLocale = if (tag.isNotEmpty()) {
+                            try {
+                                Locale.forLanguageTag(tag)
+                            } catch (_: Exception) {
+                                defaultLocale
+                            }
+                        } else {
+                            defaultLocale
+                        }
+                    } else {
+                        rawWord = line.removeSurrounding("\"")
+                        wordLocale = defaultLocale
+                    }
+
+                    if (rawWord.isNotEmpty() && rawWord.length <= 100) {
+                        val cleanLower = rawWord.lowercase(wordLocale)
+                        newWordsByLocale.getOrPut(wordLocale) { mutableSetOf() }.add(cleanLower)
+                        totalRead++
+                    }
+                }
+            }
+        } ?: throw IOException("Could not open input stream")
+
+        var addedCount = 0
+        var skippedCount = 0
+
+        for ((locale, wordsToAdd) in newWordsByLocale) {
+            val file = getBlacklistFile(context, locale)
+            val existing = if (file.exists()) {
+                file.readLines()
+                    .map { it.trim().lowercase(locale) }
+                    .filter { it.isNotEmpty() }
+                    .toMutableSet()
+            } else {
+                mutableSetOf()
+            }
+
+            for (w in wordsToAdd) {
+                if (existing.add(w)) {
+                    addedCount++
+                } else {
+                    skippedCount++
+                }
+            }
+            if (existing.isNotEmpty()) {
+                file.writeText(existing.joinToString("\n") + "\n")
+            }
+        }
+
+        if (addedCount > 0) {
+            notifyKeyboardToReload()
+        }
+
+        ImportResult(addedCount, skippedCount)
+    }
+}
+
 @Composable
 fun BlockedWordsScreen(
     onClickBack: () -> Unit,
 ) {
     val ctx = LocalContext.current
+    val scope = rememberCoroutineScope()
     var refreshTrigger by remember { mutableStateOf(0) }
     val blockedWords = remember(refreshTrigger) { loadBlockedWords(ctx) }
     var selectedWord: BlockedWord? by remember { mutableStateOf(null) }
     var showClearAllDialog by remember { mutableStateOf(false) }
+    var showSelectLanguageDialog by remember { mutableStateOf(false) }
+
+    val localesList = remember { getSortedDictionaryLocales().toList() }
+    var importLocaleTarget by remember { mutableStateOf(localesList.firstOrNull() ?: Locale.getDefault()) }
+
+    val exportLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.CreateDocument("text/plain")
+    ) { uri ->
+        if (uri != null) {
+            scope.launch {
+                try {
+                    val count = exportBlockedWords(ctx, uri)
+                    Toast.makeText(
+                        ctx,
+                        ctx.getString(R.string.blocked_words_exported_count, count),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } catch (e: Exception) {
+                    Log.e("BlockedWords", "Failed to export", e)
+                    Toast.makeText(
+                        ctx,
+                        ctx.getString(R.string.blocked_words_export_failed, e.message ?: ""),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+    }
+
+    val importLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.OpenDocument()
+    ) { uri ->
+        if (uri != null) {
+            scope.launch {
+                try {
+                    val result = importBlockedWords(ctx, uri, importLocaleTarget)
+                    refreshTrigger++
+                    Toast.makeText(
+                        ctx,
+                        ctx.getString(R.string.blocked_words_imported_count, result.addedCount, result.skippedCount),
+                        Toast.LENGTH_LONG
+                    ).show()
+                } catch (e: Exception) {
+                    Log.e("BlockedWords", "Failed to import", e)
+                    Toast.makeText(
+                        ctx,
+                        ctx.getString(R.string.blocked_words_import_failed, e.message ?: ""),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+    }
+
+    fun triggerImport() {
+        if (localesList.size > 1) {
+            showSelectLanguageDialog = true
+        } else {
+            importLocaleTarget = localesList.firstOrNull() ?: Locale.getDefault()
+            importLauncher.launch(arrayOf("text/plain", "text/comma-separated-values", "text/tab-separated-values", "*/*"))
+        }
+    }
+
+    fun triggerExport() {
+        if (blockedWords.isEmpty()) {
+            Toast.makeText(ctx, ctx.getString(R.string.blocked_words_no_words_to_export), Toast.LENGTH_SHORT).show()
+            return
+        }
+        val dateStr = SimpleDateFormat("yyyyMMdd", Locale.US).format(Date())
+        exportLauncher.launch("leantype_blocked_words_$dateStr.txt")
+    }
 
     Box(Modifier.fillMaxSize()) {
         SearchScreen(
@@ -129,6 +314,8 @@ fun BlockedWordsScreen(
                 Text("${stringResource(R.string.edit_blocked_words)} (${blockedWords.size})")
             },
             menu = listOf(
+                stringResource(R.string.import_blocked_words) to { triggerImport() },
+                stringResource(R.string.export_blocked_words) to { triggerExport() },
                 stringResource(R.string.clear_all) to { showClearAllDialog = true }
             ),
             filteredItems = { term ->
@@ -211,6 +398,30 @@ fun BlockedWordsScreen(
                 refreshTrigger++
             },
             content = { Text(stringResource(R.string.clear_all_blocked_words_confirmation)) }
+        )
+    }
+
+    if (showSelectLanguageDialog) {
+        ConfirmationDialog(
+            onDismissRequest = { showSelectLanguageDialog = false },
+            onConfirmed = {
+                showSelectLanguageDialog = false
+                importLauncher.launch(arrayOf("text/plain", "text/comma-separated-values", "text/tab-separated-values", "*/*"))
+            },
+            title = { Text(stringResource(R.string.import_blocked_words)) },
+            confirmButtonText = stringResource(R.string.select_file),
+            content = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(stringResource(R.string.select_import_language))
+                    DropDownField(
+                        items = localesList,
+                        selectedItem = importLocaleTarget,
+                        onSelected = { importLocaleTarget = it },
+                    ) {
+                        Text(it.getLocaleDisplayNameForUserDictSettings(ctx))
+                    }
+                }
+            }
         )
     }
 }

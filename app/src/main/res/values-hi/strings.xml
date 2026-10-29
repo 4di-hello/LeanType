@@ -1796,4 +1796,13 @@
     <string name="fine_tune_swipes_title">स्वाइप जेस्चर और टचपैड</string>
     <string name="fine_tune_advanced_title">भौतिक कीबोर्ड और प्रयोगात्मक</string>
     <string name="layout_symbols_cjk">प्रतीक (चीनी / सीजेके)</string>
+    <string name="import_blocked_words">अवरुद्ध शब्द आयात करें</string>
+    <string name="export_blocked_words">अवरुद्ध शब्द निर्यात करें</string>
+    <string name="blocked_words_imported_count">आयातित%1$dअवरुद्ध शब्द (%2$dडुप्लिकेट छोड़ दिए गए)</string>
+    <string name="blocked_words_exported_count">निर्यातित%1$dअवरुद्ध शब्द</string>
+    <string name="blocked_words_no_words_to_export">निर्यात करने के लिए कोई अवरुद्ध शब्द नहीं</string>
+    <string name="blocked_words_import_failed">अवरुद्ध शब्दों को आयात करने में विफल:%1$s</string>
+    <string name="blocked_words_export_failed">अवरुद्ध शब्दों को निर्यात करने में विफल:%1$s</string>
+    <string name="select_import_language">भाषा टैग के बिना आयातित शब्दों के लिए डिफ़ॉल्ट भाषा चुनें:</string>
+    <string name="select_file">फ़ाइल चुनें</string>
 </resources>

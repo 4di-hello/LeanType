@@ -1866,4 +1866,13 @@ Permet l\'inférence GGUF / llama.cpp sur l\'appareil pour la correction et la r
     <string name="fine_tune_swipes_title">Gestes de balayage et pavé tactile</string>
     <string name="fine_tune_advanced_title">Claviers physiques et expérimentaux</string>
     <string name="layout_symbols_cjk">Symboles (chinois/CJK)</string>
+    <string name="import_blocked_words">Importer des mots bloqués</string>
+    <string name="export_blocked_words">Exporter les mots bloqués</string>
+    <string name="blocked_words_imported_count">%1$dmots bloqués importés (%2$ddoublons ignorés)</string>
+    <string name="blocked_words_exported_count">%1$dmots bloqués exportés</string>
+    <string name="blocked_words_no_words_to_export">Aucun mot bloqué à exporter</string>
+    <string name="blocked_words_import_failed">Échec de l\'importation des mots bloqués :%1$s</string>
+    <string name="blocked_words_export_failed">Échec de l\'exportation des mots bloqués :%1$s</string>
+    <string name="select_import_language">Sélectionnez la langue par défaut pour les mots importés sans balises de langue :</string>
+    <string name="select_file">Sélectionner un fichier</string>
 </resources>

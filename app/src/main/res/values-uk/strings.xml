@@ -1772,4 +1772,13 @@
     <string name="fine_tune_swipes_title">Жести пальцем і сенсорна панель</string>
     <string name="fine_tune_advanced_title">Фізичні та експериментальні клавіатури</string>
     <string name="layout_symbols_cjk">Символи (китайські / CJK)</string>
+    <string name="import_blocked_words">Імпорт заблокованих слів</string>
+    <string name="export_blocked_words"></string>
+    <string name="blocked_words_imported_count">Імпортовано%1$dзаблокованих слів (%2$dдублікатів пропущено)</string>
+    <string name="blocked_words_exported_count">Експортовано%1$dзаблокованих слів</string>
+    <string name="blocked_words_no_words_to_export">Немає заблокованих слів для експорту</string>
+    <string name="blocked_words_import_failed">Не вдалося імпортувати заблоковані слова:%1$s</string>
+    <string name="blocked_words_export_failed">Не вдалося експортувати заблоковані слова:%1$s</string>
+    <string name="select_import_language">Виберіть мову за умовчанням для імпортованих слів без мовних тегів:</string>
+    <string name="select_file">Виберіть файл</string>
 </resources>

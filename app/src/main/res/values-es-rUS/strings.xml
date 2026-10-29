@@ -1829,4 +1829,13 @@ Permite la inferencia GGUF / llama.cpp en el dispositivo para corrección y rees
     <string name="fine_tune_swipes_title">Gestos de deslizamiento y panel táctil</string>
     <string name="fine_tune_advanced_title">Teclados físicos y experimentales.</string>
     <string name="layout_symbols_cjk">Símbolos (chino / CJK)</string>
+    <string name="import_blocked_words">Importar palabras bloqueadas</string>
+    <string name="export_blocked_words">Exportar palabras bloqueadas</string>
+    <string name="blocked_words_imported_count">Se importaron%1$dpalabras bloqueadas (%2$dduplicados omitidos)</string>
+    <string name="blocked_words_exported_count">Exportadas%1$dpalabras bloqueadas</string>
+    <string name="blocked_words_no_words_to_export">No hay palabras bloqueadas para exportar</string>
+    <string name="blocked_words_import_failed">No se pudieron importar palabras bloqueadas:%1$s</string>
+    <string name="blocked_words_export_failed">No se pudieron exportar palabras bloqueadas:%1$s</string>
+    <string name="select_import_language">Seleccione el idioma predeterminado para palabras importadas sin etiquetas de idioma:</string>
+    <string name="select_file">Seleccionar archivo</string>
 </resources>

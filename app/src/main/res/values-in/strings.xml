@@ -1767,4 +1767,13 @@ Memungkinkan inferensi GGUF / llama.cpp di perangkat untuk koreksi teks dan penu
     <string name="fine_tune_swipes_title">Gesek gerakan dan touchpad</string>
     <string name="fine_tune_advanced_title">Keyboard fisik dan eksperimental</string>
     <string name="layout_symbols_cjk">Simbol (Cina / CJK)</string>
+    <string name="import_blocked_words">Impor kata-kata yang diblokir</string>
+    <string name="export_blocked_words">Ekspor kata-kata yang diblokir</string>
+    <string name="blocked_words_imported_count">Mengimpor%1$dkata yang diblokir (%2$dduplikat dilewati)</string>
+    <string name="blocked_words_exported_count">Mengekspor%1$dkata-kata yang diblokir</string>
+    <string name="blocked_words_no_words_to_export">Tidak ada kata-kata yang diblokir untuk diekspor</string>
+    <string name="blocked_words_import_failed">Gagal mengimpor kata-kata yang diblokir:%1$s</string>
+    <string name="blocked_words_export_failed">Gagal mengekspor kata-kata yang diblokir:%1$s</string>
+    <string name="select_import_language">Pilih bahasa default untuk kata-kata yang diimpor tanpa tag bahasa:</string>
+    <string name="select_file">Pilih berkas</string>
 </resources>

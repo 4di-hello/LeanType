@@ -1808,4 +1808,13 @@ Lehetővé teszi az eszközön futó GGUF / llama.cpp következtetést a javít�
     <string name="fine_tune_swipes_title">Csúsztatási mozdulatok és az érintőpad</string>
     <string name="fine_tune_advanced_title">Fizikai billentyűzetek és kísérleti</string>
     <string name="layout_symbols_cjk">Szimbólumok (kínai / CJK)</string>
+    <string name="import_blocked_words">Letiltott szavak importálása</string>
+    <string name="export_blocked_words">A blokkolt szavak exportálása</string>
+    <string name="blocked_words_imported_count">%1$dblokkolt szó importálva (%2$dismétlődés kimaradt)</string>
+    <string name="blocked_words_exported_count">%1$dblokkolt szót exportált</string>
+    <string name="blocked_words_no_words_to_export">Nincsenek letiltott szavak az exportáláshoz</string>
+    <string name="blocked_words_import_failed">Nem sikerült importálni a blokkolt szavakat:%1$s</string>
+    <string name="blocked_words_export_failed">Nem sikerült a blokkolt szavak exportálása:%1$s</string>
+    <string name="select_import_language">Válassza ki az alapértelmezett nyelvet a nyelvi címkék nélkül importált szavakhoz:</string>
+    <string name="select_file">Válassza ki a fájlt</string>
 </resources>

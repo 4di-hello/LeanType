@@ -1807,4 +1807,13 @@ Habilita inferência GGUF / llama.cpp no dispositivo para revisão e reescrita.<
     <string name="fine_tune_swipes_title">Gestos de deslize e touchpad</string>
     <string name="fine_tune_advanced_title">Teclados físicos e experimentais</string>
     <string name="layout_symbols_cjk">Símbolos (chinês/CJK)</string>
+    <string name="import_blocked_words">Importar palavras bloqueadas</string>
+    <string name="export_blocked_words">Exportar palavras bloqueadas</string>
+    <string name="blocked_words_imported_count">%1$dpalavras bloqueadas importadas (%2$dduplicatas ignoradas)</string>
+    <string name="blocked_words_exported_count">%1$dpalavras bloqueadas exportadas</string>
+    <string name="blocked_words_no_words_to_export">Nenhuma palavra bloqueada para exportar</string>
+    <string name="blocked_words_import_failed">Falha ao importar palavras bloqueadas:%1$s</string>
+    <string name="blocked_words_export_failed">Falha ao exportar palavras bloqueadas:%1$s</string>
+    <string name="select_import_language">Selecione o idioma padrão para palavras importadas sem tags de idioma:</string>
+    <string name="select_file">Selecione o arquivo</string>
 </resources>

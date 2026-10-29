@@ -1799,4 +1799,13 @@ Activează inferența GGUF / llama.cpp pe dispozitiv pentru corectură și refor
     <string name="fine_tune_swipes_title">Gesturi de glisare și touchpad</string>
     <string name="fine_tune_advanced_title">Tastaturi fizice și experimentale</string>
     <string name="layout_symbols_cjk">Simboluri (chineză/CJK)</string>
+    <string name="import_blocked_words">Importă cuvinte blocate</string>
+    <string name="export_blocked_words">Exportați cuvintele blocate</string>
+    <string name="blocked_words_imported_count">S-au importat%1$dcuvinte blocate (%2$dduble au fost ignorate)</string>
+    <string name="blocked_words_exported_count">S-au exportat%1$dcuvinte blocate</string>
+    <string name="blocked_words_no_words_to_export">Nu există cuvinte blocate de exportat</string>
+    <string name="blocked_words_import_failed">Nu s-au putut importa cuvintele blocate:%1$s</string>
+    <string name="blocked_words_export_failed">Nu s-au putut exporta cuvintele blocate:%1$s</string>
+    <string name="select_import_language">Selectați limba implicită pentru cuvintele importate fără etichete de limbă:</string>
+    <string name="select_file">Selectați fișierul</string>
 </resources>

@@ -1875,4 +1875,13 @@
     <string name="fine_tune_swipes_title">انتقد الإيماءات ولوحة اللمس</string>
     <string name="fine_tune_advanced_title">لوحات المفاتيح المادية والتجريبية</string>
     <string name="layout_symbols_cjk">الرموز (الصينية / CJK)</string>
+    <string name="import_blocked_words">استيراد الكلمات المحظورة</string>
+    <string name="export_blocked_words">تصدير الكلمات المحظورة</string>
+    <string name="blocked_words_imported_count">تم استيراد%1$dمن الكلمات المحظورة (تم تخطي%2$dمن التكرارات)</string>
+    <string name="blocked_words_exported_count">تم تصدير%1$dمن الكلمات المحظورة</string>
+    <string name="blocked_words_no_words_to_export">لا توجد كلمات محظورة للتصدير</string>
+    <string name="blocked_words_import_failed">فشل استيراد الكلمات المحظورة:%1$s</string>
+    <string name="blocked_words_export_failed">فشل تصدير الكلمات المحظورة:%1$s</string>
+    <string name="select_import_language">حدد اللغة الافتراضية للكلمات المستوردة بدون علامات اللغة:</string>
+    <string name="select_file">حدد الملف</string>
 </resources>

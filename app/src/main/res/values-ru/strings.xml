@@ -1877,4 +1877,13 @@
     <string name="fine_tune_swipes_title">Жесты смахивания и сенсорная панель</string>
     <string name="fine_tune_advanced_title">Физические клавиатуры и экспериментальные</string>
     <string name="layout_symbols_cjk">Символы (китайский/CJK)</string>
+    <string name="import_blocked_words">Импортировать заблокированные слова</string>
+    <string name="export_blocked_words">Экспортировать заблокированные слова</string>
+    <string name="blocked_words_imported_count">Импортировано%1$dзаблокированных слов (пропущено%2$dдубликатов)</string>
+    <string name="blocked_words_exported_count">Экспортировано%1$dзаблокированных слов.</string>
+    <string name="blocked_words_no_words_to_export">Нет заблокированных слов для экспорта</string>
+    <string name="blocked_words_import_failed">Не удалось импортировать заблокированные слова:%1$s.</string>
+    <string name="blocked_words_export_failed">Не удалось экспортировать заблокированные слова:%1$s.</string>
+    <string name="select_import_language">Выберите язык по умолчанию для импортированных слов без языковых тегов:</string>
+    <string name="select_file">Выберите файл</string>
 </resources>

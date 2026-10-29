@@ -1804,4 +1804,13 @@
     <string name="fine_tune_swipes_title">Жэсты правядзення пальцам і сэнсарная панэль</string>
     <string name="fine_tune_advanced_title">Фізічныя і эксперыментальныя клавіятуры</string>
     <string name="layout_symbols_cjk">Сімвалы (кітайскія / CJK)</string>
+    <string name="import_blocked_words">Імпартаваць заблакаваныя словы</string>
+    <string name="export_blocked_words">Экспартаваць заблакаваныя словы</string>
+    <string name="blocked_words_imported_count">Імпартавана%1$dзаблакіраваных слоў (%2$dдублікатаў прапушчана)</string>
+    <string name="blocked_words_exported_count">Экспартавана%1$dзаблакіраваных слоў</string>
+    <string name="blocked_words_no_words_to_export">Няма заблакіраваных слоў для экспарту</string>
+    <string name="blocked_words_import_failed">Не ўдалося імпартаваць заблакіраваныя словы:%1$s</string>
+    <string name="blocked_words_export_failed">Не ўдалося экспартаваць заблакіраваныя словы:%1$s</string>
+    <string name="select_import_language">Выберыце мову па змаўчанні для імпартаваных слоў без моўных тэгаў:</string>
+    <string name="select_file">Выберыце файл</string>
 </resources>

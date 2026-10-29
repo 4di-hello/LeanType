@@ -1818,4 +1818,13 @@
     <string name="fine_tune_gesture_title">手势打字</string>
     <string name="fine_tune_swipes_title">滑动手势和触摸板</string>
     <string name="fine_tune_advanced_title">物理键盘和实验</string>
+    <string name="import_blocked_words">导入屏蔽词</string>
+    <string name="export_blocked_words">导出被阻止的单词</string>
+    <string name="blocked_words_imported_count">导入的%1$d块单词（跳过%2$d重复项）</string>
+    <string name="blocked_words_exported_count">已导出%1$d阻止的字词</string>
+    <string name="blocked_words_no_words_to_export">没有要导出的屏蔽词</string>
+    <string name="blocked_words_import_failed">无法导入阻止的字词：%1$s</string>
+    <string name="blocked_words_export_failed">无法导出阻止的字词：%1$s</string>
+    <string name="select_import_language">为没有语言标签的导入单词选择默认语言：</string>
+    <string name="select_file">选择文件</string>
 </resources>

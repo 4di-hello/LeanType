@@ -1854,4 +1854,13 @@ Umożliwia lokalne wnioskowanie GGUF / llama.cpp na urządzeniu w celu korekty i
     <string name="fine_tune_swipes_title">Gesty przesuwania i touchpad</string>
     <string name="fine_tune_advanced_title">Klawiatury fizyczne i eksperymentalne</string>
     <string name="layout_symbols_cjk">Symbole (chiński / CJK)</string>
+    <string name="import_blocked_words">Importuj zablokowane słowa</string>
+    <string name="export_blocked_words">Eksportuj zablokowane słowa</string>
+    <string name="blocked_words_imported_count">Zaimportowano%1$dzablokowanych słów (pominięto%2$dduplikaty)</string>
+    <string name="blocked_words_exported_count">Wyeksportowano%1$dzablokowanych słów</string>
+    <string name="blocked_words_no_words_to_export">Brak zablokowanych słów do wyeksportowania</string>
+    <string name="blocked_words_import_failed">Nie udało się zaimportować zablokowanych słów:%1$s</string>
+    <string name="blocked_words_export_failed">Nie udało się wyeksportować zablokowanych słów:%1$s</string>
+    <string name="select_import_language">Wybierz domyślny język dla importowanych słów bez znaczników językowych:</string>
+    <string name="select_file">Wybierz plik</string>
 </resources>

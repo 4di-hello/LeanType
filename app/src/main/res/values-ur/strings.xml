@@ -1861,4 +1861,13 @@
     <string name="fine_tune_swipes_title">اشاروں اور ٹچ پیڈ کو سوائپ کریں۔</string>
     <string name="fine_tune_advanced_title">فزیکل کی بورڈز اور تجرباتی</string>
     <string name="layout_symbols_cjk">علامات (چینی / CJK)</string>
+    <string name="import_blocked_words">مسدود الفاظ درآمد کریں۔</string>
+    <string name="export_blocked_words">مسدود الفاظ برآمد کریں۔</string>
+    <string name="blocked_words_imported_count">درآمد شدہ%1$dمسدود الفاظ (%2$dڈپلیکیٹس کو چھوڑ دیا گیا)</string>
+    <string name="blocked_words_exported_count">%1$dمسدود الفاظ برآمد کیے گئے۔</string>
+    <string name="blocked_words_no_words_to_export">برآمد کرنے کے لیے کوئی مسدود الفاظ نہیں۔</string>
+    <string name="blocked_words_import_failed">مسدود الفاظ کو درآمد کرنے میں ناکام:%1$s</string>
+    <string name="blocked_words_export_failed">مسدود الفاظ برآمد کرنے میں ناکام:%1$s</string>
+    <string name="select_import_language">لینگویج ٹیگز کے بغیر درآمد شدہ الفاظ کے لیے ڈیفالٹ زبان منتخب کریں:</string>
+    <string name="select_file">فائل منتخب کریں۔</string>
 </resources>

@@ -1817,4 +1817,13 @@ Umožňuje lokální inferenci GGUF / llama.cpp na zařízení pro korektury a p
     <string name="fine_tune_swipes_title">Přejíždění gesty a touchpadem</string>
     <string name="fine_tune_advanced_title">Fyzické klávesnice a experimentální</string>
     <string name="layout_symbols_cjk">Symboly (čínština / CJK)</string>
+    <string name="import_blocked_words">Importujte blokovaná slova</string>
+    <string name="export_blocked_words">Exportujte blokovaná slova</string>
+    <string name="blocked_words_imported_count">Importováno%1$dblokovaných slov ( vynechány duplikáty:%2$d)</string>
+    <string name="blocked_words_exported_count">Exportováno%1$dblokovaných slov</string>
+    <string name="blocked_words_no_words_to_export">Žádná blokovaná slova k exportu</string>
+    <string name="blocked_words_import_failed">Nepodařilo se importovat blokovaná slova:%1$s</string>
+    <string name="blocked_words_export_failed">Nepodařilo se exportovat blokovaná slova:%1$s</string>
+    <string name="select_import_language">Vyberte výchozí jazyk pro importovaná slova bez jazykových značek:</string>
+    <string name="select_file">Vyberte soubor</string>
 </resources>

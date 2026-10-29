@@ -1819,4 +1819,13 @@
     <string name="fine_tune_swipes_title">תנועות החלקה ומשטח מגע</string>
     <string name="fine_tune_advanced_title">מקלדות פיזיות וניסיוניות</string>
     <string name="layout_symbols_cjk">סמלים (סינית / CJK)</string>
+    <string name="import_blocked_words">ייבא מילים חסומות</string>
+    <string name="export_blocked_words">ייצא מילים חסומות</string>
+    <string name="blocked_words_imported_count">%1$dמילים חסומות יובאו (%2$dכפילויות דילגו)</string>
+    <string name="blocked_words_exported_count">ייצאו%1$dמילים חסומות</string>
+    <string name="blocked_words_no_words_to_export">אין מילים חסומות לייצוא</string>
+    <string name="blocked_words_import_failed">ייבוא ​​מילים חסומות נכשל:%1$s</string>
+    <string name="blocked_words_export_failed">ייצוא מילים חסומות נכשל:%1$s</string>
+    <string name="select_import_language">בחר שפת ברירת מחדל עבור מילים מיובאות ללא תגי שפה:</string>
+    <string name="select_file">בחר קובץ</string>
 </resources>

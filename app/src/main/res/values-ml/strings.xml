@@ -1870,4 +1870,13 @@
     <string name="fine_tune_swipes_title">ആംഗ്യങ്ങളും ടച്ച്പാഡും സ്വൈപ്പ് ചെയ്യുക</string>
     <string name="fine_tune_advanced_title">ഫിസിക്കൽ കീബോർഡുകളും പരീക്ഷണാത്മകവും</string>
     <string name="layout_symbols_cjk">ചിഹ്നങ്ങൾ (ചൈനീസ് / CJK)</string>
+    <string name="import_blocked_words">തടഞ്ഞ വാക്കുകൾ ഇറക്കുമതി ചെയ്യുക</string>
+    <string name="export_blocked_words">തടഞ്ഞ വാക്കുകൾ കയറ്റുമതി ചെയ്യുക</string>
+    <string name="blocked_words_imported_count">ഇറക്കുമതി ചെയ്‌ത%1$dതടഞ്ഞ വാക്കുകൾ (%2$dതനിപ്പകർപ്പുകൾ ഒഴിവാക്കി)</string>
+    <string name="blocked_words_exported_count">%1$dതടഞ്ഞ വാക്കുകൾ കയറ്റുമതി ചെയ്തു</string>
+    <string name="blocked_words_no_words_to_export">കയറ്റുമതി ചെയ്യാൻ തടഞ്ഞ വാക്കുകളൊന്നുമില്ല</string>
+    <string name="blocked_words_import_failed">തടഞ്ഞ വാക്കുകൾ ഇറക്കുമതി ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു:%1$s</string>
+    <string name="blocked_words_export_failed">തടഞ്ഞ വാക്കുകൾ കയറ്റുമതി ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു:%1$s</string>
+    <string name="select_import_language">ഭാഷാ ടാഗുകൾ ഇല്ലാതെ ഇറക്കുമതി ചെയ്ത വാക്കുകൾക്കായി ഡിഫോൾട്ട് ഭാഷ തിരഞ്ഞെടുക്കുക:</string>
+    <string name="select_file">ഫയൽ തിരഞ്ഞെടുക്കുക</string>
 </resources>

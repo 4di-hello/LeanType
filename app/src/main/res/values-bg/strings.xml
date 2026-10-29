@@ -1852,4 +1852,13 @@
     <string name="fine_tune_swipes_title">Плъзгащи жестове и тъчпад</string>
     <string name="fine_tune_advanced_title">Физически клавиатури и експериментални</string>
     <string name="layout_symbols_cjk">Символи (китайски / CJK)</string>
+    <string name="import_blocked_words">Импортирайте блокирани думи</string>
+    <string name="export_blocked_words">Експортиране на блокирани думи</string>
+    <string name="blocked_words_imported_count">Импортирани%1$dблокирани думи (%2$dпропуснати дубликати)</string>
+    <string name="blocked_words_exported_count">Експортирани%1$dблокирани думи</string>
+    <string name="blocked_words_no_words_to_export">Няма блокирани думи за експортиране</string>
+    <string name="blocked_words_import_failed">Неуспешно импортиране на блокирани думи:%1$s</string>
+    <string name="blocked_words_export_failed">Неуспешно експортиране на блокирани думи:%1$s</string>
+    <string name="select_import_language">Изберете език по подразбиране за импортирани думи без езикови тагове:</string>
+    <string name="select_file">Изберете файл</string>
 </resources>

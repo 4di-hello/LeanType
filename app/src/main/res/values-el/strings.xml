@@ -1870,4 +1870,13 @@
     <string name="fine_tune_swipes_title">Σύρετε χειρονομίες και επιφάνεια αφής</string>
     <string name="fine_tune_advanced_title">Φυσικά πληκτρολόγια και πειραματικά</string>
     <string name="layout_symbols_cjk">Σύμβολα (Κινεζικά / CJK)</string>
+    <string name="import_blocked_words">Εισαγωγή αποκλεισμένων λέξεων</string>
+    <string name="export_blocked_words">Εξαγωγή αποκλεισμένων λέξεων</string>
+    <string name="blocked_words_imported_count">Εισήχθησαν%1$dαποκλεισμένες λέξεις (%2$dπαράβλεψη διπλότυπων)</string>
+    <string name="blocked_words_exported_count">Εξήχθησαν%1$dαποκλεισμένες λέξεις</string>
+    <string name="blocked_words_no_words_to_export">Δεν υπάρχουν αποκλεισμένες λέξεις για εξαγωγή</string>
+    <string name="blocked_words_import_failed">Αποτυχία εισαγωγής αποκλεισμένων λέξεων:%1$s</string>
+    <string name="blocked_words_export_failed">Απέτυχε η εξαγωγή αποκλεισμένων λέξεων:%1$s</string>
+    <string name="select_import_language">Επιλέξτε προεπιλεγμένη γλώσσα για εισαγόμενες λέξεις χωρίς ετικέτες γλώσσας:</string>
+    <string name="select_file">Επιλέξτε αρχείο</string>
 </resources>

@@ -1799,4 +1799,13 @@ Võimaldab seadmesisese GGUF / llama.cpp järelduse korrektuuri ja ümbersõnast
     <string name="fine_tune_swipes_title">Pühkimisliigutused ja puuteplaat</string>
     <string name="fine_tune_advanced_title">Füüsilised klaviatuurid ja eksperimentaalsed</string>
     <string name="layout_symbols_cjk">Sümbolid (hiina / CJK)</string>
+    <string name="import_blocked_words">Blokeeritud sõnade importimine</string>
+    <string name="export_blocked_words">Ekspordi blokeeritud sõnad</string>
+    <string name="blocked_words_imported_count">Imporditud%1$dblokeeritud sõna (%2$dduplikaati jäeti vahele)</string>
+    <string name="blocked_words_exported_count">Eksporditi%1$dblokeeritud sõna</string>
+    <string name="blocked_words_no_words_to_export">Eksportimiseks pole blokeeritud sõnu</string>
+    <string name="blocked_words_import_failed">Blokeeritud sõnade importimine ebaõnnestus:%1$s</string>
+    <string name="blocked_words_export_failed">Blokeeritud sõnade eksportimine ebaõnnestus:%1$s</string>
+    <string name="select_import_language">Valige ilma keelemärgenditeta imporditud sõnade jaoks vaikekeel:</string>
+    <string name="select_file">Valige fail</string>
 </resources>

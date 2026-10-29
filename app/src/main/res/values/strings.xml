@@ -129,6 +129,15 @@
     <string name="add_blocked_word">Block a word</string>
     <string name="blocked_word_already_present">Word is already blocked</string>
     <string name="clear_all_blocked_words_confirmation">Are you sure you want to unblock all words?</string>
+    <string name="import_blocked_words">Import blocked words</string>
+    <string name="export_blocked_words">Export blocked words</string>
+    <string name="blocked_words_imported_count">Imported %1$d blocked words (%2$d duplicates skipped)</string>
+    <string name="blocked_words_exported_count">Exported %1$d blocked words</string>
+    <string name="blocked_words_no_words_to_export">No blocked words to export</string>
+    <string name="blocked_words_import_failed">Failed to import blocked words: %1$s</string>
+    <string name="blocked_words_export_failed">Failed to export blocked words: %1$s</string>
+    <string name="select_import_language">Select default language for imported words without language tags:</string>
+    <string name="select_file">Select file</string>
     <!-- Name of the main dictionary, as opposed to auxiliary dictionaries (medical/entertainment/sports...) -->
     <string name="main_dictionary">Main dictionary</string>
     <!-- Option to enable showing suggestions -->

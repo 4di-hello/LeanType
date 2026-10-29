@@ -1852,4 +1852,13 @@ Maakt GGUF / llama.cpp-inferentie op het apparaat mogelijk voor proeflezen en he
     <string name="fine_tune_swipes_title">Veeggebaren en touchpad</string>
     <string name="fine_tune_advanced_title">Fysieke toetsenborden en experimenteel</string>
     <string name="layout_symbols_cjk">Symbolen (Chinees / CJK)</string>
+    <string name="import_blocked_words">Importeer geblokkeerde woorden</string>
+    <string name="export_blocked_words">Exporteer geblokkeerde woorden</string>
+    <string name="blocked_words_imported_count">Geïmporteerde%1$dgeblokkeerde woorden (%2$dduplicaten overgeslagen)</string>
+    <string name="blocked_words_exported_count">%1$dgeblokkeerde woorden geëxporteerd</string>
+    <string name="blocked_words_no_words_to_export">Geen geblokkeerde woorden om te exporteren</string>
+    <string name="blocked_words_import_failed">Kan geblokkeerde woorden niet importeren:%1$s</string>
+    <string name="blocked_words_export_failed">Kan geblokkeerde woorden niet exporteren:%1$s</string>
+    <string name="select_import_language">Selecteer de standaardtaal voor geïmporteerde woorden zonder taaltags:</string>
+    <string name="select_file">Selecteer bestand</string>
 </resources>
