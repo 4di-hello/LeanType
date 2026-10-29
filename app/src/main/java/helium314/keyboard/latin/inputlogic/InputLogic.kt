@@ -2270,14 +2270,7 @@ class InputLogic(
             val codePoints = StringUtils.toCodePointArray(typedWordString)
             mWordComposer.setComposingWord(codePoints, mLatinIME.getCoordinatesForCurrentKeyboard(codePoints))
             mWordComposer.setCursorPositionWithinWord(typedWordString.codePointCount(0, numberOfCharsInWordBeforeCursor))
-            val success = mConnection.setComposingRegion(wordStart, wordEnd)
-            if (!success && !AppQuirksManager.shouldUseSelectionForWordReplacement(mLatinIME.currentInputEditorInfo?.packageName)) {
-                mWordComposer.reset()
-                mSuggestionStripViewAccessor.setNeutralSuggestionStrip()
-                mResumedWordStart = -1
-                mResumedWordEnd = -1
-                return
-            }
+            mConnection.setComposingRegion(wordStart, wordEnd)
         }
         if (range.getNumberOfCharsInWordAfterCursor() == 0 || suggestions.size <= 1) {
             mInputLogicHandler.getSuggestedWords {
@@ -2703,7 +2696,7 @@ class InputLogic(
             startTimeMillis = System.currentTimeMillis()
         }
         if (mWordComposer.isResumed() && mResumedWordStart >= 0 && mResumedWordEnd > mResumedWordStart) {
-            if (AppQuirksManager.shouldUseSelectionForWordReplacement(mLatinIME.currentInputEditorInfo?.packageName)) {
+            if (!mConnection.hasComposingText() || AppQuirksManager.shouldUseSelectionForWordReplacement(mLatinIME.currentInputEditorInfo?.packageName)) {
                 mConnection.finishComposingText()
                 mConnection.setSelection(mResumedWordStart, mResumedWordEnd)
             }

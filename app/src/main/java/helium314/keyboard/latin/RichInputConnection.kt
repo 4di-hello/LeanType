@@ -445,6 +445,8 @@ class RichInputConnection(private val mParent: InputMethodService) : PrivateComm
         return !TextUtils.isEmpty(after)
     }
 
+    fun hasComposingText(): Boolean = mComposingText.isNotEmpty()
+
     fun getCursorCapsMode(
         inputType: Int,
         spacingAndPunctuations: SpacingAndPunctuations,
