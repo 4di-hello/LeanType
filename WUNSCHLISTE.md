@@ -48,6 +48,8 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
 - 27.10.: Auf LeanType 4.3.0-beta1 aktualisiert (Sicherung `backup/daily-2026-10-27b`)
 - 28.10.: Auf LeanType 4.3.0-beta2 aktualisiert, nur Konflikte in den deutschen Texten (Sicherung `backup/daily-2026-10-28`); #680 ebenfalls auf beta2
 - 29.10.: Auf LeanType 4.3.0-beta3 aktualisiert, keine Konflikte (Sicherung `backup/daily-2026-10-29`); alle PR-Branches passen ohne Konflikt
+- 29.10.: Auf LeanType 4.3.0-beta4 aktualisiert (Sicherung `backup/daily-2026-10-29b`). LeanType hat jetzt selbst Kontext 4096 und passt die max. Tokens an die Textlänge an (512–2048); unser PR `fix/offline-ai-busy` ohne den Kontext-Teil neu aufgesetzt
+- Achtung beim Update-Branch: Ist der oberste Commit ein `[skip ci]`-Commit, startet GitHub keinen Build – dann einen normalen Commit obendrauf
 
 ## Zukunft von LeanType unsicher (21.10.; am 22.10. kam trotzdem v4.2.9)
 
