@@ -64,14 +64,12 @@ import helium314.keyboard.settings.updates.AppUpdatesManager
 import kotlinx.coroutines.launch
 
 private val currentChangelogItems = listOf(
-    "• Foldable & Tablet Controls: Added display fine-tuning (scale factor, side padding, split gap) with auto-detection",
-    "• Window Focus Retention: Prevented keyboard closing and focus loss on input picker dialogs in web browsers",
-    "• Window Open Flash Fix: Eliminated white/black window background flash on keyboard launch with zero-delay theme",
-    "• Suggestion Recapitalization: Enabled Shift recapitalization on suggestions and restored backspace completions",
-    "• Caps Lock Cold Start Fix: Prevented caps lock state from persisting across cold starts and new input fields",
-    "• Tamil V4 Layout Support: Added Tamil V4 layout option dynamically available across Tamil locales",
-    "• Decoupled Font Scaling: Independent secondary symbol font scaling and fixed slider stepping precision",
-    "• Animation Tightening: Instant key preview feedback with 35ms fade and eliminated view-switching jump"
+    "• Fast Typing Capitalization: Prevented second letter capitalization on fast typing and two-finger chording",
+    "• Backspace Suggestion Resumption: Restored word suggestions on backspace with selection fallback for web editors",
+    "• Foldable Landscape Profile: Accurately detected folded foldables in landscape to preserve compact phone layout",
+    "• Toolbar AI Key Delimiters: Repaired preference delimiters, deduplicated entries, and enabled custom AI keycodes",
+    "• Toolbar Icon Crash Guard: Safely rendered non-vector and bitmap drawables without Compose preview crashes",
+    "• Holo Theme Action Keys: Added missing action keys (Go, Send, Done, Next, Previous) with icon fallback inheritance"
 )
 
 @Composable

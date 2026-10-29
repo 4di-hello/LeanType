@@ -1,8 +1,6 @@
-- Added foldable and tablet display fine-tuning (scale factor, side padding, split gap) with auto-detection (#400).
-- Prevented keyboard auto-closing and focus loss on input picker dialogs in web browsers.
-- Eliminated white/black window background flash on keyboard open with zero-delay transparent theme.
-- Enabled Shift recapitalization on suggestions and restored backspace completions (#692).
-- Prevented caps lock from persisting on cold start input connections (#743).
-- Added Tamil V4 layout option dynamically available across Tamil locales.
-- Decoupled secondary symbol font scale and fixed slider stepping precision (#589).
-- Tightened key preview animations with 35ms fade and eliminated view-switching jump.
+- Prevented inadvertent second letter capitalization during fast typing (#743, #598).
+- Resumed word suggestions on backspace with selection fallback for web editors (#692).
+- Accurately classified folded foldables in landscape to maintain compact phone layout (#400).
+- Repaired toolbar preference delimiters, deduplicated keys, and enabled custom AI keycodes (#745).
+- Guarded toolbar icon rendering to safely display non-vector drawables without crashing.
+- Completed missing action keys for Holo icon theme with Material fallback inheritance (#400).
