@@ -266,7 +266,46 @@ class VoiceInputManager(
         }
     }
 
+    private fun userVoicePrompt(): String? =
+        ims.prefs().getString(VoiceConstants.PREF_VOICE_CUSTOM_PROMPT, "")?.trim()?.takeIf { it.isNotEmpty() }
+
+    private fun buildSessionConfig(sessionId: String, prompt: String?): VoiceSessionConfig {
+        val prefLang = ims.prefs().getString(VoiceConstants.PREF_VOICE_LANGUAGE, VoiceConstants.VOICE_LANG_FOLLOW_KEYBOARD)
+            ?: VoiceConstants.VOICE_LANG_FOLLOW_KEYBOARD
+        val languageTag = when (prefLang) {
+            VoiceConstants.VOICE_LANG_AUTO -> "auto"
+            VoiceConstants.VOICE_LANG_FOLLOW_KEYBOARD, "" -> {
+                try {
+                    RichInputMethodManager.getInstance().currentSubtypeLocale.toLanguageTag()
+                } catch (_: Exception) {
+                    java.util.Locale.getDefault().toLanguageTag()
+                }
+            }
+            else -> prefLang
+        }
+
+        val threads = ims.prefs().getString(VoiceConstants.PREF_VOICE_CPU_THREADS, "4")?.toIntOrNull() ?: 4
+
+        return VoiceSessionConfig(
+            sessionId = sessionId,
+            mode = VoiceConstants.MODE_ACCURATE,
+            languageTag = languageTag,
+            sampleRate = SAMPLE_RATE,
+            enablePartial = true,
+            maxSegmentMs = 5000,
+            hybridTimeoutMs = 0,
+            hybridFallbackToVosk = false,
+            cpuThreads = threads,
+            customPrompt = prompt
+        )
+    }
+
     private fun initiateSessionHandshake(sessionId: String) {
+        // LeanType+: transcribe the recording in pieces while still speaking
+        if (ims.prefs().getBoolean(VoiceConstants.PREF_VOICE_TRANSCRIBE_WHILE_SPEAKING, false)) {
+            startPiecewiseRecording()
+            return
+        }
         if (state == VoiceState.CONNECTING_PLUGIN) {
             updateState(VoiceState.STARTING_SESSION)
         }
@@ -283,35 +322,7 @@ class VoiceInputManager(
             return
         }
 
-        val prefLang = ims.prefs().getString(VoiceConstants.PREF_VOICE_LANGUAGE, VoiceConstants.VOICE_LANG_FOLLOW_KEYBOARD)
-            ?: VoiceConstants.VOICE_LANG_FOLLOW_KEYBOARD
-        val languageTag = when (prefLang) {
-            VoiceConstants.VOICE_LANG_AUTO -> "auto"
-            VoiceConstants.VOICE_LANG_FOLLOW_KEYBOARD, "" -> {
-                try {
-                    RichInputMethodManager.getInstance().currentSubtypeLocale.toLanguageTag()
-                } catch (_: Exception) {
-                    java.util.Locale.getDefault().toLanguageTag()
-                }
-            }
-            else -> prefLang
-        }
-
-        val threads = ims.prefs().getString(VoiceConstants.PREF_VOICE_CPU_THREADS, "4")?.toIntOrNull() ?: 4
-        val customPrompt = ims.prefs().getString(VoiceConstants.PREF_VOICE_CUSTOM_PROMPT, "")?.trim()?.takeIf { it.isNotEmpty() }
-
-        val config = VoiceSessionConfig(
-            sessionId = sessionId,
-            mode = VoiceConstants.MODE_ACCURATE,
-            languageTag = languageTag,
-            sampleRate = SAMPLE_RATE,
-            enablePartial = true,
-            maxSegmentMs = 5000,
-            hybridTimeoutMs = 0,
-            hybridFallbackToVosk = false,
-            cpuThreads = threads,
-            customPrompt = customPrompt
-        )
+        val config = buildSessionConfig(sessionId, userVoicePrompt())
 
         val callback = object : IVoiceCallback.Stub() {
             override fun onSessionStarted() {
@@ -504,7 +515,8 @@ class VoiceInputManager(
 
         isRecording.set(true)
         val isOnline = isCurrentSessionOnline
-        val writePfd = if (!isOnline) {
+        val piecewise = piecewiseActive
+        val writePfd = if (!isOnline && !piecewise) {
             audioPipeWriteSide ?: return false
         } else null
 
@@ -529,6 +541,10 @@ class VoiceInputManager(
             val sessionStartTime = System.currentTimeMillis()
             var lastSpeechTime = sessionStartTime
             var hasSpoken = false
+            // transcribe while speaking: the audio since the last cut, given to Whisper at a pause
+            val piece = if (piecewise) ByteArrayOutputStream() else null
+            var pieceHasSpeech = false
+            var pieceLastSpeech = 0L
 
             try {
                 if (!isOnline && writePfd != null) {
@@ -541,6 +557,8 @@ class VoiceInputManager(
                             synchronized(onlineAudioBuffer) {
                                 onlineAudioBuffer.write(buffer, 0, read)
                             }
+                        } else if (piece != null) {
+                            piece.write(buffer, 0, read)
                         } else {
                             outputStream?.write(buffer, 0, read)
                             outputStream?.flush()
@@ -573,6 +591,23 @@ class VoiceInputManager(
                         }
                         currentAudioLevel = kotlin.math.sqrt(rawNormalized).toFloat()
 
+                        if (piece != null) {
+                            if (rms > speechRmsThreshold) {
+                                pieceHasSpeech = true
+                                pieceLastSpeech = now
+                            }
+                            val pieceMs = piece.size() / BYTES_PER_MS
+                            val atPause = pieceHasSpeech && now - pieceLastSpeech >= PIECE_PAUSE_MS
+                            // a piece needs some seconds of speech: Whisper invents text for very short ones
+                            if ((atPause && pieceMs >= PIECE_MIN_MS) || pieceMs >= PIECE_MAX_MS) {
+                                val bytes = piece.toByteArray()
+                                piece.reset()
+                                val hadSpeech = pieceHasSpeech
+                                pieceHasSpeech = false
+                                if (hadSpeech) mainHandler.post { onPieceRecorded(bytes) }
+                            }
+                        }
+
                         if (silenceTimeoutMs > 0L) {
                             if (rms > speechRmsThreshold) {
                                 lastSpeechTime = now
@@ -600,6 +635,10 @@ class VoiceInputManager(
                 }
             } finally {
                 currentAudioLevel = 0f
+                if (piece != null) {
+                    val rest = if (pieceHasSpeech) piece.toByteArray() else null
+                    mainHandler.post { onPiecewiseRecordingEnded(rest) }
+                }
                 try { outputStream?.close() } catch (_: Exception) {}
                 Log.i(TAG, "Audio loop ended. Total wrote: $totalBytesWritten bytes")
             }
@@ -625,9 +664,10 @@ class VoiceInputManager(
             stopAudioLoop()
             if (isCurrentSessionOnline) {
                 processOnlineTranscription()
-            } else {
+            } else if (!piecewiseActive) {
                 pluginManager.stopSession()
             }
+            // transcribing while speaking: the end of the recording is reported by the audio thread
         }
     }
 
@@ -802,6 +842,126 @@ class VoiceInputManager(
         audioPipeWriteSide = null
     }
 
+    // ---- transcribe while speaking (LeanType+) ----
+    // The recording is cut at speech pauses and each piece is given to the plugin as its own session while
+    // recording goes on, one piece at a time. After stopping, only the last piece is left to transcribe.
+
+    private var piecewiseActive = false
+    private val pendingPieces = java.util.ArrayDeque<ByteArray>()
+    /** id of the plugin session transcribing a piece, null if none */
+    private var pieceInFlight: String? = null
+    private var piecewiseRecordingEnded = false
+    /** the text recognized so far, given to Whisper as context for the next piece */
+    private var piecewiseContext = ""
+
+    private fun startPiecewiseRecording() {
+        piecewiseActive = true
+        pendingPieces.clear()
+        pieceInFlight = null
+        piecewiseRecordingEnded = false
+        piecewiseContext = ""
+        cancelHandshakeTimeout()
+        if (startAudioRecordingThread()) {
+            updateState(VoiceState.RECORDING)
+        } else {
+            notifyError("Failed to start audio recording")
+            cleanupSession()
+            updateState(VoiceState.ERROR)
+        }
+    }
+
+    private fun onPieceRecorded(bytes: ByteArray) {
+        if (!piecewiseActive) return
+        pendingPieces.addLast(bytes)
+        transcribeNextPiece()
+    }
+
+    private fun onPiecewiseRecordingEnded(rest: ByteArray?) {
+        if (!piecewiseActive) return
+        if (rest != null) pendingPieces.addLast(rest)
+        piecewiseRecordingEnded = true
+        transcribeNextPiece()
+    }
+
+    private fun transcribeNextPiece() {
+        if (!piecewiseActive || pieceInFlight != null) return
+        val bytes = pendingPieces.pollFirst()
+        if (bytes == null) {
+            if (piecewiseRecordingEnded) {
+                Log.i(TAG, "Transcribing while speaking: all pieces done")
+                cleanupSession()
+                updateState(VoiceState.IDLE)
+            }
+            return
+        }
+        val pieceId = UUID.randomUUID().toString()
+        pieceInFlight = pieceId
+        val context = piecewiseContext.takeLast(PIECE_CONTEXT_CHARS).trim()
+        val prompt = listOfNotNull(userVoicePrompt(), context.takeIf { it.isNotEmpty() }).joinToString(" ").ifBlank { null }
+        val pipe = try {
+            ParcelFileDescriptor.createPipe()
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to create audio pipe for a piece", e)
+            failPiecewise("Failed to create audio pipe")
+            return
+        }
+        val callback = object : IVoiceCallback.Stub() {
+            override fun onSessionStarted() {}
+            override fun onPartial(text: String?) {}
+            override fun onFinal(text: String?) {
+                Log.i(TAG, "Piece recognized: ${text?.length ?: 0} chars")
+                mainHandler.post {
+                    if (pieceInFlight != pieceId) return@post
+                    val recognized = text.orEmpty().trim()
+                    if (recognized.isNotEmpty()) {
+                        syncRecognizedText(recognized, isFinal = true)
+                        piecewiseContext = (piecewiseContext + " " + recognized).takeLast(PIECE_CONTEXT_CHARS * 2)
+                    }
+                }
+            }
+            override fun onError(code: Int, message: String?) {
+                Log.e(TAG, "Piece error: code=$code, message='$message'")
+                mainHandler.post { if (pieceInFlight == pieceId) failPiecewise(message ?: "Voice error ($code)") }
+            }
+            override fun onSessionEnded() {
+                // the next piece only after the plugin is done, a new session would cancel this one
+                mainHandler.post {
+                    if (pieceInFlight != pieceId) return@post
+                    pieceInFlight = null
+                    transcribeNextPiece()
+                }
+            }
+        }
+        val started = try {
+            pluginManager.startSession(buildSessionConfig(pieceId, prompt), pipe[0], callback)
+        } finally {
+            closeQuietly(pipe[0])
+        }
+        if (!started) {
+            closeQuietly(pipe[1])
+            failPiecewise("Failed to start voice session with plugin")
+            return
+        }
+        Log.i(TAG, "Transcribing piece of ${bytes.size / BYTES_PER_MS} ms, ${pendingPieces.size} waiting")
+        // the pipe holds only a few seconds of audio: write while the plugin reads, not on this thread
+        Thread({
+            try {
+                FileOutputStream(pipe[1].fileDescriptor).use { it.write(bytes) }
+            } catch (e: Exception) {
+                Log.w(TAG, "Writing a piece to the plugin failed", e)
+            } finally {
+                closeQuietly(pipe[1])
+            }
+        }, "VoicePieceWriter").apply { isDaemon = true; start() }
+    }
+
+    private fun failPiecewise(message: String) {
+        notifyError(message)
+        pluginManager.cancelSession()
+        cleanupSession()
+        updateState(VoiceState.ERROR)
+    }
+
     private fun syncRecognizedText(rawText: String, isFinal: Boolean) {
         val ic = ims.currentInputConnection
         if (ic == null) {
@@ -944,6 +1104,9 @@ class VoiceInputManager(
     }
 
     private fun cleanupSession() {
+        piecewiseActive = false
+        pendingPieces.clear()
+        pieceInFlight = null
         onlineTranscriptionJob?.cancel()
         onlineTranscriptionJob = null
         synchronized(onlineAudioBuffer) {
@@ -994,6 +1157,14 @@ class VoiceInputManager(
         private const val FRAME_SIZE_SHORTS = SAMPLE_RATE * FRAME_SIZE_MS / 1000 // 480 shorts
         private const val FRAME_SIZE_BYTES = FRAME_SIZE_SHORTS * 2 // 960 bytes
         private const val HANDSHAKE_TIMEOUT_MS = 8000L
+        private const val BYTES_PER_MS = SAMPLE_RATE * 2 / 1000
+        /** silence that ends a piece when transcribing while speaking */
+        private const val PIECE_PAUSE_MS = 700L
+        /** shorter pieces wait for the next pause: Whisper invents text for very short audio */
+        private const val PIECE_MIN_MS = 4000
+        /** Whisper works on 30 s windows, cut before even without a pause */
+        private const val PIECE_MAX_MS = 25000
+        private const val PIECE_CONTEXT_CHARS = 200
 
         fun isBlockedEditor(info: EditorInfo?): Boolean {
             if (info == null) return false
