@@ -1818,4 +1818,5 @@
     <string name="fine_tune_gesture_title">הקלדת תנועות</string>
     <string name="fine_tune_swipes_title">תנועות החלקה ומשטח מגע</string>
     <string name="fine_tune_advanced_title">מקלדות פיזיות וניסיוניות</string>
+    <string name="layout_symbols_cjk">סמלים (סינית / CJK)</string>
 </resources>

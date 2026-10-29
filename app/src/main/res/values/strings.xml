@@ -1112,6 +1112,8 @@ language, hence "No language". -->
     <string name="layout_symbols" tools:keep="@string/layout_symbols">Symbols</string>
     <!-- Name for symbols layout for arabic language -->
     <string name="layout_symbols_arabic" tools:keep="@string/layout_symbols_arabic">Symbols (Arabic)</string>
+    <!-- Name for symbols layout for CJK / Chinese language -->
+    <string name="layout_symbols_cjk" tools:keep="@string/layout_symbols_cjk">Symbols (Chinese / CJK)</string>
     <!-- Name for more symbols layout (when pressing shift) -->
     <string name="layout_symbols_shifted" tools:keep="@string/layout_symbols_shifted">More symbols</string>
     <!-- Name for phone layout -->

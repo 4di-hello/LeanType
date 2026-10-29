@@ -1799,4 +1799,5 @@ Metin düzeltme ve yeniden yazma için cihaz üzerinde GGUF / llama.cpp çıkar�
     <string name="fine_tune_gesture_title">Hareketle yazma</string>
     <string name="fine_tune_swipes_title"></string>
     <string name="fine_tune_advanced_title">Fiziksel klavyeler ve deneysel</string>
+    <string name="layout_symbols_cjk">Semboller (Çince / CJK)</string>
 </resources>

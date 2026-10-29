@@ -1813,4 +1813,5 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="fine_tune_gesture_title">Gesteneingabe</string>
     <string name="fine_tune_swipes_title">Wischgesten und Touchpad</string>
     <string name="fine_tune_advanced_title">Physische Tastaturen und experimentell</string>
+    <string name="layout_symbols_cjk">Symbole (Chinesisch / CJK)</string>
 </resources>

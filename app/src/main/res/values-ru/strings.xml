@@ -1876,4 +1876,5 @@
     <string name="fine_tune_gesture_title">Ввод жестов</string>
     <string name="fine_tune_swipes_title">Жесты смахивания и сенсорная панель</string>
     <string name="fine_tune_advanced_title">Физические клавиатуры и экспериментальные</string>
+    <string name="layout_symbols_cjk">Символы (китайский/CJK)</string>
 </resources>

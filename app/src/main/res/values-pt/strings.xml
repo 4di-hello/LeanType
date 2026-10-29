@@ -1821,4 +1821,5 @@ Habilita inferência GGUF / llama.cpp no dispositivo para revisão e reescrita.<
     <string name="fine_tune_gesture_title">Digitação por gestos</string>
     <string name="fine_tune_swipes_title">Gestos de deslize e touchpad</string>
     <string name="fine_tune_advanced_title">Teclados físicos e experimentais</string>
+    <string name="layout_symbols_cjk">Símbolos (chinês/CJK)</string>
 </resources>

@@ -1771,4 +1771,5 @@
     <string name="fine_tune_gesture_title">Введення жестами</string>
     <string name="fine_tune_swipes_title">Жести пальцем і сенсорна панель</string>
     <string name="fine_tune_advanced_title">Фізичні та експериментальні клавіатури</string>
+    <string name="layout_symbols_cjk">Символи (китайські / CJK)</string>
 </resources>

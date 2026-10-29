@@ -283,6 +283,10 @@ private val genericCurrencyPopupKeys = listOf("£", "€", "$", "¢", "¥", "₱
 private fun getCurrency(locale: Locale): String {
     if (locale.country == "BD") return "৳"
     if (locale.country == "LK") return "රු"
+    if (locale.language == "zh") {
+        return if (locale.country == "TW") "$" else "¥"
+    }
+    if (locale.language == "ja") return "¥"
     return when (locale.language) {
         "ak" -> "¢"
         "dag" -> "¢"
@@ -326,7 +330,7 @@ private val euroLocales = "bg|ca|cs|da|de|el|en|es|et|eu|fi|fr|ga|gl|hr|hu|it|lb
 
 private val colonSpaceRegex = ":\\s+".toRegex()
 private val euroLanguagesRegex = "ca|eu|lb|mt|pms".toRegex()
-private val otherLanguagesRegex = "ak|dag|ee|fa|gaa|ha|he|ig|iw|lo|ko|km|mn|ne|si|th|uk|vi|yo".toRegex()
+private val otherLanguagesRegex = "ak|dag|ee|fa|gaa|ha|he|ig|iw|ja|lo|ko|km|mn|ne|si|th|uk|vi|yo|zh".toRegex()
 private val inLanguagesRegex = "hi|kn|ml|mr|ta|te|gu".toRegex()
 
 const val POPUP_KEYS_ALL = "all"

@@ -1828,4 +1828,5 @@ Permite la inferencia GGUF / llama.cpp en el dispositivo para corrección y rees
     <string name="fine_tune_gesture_title">Escritura de gestos</string>
     <string name="fine_tune_swipes_title">Gestos de deslizamiento y panel táctil</string>
     <string name="fine_tune_advanced_title">Teclados físicos y experimentales.</string>
+    <string name="layout_symbols_cjk">Símbolos (chino / CJK)</string>
 </resources>

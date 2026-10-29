@@ -1853,4 +1853,5 @@ Umożliwia lokalne wnioskowanie GGUF / llama.cpp na urządzeniu w celu korekty i
     <string name="fine_tune_gesture_title">Pisanie gestami</string>
     <string name="fine_tune_swipes_title">Gesty przesuwania i touchpad</string>
     <string name="fine_tune_advanced_title">Klawiatury fizyczne i eksperymentalne</string>
+    <string name="layout_symbols_cjk">Symbole (chiński / CJK)</string>
 </resources>

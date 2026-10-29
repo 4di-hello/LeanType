@@ -1876,4 +1876,5 @@ Abilita l\'inferenza GGUF / llama.cpp sul dispositivo per correzione e riscrittu
     <string name="fine_tune_gesture_title">Digitazione gestuale</string>
     <string name="fine_tune_swipes_title">Gesti di scorrimento e touchpad</string>
     <string name="fine_tune_advanced_title">Tastiere fisiche e sperimentali</string>
+    <string name="layout_symbols_cjk">Simboli (cinese/CJK)</string>
 </resources>

@@ -98,7 +98,8 @@ class CjkInputManager private constructor(private val context: Context) {
         if (ctx != null && (ctx.preedit.isNotEmpty() || ctx.candidates.isNotEmpty())) {
             isComposing = true
             if (ctx.preedit.isNotEmpty()) {
-                ic?.setComposingText(ctx.preedit, 1)
+                val composingText = ctx.preedit.replace("|", "")
+                ic?.setComposingText(composingText, 1)
             }
             uiListener?.onSetCandidateStripVisibility(true)
             uiListener?.onUpdateCandidates(ctx.candidates, ctx.selectedIndex, ctx.preedit)

@@ -1860,4 +1860,5 @@
     <string name="fine_tune_gesture_title">اشارہ ٹائپنگ</string>
     <string name="fine_tune_swipes_title">اشاروں اور ٹچ پیڈ کو سوائپ کریں۔</string>
     <string name="fine_tune_advanced_title">فزیکل کی بورڈز اور تجرباتی</string>
+    <string name="layout_symbols_cjk">علامات (چینی / CJK)</string>
 </resources>

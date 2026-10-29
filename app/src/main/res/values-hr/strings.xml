@@ -1791,4 +1791,5 @@ Omogućuje lokalno GGUF / llama.cpp zaključivanje na uređaju za lekturu i prep
     <string name="fine_tune_gesture_title">Pisanje gestama</string>
     <string name="fine_tune_swipes_title">Pokreti prijelaza i dodirna podloga</string>
     <string name="fine_tune_advanced_title">Fizičke tipkovnice i eksperimentalne</string>
+    <string name="layout_symbols_cjk">Simboli (kineski / CJK)</string>
 </resources>

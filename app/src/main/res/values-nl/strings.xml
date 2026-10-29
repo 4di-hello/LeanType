@@ -1851,4 +1851,5 @@ Maakt GGUF / llama.cpp-inferentie op het apparaat mogelijk voor proeflezen en he
     <string name="fine_tune_gesture_title">Typen met gebaren</string>
     <string name="fine_tune_swipes_title">Veeggebaren en touchpad</string>
     <string name="fine_tune_advanced_title">Fysieke toetsenborden en experimenteel</string>
+    <string name="layout_symbols_cjk">Symbolen (Chinees / CJK)</string>
 </resources>

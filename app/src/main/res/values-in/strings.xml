@@ -1766,4 +1766,5 @@ Memungkinkan inferensi GGUF / llama.cpp di perangkat untuk koreksi teks dan penu
     <string name="fine_tune_gesture_title">Ketikan isyarat</string>
     <string name="fine_tune_swipes_title">Gesek gerakan dan touchpad</string>
     <string name="fine_tune_advanced_title">Keyboard fisik dan eksperimental</string>
+    <string name="layout_symbols_cjk">Simbol (Cina / CJK)</string>
 </resources>

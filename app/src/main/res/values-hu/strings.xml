@@ -1807,4 +1807,5 @@ Lehetővé teszi az eszközön futó GGUF / llama.cpp következtetést a javít�
     <string name="fine_tune_gesture_title">Gépelés kézmozdulatokkal</string>
     <string name="fine_tune_swipes_title">Csúsztatási mozdulatok és az érintőpad</string>
     <string name="fine_tune_advanced_title">Fizikai billentyűzetek és kísérleti</string>
+    <string name="layout_symbols_cjk">Szimbólumok (kínai / CJK)</string>
 </resources>

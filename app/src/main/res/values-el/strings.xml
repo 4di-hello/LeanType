@@ -1869,4 +1869,5 @@
     <string name="fine_tune_gesture_title">Δακτυλογράφηση με χειρονομία</string>
     <string name="fine_tune_swipes_title">Σύρετε χειρονομίες και επιφάνεια αφής</string>
     <string name="fine_tune_advanced_title">Φυσικά πληκτρολόγια και πειραματικά</string>
+    <string name="layout_symbols_cjk">Σύμβολα (Κινεζικά / CJK)</string>
 </resources>

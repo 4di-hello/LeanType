@@ -1799,4 +1799,5 @@ Ar norite atnaujinti?</string>
     <string name="fine_tune_gesture_title">Rašymas gestais</string>
     <string name="fine_tune_swipes_title">Braukimo gestai ir jutiklinė dalis</string>
     <string name="fine_tune_advanced_title">Fizinės klaviatūros ir eksperimentinės</string>
+    <string name="layout_symbols_cjk">Simboliai (kinų / CJK)</string>
 </resources>

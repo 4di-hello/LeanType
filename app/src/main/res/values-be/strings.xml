@@ -1803,4 +1803,5 @@
     <string name="fine_tune_gesture_title">Увод жэстамі</string>
     <string name="fine_tune_swipes_title">Жэсты правядзення пальцам і сэнсарная панэль</string>
     <string name="fine_tune_advanced_title">Фізічныя і эксперыментальныя клавіятуры</string>
+    <string name="layout_symbols_cjk">Сімвалы (кітайскія / CJK)</string>
 </resources>

@@ -323,14 +323,21 @@ fun SubtypeScreen(
                             WithSmallTitle(stringResource(type.displayNameId)) {
                                 val explicitLayout = currentSubtype.layoutName(type)
                                 val isArabicSymbols = type == LayoutType.SYMBOLS && (ScriptUtils.isScriptRtl(currentSubtype.locale.script()) || explicitLayout == "symbols_arabic")
+                                val isCjkSymbols = type == LayoutType.SYMBOLS && (currentSubtype.locale.language == "zh" || explicitLayout == "symbols_cjk")
                                 val defaultLayout = if (isArabicSymbols) {
                                     prefs.getString(Settings.PREF_LAYOUT_PREFIX + "SYMBOLS_ARABIC", "symbols_arabic") ?: "symbols_arabic"
+                                } else if (isCjkSymbols) {
+                                    prefs.getString(Settings.PREF_LAYOUT_PREFIX + "SYMBOLS_CJK", "symbols_cjk") ?: "symbols_cjk"
                                 } else {
                                     Settings.readDefaultLayoutName(type, prefs)
                                 }
-                                val layout = if (isArabicSymbols && explicitLayout == "symbols_arabic") defaultLayout else (explicitLayout ?: defaultLayout)
+                                val layout = if (isArabicSymbols && explicitLayout == "symbols_arabic") defaultLayout
+                                    else if (isCjkSymbols && explicitLayout == "symbols_cjk") defaultLayout
+                                    else (explicitLayout ?: defaultLayout)
                                 val defaultLayouts = if (isArabicSymbols) {
                                     listOf("symbols_arabic")
+                                } else if (isCjkSymbols) {
+                                    listOf("symbols_cjk")
                                 } else if (type == LayoutType.SYMBOLS) {
                                     listOf("symbols")
                                 } else {
@@ -344,7 +351,7 @@ fun SubtypeScreen(
                                         setCurrentSubtype(currentSubtype.withLayout(type, it))
                                     },
                                     extraButton = {
-                                        DefaultButton(explicitLayout == null || (isArabicSymbols && explicitLayout == "symbols_arabic")) {
+                                        DefaultButton(explicitLayout == null || (isArabicSymbols && explicitLayout == "symbols_arabic") || (isCjkSymbols && explicitLayout == "symbols_cjk")) {
                                             setCurrentSubtype(currentSubtype.withoutLayout(type))
                                         }
                                     },

@@ -1798,4 +1798,5 @@ Activează inferența GGUF / llama.cpp pe dispozitiv pentru corectură și refor
     <string name="fine_tune_gesture_title">Tastarea gesturilor</string>
     <string name="fine_tune_swipes_title">Gesturi de glisare și touchpad</string>
     <string name="fine_tune_advanced_title">Tastaturi fizice și experimentale</string>
+    <string name="layout_symbols_cjk">Simboluri (chineză/CJK)</string>
 </resources>

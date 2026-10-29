@@ -1798,4 +1798,5 @@ Võimaldab seadmesisese GGUF / llama.cpp järelduse korrektuuri ja ümbersõnast
     <string name="fine_tune_gesture_title">Viipetega sisestamine</string>
     <string name="fine_tune_swipes_title">Pühkimisliigutused ja puuteplaat</string>
     <string name="fine_tune_advanced_title">Füüsilised klaviatuurid ja eksperimentaalsed</string>
+    <string name="layout_symbols_cjk">Sümbolid (hiina / CJK)</string>
 </resources>

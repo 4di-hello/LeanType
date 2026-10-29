@@ -40,6 +40,7 @@ object LayoutParser {
             return mutableListOf(mutableListOf()) // no functional keys
         val explicit = params.mId.mSubtype.layouts[layoutType]
         val isArabicSymbols = layoutType == LayoutType.SYMBOLS && (params.mId.mSubtype.isRtlSubtype || explicit == "symbols_arabic")
+        val isCjkSymbols = layoutType == LayoutType.SYMBOLS && (params.mId.mSubtype.locale.language == "zh" || explicit == "symbols_cjk")
         val layoutName = if (layoutType == LayoutType.MAIN) {
             params.mId.mSubtype.mainLayoutName
         } else if (isArabicSymbols) {
@@ -47,6 +48,12 @@ object LayoutParser {
                 explicit
             } else {
                 context.prefs().getString(Settings.PREF_LAYOUT_PREFIX + "SYMBOLS_ARABIC", "symbols_arabic") ?: "symbols_arabic"
+            }
+        } else if (isCjkSymbols) {
+            if (explicit != null && explicit != "symbols_cjk") {
+                explicit
+            } else {
+                context.prefs().getString(Settings.PREF_LAYOUT_PREFIX + "SYMBOLS_CJK", "symbols_cjk") ?: "symbols_cjk"
             }
         } else {
             explicit ?: Settings.readDefaultLayoutName(layoutType, context.prefs())

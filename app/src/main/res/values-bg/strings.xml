@@ -1851,4 +1851,5 @@
     <string name="fine_tune_gesture_title">Въвеждане с жестове</string>
     <string name="fine_tune_swipes_title">Плъзгащи жестове и тъчпад</string>
     <string name="fine_tune_advanced_title">Физически клавиатури и експериментални</string>
+    <string name="layout_symbols_cjk">Символи (китайски / CJK)</string>
 </resources>

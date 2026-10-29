@@ -59,6 +59,7 @@ fun SecondaryLayoutScreen(
             list.add(Settings.PREF_LAYOUT_PREFIX + it.name)
             if (it == LayoutType.SYMBOLS) {
                 list.add(Settings.PREF_LAYOUT_PREFIX + "SYMBOLS_ARABIC")
+                list.add(Settings.PREF_LAYOUT_PREFIX + "SYMBOLS_CJK")
             }
         }
         // Add configured custom layouts
@@ -165,7 +166,31 @@ fun createLayoutSettings(context: Context): List<Setting> {
                         defaultLayoutName = "symbols_arabic"
                     )
             }
-            listOf(mainSetting, arabicSetting)
+            val cjkSetting = Setting(context, Settings.PREF_LAYOUT_PREFIX + "SYMBOLS_CJK", R.string.layout_symbols_cjk) { setting ->
+                val ctx = LocalContext.current
+                val prefs = ctx.prefs()
+                val b = (ctx.getActivity() as? SettingsActivity)?.prefChanged?.collectAsState()
+                if ((b?.value ?: 0) < 0)
+                    Log.v("irrelevant", "stupid way to trigger recomposition on preference change")
+                var showDialog by rememberSaveable { mutableStateOf(false) }
+                val currentLayout = prefs.getString(Settings.PREF_LAYOUT_PREFIX + "SYMBOLS_CJK", "symbols_cjk") ?: "symbols_cjk"
+                val displayName = if (LayoutUtilsCustom.isCustomLayout(currentLayout)) LayoutUtilsCustom.getDisplayName(currentLayout)
+                    else currentLayout.getStringResourceOrName("layout_", ctx)
+                Preference(
+                    name = setting.title,
+                    description = displayName,
+                    onClick = { showDialog = true }
+                )
+                if (showDialog)
+                    LayoutPickerDialog(
+                        onDismissRequest = { showDialog = false },
+                        setting = setting,
+                        layoutType = LayoutType.SYMBOLS,
+                        prefKey = Settings.PREF_LAYOUT_PREFIX + "SYMBOLS_CJK",
+                        defaultLayoutName = "symbols_cjk"
+                    )
+            }
+            listOf(mainSetting, arabicSetting, cjkSetting)
         } else {
             listOf(mainSetting)
         }

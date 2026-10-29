@@ -1874,4 +1874,5 @@
     <string name="fine_tune_gesture_title">الكتابة بالإيماءات</string>
     <string name="fine_tune_swipes_title">انتقد الإيماءات ولوحة اللمس</string>
     <string name="fine_tune_advanced_title">لوحات المفاتيح المادية والتجريبية</string>
+    <string name="layout_symbols_cjk">الرموز (الصينية / CJK)</string>
 </resources>

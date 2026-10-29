@@ -1816,4 +1816,5 @@ Umožňuje lokální inferenci GGUF / llama.cpp na zařízení pro korektury a p
     <string name="fine_tune_gesture_title">Psaní gesty</string>
     <string name="fine_tune_swipes_title">Přejíždění gesty a touchpadem</string>
     <string name="fine_tune_advanced_title">Fyzické klávesnice a experimentální</string>
+    <string name="layout_symbols_cjk">Symboly (čínština / CJK)</string>
 </resources>

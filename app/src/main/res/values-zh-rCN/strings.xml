@@ -284,6 +284,7 @@
     <string name="button_save_file">保存到文件</string>
     <string name="delete_layout">确定要删除自定义布局 %s？</string>
     <string name="layout_symbols_arabic" tools:keep="@string/layout_symbols_arabic">符号（阿拉伯语）</string>
+    <string name="layout_symbols_cjk" tools:keep="@string/layout_symbols_cjk">符号（中文 / CJK）</string>
     <string name="theme_name_user" tools:keep="@string/theme_name_user">用户自定义</string>
     <string name="select_color_gesture">滑行输入法</string>
     <string name="switch_keyboard_after">切换到主键盘后…</string>

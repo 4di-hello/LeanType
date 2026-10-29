@@ -1795,4 +1795,5 @@
     <string name="fine_tune_gesture_title">जेस्चर टाइपिंग</string>
     <string name="fine_tune_swipes_title">स्वाइप जेस्चर और टचपैड</string>
     <string name="fine_tune_advanced_title">भौतिक कीबोर्ड और प्रयोगात्मक</string>
+    <string name="layout_symbols_cjk">प्रतीक (चीनी / सीजेके)</string>
 </resources>

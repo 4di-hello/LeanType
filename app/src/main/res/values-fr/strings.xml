@@ -1865,4 +1865,5 @@ Permet l\'inférence GGUF / llama.cpp sur l\'appareil pour la correction et la r
     <string name="fine_tune_gesture_title">Saisie gestuelle</string>
     <string name="fine_tune_swipes_title">Gestes de balayage et pavé tactile</string>
     <string name="fine_tune_advanced_title">Claviers physiques et expérimentaux</string>
+    <string name="layout_symbols_cjk">Symboles (chinois/CJK)</string>
 </resources>

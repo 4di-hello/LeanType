@@ -1869,4 +1869,5 @@
     <string name="fine_tune_gesture_title">ആംഗ്യ ടൈപ്പിംഗ്</string>
     <string name="fine_tune_swipes_title">ആംഗ്യങ്ങളും ടച്ച്പാഡും സ്വൈപ്പ് ചെയ്യുക</string>
     <string name="fine_tune_advanced_title">ഫിസിക്കൽ കീബോർഡുകളും പരീക്ഷണാത്മകവും</string>
+    <string name="layout_symbols_cjk">ചിഹ്നങ്ങൾ (ചൈനീസ് / CJK)</string>
 </resources>
