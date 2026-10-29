@@ -239,7 +239,7 @@ object Defaults {
     const val PREF_OFFLINE_SHOW_THINKING = false
     const val PREF_OFFLINE_SYSTEM_PROMPT = "Correct the grammar and spelling. Keep the same language as the input. Do not translate. Output only the corrected text."
     const val PREF_OFFLINE_TRANSLATE_SYSTEM_PROMPT = "Translate the following text to {lang}. Output only the translation, nothing else:\n\n"
-    const val PREF_OFFLINE_MAX_TOKENS = 64  // Accurate (64 tokens) default
+    const val PREF_OFFLINE_MAX_TOKENS = 512
     const val PREF_OFFLINE_TRANSLATE_TARGET_LANGUAGE = "French"
     const val PREF_OFFLINE_KEEP_MODEL_LOADED = false
     const val PREF_AI_ALLOW_INSECURE_CONNECTIONS = false

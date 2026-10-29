@@ -110,7 +110,7 @@ class ProofreadService(private val context: Context) {
                 val threads = if (cores <= 4) cores else 4
                 
                 Log.i(TAG, "Loading GGUF model via AI Plugin: path=$modelPath threads=$threads")
-                val success = provider.loadModel(context, modelPath, threads, 2048)
+                val success = provider.loadModel(context, modelPath, threads, 4096)
                 if (success) {
                     currentModelPath = modelPath
                     isModelLoaded = true
@@ -333,6 +333,10 @@ class ProofreadService(private val context: Context) {
         showThinking: Boolean? = null,
         targetLanguage: String? = null
     ): Result<String> = withContext(Dispatchers.IO) {
+        if (text.length > 12000) {
+            return@withContext Result.failure(ProofreadException("Text is too long for offline model (${text.length} characters). Please select a shorter passage."))
+        }
+
         val modelPath = getModelPath()
         if (modelPath.isNullOrBlank()) {
             return@withContext Result.failure(ProofreadException("Model not loaded. Please select a GGUF model file."))
@@ -351,7 +355,11 @@ class ProofreadService(private val context: Context) {
         ModelHolder.cancelUnload()
 
         try {
-            val maxTokens = sharedPrefs.getInt(Settings.PREF_OFFLINE_MAX_TOKENS, Defaults.PREF_OFFLINE_MAX_TOKENS)
+            val configuredMaxTokens = sharedPrefs.getInt(Settings.PREF_OFFLINE_MAX_TOKENS, Defaults.PREF_OFFLINE_MAX_TOKENS)
+            // Ensure enough tokens are allocated to complete the output without premature mid-sentence truncation
+            val estimatedTokensNeeded = (text.length / 2.5).toInt() + 128
+            val effectiveMaxTokens = maxOf(configuredMaxTokens, estimatedTokensNeeded, 512).coerceAtMost(2048)
+
             val temp = sharedPrefs.getFloat(Settings.PREF_OFFLINE_TEMP, Defaults.PREF_OFFLINE_TEMP)
             val topP = sharedPrefs.getFloat(Settings.PREF_OFFLINE_TOP_P, Defaults.PREF_OFFLINE_TOP_P)
             val topK = sharedPrefs.getInt(Settings.PREF_OFFLINE_TOP_K, Defaults.PREF_OFFLINE_TOP_K)
@@ -399,7 +407,7 @@ class ProofreadService(private val context: Context) {
                 "top_p" to topP.toDouble(),
                 "top_k" to topK,
                 "min_p" to minP.toDouble(),
-                "max_tokens" to maxTokens
+                "max_tokens" to effectiveMaxTokens
             ))
 
             // Schedule unload after work is done
