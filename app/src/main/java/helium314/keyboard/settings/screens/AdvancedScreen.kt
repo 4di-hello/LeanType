@@ -1002,6 +1002,10 @@ fun createAdvancedSettings(context: Context) = listOfNotNull(
     if (BuildConfig.FLAVOR == "offline") Setting(context, SettingsWithoutKey.OFFLINE_KEEP_MODEL_LOADED, R.string.offline_keep_model_loaded_title, R.string.offline_keep_model_loaded_summary) {
         SwitchPreference(it, Defaults.PREF_OFFLINE_KEEP_MODEL_LOADED)
     } else null,
+    if (BuildConfig.FLAVOR == "offline") Setting(context, Settings.PREF_OFFLINE_PROOFREAD_ONLY_CORRECTIONS,
+        R.string.offline_proofread_only_corrections_title, R.string.offline_proofread_only_corrections_summary) {
+        SwitchPreference(it, Defaults.PREF_OFFLINE_PROOFREAD_ONLY_CORRECTIONS)
+    } else null,
     if (BuildConfig.FLAVOR == "offline") Setting(context, SettingsWithoutKey.OFFLINE_MODEL_PATH, R.string.offline_model_title, R.string.offline_model_summary) { setting ->
         val context = LocalContext.current
         val service = remember { helium314.keyboard.latin.utils.ProofreadService(context) }
