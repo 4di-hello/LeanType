@@ -1,6 +1,4 @@
-- Prevented inadvertent second letter capitalization during fast typing (#743, #598).
-- Resumed word suggestions on backspace with selection fallback for web editors (#692).
-- Accurately classified folded foldables in landscape to maintain compact phone layout (#400).
-- Repaired toolbar preference delimiters, deduplicated keys, and enabled custom AI keycodes (#745).
-- Guarded toolbar icon rendering to safely display non-vector drawables without crashing.
-- Completed missing action keys for Holo icon theme with Material fallback inheritance (#400).
+- Added full-width Chinese punctuation, dedicated CJK symbols layout, and preedit synchronization for CJK IME.
+- Dynamically scaled max tokens and expanded context limit (up to 3,072 tokens) for Offline AI on long texts.
+- Added standalone import and export for blocked words supporting multi-language wordlists and deduplication (#687).
+- Scoped update notification badges specifically to the Updates section and main keyboard updater.

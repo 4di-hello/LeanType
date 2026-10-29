@@ -64,12 +64,10 @@ import helium314.keyboard.settings.updates.AppUpdatesManager
 import kotlinx.coroutines.launch
 
 private val currentChangelogItems = listOf(
-    "• Fast Typing Capitalization: Prevented second letter capitalization on fast typing and two-finger chording",
-    "• Backspace Suggestion Resumption: Restored word suggestions on backspace with selection fallback for web editors",
-    "• Foldable Landscape Profile: Accurately detected folded foldables in landscape to preserve compact phone layout",
-    "• Toolbar AI Key Delimiters: Repaired preference delimiters, deduplicated entries, and enabled custom AI keycodes",
-    "• Toolbar Icon Crash Guard: Safely rendered non-vector and bitmap drawables without Compose preview crashes",
-    "• Holo Theme Action Keys: Added missing action keys (Go, Send, Done, Next, Previous) with icon fallback inheritance"
+    "• Chinese Punctuation & CJK Symbols: Added full-width Chinese punctuation, dedicated CJK symbols layout, and preedit synchronization",
+    "• Offline AI Long Text Scaling: Dynamically scaled generation tokens and expanded context limit to 3,072 tokens for long paragraphs",
+    "• Blocked Words Import & Export: Added standalone text file import and export with language tagging and duplicate filtering (#687)",
+    "• Update Notification Badging: Scoped red dot update badges specifically to the Updates section and keyboard updater"
 )
 
 @Composable
