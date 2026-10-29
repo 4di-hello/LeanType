@@ -17,6 +17,7 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
   - 18.10.: Anweisung und Text getrennt (System-/Nutzernachricht), kein eingebautes Beispiel mehr („großes Haus“); `{text}` nicht mehr nötig
   - LFM2 (Liquid, z. B. LFM2-2.6B Q4_K_M) wird erkannt (Dateiname enthält „lfm“) – getestet 29.10.: viel langsamer als Qwen3-4B Q4_0, verworfen
   - Erledigt 29.10.: Schalter „Korrektur-Taste: nur Fehler“ (Einstellungen → KI) für die eingebaute Korrektur-Taste
+- Spracheingabe: Schalter „Schon beim Sprechen erkennen“ (29.10., Standard aus). Aufnahme wird bei Sprechpausen (0,7 s, Stück mind. 4 s) zerlegt, jedes Stück als eigene Plugin-Sitzung, der bisherige Text geht als Kontext mit. Bekannt: das Sprach-Plugin schreibt erkannten Text ins Systemprotokoll (nur mit eigenem Plugin änderbar)
   - Erledigt 27.10.: Chip „Nur Korrekturen“ (#corrections) für KI-Tasten – Modell nennt nur „falsch → richtig“, LeanType+ setzt es ein; Prompt optional
   - Erledigt 27.10.: KI-Taste, Korrektur- oder Übersetzen-Taste nochmal tippen bricht ab (Plugin rechnet im Hintergrund zu Ende, Ergebnis wird verworfen)
   - Erledigt 28.10.: Fortschritt als dünner Balken im Laderahmen (geschätzt aus den letzten Läufen derselben Taste), die gestartete Taste zeigt ein X. Wortzähler geht nicht, das Plugin liefert erst am Ende Text
