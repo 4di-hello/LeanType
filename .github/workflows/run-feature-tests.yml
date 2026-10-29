@@ -1,0 +1,64 @@
+name: Run feature tests
+# Only for this fork: runs the unit tests touched by the feature branches.
+# Triggered by pushing to the branch ci/run-tests.
+
+on:
+  push:
+    branches: [ ci/run-tests, 'ci/test-*' ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+
+      - name: Set up JDK
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5.0.2
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Run unit tests
+        run: >
+          set -o pipefail &&
+          ./gradlew testStandardRunTestsUnitTest
+          --tests "helium314.keyboard.latin.InputLogicTest"
+          --tests "helium314.keyboard.latin.suggestions.SuggestionStripLayoutHelperTest"
+          --tests "helium314.keyboard.latin.heatmap.TypingHeatmapTest"
+          2>&1 | tee gradle.log
+
+      - name: Report compile errors as annotations
+        if: ${{ failure() }}
+        run: |
+          grep -E "^e: " gradle.log | head -20 | sed 's/^/::error::/' || true
+
+      - name: Report failures as annotations
+        if: ${{ failure() }}
+        run: |
+          python3 - <<'PY'
+          import glob, re, xml.etree.ElementTree as ET
+          for f in glob.glob('app/build/test-results/**/*.xml', recursive=True):
+              for tc in ET.parse(f).getroot().iter('testcase'):
+                  for fl in tc.findall('failure'):
+                      msg = (fl.get('message') or fl.text or '')[:600].replace('\n', ' ')
+                      print(f"::error title={tc.get('name')}::{msg}")
+                      if 'DYNAMIC_RECEIVER' not in msg:
+                          frames = [l.strip() for l in (fl.text or '').splitlines() if 'helium314' in l or 'Caused' in l or 'Exception' in l][:25]
+                          print(f"::error title=STACK {tc.get('name')}::" + ' | '.join(frames))
+          PY
+
+      - name: Report test counts as annotations
+        if: ${{ always() }}
+        run: |
+          python3 - <<'PY'
+          import glob, xml.etree.ElementTree as ET
+          for f in glob.glob('app/build/test-results/**/*.xml', recursive=True):
+              r = ET.parse(f).getroot()
+              print(f"::notice title={r.get('name')}::tests={r.get('tests')} failures={r.get('failures')} errors={r.get('errors')} skipped={r.get('skipped')}")
+          PY
