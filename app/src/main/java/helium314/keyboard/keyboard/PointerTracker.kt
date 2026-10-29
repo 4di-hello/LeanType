@@ -278,6 +278,24 @@ class PointerTracker private constructor(
                 && oldId.mHeight == newId.mHeight
     }
 
+    /**
+     * True if [newCode], found at the same position after the layout changed because of this key press, is the key that
+     * was pressed. Letters that only differ in case count as the same key only if another finger is still down on a
+     * letter key: that letter uses up the one-shot shift (it is typed in upper case), so this key has to be taken from the
+     * unshifted layout. Without such a finger (e.g. the initial capital of a sentence after a space is pressed while the
+     * space is still down) the pressed key stays as it is, so the capital is not lost.
+     */
+    private fun isSameKeyOnChangedLayout(newCode: Int, pressedCode: Int): Boolean {
+        if (newCode == pressedCode) return true
+        if (newCode <= 0 || pressedCode <= 0 || Character.toLowerCase(newCode) != Character.toLowerCase(pressedCode)) return false
+        return hasOlderLetterKeyDown()
+    }
+
+    private fun hasOlderLetterKeyDown(): Boolean = sPointerTrackerQueue.hasOlderNonModifierElementMatching(this) {
+        val code = (it as? PointerTracker)?.mCurrentKey?.code ?: return@hasOlderNonModifierElementMatching false
+        code > 0 && Character.isLetter(code)
+    }
+
     override fun isInDraggingFinger(): Boolean = mIsInDraggingFinger
 
     val key: Key? get() = mCurrentKey
@@ -565,7 +583,7 @@ class PointerTracker private constructor(
                 keyboardChangeOccupiedHeightDifference = 0
                 CoordinateUtils.set(mDownCoordinates, x, y + yOffset)
                 val newKey = mKeyDetector.detectHitKey(x, y + yOffset)
-                if (newKey != null && newKey.code == pressedKey.code) {
+                if (newKey != null && isSameKeyOnChangedLayout(newKey.code, pressedKey.code)) {
                     key = onDownKey(x, y + yOffset, eventTime)
                 } else {
                     key = null
@@ -690,7 +708,7 @@ class PointerTracker private constructor(
         val pressedKey = newKey
         if (callListenerOnPressAndCheckKeyboardLayoutChange(pressedKey, 0)) {
             val candidateKey = onMoveKey(x, y)
-            key = if (candidateKey != null && candidateKey.code == pressedKey.code) candidateKey else null
+            key = if (candidateKey != null && isSameKeyOnChangedLayout(candidateKey.code, pressedKey.code)) candidateKey else null
         }
         onMoveToNewKey(key, x, y)
         if (mIsTrackingForActionDisabled) {

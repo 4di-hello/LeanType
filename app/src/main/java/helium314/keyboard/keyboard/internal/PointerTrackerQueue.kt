@@ -146,6 +146,19 @@ class PointerTrackerQueue {
         }
     }
 
+    /** True if a non-modifier element older than [pointer] satisfies [predicate]. */
+    fun hasOlderNonModifierElementMatching(pointer: Element, predicate: (Element) -> Boolean): Boolean {
+        synchronized(mExpandableArrayOfActivePointers) {
+            val arraySize = mArraySize
+            for (index in 0 until arraySize) {
+                val element = mExpandableArrayOfActivePointers[index]
+                if (element === pointer) return false
+                if (!element.isModifier() && predicate(element)) return true
+            }
+            return false
+        }
+    }
+
     fun isAnyInDraggingFinger(): Boolean {
         synchronized(mExpandableArrayOfActivePointers) {
             val arraySize = mArraySize
