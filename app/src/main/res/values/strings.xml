@@ -2238,6 +2238,8 @@ New dictionary:
     <string name="custom_ai_keyword_generate_label">Generate</string>
     <string name="custom_ai_keyword_outputonly_label">Result only</string>
     <string name="custom_ai_keyword_append_label">Append result</string>
+    <string name="voice_transcribe_while_speaking_title">Transcribe while speaking</string>
+    <string name="voice_transcribe_while_speaking_summary">At every pause in speech the part spoken so far is already transcribed. After stopping, only the last part is left: much shorter wait for long dictations.</string>
     <string name="offline_proofread_only_corrections_title">Proofread key: only corrections</string>
     <string name="offline_proofread_only_corrections_summary">The model only lists the mistakes and LeanType fixes them in the text. Much faster than rewriting the whole text. Turn off if your model does not manage this.</string>
     <string name="custom_ai_keyword_corrections_label">Only corrections</string>
