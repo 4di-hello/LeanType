@@ -87,7 +87,6 @@ fun UpdatesScreen(
     var updateCheckStatus by remember { mutableStateOf<String?>(null) }
     val isAppUpdateAvailable = remember(updateTrigger) { AppUpdatesManager.hasAppUpdate(context) }
     val latestVersionTag = remember(updateTrigger) { AppUpdatesManager.getAppLatestVersion(context) }
-    val hasAnyPluginUpdate = remember(updateTrigger) { AppUpdatesManager.hasAnyPluginUpdate(context) }
     val pluginStatuses = remember(updateTrigger) { AppUpdatesManager.getInstalledPluginStatuses(context) }
     var isAutoCheckEnabled by remember { mutableStateOf(prefs.getBoolean(AppUpdatesManager.PREF_AUTO_CHECK, true)) }
 
@@ -98,13 +97,10 @@ fun UpdatesScreen(
         updateCheckStatus = null
         scope.launch {
             try {
-                val (appUpdate, plugins) = AppUpdatesManager.checkAllUpdates(context)
-                val anyPluginUpdate = plugins.any { it.isUpdateAvailable }
+                val (appUpdate, _) = AppUpdatesManager.checkAllUpdates(context)
                 if (appUpdate) {
                     val tag = AppUpdatesManager.getAppLatestVersion(context)
                     updateCheckStatus = context.getString(R.string.updates_update_available, tag ?: "")
-                } else if (anyPluginUpdate) {
-                    updateCheckStatus = context.getString(R.string.updates_plugin_updates_found)
                 } else {
                     updateCheckStatus = context.getString(R.string.updates_up_to_date)
                 }
@@ -227,7 +223,6 @@ fun UpdatesScreen(
                                 isCheckingUpdates -> stringResource(R.string.updates_checking)
                                 status != null -> status
                                 isAppUpdateAvailable && latestVersionTag != null -> stringResource(R.string.updates_update_available, latestVersionTag)
-                                hasAnyPluginUpdate -> stringResource(R.string.updates_plugin_updates_found)
                                 else -> currentVersionText
                             }
 
@@ -243,7 +238,7 @@ fun UpdatesScreen(
                                             strokeWidth = 2.dp,
                                             color = MaterialTheme.colorScheme.primary
                                         )
-                                    } else if (isAppUpdateAvailable || hasAnyPluginUpdate) {
+                                    } else if (isAppUpdateAvailable) {
                                         Row(
                                             verticalAlignment = Alignment.CenterVertically,
                                             horizontalArrangement = Arrangement.spacedBy(6.dp)

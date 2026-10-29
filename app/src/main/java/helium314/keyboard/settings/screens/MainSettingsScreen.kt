@@ -92,7 +92,6 @@ fun MainSettingsScreen(
         }
         val updateTrigger by AppUpdatesManager.updateState.collectAsState()
         val hasAnyUpdate = remember(updateTrigger) { AppUpdatesManager.hasAnyUpdate(ctx) }
-        val hasPluginUpdate = remember(updateTrigger) { AppUpdatesManager.hasAnyPluginUpdate(ctx) }
         val sixDaysMs = 6L * 24 * 60 * 60 * 1000
         val shouldShow = !neverShowAgain && (
             (lastShown == 0L && settingsOpenCount >= 2) ||
@@ -156,7 +155,7 @@ fun MainSettingsScreen(
                             name = stringResource(R.string.plugins_title),
                             onClick = onClickLibraries,
                             icon = R.drawable.ic_emoji_objects
-                        ) { NextScreenIcon(hasUpdateBadge = hasPluginUpdate) }
+                        ) { NextScreenIcon() }
                         Preference(
                             name = stringResource(R.string.language_and_layouts_title),
                             description = enabledSubtypesDescription,
