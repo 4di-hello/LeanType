@@ -47,6 +47,7 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
 - Mit Konflikten: von Hand lösen, auf `update/<name>` pushen. Der Workflow baut und testet dort, nur wenn alles grün ist, ersetzt er `daily` und veröffentlicht. Sicherung des alten Stands vorher als `backup/…`
 - 27.10.: Auf LeanType 4.3.0-beta1 aktualisiert (Sicherung `backup/daily-2026-10-27b`)
 - 28.10.: Auf LeanType 4.3.0-beta2 aktualisiert, nur Konflikte in den deutschen Texten (Sicherung `backup/daily-2026-10-28`); #680 ebenfalls auf beta2
+- 29.10.: Auf LeanType 4.3.0-beta3 aktualisiert, keine Konflikte (Sicherung `backup/daily-2026-10-29`); alle PR-Branches passen ohne Konflikt
 
 ## Zukunft von LeanType unsicher (21.10.; am 22.10. kam trotzdem v4.2.9)
 
