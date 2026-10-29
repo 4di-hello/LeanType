@@ -103,7 +103,11 @@ Chip: Text bearbeiten
 Schreibe den folgenden Text als höfliche, sachliche Ich-Nachricht in der Sie-Form, ohne Floskeln. Beginne mit „Sehr geehrte Damen und Herren," und ende mit „Mit freundlichen Grüßen" und [Name]. Behalte alle Angaben, erfinde nichts dazu. Gib nur die Nachricht aus.
 ```
 
-## Korrektur-Taste – Nur Korrekturen (ab Build vom 27.10.)
+## Eingebaute Korrektur-Taste (Symbolleiste)
+
+Einstellungen → KI → „Korrektur-Taste: nur Fehler“ (ab Build vom 29.10., Standard aus). An: Die eingebaute Korrektur-Taste arbeitet wie der Chip „Nur Korrekturen“ unten, also schnell und nur mit den Fehlern. Aus: Sie schreibt den ganzen Text neu wie bisher.
+
+## Eigene Taste – Nur Korrekturen (ab Build vom 27.10.)
 
 Chip: **nur** „Nur Korrekturen“ (kein „Text bearbeiten“, kein Anfügen/Voranstellen). Der Prompt darf leer bleiben, dann gilt: Rechtschreibung, Grammatik, Satzzeichen und Groß-/Kleinschreibung korrigieren.
 
