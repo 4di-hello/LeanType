@@ -23,8 +23,8 @@ class KeyboardIconsSet private constructor() {
         val prefs = context.prefs()
         val iconStyle = prefs.getString(Settings.PREF_ICON_STYLE, Defaults.PREF_ICON_STYLE)
         val defaultIds = when (iconStyle) {
-            KeyboardTheme.STYLE_HOLO -> keyboardIconsHolo
-            KeyboardTheme.STYLE_ROUNDED -> keyboardIconsRounded
+            KeyboardTheme.STYLE_HOLO -> keyboardIconsMaterial + keyboardIconsHolo
+            KeyboardTheme.STYLE_ROUNDED -> keyboardIconsMaterial + keyboardIconsRounded
             else -> keyboardIconsMaterial
         }
         val clearClipboardIconPref = prefs.getString(Settings.PREF_CLEAR_CLIPBOARD_ICON, Defaults.PREF_CLEAR_CLIPBOARD_ICON) ?: Defaults.PREF_CLEAR_CLIPBOARD_ICON
@@ -132,12 +132,12 @@ class KeyboardIconsSet private constructor() {
             NAME_FORWARD_DELETE_KEY to          R.drawable.sym_keyboard_forward_delete_holo,
 //            NAME_SPACE_KEY to                   null,
             NAME_ENTER_KEY to                   R.drawable.sym_keyboard_return_holo,
-//            NAME_GO_KEY to                      null,
+            NAME_GO_KEY to                      R.drawable.sym_keyboard_go_lxx,
             NAME_SEARCH_KEY to                  R.drawable.sym_keyboard_search_holo,
-//            NAME_SEND_KEY to                    null,
+            NAME_SEND_KEY to                    R.drawable.sym_keyboard_send_lxx,
             NAME_DONE_KEY to                    R.drawable.sym_keyboard_done_lxx,
-//            NAME_NEXT_KEY to                    null,
-//            NAME_PREVIOUS_KEY to                null,
+            NAME_NEXT_KEY to                    R.drawable.ic_arrow_right,
+            NAME_PREVIOUS_KEY to                R.drawable.ic_arrow_left,
             NAME_TAB_KEY to                     R.drawable.sym_keyboard_tab_holo,
             NAME_SPACE_KEY_FOR_NUMBER_LAYOUT to R.drawable.sym_keyboard_space_holo,
             NAME_SHORTCUT_KEY_DISABLED to       R.drawable.sym_keyboard_voice_off_holo,
