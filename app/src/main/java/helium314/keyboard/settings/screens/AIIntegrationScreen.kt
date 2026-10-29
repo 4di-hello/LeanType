@@ -104,7 +104,8 @@ private fun OfflineAIIntegrationScreen(onClickBack: () -> Unit) {
         SettingsWithoutKey.LOAD_OFFLINE_AI_PLUGIN,
         SettingsWithoutKey.CUSTOM_AI_KEYS,
         SettingsWithoutKey.OFFLINE_MODEL_PATH,
-        SettingsWithoutKey.OFFLINE_KEEP_MODEL_LOADED
+        SettingsWithoutKey.OFFLINE_KEEP_MODEL_LOADED,
+        helium314.keyboard.latin.settings.Settings.PREF_OFFLINE_PROOFREAD_ONLY_CORRECTIONS
     )
     
     SearchSettingsScreen(
