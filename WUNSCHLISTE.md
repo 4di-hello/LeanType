@@ -15,10 +15,11 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
   - Einstellungen: max. Tokens 1024 (sonst werden lange Texte abgeschnitten), Modell geladen halten
   - Behoben in LeanType+: Chat-Format für Qwen ohne Denkmodus, Diagnose zeigt den echten Ladefehler (seit 26.10. nur in der Meldung, nichts in der Zwischenablage)
   - 18.10.: Anweisung und Text getrennt (System-/Nutzernachricht), kein eingebautes Beispiel mehr („großes Haus“); `{text}` nicht mehr nötig
-  - LFM2 (Liquid, z. B. LFM2-2.6B Q4_K_M) wird erkannt (Dateiname enthält „lfm“) – testen
+  - LFM2 (Liquid, z. B. LFM2-2.6B Q4_K_M) wird erkannt (Dateiname enthält „lfm“) – getestet 29.10.: viel langsamer als Qwen3-4B Q4_0, verworfen
+  - Erledigt 29.10.: Schalter „Korrektur-Taste: nur Fehler“ (Einstellungen → KI) für die eingebaute Korrektur-Taste
   - Erledigt 27.10.: Chip „Nur Korrekturen“ (#corrections) für KI-Tasten – Modell nennt nur „falsch → richtig“, LeanType+ setzt es ein; Prompt optional
   - Erledigt 27.10.: KI-Taste, Korrektur- oder Übersetzen-Taste nochmal tippen bricht ab (Plugin rechnet im Hintergrund zu Ende, Ergebnis wird verworfen)
-  - Erledigt 28.10.: Fortschritt als dünner Balken im Ladesrahmen (geschätzt aus den letzten Läufen derselben Taste), die gestartete Taste zeigt ein X. Wortzähler geht nicht, das Plugin liefert erst am Ende Text
+  - Erledigt 28.10.: Fortschritt als dünner Balken im Laderahmen (geschätzt aus den letzten Läufen derselben Taste), die gestartete Taste zeigt ein X. Wortzähler geht nicht, das Plugin liefert erst am Ende Text
   - Qwen3.5 (2B/4B) lädt nicht: llama.cpp im Plugin (April 2026) lehnt die Dateien ab. Nur mit eigenem Plugin und aktueller llama.cpp – optional, falls Qwen3 nicht reicht
   - Qwen3.8-Flash-Next (125B MoE, ~100 GB) passt nicht aufs Handy
 - KI-Tasten (Benutzerdefinierte AI-Tasten):
