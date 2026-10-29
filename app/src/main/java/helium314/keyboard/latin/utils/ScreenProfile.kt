@@ -58,20 +58,15 @@ object ScreenProfileProvider {
         val availableHeightDp = if (config.screenHeightDp > 0) config.screenHeightDp else if (density > 0f) (heightPx / density).roundToInt() else 0
 
         val isBothDimensionsLarge = availableWidthDp >= 600 && availableHeightDp >= 600
-        val isFoldable = isFoldableDevice(context)
+        val isSmallestWidthLarge = config.smallestScreenWidthDp >= 600
 
-        // For regular candybar phones in landscape: availableWidthDp may be >= 600,
-        // but availableHeightDp is < 600 and the device is neither a foldable nor tablet.
-        if (!isFoldable && !isBothDimensionsLarge) {
+        // For phones (including foldables when folded in landscape or portrait):
+        // neither both dimensions are large nor is the smallest screen width >= 600.
+        if (!isBothDimensionsLarge && !isSmallestWidthLarge) {
             return ScreenProfile.COMPACT
         }
 
-        val profile = when {
-            availableWidthDp >= 600 -> ScreenProfile.LARGE
-            availableWidthDp > 0 -> ScreenProfile.COMPACT
-            config.smallestScreenWidthDp >= 600 -> ScreenProfile.LARGE
-            else -> ScreenProfile.COMPACT
-        }
+        val profile = ScreenProfile.LARGE
 
         Log.i("ScreenProfile", "getScreenProfile -> $profile (screenWidthDp=${config.screenWidthDp}, smallestWidthDp=${config.smallestScreenWidthDp}, calculatedDp=$calculatedDp)")
 

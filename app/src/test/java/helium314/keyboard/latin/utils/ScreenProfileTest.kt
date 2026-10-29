@@ -52,11 +52,24 @@ class ScreenProfileTest {
         ScreenProfileProvider.isFoldableDeviceOverride = true
         val config = Configuration().apply {
             screenWidthDp = 800
-            screenHeightDp = 500
-            smallestScreenWidthDp = 500
+            screenHeightDp = 750
+            smallestScreenWidthDp = 750
         }
         val profile = ScreenProfileProvider.getScreenProfile(context, config)
         assertEquals(ScreenProfile.LARGE, profile)
+    }
+
+    @Test
+    fun testScreenProfileFoldableFoldedLandscapeIsCompact() {
+        // Foldable device when folded in landscape (width >= 600, but height < 600 and smallestScreenWidthDp < 600) gets COMPACT profile
+        ScreenProfileProvider.isFoldableDeviceOverride = true
+        val config = Configuration().apply {
+            screenWidthDp = 880
+            screenHeightDp = 390
+            smallestScreenWidthDp = 390
+        }
+        val profile = ScreenProfileProvider.getScreenProfile(context, config)
+        assertEquals(ScreenProfile.COMPACT, profile)
     }
 
     @Test
