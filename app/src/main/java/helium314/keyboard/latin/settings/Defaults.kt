@@ -248,6 +248,7 @@ object Defaults {
     const val PREF_OFFLINE_MAX_TOKENS = 64  // Accurate (64 tokens) default
     const val PREF_OFFLINE_TRANSLATE_TARGET_LANGUAGE = "French"
     const val PREF_OFFLINE_KEEP_MODEL_LOADED = false
+    const val PREF_OFFLINE_PROOFREAD_ONLY_CORRECTIONS = false
     const val PREF_AI_ALLOW_INSECURE_CONNECTIONS = false
     const val PREF_OPENAI_USE_MAX_COMPLETION_TOKENS = false
     const val PREF_OPENAI_OMIT_TEMPERATURE = false
