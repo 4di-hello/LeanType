@@ -1,4 +1,11 @@
-- Added full-width Chinese punctuation, dedicated CJK symbols layout, and preedit synchronization for CJK IME.
-- Dynamically scaled max tokens and expanded context limit (up to 3,072 tokens) for Offline AI on long texts.
-- Added standalone import and export for blocked words supporting multi-language wordlists and deduplication (#687).
-- Scoped update notification badges specifically to the Updates section and main keyboard updater.
+- Integrated platform-native visual line delete swipe on Android 14+ (#731).
+- Added foldable and large display ergonomics with fine-tuning controls (#400).
+- Reorganized settings with progressive disclosure expandable sections.
+- Added Chinese full-width punctuation and dedicated CJK symbols layout.
+- Scaled max generation tokens and expanded context limit (3,072) for Offline AI.
+- Added standalone import and export for blocked words (#687).
+- Added standardized modern Tamil V4 layout option.
+- Fixed rapid typing shift state, multi-touch chording, and caps lock cold start (#743, #598).
+- Fixed word suggestions resumption on backspace (#692) and TYPE_NULL fields.
+- Eliminated keyboard launch background flash with zero-delay theme.
+- Completed 100% global translations across 30 supported languages.

@@ -64,10 +64,17 @@ import helium314.keyboard.settings.updates.AppUpdatesManager
 import kotlinx.coroutines.launch
 
 private val currentChangelogItems = listOf(
-    "• Chinese Punctuation & CJK Symbols: Added full-width Chinese punctuation, dedicated CJK symbols layout, and preedit synchronization",
-    "• Offline AI Long Text Scaling: Dynamically scaled generation tokens and expanded context limit to 3,072 tokens for long paragraphs",
-    "• Blocked Words Import & Export: Added standalone text file import and export with language tagging and duplicate filtering (#687)",
-    "• Update Notification Badging: Scoped red dot update badges specifically to the Updates section and keyboard updater"
+    "• Exact Visual Line Delete Swipe: Integrated platform-native requestTextBoundsInfo for accurate multi-line delete swipes on Android 14+ (#731)",
+    "• Foldable & Large Display Ergonomics: Added display fine-tuning controls and automatic screen profile detection (#400)",
+    "• Progressive Disclosure Settings: Clean settings architecture with expandable fine-tuning drawers across all categories",
+    "• Chinese Punctuation & CJK Symbols: Direct input of full-width punctuation marks and dedicated CJK symbols layout",
+    "• Offline AI Long Text Scaling: Dynamically scaled tokens and expanded context limit to 3,072 tokens for long paragraphs",
+    "• Blocked Words Import & Export: Added standalone blacklist text file import and export with duplicate filtering (#687)",
+    "• Tamil V4 Standard Layout: Standardized modern Tamil V4 layout option across Tamil locales",
+    "• Fast-Typing Shift & Chording Fix: Resolved multi-touch shift state reset and inadvertent capitalization (#743, #598)",
+    "• Chromium & Web Editor Reliability: Restored word suggestions on backspace (#692) and enabled soft input on TYPE_NULL fields",
+    "• Zero-Delay Keyboard Launch: Eliminated opening flashes with transparent platform theme and instant key previews",
+    "• 100% Global Translations: Complete translation coverage across 30 supported languages and regional variants"
 )
 
 @Composable

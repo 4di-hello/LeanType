@@ -39,7 +39,7 @@ LeanType combines a lightweight, privacy-focused keyboard foundation with cuttin
 | ⌨️ **[Hardware & Physical Keyboard Support](#28-hardware--physical-keyboard-support)** | External Bluetooth/USB keyboard suggestions, shortcuts (`1`,`2`,`3`), D-PAD emoji navigation |
 | 🎨 **[Advanced Appearance & Key Ergonomics](#29-advanced-appearance--key-ergonomics)** | Independent corner radii (normal, functional, action), key gaps, padding scales, Shift icons |
 | ⌨️ **[Comprehensive Keycodes & Actions Reference](#30-comprehensive-keycodes--actions-reference)** | Complete reference table of all functional, navigation, editing, AI, and hardware keycodes |
-| 🎬 **[GIF Search & Media Picker](#31-gif-search--media-picker)** | GIPHY, Tenor, stickers, live preview, and WhatsApp sticker normalization |
+| 🎬 **[GIF Search & Media Picker](#31-gif-search--media-picker)** | GIPHY, KLIPY, stickers, live preview, and WhatsApp sticker normalization |
 | 🈲 **[CJK (Chinese, Japanese & Korean) Plugin Engine](#32-cjk-plugin-engine)** | Pinyin Chinese, Japanese Kana/Romaji, Hangul combiner & candidate strip |
 | ⬡ **[Hexagonal Honeycomb Layout Engine](#33-hexagonal-honeycomb-layout-engine)** | Authentic Typewise & hex QWERTY layouts with landscape split |
 | 👆 **[Full Keyboard & 2D Backspace Swipe Gestures](#34-full-keyboard--2d-backspace-swipe-gestures)** | Full-surface horizontal swipes and 2D diagonal/vertical deletion |
@@ -48,6 +48,12 @@ LeanType combines a lightweight, privacy-focused keyboard foundation with cuttin
 | 🖼️ **[Live System Wallpaper & FastBlurEngine](#37-live-system-wallpaper--fastblur)** | Real-time blurred device wallpaper backgrounds with blur intensity slider |
 | 📋 **[In-Keyboard Action Pill & Multi-Select Clipboard](#38-in-keyboard-action-pill--multi-select-clipboard)** | Compact floating action pill, batch deletion, pinning, and sensitive data filtering |
 | 🔐 **[Granular Backup & Encrypted API Key Export](#39-granular-backup--encrypted-api-key-export)** | Separated wordlists vs history and password-protected encrypted API keys |
+| ⌫ **[Exact Visual Line Delete Swipe (Android 14+)](#40-exact-visual-line-delete-swipe-android-14)** | Platform-native text bounds info for visual line wrap tracking |
+| 📱 **[Foldable & Large Display Ergonomics](#41-foldable--large-display-ergonomics)** | Auto screen profile detection, scale factor, side padding, and split gap |
+| ⚙️ **[Settings Progressive Disclosure](#42-settings-progressive-disclosure)** | Expandable fine-tuning sections across settings categories |
+| 🈲 **[Chinese Punctuation & CJK Symbols](#43-chinese-punctuation--cjk-symbols)** | Full-width punctuation, dedicated CJK symbols, and preedit sync |
+| 🚫 **[Blocked Words Standalone Import & Export](#44-blocked-words-standalone-import--export)** | Standalone word list import/export with duplicate filtering |
+| 🇮🇳 **[Tamil V4 Layout Option](#45-tamil-v4-layout-option)** | Modern Tamil V4 layout option dynamically available across Tamil locales |
 
 ---
 
@@ -64,7 +70,7 @@ LeanType combines a lightweight, privacy-focused keyboard foundation with cuttin
 | **Offline Camera & Screenshot OCR** | Live in-keyboard camera scanner and screenshot suggestion pill with rich text cleaners (casing, join styles, dehyphenation). | `OCR & Text Extraction` / `Plugins > OCR` |
 | **Inline Math Calculation** | Instant arithmetic calculation suggestions on typing `=` with 1-tap expression replacement. | `Text correction > Inline math calculation` |
 | **Custom Sound Packs** | Zero-latency key audio engine with 12+ built-in presets, remote catalog downloads, and `.zip` import. | `Plugins > Sound` / `Preferences > Sound on keypress` |
-| **GIF Search & Media Picker** | Search GIFs and stickers via GIPHY/Tenor with live preview and WhatsApp sticker insertion. | `Plugins > GIF Settings` / `Toolbar > GIF Key` |
+| **GIF Search & Media Picker** | Search GIFs and stickers via GIPHY/KLIPY with live preview and WhatsApp sticker insertion. | `Plugins > GIF Settings` / `Toolbar > GIF Key` |
 | **CJK Plugin Engine** | Chinese Pinyin, Japanese Romaji/Kana, and Korean Hangul with dedicated candidate strip UI. | `Plugins > CJK Settings` |
 | **Hexagonal Honeycomb Layouts** | Typewise and hexagonal QWERTY layouts with axial hit testing and landscape ergonomic thumb split. | `Languages > Layouts (hex_typewise, hex_qwerty)` |
 | **Full Keyboard Swipe Gestures** | Horizontal swipe across entire keyboard to switch languages, move cursor, or toggle numpad. | `Gesture typing > Full keyboard horizontal swipe` |
@@ -78,7 +84,7 @@ LeanType combines a lightweight, privacy-focused keyboard foundation with cuttin
 | **Auto-Spanning Toolbar** | Dynamically expands and balances toolbar keys symmetrically across device widths. | `Appearance > Toolbar auto-spacing` |
 | **Touchpad Mode** | Swipe up on Spacebar to activate full cursor control and laptop-style touchpad gestures. | `Gesture typing > Vertical spacebar swipe` |
 | **Native IME Floating Window** | Moveable floating keyboard window with touch-passthrough, bottom dock bar, resize handle, zero dead space, and persistent memory. | Toolbar > Floating Keyboard / `Preferences > Remember floating mode` |
-| **Per-App Profiles & Quirks** | Fine-tune composing behavior per app (Tasker symbol composing, web editor compatibility, auto-incognito, and Enter action overrides). | `Preferences > App Profiles` |
+| **Per-App Profiles & Quirks** | Fine-tune composing behavior per app (Tasker symbol composing, web editor compatibility, auto-incognito, and Enter action overrides). | `Plugins > App Profiles` |
 | **Hardware Keyboard Support** | Full predictive suggestions, auto-correction, candidate shortcuts (`1`, `2`, `3`), and D-PAD emoji navigation for external keyboards. | `Languages > Physical keyboard` / Auto-detected |
 | **Appearance & Key Ergonomics** | Independent key corner radius sliders, adjustable key gaps, customizable padding scales, and distinct Shift/Caps visual indicators. | `Appearance > Key borders` / `Theme` |
 | **Split Toolbar & Suggestions** | Separates suggestions from the toolbar into a dual-row view. | `Appearance > Split toolbar & suggestions` |
@@ -93,6 +99,12 @@ LeanType combines a lightweight, privacy-focused keyboard foundation with cuttin
 | **Direct Switch Target IME** | Fast 1-tap switching to another configured IME using custom keycode `-10076`. | `Preferences > Direct Switch Target IME` |
 | **Custom Layout Profiles** | Store up to 5 custom keyboard layouts with persistent slot tracking. | `Languages > Custom layouts` |
 | **In-App Update Checker** | Checks GitHub releases with changelogs and 1-tap release viewing (`standard` flavor). | `Settings > Updates` |
+| **Exact Visual Line Delete Swipe** | Uses platform-native `requestTextBoundsInfo` (API 34+) to detect visual line wrap boundaries. | `Gesture typing > Delete key swipe gesture` |
+| **Foldable & Tablet Controls** | Fine-tune scale factor, side padding, and split gap with automatic screen profile detection. | `Appearance > Foldable & Large Display` |
+| **Settings Progressive Disclosure** | Expandable fine-tune sections keep primary views minimal and intuitive. | Settings screens |
+| **Chinese Punctuation & Symbols** | Full-width punctuation marks, dedicated CJK symbols, and live preedit sync. | CJK layouts / `Plugins > CJK Settings` |
+| **Blocked Words Import & Export** | Standalone word list import and export with duplicate filtering. | `Text correction > Blocked words blacklist` |
+| **Tamil V4 Layout** | Selectable Tamil V4 layout dynamically available across Tamil locales. | `Languages > Tamil > Layouts` |
 
 ---
 
@@ -174,8 +186,8 @@ LeanType offers a flexible translation architecture supporting all app flavors:
    - Uses your configured **AI Provider** (Google Gemini, Groq, OpenAI, Ollama, or local GGUF models) with customizable translation prompts.
 
 ### How to Setup
-1. **Online Flavors (`Standard` / `Standard Full`)**: Open **Settings → Translation** and tap **Download Plugin** to install the [LeanType Translation Plugin](https://github.com/LeanBitLab/LeanType-Translation-Plugin/releases/latest) automatically.
-2. **Offline Flavors (`Offline` / `Offline Lite`)**: Download `translation_plugin-arm64-v8a.apk` from [GitHub Releases](https://github.com/LeanBitLab/LeanType-Translation-Plugin/releases/latest) and load it in **Settings → Plugins → Translation**.
+1. **Online Flavor (`Standard`)**: Open **Settings → Translation** and tap **Download Plugin** to install the [LeanType Translation Plugin](https://github.com/LeanBitLab/LeanType-Translation-Plugin/releases/latest) automatically.
+2. **Offline Flavor (`Offline`)**: Download `translation_plugin-arm64-v8a.apk` from [GitHub Releases](https://github.com/LeanBitLab/LeanType-Translation-Plugin/releases/latest) and load it in **Settings → Plugins → Translation**.
 3. Download or import your required source and target language pairs.
 4. Tap the **Translate** icon on the keyboard toolbar to instantly translate selected text or entire input fields.
 
@@ -508,15 +520,15 @@ LeanType is published in two purpose-built flavors to balance cloud AI capabilit
  
 | Flavor | Cloud AI | Offline AI | Voice Input | Handwriting | OCR Extraction | Translation | Update Checker | Internet Permission | Min SDK | Approx Size |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Standard (Recommended)** | ✅ | ❌ | ✅ *(Plugin)* | ✅ *(Plugin)* | ✅ *(Plugin)* | ✅ *(Plugin/AI)* | ✅ *(View Release)* | 🌐 Optional *(Opt-in)* | SDK 23 (6.0+) | **~10.8 MB** |
-| **Offline** | ❌ | ✅ *(Plugin on 8.0+)* | ✅ *(Plugin)* | ✅ *(Plugin)* | ✅ *(Plugin)* | ✅ *(Plugin)* | ❌ | 🚫 **None** | SDK 21 (5.0+) | **~9.8 MB** |
+| **Standard (Recommended)** | ✅ | ❌ | ✅ *(Plugin)* | ✅ *(Plugin)* | ✅ *(Plugin)* | ✅ *(Plugin/AI)* | ✅ *(View Release)* | 🌐 Optional *(Opt-in)* | SDK 23 (6.0+) | **~12.8 MB** |
+| **Offline** | ❌ | ✅ *(Plugin on 8.0+)* | ✅ *(Plugin)* | ✅ *(Plugin)* | ✅ *(Plugin)* | ✅ *(Plugin)* | ❌ | 🚫 **None** | SDK 21 (5.0+) | **~12.5 MB** |
 
 > [!TIP]
 > **Concurrent Installation**: The `offline` (`com.leanbitlab.leantype.offline`) build uses a unique package ID, allowing you to install it alongside `standard` on the same device!
 
 ### 🛡️ Privacy & Engineering Highlights
 - **Zero-Permission Privacy Overhaul (v4.2.5)**: LeanType removed `READ_CONTACTS` (contact dictionary eliminated entirely), `SYSTEM_ALERT_WINDOW` (floating mode runs natively in the IME window), and `REQUEST_INSTALL_PACKAGES` (update checks link directly to verified GitHub releases). The `offline` flavor contains zero network permissions in its manifest.
-- **Ultra-Lightweight Modular Plugin Architecture (v4.1.4 / v4.1.6)**: Heavy machine learning dependencies (including ML Kit for Handwriting, OCR, Translation, and on-device LLM inference via `llama.cpp`) are completely unbundled into standalone companion plugins. This preserves a sub-11 MB core APK footprint while granting users total on-demand control over local AI models.
+- **Ultra-Lightweight Modular Plugin Architecture (v4.1.4 / v4.1.6)**: Heavy machine learning dependencies (including ML Kit for Handwriting, OCR, Translation, and on-device LLM inference via `llama.cpp`) are completely unbundled into standalone companion plugins. This preserves a compact ~12 MB core APK footprint while granting users total on-demand control over local AI models.
 
 ---
 
@@ -586,8 +598,8 @@ LeanType includes a zero-latency native keypress audio feedback engine that deli
 - **8-Bit Chiptune Arcade**: Retro arcade game console key blips.
 
 ### 🌐 Remote Sound Pack Repository & Custom Imports
-- **Remote Catalog**: Download additional physical modeling and synthesized instrument packs on demand from the official GitHub sound pack repository (`LeanBitLab/LeanType-Sound-Packs`).
-- **Unbundled Light Footprint**: Sound packs are unbundled from the core APK to keep download sizes under 11 MB.
+- **Remote Catalog**: Download additional physical modeling and synthesized instrument packs on demand from the official GitHub sound pack repository (`LeanBitLab/LeanType-SoundPacks`).
+- **Unbundled Light Footprint**: Sound packs are unbundled from the core APK to keep the core keyboard download footprint compact.
 - **Custom `.zip` Pack Import**: Import custom sound packs packaged as a `.zip` containing a `soundpack.json` manifest and keypress audio files (`.wav` or `.ogg`).
 - **Live Audition & Volume**: Audition sounds with live sample playback (▶️) and fine-tune keypress audio volume independently from system media volume.
 - **Dedicated Settings Screen**: Access via **Settings → Plugins → Keypress Audio / Sound** or **Settings → Preferences → Sound on keypress**.
@@ -598,7 +610,7 @@ LeanType includes a zero-latency native keypress audio feedback engine that deli
 
 Certain Android apps, terminal emulators, code editors, automation tools, and web-based input fields handle text entry in non-standard ways. LeanType features a dedicated **Per-App Profiles & Compatibility Engine** that lets you customize composing, auto-correction, and key behaviors on a granular per-application basis.
 
-Access via **Settings → Preferences → App Profiles**.
+Access via **Settings → Plugins & Capabilities → App Profiles**.
 
 ### ⚙️ Available Per-App Quirks & Overrides
 
@@ -877,7 +889,7 @@ and correction rules are unchanged.
 LeanType introduces rich media integration with a dedicated, high-performance in-keyboard GIF and sticker media picker view. Access it via the toolbar media icon, custom layout keycode `-10086`, or from the emoji view media tabs.
 
 ### 🎬 Key Capabilities
-- **Dual Content Providers**: Integrated support for both **GIPHY** and **Tenor** search backends. Choose your preferred service or configure custom API keys under **Settings → Plugins → GIF Settings**.
+- **Dual Content Providers**: Integrated support for both **GIPHY** and **KLIPY** search backends. Choose your preferred service or configure custom API keys under **Settings → Plugins → GIF Settings**.
 - **Trending & Instant Search**: Browse real-time trending animations or enter keywords into the inline search bar with debounced, instantaneous query resolution.
 - **Stickers Support**: Switch seamlessly between animated GIF clips and transparent sticker graphics.
 - **Recent Media History**: Quick-access recent tray caches your favorite and recently shared media for 1-tap re-insertion without re-querying the network.
@@ -1010,8 +1022,80 @@ Safeguard your personalized keyboard configuration, custom layouts, and linguist
   - Learned Typing Prediction History & Frequency Tables.
   - Quick Text Expander Shortcuts & Dynamic Templates.
 - **Password-Protected Encrypted API Keys**:
-  - Securely export third-party cloud AI and media API keys (Gemini, Groq, OpenAI, GIPHY, Tenor) using robust AES-256 encryption.
+  - Securely export third-party cloud AI and media API keys (Gemini, Groq, OpenAI, GIPHY, KLIPY) using robust AES-256 encryption.
   - Backups can be safely shared across devices or saved to cloud storage without risking credential leakage. Decryption occurs only when the correct user password is provided during restoration.
+
+---
+
+## 40. Exact Visual Line Delete Swipe (Android 14+)
+
+On Android 14+ (API 34+), LeanType integrates platform-native `requestTextBoundsInfo` to query exact character bounding boxes and visual line wrap boundaries directly from supporting text editors:
+
+### ⌫ Key Capabilities
+- **Platform-Native Geometry**: Detects real rendered visual line wraps rather than assuming fixed character widths, maintaining horizontal column alignment as your finger moves vertically across wrapped lines.
+- **Asynchronous & Non-Blocking**: Queries execute in the background with session-based application capability caching to ensure zero typing or gesture latency.
+- **Graceful Fallback**: Automatically falls back to character-based heuristic estimates on older Android releases or applications that do not implement `takeSnapshot`.
+- **Immediate Horizontal-Right Deselection**: Swiping to the right immediately after an upward or vertical selection deselects highlighted text without requiring an initial leftward motion.
+
+---
+
+## 41. Foldable & Large Display Ergonomics
+
+LeanType features intelligent, automatic screen profile detection tailored for foldables, tablets, and large displays:
+
+### 📱 Ergonomic & Layout Features
+- **Automatic Screen Profile Detection**: Evaluates display dimensions and smallest screen width dynamically:
+  - Foldable devices when unfolded or tablets with dimensions >= 600dp are assigned the **`LARGE`** profile.
+  - Foldables when folded in portrait or landscape maintain the **`COMPACT`** profile based on smallest screen width, preventing accidental tablet-style expansion on narrow outer screens.
+- **Granular Display Fine-Tuning**: Customize display parameters under **Settings → Appearance → Foldable & Large Display**:
+  - **Keyboard Scale Factor**: Adjust overall keyboard sizing on large screens.
+  - **Side Padding**: Add left and right horizontal padding to keep keys comfortably within thumb reach.
+  - **Split Keyboard Center Gap**: Customize the center gap separation for split keyboard layouts.
+
+---
+
+## 42. Settings Progressive Disclosure
+
+LeanType modernizes settings navigation using progressive disclosure across major preference screens:
+
+### ⚙️ Clean Navigation Architecture
+- **Expandable Fine-Tuning Drawers**: Advanced and secondary controls are neatly organized into expandable sections with animated rotating chevron indicators.
+- **Reduced Visual Clutter**: Keeps top-level screens (Appearance, Preferences, Toolbar, Gesture Typing, Advanced) clean and approachable for everyday users.
+- **Full Discoverability**: All nested preferences remain instantly discoverable and accessible via the global in-settings search bar.
+- **Persistent Expansion State**: Remembers which fine-tuning sections you opened across app sessions.
+
+---
+
+## 43. Chinese Punctuation & CJK Symbols
+
+Typing in East Asian languages receives streamlined punctuation handling via deep integration with the companion CJK plugin:
+
+### 🈲 Punctuation & Symbol Features
+- **Full-Width Chinese Punctuation**: Integrated direct input of full-width Chinese punctuation marks (comma `，`, period `。`, question mark `？`, exclamation `！`, colon `：`, semicolon `；`).
+- **Dedicated CJK Symbols Layout**: Access an expansive palette of typographic brackets (`【】`, `《》`, `「」`), full-width mathematical symbols, and currency markers.
+- **Real-Time Preedit Synchronization**: Seamlessly coordinates active Pinyin/Romaji preedit text between the keyboard engine and the candidate bar.
+
+---
+
+## 44. Standalone Blocked Words Import & Export
+
+Manage and share your blocked words blacklist modularly without affecting other dictionary or layout data:
+
+### 🚫 Blacklist Management
+- **Dedicated Import & Export**: Import and export your blocked words list directly under **Settings → Text correction → Blocked words blacklist**.
+- **Format Flexibility**: Supports plain word lists, language tags, and comment lines.
+- **Automatic Deduplication**: Duplicate entries and conflicting entries are automatically filtered upon import.
+
+---
+
+## 45. Tamil V4 Layout Option
+
+LeanType includes the standardized modern Tamil V4 layout:
+
+### 🇮🇳 Layout Details
+- Selectable as an additional keyboard layout option across Tamil locales (India, Sri Lanka, Singapore, Malaysia).
+- Dynamically available in subtype settings without cluttering system input methods.
+
 
 
 

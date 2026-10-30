@@ -66,7 +66,7 @@ LeanType is available in two purpose-built flavors designed to match your exact 
 | **Internet Permission** | 🌐 Optional *(Cloud AI / Updates)* | 🚫 **None** *(OS-level blocked)* |
 | **Package ID** | `com.leanbitlab.leantype` | `com.leanbitlab.leantype.offline` |
 | **Min Android Version** | Android 6.0+ *(SDK 23)* | Android 5.0+ *(SDK 21)* |
-| **Approximate APK Size** | **~10.8 MB** | **~9.8 MB** |
+| **Approximate APK Size** | **~12.8 MB** | **~12.5 MB** |
 
 > [!TIP]
 > **APK Installation Notice**: Google Play Protect or your browser may block direct APK installations downloaded from web browsers. If you experience installation issues, install via [Obtainium](https://apps.obtainium.imranr.dev/redirect.html?r=obtainium://add/https://github.com/LeanBitLab/LeanType) or a package manager like [App Manager](https://github.com/MuntashirAkon/AppManager).
@@ -111,7 +111,7 @@ LeanType is available in two purpose-built flavors designed to match your exact 
 - **🪟 Native IME Floating Window**: Seamless native IME window architecture with zero sensitive permissions (no `SYSTEM_ALERT_WINDOW`), pass-through background touches, bottom control bar (close, center-drag pill, resize drag handle), multi-touch tracking, zero dead space, and persistent mode memory.
 - **🪟 Auto Floating Keyboard in Landscape**: Automatically switches to a compact moveable floating window when entering landscape orientation and restores full docked width in portrait.
 - **🖼️ Live System Wallpaper & FastBlurEngine**: Dynamic blurred home/lock screen wallpaper background beneath keys with adjustable blur intensity slider and adaptive contrast.
-- **⚙️ Per-App Profiles & Compatibility Engine**: Tailor keyboard behavior per application (**Settings → Preferences → App Profiles**): enable web editor compatibility, automatic incognito, force non-incognito, direct commit mode, symbol composing (preserving underscores `_` in Tasker variables), dialer search field compatibility (`TYPE_NULL`), and custom Enter action overrides.
+- **⚙️ Per-App Profiles & Compatibility Engine**: Tailor keyboard behavior per application (**Settings → Plugins & Capabilities → App Profiles**): enable web editor compatibility, automatic incognito, force non-incognito, direct commit mode, symbol composing (preserving underscores `_` in Tasker variables), dialer search field compatibility (`TYPE_NULL`), and custom Enter action overrides.
 - **⌨️ First-Class Hardware Keyboard Support**: Full predictive text, auto-correction, candidate selection shortcuts (`1`, `2`, `3`), and D-PAD navigation in emoji palettes for external Bluetooth/USB keyboards, with smart toolbar elevation above the navigation bar.
 - **🎨 Advanced Appearance & Key Ergonomics**: Independent corner radius sliders for Normal Keys, Functional Keys (Shift/Backspace), and Action Keys (Enter/Space), adjustable key gaps, customizable padding scales, and distinct Shift/Caps visual state indicators (outline, filled, underlined).
 - **⌨️ Dual Toolbar / Split Suggestions**: Option to split suggestions from the quick-action toolbar.
@@ -119,7 +119,7 @@ LeanType is available in two purpose-built flavors designed to match your exact 
 - **⌨️ Direct Switch Target IME & Custom Keycodes**: Bind keycode `-10076` to any toolbar key to switch directly to a specific target keyboard (e.g. Japanese, Korean, or Chinese IME). See the [Comprehensive Keycodes & Actions Reference](docs/FEATURES.md#30-comprehensive-keycodes--actions-reference) for the full keycodes catalog.
 
 ### 📋 Clipboard & Productivity
-- **🎬 GIF Search & Media Picker**: High-performance in-keyboard GIF and sticker media picker powered by GIPHY and Tenor, with live animated preview, trending search, recent tray, and automatic WhatsApp sticker normalization (512x512 WebP).
+- **🎬 GIF Search & Media Picker**: High-performance in-keyboard GIF and sticker media picker powered by GIPHY and KLIPY, with live animated preview, trending search, recent tray, and automatic WhatsApp sticker normalization (512x512 WebP).
 - **📋 In-Keyboard Action Pill & Multi-Select Clipboard**: Gboard-style compact floating action pill on long press (paste, pin, delete, share), multi-select batch deletion/pinning, and sensitive OTP/card data filtering.
 - **🔢 Real-Time Inline Math Calculations**: Automatically evaluates mathematical expressions upon typing `=` (e.g. `25*4=`, `500-15%=`, `(12+8)/4=`) and shows the answer directly in the suggestion strip for 1-tap replacement.
 - **🔍 Smart Clipboard History & Inline Editing**: Search clips in real-time, swipe right to edit text directly in the toolbar with full gesture cursor/deletion, swipe left to delete with 5s undo, and fold pinned items.
@@ -211,7 +211,7 @@ LeanType is available in two purpose-built flavors designed to match your exact 
 
 ### 8. GIF Search & Media Picker Setup
 1. Open **Settings → Plugins → GIF Settings** (or tap the GIF key on the toolbar).
-2. Select your preferred provider (**GIPHY** or **Tenor**). Optionally configure custom API keys.
+2. Select your preferred provider (**GIPHY** or **KLIPY**). Optionally configure custom API keys.
 3. Search trending GIFs, browse stickers, or insert media directly into compatible messaging apps.
 
 ### 9. CJK (Chinese, Japanese & Korean) Setup
@@ -232,9 +232,9 @@ Expand LeanType with official companion plugins:
 | 📷 **OCR Plugin** | [LeanBitLab/LeanType-Ocr-Plugin](https://github.com/LeanBitLab/LeanType-Ocr-Plugin) | On-device ML Kit camera viewfinder & screenshot text extraction |
 | 🌐 **Translation Plugin** | [LeanBitLab/LeanType-Translation-Plugin](https://github.com/LeanBitLab/LeanType-Translation-Plugin) | Dedicated on-device translation provider engine |
 | ✍️ **Handwriting Plugin** | [LeanBitLab/Leantype-Handwriting-Plugin](https://github.com/LeanBitLab/Leantype-Handwriting-Plugin) | ML Kit Digital Ink canvas recognition engine |
-| 🎬 **GIF Plugin** | [LeanBitLab/LeanType-Gif-Plugin](https://github.com/LeanBitLab/LeanType-Gif-Plugin) | In-keyboard GIF & sticker search engine (GIPHY & Tenor) with WhatsApp normalization |
+| 🎬 **GIF Plugin** | [LeanBitLab/LeanType-Gif-Plugin](https://github.com/LeanBitLab/LeanType-Gif-Plugin) | In-keyboard GIF & sticker search engine (GIPHY & KLIPY) with WhatsApp normalization |
 | 🈲 **CJK Plugin** | [LeanBitLab/LeanType-CJK-Plugin](https://github.com/LeanBitLab/LeanType-CJK-Plugin) | Pinyin Chinese, Japanese Romaji/Kana & Korean Hangul input engine |
-| 🎵 **Sound Packs** | [LeanBitLab/LeanType-Sound-Packs](https://github.com/LeanBitLab/LeanType-Sound-Packs) | Synthesized and physical modeling keypress sound packs |
+| 🎵 **Sound Packs** | [LeanBitLab/LeanType-SoundPacks](https://github.com/LeanBitLab/LeanType-SoundPacks) | Synthesized and physical modeling keypress sound packs |
 | 🎨 **Community Themes** | [GitHub: `leantype-theme`](https://github.com/topics/leantype-theme) | Browse and share custom color themes |
 
 ---
