@@ -1294,6 +1294,8 @@
     <string name="custom_ai_corrections_partly">Korrigierte Stellen: %1$d (%2$d nicht im Text gefunden)</string>
     <string name="custom_ai_corrections_not_found">Die %d Korrekturen der KI passen nicht zum Text, nichts geändert</string>
     <string name="custom_ai_corrections_unreadable">Die KI hat keine Korrekturliste geliefert, nichts geändert: „%s“</string>
+    <string name="voice_transcribe_while_speaking_title">Schon beim Sprechen erkennen</string>
+    <string name="voice_transcribe_while_speaking_summary">Bei jeder Sprechpause wird das bisher Gesagte schon erkannt. Nach dem Stopp bleibt nur das letzte Stück: viel kürzeres Warten bei langen Diktaten.</string>
     <string name="ai_cancelled">KI-Anfrage abgebrochen</string>
     <string name="custom_ai_keyword_prepend_label">Ergebnis voranstellen</string>
     <string name="custom_ai_keyword_showthought_label">Gedankengang anzeigen</string>
@@ -1771,13 +1773,11 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="unfolded_side_padding_scale">Aufgeklappte Seitenpolsterung</string>
     <string name="voice_futo_models_title">FUTO-Sprachmodelle (ACFT)</string>
     <string name="button_browse">Durchsuchen</string>
-    <string name="voice_transcribe_while_speaking_title">Schon beim Sprechen erkennen</string>
     <string name="voice_piecewise_field_changed">Diktat beendet: Das Textfeld hat gewechselt, der Rest wurde nicht eingefügt</string>
     <!-- Long press on a search result in the settings (accessibility action) -->
     <string name="settings_search_show_in_screen">Auf seiner Seite zeigen</string>
     <string name="custom_text_styles_title">Benutzerdefinierte Textstile</string>
     <string name="custom_text_styles_summary">Ein Stil pro Zeile. Format: Name: Stil A-Z a-z 0-9 (52 oder 62 Zeichen).</string>
-    <string name="voice_transcribe_while_speaking_summary">Kürzere Wartezeiten bei langen Diktaten</string>
     <string name="backup_category_personal_dictionary">Persönliches Wörterbuch</string>
     <string name="backup_category_text_expander">Textexpander</string>
     <string name="typing_heatmap_category">Tipp-Heatmap</string>
