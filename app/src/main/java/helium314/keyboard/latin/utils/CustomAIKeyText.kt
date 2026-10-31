@@ -58,9 +58,17 @@ object CustomAIKeyText {
      * For "only corrections" (#corrections): the model lists the mistakes instead of writing the whole
      * text again, which takes a fraction of the time. [applyCorrections] then fixes them in the text.
      */
-    const val CORRECTIONS_INSTRUCTION = "List only the mistakes in the text, one per line, in the form: wrong → right. " +
-        "Copy the wrong part exactly as it is in the text; if it occurs more than once, include the neighbouring words. " +
-        "Do not write the whole text. If there are no mistakes, write only: OK"
+    /** the corrections of the example below; a model that repeats them must not change the user's text */
+    private val EXAMPLE_CORRECTIONS = listOf("lisa" to "Lisa", "morgen weil" to "morgen, weil", "kaput" to "kaputt")
+
+    // Short pieces are essential: Qwen3-4B otherwise copies whole sentences on both sides, which takes
+    // longer than rewriting the text and invites changes in wording. The example helps more than rules.
+    val CORRECTIONS_INSTRUCTION = "List only real mistakes in the text (spelling, grammar, punctuation, capitalization), " +
+        "one per line, in the form: wrong → right. Each side has at most four words: the wrong word, and one neighbouring " +
+        "word only if needed, copied exactly as in the text. Do not change the wording, do not write whole sentences. " +
+        "If there are no mistakes, write only: OK\n\n" +
+        "Example text: lisa kommt morgen weil ihr Rad kaput ist.\n" +
+        "Example answer:\n" + EXAMPLE_CORRECTIONS.joinToString("\n") { "${it.first} → ${it.second}" }
 
     /** Used if a corrections key has no prompt of its own */
     const val CORRECTIONS_DEFAULT_PROMPT = "Correct spelling, grammar, punctuation and capitalization. Keep the language of the text."
@@ -80,7 +88,7 @@ object CustomAIKeyText {
         if (parts.size != 2) return@mapNotNull null
         val wrong = unquote(parts[0])
         val right = unquote(parts[1])
-        if (wrong.isEmpty() || wrong == right) null else wrong to right
+        if (wrong.isEmpty() || wrong == right || (wrong to right) in EXAMPLE_CORRECTIONS) null else wrong to right
     }
 
     private fun unquote(s: String): String {

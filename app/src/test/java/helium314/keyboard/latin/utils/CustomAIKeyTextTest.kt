@@ -89,4 +89,10 @@ class CustomAIKeyTextTest {
         assertTrue(CustomAIKeyText.saysNoMistakes("Keine Fehler gefunden."))
         assertFalse(CustomAIKeyText.saysNoMistakes("Ich habe den Text überarbeitet: ..."))
     }
+
+    @Test
+    fun repeatedExampleIsIgnored() {
+        assertEquals("lisa morgen weil" to 0, CustomAIKeyText.applyCorrections("lisa morgen weil", "lisa → Lisa\nmorgen weil → morgen, weil"))
+        assertTrue(CustomAIKeyText.CORRECTIONS_INSTRUCTION.contains("lisa → Lisa"))
+    }
 }
