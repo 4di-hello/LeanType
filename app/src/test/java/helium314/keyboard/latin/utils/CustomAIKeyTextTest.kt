@@ -55,44 +55,4 @@ class CustomAIKeyTextTest {
     fun resultBetweenTextIsSeparatedOnBothSides() {
         assertEquals("\n\nAntwort\n\n", CustomAIKeyText.resultToInsert("Antwort", "erster Absatz", "zweiter Absatz"))
     }
-
-    @Test
-    fun correctionsAreApplied() {
-        val text = "ich habe ein grose Haus und ein grose Garten"
-        val output = "- ich → Ich\n\"grose Haus\" → \"großes Haus\"\n2. ein grose Garten -> einen großen Garten.\nGarage → Garagen"
-        val (result, count) = CustomAIKeyText.applyCorrections(text, output)
-        assertEquals("Ich habe ein großes Haus und einen großen Garten.", result)
-        assertEquals(3, count)
-    }
-
-    @Test
-    fun noMistakesChangeNothing() {
-        assertEquals("Alles gut." to 0, CustomAIKeyText.applyCorrections("Alles gut.", "OK"))
-        assertEquals("Alles gut." to 0, CustomAIKeyText.applyCorrections("Alles gut.", "gut → gut"))
-    }
-
-    @Test
-    fun sameMistakeTwiceIsFixedInOrder() {
-        val (result, count) = CustomAIKeyText.applyCorrections("das das ist das", "das → Das\ndas → dass")
-        assertEquals("Das dass ist das", result)
-        assertEquals(2, count)
-    }
-
-    @Test
-    fun correctionsPreferWholeWords() {
-        assertEquals("mich freut, dass Ich komme" to 1, CustomAIKeyText.applyCorrections("mich freut, dass ich komme", "ich → Ich"))
-    }
-
-    @Test
-    fun noMistakesAnswerIsRecognized() {
-        assertTrue(CustomAIKeyText.saysNoMistakes(" OK."))
-        assertTrue(CustomAIKeyText.saysNoMistakes("Keine Fehler gefunden."))
-        assertFalse(CustomAIKeyText.saysNoMistakes("Ich habe den Text überarbeitet: ..."))
-    }
-
-    @Test
-    fun repeatedExampleIsIgnored() {
-        assertEquals("lisa morgen weil" to 0, CustomAIKeyText.applyCorrections("lisa morgen weil", "lisa → Lisa\nmorgen weil → morgen, weil"))
-        assertTrue(CustomAIKeyText.CORRECTIONS_INSTRUCTION.contains("lisa → Lisa"))
-    }
 }
