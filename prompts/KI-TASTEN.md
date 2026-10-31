@@ -103,34 +103,9 @@ Chip: Text bearbeiten
 Schreibe den folgenden Text als höfliche, sachliche Ich-Nachricht in der Sie-Form, ohne Floskeln. Beginne mit „Sehr geehrte Damen und Herren," und ende mit „Mit freundlichen Grüßen" und [Name]. Behalte alle Angaben, erfinde nichts dazu. Gib nur die Nachricht aus.
 ```
 
-## Eingebaute Korrektur-Taste (Symbolleiste)
+## Nur Korrekturen (getestet und wieder entfernt, 31.10.)
 
-Einstellungen → KI → „Korrektur-Taste: nur Fehler“ (ab Build vom 29.10., Standard aus). An: Die eingebaute Korrektur-Taste arbeitet wie der Chip „Nur Korrekturen“ unten, also schnell und nur mit den Fehlern. Aus: Sie schreibt den ganzen Text neu wie bisher.
-
-## Eigene Taste – Nur Korrekturen (ab Build vom 27.10.)
-
-Chip: **nur** „Nur Korrekturen“ (kein „Text bearbeiten“, kein Anfügen/Voranstellen). Der Prompt darf leer bleiben, dann gilt: Rechtschreibung, Grammatik, Satzzeichen und Groß-/Kleinschreibung korrigieren.
-
-Das Modell schreibt nur die Fehler als „falsch → richtig“, LeanType+ setzt sie im Text ein. Das ist deutlich schneller als „Fb“, weil das Modell nicht den ganzen Text neu schreibt, und der Rest des Textes bleibt garantiert unverändert.
-
-Meldungen danach:
-
-- „Korrigierte Stellen: N“ – alles eingesetzt
-- „Korrigierte Stellen: N (M nicht im Text gefunden)“ – die KI hat bei M Stellen den falschen Text nicht genau abgeschrieben, diese fehlen
-- „Keine Fehler gefunden“ – die KI hat ausdrücklich „OK“ geantwortet
-- „Die N Korrekturen der KI passen nicht zum Text“ oder „Die KI hat keine Korrekturliste geliefert: …“ – nichts geändert; die Antwort war unbrauchbar (beim zweiten Fall steht ihr Anfang in der Meldung)
-
-Optionaler Prompt, wenn nur bestimmte Fehler korrigiert werden sollen:
-
-```
-Korrigiere nur Rechtschreibung und Satzzeichen, nicht den Stil.
-```
-
-Testtext:
-
-```
-ich hab gestern mit tom telefoniert, er kommt am montag nicht weil sein Auto kaputt ist. Kanst du ihm bescheid geben das wir das Treffen verschieben?
-```
+Idee: Das Modell nennt nur „falsch → richtig“, die Tastatur setzt es ein. Mit Qwen3-4B Q4_0 und einem Text von 200 Wörtern: 31 s statt 35 s, aber fast keine Fehler gefunden, vorher sogar Umformulierungen. Grund: Die meiste Zeit braucht das Modell zum Lesen des Textes, nicht zum Schreiben. Die normale Korrektur (Fb, Korrektur-Taste) ist klar besser.
 
 ## Testtexte
 

@@ -506,7 +506,7 @@ object ProofreadHelper {
             noTextErrorResId = R.string.proofread_no_text,
             errorResId = R.string.proofread_error,
             allowEmptyInput = allowEmptyInput,
-            // per key: a key that rewrites the text takes much longer than one that only lists corrections
+            // per key: keys with different prompts take different times per character
             durationKey = durationKey ?: ("custom_" + prompt.hashCode()),
             inputLength = text.length + prompt.length,
             apiCall = { service -> service.proofread(text, overridePrompt = prompt, showThinking = showThinking) },

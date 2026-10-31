@@ -235,7 +235,6 @@ fun ConfigCustomAIKeyScreen(
     val modes = listOf(
         "#editor" to stringResource(R.string.custom_ai_keyword_editor_label),
         "#proofread" to stringResource(R.string.custom_ai_keyword_proofread_label),
-        "#corrections" to stringResource(R.string.custom_ai_keyword_corrections_label),
         "#paraphrase" to stringResource(R.string.custom_ai_keyword_paraphrase_label),
         "#summarize" to stringResource(R.string.custom_ai_keyword_summarize_label),
         "#expand" to stringResource(R.string.custom_ai_keyword_expand_label),
@@ -264,7 +263,6 @@ fun ConfigCustomAIKeyScreen(
     val keywordDescriptions = mapOf(
         "#editor" to stringResource(R.string.custom_ai_keyword_editor_desc),
         "#proofread" to stringResource(R.string.custom_ai_keyword_proofread_desc),
-        "#corrections" to stringResource(R.string.custom_ai_keyword_corrections_desc),
         "#paraphrase" to stringResource(R.string.custom_ai_keyword_paraphrase_desc),
         "#summarize" to stringResource(R.string.custom_ai_keyword_summarize_desc),
         "#expand" to stringResource(R.string.custom_ai_keyword_expand_desc),
@@ -364,8 +362,7 @@ fun ConfigCustomAIKeyScreen(
                             updateToolbarKeyStatus(context, keyEnum, finalPrompt.isNotEmpty())
                             onClickBack()
                         },
-                        // "only corrections" works without a prompt of its own
-                        enabled = (customText.isNotBlank() || "#corrections" in selectedKeywords) && selectedKeywords.isNotEmpty(),
+                        enabled = customText.isNotBlank() && selectedKeywords.isNotEmpty(),
                         modifier = if (initialPrompt.isNotBlank()) Modifier.weight(1f) else Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp)
                     ) {
@@ -425,14 +422,13 @@ fun ConfigCustomAIKeyScreen(
                             selectedKeywords = if (isSelected) {
                                 selectedKeywords - keyword
                             } else {
-                                // the result goes either after or before the text, corrections change the text itself
+                                // the result goes either after or before the text
                                 val exclusive = when (keyword) {
-                                    "#append" -> setOf("#prepend", "#corrections")
-                                    "#prepend" -> setOf("#append", "#corrections")
-                                    "#corrections" -> setOf("#append", "#prepend")
-                                    else -> emptySet()
+                                    "#append" -> "#prepend"
+                                    "#prepend" -> "#append"
+                                    else -> null
                                 }
-                                selectedKeywords - exclusive + keyword
+                                selectedKeywords - setOfNotNull(exclusive) + keyword
                             }
                         },
                         label = { Text(label) },

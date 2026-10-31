@@ -2251,15 +2251,6 @@ New dictionary:
     <string name="custom_ai_keyword_append_label">Append result</string>
     <string name="voice_transcribe_while_speaking_title">Transcribe while speaking</string>
     <string name="voice_transcribe_while_speaking_summary">At every pause in speech the part spoken so far is already transcribed. After stopping, only the last part is left: much shorter wait for long dictations.</string>
-    <string name="offline_proofread_only_corrections_title">Proofread key: only corrections</string>
-    <string name="offline_proofread_only_corrections_summary">The model only lists the mistakes and LeanType fixes them in the text. Much faster than rewriting the whole text. Turn off if your model does not manage this.</string>
-    <string name="custom_ai_keyword_corrections_label">Only corrections</string>
-    <string name="custom_ai_keyword_corrections_desc">The model only lists the mistakes, LeanType fixes them in the text. Much faster than rewriting the whole text, also fixes punctuation and capitalization. Works without a prompt.</string>
-    <string name="custom_ai_corrections_none">No mistakes found</string>
-    <string name="custom_ai_corrections_done">Corrected: %d</string>
-    <string name="custom_ai_corrections_partly">Corrected: %1$d (%2$d not found in the text)</string>
-    <string name="custom_ai_corrections_not_found">The %d corrections of the AI don\'t match the text, nothing changed</string>
-    <string name="custom_ai_corrections_unreadable">The AI gave no list of corrections, nothing changed: “%s”</string>
     <string name="ai_cancelled">AI request cancelled</string>
     <string name="custom_ai_keyword_prepend_label">Prepend result</string>
     <string name="custom_ai_keyword_showthought_label">Show reasoning</string>
