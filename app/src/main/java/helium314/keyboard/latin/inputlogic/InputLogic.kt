@@ -665,62 +665,44 @@ class InputLogic(
         val targetPackage = targetEditorInfo?.packageName
         val targetFieldId = targetEditorInfo?.fieldId
 
-        fun applyProofreadResult(proofreadText: String) {
-            if (!mLatinIME.isInputViewShown || !mConnection.isConnected()) {
-                Log.w(TAG, "Input view hidden or disconnected during proofread, ignoring result")
-                return
-            }
-            val currentEditor = getCurrentInputEditorInfo()
-            if (currentEditor?.packageName != targetPackage || currentEditor?.fieldId != targetFieldId) {
-                Log.w(TAG, "Target editor changed during proofread, ignoring result")
-                return
-            }
-            val textBefore = mTextBeforeProofread
-            if (proofreadText.isNotEmpty() && proofreadText != textBefore) {
-                if (textBefore != null && textBefore.length > 20 && proofreadText.length < textBefore.length * 0.3) {
-                    Log.w(TAG, "Proofread result suspiciously short (${proofreadText.length} vs ${textBefore.length}), aborting replacement to prevent truncation data loss")
-                    KeyboardSwitcher.getInstance().showToast(mLatinIME.getString(R.string.proofread_output_truncated), false)
-                    if (!hasSelection) {
-                        val len = textBefore.length
-                        mConnection.setSelection(len, len)
-                    }
-                    return
-                }
-                if (hasSelection) {
-                    mConnection.commitText(proofreadText, 1)
-                } else {
-                    mConnection.replaceEntireText(proofreadText)
-                }
-            } else {
-                if (!hasSelection) {
-                    val len = textBefore?.length ?: 0
-                    mConnection.setSelection(len, len)
-                }
-            }
-        }
-
         helium314.keyboard.latin.suggestions.nextLoadingKey = helium314.keyboard.latin.utils.ToolbarKey.PROOFREAD
-        val prefs = helium314.keyboard.latin.utils.DeviceProtectedUtils.getSharedPreferences(mLatinIME)
-        if (helium314.keyboard.latin.BuildConfig.FLAVOR == "offline"
-            && prefs.getBoolean(Settings.PREF_OFFLINE_PROOFREAD_ONLY_CORRECTIONS, helium314.keyboard.latin.settings.Defaults.PREF_OFFLINE_PROOFREAD_ONLY_CORRECTIONS)) {
-            // the local model only lists the mistakes, they are fixed here: much faster than writing the whole text
-            val prompt = CustomAIKeyText.withInstructions(CustomAIKeyText.CORRECTIONS_DEFAULT_PROMPT, CustomAIKeyText.CORRECTIONS_INSTRUCTION)
-            ProofreadHelper.customAsync(
-                mLatinIME, textToProofread, prompt, hasSelection, false,
-                durationKey = "proofread_corrections",
-                onSuccess = { modelOutput ->
-                    val corrected = correctionsResult(textToProofread, modelOutput, hasSelection) ?: return@customAsync
-                    applyProofreadResult(corrected)
-                },
-                onError = { errorMessage -> Log.e(TAG, "Proofreading error: $errorMessage") }
-            )
-            return
-        }
         ProofreadHelper.proofreadAsync(
             mLatinIME,
             textToProofread,
             hasSelection,
-            onSuccess = { proofreadText -> applyProofreadResult(proofreadText) },
+            onSuccess = { proofreadText ->
+                if (!mLatinIME.isInputViewShown || !mConnection.isConnected()) {
+                    Log.w(TAG, "Input view hidden or disconnected during proofread, ignoring result")
+                    return@proofreadAsync
+                }
+                val currentEditor = getCurrentInputEditorInfo()
+                if (currentEditor?.packageName != targetPackage || currentEditor?.fieldId != targetFieldId) {
+                    Log.w(TAG, "Target editor changed during proofread, ignoring result")
+                    return@proofreadAsync
+                }
+                val textBefore = mTextBeforeProofread
+                if (proofreadText.isNotEmpty() && proofreadText != textBefore) {
+                    if (textBefore != null && textBefore.length > 20 && proofreadText.length < textBefore.length * 0.3) {
+                        Log.w(TAG, "Proofread result suspiciously short (${proofreadText.length} vs ${textBefore.length}), aborting replacement to prevent truncation data loss")
+                        KeyboardSwitcher.getInstance().showToast(mLatinIME.getString(R.string.proofread_output_truncated), false)
+                        if (!hasSelection) {
+                            val len = textBefore.length
+                            mConnection.setSelection(len, len)
+                        }
+                        return@proofreadAsync
+                    }
+                    if (hasSelection) {
+                        mConnection.commitText(proofreadText, 1)
+                    } else {
+                        mConnection.replaceEntireText(proofreadText)
+                    }
+                } else {
+                    if (!hasSelection) {
+                        val len = textBefore?.length ?: 0
+                        mConnection.setSelection(len, len)
+                    }
+                }
+            },
             onError = { errorMessage ->
                 Log.e(TAG, "Proofreading error: $errorMessage")
             }
@@ -3091,12 +3073,6 @@ class InputLogic(
         var prompt = prefs.getString("pref_custom_ai_prompt_$index", "") ?: ""
         val systemInstructionBuilder = StringBuilder()
         var shouldAppend = false
-        // only corrections: the model lists the mistakes, they are fixed here in the text
-        val onlyCorrections = prompt.contains("#corrections")
-        if (onlyCorrections) {
-            systemInstructionBuilder.append(" ").append(CustomAIKeyText.CORRECTIONS_INSTRUCTION)
-            prompt = prompt.replace("#corrections", "").trim()
-        }
 
         if (prompt.contains("#editor")) {
             systemInstructionBuilder.append(" You are a text editor tool. Output ONLY the edited text. Do not add any conversational filler.")
@@ -3147,13 +3123,6 @@ class InputLogic(
         if (prompt.contains("#showthought")) {
             showThinking = true
             prompt = prompt.replace("#showthought", "").trim()
-        }
-        if (onlyCorrections) {
-            // the text itself is corrected, nothing goes before or after it
-            shouldAppend = false
-            shouldPrepend = false
-            showThinking = false
-            if (prompt.isEmpty()) prompt = CustomAIKeyText.CORRECTIONS_DEFAULT_PROMPT
         }
 
         if (TextUtils.isEmpty(prompt)) {
@@ -3240,10 +3209,7 @@ class InputLogic(
             textToProcess, prompt, hasSelection, showThinking,
             allowEmptyInput = usesClipboard,
             durationKey = "key_$index",
-            onSuccess = { modelOutput ->
-                val resultText = if (onlyCorrections) {
-                    correctionsResult(textToProcess, modelOutput, hasSelection) ?: return@customAsync
-                } else modelOutput
+            onSuccess = { resultText ->
                 val result = PendingAIResult(resultText, targetPackage, targetFieldId, hasSelection, shouldAppend, keepsOriginal,
                     android.os.SystemClock.uptimeMillis())
                 if (!mLatinIME.isInputViewShown || !mConnection.isConnected()) {
@@ -3264,33 +3230,6 @@ class InputLogic(
                 KeyboardSwitcher.getInstance().showToast(mLatinIME.getString(R.string.ai_error_format, errorMessage), true)
             }
         )
-    }
-
-    /**
-     * Applies the corrections listed by the model ("only corrections") to [text] and says how many there were.
-     * Returns the corrected text, or null if nothing was changed (the reason is shown).
-     */
-    private fun correctionsResult(text: String, modelOutput: String, hasSelection: Boolean): String? {
-        val (corrected, count) = CustomAIKeyText.applyCorrections(text, modelOutput)
-        val listed = CustomAIKeyText.parseCorrections(modelOutput).size
-        Log.i(TAG, "only corrections: $count of $listed applied")
-        if (count == 0) {
-            // the text stays as it is; a selection made for the whole text is removed again
-            if (!hasSelection) mConnection.setSelection(mConnection.expectedSelectionEnd, mConnection.expectedSelectionEnd)
-            // say whether there was nothing to correct or the answer was of no use, so a bad answer is noticed
-            val message = when {
-                listed > 0 -> mLatinIME.getString(R.string.custom_ai_corrections_not_found, listed)
-                CustomAIKeyText.saysNoMistakes(modelOutput) -> mLatinIME.getString(R.string.custom_ai_corrections_none)
-                else -> mLatinIME.getString(R.string.custom_ai_corrections_unreadable,
-                    modelOutput.trim().replace('\n', ' ').take(60))
-            }
-            KeyboardSwitcher.getInstance().showToast(message, false)
-            return null
-        }
-        KeyboardSwitcher.getInstance().showToast(
-            if (count < listed) mLatinIME.getString(R.string.custom_ai_corrections_partly, count, listed - count)
-            else mLatinIME.getString(R.string.custom_ai_corrections_done, count), true)
-        return corrected
     }
 
     /** result of a custom AI key, kept while the keyboard is hidden */
