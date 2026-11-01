@@ -1,0 +1,47 @@
+name: Build German dictionary
+# Only for this fork: the German main dictionary with many more next words (bigrams), from Leipzig corpora
+on:
+  push:
+    branches: [ ci/dict-de ]
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Download
+        run: |
+          raw=https://codeberg.org/Helium314/aosp-dictionaries/raw/branch/main
+          curl -fsSL -o dicttool.jar $raw/dicttool_aosp.jar
+          curl -fsSL -o main_de.combined $raw/wordlists/main_de.combined
+          mkdir corpora
+          for c in deu_news_2024_1M deu-de_web_2021_1M deu-de_web-public_2019_1M deu_mixed-typical_2011_1M deu_wikipedia_2021_1M; do
+            curl -fsSL https://downloads.wortschatz-leipzig.de/corpora/$c.tar.gz | tar xz -C corpora --wildcards '*-sentences.txt'
+          done
+          find corpora -name '*-sentences.txt' -exec wc -l {} +
+      - name: Count word pairs
+        run: |
+          python3 pairs.py main_de.combined $(find corpora -name '*-sentences.txt') > pairs.txt
+          wc -l pairs.txt
+          LC_ALL=C sort -S 4G pairs.txt | LC_ALL=C uniq -c > counts.txt
+          wc -l counts.txt
+      - name: Build
+        run: |
+          python3 merge.py main_de.combined counts.txt main_de_plus.combined 20 3
+          grep -c '^  bigram=' main_de_plus.combined
+          java -jar dicttool.jar makedict -s main_de_plus.combined -d main_de_plus.dict
+          ls -la main_de_plus.dict
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release delete dict-de-plus --yes --cleanup-tag 2>/dev/null || true
+          gh release create dict-de-plus main_de_plus.dict --target "$GITHUB_SHA" --latest=false \
+            --title "Deutsches Wörterbuch mit mehr Wortfolgen" \
+            --notes "Hauptwörterbuch Deutsch (HeliBoard, 1,3 Mio. Wörter) mit bis zu 20 Folgewörtern pro Wort statt 3, gezählt in 5 Mio. Sätzen der Wortschatz-Sammlung der Uni Leipzig (CC BY 4.0, © Universität Leipzig / Sächsische Akademie der Wissenschaften / InfAI). Installieren: Einstellungen → Sprachen → Deutsch → Wörterbuch aus Datei hinzufügen."
