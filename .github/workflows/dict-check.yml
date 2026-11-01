@@ -1,0 +1,41 @@
+name: Dictionary check
+# Only for this fork: what German dictionaries exist and whether they contain word pairs (bigrams)
+on:
+  push:
+    branches: [ ci/dict-check ]
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: List and inspect
+        run: |
+          api=https://codeberg.org/api/v1/repos/Helium314/aosp-dictionaries/contents
+          echo "== root"; curl -fsS "$api/" | python3 -c 'import json,sys; [print(e["type"], e["name"]) for e in json.load(sys.stdin)]'
+          for d in dictionaries dictionaries_experimental wordlists wordlists_experimental; do
+            echo "== $d (German only)"
+            curl -fsS "$api/$d" 2>/dev/null | python3 -c 'import json,sys
+          try:
+            for e in json.load(sys.stdin):
+              n=e["name"]
+              if "_de" in n or n.startswith("de"): print(e["size"], n, e.get("download_url"))
+          except Exception as ex: print("none", ex)' || true
+          done
+          mkdir -p dl && cd dl
+          for d in dictionaries dictionaries_experimental wordlists wordlists_experimental; do
+            curl -fsS "$api/$d" 2>/dev/null | python3 -c 'import json,sys
+          try:
+            for e in json.load(sys.stdin):
+              n=e["name"]
+              if n.startswith("main_de") or n.startswith("de"): print(e["download_url"])
+          except Exception: pass' >> urls.txt || true
+          done
+          cat urls.txt
+          while read -r u; do
+            f=$(basename "$u"); curl -fsSL -o "$f" "$u" || continue
+            echo "== $f $(stat -c %s "$f") bytes"
+            case "$f" in
+              *.gz) zcat "$f" | head -5; echo "lines: $(zcat "$f" | wc -l), word lines: $(zcat "$f" | grep -c '^ word=' || true), bigram lines: $(zcat "$f" | grep -c 'bigram=' || true)";;
+              *.combined) head -5 "$f"; echo "bigram lines: $(grep -c 'bigram=' "$f" || true)";;
+              *.dict) head -c 200 "$f" | strings | head -20;;
+            esac
+          done < urls.txt
