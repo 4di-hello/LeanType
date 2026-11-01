@@ -217,6 +217,21 @@
     <string name="auto_correct_aggressiveness_desc_2">Balanced (Default)\nStandard correction confidence in supported input fields.</string>
     <string name="auto_correct_aggressiveness_desc_3">Aggressive\nExtends auto-correction across more apps and unassisted text fields.</string>
     <string name="auto_correct_aggressiveness_desc_4">Very aggressive\nUnconditional correction for any close match across all fields.</string>
+    <string name="auto_correct_aggressiveness_auto">Automatic (currently: %s)\nLearns from your corrections: more careful if you often take corrections back, bolder if you often fix missed typos yourself.</string>
+    <string name="auto_correct_step_0">careful</string>
+    <string name="auto_correct_step_1">medium</string>
+    <string name="auto_correct_step_2">balanced</string>
+    <string name="auto_correct_step_3">bold</string>
+    <string name="correction_stats_title">Correction statistics</string>
+    <string name="correction_stats_empty">No data yet. Only counts are kept, never words, and nothing in password fields or incognito mode.</string>
+    <string name="correction_stats_summary">Last 30 days: %1$d words, %2$d auto-corrections, %3$d taken back (%4$.0f %%), %5$d missed typos fixed by you</string>
+    <string name="correction_stats_details">Last 30 days\n\nTyped words: %1$d\nAuto-corrections: %2$d\n– taken back right away with backspace: %3$d\n– changed back later: %4$d\n– prevented by tapping the typed word: %5$d\nTaken back in total: %6$.1f %%\n\nTypos you fixed yourself that were not auto-corrected: %7$d (%8$.1f %% of the words)\nWords completed from the strip: %9$d\nNext-word predictions used: %10$d</string>
+    <string name="correction_stats_auto_unchanged">Automatic strength: not changed yet (currently \"%s\"). It changes after 40 auto-corrections or 400 words at the earliest.</string>
+    <string name="correction_stats_auto_changed">Automatic strength: changed on %1$s from \"%2$s\" to \"%3$s\", because %4$s.</string>
+    <string name="correction_stats_reason_taken_back">corrections were often taken back</string>
+    <string name="correction_stats_reason_missed">typos were often missed</string>
+    <string name="correction_stats_privacy">Only counts are stored on this device, never words. Nothing is counted in password fields and incognito mode.</string>
+    <string name="correction_stats_reset">Reset</string>
     <!-- Expandable fine-tuning drawer titles and summaries -->
     <string name="fine_tune_autocorrect_title">Auto-correction</string>
     <string name="fine_tune_autocorrect_summary">Configure triggers, extra situations, and shortcut expansions</string>
