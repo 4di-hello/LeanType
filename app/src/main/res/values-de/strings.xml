@@ -708,8 +708,6 @@
     <string name="theme_name_ocean" tools:keep="@string/theme_name_ocean">Ozean</string>
     <string name="theme_name_deep_sea" tools:keep="@string/theme_name_deep_sea">Tiefsee</string>
     <string name="theme_name_pastel" tools:keep="@string/theme_name_pastel">Pastell</string>
-    <string name="about_sponsor_link">Projekt sponsern</string>
-    <string name="about_sponsor_link_description">Unterstützen Sie die Entwicklung von LeanType</string>
     <string name="sponsor_dialog_title">Dieses Projekt sponsern</string>
     <string name="sponsor_dialog_message">Dieses Projekt ist vollständig community-getrieben und auf Spenden angewiesen, um die Entwicklung am Leben zu erhalten. Wenn Sie diese Tastatur nützlich finden, denken Sie bitte über eine Unterstützung nach!</string>
     <string name="sponsor_dialog_never_show_again">Nicht mehr anzeigen</string>
