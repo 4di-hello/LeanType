@@ -126,10 +126,11 @@ fun createCorrectionSettings(context: Context) = listOf(
             name = setting.title,
             key = setting.key,
             default = Defaults.PREF_TYPING_ADAPT_STRENGTH,
-            range = 1f..5f,
+            range = 0f..5f,
             stepSize = 1,
             description = { value ->
                 when (value) {
+                    0 -> stringResource(R.string.typing_adapt_strength_auto)
                     1 -> stringResource(R.string.typing_adapt_strength_1)
                     2 -> stringResource(R.string.typing_adapt_strength_2)
                     3 -> stringResource(R.string.typing_adapt_strength_3)
