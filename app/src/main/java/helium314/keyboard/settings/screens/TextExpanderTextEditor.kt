@@ -148,7 +148,13 @@ fun TextExpanderTextEditor(onClose: (Boolean) -> Unit) {
                 ) {
                     OutlinedButton(onClick = {
                         val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                        cm.setPrimaryClip(ClipData.newPlainText("LeanType", value.text))
+                        // marked as sensitive: not shown in clipboard previews and kept out of clipboard histories
+                        cm.setPrimaryClip(ClipData.newPlainText("LeanType", value.text).apply {
+                            description.extras = android.os.PersistableBundle().apply {
+                                putBoolean(if (android.os.Build.VERSION.SDK_INT >= 33) android.content.ClipDescription.EXTRA_IS_SENSITIVE
+                                    else "android.content.extra.IS_SENSITIVE", true)
+                            }
+                        })
                         toast(context, R.string.text_expander_copied)
                     }) { Text(stringResource(R.string.text_expander_copy_all)) }
                     OutlinedButton(onClick = {
