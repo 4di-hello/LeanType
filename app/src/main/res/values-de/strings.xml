@@ -1816,6 +1816,10 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="typing_adapt">Trefferzonen anpassen</string>
     <string name="typing_adapt_summary">Mit den gesammelten Tipp-Daten erkennen, welche Taste Du gemeint hast, auch für die Autokorrektur. Tasten werden angepasst, sobald genug Daten da sind. Nicht in Passwortfeldern</string>
     <string name="typing_adapt_strength">Stärke der Anpassung</string>
+    <string name="typing_adapt_strength_auto">Automatisch: die Stärke mit den wenigsten Fehltreffern bei Deinen Anschlägen</string>
+    <string name="typing_adapt_evaluation_waiting">Automatische Stärke: braucht %1$d Anschläge, bis dahin „Empfohlen“.</string>
+    <string name="typing_adapt_evaluation_auto">Automatisch gewählt: %1$s. Mit Deinen letzten %2$d Anschlägen nachgerechnet: ohne Anpassung %3$.1f %% Fehltreffer, mit dieser Stärke %4$.1f %%.</string>
+    <string name="typing_adapt_evaluation_manual">Mit Deinen letzten %1$d Anschlägen nachgerechnet: ohne Anpassung %2$.1f %% Fehltreffer, mit der eingestellten Stärke %3$.1f %%. Am besten wäre: %4$s (%5$.1f %%).</string>
     <string name="typing_adapt_strength_1">Leicht</string>
     <string name="typing_adapt_strength_2">Mäßig</string>
     <string name="typing_adapt_strength_3">Empfohlen</string>
