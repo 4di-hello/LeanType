@@ -125,8 +125,9 @@ object OfflineAiLoader {
         return try {
             apkFile.setReadOnly()
             val nativeLibDir = getNativeLibDir(context, apkFile)
-            extractNativeLibs(apkFile, nativeLibDir)
+            // LeanType+: check before anything of the plugin is extracted or loaded
             helium314.keyboard.latin.utils.PluginTrust.requireTrusted(context, apkFile)
+            extractNativeLibs(apkFile, nativeLibDir)
             val classLoader = PluginClassLoader(
                 apkFile.absolutePath,
                 context.codeCacheDir.absolutePath,

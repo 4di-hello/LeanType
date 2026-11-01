@@ -13,7 +13,8 @@ import java.security.MessageDigest
 /**
  * Plugins run inside the keyboard and see everything that is typed. Only official LeanType plugins
  * are loaded: signed with a known LeanBitLab key, or (the handwriting plugin, whose releases are not
- * signed) one of the known release files.
+ * signed) one of the known release files. The voice plugin is an app of its own that gets the audio
+ * and returns text: it is only used if it is signed with the known key, see [isTrustedPackage].
  */
 object PluginTrust {
     private const val TAG = "PluginTrust"
@@ -77,6 +78,48 @@ object PluginTrust {
         val fileHash = try { sha256(apk) } catch (e: Exception) { return "file can't be read" }
         if (fileHash in TRUSTED_UNSIGNED_FILES) return null
         return "not signed and not a known release (${fileHash.take(16)}…)"
+    }
+
+    /** installed plugin apps already checked, by package and update time */
+    private val checkedPackages = HashSet<String>()
+
+    /**
+     * Whether the installed app [packageName] (a plugin that runs as its own app, like the voice plugin)
+     * is signed with a known LeanBitLab key. Shows a message and returns false otherwise.
+     */
+    fun isTrustedPackage(context: Context, packageName: String): Boolean {
+        val pm = context.packageManager
+        val updated = try {
+            @Suppress("DEPRECATION")
+            pm.getPackageInfo(packageName, 0).lastUpdateTime
+        } catch (e: PackageManager.NameNotFoundException) {
+            return false
+        }
+        val id = "$packageName:$updated"
+        synchronized(checkedPackages) { if (id in checkedPackages) return true }
+        val signers = try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                val signing = pm.getPackageInfo(packageName, PackageManager.GET_SIGNING_CERTIFICATES).signingInfo
+                if (signing == null) emptyList()
+                else (if (signing.hasMultipleSigners()) signing.apkContentsSigners else signing.signingCertificateHistory)?.toList() ?: emptyList()
+            } else {
+                @Suppress("DEPRECATION")
+                pm.getPackageInfo(packageName, PackageManager.GET_SIGNATURES).signatures?.toList() ?: emptyList()
+            }
+        } catch (e: Exception) {
+            emptyList()
+        }.map { hex(MessageDigest.getInstance("SHA-256").digest(it.toByteArray())).uppercase() }
+        if (signers.isNotEmpty() && signers.all { it in TRUSTED_SIGNERS }) {
+            synchronized(checkedPackages) { checkedPackages.add(id) }
+            return true
+        }
+        val reason = if (signers.isEmpty()) "signature can't be read" else "unknown signing key ${signers.first().take(16)}…"
+        Log.e(TAG, "not using $packageName: $reason")
+        val appContext = context.applicationContext ?: context
+        Handler(Looper.getMainLooper()).post {
+            Toast.makeText(appContext, "Plugin not used: $reason", Toast.LENGTH_LONG).show()
+        }
+        return false
     }
 
     /** SHA-256 of the certificates that signed [apk], verified by Android; empty if it is not (validly) signed */
