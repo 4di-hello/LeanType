@@ -41,12 +41,21 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
 - Emoji-Vorschläge zum getippten Wort: geprüft 27.10. – LeanType kann das schon („Emojis vorschlagen“, Standard an), braucht aber das Emoji-Wörterbuch der Sprache (z. B. `emoji_de.dict` aus Helium314/aosp-dictionaries, Ordner `emoji_cldr_signal_dictionaries`), über Wörterbücher → Wörterbuch hinzufügen. Nichts zu bauen
 - Getrennte Tipp-Profile pro Daumen bzw. Haltung weiter verfeinern (Idee)
 
+## Tippen wie Gboard/SwiftKey (seit 1.11.)
+- Ziel: weniger falsche und fehlende Korrekturen, bessere Vorschläge fürs nächste Wort, flüssigeres Gefühl
+- Erledigt 1.11.: „Aus meinen Texten lernen“ (Textkorrektur): eigene Texte einfügen oder Textdatei laden, lernt Wörter und Wortfolgen in den persönlichen Verlauf (unbekannte Wörter nur ab 2× im Text, gegen gelernte Tippfehler); Text wird beim nächsten Öffnen der Tastatur in der aktuellen Sprache gelernt und gelöscht
+- Befund 1.11.: Das deutsche Hauptwörterbuch (HeliBoard, 1,3 Mio. Wörter) hat nur höchstens 3 Folgewörter pro Wort, aus Nachrichtentexten, alle mit gleichem Gewicht – daher die schwachen Vorschläge fürs nächste Wort
+- Erledigt 1.11.: Eigenes Wörterbuch „Deutsch+“: gleiche Wörter, bis zu 20 Folgewörter pro Wort (480.000 insgesamt) aus 5 Mio. Sätzen (Wortschatz Leipzig, CC BY 4.0: News 2024, Web 2021/2019, Mixed 2011, Wikipedia 2021); nur Folgewörter, die nach dem Wort deutlich häufiger sind als allgemein. Download: Release `dict-de-plus` (`main_de_plus.dict`), Bauanleitung im Branch `ci/dict-de`. Zurück: normales Wörterbuch wieder herunterladen
+- Offen: Korrektur-Statistik (zurückgenommene Autokorrekturen, gelöschte und neu getippte Wörter) zum gezielten Nachstellen
+- Offen: Satzanfang – Folgewörter nach großgeschriebenem Satzanfang (z. B. „Viele“) hängen am kleingeschriebenen Wort; prüfen, ob die Tastatur das findet
+
 ## Updates (seit 27.10.)
 - Automatisch (montags): Workflow setzt `daily` auf LeanType neu auf, testet, baut und schiebt erst dann
 - Mit Konflikten: von Hand lösen, auf `update/<name>` pushen. Der Workflow baut und testet dort, nur wenn alles grün ist, ersetzt er `daily` und veröffentlicht. Sicherung des alten Stands vorher als `backup/…`
 - 27.10.: Auf LeanType 4.3.0-beta1 aktualisiert (Sicherung `backup/daily-2026-10-27b`)
 - 28.10.: Auf LeanType 4.3.0-beta2 aktualisiert, nur Konflikte in den deutschen Texten (Sicherung `backup/daily-2026-10-28`); #680 ebenfalls auf beta2
 - 29.10.: Auf LeanType 4.3.0-beta3 aktualisiert, keine Konflikte (Sicherung `backup/daily-2026-10-29`); alle PR-Branches passen ohne Konflikt
+- 1.11.: Auf LeanType 4.3.1-beta1 aktualisiert (Sicherung `backup/daily-2026-11-01`). Erster Build scheiterte an zwei deutschen Texten, die LeanType gestrichen hat (Lint „ExtraTranslation“) – nach einem Update mit Text-Konflikten prüfen, ob values-de Namen hat, die in values fehlen
 - 30.10.: Auf LeanType 4.3.0 (fertige Version) aktualisiert, nur Doku und Update-Anzeige geändert, keine Konflikte (Sicherung `backup/daily-2026-10-30`)
 - 29.10.: Auf LeanType 4.3.0-beta4 aktualisiert (Sicherung `backup/daily-2026-10-29b`). LeanType hat jetzt selbst Kontext 4096 und passt die max. Tokens an die Textlänge an (512–2048); unser PR `fix/offline-ai-busy` ohne den Kontext-Teil neu aufgesetzt
 - Achtung beim Update-Branch: Ist der oberste Commit ein `[skip ci]`-Commit, startet GitHub keinen Build – dann einen normalen Commit obendrauf
