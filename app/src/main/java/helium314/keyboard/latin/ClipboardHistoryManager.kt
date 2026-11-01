@@ -148,7 +148,9 @@ class ClipboardHistoryManager(
         }
 
         ExecutorUtils.getBackgroundExecutor(ExecutorUtils.KEYBOARD).execute {
-            if (latinIME.mSettings.current.mClipboardHistoryEnabled) addOlderScreenshotsToHistory()
+            // not in incognito mode: nothing is recorded there
+            val current = latinIME.mSettings.current
+            if (current.mClipboardHistoryEnabled && !current.mIncognitoModeEnabled) addOlderScreenshotsToHistory()
             val projection = mutableListOf(
                 android.provider.MediaStore.Images.Media._ID,
                 android.provider.MediaStore.Images.Media.DISPLAY_NAME,

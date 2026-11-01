@@ -7,6 +7,10 @@ name: My LeanType build
 #   and only if everything passes, replace "daily" with it and publish. A broken state never reaches "daily".
 # The APK is published as a GitHub release (latest: releases/latest/download/LeanTypePlus.apk) when the app
 # changed, and also stored on the branch apk-out. A failed run (e.g. a conflict) is reported by GitHub by mail.
+#
+# Two jobs: "build" runs the code of LeanType and of this fork (Gradle) without any secret and without write
+# access, so a bad change in LeanType can't steal the signing key or change the repository. "publish" runs no
+# code of the repository: it signs the APK with apksigner, checks it, and pushes and publishes.
 
 on:
   schedule:
@@ -16,7 +20,7 @@ on:
     branches: [ daily, 'update/**' ]
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: my-leantype
@@ -26,12 +30,16 @@ jobs:
   build:
     # fixed version, so a change of ubuntu-latest can't break the build unnoticed
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
     steps:
       # third-party actions are pinned to a commit: a tag could later point to other code
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
           ref: ${{ github.event_name == 'push' && github.ref || 'daily' }}
           fetch-depth: 0
+          # no token in .git/config, where the build could read it
+          persist-credentials: false
 
       - name: Checked update branch
         if: startsWith(github.ref, 'refs/heads/update/')
@@ -66,6 +74,9 @@ jobs:
           distribution: 'temurin'
 
       - uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5.0.2
+        with:
+          # a changed gradle-wrapper.jar would run any code
+          validate-wrappers: true
 
       - name: Run tests
         run: |
@@ -104,31 +115,12 @@ jobs:
           sys.exit(1 if bad else 0)
           PY
 
-      - name: Use the fixed key (secret DEBUG_KEYSTORE_B64)
-        env:
-          DEBUG_KEYSTORE_B64: ${{ secrets.DEBUG_KEYSTORE_B64 }}
-        run: |
-          if [ -z "$DEBUG_KEYSTORE_B64" ]; then
-            echo "::error::secret DEBUG_KEYSTORE_B64 is missing, without it the APK can't be installed over the previous one"
-            exit 1
-          fi
-          echo "$DEBUG_KEYSTORE_B64" | tr -d ' \n\r' | base64 -d > "$RUNNER_TEMP/personal.keystore"
-          echo "PERSONAL_KEYSTORE=$RUNNER_TEMP/personal.keystore" >> "$GITHUB_ENV"
-          keytool -list -v -keystore "$RUNNER_TEMP/personal.keystore" -storepass android | grep -m1 "SHA256:" | sed 's/^ */::notice title=key::/'
-
       - name: Build APK
         run: |
           # shown in About, matches the release name
           export FORK_BUILD_INFO="$(date -u +%d.%m.%Y) ($(git rev-parse --short HEAD))"
+          # signed with a temporary key here, the fixed key is only used in the job "publish"
           ./gradlew assembleOfflinePersonal
-
-      - name: Check that the APK has the fixed key
-        run: |
-          apk=$(find app/build/outputs/apk -name '*.apk' | head -1)
-          want=$(keytool -list -v -keystore "$PERSONAL_KEYSTORE" -storepass android | grep -m1 "SHA256:" | awk '{print $2}')
-          got=$(keytool -printcert -jarfile "$apk" | grep -m1 "SHA256:" | awk '{print $2}')
-          echo "::notice title=apk key::$got"
-          if [ "$want" != "$got" ]; then echo "::error::APK is not signed with the fixed key"; exit 1; fi
 
       - name: Check that the APK has no internet permission
         # LeanType+ must never be able to send typed text anywhere: stop if the permission ever
@@ -147,26 +139,101 @@ jobs:
           print("::notice title=permissions::no internet permission")
           PY
 
-      - name: Store updated branch
-        if: env.UPDATED == '1'
+      - name: Hand over to the job "publish"
         run: |
-          git push --force-with-lease=daily:"$(git rev-parse origin/daily)" origin HEAD:daily
-          # the update branch has done its job
-          if [[ "$GITHUB_REF" == refs/heads/update/* ]]; then
-            git push origin --delete "${GITHUB_REF#refs/heads/}" || true
+          mkdir -p "$RUNNER_TEMP/out"
+          cp "$(find app/build/outputs/apk -name '*.apk' | head -1)" "$RUNNER_TEMP/out/unsigned.apk"
+          git rev-parse HEAD > "$RUNNER_TEMP/out/head"
+          echo "${UPDATED:-0}" > "$RUNNER_TEMP/out/updated"
+          if [ "${UPDATED:-0}" = 1 ] && ! git merge-base --is-ancestor HEAD origin/daily; then
+            # the new commits of "daily", the publish job has the rest from GitHub
+            git remote get-url upstream >/dev/null 2>&1 || git remote add upstream https://github.com/LeanBitLab/LeanType.git
+            git fetch -q upstream main || true
+            exclude="origin/daily"
+            git rev-parse -q --verify upstream/main >/dev/null && exclude="$exclude upstream/main"
+            git bundle create "$RUNNER_TEMP/out/daily.bundle" HEAD --not $exclude
           fi
 
-      - name: Push APK to branch apk-out
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: build
+          path: ${{ runner.temp }}/out
+          retention-days: 1
+
+  publish:
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      # only git commands on the repository from here on, nothing of it is run
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          ref: daily
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: build
+          path: ${{ runner.temp }}/out
+
+      - name: Sign with the fixed key (secret DEBUG_KEYSTORE_B64)
+        env:
+          DEBUG_KEYSTORE_B64: ${{ secrets.DEBUG_KEYSTORE_B64 }}
         run: |
-          mkdir /tmp/out
-          find app/build/outputs/apk -name '*.apk' -exec cp {} /tmp/out/ \;
-          cd /tmp/out
+          if [ -z "$DEBUG_KEYSTORE_B64" ]; then
+            echo "::error::secret DEBUG_KEYSTORE_B64 is missing, without it the APK can't be installed over the previous one"
+            exit 1
+          fi
+          ks="$RUNNER_TEMP/personal.keystore"
+          echo "$DEBUG_KEYSTORE_B64" | tr -d ' \n\r' | base64 -d > "$ks"
+          # the key the previous versions were signed with
+          want=$(keytool -list -v -keystore "$ks" -storepass android | grep -m1 "SHA256:" | awk '{print $2}' | tr -d ':' | tr 'A-F' 'a-f')
+          tools="$ANDROID_HOME/build-tools/$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -1)"
+          out="$RUNNER_TEMP/out"
+          "$tools/apksigner" sign --ks "$ks" --ks-pass pass:android --ks-key-alias androiddebugkey --key-pass pass:android \
+            --out "$out/LeanTypePlus.apk" "$out/unsigned.apk"
+          rm -f "$ks"
+          # native libraries must stay aligned to 16 KB pages
+          "$tools/zipalign" -c -P 16 4 "$out/LeanTypePlus.apk" || { echo "::error::APK is not aligned"; exit 1; }
+          got=$("$tools/apksigner" verify --print-certs "$out/LeanTypePlus.apk" | grep -m1 "SHA-256 digest" | awk '{print $NF}')
+          echo "::notice title=apk key::$got"
+          if [ -z "$want" ] || [ "$want" != "$got" ]; then echo "::error::APK is not signed with the fixed key"; exit 1; fi
+
+      - name: Store updated branch
+        run: |
+          out="$RUNNER_TEMP/out"
+          head=$(cat "$out/head")
+          if [ "$(cat "$out/updated")" = 1 ]; then
+            git remote add upstream https://github.com/LeanBitLab/LeanType.git
+            git fetch -q upstream main || true
+            if [ -f "$out/daily.bundle" ]; then
+              git bundle verify -q "$out/daily.bundle"
+              git fetch -q "$out/daily.bundle" HEAD
+              [ "$(git rev-parse FETCH_HEAD)" = "$head" ] || { echo "::error::bundle does not match the build"; exit 1; }
+            fi
+            git push --force-with-lease=daily:"$(git rev-parse origin/daily)" origin "$head:refs/heads/daily"
+            # the update branch has done its job
+            if [[ "$GITHUB_REF" == refs/heads/update/* ]]; then
+              git push origin --delete "${GITHUB_REF#refs/heads/}" || true
+            fi
+          fi
+          # the commit that was built, also for the release notes
+          git checkout -q --detach "$head"
+
+      - name: Push APK to branch apk-out
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir /tmp/apk
+          cp "$RUNNER_TEMP/out/LeanTypePlus.apk" /tmp/apk/
+          cd /tmp/apk
           git init -q -b apk-out
           git config user.name 4di-hello
           git config user.email 4di-hello@users.noreply.github.com
           git add .
           git commit -q -m "APK for $(git -C "$GITHUB_WORKSPACE" rev-parse HEAD)"
-          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" apk-out
+          git push -q -f "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" apk-out
 
       - name: Publish release
         env:
@@ -187,7 +254,6 @@ jobs:
           sha=$(git rev-parse --short HEAD)
           base=$(git rev-parse -q --short --verify upstream/main || echo unknown)
           tag="plus-$(date -u +%Y-%m-%d-%H%M)-$sha"
-          cp "$(find app/build/outputs/apk -name '*.apk' | head -1)" "$RUNNER_TEMP/LeanTypePlus.apk"
           {
             echo "LeanType+ $(date -u +%d.%m.%Y), based on LeanType ${base}. Install over the previous version, nothing is lost."
             echo
@@ -205,7 +271,7 @@ jobs:
             echo
             echo "<!-- base: ${base} -->"
           } > "$RUNNER_TEMP/notes.md"
-          gh release create "$tag" "$RUNNER_TEMP/LeanTypePlus.apk" --target "$(git rev-parse HEAD)" \
+          gh release create "$tag" "$RUNNER_TEMP/out/LeanTypePlus.apk" --target "$(git rev-parse HEAD)" \
             --title "LeanType+ $(date -u +%d.%m.%Y) ($sha)" --notes-file "$RUNNER_TEMP/notes.md" --latest
           # keep the last 10 LeanType+ releases
           gh release list --limit 100 --json tagName --jq '[.[].tagName | select(startswith("plus-"))] | .[10:][]' | while read -r old; do

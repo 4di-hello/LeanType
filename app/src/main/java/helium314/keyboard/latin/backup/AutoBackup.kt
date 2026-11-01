@@ -161,13 +161,13 @@ object AutoBackup {
         return try {
             if (password == null) {
                 resolver.openInputStream(file)?.use { input ->
-                    java.util.zip.ZipInputStream(input).use { it.nextEntry != null }
+                    java.util.zip.ZipInputStream(input).use { readAllEntries(it) }
                 } ?: false
             } else {
                 val temp = java.io.File.createTempFile("backup_check", ".zip", context.cacheDir)
                 try {
                     resolver.openInputStream(file)?.use { BackupCrypto.decryptToFile(it, password, temp) } ?: return false
-                    java.util.zip.ZipFile(temp).use { it.size() > 0 }
+                    temp.inputStream().buffered().use { input -> java.util.zip.ZipInputStream(input).use { readAllEntries(it) } }
                 } finally {
                     temp.delete()
                 }
@@ -176,6 +176,17 @@ object AutoBackup {
             Log.w(TAG, "backup check failed", e)
             false
         }
+    }
+
+    /** Reads every entry to the end, so a cut off or broken file (CRC check) is noticed; false if there are none */
+    private fun readAllEntries(zip: java.util.zip.ZipInputStream): Boolean {
+        val buffer = ByteArray(64 * 1024)
+        var entries = 0
+        while (zip.nextEntry != null) {
+            while (zip.read(buffer) >= 0) { /* only checking */ }
+            entries++
+        }
+        return entries > 0
     }
 
     private fun removeUnencryptedBackups(context: Context, tree: Uri) {

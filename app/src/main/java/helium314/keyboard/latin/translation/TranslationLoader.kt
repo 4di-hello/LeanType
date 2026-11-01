@@ -124,9 +124,10 @@ object TranslationLoader {
             TranslationModelImporter.migrateLegacyModels(context)
             ensureWorkManagerInitialized(context)
             val nativeLibDir = getNativeLibDir(context, apkFile)
+            // LeanType+: check before anything of the plugin is extracted or loaded
+            helium314.keyboard.latin.utils.PluginTrust.requireTrusted(context, apkFile)
             extractNativeLibs(apkFile, nativeLibDir)
             val cachedLoader = cachedClassLoader
-            helium314.keyboard.latin.utils.PluginTrust.requireTrusted(context, apkFile)
             val classLoader = if (cachedLoader != null && cachedApkModified == apkFile.lastModified()) {
                 cachedLoader
             } else {
@@ -180,7 +181,7 @@ object TranslationLoader {
                     val prefix = "lib/$targetAbi/"
                     for (entry in zip.entries().asSequence()) {
                         if (entry.name.startsWith(prefix) && entry.name.endsWith(".so")) {
-                            val fileName = entry.name.substring(prefix.length)
+                            val fileName = entry.name.substringAfterLast('/') // no path from the zip, e.g. "../"
                             val outFile = File(outputDir, fileName)
                             if (!outFile.exists() || outFile.length() != entry.size) {
                                 zip.getInputStream(entry).use { input ->
@@ -236,8 +237,9 @@ object TranslationLoader {
             // Verify the plugin loads successfully
             ensureWorkManagerInitialized(context)
             val nativeLibDir = getNativeLibDir(context, apkFile)
-            extractNativeLibs(apkFile, nativeLibDir)
+            // LeanType+: check before anything of the plugin is extracted or loaded
             helium314.keyboard.latin.utils.PluginTrust.requireTrusted(context, apkFile)
+            extractNativeLibs(apkFile, nativeLibDir)
             val classLoader = PluginClassLoader(
                 apkFile.absolutePath,
                 context.codeCacheDir.absolutePath,
