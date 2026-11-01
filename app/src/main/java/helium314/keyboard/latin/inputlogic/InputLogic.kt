@@ -23,6 +23,8 @@ import helium314.keyboard.latin.LearnedCasing
 import helium314.keyboard.latin.utils.prefs
 import helium314.keyboard.latin.heatmap.KeyboardGeometry
 import helium314.keyboard.latin.heatmap.TypingHeatmap
+import helium314.keyboard.latin.personalization.CorrectionStats
+import helium314.keyboard.latin.personalization.CorrectionTracker
 import helium314.keyboard.event.InputTransaction
 import helium314.keyboard.latin.cjk.CjkInputManager
 import helium314.keyboard.keyboard.Keyboard
@@ -148,6 +150,7 @@ class InputLogic(
     fun startInput(combiningSpec: String?, settingsValues: SettingsValues) {
         mCapsLockFromRecapitalize = false
         TypingHeatmap.init(mLatinIME)
+        CorrectionStats.tracker.clear()
         mDeletedLetterIndex = -1
         mRecapitalizedWord = null
         mEnteredText = null
@@ -191,6 +194,7 @@ class InputLogic(
 
     fun finishInput() {
         TypingHeatmap.onFinishInput()
+        CorrectionStats.save()
         if (mWordComposer.isComposingWord()) {
             mConnection.finishComposingText()
             StatsUtils.onWordCommitUserTyped(mWordComposer.getTypedWord(), mWordComposer.isBatchMode())
@@ -389,6 +393,7 @@ class InputLogic(
                 return inputTransaction
             }
 
+            trackSuggestionPick(settingsValues, suggestion, suggestedWords)
             val isImmediate = settingsValues.mAutospaceAfterSuggestion && settingsValues.mImmediateAutoSpace && settingsValues.shouldInsertSpacesAutomatically() && !mConnection.hasTextAfterCursor()
             val cursorMovedBack = commitChosenWord(
                 settingsValues, suggestion, LastComposedWord.COMMIT_TYPE_MANUAL_PICK,
@@ -2474,6 +2479,12 @@ class InputLogic(
         val originallyTypedWord = mLastComposedWord.mTypedWord
         val committedWord = mLastComposedWord.mCommittedWord
         val committedWordString = committedWord.toString()
+        if (shouldCountCorrections(inputTransaction.settingsValues)) {
+            CorrectionStats.tracker.removeLast()
+            // a change of the case only (learned casing) is not an autocorrection
+            if (!originallyTypedWord.toString().equals(committedWordString, ignoreCase = true))
+                CorrectionStats.count(mLatinIME, CorrectionStats.REVERTED)
+        }
         // the user doesn't want the learned case here: forget it
         if (inputTransaction.settingsValues.mLearnCasing
             && LearnedCasing.learnedFormFor(mLatinIME.prefs(), originallyTypedWord) == committedWordString) {
@@ -2855,6 +2866,59 @@ class InputLogic(
         return false
     }
 
+    /** LeanType+: whether [CorrectionStats] may count here; never in incognito mode and password fields */
+    private fun shouldCountCorrections(settingsValues: SettingsValues): Boolean =
+        !settingsValues.mIncognitoModeEnabled && !settingsValues.mInputAttributes.mIsPasswordField
+                && settingsValues.mSpacingAndPunctuations.mCurrentLanguageHasSpaces
+
+    private fun isKnownWord(word: String, settingsValues: SettingsValues): Boolean =
+        mDictionaryFacilitator.isValidSpellingWord(word)
+                || mDictionaryFacilitator.isValidSpellingWord(word.lowercase(settingsValues.mLocale))
+
+    /** Counts a committed word for [CorrectionStats], and whether it changed an earlier word at the same place */
+    private fun trackCorrection(settingsValues: SettingsValues, chosenWord: String, commitType: Int, chosenWordKnown: Boolean) {
+        if (!shouldCountCorrections(settingsValues) || mWordComposer.isBatchMode()) return
+        val typed = mWordComposer.getTypedWord()
+        if (typed.isEmpty() || chosenWord.isEmpty()) return // a picked prediction, see trackSuggestionPick
+        val start = mConnection.expectedSelectionStart - chosenWord.length
+        if (start < 0) return
+        val autocorrected = commitType == LastComposedWord.COMMIT_TYPE_DECIDED_WORD && !typed.equals(chosenWord, ignoreCase = true)
+        if (!mWordComposer.isResumed()) CorrectionStats.count(mLatinIME, CorrectionStats.WORDS)
+        if (autocorrected) CorrectionStats.count(mLatinIME, CorrectionStats.AUTOCORRECTED)
+        val wordValid = autocorrected || chosenWordKnown
+        val entry = CorrectionTracker.Entry(start, chosenWord, typed, autocorrected, wordValid, SystemClock.uptimeMillis())
+        when (CorrectionStats.tracker.onCommitted(entry)) {
+            CorrectionTracker.Change.AUTOCORRECT_UNDONE -> CorrectionStats.count(mLatinIME, CorrectionStats.UNDONE)
+            CorrectionTracker.Change.MISSED_TYPO -> CorrectionStats.count(mLatinIME, CorrectionStats.MISSED)
+            CorrectionTracker.Change.NONE -> { }
+        }
+    }
+
+    /** Counts what a suggestion picked from the strip says about the autocorrection, see [CorrectionStats] */
+    private fun trackSuggestionPick(settingsValues: SettingsValues, picked: String, suggestedWords: SuggestedWords) {
+        if (!shouldCountCorrections(settingsValues) || mWordComposer.isBatchMode() || picked.isEmpty()) return
+        if (!mWordComposer.isComposingWord()) {
+            if (suggestedWords.isPrediction) CorrectionStats.count(mLatinIME, CorrectionStats.PREDICTIONS)
+            return
+        }
+        if (mWordComposer.isResumed()) return // a change of an existing word, see trackCorrection
+        val typed = mWordComposer.getTypedWord()
+        val autoCorrection = if (suggestedWords.mWillAutoCorrect && suggestedWords.size() > SuggestedWords.INDEX_OF_AUTO_CORRECTION)
+            suggestedWords.getInfo(SuggestedWords.INDEX_OF_AUTO_CORRECTION).mWord else null
+        when {
+            picked == typed -> {
+                // the typed word was tapped so it is not corrected
+                if (autoCorrection != null && !autoCorrection.equals(typed, ignoreCase = true))
+                    CorrectionStats.count(mLatinIME, CorrectionStats.KEPT_TYPED)
+            }
+            picked.length > typed.length && picked.startsWith(typed, ignoreCase = true) ->
+                CorrectionStats.count(mLatinIME, CorrectionStats.COMPLETIONS)
+            // a typo corrected from the strip that the autocorrection would not have fixed
+            !picked.equals(autoCorrection, ignoreCase = true) && !picked.equals(typed, ignoreCase = true)
+                    && !isKnownWord(typed, settingsValues) -> CorrectionStats.count(mLatinIME, CorrectionStats.MISSED)
+        }
+    }
+
     /** Remember where the keys of the typed word were touched, see [TypingHeatmap] */
     private fun recordForTypingHeatmap(settingsValues: SettingsValues, finalWord: String) {
         if (!settingsValues.mTypingHeatmapEnabled || settingsValues.mIncognitoModeEnabled) return
@@ -2977,6 +3041,8 @@ class InputLogic(
             Log.d(TAG, "commitChosenWord() : $runTimeMillis ms to run Connection.commitText")
             startTimeMillis = System.currentTimeMillis()
         }
+        // before learning: a typo is known to the user history right after it
+        val chosenWordKnown = !shouldCountCorrections(settingsValues) || isKnownWord(chosenWord, settingsValues)
         performAdditionToUserHistoryDictionary(settingsValues, chosenWord, ngramContext)
         if (DebugFlags.DEBUG_ENABLED) {
             var runTimeMillis = System.currentTimeMillis() - startTimeMillis
@@ -2984,6 +3050,7 @@ class InputLogic(
             startTimeMillis = System.currentTimeMillis()
         }
         recordForTypingHeatmap(settingsValues, chosenWord)
+        trackCorrection(settingsValues, chosenWord, commitType, chosenWordKnown)
         // the user changed the case of this word with shift: remember it
         if (settingsValues.mLearnCasing && !settingsValues.mIncognitoModeEnabled && chosenWord == mRecapitalizedWord) {
             LearnedCasing.onRecapitalizedWordUsed(mLatinIME.prefs(), chosenWord)
