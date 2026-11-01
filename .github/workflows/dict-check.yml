@@ -1,5 +1,4 @@
 name: Dictionary check
-# Only for this fork: whether the German dictionaries contain word pairs (bigrams)
 on:
   push:
     branches: [ ci/dict-check ]
@@ -7,25 +6,18 @@ jobs:
   check:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
-        with:
-          java-version: '17'
-          distribution: 'temurin'
       - name: Inspect
         run: |
           raw=https://codeberg.org/Helium314/aosp-dictionaries/raw/branch/main
-          curl -fsSL -o dicttool.jar $raw/dicttool_aosp.jar
-          java -jar dicttool.jar help 2>&1 | head -40 || true
-          for f in main_de.dict main_de__legacy.dict; do
-            curl -fsSL -o $f $raw/dictionaries/$f
-            echo "===== $f"
-            java -jar dicttool.jar info $f 2>&1 | head -40 || true
-            java -jar dicttool.jar makedict -s $f -w ${f%.dict}.combined 2>&1 | tail -5 || true
-            if [ -f ${f%.dict}.combined ]; then
-              echo "lines: $(wc -l < ${f%.dict}.combined)"
-              echo "words: $(grep -c '^ word=' ${f%.dict}.combined)"
-              echo "bigram lines: $(grep -c 'bigram=' ${f%.dict}.combined)"
-              grep -m5 'bigram=' ${f%.dict}.combined || true
-              grep -m8 '^ word=' ${f%.dict}.combined || true
-            fi
+          api=https://codeberg.org/api/v1/repos/Helium314/aosp-dictionaries/contents
+          echo "===== README"; curl -fsSL $raw/README.md | head -80
+          echo "===== scripts"; curl -fsS "$api/scripts" | python3 -c 'import json,sys; [print(e["name"]) for e in json.load(sys.stdin)]' || true
+          echo "===== wordlists raw listing"; curl -sS "$api/wordlists" | head -c 600; echo
+          for f in main_de.combined.gz main_de.combined main_de_wordlist.combined.gz; do
+            if curl -fsSL -o $f $raw/wordlists/$f; then
+              echo "===== $f $(stat -c %s $f)"
+              (zcat -f $f) > de.txt
+              echo "lines: $(wc -l < de.txt) words: $(grep -c '^ word=' de.txt) bigram lines: $(grep -c 'bigram=' de.txt)"
+              head -12 de.txt; grep -m5 'bigram=' de.txt || true
+            else echo "no $f"; fi
           done
