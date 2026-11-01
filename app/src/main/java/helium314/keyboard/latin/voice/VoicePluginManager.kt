@@ -140,6 +140,9 @@ class VoicePluginManager(private val context: Context) : IBinder.DeathRecipient 
 
         val component = resolveServiceComponent()
         val intent = Intent().apply { this.component = component }
+        // LeanType+: the plugin hears everything that is dictated, only the official one is used
+        if (component.packageName != context.packageName
+            && !helium314.keyboard.latin.utils.PluginTrust.isTrustedPackage(context, component.packageName)) return false
 
         Log.i(TAG, "Binding to voice plugin service: $component")
         isConnecting = true
