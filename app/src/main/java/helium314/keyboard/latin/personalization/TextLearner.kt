@@ -53,12 +53,15 @@ object TextLearner {
         return result
     }
 
-    /** Words that are learned: known to the dictionary, or appearing at least [MIN_COUNT_UNKNOWN] times. */
-    fun learnableWords(segments: List<Segment>, isKnownWord: (String) -> Boolean): Set<String> {
+    fun wordCounts(segments: List<Segment>): Map<String, Int> {
         val counts = HashMap<String, Int>()
         segments.forEach { s -> s.words.forEach { counts[it] = (counts[it] ?: 0) + 1 } }
-        return counts.filter { (word, count) -> count >= MIN_COUNT_UNKNOWN || isKnownWord(word) }.keys
+        return counts
     }
+
+    /** Words that are learned: known to the dictionary, or appearing at least [MIN_COUNT_UNKNOWN] times. */
+    fun learnableWords(segments: List<Segment>, isKnownWord: (String) -> Boolean): Set<String> =
+        wordCounts(segments).filter { (word, count) -> count >= MIN_COUNT_UNKNOWN || isKnownWord(word) }.keys
 
     /** Stores [text] to be learned when the keyboard opens next. Returns the number of words found. */
     fun queue(context: Context, text: String): Int {
@@ -89,15 +92,26 @@ object TextLearner {
             KeyboardSwitcher.getInstance().showToast(ime.getString(R.string.learn_from_text_personalization_off), false)
             return
         }
+        running = true
         val file = File(ime.filesDir, QUEUE_FILE)
-        val text = try { file.readText() } catch (e: Exception) { return }
-        file.delete()
-        val segments = segments(text)
-        val learnable = learnableWords(segments) { word ->
+        // reading and splitting a long text takes a moment: not on the main thread, typing must not wait
+        Thread({
+            val text = try { file.readText() } catch (e: Exception) { running = false; return@Thread }
+            file.delete()
+            val segments = segments(text)
+            val counts = wordCounts(segments)
+            handler.post { learn(ime, segments, counts) }
+        }, "TextLearner").apply { isDaemon = true; start() }
+    }
+
+    private fun learn(ime: LatinIME, segments: List<Segment>, counts: Map<String, Int>) {
+        val settings = ime.settings.current
+        val facilitator = ime.getDictionaryFacilitator()
+        val known = HashMap<String, Boolean>()
+        fun isLearnable(word: String) = (counts[word] ?: 0) >= MIN_COUNT_UNKNOWN || known.getOrPut(word) {
             facilitator.isValidSpellingWord(word) || facilitator.isValidSpellingWord(word.lowercase(settings.mLocale))
         }
-        Log.i(TAG, "learning ${learnable.size} different words from ${segments.size} segments")
-        running = true
+        Log.i(TAG, "learning ${counts.size} different words from ${segments.size} segments")
         val timestamp = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis())
         var segmentIndex = 0
         var wordIndex = 0
@@ -111,7 +125,7 @@ object TextLearner {
                     val segment = segments[segmentIndex]
                     if (wordIndex == 0) context = if (segment.startsSentence) NgramContext.BEGINNING_OF_SENTENCE else NgramContext.EMPTY_PREV_WORDS_INFO
                     val word = segment.words[wordIndex]
-                    if (word in learnable) {
+                    if (isLearnable(word)) {
                         val autoCapitalized = wordIndex == 0 && segment.startsSentence && word.first().isUpperCase()
                         facilitator.addToUserHistory(word, autoCapitalized, context, timestamp, settings.mBlockPotentiallyOffensive)
                         context = context.getNextNgramContext(NgramContext.WordInfo(word))

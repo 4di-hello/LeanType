@@ -47,8 +47,11 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
 - Befund 1.11.: Das deutsche Hauptwörterbuch (HeliBoard, 1,3 Mio. Wörter) hat nur höchstens 3 Folgewörter pro Wort, aus Nachrichtentexten, alle mit gleichem Gewicht – daher die schwachen Vorschläge fürs nächste Wort
 - Erledigt 1.11.: Eigenes Wörterbuch „Deutsch+“: gleiche Wörter, bis zu 20 Folgewörter pro Wort (480.000 insgesamt) aus 5 Mio. Sätzen (Wortschatz Leipzig, CC BY 4.0: News 2024, Web 2021/2019, Mixed 2011, Wikipedia 2021); nur Folgewörter, die nach dem Wort deutlich häufiger sind als allgemein. Download: Release `dict-de-plus` (`main_de_plus.dict`), Bauanleitung im Branch `ci/dict-de`. Zurück: normales Wörterbuch wieder herunterladen
 - Erledigt 1.11.: Stärke der Trefferzonen-Anpassung „Automatisch“ (neue Stellung ganz links am Regler, Standard bei Neuinstallation): die Tastatur rechnet Deine aufgezeichneten Anschläge mit jeder Stärke nach (jeder Anschlag zählt dabei nicht für seine eigene Taste mit) und nimmt die mit den wenigsten Fehltreffern, bei Gleichstand die schwächere; ab 300 Anschlägen je Layout, vorher „Empfohlen“; wird nach jedem Speichern neu gewählt. Trefferkarte zeigt die nachgerechneten Fehltreffer
-- Offen: Korrektur-Statistik (zurückgenommene Autokorrekturen, gelöschte und neu getippte Wörter) zum gezielten Nachstellen – danach ließe sich auch die Autokorrektur-Stärke so selbst einstellen
-- Offen: Satzanfang – Folgewörter nach großgeschriebenem Satzanfang (z. B. „Viele“) hängen am kleingeschriebenen Wort; prüfen, ob die Tastatur das findet
+- Erledigt 1.11.: Korrektur-Statistik (Textkorrektur → „Korrektur-Statistik“, letzte 30 Tage, nur Zahlen, nicht in Passwortfeldern/Inkognito): getippte Wörter, Autokorrekturen, davon zurückgenommen (sofort per Rücktaste, später zurückgeändert, durch Tippen aufs getippte Wort verhindert), selbst korrigierte übersehene Tippfehler, genutzte Vervollständigungen und Wortvorhersagen. Spätere Änderungen erkennt die Tastatur an der Stelle des Wortes (nur im Speicher, 10 Minuten)
+- Erledigt 1.11.: Autokorrektur-Stärke „Automatisch“ (neue Stellung ganz links am Regler): Schwelle in Stufen vorsichtig 0,185 / mittel 0,12 / ausgewogen 0,067 / mutig 0,04, eine Stufe vorsichtiger ab 12 % zurückgenommen (mind. 40 Korrekturen), eine Stufe mutiger ab 1,2 % übersehenen Tippfehlern (mind. 400 Wörter) bei wenig Zurückgenommenem. „Mehr Autokorrektur“ bleibt, wie es ist
+- Erledigt 1.11.: „Tippfehler lernen“ (Standard an): denselben übersehenen Tippfehler zweimal gleich selbst korrigiert → wird danach automatisch korrigiert; Rücktaste direkt danach oder späteres Zurückändern vergisst ihn; Liste „Gelernte Tippfehler“ mit Löschen
+- Geprüft 1.11., kein Fehler: Satzanfang – die Tastatur sucht Folgewörter bei unbekanntem großgeschriebenem Vorwort beim kleingeschriebenen; der persönliche Verlauf speichert Paare nach Satzanfang klein; Deutsch+ legt Satzanfangs-Paare nach derselben Regel ab
+- Idee: Vorschläge für das erste Wort eines Satzes aus Deutsch+ (braucht Satzanfangs-Einträge im Wörterbuch; bisher lernt das nur der persönliche Verlauf)
 
 ## Updates (seit 27.10.)
 - Automatisch (montags): Workflow setzt `daily` auf LeanType neu auf, testet, baut und schiebt erst dann
@@ -67,6 +70,20 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
 - Bauanleitung baut weiter, auch wenn LeanType verschwindet
 - PRs #680/#695 werden wohl nicht mehr übernommen, beides ist im Fork enthalten
 - Umzug auf HeliBoard (aktiv gepflegt): nur bei echtem Bedarf, sehr aufwendig (KI, Sprache, Textbausteine fehlen dort)
+
+## Sicherheit (Review 1.11., unabhängige Zweitprüfung)
+
+- Erledigt: Build-Pipeline in zwei Teile getrennt – „build“ führt den Code von LeanType und des Forks aus, ohne Geheimnisse und ohne Schreibrecht (kein Token in .git/config, Gradle-Wrapper wird geprüft); „publish“ führt keinen Code aus dem Repository aus, signiert mit apksigner, prüft Schlüssel und 16-KB-Ausrichtung, schiebt `daily` und veröffentlicht. Eine böswillige Änderung in LeanType kann so den Schlüssel nicht stehlen und das Repository nicht verändern
+- Bleibt: Montags wird LeanType-Code automatisch eingebaut und veröffentlicht. Wird LeanType kompromittiert, landet das in der nächsten Version (Schutz nur durch Freigabe von Hand vor dem Veröffentlichen, optional)
+- Erledigt: Plugins werden vor dem Entpacken geprüft (vorher erst nach dem Entpacken der .so-Dateien); Dateinamen aus dem Plugin ohne Pfad („../“)
+- Erledigt: Prüfsumme der Gestenbibliothek nicht mehr in Sicherungen (sie erlaubt das Laden von nativem Code)
+- Erledigt: KI-Ergebnisse nur noch ins selbe Feld mit unverändertem Text (viele Apps nutzen dieselbe Feld-ID für alle Chats), nie in Passwortfelder; sonst in die Zwischenablage mit Hinweis
+- Erledigt: Diktat „Schon beim Sprechen erkennen“: restliche Stücke nur ins Feld, in dem die Aufnahme begann
+- Erledigt: Sprach-Plugin wird nur mit dem bekannten LeanBitLab-Schlüssel benutzt
+- Erledigt: Sicherungen verschlüsselt in Abschnitten von 1 MB (Format 2): große Sicherungen ohne Speicherproblem, Abschnitte können nicht vertauscht oder abgeschnitten werden; PBKDF2 mit 600.000 statt 200.000 Runden (Zahl steht in der Datei); alte Sicherungen bleiben lesbar
+- Erledigt: Automatisches Sichern prüft jede Datei vollständig (auch unverschlüsselt), bevor alte gelöscht werden; Passwort mind. 8 Zeichen und zweimal einzugeben
+- Erledigt: Wiederherstellen einer unverschlüsselten Datei fragt nach, wenn ein Sicherungspasswort gesetzt ist
+- Erledigt: Keine 60 Zeichen KI-Ausgabe mehr im Protokoll; „Alle kopieren“ der Textbausteine als vertraulich markiert; ältere Screenshots nicht im Inkognito-Modus in den Verlauf; „Aus meinen Texten lernen“ zerlegt den Text im Hintergrund (vorher Hauptthread) und liest höchstens 2 MB
 
 ## Sicherheit (Review 18.10.)
 
