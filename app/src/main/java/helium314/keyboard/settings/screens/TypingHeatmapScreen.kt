@@ -150,6 +150,24 @@ fun TypingHeatmapScreen(onClickBack: () -> Unit) {
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
+            // which strength works best with the user's own touches
+            if (adaptEnabled) {
+                val evaluation = remember(layout, refresh) { TypingHeatmap.evaluateStrengths(layout.shapes, layout.samples) }
+                val strengthNames = listOf(
+                    stringResource(R.string.typing_adapt_strength_1), stringResource(R.string.typing_adapt_strength_2),
+                    stringResource(R.string.typing_adapt_strength_3), stringResource(R.string.typing_adapt_strength_4),
+                    stringResource(R.string.typing_adapt_strength_5)
+                )
+                val text = when {
+                    evaluation == null -> stringResource(R.string.typing_adapt_evaluation_waiting, TypingHeatmap.MIN_SAMPLES_FOR_AUTO)
+                    strength == TypingHeatmap.AUTO_STRENGTH -> stringResource(R.string.typing_adapt_evaluation_auto,
+                        strengthNames[evaluation.best - 1], evaluation.touches, evaluation.missRate(0), evaluation.missRate(evaluation.best))
+                    else -> stringResource(R.string.typing_adapt_evaluation_manual, evaluation.touches, evaluation.missRate(0),
+                        evaluation.missRate(strength.coerceIn(1, 5)), strengthNames[evaluation.best - 1], evaluation.missRate(evaluation.best))
+                }
+                Text(text, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+
             // miss rate before and after enabling adaptation
             val allSamples = layout.samples.entries.flatMap { (code, list) -> list.map { code to it } }
             val before = allSamples.filter { !it.second.adapted }
