@@ -515,6 +515,8 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
         const val PREF_SHIFT_RECAPITALIZES_WORD = "shift_recapitalizes_word"
         const val PREF_LEARN_CASING = "learn_casing"
         const val PREF_LEARNED_CASING = "learned_casing"
+        const val PREF_LEARN_TYPOS = "learn_typos"
+        const val PREF_LEARNED_TYPOS = "learned_typos"
         const val PREF_CLIPBOARD_SKIP_SENSITIVE = "clipboard_skip_sensitive"
         const val PREF_SETUP_WIZARD_DISMISSED = "setup_wizard_dismissed"
         const val PREF_OFFLINE_TEMP = "offline_temp"
@@ -612,7 +614,10 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
             PREF_EMOJI_RECENT_KEYS,
             PREF_DONT_SHOW_MISSING_DICTIONARY_DIALOG,
             PREF_SELECTED_SUBTYPE,
-            PREF_USER_DICT_SORT_ORDER
+            PREF_USER_DICT_SORT_ORDER,
+            // LeanType+: read when needed, a reload while typing is not necessary
+            PREF_LEARNED_CASING,
+            PREF_LEARNED_TYPOS,
         )
 
         fun getInstance(): Settings = sInstance

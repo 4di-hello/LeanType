@@ -108,6 +108,7 @@ open class SettingsValues(
     val mForceAutoCaps: Boolean
     val mShiftRecapitalizesWord: Boolean
     val mLearnCasing: Boolean
+    val mLearnTypos: Boolean
     val mClipboardSkipSensitive: Boolean
     val mDeleteSwipeEnabled: Boolean
     val mDeleteSwipeWordByWord: Boolean
@@ -462,6 +463,7 @@ open class SettingsValues(
         mForceAutoCaps = prefs.getBoolean(Settings.PREF_FORCE_AUTO_CAPS, Defaults.PREF_FORCE_AUTO_CAPS)
         mShiftRecapitalizesWord = prefs.getBoolean(Settings.PREF_SHIFT_RECAPITALIZES_WORD, Defaults.PREF_SHIFT_RECAPITALIZES_WORD)
         mLearnCasing = mShiftRecapitalizesWord && prefs.getBoolean(Settings.PREF_LEARN_CASING, Defaults.PREF_LEARN_CASING)
+        mLearnTypos = prefs.getBoolean(Settings.PREF_LEARN_TYPOS, Defaults.PREF_LEARN_TYPOS)
         mClipboardSkipSensitive = prefs.getBoolean(Settings.PREF_CLIPBOARD_SKIP_SENSITIVE, Defaults.PREF_CLIPBOARD_SKIP_SENSITIVE)
         mDeleteSwipeEnabled = prefs.getBoolean(Settings.PREF_DELETE_SWIPE, Defaults.PREF_DELETE_SWIPE)
         mDeleteSwipeWordByWord = prefs.getBoolean(Settings.PREF_DELETE_SWIPE_WORD_BY_WORD, Defaults.PREF_DELETE_SWIPE_WORD_BY_WORD)

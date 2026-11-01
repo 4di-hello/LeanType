@@ -249,11 +249,12 @@ object HandwritingLoader {
         try {
             ensureWorkManagerInitialized(context)
             val nativeLibDir = getNativeLibDir(context, apkFile)
+            // LeanType+: check before anything of the plugin is extracted or loaded
+            helium314.keyboard.latin.utils.PluginTrust.requireTrusted(context, apkFile)
             extractNativeLibs(apkFile, nativeLibDir)
             val libFile = File(nativeLibDir, "libdigitalink.so")
             val nativeLoaderDex = getNativeLoaderDex(context)
             val dexPaths = "${apkFile.absolutePath}${File.pathSeparator}${nativeLoaderDex.absolutePath}"
-            helium314.keyboard.latin.utils.PluginTrust.requireTrusted(context, apkFile)
             val classLoader = PluginClassLoader(
                 dexPaths,
                 context.codeCacheDir.absolutePath,
@@ -291,7 +292,7 @@ object HandwritingLoader {
                     val prefix = "lib/$targetAbi/"
                     for (entry in zip.entries().asSequence()) {
                         if (entry.name.startsWith(prefix) && entry.name.endsWith(".so")) {
-                            val fileName = entry.name.substring(prefix.length)
+                            val fileName = entry.name.substringAfterLast('/') // no path from the zip, e.g. "../"
                             val outFile = File(outputDir, fileName)
                             if (!outFile.exists() || outFile.length() != entry.size) {
                                 zip.getInputStream(entry).use { input ->
@@ -361,11 +362,12 @@ object HandwritingLoader {
             // Verify the plugin loads successfully
             ensureWorkManagerInitialized(context)
             val nativeLibDir = getNativeLibDir(context, apkFile)
+            // LeanType+: check before anything of the plugin is extracted or loaded
+            helium314.keyboard.latin.utils.PluginTrust.requireTrusted(context, apkFile)
             extractNativeLibs(apkFile, nativeLibDir)
             val libFile = File(nativeLibDir, "libdigitalink.so")
             val nativeLoaderDex = getNativeLoaderDex(context)
             val dexPaths = "${apkFile.absolutePath}${File.pathSeparator}${nativeLoaderDex.absolutePath}"
-            helium314.keyboard.latin.utils.PluginTrust.requireTrusted(context, apkFile)
             val classLoader = PluginClassLoader(
                 dexPaths,
                 context.codeCacheDir.absolutePath,

@@ -66,6 +66,8 @@ fun TextCorrectionScreen(
             SettingsWithoutKey.CORRECTION_STATS,
             if (autocorrectEnabled) Settings.PREF_AUTO_CORRECT_TRIGGER else null,
             if (autocorrectEnabled) Settings.PREF_BACKSPACE_REVERTS_AUTOCORRECT else null,
+            if (autocorrectEnabled) Settings.PREF_LEARN_TYPOS else null,
+            if (autocorrectEnabled) Settings.PREF_LEARNED_TYPOS else null,
             Settings.PREF_BACKSPACE_REPEAT_DELETES_WORDS,
             if (autocorrectEnabled) Settings.PREF_EXPAND_FINE_TUNE_AUTOCORRECT else null,
             if (autocorrectEnabled && fineTuneAutocorrectExpanded) Settings.PREF_AUTO_CORRECT_THRESHOLD else null,
@@ -251,6 +253,12 @@ fun createCorrectionSettings(context: Context) = listOf(
     },
     Setting(context, Settings.PREF_BACKSPACE_REVERTS_AUTOCORRECT, R.string.backspace_reverts_autocorrect) {
         SwitchPreference(it, Defaults.PREF_BACKSPACE_REVERTS_AUTOCORRECT)
+    },
+    Setting(context, Settings.PREF_LEARN_TYPOS, R.string.learn_typos, R.string.learn_typos_summary) {
+        SwitchPreference(it, Defaults.PREF_LEARN_TYPOS)
+    },
+    Setting(context, Settings.PREF_LEARNED_TYPOS, R.string.learned_typos) {
+        helium314.keyboard.settings.preferences.LearnedTyposPreference(it)
     },
     Setting(context, Settings.PREF_BACKSPACE_REPEAT_DELETES_WORDS,
         R.string.backspace_repeat_deletes_words, R.string.backspace_repeat_deletes_words_summary
