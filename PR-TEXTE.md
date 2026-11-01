@@ -1,8 +1,8 @@
-# PR-Texte für LeanType (Stand 29.10.2026)
+# PR-Texte für LeanType (Stand 1.11.2026)
 
 Nur in diesem Fork. Je PR: auf GitHub „Compare & pull request“ von `4di-hello:<Branch>` nach `LeanBitLab:main`, Titel und Text unten einfügen.
 
-Alle Branches passen auf LeanType 4.3.0-beta4 (a9dc76400) und sind einzeln getestet (Kompilieren + Unit-Tests).
+Alle Branches passen auf LeanType 4.3.0-beta4 (a9dc76400) und sind einzeln getestet (Kompilieren + Unit-Tests). `fix/offline-ai-busy` hat seit 1.11. einen zweiten Commit (Feldprüfung, aus dem Sicherheits-Review).
 
 ---
 
@@ -15,7 +15,7 @@ Alle Branches passen auf LeanType 4.3.0-beta4 (a9dc76400) und sind einzeln getes
 Problems with the local AI that remain after the longer context in beta4, mostly noticed with custom AI keys:
 
 1. **"Context is busy" / "Model produced no output"**: when the keyboard was hidden, the request was cancelled, but the plugin can't stop a running generation. The next request then failed. Now requests run one after another (a new one waits for the previous one), and hiding the keyboard no longer cancels a request.
-2. **Lost results**: some editors hide the keyboard while the result is inserted (they react to the cursor being moved). A custom AI key result that arrives while the keyboard is hidden is now kept and inserted when the keyboard comes back into the same field within two minutes.
+2. **Lost results**: some editors hide the keyboard while the result is inserted (they react to the cursor being moved). A custom AI key result that arrives while the keyboard is hidden is now kept and inserted when the keyboard comes back into the same field within two minutes. Because many apps use the same field id for all their text fields (e.g. every chat), the field must also still have the same input type and text, and it is never a password field; otherwise the result is dropped.
 3. **Unclear "no output"**: the message now says why: text too long for the context, nothing generated, or removed by the output cleanup.
 
 Also, the log no longer contains the input and generated texts, only their lengths – the texts are private, and the system log can be read by other tools.
