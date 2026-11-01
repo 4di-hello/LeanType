@@ -147,7 +147,7 @@ object OcrPluginLoader {
                     val prefix = "lib/$targetAbi/"
                     for (entry in zip.entries().asSequence()) {
                         if (entry.name.startsWith(prefix) && entry.name.endsWith(".so")) {
-                            val fileName = entry.name.substring(prefix.length)
+                            val fileName = entry.name.substringAfterLast('/') // no path from the zip, e.g. "../"
                             val outFile = File(outputDir, fileName)
                             if (!outFile.exists() || outFile.length() != entry.size) {
                                 zip.getInputStream(entry).use { input ->
@@ -206,10 +206,11 @@ object OcrPluginLoader {
             ensureWorkManagerInitialized(context)
             val apkLastModified = apkFile.lastModified()
             val nativeLibDir = getNativeLibDir(context, apkFile)
+            // LeanType+: check before anything of the plugin is extracted or loaded
+            helium314.keyboard.latin.utils.PluginTrust.requireTrusted(context, apkFile)
             extractNativeLibs(apkFile, nativeLibDir)
 
             val cachedLoader = cachedClassLoader
-            helium314.keyboard.latin.utils.PluginTrust.requireTrusted(context, apkFile)
             val classLoader = if (cachedLoader != null && cachedApkModified == apkLastModified) {
                 cachedLoader
             } else {
