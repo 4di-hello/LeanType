@@ -6,18 +6,11 @@ jobs:
   check:
     runs-on: ubuntu-24.04
     steps:
-      - name: Inspect
+      - name: Scripts
         run: |
           raw=https://codeberg.org/Helium314/aosp-dictionaries/raw/branch/main
-          api=https://codeberg.org/api/v1/repos/Helium314/aosp-dictionaries/contents
-          echo "===== README"; curl -fsSL $raw/README.md | head -80
-          echo "===== scripts"; curl -fsS "$api/scripts" | python3 -c 'import json,sys; [print(e["name"]) for e in json.load(sys.stdin)]' || true
-          echo "===== wordlists raw listing"; curl -sS "$api/wordlists" | head -c 600; echo
-          for f in main_de.combined.gz main_de.combined main_de_wordlist.combined.gz; do
-            if curl -fsSL -o $f $raw/wordlists/$f; then
-              echo "===== $f $(stat -c %s $f)"
-              (zcat -f $f) > de.txt
-              echo "lines: $(wc -l < de.txt) words: $(grep -c '^ word=' de.txt) bigram lines: $(grep -c 'bigram=' de.txt)"
-              head -12 de.txt; grep -m5 'bigram=' de.txt || true
-            else echo "no $f"; fi
-          done
+          for f in wordlist_combined.py examples.py; do curl -fsSL -o $f $raw/scripts/$f; done
+          echo "===== compile in wordlist_combined.py"; grep -n "def \|dicttool\|subprocess\|java" wordlist_combined.py | head -60
+          echo "===== examples.py"; head -80 examples.py
+          echo "===== German source"; curl -fsSL $raw/wordlists/main_de.source || true
+          echo "===== Leipzig German corpora"; curl -fsSL https://wortschatz.uni-leipzig.de/en/download/German | grep -o 'deu_[a-z0-9_-]*_[0-9]*[KM]' | sort -u | head -60 || true
