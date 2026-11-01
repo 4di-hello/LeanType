@@ -189,9 +189,10 @@ object CjkPluginLoader {
             val userDir = File(context.filesDir, "cjk/user").apply { mkdirs() }
             val nativeLibDir = getNativeLibDir(context, apkFile)
 
+            // LeanType+: check before anything of the plugin is extracted or loaded
+            helium314.keyboard.latin.utils.PluginTrust.requireTrusted(context, apkFile)
             extractPluginAssetsAndLibs(apkFile, nativeLibDir, sharedDir)
 
-            helium314.keyboard.latin.utils.PluginTrust.requireTrusted(context, apkFile)
             val classLoader = PluginClassLoader(
                 apkFile.absolutePath,
                 context.codeCacheDir.absolutePath,

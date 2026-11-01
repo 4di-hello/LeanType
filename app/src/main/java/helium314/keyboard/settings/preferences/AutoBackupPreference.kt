@@ -39,6 +39,8 @@ import helium314.keyboard.settings.dialogs.ThreeButtonAlertDialog
 import java.text.DateFormat
 import java.util.Date
 
+private const val MIN_PASSWORD_LENGTH = 8
+
 /** Settings for [AutoBackup]: folder, interval, how many backups to keep, password */
 @Composable
 fun AutoBackupPreference(setting: Setting) {
@@ -62,6 +64,7 @@ fun AutoBackupPreference(setting: Setting) {
     var interval by remember { mutableIntStateOf(AutoBackup.getInterval(ctx)) }
     var keep by remember { mutableIntStateOf(AutoBackup.getKeep(ctx)) }
     var password by remember { mutableStateOf("") }
+    var passwordRepeat by remember { mutableStateOf("") }
     var hasPassword by remember { mutableStateOf(AutoBackup.hasPassword(ctx)) }
     var passwordError by remember { mutableStateOf(false) }
 
@@ -123,9 +126,22 @@ fun AutoBackupPreference(setting: Setting) {
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 )
+                // LeanType+: typed twice, a typo would make all new backups unreadable
+                OutlinedTextField(
+                    value = passwordRepeat,
+                    onValueChange = { passwordRepeat = it; passwordError = false },
+                    label = { Text(stringResource(R.string.backup_password_repeat)) },
+                    singleLine = true,
+                    isError = passwordError || (passwordRepeat.isNotEmpty() && passwordRepeat != password),
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                )
+                if (password.isNotEmpty() && password.length < MIN_PASSWORD_LENGTH)
+                    Text(stringResource(R.string.backup_password_too_short, MIN_PASSWORD_LENGTH), style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.error)
                 Row {
-                    TextButton(enabled = password.isNotEmpty(), onClick = {
-                        if (AutoBackup.setPassword(ctx, password)) { hasPassword = true; password = "" }
+                    TextButton(enabled = password.length >= MIN_PASSWORD_LENGTH && password == passwordRepeat, onClick = {
+                        if (AutoBackup.setPassword(ctx, password)) { hasPassword = true; password = ""; passwordRepeat = "" }
                         else passwordError = true
                     }) { Text(stringResource(R.string.auto_backup_password_save)) }
                     if (hasPassword) TextButton(onClick = { AutoBackup.setPassword(ctx, null); hasPassword = false }) {
