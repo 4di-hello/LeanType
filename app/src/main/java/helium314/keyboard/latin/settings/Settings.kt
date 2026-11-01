@@ -518,6 +518,8 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
         const val PREF_SHIFT_RECAPITALIZES_WORD = "shift_recapitalizes_word"
         const val PREF_LEARN_CASING = "learn_casing"
         const val PREF_LEARNED_CASING = "learned_casing"
+        const val PREF_LEARN_TYPOS = "learn_typos"
+        const val PREF_LEARNED_TYPOS = "learned_typos"
         const val PREF_CLIPBOARD_SKIP_SENSITIVE = "clipboard_skip_sensitive"
         const val PREF_SETUP_WIZARD_DISMISSED = "setup_wizard_dismissed"
         const val PREF_OFFLINE_TEMP = "offline_temp"
@@ -623,7 +625,10 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
             "last_dismissed_clipboard_text",
             "last_dismissed_screenshot_uri",
             "deleted_screenshot_uris",
-            "settings_open_count"
+            "settings_open_count",
+            // LeanType+: read when needed, a reload while typing is not necessary
+            PREF_LEARNED_CASING,
+            PREF_LEARNED_TYPOS,
         )
 
         fun getInstance(): Settings = sInstance

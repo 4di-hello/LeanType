@@ -250,8 +250,15 @@ class CorrectionTracker {
 
     private val entries = ArrayList<Entry>()
 
+    /** the earlier word of the last change found by [onCommitted] */
+    var lastReplaced: Entry? = null
+        private set
+
     @Synchronized
-    fun clear() = entries.clear()
+    fun clear() {
+        entries.clear()
+        lastReplaced = null
+    }
 
     /** the last word was reverted with backspace, it is counted already */
     @Synchronized
@@ -268,8 +275,11 @@ class CorrectionTracker {
         entries.removeAll { it.start >= entry.start }
         entries.add(entry)
         while (entries.size > MAX_ENTRIES) entries.removeAt(0)
+        lastReplaced = null
         if (old == null || old.word.equals(entry.word, ignoreCase = true)) return Change.NONE
-        return classify(old, entry.word)
+        val change = classify(old, entry.word)
+        if (change != Change.NONE) lastReplaced = old
+        return change
     }
 
     companion object {

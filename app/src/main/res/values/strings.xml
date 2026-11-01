@@ -389,6 +389,8 @@
     <string name="backup_restore_message">Save or load from file. Warning: restore will overwrite existing data</string>
     <!-- Error message for backup -->
     <string name="backup_error">Backup error: %s</string>
+    <string name="backup_unencrypted_title">Backup is not encrypted</string>
+    <string name="backup_unencrypted_message">Your backups are protected with a password, this file is not. Only restore it if you made it yourself: a backup can change all settings, e.g. turn off incognito mode or add text snippets that send messages.</string>
     <!-- Error message for restore, %s is replaced by the error message -->
     <string name="restore_error">Error restoring the backup: %s</string>
     <!-- backup button -->
@@ -2201,6 +2203,7 @@ New dictionary:
     <string name="voice_transcribe_while_speaking_title">Transcribe while speaking</string>
     <string name="voice_transcribe_while_speaking_summary">At every pause in speech the part spoken so far is already transcribed. After stopping, only the last part is left: much shorter wait for long dictations.</string>
     <string name="ai_cancelled">AI request cancelled</string>
+    <string name="ai_result_to_clipboard">The text field changed meanwhile, the AI result is in the clipboard</string>
     <string name="custom_ai_keyword_prepend_label">Prepend result</string>
     <string name="custom_ai_keyword_showthought_label">Show reasoning</string>
     <string name="custom_ai_keyword_editor_desc">Free-form editing and formatting of text according to prompt.</string>
@@ -2560,6 +2563,11 @@ New dictionary:
     <string name="learned_casing_empty">Nothing remembered yet.</string>
     <string name="learned_casing_not_yet">Learning: used automatically after one more time</string>
     <string name="learned_casing_forget_all">Forget all</string>
+    <string name="learn_typos">Learn typos</string>
+    <string name="learn_typos_summary">When you correct the same typo the same way twice yourself because the auto-correction missed it, it is auto-corrected like this from then on. Backspace right after it reverts and forgets it</string>
+    <string name="learned_typos">Learned typos</string>
+    <string name="learned_typos_summary">%1$d in use, %2$d learning</string>
+    <string name="learned_typos_empty">No typos learned yet.</string>
     <string name="typing_heatmap_history">Misses and typing speed per week</string>
     <string name="typing_heatmap_history_value">%1$.1f %% (%2$d)</string>
     <string name="typing_heatmap_wpm">%1$.0f wpm</string>
@@ -2630,9 +2638,11 @@ New dictionary:
     <string name="auto_backup_keep">Keep the latest backups</string>
     <string name="auto_backup_password">Password</string>
     <string name="auto_backup_password_set">Backups are encrypted with your password.</string>
-    <string name="auto_backup_password_not_set">No password: backups are not encrypted and contain no clipboard history.</string>
+    <string name="auto_backup_password_not_set">No password: backups are not encrypted, anyone with access to the folder can read your typing history, text snippets and settings. The clipboard history is not included.</string>
     <string name="auto_backup_password_save">Save password</string>
     <string name="auto_backup_password_remove">Remove password</string>
+    <string name="backup_password_repeat">Repeat password</string>
+    <string name="backup_password_too_short">At least %d characters</string>
     <string name="auto_backup_encrypted">encrypted</string>
     <string name="auto_backup_error">Last backup failed: %s</string>
     <string name="auto_backup_last">Last backup: %s</string>

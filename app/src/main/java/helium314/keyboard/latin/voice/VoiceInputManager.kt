@@ -956,8 +956,14 @@ class VoiceInputManager(
     /** the text recognized so far, given to Whisper as context for the next piece */
     private var piecewiseContext = ""
 
+    /** the field the dictation was started in: text of later pieces goes only there */
+    private var piecewiseEditor: String? = null
+
+    private fun editorKey(info: EditorInfo?): String? = info?.let { "${it.packageName}|${it.fieldId}|${it.inputType}" }
+
     private fun startPiecewiseRecording() {
         piecewiseActive = true
+        piecewiseEditor = editorKey(ims.currentInputEditorInfo)
         pendingPieces.clear()
         pieceInFlight = null
         piecewiseRecordingEnded = false
@@ -1014,6 +1020,16 @@ class VoiceInputManager(
                 Log.i(TAG, "Piece recognized: ${text?.length ?: 0} chars")
                 mainHandler.post {
                     if (pieceInFlight != pieceId) return@post
+                    val editor = ims.currentInputEditorInfo
+                    if (editorKey(editor) != piecewiseEditor || isBlockedEditor(editor)) {
+                        // another app or field meanwhile: the rest of the dictation must not end up there
+                        Log.w(TAG, "Transcribing while speaking: field changed, dropping the rest")
+                        pendingPieces.clear()
+                        pluginManager.cancelSession()
+                        cleanupSession()
+                        updateState(VoiceState.IDLE)
+                        return@post
+                    }
                     val recognized = text.orEmpty().trim()
                     if (recognized.isNotEmpty()) {
                         syncRecognizedText(recognized, isFinal = true)
