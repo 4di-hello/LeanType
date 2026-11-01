@@ -1,0 +1,28 @@
+name: Run feature tests
+# Only for this fork: compiles and runs unit tests of a PR branch. Triggered by pushing to ci/test-*.
+on:
+  push:
+    branches: [ 'ci/test-*' ]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5.0.2
+      - name: Compile and test
+        run: |
+          chmod +x gradlew
+          set -o pipefail
+          ./gradlew compileOfflineRunTestsKotlin testStandardRunTestsUnitTest --tests "helium314.keyboard.latin.InputLogicTest" 2>&1 | tee gradle.log
+      - name: Report compile errors
+        if: ${{ failure() }}
+        run: |
+          grep -E "^e: " gradle.log | head -20 | sed 's/^/::error::/' || true
