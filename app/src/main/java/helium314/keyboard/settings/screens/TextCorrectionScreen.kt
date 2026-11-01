@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -21,6 +22,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.edit
 import helium314.keyboard.latin.R
+import helium314.keyboard.latin.personalization.AutoCorrectTuner
+import helium314.keyboard.latin.personalization.CorrectionStats
 import helium314.keyboard.latin.settings.Defaults
 import helium314.keyboard.latin.settings.Settings
 import helium314.keyboard.latin.utils.Log
@@ -60,6 +63,7 @@ fun TextCorrectionScreen(
             Settings.PREF_BLOCK_POTENTIALLY_OFFENSIVE,
             Settings.PREF_AUTO_CORRECTION,
             if (autocorrectEnabled) Settings.PREF_AUTO_CORRECT_AGGRESSIVENESS else null,
+            SettingsWithoutKey.CORRECTION_STATS,
             if (autocorrectEnabled) Settings.PREF_AUTO_CORRECT_TRIGGER else null,
             if (autocorrectEnabled) Settings.PREF_BACKSPACE_REVERTS_AUTOCORRECT else null,
             Settings.PREF_BACKSPACE_REPEAT_DELETES_WORDS,
@@ -153,19 +157,25 @@ fun createCorrectionSettings(context: Context) = listOf(
     Setting(context, Settings.PREF_AUTO_CORRECT_AGGRESSIVENESS,
         R.string.auto_correct_aggressiveness_title
     ) { setting ->
-        val prefs = LocalContext.current.prefs()
+        val ctx = LocalContext.current
+        val prefs = ctx.prefs()
         val defaultLevel = Settings.readAutoCorrectAggressiveness(prefs)
         SliderPreference(
             name = setting.title,
             key = setting.key,
             default = defaultLevel,
-            range = 1f..4f,
+            range = 0f..4f,
             stepSize = 1,
             onConfirmed = { value ->
-                Settings.applyAutoCorrectAggressivenessPreset(prefs, value.toInt())
+                // LeanType+ automatic: starts from the current threshold, see CorrectionStats
+                if (value.toInt() != CorrectionStats.AUTO_LEVEL)
+                    Settings.applyAutoCorrectAggressivenessPreset(prefs, value.toInt())
+                CorrectionStats.resetWindow(ctx)
             },
             description = { value ->
                 when (value.toInt()) {
+                    CorrectionStats.AUTO_LEVEL -> stringResource(R.string.auto_correct_aggressiveness_auto,
+                        autoCorrectStepName(prefs.getFloat(Settings.PREF_AUTO_CORRECT_THRESHOLD, Defaults.PREF_AUTO_CORRECT_THRESHOLD)))
                     Settings.AUTO_CORRECT_LEVEL_MODEST -> stringResource(R.string.auto_correct_aggressiveness_desc_1)
                     Settings.AUTO_CORRECT_LEVEL_AGGRESSIVE -> stringResource(R.string.auto_correct_aggressiveness_desc_3)
                     Settings.AUTO_CORRECT_LEVEL_VERY_AGGRESSIVE -> stringResource(R.string.auto_correct_aggressiveness_desc_4)
@@ -173,6 +183,9 @@ fun createCorrectionSettings(context: Context) = listOf(
                 }
             }
         )
+    },
+    Setting(context, SettingsWithoutKey.CORRECTION_STATS, R.string.correction_stats_title) {
+        CorrectionStatsPreference(it)
     },
     Setting(context, Settings.PREF_EXPAND_FINE_TUNE_AUTOCORRECT,
         R.string.fine_tune_autocorrect_title, R.string.fine_tune_autocorrect_summary
@@ -337,8 +350,18 @@ private fun LearnFromTextPreference(setting: Setting) {
         androidx.activity.result.contract.ActivityResultContracts.OpenDocument()
     ) { uri ->
         if (uri == null) return@rememberLauncherForActivityResult
+        // only the start of a large file: the text is limited anyway, and a huge file must not crash the app
         val text = runCatching {
-            ctx.contentResolver.openInputStream(uri)?.use { it.readBytes().decodeToString() }
+            ctx.contentResolver.openInputStream(uri)?.use { input ->
+                val buffer = ByteArray(helium314.keyboard.latin.personalization.TextLearner.MAX_CHARS * 4)
+                var length = 0
+                while (length < buffer.size) {
+                    val read = input.read(buffer, length, buffer.size - length)
+                    if (read < 0) break
+                    length += read
+                }
+                buffer.decodeToString(0, length)
+            }
         }.getOrNull()
         if (text == null) android.widget.Toast.makeText(ctx, R.string.learn_from_text_nothing, android.widget.Toast.LENGTH_LONG).show()
         else queue(text)
@@ -357,4 +380,70 @@ private fun LearnFromTextPreference(setting: Setting) {
             singleLine = false,
         )
     }
+}
+
+/** LeanType+: name of the step the automatic autocorrection strength uses for [threshold] */
+@Composable
+private fun autoCorrectStepName(threshold: Float): String = when (AutoCorrectTuner.stepFor(threshold)) {
+    0 -> stringResource(R.string.auto_correct_step_0)
+    1 -> stringResource(R.string.auto_correct_step_1)
+    2 -> stringResource(R.string.auto_correct_step_2)
+    else -> stringResource(R.string.auto_correct_step_3)
+}
+
+/** LeanType+: what the autocorrection did in the last 30 days, see [CorrectionStats] */
+@Composable
+private fun CorrectionStatsPreference(setting: Setting) {
+    val ctx = LocalContext.current
+    val prefs = ctx.prefs()
+    var showDialog by rememberSaveable { mutableStateOf(false) }
+    var refresh by remember { mutableIntStateOf(0) }
+    val counts = remember(refresh, showDialog) { CorrectionStats.lastDays(ctx) }
+    val words = counts?.get(CorrectionStats.WORDS) ?: 0
+    val corrections = counts?.let { AutoCorrectTuner.corrections(it) } ?: 0
+    val takenBack = counts?.let { AutoCorrectTuner.takenBack(it) } ?: 0
+    fun percent(part: Int, whole: Int) = if (whole == 0) 0f else part * 100f / whole
+    val summary = if (counts == null || words == 0) stringResource(R.string.correction_stats_empty)
+        else stringResource(R.string.correction_stats_summary, words, counts[CorrectionStats.AUTOCORRECTED],
+            takenBack, percent(takenBack, corrections), counts[CorrectionStats.MISSED])
+    Preference(name = setting.title, description = summary, onClick = { showDialog = true })
+    if (!showDialog) return
+    val details = buildString {
+        if (counts != null) {
+            append(stringResource(R.string.correction_stats_details, words, counts[CorrectionStats.AUTOCORRECTED],
+                counts[CorrectionStats.REVERTED], counts[CorrectionStats.UNDONE], counts[CorrectionStats.KEPT_TYPED],
+                percent(takenBack, corrections), counts[CorrectionStats.MISSED], percent(counts[CorrectionStats.MISSED], words),
+                counts[CorrectionStats.COMPLETIONS], counts[CorrectionStats.PREDICTIONS]))
+            append("\n\n")
+        }
+        val autoOn = prefs.getBoolean(Settings.PREF_AUTO_CORRECTION, Defaults.PREF_AUTO_CORRECTION)
+                && prefs.getInt(Settings.PREF_AUTO_CORRECT_AGGRESSIVENESS, Defaults.PREF_AUTO_CORRECT_AGGRESSIVENESS) == CorrectionStats.AUTO_LEVEL
+        if (autoOn) {
+            val current = autoCorrectStepName(prefs.getFloat(Settings.PREF_AUTO_CORRECT_THRESHOLD, Defaults.PREF_AUTO_CORRECT_THRESHOLD))
+            val change = CorrectionStats.lastChange(ctx)
+            if (change == null) {
+                append(stringResource(R.string.correction_stats_auto_unchanged, current))
+            } else {
+                val date = java.text.DateFormat.getDateInstance(java.text.DateFormat.MEDIUM).format(java.util.Date(CorrectionStats.dayToMillis(change[0])))
+                val from = autoCorrectStepName(AutoCorrectTuner.STEPS[change[1].coerceIn(0, AutoCorrectTuner.STEPS.size - 1)])
+                val to = autoCorrectStepName(AutoCorrectTuner.STEPS[change[2].coerceIn(0, AutoCorrectTuner.STEPS.size - 1)])
+                val reason = if (change[3] == AutoCorrectTuner.REASON_TAKEN_BACK) stringResource(R.string.correction_stats_reason_taken_back)
+                    else stringResource(R.string.correction_stats_reason_missed)
+                append(stringResource(R.string.correction_stats_auto_changed, date, from, to, reason))
+            }
+            append("\n\n")
+        }
+        append(stringResource(R.string.correction_stats_privacy))
+    }
+    helium314.keyboard.settings.dialogs.ConfirmationDialog(
+        onDismissRequest = { showDialog = false },
+        onConfirmed = {
+            CorrectionStats.reset(ctx)
+            refresh++
+        },
+        title = { Text(setting.title) },
+        content = { Text(details) },
+        confirmButtonText = stringResource(R.string.correction_stats_reset),
+        cancelButtonText = stringResource(R.string.dialog_close),
+    )
 }
