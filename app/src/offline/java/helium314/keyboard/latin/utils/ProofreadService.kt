@@ -480,7 +480,8 @@ class ProofreadService(private val context: Context) {
                     output.isBlank() && fullPrompt.length / 3 + effectiveMaxTokens > ModelHolder.CONTEXT_TOKENS ->
                         "the text is probably too long for the model (prompt ${fullPrompt.length} chars, room for about ${ModelHolder.CONTEXT_TOKENS * 3} chars including the answer)"
                     output.isBlank() -> "the model ended without generating text (prompt ${fullPrompt.length} chars, chat format ${chatFormat ?: "none"})"
-                    else -> "the cleanup removed the generated text (${output.length} chars): \"${output.trim().take(60).replace('\n', ' ')}\""
+                    // only the length: the message is logged, and the text is private
+                    else -> "the cleanup removed the generated text (${output.length} chars)"
                 }
                 Log.w(TAG, "no output: " + if (output.isBlank()) "nothing generated" else "cleanup removed ${output.length} chars")
                 // what llama.cpp logged meanwhile, e.g. a full context

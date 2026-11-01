@@ -23,6 +23,7 @@ import helium314.keyboard.latin.LearnedCasing
 import helium314.keyboard.latin.utils.prefs
 import helium314.keyboard.latin.heatmap.KeyboardGeometry
 import helium314.keyboard.latin.heatmap.TypingHeatmap
+import helium314.keyboard.latin.LearnedTypos
 import helium314.keyboard.latin.personalization.CorrectionStats
 import helium314.keyboard.latin.personalization.CorrectionTracker
 import helium314.keyboard.event.InputTransaction
@@ -634,6 +635,8 @@ class InputLogic(
             return
         }
         val textToProofread: String
+        // before the selection is changed below (the connection's text cache follows only later)
+        val targetField = currentAiTarget()
         val hasSelection = mConnection.hasSelection()
 
         if (hasSelection) {
@@ -685,6 +688,10 @@ class InputLogic(
                     Log.w(TAG, "Target editor changed during proofread, ignoring result")
                     return@proofreadAsync
                 }
+                if (!targetField.isCurrent()) {
+                    keepAIResultInClipboard(proofreadText)
+                    return@proofreadAsync
+                }
                 val textBefore = mTextBeforeProofread
                 if (proofreadText.isNotEmpty() && proofreadText != textBefore) {
                     if (textBefore != null && textBefore.length > 20 && proofreadText.length < textBefore.length * 0.3) {
@@ -722,6 +729,8 @@ class InputLogic(
             return
         }
         val textToTranslate: String
+        // before the selection is changed below (the connection's text cache follows only later)
+        val targetField = currentAiTarget()
         val hasSelection = mConnection.hasSelection()
 
         if (hasSelection) {
@@ -777,6 +786,10 @@ class InputLogic(
                 val currentEditor = getCurrentInputEditorInfo()
                 if (currentEditor?.packageName != targetPackage || currentEditor?.fieldId != targetFieldId) {
                     Log.w(TAG, "Target editor changed during translation, ignoring result")
+                    return@translateAsync
+                }
+                if (!targetField.isCurrent()) {
+                    keepAIResultInClipboard(translatedText)
                     return@translateAsync
                 }
                 val textBefore = mTextBeforeTranslate
@@ -2343,6 +2356,10 @@ class InputLogic(
             if (!originallyTypedWord.toString().equals(committedWordString, ignoreCase = true))
                 CorrectionStats.count(mLatinIME, CorrectionStats.REVERTED)
         }
+        // a learned typo that was not wanted here: forget it
+        if (LearnedTypos.correctionFor(mLatinIME.prefs(), originallyTypedWord.toString(), inputTransaction.settingsValues.mLocale)
+                .equals(committedWordString, ignoreCase = true))
+            LearnedTypos.forget(mLatinIME.prefs(), originallyTypedWord.toString())
         // the user doesn't want the learned case here: forget it
         if (inputTransaction.settingsValues.mLearnCasing
             && LearnedCasing.learnedFormFor(mLatinIME.prefs(), originallyTypedWord) == committedWordString) {
@@ -2691,7 +2708,8 @@ class InputLogic(
         }
         val autoCorrectionOrNull = mWordComposer.getAutoCorrectionOrNull()
         val typedWord = mWordComposer.getTypedWord()
-        val stringToCommit = applyLearnedCasing(settingsValues, autoCorrectionOrNull?.mWord ?: typedWord)
+        val learnedTypoCorrection = learnedTypoCorrectionFor(settingsValues, typedWord)
+        val stringToCommit = applyLearnedCasing(settingsValues, learnedTypoCorrection ?: autoCorrectionOrNull?.mWord ?: typedWord)
         if (!stringToCommit.isNullOrEmpty()) {
             val isBatchMode = mWordComposer.isBatchMode()
             val cursorMovedBack = commitChosenWord(settingsValues, stringToCommit, LastComposedWord.COMMIT_TYPE_DECIDED_WORD, separator)
@@ -2738,10 +2756,39 @@ class InputLogic(
         val wordValid = autocorrected || chosenWordKnown
         val entry = CorrectionTracker.Entry(start, chosenWord, typed, autocorrected, wordValid, SystemClock.uptimeMillis())
         when (CorrectionStats.tracker.onCommitted(entry)) {
-            CorrectionTracker.Change.AUTOCORRECT_UNDONE -> CorrectionStats.count(mLatinIME, CorrectionStats.UNDONE)
-            CorrectionTracker.Change.MISSED_TYPO -> CorrectionStats.count(mLatinIME, CorrectionStats.MISSED)
+            CorrectionTracker.Change.AUTOCORRECT_UNDONE -> {
+                CorrectionStats.count(mLatinIME, CorrectionStats.UNDONE)
+                // a learned typo correction that was changed back
+                val old = CorrectionStats.tracker.lastReplaced
+                if (old != null && LearnedTypos.correctionFor(mLatinIME.prefs(), old.typed, settingsValues.mLocale)
+                        .equals(old.word, ignoreCase = true))
+                    LearnedTypos.forget(mLatinIME.prefs(), old.typed)
+            }
+            CorrectionTracker.Change.MISSED_TYPO -> {
+                CorrectionStats.count(mLatinIME, CorrectionStats.MISSED)
+                CorrectionStats.tracker.lastReplaced?.let { learnTypo(settingsValues, it.word, chosenWord) }
+            }
             CorrectionTracker.Change.NONE -> { }
         }
+    }
+
+    /** LeanType+: the user corrected a typo the autocorrection missed, see [LearnedTypos] */
+    private fun learnTypo(settingsValues: SettingsValues, typo: String, correction: String) {
+        if (!settingsValues.mLearnTypos || !shouldCountCorrections(settingsValues)) return
+        if (!isKnownWord(correction, settingsValues)) return
+        val lower = correction.lowercase(settingsValues.mLocale)
+        // capitalized because of the start of a sentence: learn the form used in the middle of a sentence
+        val form = if (correction != lower && typo.first().isUpperCase() && correction.first().isUpperCase()
+            && correction.substring(1) == lower.substring(1) && mDictionaryFacilitator.isValidSpellingWord(lower)) lower
+            else correction
+        LearnedTypos.onTypoCorrected(mLatinIME.prefs(), typo, form)
+    }
+
+    /** Correction for [typedWord] learned by [LearnedTypos], if it is to be used here */
+    private fun learnedTypoCorrectionFor(settingsValues: SettingsValues, typedWord: String): String? {
+        if (!settingsValues.mLearnTypos || !settingsValues.mAutoCorrectEnabled || !shouldCountCorrections(settingsValues)) return null
+        if (mWordComposer.isBatchMode() || mWordComposer.isResumed() || typedWord.isEmpty()) return null
+        return LearnedTypos.correctionFor(mLatinIME.prefs(), typedWord, settingsValues.mLocale)
     }
 
     /** Counts what a suggestion picked from the strip says about the autocorrection, see [CorrectionStats] */
@@ -2765,7 +2812,10 @@ class InputLogic(
                 CorrectionStats.count(mLatinIME, CorrectionStats.COMPLETIONS)
             // a typo corrected from the strip that the autocorrection would not have fixed
             !picked.equals(autoCorrection, ignoreCase = true) && !picked.equals(typed, ignoreCase = true)
-                    && !isKnownWord(typed, settingsValues) -> CorrectionStats.count(mLatinIME, CorrectionStats.MISSED)
+                    && !isKnownWord(typed, settingsValues) -> {
+                CorrectionStats.count(mLatinIME, CorrectionStats.MISSED)
+                if (CorrectionTracker.distance(typed, picked) <= 2) learnTypo(settingsValues, typed, picked)
+            }
         }
     }
 
@@ -3212,6 +3262,8 @@ class InputLogic(
         val keepsOriginal = shouldAppend || shouldPrepend
 
         var textToProcess: String
+        // before the selection is changed below (the connection's text cache follows only later)
+        val targetField = currentAiTarget()
         val hasSelection = mConnection.hasSelection()
 
         if (hasSelection) {
@@ -3278,7 +3330,7 @@ class InputLogic(
             durationKey = "key_$index",
             onSuccess = { resultText ->
                 val result = PendingAIResult(resultText, targetPackage, targetFieldId, hasSelection, shouldAppend, keepsOriginal,
-                    android.os.SystemClock.uptimeMillis())
+                    android.os.SystemClock.uptimeMillis(), targetField)
                 if (!mLatinIME.isInputViewShown || !mConnection.isConnected()) {
                     // some editors (e.g. Nine Mail) hide the keyboard meanwhile: insert when it is back in this field
                     Log.i(TAG, "Input view hidden during custom AI operation, keeping the result")
@@ -3288,6 +3340,10 @@ class InputLogic(
                 val currentEditor = getCurrentInputEditorInfo()
                 if (currentEditor?.packageName != targetPackage || currentEditor?.fieldId != targetFieldId) {
                     Log.w(TAG, "Target editor changed during custom AI operation, ignoring result")
+                    return@customAsync
+                }
+                if (!targetField.isCurrent()) {
+                    keepAIResultInClipboard(resultText)
                     return@customAsync
                 }
                 insertAIResult(result)
@@ -3302,8 +3358,45 @@ class InputLogic(
     /** result of a custom AI key, kept while the keyboard is hidden */
     private class PendingAIResult(
         val text: String, val packageName: String?, val fieldId: Int?,
-        val hasSelection: Boolean, val shouldAppend: Boolean, val keepsOriginal: Boolean, val time: Long
+        val hasSelection: Boolean, val shouldAppend: Boolean, val keepsOriginal: Boolean, val time: Long,
+        val target: AiTarget
     )
+
+    /**
+     * LeanType+: the field an AI request was started in, to insert the result only there. Many apps
+     * use the same field id for all their text fields (e.g. every chat), so the text and type of the
+     * field are compared too: if they changed, the result is put into the clipboard instead.
+     */
+    private inner class AiTarget(private val inputType: Int, private val textHash: Int, private val textLength: Int) {
+        fun isCurrent(): Boolean {
+            val editor = getCurrentInputEditorInfo() ?: return false
+            if (editor.inputType != inputType || InputTypeUtils.isPasswordInputType(editor.inputType)) return false
+            val text = currentFieldText()
+            return text.length == textLength && text.hashCode() == textHash
+        }
+    }
+
+    private fun currentAiTarget(): AiTarget {
+        val text = currentFieldText()
+        return AiTarget(getCurrentInputEditorInfo()?.inputType ?: 0, text.hashCode(), text.length)
+    }
+
+    /** The whole text of the field, also a selected part */
+    private fun currentFieldText(): String {
+        val before = mConnection.getTextBeforeCursor(AI_FIELD_TEXT_CHARS, 0)?.toString() ?: ""
+        val selected = mConnection.getSelectedText(0)?.toString() ?: ""
+        val after = mConnection.getTextAfterCursor(AI_FIELD_TEXT_CHARS, 0)?.toString() ?: ""
+        return before + selected + after
+    }
+
+    /** An AI result for a field that changed meanwhile: not lost, but not inserted at the wrong place */
+    private fun keepAIResultInClipboard(text: String) {
+        if (text.isBlank()) return
+        Log.w(TAG, "field changed during the AI request, result copied to the clipboard")
+        val clipboard = mLatinIME.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as? android.content.ClipboardManager ?: return
+        clipboard.setPrimaryClip(android.content.ClipData.newPlainText("AI", text))
+        KeyboardSwitcher.getInstance().showToast(mLatinIME.getString(R.string.ai_result_to_clipboard), false)
+    }
     private var mPendingAIResult: PendingAIResult? = null
 
     private fun insertAIResult(result: PendingAIResult) {
@@ -3333,9 +3426,19 @@ class InputLogic(
         if (android.os.SystemClock.uptimeMillis() - pending.time > PENDING_AI_RESULT_MS) return
         if (!mLatinIME.isInputViewShown || !mConnection.isConnected()) return
         val editor = getCurrentInputEditorInfo()
-        if (editor?.packageName != pending.packageName || editor?.fieldId != pending.fieldId) return
+        if (editor?.packageName != pending.packageName || editor?.fieldId != pending.fieldId) {
+            keepAIResultInClipboard(pending.text)
+            return
+        }
         // a replaced selection is gone, there is nothing left to replace safely
-        if (pending.hasSelection && !pending.keepsOriginal) return
+        if (pending.hasSelection && !pending.keepsOriginal) {
+            keepAIResultInClipboard(pending.text)
+            return
+        }
+        if (!pending.target.isCurrent()) {
+            keepAIResultInClipboard(pending.text)
+            return
+        }
         insertAIResult(pending)
     }
 
@@ -3550,6 +3653,8 @@ class InputLogic(
         private const val SEPARATOR_CONTEXT = 64
         /** how long a result waits for the keyboard to come back into its field */
         private const val PENDING_AI_RESULT_MS = 2 * 60 * 1000L
+        /** text read around the cursor to recognize the field of an AI request, like the text sent to the AI */
+        private const val AI_FIELD_TEXT_CHARS = 60000
         private val CURSOR_PATTERN = java.util.regex.Pattern.compile("%cursor(\\d+)%")
 
         /**
