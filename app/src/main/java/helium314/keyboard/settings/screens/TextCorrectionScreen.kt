@@ -100,7 +100,8 @@ fun TextCorrectionScreen(
             Settings.PREF_TYPING_HEATMAP,
             Settings.PREF_TYPING_ADAPT,
             Settings.PREF_TYPING_ADAPT_STRENGTH,
-            SettingsWithoutKey.SCREEN_NAV_TYPING_HEATMAP
+            SettingsWithoutKey.SCREEN_NAV_TYPING_HEATMAP,
+            SettingsWithoutKey.LEARN_FROM_TEXT
         )
     }
 
@@ -112,6 +113,9 @@ fun TextCorrectionScreen(
 }
 
 fun createCorrectionSettings(context: Context) = listOf(
+    Setting(context, SettingsWithoutKey.LEARN_FROM_TEXT, R.string.learn_from_text_title, R.string.learn_from_text_summary) {
+        LearnFromTextPreference(it)
+    },
     Setting(context, Settings.PREF_TYPING_HEATMAP, R.string.typing_heatmap_collect, R.string.typing_heatmap_collect_summary) {
         SwitchPreference(it, Defaults.PREF_TYPING_HEATMAP)
     },
@@ -326,5 +330,42 @@ private fun PreferencePreview() {
         Surface {
             TextCorrectionScreen { }
         }
+    }
+}
+
+/** LeanType+: give the keyboard own texts to learn words and word pairs from, see [helium314.keyboard.latin.personalization.TextLearner] */
+@Composable
+private fun LearnFromTextPreference(setting: Setting) {
+    val ctx = LocalContext.current
+    var showDialog by rememberSaveable { mutableStateOf(false) }
+    fun queue(text: String) {
+        val words = helium314.keyboard.latin.personalization.TextLearner.queue(ctx, text)
+        val message = if (words == 0) ctx.getString(R.string.learn_from_text_nothing)
+            else ctx.getString(R.string.learn_from_text_queued, words)
+        android.widget.Toast.makeText(ctx, message, android.widget.Toast.LENGTH_LONG).show()
+    }
+    val loadFile = androidx.activity.compose.rememberLauncherForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.OpenDocument()
+    ) { uri ->
+        if (uri == null) return@rememberLauncherForActivityResult
+        val text = runCatching {
+            ctx.contentResolver.openInputStream(uri)?.use { it.readBytes().decodeToString() }
+        }.getOrNull()
+        if (text == null) android.widget.Toast.makeText(ctx, R.string.learn_from_text_nothing, android.widget.Toast.LENGTH_LONG).show()
+        else queue(text)
+        showDialog = false
+    }
+    Preference(name = setting.title, description = setting.description, onClick = { showDialog = true })
+    if (showDialog) {
+        helium314.keyboard.settings.dialogs.TextInputDialog(
+            onDismissRequest = { showDialog = false },
+            onConfirmed = { queue(it) },
+            title = { Text(setting.title) },
+            confirmButtonText = stringResource(R.string.learn_from_text_learn),
+            neutralButtonText = stringResource(R.string.learn_from_text_file),
+            onNeutral = { loadFile.launch(arrayOf("text/*")) },
+            textInputLabel = { Text(stringResource(R.string.learn_from_text_hint)) },
+            singleLine = false,
+        )
     }
 }

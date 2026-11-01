@@ -798,6 +798,8 @@ class LatinIME : InputMethodService(),
     fun onStartInputViewInternal(editorInfo: EditorInfo, restarting: Boolean) {
         super.onStartInputView(editorInfo, restarting)
         ProofreadHelper.preloadModel(this)
+        // LeanType+: learn a text the user gave in the settings, once the dictionaries are ready
+        helium314.keyboard.latin.personalization.TextLearner.processPendingLater(this)
         
         val vpm = voicePluginManager
         if (vpm != null && !vpm.isPluginConnected() &&

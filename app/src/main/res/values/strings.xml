@@ -2260,6 +2260,15 @@ New dictionary:
     <string name="custom_ai_keyword_generate_label">Generate</string>
     <string name="custom_ai_keyword_outputonly_label">Result only</string>
     <string name="custom_ai_keyword_append_label">Append result</string>
+    <string name="learn_from_text_title">Learn from my texts</string>
+    <string name="learn_from_text_summary">Paste your own texts (e.g. emails or chats) or load a text file. The keyboard learns your words and word sequences for corrections and suggestions. Only on this device, the text is deleted afterwards.</string>
+    <string name="learn_from_text_hint">Paste text here</string>
+    <string name="learn_from_text_learn">Learn</string>
+    <string name="learn_from_text_file">Load file</string>
+    <string name="learn_from_text_nothing">No words found</string>
+    <string name="learn_from_text_queued">%d words noted. They are learned the next time you open the keyboard in the language of the text.</string>
+    <string name="learn_from_text_done">Learned from your text: %d words</string>
+    <string name="learn_from_text_personalization_off">Learning from your text needs personalized suggestions to be switched on</string>
     <string name="voice_transcribe_while_speaking_title">Transcribe while speaking</string>
     <string name="voice_transcribe_while_speaking_summary">At every pause in speech the part spoken so far is already transcribed. After stopping, only the last part is left: much shorter wait for long dictations.</string>
     <string name="ai_cancelled">AI request cancelled</string>
