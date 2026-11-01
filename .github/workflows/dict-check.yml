@@ -6,11 +6,15 @@ jobs:
   check:
     runs-on: ubuntu-24.04
     steps:
-      - name: Scripts
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Compile test
         run: |
           raw=https://codeberg.org/Helium314/aosp-dictionaries/raw/branch/main
-          for f in wordlist_combined.py examples.py; do curl -fsSL -o $f $raw/scripts/$f; done
-          echo "===== compile in wordlist_combined.py"; grep -n "def \|dicttool\|subprocess\|java" wordlist_combined.py | head -60
-          echo "===== examples.py"; head -80 examples.py
-          echo "===== German source"; curl -fsSL $raw/wordlists/main_de.source || true
-          echo "===== Leipzig German corpora"; curl -fsSL https://wortschatz.uni-leipzig.de/en/download/German | grep -o 'deu_[a-z0-9_-]*_[0-9]*[KM]' | sort -u | head -60 || true
+          curl -fsSL -o dicttool.jar $raw/dicttool_aosp.jar
+          unzip -l dicttool.jar | grep -i "\.so\|native\|lib" | head
+          printf 'dictionary=main:de,locale=de,description=test,date=1700000000,version=1\n word=der,f=254\n  bigram=Mann,f=3\n word=Mann,f=200\n' > t.combined
+          java -jar dicttool.jar makedict -s t.combined -d t.dict 2>&1 | tail -15; ls -la t.dict || true
+          java -Djava.library.path=. -jar dicttool.jar makedict -s t.combined -d t2.dict 2>&1 | tail -3 || true
