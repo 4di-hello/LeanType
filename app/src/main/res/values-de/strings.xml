@@ -1309,6 +1309,15 @@
     <string name="custom_ai_keyword_generate_label">Generieren</string>
     <string name="custom_ai_keyword_outputonly_label">Nur Ergebnis</string>
     <string name="custom_ai_keyword_append_label">Ergebnis anfügen</string>
+    <string name="learn_from_text_title">Aus meinen Texten lernen</string>
+    <string name="learn_from_text_summary">Eigene Texte einfügen (z. B. E-Mails oder Chats) oder eine Textdatei laden. Die Tastatur lernt Deine Wörter und Wortfolgen für Korrekturen und Vorschläge. Nur auf diesem Gerät, der Text wird danach gelöscht.</string>
+    <string name="learn_from_text_hint">Text hier einfügen</string>
+    <string name="learn_from_text_learn">Lernen</string>
+    <string name="learn_from_text_file">Datei laden</string>
+    <string name="learn_from_text_nothing">Keine Wörter gefunden</string>
+    <string name="learn_from_text_queued">%d Wörter vorgemerkt. Sie werden gelernt, sobald Du die Tastatur das nächste Mal in der Sprache des Textes öffnest.</string>
+    <string name="learn_from_text_done">Aus Deinem Text gelernt: %d Wörter</string>
+    <string name="learn_from_text_personalization_off">Zum Lernen aus Deinem Text müssen personalisierte Vorschläge eingeschaltet sein</string>
     <string name="voice_transcribe_while_speaking_title">Schon beim Sprechen erkennen</string>
     <string name="voice_transcribe_while_speaking_summary">Bei jeder Sprechpause wird das bisher Gesagte schon erkannt. Nach dem Stopp bleibt nur das letzte Stück: viel kürzeres Warten bei langen Diktaten.</string>
     <string name="ai_cancelled">KI-Anfrage abgebrochen</string>

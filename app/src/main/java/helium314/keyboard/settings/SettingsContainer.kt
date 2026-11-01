@@ -261,6 +261,7 @@ object SettingsWithoutKey {
     const val SCREEN_NAV_CJK = "screen_nav_cjk"
     const val SCREEN_NAV_UPDATES = "screen_nav_updates"
     const val SCREEN_NAV_TYPING_HEATMAP = "screen_nav_typing_heatmap"
+    const val LEARN_FROM_TEXT = "learn_from_text"
     const val SCREEN_NAV_PERSONAL_DICTIONARIES = "screen_nav_personal_dictionaries"
     const val SCREEN_NAV_BLOCKED_WORDS = "screen_nav_blocked_words"
 }
