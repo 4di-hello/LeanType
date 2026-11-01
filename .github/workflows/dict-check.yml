@@ -9,11 +9,23 @@ jobs:
       - name: Look
         run: |
           raw=https://codeberg.org/Helium314/aosp-dictionaries/raw/branch/main
-          curl -fsSL -o wordlist.py $raw/scripts/wordlist.py
-          echo "===== bigram f in wordlist.py"; grep -n "bigram" wordlist.py | head -40
-          n=$(grep -n "def create_wordlist_combined" wordlist.py | cut -d: -f1); sed -n "$n,$((n+80))p" wordlist.py
-          echo "===== en_US"; curl -fsSL $raw/wordlists/main_en_US.combined.gz -o en.gz && zcat en.gz | sed -n '1,40p'
-          echo "===== en_US bigram f values"; zcat en.gz | grep 'bigram=' | sed 's/.*f=//' | sort -n | uniq -c | sort -k2 -n | head -30
-          for c in deu_news_2023_1M deu_news_2022_1M deu_news_2024_1M deu-de_web_2021_1M deu-de_web_2019_1M deu_mixed-typical_2011_1M deu_wikipedia_2021_1M deu_web_2019_1M deu-de_web-public_2019_1M deu_newscrawl-public_2019_1M deu_newscrawl_2011_1M; do
-            code=$(curl -s -o /dev/null -w '%{http_code}' -I https://downloads.wortschatz-leipzig.de/corpora/$c.tar.gz); echo "$c $code"
+          curl -fsSL -o de.combined $raw/wordlists/main_de.combined
+          head -3 de.combined
+          echo "===== capitalized forms of sentence starters"
+          for w in Viele Ich Wir Das Die Der Es Sie Er Wenn Aber Und Danke Hallo Bitte Kannst Kann Ist Hast Habe Morgen Heute Leider Gerne Gestern Vielen Liebe Lieber Wie Was Wo Warum Ja Nein Na Okay Ok Super; do
+            printf '%-8s ' "$w"; grep -E "^ word=$w,|^ word=$(echo $w | tr 'A-ZÄÖÜ' 'a-zäöü')," de.combined | tr '\n' ' '; echo
           done
+          python3 - <<'PY'
+          import re
+          words = {}
+          for line in open("de.combined", encoding="utf-8"):
+              if line.startswith(" word="):
+                  w, rest = line[6:].split(",f=", 1)
+                  words[w] = int(re.match(r"\d+", rest).group())
+          both = [(w, f, words[w.lower()]) for w, f in words.items() if w[:1].isupper() and w[1:].islower() and w.lower() in words]
+          print("words:", len(words), "capitalized with lowercase form too:", len(both))
+          # capitalized form much rarer than lowercase: probably only from sentence starts
+          rare = [b for b in both if b[1] + 30 < b[2]]
+          print("capitalized clearly rarer than lowercase:", len(rare))
+          for w, f, lf in sorted(rare, key=lambda b: -b[2])[:40]: print(f"  {w} f={f} lower f={lf}")
+          PY
