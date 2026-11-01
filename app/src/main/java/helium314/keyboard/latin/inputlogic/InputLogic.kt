@@ -3001,6 +3001,8 @@ class InputLogic(
         prompt = CustomAIKeyText.withInstructions(prompt, systemInstruction)
 
         var textToProcess: String
+        // before the selection is changed below: the text cache of the connection follows only later
+        val targetField = currentFieldState()
         val hasSelection = mConnection.hasSelection()
 
         if (hasSelection) {
@@ -3055,7 +3057,7 @@ class InputLogic(
             textToProcess, prompt, hasSelection, showThinking,
             onSuccess = { resultText ->
                 val result = PendingAIResult(resultText, targetPackage, targetFieldId, hasSelection, shouldAppend,
-                    android.os.SystemClock.uptimeMillis())
+                    android.os.SystemClock.uptimeMillis(), targetField)
                 if (!mLatinIME.isInputViewShown || !mConnection.isConnected()) {
                     // some editors hide the keyboard meanwhile: insert when it is back in this field
                     Log.i(TAG, "Input view hidden during custom AI operation, keeping the result")
@@ -3079,9 +3081,24 @@ class InputLogic(
     /** result of a custom AI key, kept while the keyboard is hidden */
     private class PendingAIResult(
         val text: String, val packageName: String?, val fieldId: Int?,
-        val hasSelection: Boolean, val shouldAppend: Boolean, val time: Long
+        val hasSelection: Boolean, val shouldAppend: Boolean, val time: Long,
+        val field: FieldState
     )
     private var mPendingAIResult: PendingAIResult? = null
+
+    /**
+     * Type and text of a field. Many apps use the same field id for all their text fields (e.g. every
+     * chat), so a kept result is only inserted if the field still has the same type and text.
+     */
+    private class FieldState(val inputType: Int, val textLength: Int, val textHash: Int)
+
+    private fun currentFieldState(): FieldState {
+        val before = mConnection.getTextBeforeCursor(60000, 0)?.toString() ?: ""
+        val selected = mConnection.getSelectedText(0)?.toString() ?: ""
+        val after = mConnection.getTextAfterCursor(60000, 0)?.toString() ?: ""
+        val text = before + selected + after
+        return FieldState(getCurrentInputEditorInfo()?.inputType ?: 0, text.length, text.hashCode())
+    }
 
     private fun insertAIResult(result: PendingAIResult) {
         if (result.shouldAppend) {
@@ -3108,10 +3125,18 @@ class InputLogic(
         mPendingAIResult = null
         if (android.os.SystemClock.uptimeMillis() - pending.time > PENDING_AI_RESULT_MS) return
         if (!mLatinIME.isInputViewShown || !mConnection.isConnected()) return
-        val editor = getCurrentInputEditorInfo()
-        if (editor?.packageName != pending.packageName || editor?.fieldId != pending.fieldId) return
+        val editor = getCurrentInputEditorInfo() ?: return
+        if (editor.packageName != pending.packageName || editor.fieldId != pending.fieldId) return
+        if (InputTypeUtils.isPasswordInputType(editor.inputType)) return
         // a replaced selection is gone, there is nothing left to replace safely
         if (pending.hasSelection && !pending.shouldAppend) return
+        // another text field with the same id, or the text was changed meanwhile
+        val field = currentFieldState()
+        if (field.inputType != pending.field.inputType || field.textLength != pending.field.textLength
+            || field.textHash != pending.field.textHash) {
+            Log.w(TAG, "field changed while the keyboard was hidden, dropping the AI result")
+            return
+        }
         insertAIResult(pending)
     }
 
