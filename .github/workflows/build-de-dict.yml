@@ -32,7 +32,7 @@ jobs:
           wc -l counts.txt
       - name: Build
         run: |
-          python3 merge.py main_de.combined counts.txt main_de_plus.combined 20 3
+          python3 merge.py main_de.combined counts.txt main_de_plus.combined 20 3 2
           grep -c '^  bigram=' main_de_plus.combined
           java -jar dicttool.jar makedict -s main_de_plus.combined -d main_de_plus.dict
           ls -la main_de_plus.dict
