@@ -62,6 +62,10 @@ object TypingHeatmap {
     /** maximum shift of a key center for strength 1..5, in key sizes */
     private val MAX_SHIFT_FOR_STRENGTH = floatArrayOf(0.2f, 0.27f, 0.33f, 0.42f, 0.5f)
     const val DEFAULT_STRENGTH = 3
+    /** strength setting that lets the keyboard choose the strength from the user's own touches */
+    const val AUTO_STRENGTH = 0
+    /** touches needed before the strength is chosen automatically, before that [DEFAULT_STRENGTH] */
+    const val MIN_SAMPLES_FOR_AUTO = 300
 
     /** Position of a key, normalized to the keyboard size (0..1) */
     data class KeyShape(val code: Int, val label: String, val x: Float, val y: Float, val width: Float, val height: Float) {
@@ -289,7 +293,8 @@ object TypingHeatmap {
     // ---------------- adaptation ----------------
 
     /** Effective offsets per key code for a layout, empty if there is not enough data */
-    fun getOffsets(context: Context?, layoutId: String, strength: Int): Map<Int, FloatArray> {
+    fun getOffsets(context: Context?, layoutId: String, requestedStrength: Int): Map<Int, FloatArray> {
+        val strength = resolveStrength(layoutId, requestedStrength)
         val cacheKey = cacheKey(layoutId, strength)
         offsetCache[cacheKey]?.let { return it }
         if (context == null && !loaded) return emptyMap() // touch events: don't wait for loading (started by init)
@@ -318,6 +323,97 @@ object TypingHeatmap {
         val key = CacheKey(layoutId, strength, "$layoutId|$strength")
         lastCacheKey = key
         return key.key
+    }
+
+    // ---------------- automatic strength ----------------
+
+    /** per layout: strength chosen from the user's touches, see [evaluateStrengths] */
+    @Volatile private var autoStrengths: Map<String, Int> = emptyMap()
+
+    /** The strength actually used: [AUTO_STRENGTH] is replaced by the one chosen for the layout */
+    fun resolveStrength(layoutId: String, strength: Int): Int =
+        if (strength == AUTO_STRENGTH) autoStrengths[layoutId] ?: DEFAULT_STRENGTH else strength
+
+    /**
+     * Misses of the recorded touches if they were detected again: index 0 without adaptation,
+     * 1..5 with that strength. Each touch is checked with offsets learned from the other touches
+     * (its own one left out), so the result shows how well a strength would work for new touches.
+     * Null if there are fewer than [MIN_SAMPLES_FOR_AUTO] touches.
+     */
+    class StrengthEvaluation(val touches: Int, val misses: IntArray) {
+        /** strength with the fewest misses, the lower one if equal */
+        val best: Int get() = (1..5).minByOrNull { misses[it] * 10 + it } ?: DEFAULT_STRENGTH
+        fun missRate(strength: Int) = misses[strength] * 100f / touches
+    }
+
+    fun evaluateStrengths(shapes: List<KeyShape>, samples: Map<Int, Collection<Sample>>): StrengthEvaluation? {
+        val keys = shapes.filter { Character.isLetter(it.code) && it.width > 0 && it.height > 0 }.associateBy { lower(it.code) }
+        if (keys.size < 2) return null
+        // sums of the (limited) offsets per key, for computing offsets with one touch left out
+        val sums = HashMap<Int, DoubleArray>()
+        for ((code, list) in samples) {
+            if (code !in keys) continue
+            sums[code] = doubleArrayOf(list.sumOf { it.dx.coerceIn(-1f, 1f).toDouble() },
+                list.sumOf { it.dy.coerceIn(-1f, 1f).toDouble() }, list.size.toDouble())
+        }
+        val touches = samples.filterKeys { it in keys }.values.sumOf { it.size }
+        if (touches < MIN_SAMPLES_FOR_AUTO) return null
+        val misses = IntArray(6)
+        val offsetsByStrength = (1..5).map { strength ->
+            val max = maxShift(strength)
+            sums.mapNotNull { (code, sum) -> offsetFromSums(sum[0], sum[1], sum[2].toInt(), max)?.let { code to it } }.toMap()
+        }
+        for ((intended, list) in samples) {
+            val key = keys[intended] ?: continue
+            val sum = sums[intended] ?: continue
+            for (sample in list) {
+                val x = key.centerX + sample.dx * key.width
+                val y = key.centerY + sample.dy * key.height
+                val candidates = keys.values.filter { abs(x - it.centerX) <= 2 * it.width && abs(y - it.centerY) <= 2 * it.height }
+                    .map { Candidate(lower(it.code), it.x, it.y, it.width, it.height) }
+                val plain = candidates.minByOrNull { sq((x - it.x - it.width / 2) / it.width) + sq((y - it.y - it.height / 2) / it.height) }?.code
+                if (plain != intended) misses[0]++
+                for (strength in 1..5) {
+                    val offsets = HashMap(offsetsByStrength[strength - 1])
+                    // the touch itself must not help: offset of its key without it
+                    val own = offsetFromSums(sum[0] - sample.dx.coerceIn(-1f, 1f), sum[1] - sample.dy.coerceIn(-1f, 1f),
+                        sum[2].toInt() - 1, maxShift(strength))
+                    if (own == null) offsets.remove(intended) else offsets[intended] = own
+                    val detected = adaptedKeyCode(x, y, candidates, offsets) ?: plain
+                    if (detected != intended) misses[strength]++
+                }
+            }
+        }
+        return StrengthEvaluation(touches, misses)
+    }
+
+    /** like [effectiveOffset], from sums of the limited offsets */
+    private fun offsetFromSums(sumDx: Double, sumDy: Double, n: Int, maxShift: Float): FloatArray? {
+        if (n < MIN_SAMPLES_FOR_ADAPTATION) return null
+        val weight = ((n - MIN_SAMPLES_FOR_ADAPTATION + 1).toFloat() /
+                (FULL_SAMPLES_FOR_ADAPTATION - MIN_SAMPLES_FOR_ADAPTATION + 1)).coerceIn(0f, 1f)
+        var dx = (sumDx / n).toFloat() * weight
+        var dy = (sumDy / n).toFloat() * weight
+        if (!dx.isFinite() || !dy.isFinite()) return null
+        val length = hypot(dx, dy)
+        if (length > maxShift) {
+            dx *= maxShift / length
+            dy *= maxShift / length
+        }
+        return floatArrayOf(dx, dy)
+    }
+
+    /** chooses the strength for each layout again, in background */
+    private fun updateAutoStrengths(copies: List<LayoutCopy>) {
+        val result = HashMap(autoStrengths)
+        for (copy in copies) {
+            val evaluation = try { evaluateStrengths(copy.shapes, copy.samples) } catch (e: Exception) { null } ?: continue
+            result[copy.id] = evaluation.best
+        }
+        if (result != autoStrengths) {
+            autoStrengths = result
+            offsetCache = HashMap()
+        }
     }
 
     fun maxShift(strength: Int) = MAX_SHIFT_FOR_STRENGTH[(strength - 1).coerceIn(0, MAX_SHIFT_FOR_STRENGTH.size - 1)]
@@ -640,6 +736,8 @@ object TypingHeatmap {
             weeks.putAll(parsed.weeks)
             learnedOnDevice = parsed.device
             offsetCache = HashMap()
+            val copies = layouts.values.map { it.copyForSaving() }
+            ioExecutor.execute { updateAutoStrengths(copies) }
         } catch (t: Throwable) { // also catch errors like StackOverflowError from broken data
             // log only the type: the message may contain the file content
             Log.w(TAG, "could not read typing heatmap: ${t.javaClass.simpleName}")
@@ -684,6 +782,7 @@ object TypingHeatmap {
             } catch (t: Throwable) {
                 Log.w(TAG, "could not write typing heatmap: ${t.javaClass.simpleName}")
             }
+            updateAutoStrengths(copy)
         }
     }
 
