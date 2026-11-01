@@ -50,4 +50,62 @@ class BackupCryptoTest {
         assertFalse(BackupCrypto.isEncrypted(byteArrayOf(0x50, 0x4B, 0x03, 0x04, 0, 0, 0, 0)))
         assertFalse(BackupCrypto.isEncrypted(byteArrayOf()))
     }
+
+    private fun encryptSegmented(data: ByteArray, password: String, segmentSize: Int): ByteArray {
+        val out = ByteArrayOutputStream()
+        BackupCrypto.encryptingStream(out, password.toCharArray(), 100_000, segmentSize).use { stream ->
+            // in pieces of different sizes, like a zip stream writes
+            var offset = 0
+            var piece = 1
+            while (offset < data.size) {
+                val n = minOf(piece, data.size - offset)
+                stream.write(data, offset, n)
+                offset += n
+                piece = piece * 3 % 1700 + 1
+            }
+        }
+        return out.toByteArray()
+    }
+
+    private fun decrypt(encrypted: ByteArray, password: String): ByteArray {
+        val target = File.createTempFile("backup", ".zip")
+        try {
+            BackupCrypto.decryptToFile(ByteArrayInputStream(encrypted), password.toCharArray(), target)
+            return target.readBytes()
+        } finally {
+            target.delete()
+        }
+    }
+
+    @Test fun segmentsOfAnySizeAreDecrypted() {
+        for (size in listOf(0, 1, 999, 1000, 1001, 2500, 3000)) {
+            val data = Random(size).nextBytes(size)
+            assertContentEquals(data, decrypt(encryptSegmented(data, "pw", 1000), "pw"), "size $size")
+        }
+    }
+
+    @Test fun missingOrMovedSegmentsAreNoticed() {
+        val encrypted = encryptSegmented(Random(2).nextBytes(2500), "pw", 1000)
+        val header = 8 + 4 + 16 + 8
+        val fullSegment = 4 + 1000 + 16
+        // the last segment cut off: the one before is not marked as last
+        val cut = encrypted.copyOf(header + 2 * fullSegment)
+        assertFailsWith<BackupCrypto.WrongPasswordException> { decrypt(cut, "pw") }
+        // two segments swapped: wrong segment numbers
+        val swapped = encrypted.copyOf()
+        System.arraycopy(encrypted, header + fullSegment, swapped, header, fullSegment)
+        System.arraycopy(encrypted, header, swapped, header + fullSegment, fullSegment)
+        assertFailsWith<BackupCrypto.WrongPasswordException> { decrypt(swapped, "pw") }
+        // something added at the end
+        assertFailsWith<BackupCrypto.WrongPasswordException> { decrypt(encrypted + byteArrayOf(0, 0, 0, 20) + ByteArray(20), "pw") }
+    }
+
+    @Test fun backupsOfOlderVersionsCanStillBeRead() {
+        val data = Random(3).nextBytes(10_000)
+        val out = ByteArrayOutputStream()
+        BackupCrypto.encryptingStreamFormat1(out, "alt".toCharArray()).use { it.write(data) }
+        assertTrue(BackupCrypto.isEncrypted(out.toByteArray()))
+        assertContentEquals(data, decrypt(out.toByteArray(), "alt"))
+    }
 }
+
