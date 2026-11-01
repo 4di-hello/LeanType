@@ -209,6 +209,8 @@
     <string name="toolbar_keys">Symbolleistentasten wählen</string>
     <string name="license">Open-Source-Lizenz</string>
     <string name="backup_error">Sicherungsfehler: %s</string>
+    <string name="backup_unencrypted_title">Sicherung ist nicht verschlüsselt</string>
+    <string name="backup_unencrypted_message">Deine Sicherungen sind mit einem Passwort geschützt, diese Datei nicht. Nur wiederherstellen, wenn Du sie selbst erstellt hast: Eine Sicherung kann alle Einstellungen ändern, z. B. den Inkognito-Modus ausschalten oder Textbausteine hinzufügen, die Nachrichten abschicken.</string>
     <string name="show_popup_hints_summary">Hinweise anzeigen, wenn langes Drücken einer Taste zusätzliche Funktionen auslöst</string>
     <string name="theme_name_sand" tools:keep="@string/theme_name_sand">Sand</string>
     <string name="backup_restore_title">Sichern und Wiederherstellen</string>
@@ -1336,6 +1338,7 @@
     <string name="voice_transcribe_while_speaking_title">Schon beim Sprechen erkennen</string>
     <string name="voice_transcribe_while_speaking_summary">Bei jeder Sprechpause wird das bisher Gesagte schon erkannt. Nach dem Stopp bleibt nur das letzte Stück: viel kürzeres Warten bei langen Diktaten.</string>
     <string name="ai_cancelled">KI-Anfrage abgebrochen</string>
+    <string name="ai_result_to_clipboard">Das Textfeld hat sich inzwischen geändert, das KI-Ergebnis ist in der Zwischenablage</string>
     <string name="custom_ai_keyword_prepend_label">Ergebnis voranstellen</string>
     <string name="custom_ai_keyword_showthought_label">Gedankengang anzeigen</string>
     <string name="custom_ai_keyword_editor_desc">Freie Bearbeitung und Formatierung des Textes gemäß Aufforderung.</string>
@@ -1857,6 +1860,11 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="learned_casing_empty">Noch nichts gemerkt.</string>
     <string name="learned_casing_not_yet">Im Lernen: wird nach einem weiteren Mal automatisch verwendet</string>
     <string name="learned_casing_forget_all">Alle vergessen</string>
+    <string name="learn_typos">Tippfehler lernen</string>
+    <string name="learn_typos_summary">Korrigierst Du denselben Tippfehler zweimal gleich selbst, weil die Autokorrektur ihn übersehen hat, wird er danach automatisch so korrigiert. Die Rücktaste direkt danach macht es rückgängig und vergisst ihn</string>
+    <string name="learned_typos">Gelernte Tippfehler</string>
+    <string name="learned_typos_summary">%1$d aktiv, %2$d im Lernen</string>
+    <string name="learned_typos_empty">Noch keine Tippfehler gelernt.</string>
     <string name="typing_heatmap_history">Fehltreffer und Tipp-Tempo pro Woche</string>
     <string name="typing_heatmap_history_value">%1$.1f %% (%2$d)</string>
     <string name="typing_heatmap_wpm">%1$.0f W/min</string>
@@ -1926,9 +1934,11 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="auto_backup_keep">Neueste Sicherungen behalten</string>
     <string name="auto_backup_password">Passwort</string>
     <string name="auto_backup_password_set">Sicherungen werden mit Deinem Passwort verschlüsselt.</string>
-    <string name="auto_backup_password_not_set">Kein Passwort: Sicherungen sind unverschlüsselt und enthalten keinen Zwischenablage-Verlauf.</string>
+    <string name="auto_backup_password_not_set">Kein Passwort: Sicherungen sind unverschlüsselt, wer Zugriff auf den Ordner hat, kann Deinen Tippverlauf, Deine Textbausteine und Einstellungen lesen. Der Zwischenablage-Verlauf ist nicht enthalten.</string>
     <string name="auto_backup_password_save">Passwort speichern</string>
     <string name="auto_backup_password_remove">Passwort entfernen</string>
+    <string name="backup_password_repeat">Passwort wiederholen</string>
+    <string name="backup_password_too_short">Mindestens %d Zeichen</string>
     <string name="auto_backup_encrypted">verschlüsselt</string>
     <string name="auto_backup_error">Letzte Sicherung fehlgeschlagen: %s</string>
     <string name="auto_backup_last">Letzte Sicherung: %s</string>

@@ -94,8 +94,9 @@ fun BackupRestorePreference(setting: Setting) {
     }
     var backupPassword by remember { mutableStateOf("") }
     var encryptedUri: Uri? by remember { mutableStateOf(null) }
+    var unencryptedUri: Uri? by remember { mutableStateOf(null) }
     val backupLauncher = backupLauncher(selectedCategories, { backupPassword.takeIf { it.isNotEmpty() }?.toCharArray() }) { error = it }
-    val restoreLauncher = restoreLauncher(selectedCategories, { encryptedUri = it }) { error = it }
+    val restoreLauncher = restoreLauncher(selectedCategories, { encryptedUri = it }, { unencryptedUri = it }) { error = it }
     Preference(name = setting.title, onClick = { showDialog = true })
     if (showDialog) {
         ConfirmationDialog(
@@ -230,6 +231,20 @@ fun BackupRestorePreference(setting: Setting) {
             }
         )
     }
+    // LeanType+: own backups are encrypted, an unencrypted file may come from someone else
+    val uriToConfirm = unencryptedUri
+    if (uriToConfirm != null) {
+        ConfirmationDialog(
+            onDismissRequest = { unencryptedUri = null },
+            title = { Text(stringResource(R.string.backup_unencrypted_title)) },
+            content = { Text(stringResource(R.string.backup_unencrypted_message)) },
+            confirmButtonText = stringResource(R.string.button_restore),
+            onConfirmed = {
+                unencryptedUri = null
+                runRestore(ctx, selectedCategories, { error = it }) { ctx.contentResolver.openInputStream(uriToConfirm) }
+            }
+        )
+    }
     val currentError = error
     if (currentError != null) {
         InfoDialog(
@@ -322,7 +337,7 @@ internal fun writeBackup(ctx: Context, os: OutputStream, selectedCategories: Set
     zipStream.closeEntry()
 
     val filteredProtectedPrefs = ctx.protectedPrefs().all.filter {
-        selectedCategories.contains(getCategoryForPrefKey(it.key))
+        it.key !in neverRestoredKeys && selectedCategories.contains(getCategoryForPrefKey(it.key))
     }
     zipStream.putNextEntry(ZipEntry(PROTECTED_PREFS_FILE_NAME))
     settingsToJsonStream(filteredProtectedPrefs, zipStream)
@@ -370,6 +385,7 @@ private fun backupLauncher(
 private fun restoreLauncher(
     selectedCategories: Set<BackupCategory>,
     onEncrypted: (Uri) -> Unit,
+    onUnencryptedWithPassword: (Uri) -> Unit,
     onError: (String) -> Unit
 ): ManagedActivityResultLauncher<Intent, ActivityResult> {
     val ctx = LocalContext.current
@@ -388,6 +404,7 @@ private fun restoreLauncher(
                 } ?: false
             } catch (_: Exception) { false }
             if (encrypted) Handler(Looper.getMainLooper()).post { onEncrypted(uri) }
+            else if (helium314.keyboard.latin.backup.AutoBackup.hasPassword(ctx)) Handler(Looper.getMainLooper()).post { onUnencryptedWithPassword(uri) }
             else runRestore(ctx, selectedCategories, onError) { ctx.contentResolver.openInputStream(uri) }
         }
     }
@@ -602,30 +619,36 @@ private fun settingsToJsonStream(settings: Map<*, Any?>, out: OutputStream) {
     out.write(Json.encodeToString(stringSets).toByteArray())
 }
 
+/**
+ * LeanType+: the checksum of a gesture typing library lets the keyboard load native code from its files.
+ * The library itself is not in backups, so its checksum must not come from one either.
+ */
+private val neverRestoredKeys = setOf(Settings.PREF_LIBRARY_CHECKSUM)
+
 private fun readJsonLinesToSettings(list: List<String>, prefs: SharedPreferences, selectedCategories: Set<BackupCategory>): Boolean {
     val i = list.iterator()
     val e = prefs.edit()
     try {
-        prefs.all.keys.filter { selectedCategories.contains(getCategoryForPrefKey(it)) }.forEach { e.remove(it) }
+        prefs.all.keys.filter { it !in neverRestoredKeys && selectedCategories.contains(getCategoryForPrefKey(it)) }.forEach { e.remove(it) }
         while (i.hasNext()) {
             when (i.next()) {
                 "boolean settings" -> Json.decodeFromString<Map<String, Boolean>>(i.next())
-                    .filter { selectedCategories.contains(getCategoryForPrefKey(it.key)) }
+                    .filter { it.key !in neverRestoredKeys && selectedCategories.contains(getCategoryForPrefKey(it.key)) }
                     .forEach { e.putBoolean(it.key, it.value) }
                 "int settings" -> Json.decodeFromString<Map<String, Int>>(i.next())
-                    .filter { selectedCategories.contains(getCategoryForPrefKey(it.key)) }
+                    .filter { it.key !in neverRestoredKeys && selectedCategories.contains(getCategoryForPrefKey(it.key)) }
                     .forEach { e.putInt(it.key, it.value) }
                 "long settings" -> Json.decodeFromString<Map<String, Long>>(i.next())
-                    .filter { selectedCategories.contains(getCategoryForPrefKey(it.key)) }
+                    .filter { it.key !in neverRestoredKeys && selectedCategories.contains(getCategoryForPrefKey(it.key)) }
                     .forEach { e.putLong(it.key, it.value) }
                 "float settings" -> Json.decodeFromString<Map<String, Float>>(i.next())
-                    .filter { selectedCategories.contains(getCategoryForPrefKey(it.key)) }
+                    .filter { it.key !in neverRestoredKeys && selectedCategories.contains(getCategoryForPrefKey(it.key)) }
                     .forEach { e.putFloat(it.key, it.value) }
                 "string settings" -> Json.decodeFromString<Map<String, String>>(i.next())
-                    .filter { selectedCategories.contains(getCategoryForPrefKey(it.key)) }
+                    .filter { it.key !in neverRestoredKeys && selectedCategories.contains(getCategoryForPrefKey(it.key)) }
                     .forEach { e.putString(it.key, it.value) }
                 "string set settings" -> Json.decodeFromString<Map<String, Set<String>>>(i.next())
-                    .filter { selectedCategories.contains(getCategoryForPrefKey(it.key)) }
+                    .filter { it.key !in neverRestoredKeys && selectedCategories.contains(getCategoryForPrefKey(it.key)) }
                     .forEach { e.putStringSet(it.key, it.value) }
             }
         }
