@@ -812,6 +812,8 @@ class LatinIME : InputMethodService(),
         super.onStartInputView(editorInfo, restarting)
         refreshDeviceLocked(this)
         ProofreadHelper.preloadModel(this)
+        // LeanType+: learn a text the user gave in the settings, once the dictionaries are ready
+        helium314.keyboard.latin.personalization.TextLearner.processPendingLater(this)
 
         clipboardHistoryManager.onStartInputView()
         AudioAndHapticFeedbackManager.getInstance().onStartInputView()
