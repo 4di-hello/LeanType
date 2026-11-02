@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import helium314.keyboard.latin.LatinIME
 import helium314.keyboard.latin.LearnedWord
 import helium314.keyboard.latin.R
+import helium314.keyboard.latin.utils.DeviceProtectedUtils
 import helium314.keyboard.latin.personalization.PersonalizationHelper
 import helium314.keyboard.settings.SearchScreen
 import helium314.keyboard.settings.dialogs.ConfirmationDialog
@@ -101,6 +102,8 @@ fun LearnedWordsScreen(onClickBack: () -> Unit) {
             onConfirmed = {
                 showClearDialog = false
                 PersonalizationHelper.clearUserHistory(ctx)
+                // LeanType+: typos learned from typing are learned words too
+                helium314.keyboard.latin.LearnedTypos.clear(DeviceProtectedUtils.getSharedPreferences(ctx))
                 words = emptyList()
                 Toast.makeText(ctx, ctx.getString(R.string.clear_learned_words_success), Toast.LENGTH_SHORT).show()
             },
