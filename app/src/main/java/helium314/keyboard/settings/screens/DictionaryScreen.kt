@@ -324,6 +324,8 @@ fun DictionaryScreen(
             onDismissRequest = { showClearHistoryDialog = false },
             onConfirmed = {
                 PersonalizationHelper.clearUserHistory(ctx)
+                // LeanType+: typos learned from typing are learned words too
+                helium314.keyboard.latin.LearnedTypos.clear(ctx.prefs())
                 Toast.makeText(ctx, ctx.getString(R.string.clear_learned_words_success), Toast.LENGTH_SHORT).show()
             },
             content = { Text(stringResource(R.string.clear_learned_words_confirmation)) }
