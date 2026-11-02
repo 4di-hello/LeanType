@@ -59,6 +59,7 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
 - 27.10.: Auf LeanType 4.3.0-beta1 aktualisiert (Sicherung `backup/daily-2026-10-27b`)
 - 28.10.: Auf LeanType 4.3.0-beta2 aktualisiert, nur Konflikte in den deutschen Texten (Sicherung `backup/daily-2026-10-28`); #680 ebenfalls auf beta2
 - 29.10.: Auf LeanType 4.3.0-beta3 aktualisiert, keine Konflikte (Sicherung `backup/daily-2026-10-29`); alle PR-Branches passen ohne Konflikt
+- 2.11.: Auf LeanType 4.3.1-beta2 aktualisiert (Sicherung `backup/daily-2026-11-02`), ein Konflikt in InputLogic (LeanType ersetzt ThreadLocal.withInitial für Android 7)
 - 1.11.: Auf LeanType 4.3.1-beta1 aktualisiert (Sicherung `backup/daily-2026-11-01`). Erster Build scheiterte an zwei deutschen Texten, die LeanType gestrichen hat (Lint „ExtraTranslation“) – nach einem Update mit Text-Konflikten prüfen, ob values-de Namen hat, die in values fehlen
 - 30.10.: Auf LeanType 4.3.0 (fertige Version) aktualisiert, nur Doku und Update-Anzeige geändert, keine Konflikte (Sicherung `backup/daily-2026-10-30`)
 - 29.10.: Auf LeanType 4.3.0-beta4 aktualisiert (Sicherung `backup/daily-2026-10-29b`). LeanType hat jetzt selbst Kontext 4096 und passt die max. Tokens an die Textlänge an (512–2048); unser PR `fix/offline-ai-busy` ohne den Kontext-Teil neu aufgesetzt
