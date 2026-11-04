@@ -59,6 +59,7 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
 - 27.10.: Auf LeanType 4.3.0-beta1 aktualisiert (Sicherung `backup/daily-2026-10-27b`)
 - 28.10.: Auf LeanType 4.3.0-beta2 aktualisiert, nur Konflikte in den deutschen Texten (Sicherung `backup/daily-2026-10-28`); #680 ebenfalls auf beta2
 - 29.10.: Auf LeanType 4.3.0-beta3 aktualisiert, keine Konflikte (Sicherung `backup/daily-2026-10-29`); alle PR-Branches passen ohne Konflikt
+- 4.11.: Auf LeanType 4.3.1-beta3 aktualisiert (Sicherung `backup/daily-2026-11-04`): Konflikte in Texten, InputLogic (neues „Wort löschen“ per Wischen) und Spracheingabe. LeanTypes neue anpassende Stille-Erkennung gilt jetzt auch für das Zerlegen beim Sprechen, so werden Pausen auch bei Umgebungslärm gefunden
 - 2.11.: Auf LeanType 4.3.1-beta2 aktualisiert (Sicherung `backup/daily-2026-11-02`), ein Konflikt in InputLogic (LeanType ersetzt ThreadLocal.withInitial für Android 7)
 - 2.11. nachmittags: LeanType hat beta2 nachgelegt (9 Commits: Absturz in der Wortsuche, mehrsprachiger Verlauf, Standard-Schwelle der Autokorrektur jetzt „Ausgewogen“ 0,067, fehlende Menüpunkte) – ohne Konflikte übernommen. „Gelernte Wörter löschen“ löscht jetzt auch die gelernten Tippfehler
 - 1.11.: Auf LeanType 4.3.1-beta1 aktualisiert (Sicherung `backup/daily-2026-11-01`). Erster Build scheiterte an zwei deutschen Texten, die LeanType gestrichen hat (Lint „ExtraTranslation“) – nach einem Update mit Text-Konflikten prüfen, ob values-de Namen hat, die in values fehlen
