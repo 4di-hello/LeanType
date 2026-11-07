@@ -86,6 +86,7 @@ fun AdvancedSettingsScreen(
         listOfNotNull(
             // Primary
             Settings.PREF_ALWAYS_INCOGNITO_MODE,
+            Settings.PREF_AUTOMATION_BROADCASTS,
             Settings.PREF_DISABLE_NETWORK,
             SettingsWithoutKey.APP_QUIRKS,
             SettingsWithoutKey.BACKGROUND_SERVICES,
@@ -192,6 +193,9 @@ private fun createAdvancedSettings(context: Context) = listOfNotNull(
     },
     Setting(context, "auto_backup", R.string.auto_backup_title) {
         helium314.keyboard.settings.preferences.AutoBackupPreference(it)
+    },
+    Setting(context, Settings.PREF_AUTOMATION_BROADCASTS, R.string.automation_broadcasts, R.string.automation_broadcasts_summary) {
+        SwitchPreference(it, Defaults.PREF_AUTOMATION_BROADCASTS)
     },
     Setting(context, SettingsWithoutKey.BACKGROUND_SERVICES, R.string.background_services_title) {
         Preference(
