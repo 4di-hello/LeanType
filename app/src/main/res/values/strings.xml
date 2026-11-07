@@ -2650,6 +2650,8 @@ New dictionary:
     <string name="learned_casing_empty">Nothing remembered yet.</string>
     <string name="learned_casing_not_yet">Learning: used automatically after one more time</string>
     <string name="learned_casing_forget_all">Forget all</string>
+    <string name="automation_broadcasts">Allow switching by other apps</string>
+    <string name="automation_broadcasts_summary">Automation apps (Tasker, MacroDroid, ADB) may switch the language, layout or mode, e.g. to the clipboard. Any installed app can do this when switched on</string>
     <string name="learn_typos">Learn typos</string>
     <string name="learn_typos_summary">When you correct the same typo the same way twice yourself because the auto-correction missed it, it is auto-corrected like this from then on. Backspace right after it reverts and forgets it</string>
     <string name="learned_typos">Learned typos</string>

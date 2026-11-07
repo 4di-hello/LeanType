@@ -509,6 +509,7 @@ class Settings private constructor() : SharedPreferences.OnSharedPreferenceChang
         const val PREF_LEARN_CASING = "learn_casing"
         const val PREF_LEARNED_CASING = "learned_casing"
         const val PREF_LEARN_TYPOS = "learn_typos"
+        const val PREF_AUTOMATION_BROADCASTS = "automation_broadcasts"
         const val PREF_LEARNED_TYPOS = "learned_typos"
         const val PREF_CLIPBOARD_SKIP_SENSITIVE = "clipboard_skip_sensitive"
         const val PREF_OFFLINE_TEMP = "offline_temp"
