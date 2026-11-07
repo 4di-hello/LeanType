@@ -1862,6 +1862,8 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="learned_casing_empty">Noch nichts gemerkt.</string>
     <string name="learned_casing_not_yet">Im Lernen: wird nach einem weiteren Mal automatisch verwendet</string>
     <string name="learned_casing_forget_all">Alle vergessen</string>
+    <string name="automation_broadcasts">Umschalten durch andere Apps erlauben</string>
+    <string name="automation_broadcasts_summary">Automatisierungs-Apps (Tasker, MacroDroid, ADB) dürfen Sprache, Layout oder Ansicht umschalten, z. B. auf die Zwischenablage. Eingeschaltet kann das jede installierte App</string>
     <string name="learn_typos">Tippfehler lernen</string>
     <string name="learn_typos_summary">Korrigierst Du denselben Tippfehler zweimal gleich selbst, weil die Autokorrektur ihn übersehen hat, wird er danach automatisch so korrigiert. Die Rücktaste direkt danach macht es rückgängig und vergisst ihn</string>
     <string name="learned_typos">Gelernte Tippfehler</string>
