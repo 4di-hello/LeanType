@@ -2391,6 +2391,8 @@ class LatinIME : InputMethodService(),
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action ?: return
             if (action != ACTION_SWITCH_SUBTYPE && action != ACTION_SWITCH_LAYOUT && action != ACTION_SWITCH_MODE) return
+            // LeanType+: any app may send these, so only when switched on (e.g. for Tasker)
+            if (!prefs().getBoolean(Settings.PREF_AUTOMATION_BROADCASTS, Defaults.PREF_AUTOMATION_BROADCASTS)) return
 
             val mode = intent.getStringExtra(EXTRA_KEYBOARD_MODE) ?: intent.getStringExtra("keyboard_mode")
             if (mode != null) {
