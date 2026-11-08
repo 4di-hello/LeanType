@@ -132,7 +132,8 @@ class TextField : Closeable {
         LatinIME.getInstance()?.getDictionaryFacilitator()?.isValidSpellingWord(word) == true
     }
 
-    private fun keyCenter(code: Int): Point = E2e.onMain {
+    /** Screen position of the middle of the key with [code] on the keyboard shown now */
+    fun keyCenter(code: Int): Point = E2e.onMain {
         val view = KeyboardSwitcher.getInstance().mainKeyboardView ?: error("no keyboard view")
         val key = view.keyboard?.getKey(code) ?: error("no key for code $code")
         val location = IntArray(2)
