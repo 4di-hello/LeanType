@@ -56,3 +56,30 @@ jobs:
           name: e2e
           path: e2e-out
           retention-days: 7
+
+  # the screenshots must be looked at: kept on the branch e2e-results, this job runs no code of the repository
+  results:
+    needs: e2e
+    if: ${{ always() }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: e2e
+          path: out
+
+      - name: Push to branch e2e-results
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd out
+          mkdir -p files
+          if [ -f files.tar ]; then tar -xf files.tar -C files --no-same-owner || true; rm -f files.tar; fi
+          git init -q -b e2e-results
+          git config user.name 4di-hello
+          git config user.email 4di-hello@users.noreply.github.com
+          git add -A
+          git commit -q -m "E2E results of ${GITHUB_SHA}"
+          git push -q -f "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" e2e-results
