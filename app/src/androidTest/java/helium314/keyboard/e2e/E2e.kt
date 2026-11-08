@@ -120,6 +120,18 @@ class TextField : Closeable {
             (0 until words.size()).map { words.getWord(it) }
         }
 
+    /** Whether the strip shows an auto-correction for the typed word (the middle word in bold) */
+    val willAutoCorrect: Boolean
+        get() = E2e.onMain {
+            val inputLogic = LatinIME.getInstance()?.mInputLogic ?: return@onMain false
+            val field = inputLogic.javaClass.getDeclaredField("mSuggestedWords").apply { isAccessible = true }
+            (field.get(inputLogic) as SuggestedWords).mWillAutoCorrect
+        }
+
+    fun isKnownWord(word: String): Boolean = E2e.onMain {
+        LatinIME.getInstance()?.getDictionaryFacilitator()?.isValidSpellingWord(word) == true
+    }
+
     private fun keyCenter(code: Int): Point = E2e.onMain {
         val view = KeyboardSwitcher.getInstance().mainKeyboardView ?: error("no keyboard view")
         val key = view.keyboard?.getKey(code) ?: error("no key for code $code")
