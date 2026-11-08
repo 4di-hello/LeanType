@@ -140,13 +140,16 @@ class DeviceE2eTest {
             throw AssertionError("not found: $selector")
         }
 
-    /** Scrolls the list down until [text] is shown */
+    /** Scrolls the list down until [text] is shown (also within a row that has more text, like a switch) */
     private fun scrollTo(text: String): UiObject2 {
-        E2e.device.findObject(By.text(text))?.let { return it }
-        val list = find(By.scrollable(true))
+        E2e.device.wait(Until.findObject(By.textContains(text)), 2000)?.let { return it }
+        val list = E2e.device.findObject(By.scrollable(true)) ?: run {
+            E2e.screenshot("missing-" + text.replace(Regex("[^A-Za-z0-9]+"), "_"))
+            throw AssertionError("not found and nothing to scroll: $text")
+        }
         repeat(15) {
             list.scroll(Direction.DOWN, 0.8f)
-            E2e.device.findObject(By.text(text))?.let { return it }
+            E2e.device.findObject(By.textContains(text))?.let { return it }
         }
         E2e.screenshot("missing-" + text.replace(Regex("[^A-Za-z0-9]+"), "_"))
         throw AssertionError("not found when scrolling: $text")
