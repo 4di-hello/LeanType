@@ -11,6 +11,7 @@ import helium314.keyboard.latin.personalization.TextLearner
 import helium314.keyboard.latin.settings.Settings
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
@@ -162,6 +163,45 @@ class TypingE2eTest {
                 field.suggestions.any { it.equals("zorbulon", ignoreCase = true) }
             }
             E2e.screenshot("f_learned_word_suggested")
+        }
+    }
+
+    /**
+     * The check that keeps AI results out of other fields: the text of the field is taken before the
+     * selection is changed for the request, and compared when the result arrives. Here without an AI
+     * plugin, through the same functions on a real text field.
+     */
+    @Test
+    fun g_aiResultFieldCheckOnARealTextField() {
+        TextField().use { field ->
+            field.type("hello world")
+            field.waitForText("hello world")
+            val inputLogic = E2e.onMain { helium314.keyboard.latin.LatinIME.getInstance()!!.mInputLogic }
+            val connection = inputLogic.javaClass.getDeclaredField("mConnection").apply { isAccessible = true }
+                .get(inputLogic) as helium314.keyboard.latin.RichInputConnection
+            val currentTarget = inputLogic.javaClass.getDeclaredMethod("currentAiTarget").apply { isAccessible = true }
+            fun isCurrent(target: Any): Boolean = E2e.onMain {
+                target.javaClass.getDeclaredMethod("isCurrent").apply { isAccessible = true }.invoke(target) as Boolean
+            }
+
+            // like proofreading without a selection: everything is selected after the text was taken
+            val target = E2e.onMain { currentTarget.invoke(inputLogic)!! }
+            E2e.onMain { connection.selectAll() }
+            SystemClock.sleep(1000)
+            E2e.screenshot("g_all_selected")
+            assertTrue("same field and text, but not recognized", isCurrent(target))
+
+            // the cursor moved somewhere else: still the same text
+            E2e.onMain { connection.setSelection(3, 3) }
+            SystemClock.sleep(500)
+            assertTrue("cursor moved, text the same", isCurrent(target))
+
+            // the text was changed meanwhile: the result must not replace it
+            E2e.onMain { connection.setSelection(11, 11) }
+            SystemClock.sleep(300)
+            field.type("x")
+            E2e.waitFor({ "x typed, is \"${field.text}\"" }) { field.text.endsWith("x") }
+            assertFalse("text changed, but still recognized as the same", isCurrent(target))
         }
     }
 }
