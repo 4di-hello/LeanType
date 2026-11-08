@@ -148,8 +148,10 @@ class DeviceE2eTest {
             throw AssertionError("not found and nothing to scroll: $text")
         }
         repeat(15) {
-            list.scroll(Direction.DOWN, 0.8f)
-            E2e.device.findObject(By.textContains(text))?.let { return it }
+            // the list on screen may be a new object after scrolling (Compose)
+            (E2e.device.findObject(By.scrollable(true)) ?: list).scroll(Direction.DOWN, 0.6f)
+            E2e.device.waitForIdle()
+            E2e.device.wait(Until.findObject(By.textContains(text)), 700)?.let { return it }
         }
         E2e.screenshot("missing-" + text.replace(Regex("[^A-Za-z0-9]+"), "_"))
         throw AssertionError("not found when scrolling: $text")
