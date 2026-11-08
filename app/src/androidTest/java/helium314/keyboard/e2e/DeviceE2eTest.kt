@@ -196,6 +196,8 @@ class DeviceE2eTest {
         SystemClock.sleep(400)
 
         open("Typing heatmap")
+        // the item and the screen have the same title, so wait for something only the screen has
+        find(By.textContains("Collect typing data"))
         E2e.screenshot("s5_typing_heatmap")
         back()
         back()
