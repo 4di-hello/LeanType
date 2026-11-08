@@ -41,6 +41,8 @@ class TypingE2eTest {
             putBoolean(Settings.PREF_AUTOMATION_BROADCASTS, false)
             // an emulator may report a hardware keyboard: the whole keyboard is needed here
             putBoolean(Settings.PREF_SHOW_ONLY_TOOLBAR_WITH_HARDWARE_KEYBOARD, false)
+            // LeanType capitalizes sentences also in fields that don't ask for it: lower case keeps the tests simple
+            putBoolean(Settings.PREF_AUTO_CAP, false)
         }
         Settings.applyAutoCorrectAggressivenessPreset(E2e.prefs, Settings.AUTO_CORRECT_LEVEL_BALANCED)
         LearnedTypos.clear(E2e.prefs)
@@ -49,6 +51,7 @@ class TypingE2eTest {
     @After
     fun tearDown() {
         Settings.applyAutoCorrectAggressivenessPreset(E2e.prefs, Settings.AUTO_CORRECT_LEVEL_BALANCED)
+        E2e.setPrefs { putBoolean(Settings.PREF_AUTO_CAP, true) }
     }
 
     private fun counts() = CorrectionStats.lastDays(E2e.context) ?: error("statistics not readable")

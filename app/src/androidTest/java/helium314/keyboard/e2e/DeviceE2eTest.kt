@@ -167,6 +167,8 @@ class DeviceE2eTest {
     @Test
     fun newSettingsScreensOpen() {
         E2e.selectKeyboard()
+        // the settings for learned typos are only shown with auto-correction
+        E2e.setPrefs { putBoolean(helium314.keyboard.latin.settings.Settings.PREF_AUTO_CORRECTION, true) }
         val intent = Intent(E2e.context, SettingsActivity::class.java)
             .putExtra("from_ime", true)
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
