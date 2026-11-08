@@ -85,6 +85,10 @@ class TextField : Closeable {
             }
         }
         SystemClock.sleep(800) // the keyboard slides in
+        // LeanType has no built-in dictionaries: the test run puts the English one in place (.github/e2e/run.sh)
+        E2e.waitFor({ "main dictionary loaded" }, 20_000) {
+            E2e.onMain { LatinIME.getInstance()?.getDictionaryFacilitator()?.hasAtLeastOneInitializedMainDictionary() == true }
+        }
     }
 
     val text: String get() = E2e.onMain { activity.editText.text.toString() }
