@@ -39,6 +39,8 @@ class TypingE2eTest {
             putBoolean(Settings.PREF_LEARN_TYPOS, true)
             putBoolean(Settings.PREF_ALWAYS_INCOGNITO_MODE, false)
             putBoolean(Settings.PREF_AUTOMATION_BROADCASTS, false)
+            // an emulator may report a hardware keyboard: the whole keyboard is needed here
+            putBoolean(Settings.PREF_SHOW_ONLY_TOOLBAR_WITH_HARDWARE_KEYBOARD, false)
         }
         Settings.applyAutoCorrectAggressivenessPreset(E2e.prefs, Settings.AUTO_CORRECT_LEVEL_BALANCED)
         LearnedTypos.clear(E2e.prefs)
