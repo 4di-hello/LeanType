@@ -11,6 +11,10 @@ echo "app: $app, tests: $tests"
 adb install -r -g "$app" || exit 1
 adb install -r -g "$tests" || exit 1
 adb shell settings put secure show_ime_with_hard_keyboard 1
+# a freshly booted emulator is busy for a while, and "isn't responding" dialogs would cover the screen
+adb shell settings put global hide_error_dialogs 1
+sleep 45
+adb shell am broadcast -a android.intent.action.CLOSE_SYSTEM_DIALOGS >/dev/null
 # LeanType has no built-in dictionaries: the English one, as if added by the user
 adb push app/src/main/assets/dicts/main_en-US.dict /data/local/tmp/main_en-US.dict >/dev/null
 adb shell "cat /data/local/tmp/main_en-US.dict | run-as $pkg sh -c 'mkdir -p files/dicts/en-US && cat > files/dicts/en-US/main_user.dict && ls -l files/dicts/en-US'"
