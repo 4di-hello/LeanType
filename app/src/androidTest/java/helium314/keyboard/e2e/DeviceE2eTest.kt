@@ -151,9 +151,13 @@ class DeviceE2eTest {
             // the list on screen may be a new object after scrolling (Compose)
             (E2e.device.findObject(By.scrollable(true)) ?: list).scroll(Direction.DOWN, 0.6f)
             E2e.device.waitForIdle()
-            E2e.device.wait(Until.findObject(By.textContains(text)), 700)?.let { return it }
+            // the emulator draws slowly at times (frames of up to 4 s), and the accessibility tree comes later
+            E2e.device.wait(Until.findObject(By.textContains(text)), 1500)?.let { return it }
         }
+        E2e.device.wait(Until.findObject(By.textContains(text)), 10_000)?.let { return it }
         E2e.screenshot("missing-" + text.replace(Regex("[^A-Za-z0-9]+"), "_"))
+        File(E2e.context.filesDir, "e2e/missing-" + text.replace(Regex("[^A-Za-z0-9]+"), "_") + ".xml")
+            .outputStream().use { E2e.device.dumpWindowHierarchy(it) }
         throw AssertionError("not found when scrolling: $text")
     }
 
@@ -195,9 +199,12 @@ class DeviceE2eTest {
         find(By.text("Close")).click()
         SystemClock.sleep(400)
 
-        open("Typing heatmap")
-        // the item and the screen have the same title, so wait for something only the screen has
-        find(By.textContains("Collect typing data"))
+        // the section header and the item below it have the same text: the item is the lower one
+        scrollTo("Typing heatmap")
+        val heatmapItem = E2e.device.findObjects(By.text("Typing heatmap")).maxByOrNull { it.visibleBounds.top }!!
+        heatmapItem.click()
+        // wait for something only the heatmap screen shows
+        find(By.textContains("type a few sentences"), 10_000)
         E2e.screenshot("s5_typing_heatmap")
         back()
         back()
