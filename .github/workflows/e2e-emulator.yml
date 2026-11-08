@@ -51,6 +51,7 @@ jobs:
           pre-emulator-launch-script: |
             for f in ~/.android/avd/*.avd/config.ini; do sed -i '/^hw.keyboard/d' "$f"; echo "hw.keyboard=no" >> "$f"; done
           ram-size: 4096M
+          cores: 4
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -no-snapshot
           script: bash .github/e2e/run.sh
