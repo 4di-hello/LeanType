@@ -28,8 +28,15 @@ object E2e {
     val prefs: SharedPreferences get() = context.prefs()
     private val imeId get() = "${context.packageName}/${LatinIME::class.java.name}"
 
+    /** Closes dialogs of the system (e.g. "isn't responding") that would cover the screen */
+    fun closeSystemDialogs() {
+        device.executeShellCommand("am broadcast -a android.intent.action.CLOSE_SYSTEM_DIALOGS")
+        device.findObject(androidx.test.uiautomator.By.text("Wait"))?.click()
+    }
+
     /** Makes LeanType+ the current keyboard of the device */
     fun selectKeyboard() {
+        closeSystemDialogs()
         log(device.executeShellCommand("ime enable $imeId"))
         log(device.executeShellCommand("ime set $imeId"))
     }
