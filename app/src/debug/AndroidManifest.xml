@@ -4,5 +4,10 @@
         <service
             android:name="helium314.keyboard.latin.voice.DebugVoiceEngineService"
             android:exported="false" />
+        <!-- only in this fork: text field for the end-to-end tests (app/src/androidTest) -->
+        <activity
+            android:name="helium314.keyboard.e2e.E2eTextFieldActivity"
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysVisible|adjustResize" />
     </application>
 </manifest>

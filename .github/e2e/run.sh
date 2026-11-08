@@ -1,0 +1,24 @@
+#!/bin/bash
+# Only in this fork: runs the end-to-end tests (app/src/androidTest) on the started emulator and collects
+# screenshots, crash reports and the log in e2e-out. Called by .github/workflows/e2e-emulator.yml.
+set -u
+out=e2e-out
+mkdir -p "$out"
+pkg=com.leanbitlab.leantype.offline.debug
+app=$(find app/build/outputs/apk/offline/debug -name '*.apk' | head -1)
+tests=$(find app/build/outputs/apk/androidTest/offline/debug -name '*.apk' | head -1)
+echo "app: $app, tests: $tests"
+adb install -r -g "$app" || exit 1
+adb install -r -g "$tests" || exit 1
+adb shell settings put secure show_ime_with_hard_keyboard 1
+adb logcat -c
+adb shell am instrument -w ${pkg}.test/androidx.test.runner.AndroidJUnitRunner | tee "$out/instrument.txt"
+adb exec-out run-as $pkg sh -c 'cd files && tar -cf - e2e crash_report* 2>/dev/null' > "$out/files.tar" || true
+adb logcat -d > "$out/logcat.txt"
+grep -E "LeanTypeE2E|FATAL EXCEPTION|AndroidRuntime|PluginTrust|CorrectionStats|LearnedTypos|TextLearner" "$out/logcat.txt" > "$out/logcat-relevant.txt" || true
+if grep -q "^OK (" "$out/instrument.txt"; then
+  echo "::notice title=e2e::$(grep '^OK (' "$out/instrument.txt")"
+  exit 0
+fi
+echo "::error title=e2e::tests failed or did not run"
+exit 1
