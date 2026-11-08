@@ -12,10 +12,19 @@ adb install -r -g "$app" || exit 1
 adb install -r -g "$tests" || exit 1
 adb shell settings put secure show_ime_with_hard_keyboard 1
 adb logcat -c
+echo "--- input methods before the tests"
+adb shell ime list -s
+adb shell settings get secure default_input_method
 adb shell am instrument -w ${pkg}.test/androidx.test.runner.AndroidJUnitRunner | tee "$out/instrument.txt"
+echo "--- input method state after the tests"
+adb shell settings get secure default_input_method
+adb shell dumpsys input_method | grep -E "mCurMethodId|mInputShown|mCurFocusedWindow|mCurClient|mVisibleBound|mCurToken" | head -20
+adb shell uiautomator dump /sdcard/window.xml >/dev/null 2>&1 && adb pull /sdcard/window.xml "$out/window.xml" >/dev/null 2>&1
 adb exec-out run-as $pkg sh -c 'cd files && tar -cf - e2e crash_report* 2>/dev/null' > "$out/files.tar" || true
 adb logcat -d > "$out/logcat.txt"
-grep -E "LeanTypeE2E|FATAL EXCEPTION|AndroidRuntime|PluginTrust|CorrectionStats|LearnedTypos|TextLearner" "$out/logcat.txt" > "$out/logcat-relevant.txt" || true
+grep -E "LeanTypeE2E|FATAL EXCEPTION|AndroidRuntime|PluginTrust|CorrectionStats|LearnedTypos|TextLearner|InputMethodManagerService|LatinIME" "$out/logcat.txt" > "$out/logcat-relevant.txt" || true
+echo "--- relevant log"
+grep -E "LeanTypeE2E|FATAL EXCEPTION|AndroidRuntime" "$out/logcat.txt" | head -60
 if grep -q "^OK (" "$out/instrument.txt"; then
   echo "::notice title=e2e::$(grep '^OK (' "$out/instrument.txt")"
   exit 0
