@@ -177,7 +177,11 @@ class DeviceE2eTest {
     fun newSettingsScreensOpen() {
         E2e.selectKeyboard()
         // the settings for learned typos are only shown with auto-correction
-        E2e.setPrefs { putBoolean(helium314.keyboard.latin.settings.Settings.PREF_AUTO_CORRECTION, true) }
+        E2e.setPrefs {
+            putBoolean(helium314.keyboard.latin.settings.Settings.PREF_AUTO_CORRECTION, true)
+            // LeanType asks for sponsoring the second time the main page is shown, that dialog would cover the list
+            putBoolean(helium314.keyboard.latin.settings.Settings.PREF_DONT_SHOW_SPONSOR_DIALOG, true)
+        }
         val intent = Intent(E2e.context, SettingsActivity::class.java)
             .putExtra("from_ime", true)
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
