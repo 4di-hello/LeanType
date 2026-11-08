@@ -169,10 +169,16 @@ class TypingE2eTest {
             SystemClock.sleep(1500)
             assertEquals("switched although not allowed", KeyboardId.ELEMENT_ALPHABET, field.elementId)
 
+            // where q is now; on the symbols keyboard the same place is 1
+            val qPlace = field.keyCenter('q'.code)
             E2e.setPrefs { putBoolean(Settings.PREF_AUTOMATION_BROADCASTS, true) }
             E2e.device.executeShellCommand("am broadcast -a helium314.keyboard.ACTION_SWITCH_MODE --es mode symbols")
             E2e.waitFor({ "symbols shown, element ${field.elementId}" }) { field.elementId == KeyboardId.ELEMENT_SYMBOLS }
+            SystemClock.sleep(800)
             E2e.screenshot("e_switched_to_symbols")
+            // not only the inner state: a touch on the screen types what the symbols keyboard shows
+            E2e.device.click(qPlace.x, qPlace.y)
+            field.waitForText("1")
         }
     }
 
