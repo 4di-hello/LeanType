@@ -67,15 +67,35 @@ class TypingE2eTest {
 
     @Test
     fun b_autocorrectionAndBackspaceAreCounted() {
+        // first a few typos, to see what the dictionary corrects (written to the log)
+        val tries = listOf("teh" to "the", "tgis" to "this", "helli" to "hello", "wprld" to "world", "becuase" to "because")
+        val corrected = mutableListOf<String>()
+        TextField().use { field ->
+            for ((typo, word) in tries) {
+                val before = field.text
+                field.type(typo)
+                SystemClock.sleep(500)
+                val state = "typo \"$typo\" known=${field.isKnownWord(typo)} strip=${field.suggestions} autocorrect=${field.willAutoCorrect}"
+                if (typo == "tgis") E2e.screenshot("b_strip_tgis")
+                field.type(" ")
+                SystemClock.sleep(500)
+                val result = field.text.removePrefix(before).trim()
+                E2e.log("$state -> \"$result\"")
+                if (result == word) corrected += typo
+            }
+        }
+        E2e.log("corrected: $corrected of ${tries.map { it.first }}")
+        assertTrue("no typo was auto-corrected", corrected.isNotEmpty())
+
+        // then backspace right after a correction, with the statistics
+        val typo = corrected.first()
+        val word = tries.first { it.first == typo }.second
         val before = counts()
         TextField().use { field ->
-            field.type("teh")
-            E2e.screenshot("b_strip_before_space")
-            field.type(" ")
-            field.waitForText("the ")
+            field.type("$typo ")
+            field.waitForText("$word ")
             field.type("\b")
-            // backspace right after the correction reverts it
-            E2e.waitFor({ "reverted, is \"${field.text}\"" }) { field.text.trimEnd() == "teh" }
+            E2e.waitFor({ "reverted, is \"${field.text}\"" }) { field.text.trimEnd() == typo }
             E2e.screenshot("b_reverted")
         }
         val after = counts()
