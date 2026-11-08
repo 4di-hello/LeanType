@@ -78,7 +78,7 @@ class TextField : Closeable {
             Point(location[0] + activity.editText.width / 2, location[1] + activity.editText.height / 2)
         }
         E2e.device.click(field.x, field.y)
-        E2e.waitFor({ "keyboard shown" }) {
+        E2e.waitFor({ "keyboard shown: " + keyboardState() }) {
             E2e.onMain {
                 val view = KeyboardSwitcher.getInstance().mainKeyboardView
                 view != null && view.isShown && view.keyboard != null && view.width > 0
@@ -88,6 +88,15 @@ class TextField : Closeable {
     }
 
     val text: String get() = E2e.onMain { activity.editText.text.toString() }
+
+    /** For the message when the keyboard does not appear */
+    private fun keyboardState(): String = E2e.onMain {
+        val view = KeyboardSwitcher.getInstance().mainKeyboardView
+        val ime = LatinIME.getInstance()
+        val current = android.provider.Settings.Secure.getString(E2e.context.contentResolver, android.provider.Settings.Secure.DEFAULT_INPUT_METHOD)
+        "ime=${ime != null} inputView=${ime?.isInputViewShown} view=${view != null} shown=${view?.isShown} " +
+            "keyboard=${view?.keyboard != null} width=${view?.width} focus=${activity.editText.hasFocus()} current=$current"
+    }
 
     val elementId: Int? get() = E2e.onMain { KeyboardSwitcher.getInstance().keyboard?.mId?.mElementId }
 
