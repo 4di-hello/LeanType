@@ -171,7 +171,7 @@ class DeviceE2eTest {
             .putExtra("from_ime", true)
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         E2e.context.startActivity(intent)
-        find(By.text("Text correction"), 10_000)
+        find(By.text("Plugins"), 10_000)
         E2e.screenshot("s1_main")
 
         open("Text correction")
