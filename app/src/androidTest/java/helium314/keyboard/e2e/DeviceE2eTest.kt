@@ -7,6 +7,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.BySelector
 import androidx.test.uiautomator.Direction
+import androidx.test.uiautomator.StaleObjectException
 import androidx.test.uiautomator.UiObject2
 import androidx.test.uiautomator.Until
 import helium314.keyboard.latin.backup.BackupCrypto
@@ -150,7 +151,9 @@ class DeviceE2eTest {
         }
         repeat(15) {
             // the list on screen may be a new object after scrolling (Compose)
-            (E2e.device.findObject(By.scrollable(true)) ?: list).scroll(Direction.DOWN, 0.6f)
+            // the list may be replaced while it is used (Compose), then it is looked up again with the next try
+            try { (E2e.device.findObject(By.scrollable(true)) ?: list).scroll(Direction.DOWN, 0.6f) }
+            catch (e: StaleObjectException) { }
             E2e.device.waitForIdle()
             // the emulator draws slowly at times (frames of up to 4 s), and the accessibility tree comes later
             E2e.device.wait(Until.findObject(By.textContains(text)), 1500)?.let { return it }
