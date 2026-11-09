@@ -5,10 +5,6 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.awaitEachGesture
-import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.ui.input.pointer.PointerEventPass
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -57,9 +53,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import helium314.keyboard.latin.R
+import helium314.keyboard.settings.preferences.LocalPreferenceLongClick
 import helium314.keyboard.settings.preferences.PreferenceCategory
 
-import helium314.keyboard.latin.utils.getActivity
 import helium314.keyboard.latin.utils.prefs
 
 @Composable
@@ -114,29 +110,30 @@ fun SearchSettingsScreen(
                     // jump from a long press in the search results: scroll to the setting and highlight it
                     val listState = androidx.compose.foundation.lazy.rememberLazyListState()
                     var highlightKey by remember { mutableStateOf<String?>(null) }
-                    // fine-tune sections opened only to find the setting, and the setting to scroll to
-                    var openedForJump by remember { mutableStateOf(emptySet<String>()) }
-                    var scrollKey by remember { mutableStateOf<String?>(null) }
-                    LaunchedEffect(groups) {
-                        val keysOnScreen = groups.flatMap { it.second }
-                        if (scrollKey == null) {
-                            val found = SettingsJump.take(keysOnScreen)
-                            val step = jumpThroughFineTuneSections(context, settings, openedForJump, found)
-                            openedForJump = step.opened
-                            if (step.prefsChanged) (context.getActivity() as? SettingsActivity)?.prefChanged()
-                            if (found == null) return@LaunchedEffect
-                            scrollKey = found
-                            // closing the other sections changes the list, scroll after that
-                            if (step.prefsChanged) return@LaunchedEffect
+                    val jumpTarget = jumpTarget()
+                    val jumpOpened = jumpOpenedSections()
+                    val jump = jumpState()
+                    LaunchedEffect(groups, jumpTarget) {
+                        val target = jumpTarget ?: return@LaunchedEffect
+                        val shown = groups.flatMap { it.second }
+                        val prefs = context.prefs()
+                        when (val step = nextJumpStep(target, settings, shown, jumpOpened) { prefs.getBoolean(it, false) }) {
+                            // the screen shows more settings then, and this runs again
+                            is JumpStep.OpenSections -> jump.setOpenedSections(step.sections)
+                            JumpStep.GiveUp -> { jump.setOpenedSections(emptySet()); jump.done() }
+                            is JumpStep.Show -> {
+                                if (step.keepOpen != jumpOpened) {
+                                    // closing the other sections changes the list, scroll after that
+                                    jump.setOpenedSections(step.keepOpen)
+                                    return@LaunchedEffect
+                                }
+                                jump.done()
+                                highlightKey = target
+                                listState.animateScrollToItem(groups.indexOfFirst { target in it.second } + if (headerContent != null) 1 else 0)
+                                kotlinx.coroutines.delay(2500)
+                                highlightKey = null
+                            }
                         }
-                        val jumpKey = scrollKey ?: return@LaunchedEffect
-                        scrollKey = null
-                        if (jumpKey !in keysOnScreen) return@LaunchedEffect
-                        val index = groups.indexOfFirst { jumpKey in it.second }
-                        highlightKey = jumpKey
-                        listState.animateScrollToItem(index + if (headerContent != null) 1 else 0)
-                        kotlinx.coroutines.delay(2500)
-                        highlightKey = null
                     }
                     LazyColumn(
                         state = listState,
@@ -230,101 +227,22 @@ fun SearchSettingsScreen(
             } 
         },
         // long press on a search result opens the screen where the setting is
-        itemContent = { setting -> JumpOnLongPress(setting.key) { setting.Preference() } }
+        itemContent = { setting -> SearchResult(setting) }
     )
 }
 
-private const val FINE_TUNE_SECTION_PREFIX = "expand_fine_tune_"
-
-internal class JumpStep(val opened: Set<String>, val prefsChanged: Boolean)
-
-/**
- * A setting in a closed fine-tune section is not in the list. Then all closed sections of the screen are
- * opened; once the setting is [found], only the section that contains it stays open. If the setting is
- * still missing (hidden for another reason), the sections are closed again.
- */
-internal fun jumpThroughFineTuneSections(
-    context: android.content.Context,
-    settings: List<Any?>,
-    opened: Set<String>,
-    found: String?,
-): JumpStep {
-    val prefs = context.prefs()
-    fun close(keys: Collection<String>) = prefs.edit().apply { keys.forEach { putBoolean(it, false) } }.apply()
-    if (found != null) {
-        if (opened.isEmpty()) return JumpStep(emptySet(), false)
-        val index = settings.indexOf(found)
-        val owner = settings.subList(0, index.coerceAtLeast(0)).lastOrNull { it is String && it in opened }
-        val toClose = opened - setOfNotNull(owner as String?)
-        close(toClose)
-        return JumpStep(emptySet(), toClose.isNotEmpty())
-    }
-    if (opened.isNotEmpty()) {
-        close(opened)
-        return JumpStep(emptySet(), true)
-    }
-    if (!SettingsJump.isPending()) return JumpStep(emptySet(), false)
-    val closed = settings.filterIsInstance<String>()
-        .filter { it.startsWith(FINE_TUNE_SECTION_PREFIX) && !prefs.getBoolean(it, false) }
-    if (closed.isEmpty()) return JumpStep(emptySet(), false)
-    prefs.edit().apply { closed.forEach { putBoolean(it, true) } }.apply()
-    return JumpStep(closed.toSet(), true)
-}
-
-/** A setting to show and highlight on its screen after a long press in the search results */
-object SettingsJump {
-    private const val VALID_MS = 3000L
-    private var key: String? = null
-    private var time = 0L
-
-    fun request(key: String) {
-        this.key = key
-        time = android.os.SystemClock.uptimeMillis()
-    }
-
-    fun isPending() = key != null && android.os.SystemClock.uptimeMillis() - time <= VALID_MS
-
-    /** The requested key if it is on this screen; it is then used up */
-    fun take(keysOnScreen: Collection<String>): String? {
-        val k = key ?: return null
-        if (android.os.SystemClock.uptimeMillis() - time > VALID_MS) { key = null; return null }
-        if (k !in keysOnScreen) return null
-        key = null
-        return k
-    }
-}
-
+/** A search result: a long press opens the screen of the setting and shows it there */
 @Composable
-private fun JumpOnLongPress(key: String, content: @Composable () -> Unit) {
-    val destination = SettingsActivity.settingsContainer.screenOf(key)
-    if (destination == null) {
-        content()
+private fun SearchResult(setting: Setting) {
+    val navController = LocalSettingsNavController.current
+    val destination = SettingsActivity.settingsContainer.screenOf(setting.key)
+    if (navController == null || destination == null) {
+        setting.Preference()
         return
     }
-    val haptic = androidx.compose.ui.platform.LocalHapticFeedback.current
-    Box(Modifier.pointerInput(key) {
-        awaitEachGesture {
-            val down = awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
-            // null on timeout: the finger stayed down without moving, a long press
-            val endedEarly = withTimeoutOrNull(viewConfiguration.longPressTimeoutMillis) {
-                while (true) {
-                    val change = awaitPointerEvent(PointerEventPass.Initial).changes.firstOrNull { it.id == down.id } ?: break
-                    if (!change.pressed || (change.position - down.position).getDistance() > viewConfiguration.touchSlop) break
-                }
-                true
-            }
-            if (endedEarly == null) {
-                haptic.performHapticFeedback(androidx.compose.ui.hapticfeedback.HapticFeedbackType.LongPress)
-                SettingsJump.request(key)
-                SettingsDestination.navigateTo(destination)
-                // the setting itself must not react to this touch
-                do {
-                    val event = awaitPointerEvent(PointerEventPass.Initial)
-                    event.changes.forEach { it.consume() }
-                } while (event.changes.any { it.pressed })
-            }
-        }
-    }) { content() }
+    CompositionLocalProvider(LocalPreferenceLongClick provides { jumpToSetting(navController, destination, setting.key) }) {
+        setting.Preference()
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

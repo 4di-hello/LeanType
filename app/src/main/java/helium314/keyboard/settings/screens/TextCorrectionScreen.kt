@@ -29,6 +29,7 @@ import helium314.keyboard.latin.settings.Settings
 import helium314.keyboard.latin.utils.Log
 import helium314.keyboard.latin.utils.getActivity
 import helium314.keyboard.latin.utils.prefs
+import helium314.keyboard.settings.fineTuneExpanded
 import helium314.keyboard.settings.SearchSettingsScreen
 import helium314.keyboard.settings.Setting
 import helium314.keyboard.settings.SettingsWithoutKey
@@ -54,7 +55,7 @@ fun TextCorrectionScreen(
     val prefChanged = (activity?.prefChanged ?: MutableStateFlow(0)).collectAsState()
 
     val autocorrectEnabled = prefs.getBoolean(Settings.PREF_AUTO_CORRECTION, Defaults.PREF_AUTO_CORRECTION)
-    val fineTuneAutocorrectExpanded = prefs.getBoolean(Settings.PREF_EXPAND_FINE_TUNE_AUTOCORRECT, Defaults.PREF_EXPAND_FINE_TUNE_AUTOCORRECT)
+    val fineTuneAutocorrectExpanded = fineTuneExpanded(prefs, Settings.PREF_EXPAND_FINE_TUNE_AUTOCORRECT, Defaults.PREF_EXPAND_FINE_TUNE_AUTOCORRECT)
 
     val items = remember(autocorrectEnabled, fineTuneAutocorrectExpanded, prefChanged.value) {
         listOf(
