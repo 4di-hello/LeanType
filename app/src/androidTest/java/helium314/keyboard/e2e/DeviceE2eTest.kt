@@ -11,7 +11,9 @@ import androidx.test.uiautomator.StaleObjectException
 import androidx.test.uiautomator.UiObject2
 import androidx.test.uiautomator.Until
 import helium314.keyboard.latin.backup.BackupCrypto
+import helium314.keyboard.latin.settings.Settings
 import helium314.keyboard.latin.utils.PluginTrust
+import helium314.keyboard.latin.utils.prefs
 import helium314.keyboard.settings.SettingsActivity
 import helium314.keyboard.settings.SettingsDestination
 import org.junit.Assert.assertArrayEquals
@@ -226,6 +228,35 @@ class DeviceE2eTest {
 
         // the app is still there, nothing crashed
         assertTrue(E2e.device.hasObject(By.pkg(E2e.context.packageName)))
+        assertEquals(0, crashReports())
+    }
+
+    @Test
+    fun longPressOnASearchResultShowsTheSettingWithoutChangingWhatIsSaved() {
+        E2e.selectKeyboard()
+        E2e.setPrefs {
+            putBoolean(Settings.PREF_AUTO_CORRECTION, true)
+            putBoolean(Settings.PREF_DONT_SHOW_SPONSOR_DIALOG, true)
+            putBoolean(Settings.PREF_EXPAND_FINE_TUNE_AUTOCORRECT, false) // the setting is in this closed section
+        }
+        val intent = Intent(E2e.context, SettingsActivity::class.java)
+            .putExtra("from_ime", true)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        E2e.context.startActivity(intent)
+        find(By.text("Plugins"), 10_000)
+        find(By.desc("Search")).click()
+        val field = find(By.clazz("android.widget.EditText"))
+        field.text = "confidence"
+        val result = find(By.text("Auto-correction confidence").clazz("android.widget.TextView"))
+        E2e.screenshot("j1_search_result")
+        result.longClick()
+        // the screen of the setting, with the closed section open
+        find(By.text("Text correction"), 10_000)
+        find(By.text("Auto-correction confidence"), 10_000)
+        E2e.screenshot("j2_shown_in_its_screen")
+        assertFalse("the saved state of the section is not changed",
+            E2e.context.prefs().getBoolean(Settings.PREF_EXPAND_FINE_TUNE_AUTOCORRECT, false))
+        back()
         assertEquals(0, crashReports())
     }
 
