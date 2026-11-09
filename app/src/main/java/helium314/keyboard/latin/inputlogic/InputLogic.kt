@@ -2963,9 +2963,12 @@ class InputLogic(
         mDictionaryFacilitator.isValidSpellingWord(word)
                 || mDictionaryFacilitator.isValidSpellingWord(word.lowercase(settingsValues.mLocale))
 
+    /** Words in a Unicode font style (live styling) are decoration, not typing: not counted and nothing learned */
+    private fun isStyled(word: String) = UnicodeStyleEngine.toPlainText(word) != word
+
     /** Counts a committed word for [CorrectionStats], and whether it changed an earlier word at the same place */
     private fun trackCorrection(settingsValues: SettingsValues, chosenWord: String, commitType: Int, chosenWordKnown: Boolean) {
-        if (!shouldCountCorrections(settingsValues) || mWordComposer.isBatchMode()) return
+        if (!shouldCountCorrections(settingsValues) || mWordComposer.isBatchMode() || isStyled(chosenWord)) return
         val typed = mWordComposer.getTypedWord()
         if (typed.isEmpty() || chosenWord.isEmpty()) return // a picked prediction, see trackSuggestionPick
         val start = mConnection.expectedSelectionStart - chosenWord.length
@@ -3013,7 +3016,7 @@ class InputLogic(
 
     /** Counts what a suggestion picked from the strip says about the autocorrection, see [CorrectionStats] */
     private fun trackSuggestionPick(settingsValues: SettingsValues, picked: String, suggestedWords: SuggestedWords) {
-        if (!shouldCountCorrections(settingsValues) || mWordComposer.isBatchMode() || picked.isEmpty()) return
+        if (!shouldCountCorrections(settingsValues) || mWordComposer.isBatchMode() || picked.isEmpty() || isStyled(picked)) return
         if (!mWordComposer.isComposingWord()) {
             if (suggestedWords.isPrediction) CorrectionStats.count(mLatinIME, CorrectionStats.PREDICTIONS)
             return
