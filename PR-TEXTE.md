@@ -1,4 +1,4 @@
-# PR-Texte für LeanType (Stand 1.11.2026)
+# PR-Texte für LeanType (Stand 9.11.2026)
 
 Nur in diesem Fork. Je PR: auf GitHub „Compare & pull request“ von `4di-hello:<Branch>` nach `LeanBitLab:main`, Titel und Text unten einfügen.
 
@@ -80,6 +80,21 @@ https://claude.ai/code/session_01VuiaMhLXwhErf9shhrr1uD
 
 ---
 
-## Kommentar für #680 und #739 (nach dem Update)
+## 4. `feature/text-expander-edit-as-text` (schlanke Fassung von #695, wie von LeanType gewünscht)
 
-> Rebased onto 4.3.0-beta1. #739: a long press on a search result now also opens the closed fine-tune section that contains the setting (only that one stays open). #680: no functional change, the setting stays a single switch in Text correction.
+Basis: LeanType 4.3.2-beta2 (bc4eda600). Ohne Tastendrücke, keine Änderung an `InputLogic`.
+
+**Titel:** Text expander: edit all shortcuts as one text, %tab% placeholder
+
+**Text:**
+
+> As suggested in #695: only the "Edit all as text" editor and a plain `%tab%` placeholder, without key presses (%enter%, %tabkey%) and without any change to InputLogic.
+>
+> - **Edit all as text:** a full-screen editor for all text shortcuts. Each shortcut starts with a line `=== shortcut ===`, followed by its text. Copy all, paste all, share, save to and load from a file, restore the state before the last save. Saving shows what is new, changed and deleted, and reports errors with line numbers (text before the first shortcut, missing or duplicate shortcut, spaces, invalid regex). Exported text is marked as sensitive on the clipboard.
+> - **`%tab%`:** inserts a tab character (`\t`), e.g. for table columns; added to the quick placeholders.
+>
+> Tests: `TextExpanderTextTest` (format and parse round trip, empty lines, prefixes, diff, errors with line numbers), `TextExpanderTabTest`.
+
+## #680 und #739
+
+Beide am 9.11. von LeanType geschlossen. #680 bleibt nur im Fork. #739 nur neu anbieten, wenn der Sprung die gespeicherten Auf-/Zugeklappt-Zustände nicht mehr ändert, die normale Klick-Erkennung nutzt und ohne globalen Zustand auskommt.

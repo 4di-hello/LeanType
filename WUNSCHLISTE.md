@@ -60,6 +60,7 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
 - 28.10.: Auf LeanType 4.3.0-beta2 aktualisiert, nur Konflikte in den deutschen Texten (Sicherung `backup/daily-2026-10-28`); #680 ebenfalls auf beta2
 - 29.10.: Auf LeanType 4.3.0-beta3 aktualisiert, keine Konflikte (Sicherung `backup/daily-2026-10-29`); alle PR-Branches passen ohne Konflikt
 - 7.11.: Auf LeanType 4.3.2-beta1 aktualisiert (Sicherung `backup/daily-2026-11-07`), ohne Konflikte. Das neue Umschalten per Broadcast (#501, Tasker usw.) kann jede App auslösen: im Fork nur mit dem Schalter „Umschalten durch andere Apps erlauben“ (Erweitert, Standard aus)
+- 9.11.: Auf LeanType 4.3.2-beta2 aktualisiert (Sicherung `backup/daily-2026-11-09`), Konflikte nur in Texten, Farben und Navigation. Neu bei LeanType: Unicode-Schriftstile; Wörter in einem Schriftstil zählen nicht für die Korrekturstatistik und lehren keine Tippfehler. Vor der Veröffentlichung die Ende-zu-Ende-Tests auf dem Emulator laufen lassen (`.github/e2e/README.md` im Branch `ci/e2e`)
 - 4.11.: Auf LeanType 4.3.1-beta3 aktualisiert (Sicherung `backup/daily-2026-11-04`): Konflikte in Texten, InputLogic (neues „Wort löschen“ per Wischen) und Spracheingabe. LeanTypes neue anpassende Stille-Erkennung gilt jetzt auch für das Zerlegen beim Sprechen, so werden Pausen auch bei Umgebungslärm gefunden
 - 2.11.: Auf LeanType 4.3.1-beta2 aktualisiert (Sicherung `backup/daily-2026-11-02`), ein Konflikt in InputLogic (LeanType ersetzt ThreadLocal.withInitial für Android 7)
 - 2.11. nachmittags: LeanType hat beta2 nachgelegt (9 Commits: Absturz in der Wortsuche, mehrsprachiger Verlauf, Standard-Schwelle der Autokorrektur jetzt „Ausgewogen“ 0,067, fehlende Menüpunkte) – ohne Konflikte übernommen. „Gelernte Wörter löschen“ löscht jetzt auch die gelernten Tippfehler
@@ -72,7 +73,7 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
 
 - Gesichert: Quellcode aller 7 Plugins (Branches `backup/plugins/*`) und alle Plugin-APKs (Release „plugins-backup“)
 - Bauanleitung baut weiter, auch wenn LeanType verschwindet
-- PRs #680/#695 werden wohl nicht mehr übernommen, beides ist im Fork enthalten
+- PRs #680/#695/#739 wurden am 9.11. geschlossen, alles ist im Fork enthalten
 - Umzug auf HeliBoard (aktiv gepflegt): nur bei echtem Bedarf, sehr aufwendig (KI, Sprache, Textbausteine fehlen dort)
 
 ## Sicherheit (Review 1.11., unabhängige Zweitprüfung)
@@ -105,8 +106,10 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
 
 ## Upstream (LeanBitLab/LeanType)
 
-- PR #680 „Adapt to my typing“ begleiten; nach dem Merge den Fork auf die schlanke Version umstellen (ein Schalter, Daten bleiben). 27.10. auf 4.3 neu aufgesetzt
-- PR #739 (Einstellungssprung) 27.10. auf 4.3 angepasst: öffnet auch zugeklappte Feinabstimmungs-Bereiche
+- 9.11.: LeanType hat #680 (Anpassung an meine Tippweise), #695 (Textbausteine als Text) und #739 (Einstellungssprung) geschlossen, Issue #676 ebenfalls. Alles bleibt im Fork
+  - #680 grundsätzlich abgelehnt: Trefferflächen sollen sich nie ändern, Fehler soll nur das Wörterbuch auffangen. Bleibt dauerhaft nur im Fork (eigene Änderungen in `KeyDetector`/`PointerTracker`, bei Updates im Blick behalten)
+  - #695: LeanType nimmt einen schlanken PR nur mit „Alle als Text bearbeiten“ und `%tab%` (Tabulatorzeichen) an, ohne Tastendrücke (%enter%, %tabkey%). Branch `feature/text-expander-edit-as-text` dafür vorbereitet, Text in `PR-TEXTE.md`
+  - #739 abgelehnt wegen: speichert den Auf-/Zugeklappt-Zustand dauerhaft um, eigene Touch-Erkennung, globaler Zustand. Im Fork ändern (nur vorübergehend aufklappen), dann neu anbieten
 - PR-Branches 27.10. vorbereitet (Texte in `PR-TEXTE.md`): `fix/offline-ai-busy` (kein „Context is busy“, Ergebnis bleibt bei eingeklappter Tastatur, Kontext 4096, Grund bei „no output“, keine Texte im Log), `feature/ai-key-clipboard-prepend` ({clipboard}, Ergebnis voranstellen), `feature/more-themes` (Themes ohne Menüänderungen)
 - Später: verschlüsselte Backups
 
