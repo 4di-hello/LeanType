@@ -2750,4 +2750,6 @@ New dictionary:
     <string name="auto_backup_error">Last backup failed: %s</string>
     <string name="auto_backup_last">Last backup: %s</string>
     <string name="auto_backup_explanation">Backs up settings, layouts, dictionaries, learned words and the typing profile, with a password also the clipboard history. Downloaded models and plugins are not included. Remember the password: without it, backups can\'t be restored.</string>
+    <!-- Long press on a search result in the settings (accessibility action) -->
+    <string name="settings_search_show_in_screen">Show in its screen</string>
 </resources>
