@@ -12,6 +12,7 @@ import androidx.test.uiautomator.Until
 import helium314.keyboard.latin.backup.BackupCrypto
 import helium314.keyboard.latin.utils.PluginTrust
 import helium314.keyboard.settings.SettingsActivity
+import helium314.keyboard.settings.SettingsDestination
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -203,10 +204,9 @@ class DeviceE2eTest {
         find(By.text("Close")).click()
         SystemClock.sleep(400)
 
-        // the section header and the item below it have the same text: the item is the lower one
-        scrollTo("Typing heatmap")
-        val heatmapItem = E2e.device.findObjects(By.text("Typing heatmap")).maxByOrNull { it.visibleBounds.top }!!
-        heatmapItem.click()
+        // at the end of a long list: on the emulator the accessibility tree that UI Automator searches can lag
+        // more than 10 s behind the screen after scrolling, so go there like the settings search does
+        E2e.onMain { SettingsDestination.navigateTo(SettingsDestination.TypingHeatmap) }
         // wait for something only the heatmap screen shows
         find(By.textContains("type a few sentences"), 10_000)
         E2e.screenshot("s5_typing_heatmap")
