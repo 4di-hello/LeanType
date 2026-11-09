@@ -1947,4 +1947,6 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="auto_backup_error">Letzte Sicherung fehlgeschlagen: %s</string>
     <string name="auto_backup_last">Letzte Sicherung: %s</string>
     <string name="auto_backup_explanation">Sichert Einstellungen, Layouts, Wörterbücher, gelernte Wörter und das Tipp-Profil, mit Passwort auch den Zwischenablage-Verlauf. Heruntergeladene Modelle und Plugins sind nicht enthalten. Merk Dir das Passwort: Ohne es lässt sich die Sicherung nicht wiederherstellen.</string>
+    <!-- Long press on a search result in the settings (accessibility action) -->
+    <string name="settings_search_show_in_screen">Auf seiner Seite zeigen</string>
 </resources>
