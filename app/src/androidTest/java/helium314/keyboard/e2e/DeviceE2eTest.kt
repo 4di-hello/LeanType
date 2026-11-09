@@ -252,7 +252,12 @@ class DeviceE2eTest {
         result.longClick()
         // the screen of the setting, with the closed section open
         find(By.text("Text correction"), 10_000)
-        find(By.text("Auto-correction confidence"), 10_000)
+        if (E2e.device.wait(Until.findObject(By.text("Auto-correction confidence")), 10_000) == null) {
+            E2e.screenshot("j_not_scrolled")
+            val inList = runCatching { scrollTo("Auto-correction confidence") }.isSuccess
+            E2e.screenshot("j_after_scrolling")
+            throw AssertionError("not shown after the jump; in the list when scrolling by hand: $inList")
+        }
         E2e.screenshot("j2_shown_in_its_screen")
         assertFalse("the saved state of the section is not changed",
             E2e.context.prefs().getBoolean(Settings.PREF_EXPAND_FINE_TUNE_AUTOCORRECT, false))

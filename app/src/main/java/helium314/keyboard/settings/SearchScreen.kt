@@ -117,10 +117,13 @@ fun SearchSettingsScreen(
                     // ending the jump does not cancel the scrolling
                     var scrollKey by remember { mutableStateOf<String?>(null) }
                     LaunchedEffect(groups, jumpTarget) {
+                        android.util.Log.i("SettingsJumpDebug", "effect target $jumpTarget opened $jumpOpened groups ${groups.size}")
                         val target = jumpTarget ?: return@LaunchedEffect
                         val shown = groups.flatMap { it.second }
                         val prefs = context.prefs()
-                        when (val step = nextJumpStep(target, settings, shown, jumpOpened) { prefs.getBoolean(it, false) }) {
+                        val debugStep = nextJumpStep(target, settings, shown, jumpOpened) { prefs.getBoolean(it, false) }
+                        android.util.Log.i("SettingsJumpDebug", "step $debugStep")
+                        when (val step = debugStep) {
                             // the screen shows more settings then, and this runs again
                             is JumpStep.OpenSections -> jump.setOpenedSections(step.sections)
                             JumpStep.GiveUp -> { jump.setOpenedSections(emptySet()); jump.done() }
@@ -134,6 +137,7 @@ fun SearchSettingsScreen(
                     LaunchedEffect(scrollKey) {
                         val target = scrollKey ?: return@LaunchedEffect
                         val index = groups.indexOfFirst { target in it.second }
+                        android.util.Log.i("SettingsJumpDebug", "scroll to $target index $index")
                         if (index >= 0) {
                             highlightKey = target
                             listState.animateScrollToItem(index + if (headerContent != null) 1 else 0)
@@ -247,6 +251,7 @@ private fun SearchResult(setting: Setting) {
         setting.Preference()
         return
     }
+    android.util.Log.i("SettingsJumpDebug", "result ${setting.key} -> $destination")
     CompositionLocalProvider(LocalPreferenceLongClick provides { jumpToSetting(navController, destination, setting.key) }) {
         setting.Preference()
     }

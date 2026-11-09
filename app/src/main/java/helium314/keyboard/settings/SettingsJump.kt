@@ -29,11 +29,16 @@ val LocalSettingsNavController = staticCompositionLocalOf<NavController?> { null
 fun jumpToSetting(navController: NavController, destination: String, key: String) {
     navController.navigate(destination)
     navController.currentBackStackEntry?.savedStateHandle?.set(JUMP_TO, key)
+    android.util.Log.i("SettingsJumpDebug", "navigate to $destination for $key, entry ${navController.currentBackStackEntry?.destination?.route} ${navController.currentBackStackEntry?.id}")
 }
 
 /** State of the screen this is called in: null outside of the navigation (e.g. in a preview) */
 @Composable
-private fun screenState(): SavedStateHandle? = (LocalViewModelStoreOwner.current as? NavBackStackEntry)?.savedStateHandle
+private fun screenState(): SavedStateHandle? {
+    val owner = LocalViewModelStoreOwner.current
+    android.util.Log.i("SettingsJumpDebug", "owner ${owner?.javaClass?.name} ${(owner as? NavBackStackEntry)?.destination?.route} ${(owner as? NavBackStackEntry)?.id}")
+    return (owner as? NavBackStackEntry)?.savedStateHandle
+}
 
 /** The setting this screen is asked to show, if any */
 @Composable
