@@ -113,6 +113,9 @@ fun SearchSettingsScreen(
                     val jumpTarget = jumpTarget()
                     val jumpOpened = jumpOpenedSections()
                     val jump = jumpState()
+                    // the setting to scroll to once the list shows it; separate from the jump state, so that
+                    // ending the jump does not cancel the scrolling
+                    var scrollKey by remember { mutableStateOf<String?>(null) }
                     LaunchedEffect(groups, jumpTarget) {
                         val target = jumpTarget ?: return@LaunchedEffect
                         val shown = groups.flatMap { it.second }
@@ -122,18 +125,22 @@ fun SearchSettingsScreen(
                             is JumpStep.OpenSections -> jump.setOpenedSections(step.sections)
                             JumpStep.GiveUp -> { jump.setOpenedSections(emptySet()); jump.done() }
                             is JumpStep.Show -> {
-                                if (step.keepOpen != jumpOpened) {
-                                    // closing the other sections changes the list, scroll after that
-                                    jump.setOpenedSections(step.keepOpen)
-                                    return@LaunchedEffect
-                                }
-                                jump.done()
-                                highlightKey = target
-                                listState.animateScrollToItem(groups.indexOfFirst { target in it.second } + if (headerContent != null) 1 else 0)
-                                kotlinx.coroutines.delay(2500)
-                                highlightKey = null
+                                // closing the other sections changes the list, this runs again after that
+                                if (step.keepOpen != jumpOpened) jump.setOpenedSections(step.keepOpen)
+                                else { scrollKey = target; jump.done() }
                             }
                         }
+                    }
+                    LaunchedEffect(scrollKey) {
+                        val target = scrollKey ?: return@LaunchedEffect
+                        val index = groups.indexOfFirst { target in it.second }
+                        if (index >= 0) {
+                            highlightKey = target
+                            listState.animateScrollToItem(index + if (headerContent != null) 1 else 0)
+                            kotlinx.coroutines.delay(2500)
+                            highlightKey = null
+                        }
+                        scrollKey = null
                     }
                     LazyColumn(
                         state = listState,
