@@ -3,7 +3,10 @@ package helium314.keyboard.settings
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -58,6 +61,7 @@ import helium314.keyboard.settings.preferences.PreferenceCategory
 
 import helium314.keyboard.latin.utils.prefs
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SearchSettingsScreen(
     onClickBack: () -> Unit,
@@ -139,8 +143,9 @@ fun SearchSettingsScreen(
                         val index = groups.indexOfFirst { target in it.second }
                         android.util.Log.i("SettingsJumpDebug", "scroll to $target index $index")
                         if (index >= 0) {
-                            highlightKey = target
+                            // to the card with the setting, then the setting itself is brought into view (see below)
                             listState.animateScrollToItem(index + if (headerContent != null) 1 else 0)
+                            highlightKey = target
                             kotlinx.coroutines.delay(2500)
                             highlightKey = null
                         }
@@ -201,7 +206,13 @@ fun SearchSettingsScreen(
                                                     else androidx.compose.ui.graphics.Color.Transparent,
                                                     label = "jump highlight"
                                                 )
-                                                Box(Modifier.background(highlight)) {
+                                                // a setting further down in a large card is not on screen after scrolling to the card
+                                                val bringIntoView = remember { BringIntoViewRequester() }
+                                                LaunchedEffect(highlightKey) { if (key == highlightKey) bringIntoView.bringIntoView() }
+                                                Box(Modifier
+                                                    .bringIntoViewRequester(bringIntoView)
+                                                    .background(highlight)
+                                                ) {
                                                     SettingsActivity.settingsContainer[key]?.Preference()
                                                 }
                                             }
