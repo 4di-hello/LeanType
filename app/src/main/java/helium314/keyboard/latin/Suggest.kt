@@ -323,7 +323,9 @@ class Suggest(private val mDictionaryFacilitator: DictionaryFacilitator) {
                 val isUserHistory = firstSuggestion.mSourceDict?.mDictType == Dictionary.TYPE_USER_HISTORY
                 val isWhitelist = firstSuggestion.isKindOf(SuggestedWordInfo.KIND_WHITELIST)
                 val isShortcut = firstSuggestion.isKindOf(SuggestedWordInfo.KIND_SHORTCUT) && Settings.getValues().mAutoCorrectShortcuts
-                if (!isExactOrCaseMatch && !isUserHistory && !isWhitelist && !isShortcut && expectedContraction == null) {
+                // only in this fork: two swapped letters like "dsa" for "das" are corrected
+                val isSwap = ShortWordSwap.isSwapOfNeighbors(consideredWord, firstSuggestion.mWord)
+                if (!isExactOrCaseMatch && !isUserHistory && !isWhitelist && !isShortcut && !isSwap && expectedContraction == null) {
                     return true to false
                 }
             }
