@@ -86,6 +86,8 @@ class TypingE2eTest {
         }
         E2e.log("corrected: $corrected of ${tries.map { it.first }}")
         assertTrue("no typo was auto-corrected", corrected.isNotEmpty())
+        // LeanType leaves unknown words of up to 3 letters, this fork corrects two swapped letters
+        assertTrue("teh is corrected to the", "teh" in corrected)
 
         // then backspace right after a correction, with the statistics
         val typo = corrected.first()
