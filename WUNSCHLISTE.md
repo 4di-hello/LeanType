@@ -42,6 +42,8 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
 - Getrennte Tipp-Profile pro Daumen bzw. Haltung weiter verfeinern (Idee)
 
 ## Tippen wie Gboard/SwiftKey (seit 1.11.)
+
+- Erledigt 9.11.: kurze Wörter mit zwei vertauschten Buchstaben werden korrigiert (dsa→das, ihc→ich, dei→die, nud→und, teh→the). LeanType korrigiert unbekannte Wörter bis 3 Buchstaben sonst nie (damit Abkürzungen wie db, yt bleiben); vertauschte Nachbarbuchstaben sind aber fast immer ein Tippfehler
 - Ziel: weniger falsche und fehlende Korrekturen, bessere Vorschläge fürs nächste Wort, flüssigeres Gefühl
 - Erledigt 1.11.: „Aus meinen Texten lernen“ (Textkorrektur): eigene Texte einfügen oder Textdatei laden, lernt Wörter und Wortfolgen in den persönlichen Verlauf (unbekannte Wörter nur ab 2× im Text, gegen gelernte Tippfehler); Text wird beim nächsten Öffnen der Tastatur in der aktuellen Sprache gelernt und gelöscht
 - Befund 1.11.: Das deutsche Hauptwörterbuch (HeliBoard, 1,3 Mio. Wörter) hat nur höchstens 3 Folgewörter pro Wort, aus Nachrichtentexten, alle mit gleichem Gewicht – daher die schwachen Vorschläge fürs nächste Wort
@@ -109,7 +111,7 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
 - 9.11.: LeanType hat #680 (Anpassung an meine Tippweise), #695 (Textbausteine als Text) und #739 (Einstellungssprung) geschlossen, Issue #676 ebenfalls. Alles bleibt im Fork
   - #680 grundsätzlich abgelehnt: Trefferflächen sollen sich nie ändern, Fehler soll nur das Wörterbuch auffangen. Bleibt dauerhaft nur im Fork (eigene Änderungen in `KeyDetector`/`PointerTracker`, bei Updates im Blick behalten)
   - #695: LeanType nimmt einen schlanken PR nur mit „Alle als Text bearbeiten“ und `%tab%` (Tabulatorzeichen) an, ohne Tastendrücke (%enter%, %tabkey%). Branch `feature/text-expander-edit-as-text` dafür vorbereitet, Text in `PR-TEXTE.md`
-  - #739 abgelehnt wegen: speichert den Auf-/Zugeklappt-Zustand dauerhaft um, eigene Touch-Erkennung, globaler Zustand. Im Fork ändern (nur vorübergehend aufklappen), dann neu anbieten
+  - #739 abgelehnt wegen: speichert den Auf-/Zugeklappt-Zustand dauerhaft um, eigene Touch-Erkennung, globaler Zustand. Im Fork ändern (nur vorübergehend aufklappen), dann neu anbieten. In Arbeit 9.11. (Branch `feature/settings-jump-v2`)
 - PR-Branches 27.10. vorbereitet (Texte in `PR-TEXTE.md`): `fix/offline-ai-busy` (kein „Context is busy“, Ergebnis bleibt bei eingeklappter Tastatur, Kontext 4096, Grund bei „no output“, keine Texte im Log), `feature/ai-key-clipboard-prepend` ({clipboard}, Ergebnis voranstellen), `feature/more-themes` (Themes ohne Menüänderungen)
 - Später: verschlüsselte Backups
 
