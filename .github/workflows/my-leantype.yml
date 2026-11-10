@@ -62,9 +62,54 @@ jobs:
             echo "UPDATED=1" >> "$GITHUB_ENV"
             echo "::notice::rebased onto $(git rev-parse --short upstream/main)"
           else
-            echo "::error::conflict while updating, files: $(git diff --name-only --diff-filter=U | tr '\n' ' ')"
-            git rebase --abort
-            exit 1
+            # Conflicts only in texts (strings.xml) are resolved: both sides are kept, for the same name
+            # LeanType's text wins. Any other conflict stops the update. Duplicate or extra texts would
+            # still fail the build below (resource merge, lint), so nothing broken gets published.
+            resolved=""
+            for i in $(seq 1 300); do
+              files=$(git diff --name-only --diff-filter=U)
+              if [ -n "$files" ]; then
+                if echo "$files" | grep -qvE '^app/src/main/res/values(-[a-zA-Z+]+)?/strings\.xml$'; then
+                  echo "::error::conflict while updating, files: $(echo $files)"
+                  git rebase --abort
+                  exit 1
+                fi
+                python3 - $files <<'EOF'
+          import re, sys
+          entry = re.compile(r'[ \t]*<(string|plurals|string-array)\s+name="([^"]+)"[^>]*?(?:/>|>.*?</\1>)[ \t]*\n', re.S)
+          for path in sys.argv[1:]:
+              text = open(path).read()
+              # LeanType's side (HEAD while rebasing) first, then the fork's
+              text = re.sub(r'<<<<<<< [^\n]*\n(.*?)=======\n(.*?)>>>>>>> [^\n]*\n', lambda m: m.group(1) + m.group(2), text, flags=re.S)
+              seen, out, pos = set(), [], 0
+              for m in entry.finditer(text):
+                  out.append(text[pos:m.start()])
+                  key = (m.group(1), m.group(2))
+                  if key not in seen:
+                      out.append(m.group(0))
+                      seen.add(key)
+                  pos = m.end()
+              out.append(text[pos:])
+              open(path, 'w').write(''.join(out))
+          EOF
+                git add $files
+                resolved="$resolved $(git log -1 --format=%h REBASE_HEAD)"
+              fi
+              if ! git -c core.editor=true rebase --continue; then
+                # a commit that is empty after resolving is dropped
+                if [ -z "$(git diff --name-only --diff-filter=U)" ] && git diff --cached --quiet; then
+                  git rebase --skip || true
+                fi
+              fi
+              git status | grep -q "rebase in progress" || break
+            done
+            if git status | grep -q "rebase in progress"; then
+              echo "::error::update did not finish"
+              git rebase --abort
+              exit 1
+            fi
+            echo "UPDATED=1" >> "$GITHUB_ENV"
+            echo "::warning::rebased onto $(git rev-parse --short upstream/main), text conflicts resolved automatically in:$resolved"
           fi
 
       - name: Set up JDK
