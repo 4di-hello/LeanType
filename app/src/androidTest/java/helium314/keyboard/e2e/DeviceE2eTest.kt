@@ -204,10 +204,14 @@ class DeviceE2eTest {
         find(By.text("Close")).click()
         SystemClock.sleep(400)
 
-        open("Learned typos")
+        // through the search of this screen: after scrolling, UI Automator sometimes does not see the list in time
+        find(By.desc("Search")).click()
+        find(By.clazz("android.widget.EditText")).text = "Learned typos"
+        find(By.text("Learned typos").clazz("android.widget.TextView"), 10_000).click()
         E2e.screenshot("s4_learned_typos")
         find(By.text("Close")).click()
         SystemClock.sleep(400)
+        back() // closes the search
 
         // at the end of a long list: on the emulator the accessibility tree that UI Automator searches can lag
         // more than 10 s behind the screen after scrolling, so go there like the settings search does
