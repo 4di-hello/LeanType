@@ -124,6 +124,8 @@ class VoiceInputManager(
     private var connectingTimeoutRunnable: Runnable? = null
     private var handshakeTimeoutRunnable: Runnable? = null
     private var processingTimeoutRunnable: Runnable? = null
+    // LeanType+: start of the current recording, the time for processing depends on its length
+    private var recordingStartedAt = 0L
     private var needsCapitalStart = true
     private var sessionEmittedText = ""
 
@@ -559,6 +561,7 @@ class VoiceInputManager(
             var outputStream: FileOutputStream? = null
             var totalBytesWritten = 0L
             val sessionStartTime = System.currentTimeMillis()
+            recordingStartedAt = sessionStartTime
             var lastSpeechTime = sessionStartTime
             var hasSpoken = false
             var ambientNoiseRms = speechRmsThreshold * 0.5
@@ -722,9 +725,12 @@ class VoiceInputManager(
 
     private fun scheduleProcessingTimeout() {
         cancelProcessingTimeout()
+        // LeanType+: a fixed 15 s cut off the offline recognition of longer messages on the phone
+        val recordedMs = if (recordingStartedAt > 0L) System.currentTimeMillis() - recordingStartedAt else 0L
+        val timeoutMs = processingTimeoutFor(recordedMs)
         val runnable = Runnable {
             if (state == VoiceState.PROCESSING_FINAL) {
-                Log.w(TAG, "Voice processing timed out (15s)")
+                Log.w(TAG, "Voice processing timed out (${timeoutMs / 1000}s)")
                 notifyError("Voice processing timed out")
                 val wasOffline = !isCurrentSessionOnline
                 cleanupSession()
@@ -735,7 +741,7 @@ class VoiceInputManager(
             }
         }
         processingTimeoutRunnable = runnable
-        mainHandler.postDelayed(runnable, PROCESSING_TIMEOUT_MS)
+        mainHandler.postDelayed(runnable, timeoutMs)
     }
 
     private fun cancelProcessingTimeout() {
@@ -1280,6 +1286,13 @@ class VoiceInputManager(
         private const val FRAME_SIZE_BYTES = FRAME_SIZE_SHORTS * 2 // 960 bytes
         private const val HANDSHAKE_TIMEOUT_MS = 8000L
         private const val PROCESSING_TIMEOUT_MS = 15000L
+
+        /**
+         * Time allowed for the final recognition: offline recognition on a phone can take longer than the
+         * recording itself, so at least 60 s and three times the recording; it only ends a hung session.
+         */
+        internal fun processingTimeoutFor(recordedMs: Long): Long =
+            maxOf(60_000L, PROCESSING_TIMEOUT_MS + 3 * recordedMs.coerceAtLeast(0L))
         private const val DEFAULT_MAX_DURATION_SEC = 30
         internal const val KEEP_SCREEN_ON_SILENCE_GRACE_MS = 60_000L
 
