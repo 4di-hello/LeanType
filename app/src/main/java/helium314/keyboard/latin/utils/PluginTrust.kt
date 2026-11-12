@@ -87,6 +87,21 @@ object PluginTrust {
      * Whether the installed app [packageName] (a plugin that runs as its own app, like the voice plugin)
      * is signed with a known LeanBitLab key. Shows a message and returns false otherwise.
      */
+    /**
+     * Whether [packageName] is installed but not signed with a trusted key. A package that is not installed
+     * is not refused here: Android cannot bind to it anyway (and tests use such fake components).
+     */
+    fun isInstalledButUntrusted(context: Context, packageName: String): Boolean {
+        if (packageName == context.packageName) return false
+        try {
+            @Suppress("DEPRECATION")
+            context.packageManager.getPackageInfo(packageName, 0)
+        } catch (e: PackageManager.NameNotFoundException) {
+            return false
+        }
+        return !isTrustedPackage(context, packageName)
+    }
+
     fun isTrustedPackage(context: Context, packageName: String): Boolean {
         val pm = context.packageManager
         val updated = try {
