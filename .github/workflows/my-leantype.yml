@@ -142,6 +142,9 @@ jobs:
             --tests "helium314.keyboard.latin.personalization.CorrectionStatsTest" \
             --tests "helium314.keyboard.latin.ShortWordSwapTest" \
             --tests "helium314.keyboard.latin.voice.VoiceProcessingTimeoutTest" \
+            --tests "helium314.keyboard.latin.inputlogic.AiFieldCheckTest" \
+            --tests "helium314.keyboard.latin.LearnedTyposTest" \
+            --tests "helium314.keyboard.latin.utils.PluginTrustTest" \
             --tests "helium314.keyboard.settings.SettingsJumpTest" \
             --continue 2>&1 | tee gradle.log || true
           grep -E "^e: " gradle.log | head -20 | sed 's/^/::error::/' || true
