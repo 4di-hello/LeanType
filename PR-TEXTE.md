@@ -1,4 +1,4 @@
-# PR-Texte für LeanType (Stand 9.11.2026)
+# PR-Texte für LeanType (Stand 13.11.2026)
 
 Nur in diesem Fork. Je PR: auf GitHub „Compare & pull request“ von `4di-hello:<Branch>` nach `LeanBitLab:main`, Titel und Text unten einfügen.
 
@@ -98,3 +98,54 @@ Basis: LeanType 4.3.2-beta2 (bc4eda600). Ohne Tastendrücke, keine Änderung an 
 ## #680 und #739
 
 Beide am 9.11. von LeanType geschlossen. #680 bleibt nur im Fork. #739 nur neu anbieten, wenn der Sprung die gespeicherten Auf-/Zugeklappt-Zustände nicht mehr ändert, die normale Klick-Erkennung nutzt und ohne globalen Zustand auskommt.
+
+## 5. `feature/voice-dictation` (Spracheingabe)
+
+Basis: LeanType 4.3.2. Link: https://github.com/LeanBitLab/LeanType/compare/main...4di-hello:LeanType:feature/voice-dictation
+
+**Titel:** Voice input: longer processing time limit, full priority while dictating, optional transcription while speaking
+
+**Text:**
+
+> Three changes for offline dictation, found while using it daily:
+>
+> - **Processing time limit:** the watchdog ends the final recognition after a fixed 15 s. Offline recognition of a longer message on a phone needs more, so longer dictations were cut off. Now at least 60 s, and 15 s plus three times the recording length. It still ends a hung session.
+> - **Priority while dictating:** since the plugin is bound with `BIND_NOT_FOREGROUND`, it gets less CPU, and recognition took about twice as long. While recording and recognizing, a second binding with normal priority raises it; it is removed when the dictation ends, so the idle binding stays as it is.
+> - **Transcribe while speaking** (new option, off by default): at every pause in speech the part spoken so far is transcribed already, with the recognized text as context for the next part. After stopping, only the last part is left, which shortens the wait for long dictations a lot. If the field or app changes meanwhile, the rest is dropped with a notice instead of going to the wrong place.
+>
+> Also: recognized text is no longer written to the log, only its length.
+>
+> Tests: `VoiceProcessingTimeoutTest`. Translations for the two new texts: English and German.
+
+## 6. `feature/short-word-swap-pr` (vertauschte Buchstaben)
+
+Basis: LeanType 4.3.2. Link: https://github.com/LeanBitLab/LeanType/compare/main...4di-hello:LeanType:feature/short-word-swap-pr
+
+**Titel:** Auto-correction: short words with two swapped letters (teh → the)
+
+**Text:**
+
+> Unknown words of up to 3 letters are not auto-corrected, so that abbreviations like "db" or "yt" stay. That also leaves very common typos uncorrected: two neighboring letters typed in the wrong order, like "teh" for "the", "adn" for "and", or in German "ihc" for "ich", "dei" for "die", "nud" for "und".
+>
+> This adds one exception to that rule: if the first suggestion is the typed word with two neighboring letters swapped, the auto-correction may correct it. The usual threshold still applies, backspace undoes it, and `RevertedCorrectionHistory` still prevents repeating a reverted correction. Abbreviations are not affected, their swapped form is no word.
+>
+> The check is a small pure function in its own file (`ShortWordSwap`), one line in `Suggest`. No work on the touch path.
+>
+> Tests: `ShortWordSwapTest`.
+
+## 7. `feature/settings-jump-v2-pr` (Sprung aus der Suche, Neuauflage von #739)
+
+Basis: LeanType 4.3.2. Link: https://github.com/LeanBitLab/LeanType/compare/main...4di-hello:LeanType:feature/settings-jump-v2-pr
+
+**Titel:** Settings search: long press on a result shows the setting in its screen
+
+**Text:**
+
+> A new version of #739, reworked after your review:
+>
+> - **No saved state is changed.** A closed fine-tune section is opened only for the screen that shows the setting, in that screen's back stack entry. The saved open/closed state is never written. If the user opens or closes the section himself, that is what counts from then on.
+> - **Standard long press.** The long press is a normal `combinedClickable` on the preference, with an accessibility label, so it also works with TalkBack. No pointer handling of its own.
+> - **No global state.** The setting to show and the sections opened for it are kept in the `SavedStateHandle` of the target screen's back stack entry; the nav controller is passed down as a `CompositionLocal`. No timeout.
+> - The setting itself is brought into view, also further down in a large card, and highlighted for a moment.
+>
+> Tests: `SettingsJumpTest` (the steps: open sections, keep only the one with the setting, give up). Also tested on an emulator: long press on a search result, the setting is shown and highlighted, and the saved section state is unchanged afterwards.
