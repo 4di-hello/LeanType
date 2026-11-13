@@ -3595,18 +3595,25 @@ class InputLogic(
      * use the same field id for all their text fields (e.g. every chat), so the text and type of the
      * field are compared too: if they changed, the result is put into the clipboard instead.
      */
-    private inner class AiTarget(private val inputType: Int, private val textHash: Int, private val textLength: Int) {
-        fun isCurrent(): Boolean {
-            val editor = getCurrentInputEditorInfo() ?: return false
-            if (editor.inputType != inputType || InputTypeUtils.isPasswordInputType(editor.inputType)) return false
-            val text = currentFieldText()
-            return text.length == textLength && text.hashCode() == textHash
-        }
+    private inner class AiTarget(private val fingerprint: AiFieldCheck.Fingerprint) {
+        fun isCurrent(): Boolean = fingerprint.matches(aiFieldSnapshot() ?: return false)
     }
 
-    private fun currentAiTarget(): AiTarget {
-        val text = currentFieldText()
-        return AiTarget(getCurrentInputEditorInfo()?.inputType ?: 0, text.hashCode(), text.length)
+    private fun currentAiTarget(): AiTarget =
+        AiTarget(AiFieldCheck.fingerprint(aiFieldSnapshot() ?: AiFieldCheck.Snapshot(null, 0, true, "", null)))
+
+    private fun aiFieldSnapshot(): AiFieldCheck.Snapshot? {
+        val editor = getCurrentInputEditorInfo() ?: return null
+        return AiFieldCheck.Snapshot(editor.packageName, editor.inputType,
+            InputTypeUtils.isPasswordInputType(editor.inputType), currentFieldText(), extractedFieldText())
+    }
+
+    /** The whole text as the app gives it for extraction, null if it does not */
+    private fun extractedFieldText(): String? = try {
+        val request = android.view.inputmethod.ExtractedTextRequest().apply { hintMaxChars = AI_FIELD_TEXT_CHARS * 2 }
+        mLatinIME.currentInputConnection?.getExtractedText(request, 0)?.text?.toString()
+    } catch (e: Exception) {
+        null
     }
 
     /** The whole text of the field, also a selected part */
