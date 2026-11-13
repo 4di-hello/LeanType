@@ -134,7 +134,13 @@ class TypingE2eTest {
         // using it: with auto-correction "hte" becomes "hate" (the dictionary alone would choose "the")
         E2e.setPrefs { putBoolean(Settings.PREF_AUTO_CORRECTION, true) }
         TextField().use { field ->
-            field.type("hte ")
+            // before the space the strip already shows what will happen
+            field.type("hte")
+            E2e.waitFor({ "strip shows the learned correction: ${field.suggestions} autocorrect=${field.willAutoCorrect}" }) {
+                field.suggestions.getOrNull(1) == "hate" && field.willAutoCorrect
+            }
+            E2e.screenshot("c_learned_typo_in_strip")
+            field.type(" ")
             field.waitForText("hate ")
             E2e.screenshot("c_learned_typo_used")
             // backspace right after it: reverted and forgotten
