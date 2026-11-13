@@ -1,0 +1,286 @@
+11-13 14:00:02.141  5382  5382 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-13 14:00:02.146  5382  5382 I AndroidRuntime: Using default boot image
+11-13 14:00:02.146  5382  5382 I AndroidRuntime: Leaving lock profiling enabled
+11-13 14:00:02.324  5382  5382 D AndroidRuntime: Calling main entry com.android.commands.am.Am
+11-13 14:00:03.950  5399  5422 I LeanTypeE2E: own APK as plugin: unknown signing key FD1E70C3B924FE3B…
+11-13 14:00:03.959  5399  5422 E PluginTrust: not using com.leanbitlab.leantype.offline.debug: unknown signing key FD1E70C3B924FE3B…
+11-13 14:00:03.966  5399  5422 E PluginTrust: not using com.android.settings: unknown signing key 301AA3CB08113450…
+11-13 14:00:10.109  5399  5422 I LeanTypeE2E: GCM provider: AndroidOpenSSL
+11-13 14:00:26.609  5399  5422 I LeanTypeE2E: 40 MB backup: encrypted in 8791 ms, decrypted in 7701 ms, heap 3 -> 22 MB, max 576 MB
+11-13 14:00:45.015  5399  5422 D UiDevice: Executing shell command: ime enable com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME
+11-13 14:00:45.036  5399  5422 I LeanTypeE2E: Input method com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME: now enabled for user #0
+11-13 14:00:45.036  5399  5422 D UiDevice: Executing shell command: ime set com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME
+11-13 14:00:45.047   547   662 W InputMethodManagerService: Illegal subtype state: old subtype = null, new subtype = android.view.inputmethod.InputMethodSubtype@7000000f
+11-13 14:00:45.049  5399  5422 I LeanTypeE2E: Input method com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME selected for user #0
+11-13 14:00:45.239  5399  5399 I LatinIME: Hardware accelerated drawing: true
+11-13 14:00:45.247  5399  5399 D WindowTokenClient: android.window.WindowTokenClient.attachToDisplayArea:119 android.window.WindowContextController.attachToDisplayArea:107 android.window.WindowProviderService.attachBaseContext:208 helium314.keyboard.latin.LatinIME.attachBaseContext:219 android.app.Service.attach:982 
+11-13 14:00:45.568  5399  5426 I LatinIME:LogUtils: Dictionary info: dictionary = main:en_us ; version = 54 ; date = 1414726260
+11-13 14:00:45.576  5399  5426 I LatinIME:LogUtils: Dictionary info: dictionary = main:en_us ; version = 54 ; date = 1414726260
+11-13 14:00:45.577  5399  5426 I LatinIME:LogUtils: Dictionary info: dictionary = main:en_us ; version = 54 ; date = 1414726260
+11-13 14:00:45.586  5399  6062 I LatinIME:LogUtils: Dictionary info: dictionary = userunigram.en-US ; version = 1794578445 ; date = ?
+11-13 14:00:45.606  5399  6061 I LatinIME:LogUtils: Dictionary info: dictionary = UserHistoryDictionary.en-US ; version = 1794578445 ; date = ?
+11-13 14:00:46.004  5399  5399 I LatinIME: ringer mode changed, zen_mode on: false
+11-13 14:00:47.883  5399  5399 D LatinIME: onInitializeInterface
+11-13 14:00:48.496  5399  5399 I LatinIME: onFinishInput
+11-13 14:00:49.545  5399  5399 I LatinIME: onFinishInput
+11-13 14:00:49.545  5399  5399 D LatinIME: onInlineSuggestionsResponse called
+11-13 14:00:49.546  5399  5399 D LatinIME: onCreateInlineSuggestionsRequest called
+11-13 14:00:50.039  5399  5399 I LatinIME: Starting input. Cursor position = 0,0
+11-13 14:00:50.042  5399  5399 D LatinIME: editorInfo: inputType: 0x00008001, imeOptions: 0x02000003
+11-13 14:00:50.042  5399  5399 D LatinIME: All caps: false, sentence caps: false, word caps: false
+11-13 14:00:52.160  5399  5399 I LatinIME: onUpdateSelection: oss=0, ose=0, nss=10, nse=10, cs=-1, ce=-1
+11-13 14:00:52.464  5399  5399 I LatinIME: onUpdateSelection: oss=10, ose=10, nss=10, nse=10, cs=0, ce=10
+11-13 14:00:54.673  5399  5399 I LatinIME: hideWindow
+11-13 14:00:54.675  5399  5399 I LatinIME: onFinishInputView
+11-13 14:00:54.696  5399  5399 I LatinIME: onWindowHidden
+11-13 14:00:54.816  5399  5399 I LatinIME: hideWindow
+11-13 14:00:58.320  5399  5399 I LatinIME: onFinishInput
+11-13 14:00:59.014  5399  5422 D UiDevice: Executing shell command: ime enable com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME
+11-13 14:00:59.032  5399  5422 I LeanTypeE2E: Input method com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME: already enabled for user #0
+11-13 14:00:59.032  5399  5422 D UiDevice: Executing shell command: ime set com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME
+11-13 14:00:59.052  5399  5422 I LeanTypeE2E: Input method com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME selected for user #0
+11-13 14:00:59.800  5399  5399 I LatinIME: onFinishInput
+11-13 14:01:03.123  5399  5399 I LatinIME: onFinishInput
+11-13 14:01:04.300  5399  5399 I LatinIME: onFinishInput
+11-13 14:01:05.095  5399  5399 I LatinIME: onFinishInput
+11-13 14:01:05.096  5399  5399 D LatinIME: onInlineSuggestionsResponse called
+11-13 14:01:05.096  5399  5399 D LatinIME: onCreateInlineSuggestionsRequest called
+11-13 14:01:05.126  5399  5399 I LatinIME: Starting input. Cursor position = 0,0
+11-13 14:01:05.126  5399  5399 D LatinIME: editorInfo: inputType: 0x00008001, imeOptions: 0x02000003
+11-13 14:01:05.126  5399  5399 D LatinIME: All caps: false, sentence caps: false, word caps: false
+11-13 14:01:06.025  5399  5399 I LatinIME: onUpdateSelection: oss=0, ose=0, nss=13, nse=13, cs=-1, ce=-1
+11-13 14:01:06.313  5399  5399 I LatinIME: onUpdateSelection: oss=13, ose=13, nss=13, nse=13, cs=8, ce=13
+11-13 14:01:07.868  5399  5399 I LatinIME: hideWindow
+11-13 14:01:07.870  5399  5399 I LatinIME: onFinishInputView
+11-13 14:01:07.874  5399  5399 I LatinIME: onWindowHidden
+11-13 14:01:07.892  5399  5399 I LatinIME: onFinishInput
+11-13 14:01:09.185  5399  5399 I LatinIME: onFinishInput
+11-13 14:01:09.197  5399  5399 I LatinIME: Starting input. Cursor position = 13,13
+11-13 14:01:09.197  5399  5399 D LatinIME: editorInfo: inputType: 0x00008001, imeOptions: 0x02000003
+11-13 14:01:09.197  5399  5399 D LatinIME: All caps: false, sentence caps: false, word caps: false
+11-13 14:01:09.627  5399  5399 I LatinIME: onUpdateSelection: oss=13, ose=13, nss=13, nse=13, cs=8, ce=13
+11-13 14:01:10.289  5399  5399 I LatinIME: hideWindow
+11-13 14:01:10.291  5399  5399 I LatinIME: onFinishInputView
+11-13 14:01:10.294  5399  5399 I LatinIME: onWindowHidden
+11-13 14:01:10.309  5399  5399 I LatinIME: onUpdateSelection: oss=13, ose=13, nss=13, nse=13, cs=-1, ce=-1
+11-13 14:01:18.644  5399  5399 I LatinIME: onFinishInput
+11-13 14:01:19.214  5399  5399 I LatinIME: onFinishInput
+11-13 14:01:22.367  5399  5399 I LatinIME: onFinishInput
+11-13 14:01:23.700  5399  5422 D UiDevice: Executing shell command: ime enable com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME
+11-13 14:01:23.722  5399  5422 I LeanTypeE2E: Input method com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME: already enabled for user #0
+11-13 14:01:23.722  5399  5422 D UiDevice: Executing shell command: ime set com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME
+11-13 14:01:23.734  5399  5422 I LeanTypeE2E: Input method com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME selected for user #0
+11-13 14:01:24.405  5399  5399 I LatinIME: onFinishInput
+11-13 14:01:24.407  5399  5399 D LatinIME: onInlineSuggestionsResponse called
+11-13 14:01:24.407  5399  5399 D LatinIME: onCreateInlineSuggestionsRequest called
+11-13 14:01:24.427  5399  5399 I LatinIME: Starting input. Cursor position = 0,0
+11-13 14:01:24.427  5399  5399 D LatinIME: editorInfo: inputType: 0x00008001, imeOptions: 0x00000006
+11-13 14:01:24.427  5399  5399 D LatinIME: All caps: false, sentence caps: false, word caps: false
+11-13 14:01:26.046  5399  5399 I LatinIME: onUpdateSelection: oss=0, ose=0, nss=1, nse=1, cs=0, ce=1
+11-13 14:01:26.475  5399  5399 I LatinIME: onUpdateSelection: oss=1, ose=1, nss=2, nse=2, cs=0, ce=2
+11-13 14:01:26.926  5399  5399 I LatinIME: onUpdateSelection: oss=2, ose=2, nss=3, nse=3, cs=0, ce=3
+11-13 14:01:27.569  5399  5399 I LatinIME: onUpdateSelection: oss=3, ose=3, nss=4, nse=4, cs=0, ce=4
+11-13 14:01:27.939  5399  5399 I LatinIME: onUpdateSelection: oss=4, ose=4, nss=5, nse=5, cs=0, ce=5
+11-13 14:01:28.444  5399  5399 I LatinIME: onUpdateSelection: oss=5, ose=5, nss=6, nse=6, cs=-1, ce=-1
+11-13 14:01:29.454  5399  5399 I LatinIME: hideWindow
+11-13 14:01:29.455  5399  5399 I LatinIME: onFinishInputView
+11-13 14:01:29.464  5399  5399 I LatinIME: onWindowHidden
+11-13 14:01:29.640  5399  5399 I LatinIME: onFinishInput
+11-13 14:01:29.859  5399  6061 I LatinIME:LogUtils: Dictionary info: dictionary = UserHistoryDictionary.en-US ; version = 1794578445 ; date = 1794578489
+11-13 14:01:30.850  5399  5422 D UiDevice: Executing shell command: ime enable com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME
+11-13 14:01:30.875  5399  5422 I LeanTypeE2E: Input method com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME: already enabled for user #0
+11-13 14:01:30.875  5399  5422 D UiDevice: Executing shell command: ime set com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME
+11-13 14:01:30.901  5399  5422 I LeanTypeE2E: Input method com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME selected for user #0
+11-13 14:01:31.581  5399  5399 I LatinIME: onFinishInput
+11-13 14:01:31.592  5399  5399 D LatinIME: onInlineSuggestionsResponse called
+11-13 14:01:31.593  5399  5399 D LatinIME: onCreateInlineSuggestionsRequest called
+11-13 14:01:31.644  5399  5399 I LatinIME: Starting input. Cursor position = 0,0
+11-13 14:01:31.651  5399  5399 D LatinIME: editorInfo: inputType: 0x00008001, imeOptions: 0x00000006
+11-13 14:01:31.652  5399  5399 D LatinIME: All caps: false, sentence caps: false, word caps: false
+11-13 14:01:33.798  5399  5399 I LatinIME: onUpdateSelection: oss=0, ose=0, nss=1, nse=1, cs=0, ce=1
+11-13 14:01:34.456  5399  5399 I LatinIME: onUpdateSelection: oss=1, ose=1, nss=2, nse=2, cs=0, ce=2
+11-13 14:01:35.215  5399  5399 I LatinIME: onUpdateSelection: oss=2, ose=2, nss=3, nse=3, cs=0, ce=3
+11-13 14:01:36.255  5399  5399 I LatinIME: onUpdateSelection: oss=3, ose=3, nss=4, nse=4, cs=-1, ce=-1
+11-13 14:01:37.328  5399  5422 I LeanTypeE2E: typo "teh" known=false strip=[teh, the, teh, ten, tech, try, Tehran, they, then, tho, Rev, yen, teg, Rey, ETH, Feb, Tehuantepec, Teheran, Tehran's] autocorrect=true -> "the"
+11-13 14:01:37.508  5399  5399 I LatinIME: onUpdateSelection: oss=4, ose=4, nss=5, nse=5, cs=4, ce=5
+11-13 14:01:38.172  5399  5399 I LatinIME: onUpdateSelection: oss=5, ose=5, nss=6, nse=6, cs=4, ce=6
+11-13 14:01:38.869  5399  5399 I LatinIME: onUpdateSelection: oss=6, ose=6, nss=7, nse=7, cs=4, ce=7
+11-13 14:01:39.518  5399  5399 I LatinIME: onUpdateSelection: oss=7, ose=7, nss=8, nse=8, cs=4, ce=8
+11-13 14:01:40.713  5399  5399 I LatinIME: onUpdateSelection: oss=8, ose=8, nss=9, nse=9, cs=-1, ce=-1
+11-13 14:01:41.769  5399  5422 I LeanTypeE2E: typo "tgis" known=false strip=[tgis, this, tgis, thus, RBIs, FBI's, tags, this'd, tugs, toys, tics, those, Gris, third, RFID, tabs, thin, thistle, Tris, tie] autocorrect=true -> "this"
+11-13 14:01:41.911  5399  5399 I LatinIME: onUpdateSelection: oss=9, ose=9, nss=10, nse=10, cs=9, ce=10
+11-13 14:01:42.458  5399  5399 I LatinIME: onUpdateSelection: oss=10, ose=10, nss=11, nse=11, cs=9, ce=11
+11-13 14:01:42.781  5399  5399 I LatinIME: onUpdateSelection: oss=11, ose=11, nss=12, nse=12, cs=9, ce=12
+11-13 14:01:43.290  5399  5399 I LatinIME: onUpdateSelection: oss=12, ose=12, nss=13, nse=13, cs=9, ce=13
+11-13 14:01:43.883  5399  5399 I LatinIME: onUpdateSelection: oss=13, ose=13, nss=14, nse=14, cs=9, ce=14
+11-13 14:01:44.735  5399  5399 I LatinIME: onUpdateSelection: oss=14, ose=14, nss=15, nse=15, cs=-1, ce=-1
+11-13 14:01:45.991  5399  5422 I LeanTypeE2E: typo "helli" known=false strip=[helli, hello, helli, belli, hellish, Nelli, hell I, he'll I, helping, hellion, hell, Jello, bello, Hellion's, hellishly, hellions, he'll, jello] autocorrect=true -> "hello"
+11-13 14:01:46.233  5399  5399 I LatinIME: onUpdateSelection: oss=15, ose=15, nss=16, nse=16, cs=15, ce=16
+11-13 14:01:46.691  5399  5399 I LatinIME: onUpdateSelection: oss=16, ose=16, nss=17, nse=17, cs=15, ce=17
+11-13 14:01:47.137  5399  5399 I LatinIME: onUpdateSelection: oss=17, ose=17, nss=18, nse=18, cs=15, ce=18
+11-13 14:01:47.580  5399  5399 I LatinIME: onUpdateSelection: oss=18, ose=18, nss=19, nse=19, cs=15, ce=19
+11-13 14:01:48.062  5399  5399 I LatinIME: onUpdateSelection: oss=19, ose=19, nss=20, nse=20, cs=15, ce=20
+11-13 14:01:49.024  5399  5399 I LatinIME: onUpdateSelection: oss=20, ose=20, nss=21, nse=21, cs=-1, ce=-1
+11-13 14:01:50.137  5399  5422 I LeanTypeE2E: typo "wprld" known=false strip=[wprld, world, wprld, works, worldwide, world's, worlds, worms, worldly, worldview, word, work's, Worms, WorldCom, worldviews, worm's, worldliness, wield, words, worked] autocorrect=true -> "world"
+11-13 14:01:50.285  5399  5399 I LatinIME: onUpdateSelection: oss=21, ose=21, nss=22, nse=22, cs=21, ce=22
+11-13 14:01:50.843  5399  5399 I LatinIME: onUpdateSelection: oss=22, ose=22, nss=23, nse=23, cs=21, ce=23
+11-13 14:01:51.167  5399  5399 I LatinIME: onUpdateSelection: oss=23, ose=23, nss=24, nse=24, cs=21, ce=24
+11-13 14:01:51.648  5399  5399 I LatinIME: onUpdateSelection: oss=24, ose=24, nss=25, nse=25, cs=21, ce=25
+11-13 14:01:52.196  5399  5399 I LatinIME: onUpdateSelection: oss=25, ose=25, nss=26, nse=26, cs=21, ce=26
+11-13 14:01:52.542  5399  5399 I LatinIME: onUpdateSelection: oss=26, ose=26, nss=27, nse=27, cs=21, ce=27
+11-13 14:01:53.149  5399  5399 I LatinIME: onUpdateSelection: oss=27, ose=27, nss=28, nse=28, cs=21, ce=28
+11-13 14:01:54.133  5399  5399 I LatinIME: onUpdateSelection: oss=28, ose=28, nss=29, nse=29, cs=-1, ce=-1
+11-13 14:01:55.254  5399  5422 I LeanTypeE2E: typo "becuase" known=false strip=[becuase, because, becuase, be chase, be cause, be case, be use, be Case, be curse, be used, bedside, bemused, nexuses, recused, be uses, be ukase, neguses, be user, be chaste] autocorrect=true -> "because"
+11-13 14:01:55.561  5399  5422 I LeanTypeE2E: corrected: [teh, tgis, helli, wprld, becuase] of [teh, tgis, helli, wprld, becuase]
+11-13 14:01:56.278  5399  5399 D LatinIME: onCreateInlineSuggestionsRequest called
+11-13 14:01:56.528  5399  5399 I LatinIME: onFinishInputView
+11-13 14:01:56.536  5399  5399 I LatinIME: onFinishInput
+11-13 14:01:56.538  5399  5399 D LatinIME: onInlineSuggestionsResponse called
+11-13 14:01:56.557  5399  5399 I LatinIME: Starting input. Cursor position = 0,0
+11-13 14:01:56.562  5399  5399 D LatinIME: editorInfo: inputType: 0x00008001, imeOptions: 0x00000006
+11-13 14:01:56.562  5399  5399 D LatinIME: All caps: false, sentence caps: false, word caps: false
+11-13 14:01:56.562  5399  6061 I LatinIME:LogUtils: Dictionary info: dictionary = UserHistoryDictionary.en-US ; version = 1794578445 ; date = 1794578516
+11-13 14:01:58.117  5399  5399 I LatinIME: onUpdateSelection: oss=0, ose=0, nss=1, nse=1, cs=0, ce=1
+11-13 14:01:58.577  5399  5399 I LatinIME: onUpdateSelection: oss=1, ose=1, nss=2, nse=2, cs=0, ce=2
+11-13 14:01:58.975  5399  5399 I LatinIME: onUpdateSelection: oss=2, ose=2, nss=3, nse=3, cs=0, ce=3
+11-13 14:01:59.480  5399  5399 I LatinIME: onUpdateSelection: oss=3, ose=3, nss=4, nse=4, cs=-1, ce=-1
+11-13 14:02:00.293  5399  5399 I LatinIME: onUpdateSelection: oss=4, ose=4, nss=3, nse=3, cs=0, ce=3
+11-13 14:02:01.602  5399  5399 I LatinIME: hideWindow
+11-13 14:02:01.606  5399  5399 I LatinIME: onFinishInputView
+11-13 14:02:01.608  5399  5399 I LatinIME: onWindowHidden
+11-13 14:02:01.626  5399  5399 I LatinIME: onFinishInput
+11-13 14:02:01.664  5399  6061 I LatinIME:LogUtils: Dictionary info: dictionary = UserHistoryDictionary.en-US ; version = 1794578445 ; date = 1794578521
+11-13 14:02:02.689  5399  5422 D UiDevice: Executing shell command: ime enable com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME
+11-13 14:02:02.701  5399  5422 I LeanTypeE2E: Input method com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME: already enabled for user #0
+11-13 14:02:02.701  5399  5422 D UiDevice: Executing shell command: ime set com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME
+11-13 14:02:02.712  5399  5422 I LeanTypeE2E: Input method com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME selected for user #0
+11-13 14:02:03.131  5399  5399 I LatinIME: onFinishInput
+11-13 14:02:03.135  5399  5399 D LatinIME: onInlineSuggestionsResponse called
+11-13 14:02:03.135  5399  5399 D LatinIME: onCreateInlineSuggestionsRequest called
+11-13 14:02:03.167  5399  5399 I LatinIME: Starting input. Cursor position = 0,0
+11-13 14:02:03.167  5399  5399 D LatinIME: editorInfo: inputType: 0x00008001, imeOptions: 0x00000006
+11-13 14:02:03.168  5399  5399 D LatinIME: All caps: false, sentence caps: false, word caps: false
+11-13 14:02:04.715  5399  5399 I LatinIME: onUpdateSelection: oss=0, ose=0, nss=1, nse=1, cs=0, ce=1
+11-13 14:02:05.190  5399  5399 I LatinIME: onUpdateSelection: oss=1, ose=1, nss=2, nse=2, cs=0, ce=2
+11-13 14:02:05.757  5399  5399 I LatinIME: onUpdateSelection: oss=2, ose=2, nss=3, nse=3, cs=0, ce=3
+11-13 14:02:06.083  5399  5399 I LatinIME: onUpdateSelection: oss=3, ose=3, nss=4, nse=4, cs=-1, ce=-1
+11-13 14:02:06.596  5399  5399 I LatinIME: onUpdateSelection: oss=4, ose=4, nss=3, nse=3, cs=0, ce=3
+11-13 14:02:07.042  5399  5399 I LatinIME: onUpdateSelection: oss=3, ose=3, nss=2, nse=2, cs=0, ce=2
+11-13 14:02:07.621  5399  5399 I LatinIME: onUpdateSelection: oss=2, ose=2, nss=1, nse=1, cs=0, ce=1
+11-13 14:02:07.969  5399  5399 I LatinIME: onUpdateSelection: oss=1, ose=1, nss=0, nse=0, cs=-1, ce=-1
+11-13 14:02:08.365  5399  5399 I LatinIME: onUpdateSelection: oss=0, ose=0, nss=1, nse=1, cs=0, ce=1
+11-13 14:02:08.945  5399  5399 I LatinIME: onUpdateSelection: oss=1, ose=1, nss=2, nse=2, cs=0, ce=2
+11-13 14:02:09.244  5399  5399 I LatinIME: onUpdateSelection: oss=2, ose=2, nss=3, nse=3, cs=0, ce=3
+11-13 14:02:09.592  5399  5399 I LatinIME: onUpdateSelection: oss=3, ose=3, nss=4, nse=4, cs=0, ce=4
+11-13 14:02:10.102  5399  5399 I LatinIME: onUpdateSelection: oss=4, ose=4, nss=5, nse=5, cs=-1, ce=-1
+11-13 14:02:10.515  5399  5399 I LatinIME: onUpdateSelection: oss=5, ose=5, nss=6, nse=6, cs=5, ce=6
+11-13 14:02:10.943  5399  5399 I LatinIME: onUpdateSelection: oss=6, ose=6, nss=7, nse=7, cs=5, ce=7
+11-13 14:02:11.387  5399  5399 I LatinIME: onUpdateSelection: oss=7, ose=7, nss=8, nse=8, cs=5, ce=8
+11-13 14:02:11.852  5399  5399 I LatinIME: onUpdateSelection: oss=8, ose=8, nss=9, nse=9, cs=-1, ce=-1
+11-13 14:02:12.247  5399  5399 I LatinIME: onUpdateSelection: oss=9, ose=9, nss=8, nse=8, cs=5, ce=8
+11-13 14:02:12.676  5399  5399 I LatinIME: onUpdateSelection: oss=8, ose=8, nss=7, nse=7, cs=5, ce=7
+11-13 14:02:13.105  5399  5399 I LatinIME: onUpdateSelection: oss=7, ose=7, nss=6, nse=6, cs=5, ce=6
+11-13 14:02:13.667  5399  5399 I LatinIME: onUpdateSelection: oss=6, ose=6, nss=5, nse=5, cs=-1, ce=-1
+11-13 14:02:13.974  5399  5399 I LatinIME: onUpdateSelection: oss=5, ose=5, nss=6, nse=6, cs=5, ce=6
+11-13 14:02:14.392  5399  5399 I LatinIME: onUpdateSelection: oss=6, ose=6, nss=7, nse=7, cs=5, ce=7
+11-13 14:02:14.859  5399  5399 I LatinIME: onUpdateSelection: oss=7, ose=7, nss=8, nse=8, cs=5, ce=8
+11-13 14:02:15.416  5399  5399 I LatinIME: onUpdateSelection: oss=8, ose=8, nss=9, nse=9, cs=5, ce=9
+11-13 14:02:15.921  5399  5399 I LatinIME: onUpdateSelection: oss=9, ose=9, nss=10, nse=10, cs=-1, ce=-1
+11-13 14:02:17.386  5399  5399 D LatinIME: onCreateInlineSuggestionsRequest called
+11-13 14:02:17.503  5399  5399 D LatinIME: onInlineSuggestionsResponse called
+11-13 14:02:17.503  5399  5399 I LatinIME: onFinishInputView
+11-13 14:02:17.506  5399  5399 I LatinIME: onFinishInput
+11-13 14:02:17.516  5399  5399 I LatinIME: Starting input. Cursor position = 0,0
+11-13 14:02:17.516  5399  5399 D LatinIME: editorInfo: inputType: 0x00008001, imeOptions: 0x00000006
+11-13 14:02:17.517  5399  5399 D LatinIME: All caps: false, sentence caps: false, word caps: false
+11-13 14:02:17.542  5399  6062 I LatinIME:LogUtils: Dictionary info: dictionary = UserHistoryDictionary.en-US ; version = 1794578445 ; date = 1794578537
+11-13 14:02:18.969  5399  5399 I LatinIME: onUpdateSelection: oss=0, ose=0, nss=1, nse=1, cs=0, ce=1
+11-13 14:02:19.344  5399  5399 I LatinIME: onUpdateSelection: oss=1, ose=1, nss=2, nse=2, cs=0, ce=2
+11-13 14:02:19.802  5399  5399 I LatinIME: onUpdateSelection: oss=2, ose=2, nss=3, nse=3, cs=0, ce=3
+11-13 14:02:20.446  5399  5399 I LatinIME: onUpdateSelection: oss=3, ose=3, nss=5, nse=5, cs=-1, ce=-1
+11-13 14:02:21.535  5399  5399 I LatinIME: onUpdateSelection: oss=5, ose=5, nss=3, nse=3, cs=0, ce=3
+11-13 14:02:22.697  5399  5399 I LatinIME: hideWindow
+11-13 14:02:22.727  5399  5399 I LatinIME: onFinishInputView
+11-13 14:02:22.733  5399  5399 I LatinIME: onWindowHidden
+11-13 14:02:22.746  5399  5399 I LatinIME: onFinishInput
+11-13 14:02:22.762  5399  6061 I LatinIME:LogUtils: Dictionary info: dictionary = UserHistoryDictionary.en-US ; version = 1794578445 ; date = 1794578542
+11-13 14:02:23.810  5399  5422 D UiDevice: Executing shell command: ime enable com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME
+11-13 14:02:23.822  5399  5422 I LeanTypeE2E: Input method com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME: already enabled for user #0
+11-13 14:02:23.822  5399  5422 D UiDevice: Executing shell command: ime set com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME
+11-13 14:02:23.833  5399  5422 I LeanTypeE2E: Input method com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME selected for user #0
+11-13 14:02:23.844  5399  5422 I CorrectionStats: automatic autocorrection strength: step 2 -> 1
+11-13 14:02:23.878  5399  5422 D UiDevice: Executing shell command: ime enable com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME
+11-13 14:02:23.889  5399  5422 I LeanTypeE2E: Input method com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME: already enabled for user #0
+11-13 14:02:23.889  5399  5422 D UiDevice: Executing shell command: ime set com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME
+11-13 14:02:23.900  5399  5422 I LeanTypeE2E: Input method com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME selected for user #0
+11-13 14:02:24.373  5399  5399 I LatinIME: onFinishInput
+11-13 14:02:24.373  5399  5399 D LatinIME: onInlineSuggestionsResponse called
+11-13 14:02:24.373  5399  5399 D LatinIME: onCreateInlineSuggestionsRequest called
+11-13 14:02:24.388  5399  5399 I LatinIME: Starting input. Cursor position = 0,0
+11-13 14:02:24.388  5399  5399 D LatinIME: editorInfo: inputType: 0x00008001, imeOptions: 0x00000006
+11-13 14:02:24.389  5399  5399 D LatinIME: All caps: false, sentence caps: false, word caps: false
+11-13 14:02:28.605  5399  5399 I LatinIME: onUpdateSelection: oss=0, ose=0, nss=1, nse=1, cs=-1, ce=-1
+11-13 14:02:29.370  5399  5399 I LatinIME: hideWindow
+11-13 14:02:29.371  5399  5399 I LatinIME: onFinishInputView
+11-13 14:02:29.373  5399  5399 I LatinIME: onWindowHidden
+11-13 14:02:29.413  5399  5399 I LatinIME: onFinishInput
+11-13 14:02:30.877  5399  5422 D UiDevice: Executing shell command: ime enable com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME
+11-13 14:02:30.896  5399  5422 I LeanTypeE2E: Input method com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME: already enabled for user #0
+11-13 14:02:30.896  5399  5422 D UiDevice: Executing shell command: ime set com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME
+11-13 14:02:30.915  5399  5422 I LeanTypeE2E: Input method com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME selected for user #0
+11-13 14:02:31.481  5399  5399 I LatinIME: onFinishInput
+11-13 14:02:31.482  5399  5399 D LatinIME: onInlineSuggestionsResponse called
+11-13 14:02:31.482  5399  5399 D LatinIME: onCreateInlineSuggestionsRequest called
+11-13 14:02:31.516  5399  5399 I LatinIME: Starting input. Cursor position = 0,0
+11-13 14:02:31.516  5399  5399 D LatinIME: editorInfo: inputType: 0x00008001, imeOptions: 0x00000006
+11-13 14:02:31.523  5399  5399 D LatinIME: All caps: false, sentence caps: false, word caps: false
+11-13 14:02:33.011  5399  5399 I TextLearner: learning 8 different words from 2 segments
+11-13 14:02:33.017  5399  5399 I TextLearner: learned 10 words
+11-13 14:02:37.036  5399  5399 I LatinIME: onUpdateSelection: oss=0, ose=0, nss=1, nse=1, cs=0, ce=1
+11-13 14:02:37.495  5399  5399 I LatinIME: onUpdateSelection: oss=1, ose=1, nss=2, nse=2, cs=0, ce=2
+11-13 14:02:37.942  5399  5399 I LatinIME: onUpdateSelection: oss=2, ose=2, nss=3, nse=3, cs=0, ce=3
+11-13 14:02:38.431  5399  5399 I LatinIME: onUpdateSelection: oss=3, ose=3, nss=4, nse=4, cs=0, ce=4
+11-13 14:02:38.971  5399  5399 I LatinIME: onUpdateSelection: oss=4, ose=4, nss=5, nse=5, cs=0, ce=5
+11-13 14:02:39.236  5399  5399 I LatinIME: onUpdateSelection: oss=5, ose=5, nss=6, nse=6, cs=0, ce=6
+11-13 14:02:40.619  5399  5399 I LatinIME: hideWindow
+11-13 14:02:40.619  5399  5399 I LatinIME: onFinishInputView
+11-13 14:02:40.621  5399  5399 I LatinIME: onWindowHidden
+11-13 14:02:40.638  5399  5399 I LatinIME: onFinishInput
+11-13 14:02:40.703  5399  6062 I LatinIME:LogUtils: Dictionary info: dictionary = UserHistoryDictionary.en-US ; version = 1794578445 ; date = 1794578560
+11-13 14:02:41.688  5399  5422 D UiDevice: Executing shell command: ime enable com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME
+11-13 14:02:41.709  5399  5422 I LeanTypeE2E: Input method com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME: already enabled for user #0
+11-13 14:02:41.709  5399  5422 D UiDevice: Executing shell command: ime set com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME
+11-13 14:02:41.721  5399  5422 I LeanTypeE2E: Input method com.leanbitlab.leantype.offline.debug/helium314.keyboard.latin.LatinIME selected for user #0
+11-13 14:02:42.194  5399  5399 I LatinIME: onFinishInput
+11-13 14:02:42.195  5399  5399 D LatinIME: onInlineSuggestionsResponse called
+11-13 14:02:42.195  5399  5399 D LatinIME: onCreateInlineSuggestionsRequest called
+11-13 14:02:42.217  5399  5399 I LatinIME: Starting input. Cursor position = 0,0
+11-13 14:02:42.217  5399  5399 D LatinIME: editorInfo: inputType: 0x00008001, imeOptions: 0x00000006
+11-13 14:02:42.217  5399  5399 D LatinIME: All caps: false, sentence caps: false, word caps: false
+11-13 14:02:43.767  5399  5399 I LatinIME: onUpdateSelection: oss=0, ose=0, nss=1, nse=1, cs=0, ce=1
+11-13 14:02:44.375  5399  5399 I LatinIME: onUpdateSelection: oss=1, ose=1, nss=2, nse=2, cs=0, ce=2
+11-13 14:02:44.695  5399  5399 I LatinIME: onUpdateSelection: oss=2, ose=2, nss=3, nse=3, cs=0, ce=3
+11-13 14:02:45.246  5399  5399 I LatinIME: onUpdateSelection: oss=3, ose=3, nss=4, nse=4, cs=0, ce=4
+11-13 14:02:45.733  5399  5399 I LatinIME: onUpdateSelection: oss=4, ose=4, nss=5, nse=5, cs=0, ce=5
+11-13 14:02:46.055  5399  5399 I LatinIME: onUpdateSelection: oss=5, ose=5, nss=6, nse=6, cs=-1, ce=-1
+11-13 14:02:46.489  5399  5399 I LatinIME: onUpdateSelection: oss=6, ose=6, nss=7, nse=7, cs=6, ce=7
+11-13 14:02:46.993  5399  5399 I LatinIME: onUpdateSelection: oss=7, ose=7, nss=8, nse=8, cs=6, ce=8
+11-13 14:02:47.528  5399  5399 I LatinIME: onUpdateSelection: oss=8, ose=8, nss=9, nse=9, cs=6, ce=9
+11-13 14:02:47.882  5399  5399 I LatinIME: onUpdateSelection: oss=9, ose=9, nss=10, nse=10, cs=6, ce=10
+11-13 14:02:48.326  5399  5399 I LatinIME: onUpdateSelection: oss=10, ose=10, nss=11, nse=11, cs=6, ce=11
+11-13 14:02:48.571  5399  5399 I LatinIME: onUpdateSelection: oss=11, ose=11, nss=0, nse=11, cs=6, ce=11
+11-13 14:02:48.576  5399  5399 I LatinIME: onUpdateSelection: oss=0, ose=11, nss=0, nse=11, cs=-1, ce=-1
+11-13 14:02:49.736  5399  5399 I LatinIME: onUpdateSelection: oss=0, ose=11, nss=3, nse=3, cs=-1, ce=-1
+11-13 14:02:50.249  5399  5399 I LatinIME: onUpdateSelection: oss=3, ose=3, nss=11, nse=11, cs=-1, ce=-1
+11-13 14:02:50.694  5399  5399 I LatinIME: onUpdateSelection: oss=11, ose=11, nss=12, nse=12, cs=-1, ce=-1
+11-13 14:02:51.424  5399  5399 I LatinIME: hideWindow
+11-13 14:02:51.427  5399  5399 I LatinIME: onFinishInputView
+11-13 14:02:51.439  5399  5399 I LatinIME: onWindowHidden
+11-13 14:02:51.497  5399  5399 I LatinIME: onFinishInput
+11-13 14:02:51.516  5399  6062 I LatinIME:LogUtils: Dictionary info: dictionary = UserHistoryDictionary.en-US ; version = 1794578445 ; date = 1794578571
+11-13 14:02:52.508  5382  5382 I AndroidRuntime: VM exiting with result code 0.
+11-13 14:02:52.806  6665  6665 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-13 14:02:52.810  6665  6665 I AndroidRuntime: Using default boot image
+11-13 14:02:52.810  6665  6665 I AndroidRuntime: Leaving lock profiling enabled
+11-13 14:02:52.896  6665  6665 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+11-13 14:02:53.920  6665  6665 D AndroidRuntime: Shutting down VM
