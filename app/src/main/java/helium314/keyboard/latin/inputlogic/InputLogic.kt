@@ -3620,7 +3620,10 @@ class InputLogic(
      * field are compared too: if they changed, the result is put into the clipboard instead.
      */
     private inner class AiTarget(private val fingerprint: AiFieldCheck.Fingerprint) {
-        fun isCurrent(): Boolean = fingerprint.matches(aiFieldSnapshot() ?: return false)
+        fun isCurrent(): Boolean {
+            val now = aiFieldSnapshot() ?: return false
+            return fingerprint.matches(now)
+        }
     }
 
     private fun currentAiTarget(): AiTarget =
