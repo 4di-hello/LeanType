@@ -1030,6 +1030,8 @@ class VoiceInputManager(
                     if (editorKey(editor) != piecewiseEditor || isBlockedEditor(editor)) {
                         // another app or field meanwhile: the rest of the dictation must not end up there
                         Log.w(TAG, "Transcribing while speaking: field changed, dropping the rest")
+                        // LeanType+: say so instead of silently dropping it
+                        android.widget.Toast.makeText(ims, ims.getString(helium314.keyboard.latin.R.string.voice_piecewise_field_changed), android.widget.Toast.LENGTH_LONG).show()
                         pendingPieces.clear()
                         pluginManager.cancelSession()
                         cleanupSession()
@@ -1260,6 +1262,9 @@ class VoiceInputManager(
         }
         Log.i(TAG, "State transition: $oldState -> $newState")
         this.state = newState
+        // LeanType+: full speed for the plugin only while dictating
+        val dictating = newState == VoiceState.RECORDING || newState == VoiceState.PROCESSING_FINAL
+        mainHandler.post { pluginManager.setDictationPriority(dictating) }
         mainHandler.post {
             listener?.onStateChanged(newState)
         }

@@ -146,8 +146,37 @@ class VoicePluginManager(private val context: Context) : IBinder.DeathRecipient 
         return success
     }
 
+    // LeanType+: the plugin is bound without foreground priority (saves battery while it waits), but then
+    // Android gives it less CPU and recognition takes about twice as long. While dictating, a second binding
+    // with normal priority raises it; Android uses the higher one. It is removed when the dictation ends.
+    private var isBoosted = false
+    private val boostConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {}
+        override fun onServiceDisconnected(name: ComponentName?) {}
+    }
+
+    /** Normal priority for the plugin while [active] (recording and recognizing), see [boostConnection] */
+    fun setDictationPriority(active: Boolean) {
+        if (active == isBoosted) return
+        if (active) {
+            if (!isBound) return
+            val component = resolveServiceComponent()
+            if (helium314.keyboard.latin.utils.PluginTrust.isInstalledButUntrusted(context, component.packageName)) return
+            isBoosted = try {
+                context.bindService(Intent().apply { this.component = component }, boostConnection, Context.BIND_AUTO_CREATE)
+            } catch (e: Exception) {
+                Log.w(TAG, "Could not raise the priority of the voice plugin", e)
+                false
+            }
+        } else {
+            isBoosted = false
+            try { context.unbindService(boostConnection) } catch (e: Exception) { }
+        }
+    }
+
     fun unbind() {
         cancelScheduledUnbind()
+        setDictationPriority(false)
         if (isBound || isConnecting) {
             try {
                 if (deathRecipientRegistered) {

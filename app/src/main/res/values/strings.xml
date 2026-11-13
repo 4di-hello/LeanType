@@ -2646,4 +2646,6 @@ New dictionary:
     <string name="auto_backup_explanation">Backs up settings, layouts, dictionaries, learned words and the typing profile, with a password also the clipboard history. Downloaded models and plugins are not included. Remember the password: without it, backups can\'t be restored.</string>
     <!-- Long press on a search result in the settings (accessibility action) -->
     <string name="settings_search_show_in_screen">Show in its screen</string>
+    <!-- Toast when dictation in pieces stops because the user switched to another field or app -->
+    <string name="voice_piecewise_field_changed">Dictation stopped: the text field changed, the rest was not inserted</string>
 </resources>

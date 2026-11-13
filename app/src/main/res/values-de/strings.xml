@@ -1944,4 +1944,6 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="auto_backup_explanation">Sichert Einstellungen, Layouts, Wörterbücher, gelernte Wörter und das Tipp-Profil, mit Passwort auch den Zwischenablage-Verlauf. Heruntergeladene Modelle und Plugins sind nicht enthalten. Merk Dir das Passwort: Ohne es lässt sich die Sicherung nicht wiederherstellen.</string>
     <!-- Long press on a search result in the settings (accessibility action) -->
     <string name="settings_search_show_in_screen">Auf seiner Seite zeigen</string>
+    <!-- Toast when dictation in pieces stops because the user switched to another field or app -->
+    <string name="voice_piecewise_field_changed">Diktat beendet: Das Textfeld hat gewechselt, der Rest wurde nicht eingefügt</string>
 </resources>
