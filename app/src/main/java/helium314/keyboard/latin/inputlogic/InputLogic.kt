@@ -3007,6 +3007,30 @@ class InputLogic(
         LearnedTypos.onTypoCorrected(mLatinIME.prefs(), typo, form)
     }
 
+    /**
+     * LeanType+: a learned typo is shown in the strip as the word it will be corrected to, in bold like an
+     * auto-correction, so that the strip shows what happens on the next space.
+     */
+    fun withLearnedTypo(words: SuggestedWords): SuggestedWords {
+        if (words.isEmpty || words.isPrediction || !mWordComposer.isComposingWord()) return words
+        val typed = mWordComposer.getTypedWord()
+        val typedInfo = words.mTypedWordInfo ?: return words
+        if (typedInfo.mWord != typed) return words
+        val correction = learnedTypoCorrectionFor(Settings.getValues(), typed) ?: return words
+        if (words.mWillAutoCorrect && words.size() > SuggestedWords.INDEX_OF_AUTO_CORRECTION
+                && words.getInfo(SuggestedWords.INDEX_OF_AUTO_CORRECTION).mWord == correction) return words
+        val list = ArrayList<SuggestedWordInfo>()
+        list.add(typedInfo)
+        list.add(SuggestedWordInfo(correction, "", SuggestedWordInfo.MAX_SCORE, SuggestedWordInfo.KIND_CORRECTION,
+            Dictionary.DICTIONARY_USER_TYPED, SuggestedWordInfo.NOT_AN_INDEX, SuggestedWordInfo.NOT_A_CONFIDENCE))
+        for (i in 0 until words.size()) {
+            val info = words.getInfo(i)
+            if (info !== typedInfo && info.mWord != correction && info.mWord != typed) list.add(info)
+        }
+        return SuggestedWords(list, words.mRawSuggestions, typedInfo, words.mTypedWordValid, true,
+            words.mIsObsoleteSuggestions, words.mInputStyle, words.mSequenceNumber)
+    }
+
     /** Correction for [typedWord] learned by [LearnedTypos], if it is to be used here */
     private fun learnedTypoCorrectionFor(settingsValues: SettingsValues, typedWord: String): String? {
         if (!settingsValues.mLearnTypos || !settingsValues.mAutoCorrectEnabled || !shouldCountCorrections(settingsValues)) return null

@@ -1814,7 +1814,9 @@ class LatinIME : InputMethodService(),
         }
     }
 
-    override fun setSuggestions(suggestedWords: SuggestedWords) {
+    override fun setSuggestions(words: SuggestedWords) {
+        // LeanType+: shows a learned typo's correction like an auto-correction
+        val suggestedWords = inputLogic.withLearnedTypo(words)
         if (CjkInputManager.getInstance(this).isCjkSubtypeActive(richImm.currentSubtype)) {
             return
         }
