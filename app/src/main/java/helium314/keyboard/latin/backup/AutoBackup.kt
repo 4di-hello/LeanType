@@ -119,6 +119,7 @@ object AutoBackup {
         if (hasPassword(context) && password == null) return "password not readable, please set it again"
         val categories = mutableSetOf(
             BackupCategory.LAYOUTS, BackupCategory.THEME_APPEARANCE, BackupCategory.DICTIONARIES,
+            BackupCategory.PERSONAL_DICTIONARY, BackupCategory.TEXT_EXPANDER,
             BackupCategory.TYPING_HISTORY, BackupCategory.GENERAL_SETTINGS, BackupCategory.TYPING_PROFILE,
         )
         // copied texts may contain private data, they are only saved in encrypted backups
