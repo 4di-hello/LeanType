@@ -7,7 +7,7 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
 - **Textbausteine (Text-Expander) bequem bearbeiten** – Kürzel wie „cic“, hinter denen lange Prompts liegen
   - Heute: Bearbeiten nur im kleinen Feld (ca. 5 Zeilen hoch) unter Text-Expander, Export nur über die komplette Sicherung (Kategorie Wörterbücher)
   - ~~Wunsch A: alle Bausteine als Text/Datei bearbeiten~~ erledigt („Alle als Text bearbeiten“: === Kürzel ===, Kopieren/Einfügen, Teilen, Datei, Sprungleiste, letzten Stand wiederherstellen)
-  - Neue Platzhalter: %tab% (Tab-Zeichen), %tabkey% (Tab-Taste), %enter% (Enter/Senden)
+  - Platzhalter %tab% (Tab-Zeichen) wie bei LeanType; die Tastendrücke %tabkey%/%enter% sind seit 15.11. entfallen
   - ~~Wunsch B: Vollbild-Editor in der App~~ erledigt (Knopf „Im Vollbild bearbeiten“ im Bearbeiten-Dialog)
 - **Lokale KI mit Qwen** – ~~läuft nicht~~ läuft (18.10.)
   - Empfohlen: Qwen3-4B-Instruct-2507 **Q4_0** (schnellstes Format auf dem Handy-Prozessor), langer Absatz (~320 Wörter) ca. 30 s, kurze Nachrichten wenige Sekunden
@@ -71,6 +71,12 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
   - KI-Ergebnisse: gleiche App ist Pflicht, zusätzlich Vergleich des ganzen Feldinhalts (getExtractedText), damit Ergebnisse seltener unnötig in der Zwischenablage landen
   - Gelernte Tippfehler: die Vorschlagsleiste zeigt die Korrektur schon beim Tippen fett an, wie eine Autokorrektur
   - Unit-Tests für gelernte Tippfehler, KI-Feldprüfung und Plugin-Prüfung
+- 15.11.: Auf LeanType 4.3.3 aktualisiert (Sicherung `backup/daily-2026-11-15`). Unsere drei PRs sind dort jetzt drin (#797 Spracheingabe, #798 vertauschte Buchstaben, #799 Einstellungssprung), der Fork nutzt dafür jetzt LeanTypes Code. Dazu:
+  - Tastendrücke `%tabkey%`/`%enter%` in Textbausteinen entfernt (Fork-Code in InputLogic weg)
+  - Aufklappbare Bereiche der Einstellungen auf LeanTypes neue Zeilen-Liste umgebaut; ein Sprung aus der Suche öffnet einen zugeklappten Bereich nur zum Anzeigen
+  - Sicherung: LeanTypes neue Kategorien „Persönliches Wörterbuch“ und „Textbausteine“ sind auch in der automatischen Sicherung
+  - Plugin-Prüfung beim Binden des Sprach-Plugins bleibt
+  - Neu bei LeanType: Stille-Ende der Spracheingabe standardmäßig 3 s (einstellbar), eigene Textstile, Wörterbuch-Download mit Versionsangabe
 - 4.11.: Auf LeanType 4.3.1-beta3 aktualisiert (Sicherung `backup/daily-2026-11-04`): Konflikte in Texten, InputLogic (neues „Wort löschen“ per Wischen) und Spracheingabe. LeanTypes neue anpassende Stille-Erkennung gilt jetzt auch für das Zerlegen beim Sprechen, so werden Pausen auch bei Umgebungslärm gefunden
 - 2.11.: Auf LeanType 4.3.1-beta2 aktualisiert (Sicherung `backup/daily-2026-11-02`), ein Konflikt in InputLogic (LeanType ersetzt ThreadLocal.withInitial für Android 7)
 - 2.11. nachmittags: LeanType hat beta2 nachgelegt (9 Commits: Absturz in der Wortsuche, mehrsprachiger Verlauf, Standard-Schwelle der Autokorrektur jetzt „Ausgewogen“ 0,067, fehlende Menüpunkte) – ohne Konflikte übernommen. „Gelernte Wörter löschen“ löscht jetzt auch die gelernten Tippfehler
@@ -118,7 +124,7 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
 
 - 9.11.: LeanType hat #680 (Anpassung an meine Tippweise), #695 (Textbausteine als Text) und #739 (Einstellungssprung) geschlossen, Issue #676 ebenfalls. Alles bleibt im Fork
   - #680 grundsätzlich abgelehnt: Trefferflächen sollen sich nie ändern, Fehler soll nur das Wörterbuch auffangen. Bleibt dauerhaft nur im Fork (eigene Änderungen in `KeyDetector`/`PointerTracker`, bei Updates im Blick behalten)
-  - #695: LeanType wollte einen schlanken PR nur mit „Alle als Text bearbeiten“ und `%tab%`. Als #781 am 10.11. übernommen (in 4.3.2-beta3), von LeanType als „Massen-Editor“ mit nur Laden und Exportieren gestaltet. Der Fork nutzt seit 10.11. LeanTypes Massen-Editor; nur die Tastendrücke `%tabkey%` und `%enter%` bleiben Fork-Extras
+  - #695: LeanType wollte einen schlanken PR nur mit „Alle als Text bearbeiten“ und `%tab%`. Als #781 am 10.11. übernommen (in 4.3.2-beta3), von LeanType als „Massen-Editor“ mit nur Laden und Exportieren gestaltet. Der Fork nutzt seit 10.11. LeanTypes Massen-Editor; die Tastendrücke `%tabkey%`/`%enter%` sind seit 15.11. entfallen
   - #739 abgelehnt wegen: speichert den Auf-/Zugeklappt-Zustand dauerhaft um, eigene Touch-Erkennung, globaler Zustand. Erledigt 9.11. im Fork: Bereiche gehen nur für die angezeigte Seite auf (gespeicherter Zustand bleibt), langer Druck über das normale `combinedClickable` (mit Bedienungshilfen-Beschriftung), Sprungziel im Zustand der Seite statt in einem globalen Objekt. Der E2E-Test fand dabei einen alten Fehler: eine Option weit unten in einer großen Karte blieb außerhalb des Bildschirms, jetzt wird sie selbst ins Bild geholt. Als PR neu anbieten: offen
 - PR-Branches 27.10. vorbereitet (Texte in `PR-TEXTE.md`): `fix/offline-ai-busy` (kein „Context is busy“, Ergebnis bleibt bei eingeklappter Tastatur, Kontext 4096, Grund bei „no output“, keine Texte im Log), `feature/ai-key-clipboard-prepend` ({clipboard}, Ergebnis voranstellen), `feature/more-themes` (Themes ohne Menüänderungen)
 - Später: verschlüsselte Backups
