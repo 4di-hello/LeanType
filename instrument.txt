@@ -1,0 +1,9 @@
+
+helium314.keyboard.e2e.DeviceE2eTest:.....
+helium314.keyboard.e2e.TypingE2eTest:.......
+
+Time: 121.376
+
+OK (12 tests)
+
+
