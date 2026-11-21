@@ -96,14 +96,21 @@ object SilentKeyCorrection {
     private fun append(context: String, codePoint: Int): String =
         (context + String(Character.toChars(Character.toLowerCase(codePoint)))).takeLast(2)
 
-    /** Fields where it is used: text fields without word correction, not for passwords and email addresses */
-    fun isSuitableField(settingsValues: SettingsValues): Boolean {
+    /**
+     * Whether it is used for the next letter: only for letters that are not part of a word the
+     * dictionary corrects, i.e. in fields without suggestions, or where the word isn't composed
+     * (e.g. a web page broke the composing word, or the cursor is inside an existing word).
+     * Not in password and email fields. [context]: see [contextAt].
+     */
+    fun isUsed(settingsValues: SettingsValues, isComposingWord: Boolean, context: String): Boolean {
         val attributes = settingsValues.mInputAttributes
-        if (attributes.mIsPasswordField) return false
+        if (attributes.mIsPasswordField || isComposingWord) return false
         val inputType = attributes.mInputType
         if ((inputType and InputType.TYPE_MASK_CLASS) != InputType.TYPE_CLASS_TEXT) return false
         if (InputTypeUtils.isEmailVariation(inputType and InputType.TYPE_MASK_VARIATION)) return false
-        return !settingsValues.needsToLookupSuggestions()
+        if (!settingsValues.needsToLookupSuggestions()) return true
+        // with suggestions, a letter at the start of a word starts a composing word: the dictionary decides
+        return !context.endsWith(WORD_START)
     }
 
     // ---------------- choosing the key ----------------

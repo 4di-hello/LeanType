@@ -127,11 +127,11 @@ open class KeyDetector {
     private fun silentlyCorrectedKey(keyboard: Keyboard, touchX: Int, touchY: Int, key: Key?): Key? {
         if (key == null || !Character.isLetter(key.code)) return null
         val settingsValues = Settings.getValues()
-        if (!settingsValues.mSilentKeyCorrection || !SilentKeyCorrection.isSuitableField(settingsValues)) return null
-        if (!keyboard.mId.isAlphabetKeyboard) return null
+        if (!settingsValues.mSilentKeyCorrection || !keyboard.mId.isAlphabetKeyboard) return null
         val model = SilentKeyCorrection.model ?: return null
-        val cursor = LatinIME.getInstance()?.mInputLogic?.connection?.expectedSelectionStart ?: return null
-        val context = SilentKeyCorrection.contextAt(cursor) ?: return null
+        val inputLogic = LatinIME.getInstance()?.mInputLogic ?: return null
+        val context = SilentKeyCorrection.contextAt(inputLogic.connection.expectedSelectionStart) ?: return null
+        if (!SilentKeyCorrection.isUsed(settingsValues, inputLogic.wordComposer.isComposingWord(), context)) return null
         val offsets = if (settingsValues.mTypingAdaptEnabled)
             TypingHeatmap.getOffsets(null, KeyboardGeometry.layoutId(keyboard), settingsValues.mTypingAdaptStrength)
         else emptyMap()
