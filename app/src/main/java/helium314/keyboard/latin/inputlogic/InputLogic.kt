@@ -3108,9 +3108,12 @@ class InputLogic(
         val deletedIndex = mDeletedLetterIndex
         mDeletedLetterIndex = -1
         if (!settingsValues.mTypingHeatmapEnabled || settingsValues.mIncognitoModeEnabled) return
-        if (!mWordComposer.isComposingWord() && !settingsValues.needsToLookupSuggestions()) {
+        if (!mWordComposer.isComposingWord()) {
+            // letters are committed directly: no suggestions, or the word isn't composed (e.g. broken by a web page)
             trackDirectLetterRetype(event, settingsValues)
-            return
+        } else {
+            mDirectLetter = 0
+            mDirectLetterDeleted = false
         }
         if (mWordComposer.isBatchMode() || mWordComposer.isResumed()) return
         if (event.keyCode == KeyCode.DELETE) {
