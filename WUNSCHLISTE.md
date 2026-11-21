@@ -44,6 +44,7 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
 ## Tippen wie Gboard/SwiftKey (seit 1.11.)
 
 - Erledigt 21.11.: **Stille Tastenkorrektur** (Textkorrektur → Tipp-Heatmap, Standard an): in Feldern ohne Vorschläge (Adressleiste und Suchfelder im Browser, z. B. Vivaldi) entscheidet bei Tipps nahe der Grenze zweier Tasten der Buchstabe, der besser zu den Buchstaben davor im Wort passt (Buchstabenstatistik aus dem Wörterbuch, nur im Speicher). Nur Grenzfälle, keine Wörter werden ersetzt. Nicht in Passwort- und E-Mail-Feldern
+- Erledigt 21.11. (abends): Stille Tastenkorrektur greift jetzt auch, wenn Vorschläge an sind, das Wort aber nicht zusammengesetzt wird (Webseiten wie Amazons Suchfeld reißen das getippte Wort per JavaScript ab, dann gehen die Buchstaben direkt ins Feld; ebenso beim Tippen mitten in einem vorhandenen Wort). Am Wortanfang entscheidet in solchen Feldern weiter das Wörterbuch
 - Erledigt 21.11.: **Streuung pro Taste** bei der Trefferzonen-Anpassung: Tasten, die Du ungenauer triffst, bekommen eine größere Zone. Wird je Layout und Stärke nur genutzt, wenn es Deine nachgerechneten Fehltreffer senkt; die Tipp-Heatmap zeigt das Ergebnis
 - Erledigt 21.11.: Lernen auch in Feldern ohne Vorschläge: Buchstaben löschen und Nachbarbuchstaben tippen zählt dort jetzt auch für die Heatmap
 - Idee 21.11.: Bewegungsrichtung bei der Anpassung (Daumen schießt in Bewegungsrichtung über); bräuchte die grobe Richtung pro Anschlag (8 Richtungen) und ein paar Wochen Daten
