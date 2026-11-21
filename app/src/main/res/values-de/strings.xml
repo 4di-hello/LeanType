@@ -1839,6 +1839,10 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="typing_adapt_strength_3">Empfohlen</string>
     <string name="typing_adapt_strength_4">Stark</string>
     <string name="typing_adapt_strength_5">Sehr stark</string>
+    <string name="silent_key_correction">Stille Tastenkorrektur</string>
+    <string name="silent_key_correction_summary">In Feldern ohne Vorschläge (z. B. Adressleiste oder Suchfelder im Browser): Ein Tipp nahe der Grenze zweier Tasten ergibt den Buchstaben, der besser zum Wort passt. Nicht in Passwort- und E-Mail-Feldern</string>
+    <string name="typing_adapt_spread_used">Streuung pro Taste: wird genutzt, %1$.1f %% statt %2$.1f %% Fehltreffer nur mit der mittleren Abweichung.</string>
+    <string name="typing_adapt_spread_unused">Streuung pro Taste: wird nicht genutzt, sie verringert Deine Fehltreffer nicht.</string>
     <string name="typing_heatmap_adapt_off">Die Anpassung der Trefferzonen ist aus.</string>
     <string name="typing_heatmap_adapt_waiting">Trefferzonen werden angepasst, sobald eine Taste %1$d Anschläge hat.</string>
     <string name="typing_heatmap_adapt_on">%1$d Tasten sind angepasst. Getönte Flächen: Hier wird ein Anschlag jetzt einer Nachbartaste zugeordnet.</string>

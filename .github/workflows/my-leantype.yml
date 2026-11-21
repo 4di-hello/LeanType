@@ -139,6 +139,7 @@ jobs:
             --tests "helium314.keyboard.keyboard.WordDeleteSwipeTest" \
             --tests "helium314.keyboard.latin.personalization.TextLearnerTest" \
             --tests "helium314.keyboard.latin.heatmap.TypingHeatmapStrengthTest" \
+            --tests "helium314.keyboard.latin.heatmap.SilentKeyCorrectionTest" \
             --tests "helium314.keyboard.latin.personalization.CorrectionStatsTest" \
             --tests "helium314.keyboard.latin.ShortWordSwapTest" \
             --tests "helium314.keyboard.latin.voice.VoiceProcessingTimeoutTest" \
