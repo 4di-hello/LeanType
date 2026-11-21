@@ -166,6 +166,13 @@ fun TypingHeatmapScreen(onClickBack: () -> Unit) {
                         evaluation.missRate(strength.coerceIn(1, 5)), strengthNames[evaluation.best - 1], evaluation.missRate(evaluation.best))
                 }
                 Text(text, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                if (evaluation != null) {
+                    val used = if (strength == TypingHeatmap.AUTO_STRENGTH) evaluation.best else strength.coerceIn(1, 5)
+                    val spreadText = if (evaluation.usesSpread(used))
+                        stringResource(R.string.typing_adapt_spread_used, evaluation.missRate(used), evaluation.missRateWithoutSpread(used))
+                    else stringResource(R.string.typing_adapt_spread_unused)
+                    Text(spreadText, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
             }
 
             // miss rate before and after enabling adaptation

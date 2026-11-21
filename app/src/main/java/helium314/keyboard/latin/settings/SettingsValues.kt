@@ -234,6 +234,7 @@ open class SettingsValues(
     val mTypingHeatmapEnabled: Boolean
     val mTypingAdaptEnabled: Boolean
     val mTypingAdaptStrength: Int
+    val mSilentKeyCorrection: Boolean
     val mDisableMultiWordSuggestions: Boolean
     val mPrioritizePersonalSuggestions: Boolean
     val mSuggestionBalance: Int
@@ -377,6 +378,7 @@ open class SettingsValues(
         mTypingHeatmapEnabled = prefs.getBoolean(Settings.PREF_TYPING_HEATMAP, Defaults.PREF_TYPING_HEATMAP)
         mTypingAdaptEnabled = prefs.getBoolean(Settings.PREF_TYPING_ADAPT, Defaults.PREF_TYPING_ADAPT)
         mTypingAdaptStrength = prefs.getInt(Settings.PREF_TYPING_ADAPT_STRENGTH, Defaults.PREF_TYPING_ADAPT_STRENGTH)
+        mSilentKeyCorrection = prefs.getBoolean(Settings.PREF_SILENT_KEY_CORRECTION, Defaults.PREF_SILENT_KEY_CORRECTION)
         mDisableMultiWordSuggestions = prefs.getBoolean(Settings.PREF_DISABLE_MULTI_WORD_SUGGESTIONS, Defaults.PREF_DISABLE_MULTI_WORD_SUGGESTIONS)
         mBigramPredictionEnabled = prefs.getBoolean(Settings.PREF_BIGRAM_PREDICTIONS, Defaults.PREF_BIGRAM_PREDICTIONS)
         mPrioritizePersonalSuggestions = prefs.getBoolean(Settings.PREF_PRIORITIZE_PERSONAL_SUGGESTIONS, Defaults.PREF_PRIORITIZE_PERSONAL_SUGGESTIONS)

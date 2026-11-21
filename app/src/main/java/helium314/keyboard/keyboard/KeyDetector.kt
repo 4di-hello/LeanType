@@ -6,7 +6,9 @@
 
 package helium314.keyboard.keyboard
 
+import helium314.keyboard.latin.LatinIME
 import helium314.keyboard.latin.heatmap.KeyboardGeometry
+import helium314.keyboard.latin.heatmap.SilentKeyCorrection
 import helium314.keyboard.latin.heatmap.TypingHeatmap
 import helium314.keyboard.latin.settings.Settings
 
@@ -114,7 +116,32 @@ open class KeyDetector {
                 primaryKey = key
             }
         }
-        return adaptedKey(keyboard, touchX, touchY, primaryKey) ?: primaryKey
+        val key = adaptedKey(keyboard, touchX, touchY, primaryKey) ?: primaryKey
+        return silentlyCorrectedKey(keyboard, touchX, touchY, key) ?: key
+    }
+
+    /**
+     * In fields without suggestions: the neighboring letter key, if the touch is close to it and its
+     * letter fits better to the letters before it. See [SilentKeyCorrection].
+     */
+    private fun silentlyCorrectedKey(keyboard: Keyboard, touchX: Int, touchY: Int, key: Key?): Key? {
+        if (key == null || !Character.isLetter(key.code)) return null
+        val settingsValues = Settings.getValues()
+        if (!settingsValues.mSilentKeyCorrection || !SilentKeyCorrection.isSuitableField(settingsValues)) return null
+        if (!keyboard.mId.isAlphabetKeyboard) return null
+        val model = SilentKeyCorrection.model ?: return null
+        val cursor = LatinIME.getInstance()?.mInputLogic?.connection?.expectedSelectionStart ?: return null
+        val context = SilentKeyCorrection.contextAt(cursor) ?: return null
+        val offsets = if (settingsValues.mTypingAdaptEnabled)
+            TypingHeatmap.getOffsets(null, KeyboardGeometry.layoutId(keyboard), settingsValues.mTypingAdaptStrength)
+        else emptyMap()
+        val keys = keyboard.getNearestKeys(touchX, touchY).filter { Character.isLetter(it.code) && it.width > 0 && it.height > 0 }
+        val candidates = keys.map {
+            TypingHeatmap.Candidate(Character.toLowerCase(it.code), it.x.toFloat(), it.y.toFloat(), it.width.toFloat(), it.height.toFloat())
+        }
+        val code = SilentKeyCorrection.choose(touchX.toFloat(), touchY.toFloat(), candidates, offsets) { model.logProb(context, it) }
+            ?: return null
+        return keys.firstOrNull { Character.toLowerCase(it.code) == code }
     }
 
     /**
