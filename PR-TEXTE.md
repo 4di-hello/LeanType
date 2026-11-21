@@ -192,3 +192,24 @@ The field check is a small class with unit tests (`AiFieldCheckTest`). In daily 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
 
 https://claude.ai/code/session_01VuiaMhLXwhErf9shhrr1uD
+
+---
+
+## 10. `feature/ai-key-cancel` (21.11., auf LeanType 4.3.6-beta2, passt zusammen mit #888 und #889)
+
+**Titel:** AI keys: the key that started a request shows an X, tapping it cancels
+
+**Text:**
+
+While an AI request runs, only the proofread key turned into an X, also when the request came from the translate key or a custom AI key.
+
+- The key that started the request now shows the X, and gets its own icon back afterwards.
+- A second tap on the translate key or a custom AI key cancels the request, like the proofread key already did, with a short "AI request cancelled" message.
+
+This fits well with #889: as requests now keep running when the keyboard hides, there should be a clear way to stop one.
+
+Tested together with #888 and #889 (no merge conflicts, unit tests pass); in daily use in my fork since end of October.
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+https://claude.ai/code/session_01VuiaMhLXwhErf9shhrr1uD
