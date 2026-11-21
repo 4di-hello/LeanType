@@ -15,7 +15,9 @@ import java.io.InputStream
 import java.util.concurrent.Executors
 import kotlin.math.abs
 import kotlin.math.hypot
+import kotlin.math.ln
 import kotlin.math.roundToLong
+import kotlin.math.sqrt
 
 /**
  * Learns where the user actually touches keys, and adapts key detection to it.
@@ -304,8 +306,10 @@ object TypingHeatmap {
             if (!loaded) return emptyMap() // not available yet
             val maxShift = maxShift(strength)
             val result = HashMap<Int, FloatArray>()
-            layouts[layoutId]?.samples?.forEach { (code, list) ->
-                effectiveOffset(list, maxShift)?.let { result[code] = it }
+            val stats = layouts[layoutId]?.samples?.mapValues { keyStats(it.value) }.orEmpty()
+            val reference = if (strength in (autoSpread[layoutId] ?: emptySet())) layoutSpread(stats.values) else null
+            stats.forEach { (code, keyStats) ->
+                offsetFromStats(keyStats, maxShift, reference)?.let { result[code] = it }
             }
             val newCache = HashMap(offsetCache)
             newCache[cacheKey] = result
@@ -329,6 +333,8 @@ object TypingHeatmap {
 
     /** per layout: strength chosen from the user's touches, see [evaluateStrengths] */
     @Volatile private var autoStrengths: Map<String, Int> = emptyMap()
+    /** per layout: strengths for which the spread per key reduces misses, see [StrengthEvaluation.usesSpread] */
+    @Volatile private var autoSpread: Map<String, Set<Int>> = emptyMap()
 
     /** The strength actually used: [AUTO_STRENGTH] is replaced by the one chosen for the layout */
     fun resolveStrength(layoutId: String, strength: Int): Int =
@@ -340,10 +346,15 @@ object TypingHeatmap {
      * (its own one left out), so the result shows how well a strength would work for new touches.
      * Null if there are fewer than [MIN_SAMPLES_FOR_AUTO] touches.
      */
-    class StrengthEvaluation(val touches: Int, val misses: IntArray) {
+    class StrengthEvaluation(val touches: Int, val misses: IntArray, val spreadMisses: IntArray = misses) {
+        /** whether the spread per key is used with this strength: only if it reduces the misses */
+        fun usesSpread(strength: Int) = strength in 1..5 && spreadMisses[strength] < misses[strength]
+        private fun effectiveMisses(strength: Int) = if (usesSpread(strength)) spreadMisses[strength] else misses[strength]
         /** strength with the fewest misses, the lower one if equal */
-        val best: Int get() = (1..5).minByOrNull { misses[it] * 10 + it } ?: DEFAULT_STRENGTH
-        fun missRate(strength: Int) = misses[strength] * 100f / touches
+        val best: Int get() = (1..5).minByOrNull { effectiveMisses(it) * 10 + it } ?: DEFAULT_STRENGTH
+        fun missRate(strength: Int) = effectiveMisses(strength) * 100f / touches
+        /** misses with only the average offset per key, without the spread */
+        fun missRateWithoutSpread(strength: Int) = misses[strength] * 100f / touches
     }
 
     fun evaluateStrengths(shapes: List<KeyShape>, samples: Map<Int, Collection<Sample>>): StrengthEvaluation? {
@@ -353,15 +364,20 @@ object TypingHeatmap {
         val sums = HashMap<Int, DoubleArray>()
         for ((code, list) in samples) {
             if (code !in keys) continue
-            sums[code] = doubleArrayOf(list.sumOf { it.dx.coerceIn(-1f, 1f).toDouble() },
-                list.sumOf { it.dy.coerceIn(-1f, 1f).toDouble() }, list.size.toDouble())
+            sums[code] = keyStats(list)
         }
         val touches = samples.filterKeys { it in keys }.values.sumOf { it.size }
         if (touches < MIN_SAMPLES_FOR_AUTO) return null
         val misses = IntArray(6)
+        val spreadMisses = IntArray(6)
+        val reference = layoutSpread(sums.values)
         val offsetsByStrength = (1..5).map { strength ->
             val max = maxShift(strength)
-            sums.mapNotNull { (code, sum) -> offsetFromSums(sum[0], sum[1], sum[2].toInt(), max)?.let { code to it } }.toMap()
+            sums.mapNotNull { (code, sum) -> offsetFromStats(sum, max, null)?.let { code to it } }.toMap()
+        }
+        val spreadOffsetsByStrength = (1..5).map { strength ->
+            val max = maxShift(strength)
+            sums.mapNotNull { (code, sum) -> offsetFromStats(sum, max, reference)?.let { code to it } }.toMap()
         }
         for ((intended, list) in samples) {
             val key = keys[intended] ?: continue
@@ -373,45 +389,122 @@ object TypingHeatmap {
                     .map { Candidate(lower(it.code), it.x, it.y, it.width, it.height) }
                 val plain = candidates.minByOrNull { sq((x - it.x - it.width / 2) / it.width) + sq((y - it.y - it.height / 2) / it.height) }?.code
                 if (plain != intended) misses[0]++
+                // the touch itself must not help: statistics of its key without it
+                val own = withoutSample(sum, sample)
                 for (strength in 1..5) {
-                    val offsets = HashMap(offsetsByStrength[strength - 1])
-                    // the touch itself must not help: offset of its key without it
-                    val own = offsetFromSums(sum[0] - sample.dx.coerceIn(-1f, 1f), sum[1] - sample.dy.coerceIn(-1f, 1f),
-                        sum[2].toInt() - 1, maxShift(strength))
-                    if (own == null) offsets.remove(intended) else offsets[intended] = own
-                    val detected = adaptedKeyCode(x, y, candidates, offsets) ?: plain
-                    if (detected != intended) misses[strength]++
+                    for (withSpread in listOf(false, true)) {
+                        if (withSpread && reference == null) {
+                            spreadMisses[strength] = misses[strength]
+                            continue
+                        }
+                        val offsets = HashMap((if (withSpread) spreadOffsetsByStrength else offsetsByStrength)[strength - 1])
+                        val ownOffset = offsetFromStats(own, maxShift(strength), if (withSpread) reference else null)
+                        if (ownOffset == null) offsets.remove(intended) else offsets[intended] = ownOffset
+                        val detected = adaptedKeyCode(x, y, candidates, offsets) ?: plain
+                        if (detected != intended) {
+                            if (withSpread) spreadMisses[strength]++ else misses[strength]++
+                        }
+                    }
                 }
             }
         }
-        return StrengthEvaluation(touches, misses)
+        return StrengthEvaluation(touches, misses, spreadMisses)
     }
 
-    /** like [effectiveOffset], from sums of the limited offsets */
-    private fun offsetFromSums(sumDx: Double, sumDy: Double, n: Int, maxShift: Float): FloatArray? {
+    // ---------------- statistics per key ----------------
+
+    private const val STAT_SUM_DX = 0
+    private const val STAT_SUM_DY = 1
+    private const val STAT_SUM_SQ_DX = 2
+    private const val STAT_SUM_SQ_DY = 3
+    private const val STAT_COUNT = 4
+    /** limits of the spread of a key relative to the typical spread of the layout */
+    private const val MIN_SPREAD_FACTOR = 0.75f
+    private const val MAX_SPREAD_FACTOR = 1.35f
+    /** keys with enough data needed for the typical spread of a layout */
+    private const val MIN_KEYS_FOR_SPREAD = 5
+
+    /** Sums of the (limited) offsets and their squares, and the number of touches */
+    internal fun keyStats(samples: Collection<Sample>): DoubleArray {
+        val stats = DoubleArray(5)
+        for (sample in samples) {
+            val dx = sample.dx.coerceIn(-1f, 1f).toDouble()
+            val dy = sample.dy.coerceIn(-1f, 1f).toDouble()
+            stats[STAT_SUM_DX] += dx
+            stats[STAT_SUM_DY] += dy
+            stats[STAT_SUM_SQ_DX] += dx * dx
+            stats[STAT_SUM_SQ_DY] += dy * dy
+        }
+        stats[STAT_COUNT] = samples.size.toDouble()
+        return stats
+    }
+
+    private fun withoutSample(stats: DoubleArray, sample: Sample): DoubleArray {
+        val dx = sample.dx.coerceIn(-1f, 1f).toDouble()
+        val dy = sample.dy.coerceIn(-1f, 1f).toDouble()
+        return doubleArrayOf(stats[STAT_SUM_DX] - dx, stats[STAT_SUM_DY] - dy,
+            stats[STAT_SUM_SQ_DX] - dx * dx, stats[STAT_SUM_SQ_DY] - dy * dy, stats[STAT_COUNT] - 1)
+    }
+
+    /** standard deviation of the touches of a key in x and y, in key sizes */
+    private fun spread(stats: DoubleArray): FloatArray? {
+        val n = stats[STAT_COUNT]
+        if (n < MIN_SAMPLES_FOR_ADAPTATION) return null
+        val mx = stats[STAT_SUM_DX] / n
+        val my = stats[STAT_SUM_DY] / n
+        val sx = sqrt((stats[STAT_SUM_SQ_DX] / n - mx * mx).coerceAtLeast(0.0)).toFloat()
+        val sy = sqrt((stats[STAT_SUM_SQ_DY] / n - my * my).coerceAtLeast(0.0)).toFloat()
+        if (!sx.isFinite() || !sy.isFinite() || sx <= 0f || sy <= 0f) return null
+        return floatArrayOf(sx, sy)
+    }
+
+    /** Typical spread of the touches of a layout (median of the keys), null if not enough keys have data */
+    internal fun layoutSpread(stats: Collection<DoubleArray>): FloatArray? {
+        val spreads = stats.mapNotNull { spread(it) }
+        if (spreads.size < MIN_KEYS_FOR_SPREAD) return null
+        val xs = spreads.map { it[0] }.sorted()
+        val ys = spreads.map { it[1] }.sorted()
+        return floatArrayOf(xs[xs.size / 2], ys[ys.size / 2])
+    }
+
+    /**
+     * Offset of a key from its statistics, see [effectiveOffset]. With a [reference] spread of the
+     * layout, the result also contains how much the touches of this key spread compared to the
+     * other keys: [dx, dy, spread factor x, spread factor y, typical variance of the layout].
+     */
+    internal fun offsetFromStats(stats: DoubleArray, maxShift: Float, reference: FloatArray?): FloatArray? {
+        val n = stats[STAT_COUNT].toInt()
         if (n < MIN_SAMPLES_FOR_ADAPTATION) return null
         val weight = ((n - MIN_SAMPLES_FOR_ADAPTATION + 1).toFloat() /
                 (FULL_SAMPLES_FOR_ADAPTATION - MIN_SAMPLES_FOR_ADAPTATION + 1)).coerceIn(0f, 1f)
-        var dx = (sumDx / n).toFloat() * weight
-        var dy = (sumDy / n).toFloat() * weight
+        var dx = (stats[STAT_SUM_DX] / n).toFloat() * weight
+        var dy = (stats[STAT_SUM_DY] / n).toFloat() * weight
         if (!dx.isFinite() || !dy.isFinite()) return null
         val length = hypot(dx, dy)
         if (length > maxShift) {
             dx *= maxShift / length
             dy *= maxShift / length
         }
-        return floatArrayOf(dx, dy)
+        val own = if (reference == null) null else spread(stats)
+        if (reference == null || own == null || reference[0] <= 0f || reference[1] <= 0f) return floatArrayOf(dx, dy)
+        // like the offset: only with enough data, and limited
+        val fx = (1f + weight * (own[0] / reference[0] - 1f)).coerceIn(MIN_SPREAD_FACTOR, MAX_SPREAD_FACTOR)
+        val fy = (1f + weight * (own[1] / reference[1] - 1f)).coerceIn(MIN_SPREAD_FACTOR, MAX_SPREAD_FACTOR)
+        return floatArrayOf(dx, dy, fx, fy, reference[0] * reference[1])
     }
 
     /** chooses the strength for each layout again, in background */
     private fun updateAutoStrengths(copies: List<LayoutCopy>) {
         val result = HashMap(autoStrengths)
+        val spreadResult = HashMap(autoSpread)
         for (copy in copies) {
             val evaluation = try { evaluateStrengths(copy.shapes, copy.samples) } catch (e: Exception) { null } ?: continue
             result[copy.id] = evaluation.best
+            spreadResult[copy.id] = (1..5).filter { evaluation.usesSpread(it) }.toSet()
         }
-        if (result != autoStrengths) {
+        if (result != autoStrengths || spreadResult != autoSpread) {
             autoStrengths = result
+            autoSpread = spreadResult
             offsetCache = HashMap()
         }
     }
@@ -422,22 +515,8 @@ object TypingHeatmap {
      * Average offset of the touches meant for a key, weighted by the amount of data and limited
      * to [maxShift]. Null if there is not enough data.
      */
-    fun effectiveOffset(samples: Collection<Sample>, maxShift: Float): FloatArray? {
-        val n = samples.size
-        if (n < MIN_SAMPLES_FOR_ADAPTATION) return null
-        val weight = ((n - MIN_SAMPLES_FOR_ADAPTATION + 1).toFloat() /
-                (FULL_SAMPLES_FOR_ADAPTATION - MIN_SAMPLES_FOR_ADAPTATION + 1)).coerceIn(0f, 1f)
-        // limit single outliers
-        var dx = samples.sumOf { it.dx.coerceIn(-1f, 1f).toDouble() }.toFloat() / n * weight
-        var dy = samples.sumOf { it.dy.coerceIn(-1f, 1f).toDouble() }.toFloat() / n * weight
-        if (!dx.isFinite() || !dy.isFinite()) return null
-        val length = hypot(dx, dy)
-        if (length > maxShift) {
-            dx *= maxShift / length
-            dy *= maxShift / length
-        }
-        return floatArrayOf(dx, dy)
-    }
+    fun effectiveOffset(samples: Collection<Sample>, maxShift: Float): FloatArray? =
+        offsetFromStats(keyStats(samples), maxShift, null) // single outliers are limited in keyStats
 
     /**
      * Code of the key a touch at [x], [y] is meant for, if adaptation decides differently than
@@ -449,16 +528,14 @@ object TypingHeatmap {
         var bestPlain: Candidate? = null
         var bestPlainDistance = Float.MAX_VALUE
         var bestAdapted: Candidate? = null
+        var bestAdaptedScore = Float.MAX_VALUE
         var bestAdaptedDistance = Float.MAX_VALUE
         for (c in candidates) {
-            val cx = c.x + c.width / 2
-            val cy = c.y + c.height / 2
-            val plain = sq((x - cx) / c.width) + sq((y - cy) / c.height)
-            val offset = offsets[c.code]
-            val adapted = if (offset == null) plain
-                else sq((x - cx - offset[0] * c.width) / c.width) + sq((y - cy - offset[1] * c.height) / c.height)
+            val plain = sq((x - c.x - c.width / 2) / c.width) + sq((y - c.y - c.height / 2) / c.height)
+            val distance = adaptedDistance(x, y, c, offsets[c.code])
+            val score = adaptedScore(x, y, c, offsets[c.code])
             if (plain < bestPlainDistance) { bestPlainDistance = plain; bestPlain = c }
-            if (adapted < bestAdaptedDistance) { bestAdaptedDistance = adapted; bestAdapted = c }
+            if (score < bestAdaptedScore) { bestAdaptedScore = score; bestAdaptedDistance = distance; bestAdapted = c }
         }
         if (bestAdapted == null || bestAdapted === bestPlain) return null
         // don't take touches that are far away from the adapted key
@@ -480,6 +557,27 @@ object TypingHeatmap {
         val ay = (y - offset[1] * keyHeight).toInt().coerceAtLeast(0)
         if (ax != x || ay != y) rawTouches[pack(ax + correctionX, ay + correctionY)] = pack(x + correctionX, y + correctionY)
         return intArrayOf(ax, ay)
+    }
+
+    /** squared distance of a touch from the adapted key center, in key sizes */
+    fun adaptedDistance(x: Float, y: Float, c: Candidate, offset: FloatArray?): Float {
+        val ox = offset?.get(0) ?: 0f
+        val oy = offset?.get(1) ?: 0f
+        return sq((x - c.x - c.width / 2 - ox * c.width) / c.width) + sq((y - c.y - c.height / 2 - oy * c.height) / c.height)
+    }
+
+    /**
+     * How badly a touch fits a key: the squared distance from the adapted key center, scaled by the
+     * spread of the key if known (keys hit less precisely get a larger zone). Lower is better.
+     * Like -2 * log likelihood of a normal distribution, in units of the typical variance.
+     */
+    fun adaptedScore(x: Float, y: Float, c: Candidate, offset: FloatArray?): Float {
+        if (offset == null || offset.size < 5) return adaptedDistance(x, y, c, offset)
+        val fx = offset[2]
+        val fy = offset[3]
+        val dx = (x - c.x - c.width / 2 - offset[0] * c.width) / c.width
+        val dy = (y - c.y - c.height / 2 - offset[1] * c.height) / c.height
+        return sq(dx / fx) + sq(dy / fy) + 2f * offset[4] * ln(fx * fy)
     }
 
     private fun sq(f: Float) = f * f
@@ -923,6 +1021,8 @@ object TypingHeatmap {
         appContext = null
         learnedOnDevice = null
         offsetCache = HashMap()
+        autoStrengths = emptyMap()
+        autoSpread = emptyMap()
         rawTouches.clear()
     }
 
