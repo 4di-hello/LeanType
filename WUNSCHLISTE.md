@@ -43,6 +43,11 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
 
 ## Tippen wie Gboard/SwiftKey (seit 1.11.)
 
+- Erledigt 21.11.: **Stille Tastenkorrektur** (Textkorrektur → Tipp-Heatmap, Standard an): in Feldern ohne Vorschläge (Adressleiste und Suchfelder im Browser, z. B. Vivaldi) entscheidet bei Tipps nahe der Grenze zweier Tasten der Buchstabe, der besser zu den Buchstaben davor im Wort passt (Buchstabenstatistik aus dem Wörterbuch, nur im Speicher). Nur Grenzfälle, keine Wörter werden ersetzt. Nicht in Passwort- und E-Mail-Feldern
+- Erledigt 21.11.: **Streuung pro Taste** bei der Trefferzonen-Anpassung: Tasten, die Du ungenauer triffst, bekommen eine größere Zone. Wird je Layout und Stärke nur genutzt, wenn es Deine nachgerechneten Fehltreffer senkt; die Tipp-Heatmap zeigt das Ergebnis
+- Erledigt 21.11.: Lernen auch in Feldern ohne Vorschläge: Buchstaben löschen und Nachbarbuchstaben tippen zählt dort jetzt auch für die Heatmap
+- Idee 21.11.: Bewegungsrichtung bei der Anpassung (Daumen schießt in Bewegungsrichtung über); bräuchte die grobe Richtung pro Anschlag (8 Richtungen) und ein paar Wochen Daten
+- Hinweis 21.11.: Für Vivaldi zusätzlich App-Profil möglich (Vorschläge immer anzeigen, Autokorrektur immer an); die globale Option „Immer Vorschläge“ nimmt Web-Felder standardmäßig aus („Nicht immer Vorschläge für Web-Editierfelder“). LeanType 4.3.5 behebt doppelte Buchstaben in Chromium-Browsern bei erzwungenen Vorschlägen
 - Erledigt 9.11.: kurze Wörter mit zwei vertauschten Buchstaben werden korrigiert (dsa→das, ihc→ich, dei→die, nud→und, teh→the). LeanType korrigiert unbekannte Wörter bis 3 Buchstaben sonst nie (damit Abkürzungen wie db, yt bleiben); vertauschte Nachbarbuchstaben sind aber fast immer ein Tippfehler
 - Ziel: weniger falsche und fehlende Korrekturen, bessere Vorschläge fürs nächste Wort, flüssigeres Gefühl
 - Erledigt 1.11.: „Aus meinen Texten lernen“ (Textkorrektur): eigene Texte einfügen oder Textdatei laden, lernt Wörter und Wortfolgen in den persönlichen Verlauf (unbekannte Wörter nur ab 2× im Text, gegen gelernte Tippfehler); Text wird beim nächsten Öffnen der Tastatur in der aktuellen Sprache gelernt und gelöscht
@@ -71,6 +76,7 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
   - KI-Ergebnisse: gleiche App ist Pflicht, zusätzlich Vergleich des ganzen Feldinhalts (getExtractedText), damit Ergebnisse seltener unnötig in der Zwischenablage landen
   - Gelernte Tippfehler: die Vorschlagsleiste zeigt die Korrektur schon beim Tippen fett an, wie eine Autokorrektur
   - Unit-Tests für gelernte Tippfehler, KI-Feldprüfung und Plugin-Prüfung
+- 21.11.: Auf LeanType 4.3.6-beta2 aktualisiert (Sicherung `backup/daily-2026-11-21`), u. a. Chromium-Doppelbuchstaben behoben, Wörterbuch-Wörter werden beim Entfernen eines Vorschlags nicht mehr gesperrt, Wischen über die ganze Tastatur für Löschen/Leerzeichen, lokale GIF-Pakete. Plugin-Prüfung im CJK-Lader wieder eingesetzt
 - 15.11.: Auf LeanType 4.3.3 aktualisiert (Sicherung `backup/daily-2026-11-15`). Unsere drei PRs sind dort jetzt drin (#797 Spracheingabe, #798 vertauschte Buchstaben, #799 Einstellungssprung), der Fork nutzt dafür jetzt LeanTypes Code. Dazu:
   - Tastendrücke `%tabkey%`/`%enter%` in Textbausteinen entfernt (Fork-Code in InputLogic weg)
   - Aufklappbare Bereiche der Einstellungen auf LeanTypes neue Zeilen-Liste umgebaut; ein Sprung aus der Suche öffnet einen zugeklappten Bereich nur zum Anzeigen
