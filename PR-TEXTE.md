@@ -1,4 +1,4 @@
-# PR-Texte für LeanType (Stand 13.11.2026)
+# PR-Texte für LeanType (Stand 21.11.2026)
 
 Nur in diesem Fork. Je PR: auf GitHub „Compare & pull request“ von `4di-hello:<Branch>` nach `LeanBitLab:main`, Titel und Text unten einfügen.
 
@@ -149,3 +149,46 @@ Basis: LeanType 4.3.2. Link: https://github.com/LeanBitLab/LeanType/compare/main
 > - The setting itself is brought into view, also further down in a large card, and highlighted for a moment.
 >
 > Tests: `SettingsJumpTest` (the steps: open sections, keep only the one with the setting, give up). Also tested on an emulator: long press on a search result, the setting is shown and highlighted, and the saved section state is unchanged afterwards.
+
+---
+
+## 8. `feature/offline-ai-chat-format` (21.11., auf LeanType 4.3.6-beta2)
+
+**Titel:** Offline AI: chat format for Qwen and LFM2 models, no texts in the log
+
+**Text:**
+
+Local chat models answer much better with their own chat format:
+
+- **Qwen and LFM2** models (detected by the model file name) now get the instruction as system message and the text as user message (ChatML). With the plain "Instruction / Input / Output" prompt they often answered badly, took the few-shot examples as part of the text, and Qwen3 first "thought" and used up the available tokens.
+- For Qwen, an empty think block switches thinking off, unless "Show thinking" is enabled.
+- Other models get the prompt exactly as before.
+- A prompt without `{text}` and an empty field (e.g. a custom key working on the clipboard) is sent as the request itself.
+
+Also, the log no longer contains the input and the generated text, only their lengths: the texts are private, and the system log can be read by other tools (like #825 for typed words).
+
+Tested with Qwen3-4B-Instruct-2507 Q4_0 and LFM2; in daily use in my fork for some weeks.
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+https://claude.ai/code/session_01VuiaMhLXwhErf9shhrr1uD
+
+---
+
+## 9. `fix/ai-key-result-after-hide` (21.11., auf LeanType 4.3.6-beta2)
+
+**Titel:** Custom AI keys: keep the result when the keyboard hides, insert it only into the same field
+
+**Text:**
+
+Some editors hide the keyboard while a custom AI key is running, e.g. because they react to the cursor being moved for the result (seen in Nine Mail). The request was cancelled and the result was lost.
+
+- **Result kept:** the request keeps running when the keyboard hides. A result that arrives meanwhile is inserted when the keyboard comes back into the same field within two minutes.
+- **Only the same field:** many apps use the same field id for all their text fields (e.g. every chat). So the field must also be in the same app, have the same input type and the same text (the text around the cursor, or as a second check the whole text the app gives for extraction, because some apps report the selection unreliably), and is never a password field. Otherwise the result is copied to the clipboard with a short message, instead of going into the wrong place. The same check is used when the keyboard stayed open.
+- **No "Context is busy" (offline):** the plugin can't stop a running generation, so a new request failed with "Context is busy" / "Model produced no output". Generations now run one after another.
+
+The field check is a small class with unit tests (`AiFieldCheckTest`). In daily use in my fork since end of October.
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+https://claude.ai/code/session_01VuiaMhLXwhErf9shhrr1uD
