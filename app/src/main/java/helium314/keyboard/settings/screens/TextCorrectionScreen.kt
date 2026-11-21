@@ -109,6 +109,7 @@ fun TextCorrectionScreen(
             Settings.PREF_TYPING_HEATMAP,
             Settings.PREF_TYPING_ADAPT,
             Settings.PREF_TYPING_ADAPT_STRENGTH,
+            Settings.PREF_SILENT_KEY_CORRECTION,
             SettingsWithoutKey.SCREEN_NAV_TYPING_HEATMAP,
             SettingsWithoutKey.LEARN_FROM_TEXT
         )
@@ -130,6 +131,9 @@ fun createCorrectionSettings(context: Context) = listOf(
     },
     Setting(context, Settings.PREF_TYPING_ADAPT, R.string.typing_adapt, R.string.typing_adapt_summary) {
         SwitchPreference(it, Defaults.PREF_TYPING_ADAPT)
+    },
+    Setting(context, Settings.PREF_SILENT_KEY_CORRECTION, R.string.silent_key_correction, R.string.silent_key_correction_summary) {
+        SwitchPreference(it, Defaults.PREF_SILENT_KEY_CORRECTION)
     },
     Setting(context, Settings.PREF_TYPING_ADAPT_STRENGTH, R.string.typing_adapt_strength) { setting ->
         SliderPreference(

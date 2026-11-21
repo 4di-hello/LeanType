@@ -23,6 +23,7 @@ import helium314.keyboard.event.Event
 import helium314.keyboard.latin.LearnedCasing
 import helium314.keyboard.latin.utils.prefs
 import helium314.keyboard.latin.heatmap.KeyboardGeometry
+import helium314.keyboard.latin.heatmap.SilentKeyCorrection
 import helium314.keyboard.latin.heatmap.TypingHeatmap
 import helium314.keyboard.latin.LearnedTypos
 import helium314.keyboard.latin.personalization.CorrectionStats
@@ -157,6 +158,8 @@ class InputLogic(
         TypingHeatmap.init(mLatinIME)
         CorrectionStats.tracker.clear()
         mDeletedLetterIndex = -1
+        mDirectLetter = 0
+        mDirectLetterDeleted = false
         mRecapitalizedWord = null
         mEnteredText = null
         mWordBeingCorrectedByCursor = null
@@ -504,6 +507,7 @@ class InputLogic(
         mJustRevertedACommit = false
         if (event.keyCode != KeyCode.DELETE) TypingHeatmap.finalizePending()
         trackLetterRetype(event, settingsValues)
+        val cursorBeforeEvent = mConnection.expectedSelectionStart
         val processedEvent = mWordComposer.processEvent(event)
         val inputTransaction = InputTransaction(
             settingsValues,
@@ -576,6 +580,8 @@ class InputLogic(
         } finally {
             mConnection.endBatchEdit()
         }
+        SilentKeyCorrection.onInput(processedEvent.codePoint, processedEvent.keyCode == KeyCode.DELETE,
+            processedEvent.isFunctionalKeyEvent, cursorBeforeEvent, mConnection.expectedSelectionStart)
         return inputTransaction
     }
 
@@ -3189,6 +3195,10 @@ class InputLogic(
         val deletedIndex = mDeletedLetterIndex
         mDeletedLetterIndex = -1
         if (!settingsValues.mTypingHeatmapEnabled || settingsValues.mIncognitoModeEnabled) return
+        if (!mWordComposer.isComposingWord() && !settingsValues.needsToLookupSuggestions()) {
+            trackDirectLetterRetype(event, settingsValues)
+            return
+        }
         if (mWordComposer.isBatchMode() || mWordComposer.isResumed()) return
         if (event.keyCode == KeyCode.DELETE) {
             if (event.isKeyRepeat || !mWordComposer.isComposingWord() || mWordComposer.isCursorFrontOrMiddleOfComposingWord()) return
@@ -3212,6 +3222,42 @@ class InputLogic(
             mLatinIME, KeyboardGeometry(keyboard), mDeletedLetter, mDeletedLetterX, mDeletedLetterY,
             codePoint, settingsValues.mTypingAdaptEnabled
         )
+    }
+
+    // last letter committed directly (field without suggestions), and whether it was deleted with a single backspace press
+    private var mDirectLetter = 0
+    private var mDirectLetterX = 0
+    private var mDirectLetterY = 0
+    private var mDirectLetterDeleted = false
+
+    /** Like [trackLetterRetype], for fields without suggestions: letters are committed directly, there is no composing word */
+    private fun trackDirectLetterRetype(event: Event, settingsValues: SettingsValues) {
+        val deleted = mDirectLetterDeleted
+        mDirectLetterDeleted = false
+        if (event.keyCode == KeyCode.DELETE) {
+            // only the letter typed last, deleted with one press
+            mDirectLetterDeleted = mDirectLetter != 0 && !event.isKeyRepeat && !mConnection.hasSelection()
+            mDirectLetter = if (mDirectLetterDeleted) mDirectLetter else 0
+            return
+        }
+        val codePoint = event.codePoint
+        val isLetter = codePoint > 0 && Character.isLetter(codePoint) && event.x >= 0 && event.y >= 0
+        if (deleted && isLetter && mDirectLetter != 0) {
+            val keyboard = mLatinIME.keyboardSwitcher.keyboard
+            if (keyboard != null && keyboard.mId.isAlphabetKeyboard) {
+                TypingHeatmap.onLetterRetyped(
+                    mLatinIME, KeyboardGeometry(keyboard), mDirectLetter, mDirectLetterX, mDirectLetterY,
+                    codePoint, settingsValues.mTypingAdaptEnabled
+                )
+            }
+        }
+        if (isLetter && !settingsValues.mInputAttributes.mIsPasswordField) {
+            mDirectLetter = codePoint
+            mDirectLetterX = event.x
+            mDirectLetterY = event.y
+        } else {
+            mDirectLetter = 0
+        }
     }
 
     private fun commitChosenWord(

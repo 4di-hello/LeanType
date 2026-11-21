@@ -2612,6 +2612,10 @@ New dictionary:
     <string name="typing_adapt_strength_3">Recommended</string>
     <string name="typing_adapt_strength_4">Strong</string>
     <string name="typing_adapt_strength_5">Very strong</string>
+    <string name="silent_key_correction">Silent key correction</string>
+    <string name="silent_key_correction_summary">In fields without suggestions (e.g. address bar or search fields in a browser), a touch close to the border of two keys gives the letter that fits better to the word. Not in password and email fields</string>
+    <string name="typing_adapt_spread_used">Spread per key: used, %1$.1f %% misses instead of %2$.1f %% with the average offset only.</string>
+    <string name="typing_adapt_spread_unused">Spread per key: not used, it does not reduce your misses.</string>
     <string name="typing_heatmap_adapt_off">Key zone adaptation is off.</string>
     <string name="typing_heatmap_adapt_waiting">Key zones are adapted as soon as a key has %1$d touches.</string>
     <string name="typing_heatmap_adapt_on">%1$d keys are adapted. Tinted areas: here a touch is now assigned to a neighboring key.</string>

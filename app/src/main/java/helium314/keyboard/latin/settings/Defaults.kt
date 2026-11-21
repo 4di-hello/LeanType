@@ -109,6 +109,7 @@ object Defaults {
     const val PREF_TYPING_HEATMAP = false
     const val PREF_TYPING_ADAPT = false
     const val PREF_TYPING_ADAPT_STRENGTH = 0 // automatic, see TypingHeatmap.AUTO_STRENGTH
+    const val PREF_SILENT_KEY_CORRECTION = true
     const val PREF_CENTER_SUGGESTION_TEXT_TO_ENTER = false
     const val PREF_CENTER_TYPED_WORD = false
     const val PREF_SUGGESTION_UPDATE_DELAY = 100

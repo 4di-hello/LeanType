@@ -49,6 +49,7 @@ import helium314.keyboard.accessibility.AccessibilityUtils
 import helium314.keyboard.compat.AppQuirksManager
 import helium314.keyboard.compat.BrowserDetector
 import helium314.keyboard.compat.EditorInfoCompatUtils
+import helium314.keyboard.latin.heatmap.SilentKeyCorrection
 import helium314.keyboard.compat.isDeviceLocked
 import helium314.keyboard.compat.refreshDeviceLocked
 import helium314.keyboard.latin.style.UnicodeStyleEngine
@@ -947,10 +948,13 @@ class LatinIME : InputMethodService(),
             resetDictionaryFacilitatorIfNecessary()
             
             if (!inputLogic.connection.resetCachesUponCursorMoveAndReturnSuccess(editorInfo.initialSelStart, editorInfo.initialSelEnd, false)) {
+                SilentKeyCorrection.onStartInput(null, -1)
                 handler.postResetCaches(isDifferentTextField, 5)
                 needToCallLoadKeyboardLater = true
             } else {
                 inputLogic.connection.tryFixIncorrectCursorPosition()
+                SilentKeyCorrection.onStartInput(editorInfo, inputLogic.connection.expectedSelectionStart)
+                if (currentSettingsValues.mSilentKeyCorrection) SilentKeyCorrection.ensureModel(dictionaryFacilitator)
                 if (inputLogic.connection.isCursorTouchingWord(currentSettingsValues.mSpacingAndPunctuations, true)) {
                     handler.postResumeSuggestions(true)
                 }
