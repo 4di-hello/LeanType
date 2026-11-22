@@ -753,6 +753,12 @@ class InputLogic(
     }
 
     private fun handleTranslate() {
+        // a second tap while the AI is working cancels it
+        if (ProofreadHelper.isOperationInProgress) {
+            ProofreadHelper.cancelCurrentOperation()
+            KeyboardSwitcher.getInstance().showToast(mLatinIME.getString(R.string.ai_cancelled), true)
+            return
+        }
         val textToTranslate: String
         val hasSelection = mConnection.hasSelection()
 
@@ -796,6 +802,7 @@ class InputLogic(
         val targetPackage = targetEditorInfo?.packageName
         val targetFieldId = targetEditorInfo?.fieldId
 
+        helium314.keyboard.latin.suggestions.nextLoadingKey = helium314.keyboard.latin.utils.ToolbarKey.TRANSLATE
         ProofreadHelper.translateAsync(
             mLatinIME,
             textToTranslate,
@@ -3165,6 +3172,12 @@ class InputLogic(
     }
 
     private fun handleCustomAIKey(index: Int) {
+        // a second tap while the AI is working cancels it
+        if (ProofreadHelper.isOperationInProgress) {
+            ProofreadHelper.cancelCurrentOperation()
+            KeyboardSwitcher.getInstance().showToast(mLatinIME.getString(R.string.ai_cancelled), true)
+            return
+        }
         val prefs = helium314.keyboard.latin.utils.DeviceProtectedUtils.getSharedPreferences(mLatinIME)
         var prompt = prefs.getString("pref_custom_ai_prompt_$index", "") ?: ""
         val systemInstructionBuilder = StringBuilder()
@@ -3279,6 +3292,7 @@ class InputLogic(
         val inputSession = mInputSession
         mPendingAIResult = null // an older result must not be inserted after this one
 
+        helium314.keyboard.latin.suggestions.nextLoadingKey = helium314.keyboard.latin.utils.ToolbarKey.entries.firstOrNull { it.name == "CUSTOM_AI_$index" }
         ProofreadHelper.customAsync(
             mLatinIME,
             textToProcess, prompt, hasSelection, showThinking,
