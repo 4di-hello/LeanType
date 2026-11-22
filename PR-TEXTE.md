@@ -24,8 +24,6 @@ Tested with Qwen3-4B-Instruct-2507 Q4_0; the same changes are in daily use in my
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
 
-https://claude.ai/code/session_01VuiaMhLXwhErf9shhrr1uD
-
 ---
 
 ## 2. `feature/ai-key-clipboard-prepend`
@@ -53,8 +51,6 @@ Unit tests in `CustomAIKeyTextTest`.
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
 
-https://claude.ai/code/session_01VuiaMhLXwhErf9shhrr1uD
-
 ---
 
 ## 3. `feature/more-themes`
@@ -75,8 +71,6 @@ More built-in color themes, without any change to the existing themes or setting
 Unit tests in `KeyboardThemeTest` (all themes resolve, readable text contrast).
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
-
-https://claude.ai/code/session_01VuiaMhLXwhErf9shhrr1uD
 
 ---
 
@@ -171,8 +165,6 @@ Tested with Qwen3-4B-Instruct-2507 Q4_0 and LFM2; in daily use in my fork for so
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
 
-https://claude.ai/code/session_01VuiaMhLXwhErf9shhrr1uD
-
 ---
 
 ## 9. `fix/ai-key-result-after-hide` → #889 (nach Review überarbeitet 22.11.) (21.11., auf LeanType 4.3.6-beta2)
@@ -190,8 +182,6 @@ Some editors hide the keyboard while a custom AI key is running, e.g. because th
 The field check is a small class with unit tests (`AiFieldCheckTest`). In daily use in my fork since end of October.
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
-
-https://claude.ai/code/session_01VuiaMhLXwhErf9shhrr1uD
 
 ---
 
@@ -212,8 +202,6 @@ Tested together with #888 and #889 (no merge conflicts, unit tests pass); in dai
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
 
-https://claude.ai/code/session_01VuiaMhLXwhErf9shhrr1uD
-
 ---
 
 ## 11. `feature/settings-search-word-parts` → #901 (22.11., auf LeanType 4.3.6-beta3)
@@ -231,8 +219,6 @@ The settings search only finds words that start with the search term. In languag
 Small change in `SettingsContainer.filter` (the comment there says filtering could be more elaborate). Unit tests pass; in daily use in my fork since October.
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
-
-https://claude.ai/code/session_01VuiaMhLXwhErf9shhrr1uD
 
 ---
 
@@ -254,8 +240,6 @@ Feel free to take only #<Nummer von PR 11> if you'd rather not have the extra st
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
 
-https://claude.ai/code/session_01VuiaMhLXwhErf9shhrr1uD
-
 ---
 
 ## 13. `feature/settings-test-field` → #903 (22.11., auf LeanType 4.3.6-beta3)
@@ -273,8 +257,6 @@ To see the effect of a changed theme, key size or suggestion setting, you have t
 In daily use in my fork since October.
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
-
-https://claude.ai/code/session_01VuiaMhLXwhErf9shhrr1uD
 
 ---
 
@@ -295,5 +277,3 @@ Long settings screens are easier to overview when sections you don't need can be
 In daily use in my fork since October.
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
-
-https://claude.ai/code/session_01VuiaMhLXwhErf9shhrr1uD
