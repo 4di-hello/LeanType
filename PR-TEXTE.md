@@ -152,7 +152,7 @@ Basis: LeanType 4.3.2. Link: https://github.com/LeanBitLab/LeanType/compare/main
 
 ---
 
-## 8. `feature/offline-ai-chat-format` (21.11., auf LeanType 4.3.6-beta2)
+## 8. `feature/offline-ai-chat-format` → #888, übernommen 22.11. (21.11., auf LeanType 4.3.6-beta2)
 
 **Titel:** Offline AI: chat format for Qwen and LFM2 models, no texts in the log
 
@@ -175,7 +175,7 @@ https://claude.ai/code/session_01VuiaMhLXwhErf9shhrr1uD
 
 ---
 
-## 9. `fix/ai-key-result-after-hide` (21.11., auf LeanType 4.3.6-beta2)
+## 9. `fix/ai-key-result-after-hide` → #889 (nach Review überarbeitet 22.11.) (21.11., auf LeanType 4.3.6-beta2)
 
 **Titel:** Custom AI keys: keep the result when the keyboard hides, insert it only into the same field
 
@@ -195,7 +195,7 @@ https://claude.ai/code/session_01VuiaMhLXwhErf9shhrr1uD
 
 ---
 
-## 10. `feature/ai-key-cancel` (21.11., auf LeanType 4.3.6-beta2, passt zusammen mit #888 und #889)
+## 10. `feature/ai-key-cancel` → #890 (nach Review überarbeitet 22.11.) (21.11., auf LeanType 4.3.6-beta2, passt zusammen mit #888 und #889)
 
 **Titel:** AI keys: the key that started a request shows an X, tapping it cancels
 
@@ -216,7 +216,7 @@ https://claude.ai/code/session_01VuiaMhLXwhErf9shhrr1uD
 
 ---
 
-## 11. `feature/settings-search-word-parts` (22.11., auf LeanType 4.3.6-beta3)
+## 11. `feature/settings-search-word-parts` → #901 (22.11., auf LeanType 4.3.6-beta3)
 
 **Titel:** Settings search: also find parts of words
 
@@ -236,7 +236,7 @@ https://claude.ai/code/session_01VuiaMhLXwhErf9shhrr1uD
 
 ---
 
-## 12. `feature/settings-search-keywords` (22.11., baut auf 11 auf)
+## 12. `feature/settings-search-keywords` → #902 (22.11., baut auf 11 auf)
 
 **Titel:** Settings search: additional search words for some settings
 
@@ -258,7 +258,7 @@ https://claude.ai/code/session_01VuiaMhLXwhErf9shhrr1uD
 
 ---
 
-## 13. `feature/settings-test-field` (22.11., auf LeanType 4.3.6-beta3)
+## 13. `feature/settings-test-field` → #903 (22.11., auf LeanType 4.3.6-beta3)
 
 **Titel:** Settings: a field to try the keyboard on the appearance and suggestion screens
 
@@ -278,7 +278,7 @@ https://claude.ai/code/session_01VuiaMhLXwhErf9shhrr1uD
 
 ---
 
-## 14. `feature/settings-collapsible-sections` (22.11., optional, zuletzt einstellen)
+## 14. `feature/settings-collapsible-sections` → #904 (22.11., optional, zuletzt einstellen)
 
 **Titel:** Settings: sections can be collapsed (optional)
 
