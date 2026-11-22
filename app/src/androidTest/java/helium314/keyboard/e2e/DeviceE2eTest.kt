@@ -222,7 +222,8 @@ class DeviceE2eTest {
         back()
         back()
 
-        open("Advanced")
+        // at the end of the main page (LeanType 4.3.6 groups it): like the heatmap above, the accessibility tree lags
+        E2e.onMain { SettingsDestination.navigateTo(SettingsDestination.Advanced) }
         scrollTo("Allow switching by other apps")
         E2e.screenshot("s6_advanced")
         open("Automatic backup")
