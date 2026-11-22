@@ -213,3 +213,87 @@ Tested together with #888 and #889 (no merge conflicts, unit tests pass); in dai
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
 
 https://claude.ai/code/session_01VuiaMhLXwhErf9shhrr1uD
+
+---
+
+## 11. `feature/settings-search-word-parts` (22.11., auf LeanType 4.3.6-beta3)
+
+**Titel:** Settings search: also find parts of words
+
+**Text:**
+
+The settings search only finds words that start with the search term. In languages with compound words this misses a lot: in German, "korrektur" doesn't find "Autokorrektur", "taste" doesn't find "Löschtaste". In English, "correct" doesn't find "Autocorrect".
+
+- Search terms of 3 or more letters now also find settings whose title or description contains them.
+- These results come after the existing ones (title start, title word, description word), so the order of the best matches doesn't change.
+- Shorter terms behave as before, to avoid noise.
+
+Small change in `SettingsContainer.filter` (the comment there says filtering could be more elaborate). Unit tests pass; in daily use in my fork since October.
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+https://claude.ai/code/session_01VuiaMhLXwhErf9shhrr1uD
+
+---
+
+## 12. `feature/settings-search-keywords` (22.11., baut auf 11 auf)
+
+**Titel:** Settings search: additional search words for some settings
+
+**Text:**
+
+Builds on #<Nummer von PR 11> (it contains that commit).
+
+Users search with their own words, which often aren't in the title or description: "color" for the theme, "haptic" for vibration, "swipe" for gesture typing, "copy" for the clipboard history.
+
+- A string array `settings_search_keywords` lists additional words per setting key (`key|word word ...`), English and German for now. Other languages can translate it or leave it out; without it nothing changes.
+- A setting is found if one of its words starts with the search term. These results come after the title and description matches.
+- All keys in the list exist in the current settings (checked against `Settings` and `SettingsWithoutKey`).
+
+Feel free to take only #<Nummer von PR 11> if you'd rather not have the extra strings.
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+https://claude.ai/code/session_01VuiaMhLXwhErf9shhrr1uD
+
+---
+
+## 13. `feature/settings-test-field` (22.11., auf LeanType 4.3.6-beta3)
+
+**Titel:** Settings: a field to try the keyboard on the appearance and suggestion screens
+
+**Text:**
+
+To see the effect of a changed theme, key size or suggestion setting, you have to leave the settings and open another app, then come back.
+
+- A text field "Try the keyboard here" at the top of the Appearance and Suggestions screens (using the existing `headerContent` of `SearchSettingsScreen`) lets you try the keyboard right there.
+- A short hint says that changes are shown the next time the keyboard opens.
+- One small composable (`KeyboardTestField`), two strings (English and German).
+
+In daily use in my fork since October.
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+https://claude.ai/code/session_01VuiaMhLXwhErf9shhrr1uD
+
+---
+
+## 14. `feature/settings-collapsible-sections` (22.11., optional, zuletzt einstellen)
+
+**Titel:** Settings: sections can be collapsed (optional)
+
+**Text:**
+
+This one is optional - just close it if it doesn't fit your idea of the new settings layout.
+
+Long settings screens are easier to overview when sections you don't need can be collapsed:
+
+- A tap on a section title collapses or expands it, with an arrow showing the state. The state is remembered per screen.
+- A jump from the search (#799) opens a collapsed section while the setting is shown, without saving that.
+- Only `SearchScreen.kt` and one string (English and German).
+
+In daily use in my fork since October.
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+https://claude.ai/code/session_01VuiaMhLXwhErf9shhrr1uD
