@@ -176,6 +176,7 @@ class InputLogic(
         mInputLogicHandler.reset()
         mConnection.requestCursorUpdates(true, true)
         setInlineEmojiSearchAction(false)
+        mInputSession++
         // an AI result that arrived while the keyboard was hidden, once the field is ready again
         if (mPendingAIResult != null)
             android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({ insertPendingAIResult() }, 300)
@@ -3620,6 +3621,8 @@ class InputLogic(
 
         helium314.keyboard.latin.suggestions.nextLoadingKey =
             helium314.keyboard.latin.utils.ToolbarKey.entries.firstOrNull { it.name == "CUSTOM_AI_$index" }
+        val inputSession = mInputSession
+        mPendingAIResult = null // an older result must not be inserted after this one
         ProofreadHelper.customAsync(
             mLatinIME,
             textToProcess, prompt, hasSelection, showThinking,
@@ -3639,7 +3642,9 @@ class InputLogic(
                     Log.w(TAG, "Target editor changed during custom AI operation, ignoring result")
                     return@customAsync
                 }
-                if (!targetField.isCurrent()) {
+                // appending while the user keeps typing in the same field is fine (as in LeanType);
+                // otherwise only if the field is still the same, e.g. not another chat with the same field id
+                if ((mInputSession != inputSession || !shouldAppend) && !targetField.isCurrent()) {
                     keepAIResultInClipboard(resultText)
                     return@customAsync
                 }
@@ -3726,6 +3731,9 @@ class InputLogic(
         }
     }
 
+    /** counts the fields opened, to notice if another field was opened during an AI request */
+    private var mInputSession = 0
+
     /** Inserts a result that arrived while the keyboard was hidden, if the keyboard is back in the same field soon. */
     private fun insertPendingAIResult() {
         val pending = mPendingAIResult ?: return
@@ -3733,7 +3741,8 @@ class InputLogic(
         if (android.os.SystemClock.uptimeMillis() - pending.time > PENDING_AI_RESULT_MS) return
         if (!mLatinIME.isInputViewShown || !mConnection.isConnected()) return
         val editor = getCurrentInputEditorInfo()
-        if (editor?.packageName != pending.packageName || editor?.fieldId != pending.fieldId) {
+        // a newer request is running: this one is outdated
+        if (ProofreadHelper.isOperationInProgress || editor?.packageName != pending.packageName || editor?.fieldId != pending.fieldId) {
             keepAIResultInClipboard(pending.text)
             return
         }

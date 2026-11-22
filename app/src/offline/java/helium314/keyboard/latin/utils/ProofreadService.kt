@@ -15,6 +15,7 @@ import helium314.keyboard.latin.settings.Defaults
 import helium314.keyboard.latin.settings.Settings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.CoroutineScope
@@ -436,6 +437,11 @@ class ProofreadService(private val context: Context) {
             OfflineAiLoader.isBusy = true
             val output = try {
                 synchronized(ModelHolder.generateLock) {
+                    // cancelled while waiting for the previous generation: don't start one, it can't be stopped
+                    if (!isActive) {
+                        ModelHolder.scheduleUnload(context)
+                        return@withContext Result.failure(ProofreadException("Cancelled"))
+                    }
                     progress?.phase = AiProgress.Phase.GENERATING
                     provider.generate(fullPrompt, mapOf(
                     "temperature" to temp.toDouble(),
