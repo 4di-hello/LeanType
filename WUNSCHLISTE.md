@@ -77,6 +77,7 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
   - KI-Ergebnisse: gleiche App ist Pflicht, zusätzlich Vergleich des ganzen Feldinhalts (getExtractedText), damit Ergebnisse seltener unnötig in der Zwischenablage landen
   - Gelernte Tippfehler: die Vorschlagsleiste zeigt die Korrektur schon beim Tippen fett an, wie eine Autokorrektur
   - Unit-Tests für gelernte Tippfehler, KI-Feldprüfung und Plugin-Prüfung
+- 22.11.: Auf LeanType 4.3.6-beta3 aktualisiert (Sicherung `backup/daily-2026-11-22`). Unser PR #888 (Chat-Format Qwen/LFM2) ist dort übernommen, die Fork-Version entfällt. LeanTypes neue Gliederung der Einstellungen (Tastatur, Tippen, Extras, System) übernommen; die kurzen Beschreibungen unter den Menüpunkten der Hauptseite entfallen. Testfeld, aufklappbare Bereiche und erweiterte Suche bleiben (sollen als PRs an LeanType, aufklappbar zuletzt und optional)
 - 21.11.: Auf LeanType 4.3.6-beta2 aktualisiert (Sicherung `backup/daily-2026-11-21`), u. a. Chromium-Doppelbuchstaben behoben, Wörterbuch-Wörter werden beim Entfernen eines Vorschlags nicht mehr gesperrt, Wischen über die ganze Tastatur für Löschen/Leerzeichen, lokale GIF-Pakete. Plugin-Prüfung im CJK-Lader wieder eingesetzt
 - 15.11.: Auf LeanType 4.3.3 aktualisiert (Sicherung `backup/daily-2026-11-15`). Unsere drei PRs sind dort jetzt drin (#797 Spracheingabe, #798 vertauschte Buchstaben, #799 Einstellungssprung), der Fork nutzt dafür jetzt LeanTypes Code. Dazu:
   - Tastendrücke `%tabkey%`/`%enter%` in Textbausteinen entfernt (Fork-Code in InputLogic weg)
