@@ -68,7 +68,15 @@ object ProofreadHelper {
         }
     }
 
-    fun cancelCurrentJob() {
+    /** whether the running request was started by a custom AI key */
+    private var currentJobIsCustomKey = false
+
+    /**
+     * Cancels the running request, e.g. when the keyboard is hidden. With [keepCustomKeyJob], a request
+     * of a custom AI key keeps running: its result is inserted when the keyboard is back in the same field.
+     */
+    fun cancelCurrentJob(keepCustomKeyJob: Boolean = false) {
+        if (keepCustomKeyJob && currentJobIsCustomKey && isOperationInProgress) return
         cancelCurrentOperation()
     }
     
@@ -87,7 +95,8 @@ object ProofreadHelper {
         inputLength: Int = text.length,
         apiCall: suspend (ProofreadService) -> Result<String>,
         onSuccess: (String) -> Unit,
-        onError: (String) -> Unit
+        onError: (String) -> Unit,
+        isCustomKey: Boolean = false
     ) {
         val service = ProofreadService(context)
 
@@ -122,6 +131,7 @@ object ProofreadHelper {
 
         // Launch coroutine for inference and track it for cancellation
         val progress = AiProgress()
+        currentJobIsCustomKey = isCustomKey
         val job = scope.launch(progress) {
             val result = apiCall(service)
             if (result.isSuccess) AiDuration.learn(context, durationKey, inputLength, progress)
@@ -518,7 +528,8 @@ object ProofreadHelper {
             inputLength = text.length + prompt.length,
             apiCall = { service -> service.proofread(text, overridePrompt = prompt, showThinking = showThinking) },
             onSuccess = onSuccess,
-            onError = onError
+            onError = onError,
+            isCustomKey = true
         )
     }
 
