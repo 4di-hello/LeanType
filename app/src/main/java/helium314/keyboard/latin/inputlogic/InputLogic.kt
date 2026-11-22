@@ -3707,7 +3707,7 @@ class InputLogic(
         Log.w(TAG, "field changed during the AI request, result copied to the clipboard")
         val clipboard = mLatinIME.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as? android.content.ClipboardManager ?: return
         clipboard.setPrimaryClip(android.content.ClipData.newPlainText("AI", text))
-        KeyboardSwitcher.getInstance().showToast(mLatinIME.getString(R.string.ai_result_to_clipboard), false)
+        KeyboardSwitcher.getInstance().showLongToast(mLatinIME.getString(R.string.ai_result_to_clipboard), 6000)
     }
     private var mPendingAIResult: PendingAIResult? = null
 
