@@ -1189,6 +1189,18 @@ class KeyboardSwitcher private constructor() : KeyboardState.SwitchActions {
         }
     }
 
+    /** A message shown longer than [showToast] allows, for things that are easy to miss (Android 13+, before: long toast) */
+    fun showLongToast(text: String, timeMillis: Int) {
+        val latinIme = mLatinIME ?: return
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
+            val toast = Toast.makeText(latinIme, text, Toast.LENGTH_LONG)
+            toast.setGravity(Gravity.CENTER, 0, 0)
+            toast.show()
+        } else {
+            showFakeToast(text, timeMillis)
+        }
+    }
+
     /** [key]: the toolbar key that started the AI request, it shows an X while the request runs */
     fun showLoadingAnimation(key: ToolbarKey = ToolbarKey.PROOFREAD) {
         mSuggestionStripView?.showLoadingAnimation(key)
