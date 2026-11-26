@@ -390,6 +390,15 @@ class ProofreadService(private val context: Context) {
             
             // Build the prompt
             val systemPrompt = overridePrompt ?: getSystemPrompt().ifBlank { Defaults.PREF_OFFLINE_SYSTEM_PROMPT }
+            // the same as chat messages: plugins with llama.cpp's chat templates (LeanType+ plugin) put them
+            // into the chat format stored in the model (Gemma, Qwen, ...), others use the prompt below
+            val chatSystem: String?
+            val chatUser: String
+            when {
+                systemPrompt.contains("{text}") -> { chatSystem = null; chatUser = systemPrompt.replace("{text}", text) }
+                text.isBlank() -> { chatSystem = null; chatUser = systemPrompt.trim() }
+                else -> { chatSystem = systemPrompt.trim(); chatUser = text }
+            }
             val chatFormat = chatFormat(modelPath)
             val fullPrompt = if (chatFormat != null) {
                 // Chat models get the instruction as system message and the text as user message,
@@ -450,8 +459,10 @@ class ProofreadService(private val context: Context) {
                         "top_p" to topP.toDouble(),
                         "top_k" to topK,
                         "min_p" to minP.toDouble(),
-                        "max_tokens" to effectiveMaxTokens
-                    ))
+                        "max_tokens" to effectiveMaxTokens,
+                        "chat_user" to chatUser,
+                        "enable_thinking" to showThinkingVal
+                    ) + (chatSystem?.let { mapOf("chat_system" to it) } ?: emptyMap()))
                 } finally {
                     OfflineAiLoader.isBusy = false
                 }
