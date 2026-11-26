@@ -15,6 +15,8 @@ import java.security.MessageDigest
  * are loaded: signed with a known LeanBitLab key, or (the handwriting plugin, whose releases are not
  * signed) one of the known release files. The voice plugin is an app of its own that gets the audio
  * and returns text: it is only used if it is signed with the known key, see [isTrustedPackage].
+ * LeanType+: plugins signed with the same key as the keyboard itself are trusted as well (own
+ * plugin builds, signed by the same workflow as the keyboard).
  */
 object PluginTrust {
     private const val TAG = "PluginTrust"
@@ -42,6 +44,20 @@ object PluginTrust {
         "bb209cce3a870b14249d6bb6395136c961499127b7f64d57f8a48a5b804fac76", // 1.0.6 x86
         "0a4d7ee666c902d5bbd9a86b09eae7375b2af952c3237aa94bf7c27ecb6a111a", // 1.0.6 x86_64
     )
+
+    /** SHA-256 of the certificates the keyboard itself is signed with, see [trustedSigners] */
+    @Volatile private var ownSigners: Set<String>? = null
+
+    /** The LeanBitLab keys and the key of the keyboard itself */
+    private fun trustedSigners(context: Context): Set<String> {
+        val own = ownSigners ?: try {
+            packageSigners(context.packageManager, context.packageName).toSet()
+        } catch (e: Exception) {
+            Log.w(TAG, "could not read the own signature", e)
+            emptySet()
+        }.also { ownSigners = it }
+        return TRUSTED_SIGNERS + own
+    }
 
     /** files already checked in this process, by path, size and modification time */
     private val checked = HashSet<String>()
@@ -72,7 +88,8 @@ object PluginTrust {
             emptySet()
         }
         if (signers.isNotEmpty()) {
-            if (signers.all { it in TRUSTED_SIGNERS }) return null
+            val trusted = trustedSigners(context)
+            if (signers.all { it in trusted }) return null
             return "unknown signing key ${signers.first().take(16)}…"
         }
         val fileHash = try { sha256(apk) } catch (e: Exception) { return "file can't be read" }
@@ -113,18 +130,12 @@ object PluginTrust {
         val id = "$packageName:$updated"
         synchronized(checkedPackages) { if (id in checkedPackages) return true }
         val signers = try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                val signing = pm.getPackageInfo(packageName, PackageManager.GET_SIGNING_CERTIFICATES).signingInfo
-                if (signing == null) emptyList()
-                else (if (signing.hasMultipleSigners()) signing.apkContentsSigners else signing.signingCertificateHistory)?.toList() ?: emptyList()
-            } else {
-                @Suppress("DEPRECATION")
-                pm.getPackageInfo(packageName, PackageManager.GET_SIGNATURES).signatures?.toList() ?: emptyList()
-            }
+            packageSigners(pm, packageName)
         } catch (e: Exception) {
             emptyList()
-        }.map { hex(MessageDigest.getInstance("SHA-256").digest(it.toByteArray())).uppercase() }
-        if (signers.isNotEmpty() && signers.all { it in TRUSTED_SIGNERS }) {
+        }
+        val trusted = trustedSigners(context)
+        if (signers.isNotEmpty() && signers.all { it in trusted }) {
             synchronized(checkedPackages) { checkedPackages.add(id) }
             return true
         }
@@ -135,6 +146,19 @@ object PluginTrust {
             Toast.makeText(appContext, "Plugin not used: $reason", Toast.LENGTH_LONG).show()
         }
         return false
+    }
+
+    /** SHA-256 (upper case) of the certificates the installed app [packageName] is signed with */
+    private fun packageSigners(pm: PackageManager, packageName: String): List<String> {
+        val certs = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val signing = pm.getPackageInfo(packageName, PackageManager.GET_SIGNING_CERTIFICATES).signingInfo
+            if (signing == null) emptyList()
+            else (if (signing.hasMultipleSigners()) signing.apkContentsSigners else signing.signingCertificateHistory)?.toList() ?: emptyList()
+        } else {
+            @Suppress("DEPRECATION")
+            pm.getPackageInfo(packageName, PackageManager.GET_SIGNATURES).signatures?.toList() ?: emptyList()
+        }
+        return certs.map { hex(MessageDigest.getInstance("SHA-256").digest(it.toByteArray())).uppercase() }
     }
 
     /** SHA-256 of the certificates that signed [apk], verified by Android; empty if it is not (validly) signed */

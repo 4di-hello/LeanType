@@ -22,6 +22,7 @@ Nur in diesem Fork. Ideen und offene Punkte, grob nach Priorität.
   - Erledigt 28.10.: Fortschritt als dünner Balken im Laderahmen (geschätzt aus den letzten Läufen derselben Taste), die gestartete Taste zeigt ein X. Wortzähler geht nicht, das Plugin liefert erst am Ende Text
   - Qwen3.5 (2B/4B) lädt nicht: llama.cpp im Plugin (April 2026) lehnt die Dateien ab. Nur mit eigenem Plugin und aktueller llama.cpp – optional, falls Qwen3 nicht reicht
   - Qwen3.8-Flash-Next (125B MoE, ~100 GB) passt nicht aufs Handy
+  - 26.11.: Gemma 4 E2B im Plugin liefert nur Datensalat (`<unused…>`, 1024 Tokens in ca. 2 min): die llama.cpp im Plugin kennt Gemma 4 nicht. Eigenes Plugin im Fork `4di-hello/leantype-offline-ai-plugin`; gebaut und mit dem Schlüssel von LeanType+ signiert wird es hier vom Workflow `ai-plugin.yml` (Branch `plugin-build/<Plugin-Branch>` pushen), APK in der Vorab-Version `ai-plugin`. LeanType+ vertraut Plugins mit dem eigenen Schlüssel. Plan: 1. aktuelle llama.cpp direkt, 2. Optionen (Threads, Kontext, Antwortlänge, Denkmodus, Leistungsanzeige), 3. Wort-für-Wort-Einblendung. Keine GPU (gemessen: Vulkan 3,5× langsamer, LiteRT-GPU nicht schneller als CPU)
 - KI-Tasten (Benutzerdefinierte AI-Tasten):
   - ~~Ergebnis vor den Text setzen~~ erledigt 24.10.: Chip „Ergebnis voranstellen“ (#prepend), mit Leerzeile
   - ~~`#append` mit Leerzeile~~ erledigt 24.10.
