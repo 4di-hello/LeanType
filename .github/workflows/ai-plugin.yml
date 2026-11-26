@@ -45,7 +45,8 @@ jobs:
       - name: Build
         run: |
           chmod +x ./gradlew
-          ./gradlew :app:assembleRelease
+          # only for phones: llama.cpp takes long to build
+          ./gradlew :app:assembleRelease -Pplugin.abis=arm64-v8a
           ls -l app/build/outputs/apk/release/
 
       - name: Sign with the key of LeanType+ (secret DEBUG_KEYSTORE_B64)
