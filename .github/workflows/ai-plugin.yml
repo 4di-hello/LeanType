@@ -1,0 +1,89 @@
+name: Offline AI plugin for LeanType+
+
+# Builds the offline AI plugin from the fork 4di-hello/leantype-offline-ai-plugin and signs it with
+# the key of LeanType+ (secret DEBUG_KEYSTORE_B64 of this repo), so LeanType+ trusts it.
+# Push a branch plugin-build/<branch of the plugin repo>, e.g. plugin-build/main.
+# The APK is published in the pre-release "ai-plugin" (never the latest release):
+# https://github.com/4di-hello/LeanType/releases/download/ai-plugin/LeanTypePlus-AI-Plugin.apk
+
+on:
+  push:
+    branches: ['plugin-build/**']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ai-plugin
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Plugin branch
+        id: ref
+        run: echo "ref=${GITHUB_REF#refs/heads/plugin-build/}" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          repository: 4di-hello/leantype-offline-ai-plugin
+          ref: ${{ steps.ref.outputs.ref }}
+          submodules: recursive
+
+      - name: Set up JDK
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5.0.2
+        with:
+          # a changed gradle-wrapper.jar would run any code
+          validate-wrappers: true
+
+      - name: Build
+        run: |
+          chmod +x ./gradlew
+          ./gradlew :app:assembleRelease
+          ls -l app/build/outputs/apk/release/
+
+      - name: Sign with the key of LeanType+ (secret DEBUG_KEYSTORE_B64)
+        env:
+          DEBUG_KEYSTORE_B64: ${{ secrets.DEBUG_KEYSTORE_B64 }}
+        run: |
+          if [ -z "$DEBUG_KEYSTORE_B64" ]; then echo "::error::secret DEBUG_KEYSTORE_B64 is missing"; exit 1; fi
+          ks="$RUNNER_TEMP/personal.keystore"
+          echo "$DEBUG_KEYSTORE_B64" | tr -d ' \n\r' | base64 -d > "$ks"
+          want=$(keytool -list -v -keystore "$ks" -storepass android | grep -m1 "SHA256:" | awk '{print $2}' | tr -d ':' | tr 'A-F' 'a-f')
+          tools="$ANDROID_HOME/build-tools/$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -1)"
+          out="$RUNNER_TEMP/out"
+          mkdir -p "$out"
+          cp app/build/outputs/apk/release/ai_plugin-arm64-v8a.apk "$out/built.apk"
+          # remove the signature of the build (debug key), then align native libraries to 16 KB pages
+          zip -q -d "$out/built.apk" 'META-INF/*.SF' 'META-INF/*.RSA' 'META-INF/*.EC' 'META-INF/*.DSA' 'META-INF/MANIFEST.MF' || true
+          "$tools/zipalign" -f -P 16 4 "$out/built.apk" "$out/aligned.apk"
+          "$tools/apksigner" sign --ks "$ks" --ks-pass pass:android --ks-key-alias androiddebugkey --key-pass pass:android \
+            --out "$out/LeanTypePlus-AI-Plugin.apk" "$out/aligned.apk"
+          rm -f "$ks"
+          "$tools/zipalign" -c -P 16 4 "$out/LeanTypePlus-AI-Plugin.apk" || { echo "::error::APK is not aligned"; exit 1; }
+          got=$("$tools/apksigner" verify --print-certs "$out/LeanTypePlus-AI-Plugin.apk" | grep -m1 "SHA-256 digest" | awk '{print $NF}')
+          echo "::notice title=plugin key::$got"
+          if [ -z "$want" ] || [ "$want" != "$got" ]; then echo "::error::plugin is not signed with the key of LeanType+"; exit 1; fi
+
+      - name: Publish in the pre-release ai-plugin
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          PLUGIN_REF: ${{ steps.ref.outputs.ref }}
+        run: |
+          apk="$RUNNER_TEMP/out/LeanTypePlus-AI-Plugin.apk"
+          commit=$(git rev-parse --short HEAD)
+          notes="Offline AI plugin for LeanType+, built from 4di-hello/leantype-offline-ai-plugin $PLUGIN_REF @ $commit on $(date -u +%Y-%m-%d\ %H:%M) UTC. Signed with the key of LeanType+, only LeanType+ loads it."
+          if gh release view ai-plugin >/dev/null 2>&1; then
+            gh release upload ai-plugin "$apk" --clobber
+            gh release edit ai-plugin --notes "$notes" --prerelease --latest=false
+          else
+            gh release create ai-plugin "$apk" --target "$GITHUB_SHA" --title "Offline AI plugin (LeanType+)" \
+              --notes "$notes" --prerelease --latest=false
+          fi
