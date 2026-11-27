@@ -1,0 +1,26 @@
+
+helium314.keyboard.e2e.DeviceE2eTest:
+Error in onlyOfficialPluginsAreTrusted(helium314.keyboard.e2e.DeviceE2eTest):
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertNotNull(Assert.java:713)
+	at org.junit.Assert.assertNotNull(Assert.java:723)
+	at helium314.keyboard.e2e.DeviceE2eTest.onlyOfficialPluginsAreTrusted(DeviceE2eTest.kt:135)
+....
+helium314.keyboard.e2e.TypingE2eTest:.......
+
+Time: 120.441
+There was 1 failure:
+1) onlyOfficialPluginsAreTrusted(helium314.keyboard.e2e.DeviceE2eTest)
+java.lang.AssertionError
+	at org.junit.Assert.fail(Assert.java:87)
+	at org.junit.Assert.assertTrue(Assert.java:42)
+	at org.junit.Assert.assertNotNull(Assert.java:713)
+	at org.junit.Assert.assertNotNull(Assert.java:723)
+	at helium314.keyboard.e2e.DeviceE2eTest.onlyOfficialPluginsAreTrusted(DeviceE2eTest.kt:135)
+
+FAILURES!!!
+Tests run: 12,  Failures: 1
+
+
