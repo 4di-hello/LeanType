@@ -503,7 +503,7 @@ class ProofreadService(private val context: Context) {
                 // say why: the model generated nothing, or our cleanup removed what it generated
                 val reason = when {
                     // roughly 3 characters per token for German; prompt and answer have to fit together
-                    output.isBlank() && fullPrompt.length / 3 + maxTokens > ModelHolder.CONTEXT_TOKENS ->
+                    output.isBlank() && fullPrompt.length / 3 + effectiveMaxTokens > ModelHolder.CONTEXT_TOKENS ->
                         "the text is probably too long for the model (prompt ${fullPrompt.length} chars, room for about ${ModelHolder.CONTEXT_TOKENS * 3} chars including the answer)"
                     output.isBlank() -> "the model ended without generating text (prompt ${fullPrompt.length} chars, chat format ${chatFormat ?: "none"})"
                     // only the length: the message is logged, and the text is private
