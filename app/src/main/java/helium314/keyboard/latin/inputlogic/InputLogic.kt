@@ -3664,11 +3664,6 @@ class InputLogic(
         if (hasSelection) {
             val selectedText = mConnection.getSelectedText(0)
             textToProcess = selectedText?.toString() ?: ""
-            if (shouldAppend) {
-                mConnection.setSelection(mConnection.expectedSelectionEnd, mConnection.expectedSelectionEnd)
-            } else if (shouldPrepend) {
-                mConnection.setSelection(mConnection.expectedSelectionStart, mConnection.expectedSelectionStart)
-            }
         } else {
             val maxChars = 60000
             var textBefore: CharSequence? = null
@@ -3693,20 +3688,9 @@ class InputLogic(
             val before = textBefore?.toString() ?: ""
             val after = textAfter?.toString() ?: ""
             textToProcess = before + after
-
-            if (shouldPrepend) {
-                // the result goes where the cursor is, the text after the cursor stays below it
-            } else if (!shouldAppend) {
-                mConnection.selectAll()
-            } else {
-                if (textToProcess.isNotEmpty()) {
-                    if (after.isNotEmpty() && mConnection.expectedSelectionEnd >= 0) {
-                        val newPos = mConnection.expectedSelectionEnd + after.length
-                        mConnection.setSelection(newPos, newPos)
-                    }
-                }
-            }
         }
+        // the selection and the cursor are changed only when the result is inserted: some apps (e.g.
+        // Nine Mail) hide the keyboard when the selection changes, which cancels the request
 
         // a prompt with the clipboard but without {text} is complete: the text in the field only decides
         // where the result goes, sending it too would make the model answer the wrong text
@@ -3808,14 +3792,26 @@ class InputLogic(
     private var mPendingAIResult: PendingAIResult? = null
 
     private fun insertAIResult(result: PendingAIResult) {
+        // the user may have typed while the request ran: a word still composing is finished first,
+        // otherwise replacing all text could replace only that word and keep the text before it
+        if (mWordComposer.isComposingWord()) {
+            mConnection.finishComposingText()
+            StatsUtils.onWordCommitUserTyped(mWordComposer.getTypedWord(), mWordComposer.isBatchMode())
+        }
+        resetComposingState(true)
         if (result.keepsOriginal) {
-            if (result.shouldAppend && !result.hasSelection) {
-                // the cursor may have moved meanwhile, e.g. when the keyboard was hidden and the field tapped again
+            val start = mConnection.expectedSelectionStart
+            val end = mConnection.expectedSelectionEnd
+            if (result.shouldAppend && result.hasSelection) {
+                // after the selection the request was made for
+                if (end >= 0 && start != end) mConnection.setSelection(end, end)
+            } else if (result.shouldAppend) {
+                // at the end of the text
                 val after = mConnection.getTextAfterCursor(60000, 0)?.length ?: 0
-                if (after > 0 && mConnection.expectedSelectionEnd >= 0) {
-                    val end = mConnection.expectedSelectionEnd + after
-                    mConnection.setSelection(end, end)
-                }
+                if (after > 0 && end >= 0) mConnection.setSelection(end + after, end + after)
+            } else if (result.hasSelection) {
+                // prepend: before the selection the request was made for
+                if (start >= 0 && start != end) mConnection.setSelection(start, start)
             }
             val textBefore = mConnection.getTextBeforeCursor(SEPARATOR_CONTEXT, 0) ?: ""
             val textAfter = mConnection.getTextAfterCursor(SEPARATOR_CONTEXT, 0) ?: ""
