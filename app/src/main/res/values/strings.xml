@@ -761,7 +761,23 @@
     <string name="config_groq_chat_endpoint" translatable="false">https://api.groq.com/openai/v1/chat/completions</string>
     <string name="config_groq_audio_transcriptions_endpoint" translatable="false">https://api.groq.com/openai/v1/audio/transcriptions</string>
     <string name="offline_keep_model_loaded_title">Keep model loaded</string>
-    <string name="offline_keep_model_loaded_summary">Keep the offline AI model in memory to avoid reloading delay (uses more RAM)</string>
+    <string name="offline_keep_model_loaded_summary">Without it the model is unloaded after 10 minutes without use, and the next request loads it again (a few seconds). Uses 2–5 GB of memory while loaded</string>
+    <string name="offline_performance_title">Performance</string>
+    <string name="offline_threads_title">Threads</string>
+    <string name="offline_threads_auto">Automatic (%d, the fast cores)</string>
+    <string name="offline_threads_two">2 (saves battery, slower)</string>
+    <string name="offline_context_title">Context size</string>
+    <string name="offline_context_4096">4096 tokens: long texts (default)</string>
+    <string name="offline_context_2048">2048 tokens: medium texts, less memory</string>
+    <string name="offline_context_1024">1024 tokens: short texts, least memory</string>
+    <string name="offline_thinking_title">Thinking mode</string>
+    <string name="offline_thinking_summary">Models that can think (e.g. Qwen3, Gemma 4) think before answering: sometimes better, but much slower</string>
+    <string name="offline_show_stats_title">Show speed</string>
+    <string name="offline_show_stats_summary">After each answer: tokens per second, time to read the text, total time</string>
+    <string name="offline_stats_format">%1$s tokens/s · text read in %2$s s · total %3$s s</string>
+    <string name="offline_stats_load">Model loaded in %s s</string>
+    <string name="offline_stats_load_hint">“Keep model loaded” saves this time</string>
+    <string name="offline_stats_total">Total %s s</string>
     <!-- Translation feature strings -->
     <string name="translate" tools:keep="@string/translate">Translate</string>
     <string name="translate_error">Translation failed: %s</string>

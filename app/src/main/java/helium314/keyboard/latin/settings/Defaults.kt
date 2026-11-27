@@ -255,6 +255,14 @@ object Defaults {
     const val PREF_OFFLINE_MAX_TOKENS = 512
     const val PREF_OFFLINE_TRANSLATE_TARGET_LANGUAGE = "French"
     const val PREF_OFFLINE_KEEP_MODEL_LOADED = false
+    /** 0: automatic, the fast cores (at most 4) */
+    const val PREF_OFFLINE_THREADS = 0
+    /** tokens the model sees at once: prompt, text and answer */
+    const val PREF_OFFLINE_CONTEXT_SIZE = 4096
+    /** let models that can think do it before answering (slower) */
+    const val PREF_OFFLINE_THINKING = false
+    /** show speed and time after each offline AI answer */
+    const val PREF_OFFLINE_SHOW_STATS = false
     const val PREF_AI_ALLOW_INSECURE_CONNECTIONS = false
     const val PREF_OPENAI_USE_MAX_COMPLETION_TOKENS = false
     const val PREF_OPENAI_OMIT_TEMPERATURE = false

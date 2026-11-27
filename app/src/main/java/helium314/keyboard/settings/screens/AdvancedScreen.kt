@@ -1130,6 +1130,10 @@ private fun createAdvancedSettings(context: Context) = listOfNotNull(
                 description = { String.format(Locale.getDefault(), "%.2f", it) }
             )
 
+            // Thinking mode: models that can think do it before answering
+            val thinkingSetting = Setting(context, Settings.PREF_OFFLINE_THINKING, R.string.offline_thinking_title, R.string.offline_thinking_summary) { }
+            SwitchPreference(setting = thinkingSetting, default = Defaults.PREF_OFFLINE_THINKING)
+
             // Show Thinking
             val showThinkingSetting = Setting(context, Settings.PREF_OFFLINE_SHOW_THINKING, R.string.offline_show_thinking_title, R.string.offline_show_thinking_summary) { }
             SwitchPreference(
@@ -1197,6 +1201,38 @@ private fun createAdvancedSettings(context: Context) = listOfNotNull(
                     }
                 )
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
+            androidx.compose.material3.HorizontalDivider()
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = stringResource(R.string.offline_performance_title),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp)
+            )
+
+            // the model is loaded again with changed threads or context when the next request comes
+            // as ProofreadService.ModelHolder.threadsFor(0) (only in the offline flavor)
+            val autoThreads = Runtime.getRuntime().availableProcessors().coerceAtMost(4)
+            ListPreference(
+                Setting(context, Settings.PREF_OFFLINE_THREADS, R.string.offline_threads_title) { },
+                listOf(stringResource(R.string.offline_threads_auto, autoThreads) to 0, stringResource(R.string.offline_threads_two) to 2),
+                Defaults.PREF_OFFLINE_THREADS
+            )
+            ListPreference(
+                Setting(context, Settings.PREF_OFFLINE_CONTEXT_SIZE, R.string.offline_context_title) { },
+                listOf(
+                    stringResource(R.string.offline_context_4096) to 4096,
+                    stringResource(R.string.offline_context_2048) to 2048,
+                    stringResource(R.string.offline_context_1024) to 1024,
+                ),
+                Defaults.PREF_OFFLINE_CONTEXT_SIZE
+            )
+            SwitchPreference(
+                setting = Setting(context, Settings.PREF_OFFLINE_SHOW_STATS, R.string.offline_show_stats_title, R.string.offline_show_stats_summary) { },
+                default = Defaults.PREF_OFFLINE_SHOW_STATS
+            )
         }
     } else null
 ) // Close listOfNotNull

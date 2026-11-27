@@ -9,6 +9,7 @@ import android.content.SharedPreferences
 import android.net.Uri
 import android.provider.OpenableColumns
 import android.util.Log
+import helium314.keyboard.latin.R
 import helium314.keyboard.latin.RichInputMethodManager
 import helium314.keyboard.latin.ai.OfflineAiLoader
 import helium314.keyboard.latin.settings.Defaults
@@ -94,11 +95,28 @@ class ProofreadService(private val context: Context) {
         val generateLock = Any()
 
         /**
-         * Tokens the model can see at once: prompt, text and answer together. 2048 were too few for
-         * a long text (about 5000 characters of German), the model then generated nothing. 4096 need
-         * roughly 300 MB more memory for a 4B model.
+         * Tokens the model can see at once: prompt, text and answer together (setting, default 4096).
+         * 2048 are too few for a long text (about 5000 characters of German), the model then
+         * generates nothing. 4096 need roughly 300 MB more memory than 2048 for a 4B model.
          */
-        const val CONTEXT_TOKENS = 4096
+        var contextTokens = Defaults.PREF_OFFLINE_CONTEXT_SIZE
+            private set
+        /** threads of the loaded model, a changed setting loads it again */
+        private var loadedThreads = 0
+
+        /** the fast cores do the work: with more threads they wait for the slower ones (measured: 4 of 8 twice as fast) */
+        fun threadsFor(setting: Int): Int {
+            val cores = Runtime.getRuntime().availableProcessors()
+            return if (setting > 0) setting.coerceAtMost(cores) else cores.coerceAtMost(4)
+        }
+
+        /** the model will be loaded when the next request comes: it's not loaded, another one, or other settings */
+        fun needsLoading(context: Context, modelPath: String): Boolean {
+            val prefs = context.prefs()
+            return !isModelLoaded || currentModelPath != modelPath
+                || loadedThreads != threadsFor(prefs.getInt(Settings.PREF_OFFLINE_THREADS, Defaults.PREF_OFFLINE_THREADS))
+                || contextTokens != prefs.getInt(Settings.PREF_OFFLINE_CONTEXT_SIZE, Defaults.PREF_OFFLINE_CONTEXT_SIZE)
+        }
 
         suspend fun loadModel(
             context: Context,
@@ -113,20 +131,23 @@ class ProofreadService(private val context: Context) {
                 return false
             }
 
-            // Check if already loaded with same path
-            if (isModelLoaded && currentModelPath == modelPath && provider.isModelLoaded()) {
+            // Check if already loaded with same path and settings
+            if (!needsLoading(context, modelPath) && provider.isModelLoaded()) {
                 return true
             }
 
-            unloadModel(context) // Ensure clean slate if path changed
+            unloadModel(context) // Ensure clean slate if path or settings changed
 
             return try {
-                val cores = Runtime.getRuntime().availableProcessors()
-                val threads = if (cores <= 4) cores else 4
-                
-                Log.i(TAG, "Loading GGUF model via AI Plugin: path=$modelPath threads=$threads")
-                val success = provider.loadModel(context, modelPath, threads, CONTEXT_TOKENS)
+                val prefs = context.prefs()
+                val threads = threadsFor(prefs.getInt(Settings.PREF_OFFLINE_THREADS, Defaults.PREF_OFFLINE_THREADS))
+                val contextSize = prefs.getInt(Settings.PREF_OFFLINE_CONTEXT_SIZE, Defaults.PREF_OFFLINE_CONTEXT_SIZE)
+
+                Log.i(TAG, "Loading GGUF model via AI Plugin: threads=$threads, context=$contextSize")
+                val success = provider.loadModel(context, modelPath, threads, contextSize)
                 if (success) {
+                    loadedThreads = threads
+                    contextTokens = contextSize
                     currentModelPath = modelPath
                     isModelLoaded = true
                     isModelAvailable = true
@@ -363,7 +384,8 @@ class ProofreadService(private val context: Context) {
         val progress = coroutineContext[AiProgress]
         // Load model (or get cached)
         val loadStart = System.currentTimeMillis()
-        if (!ModelHolder.isModelLoaded || ModelHolder.currentModelPath != modelPath) progress?.phase = AiProgress.Phase.LOADING
+        val needsLoading = ModelHolder.needsLoading(context, modelPath)
+        if (needsLoading) progress?.phase = AiProgress.Phase.LOADING
         if (!ModelHolder.loadModel(context, modelPath)) {
              Log.e(TAG, "Model load failed")
              val details = loadFailureDetails(loadStart)
@@ -373,6 +395,8 @@ class ProofreadService(private val context: Context) {
              ))
         }
 
+        val loadMillis = if (needsLoading) System.currentTimeMillis() - loadStart else 0L
+
         // Cancel unload timer while working
         ModelHolder.cancelUnload()
 
@@ -380,7 +404,10 @@ class ProofreadService(private val context: Context) {
             val configuredMaxTokens = sharedPrefs.getInt(Settings.PREF_OFFLINE_MAX_TOKENS, Defaults.PREF_OFFLINE_MAX_TOKENS)
             // Ensure enough tokens are allocated to complete the output without premature mid-sentence truncation
             val estimatedTokensNeeded = (text.length / 2.5).toInt() + 128
-            val effectiveMaxTokens = maxOf(configuredMaxTokens, estimatedTokensNeeded, 512).coerceAtMost(2048)
+            val thinking = sharedPrefs.getBoolean(Settings.PREF_OFFLINE_THINKING, Defaults.PREF_OFFLINE_THINKING)
+            // thinking takes tokens before the answer starts; never more than the context holds
+            val effectiveMaxTokens = (maxOf(configuredMaxTokens, estimatedTokensNeeded, 512).coerceAtMost(2048) + if (thinking) THINKING_TOKENS else 0)
+                .coerceAtMost(ModelHolder.contextTokens / 2)
 
             val temp = sharedPrefs.getFloat(Settings.PREF_OFFLINE_TEMP, Defaults.PREF_OFFLINE_TEMP)
             val topP = sharedPrefs.getFloat(Settings.PREF_OFFLINE_TOP_P, Defaults.PREF_OFFLINE_TOP_P)
@@ -403,7 +430,8 @@ class ProofreadService(private val context: Context) {
             val fullPrompt = if (chatFormat != null) {
                 // Chat models get the instruction as system message and the text as user message,
                 // the few-shot examples below would end up in their answer
-                val noThinking = !showThinkingVal
+                // "Show thinking" only shows thoughts, the thinking setting lets the model think
+                val noThinking = !thinking
                 if (systemPrompt.contains("{text}")) chatFormat.build(null, systemPrompt.replace("{text}", text), noThinking)
                 // no text, e.g. a custom key that only uses the clipboard: the prompt is the request
                 else if (text.isBlank()) chatFormat.build(null, systemPrompt.trim(), noThinking)
@@ -462,7 +490,9 @@ class ProofreadService(private val context: Context) {
                         "max_tokens" to effectiveMaxTokens,
                         "chat_user" to chatUser,
                         // "Show thinking" only shows what a model thinks, it doesn't make it think
-                        "enable_thinking" to false
+                        "enable_thinking" to thinking,
+                        // the LeanType+ plugin removes the thoughts from the answer, unless they are to be shown
+                        "show_thinking" to showThinkingVal
                     ) + (chatSystem?.let { mapOf("chat_system" to it) } ?: emptyMap()))
                 } finally {
                     OfflineAiLoader.isBusy = false
@@ -498,13 +528,15 @@ class ProofreadService(private val context: Context) {
             // only the lengths: the texts are private, and the system log can be read by other tools
             Log.i(TAG, "inference via plugin: input ${text.length} chars, generated ${output.length} chars, result ${finalOutput.length} chars, chat format ${chatFormat ?: "none"}")
             if (finalOutput.isNotBlank()) {
+                if (sharedPrefs.getBoolean(Settings.PREF_OFFLINE_SHOW_STATS, Defaults.PREF_OFFLINE_SHOW_STATS))
+                    showStats(loadMillis, System.currentTimeMillis() - inferenceStart, inferenceStart)
                 Result.success(finalOutput)
             } else {
                 // say why: the model generated nothing, or our cleanup removed what it generated
                 val reason = when {
                     // roughly 3 characters per token for German; prompt and answer have to fit together
-                    output.isBlank() && fullPrompt.length / 3 + effectiveMaxTokens > ModelHolder.CONTEXT_TOKENS ->
-                        "the text is probably too long for the model (prompt ${fullPrompt.length} chars, room for about ${ModelHolder.CONTEXT_TOKENS * 3} chars including the answer)"
+                    output.isBlank() && fullPrompt.length / 3 + effectiveMaxTokens > ModelHolder.contextTokens ->
+                        "the text is probably too long for the model (prompt ${fullPrompt.length} chars, room for about ${ModelHolder.contextTokens * 3} chars including the answer)"
                     output.isBlank() -> "the model ended without generating text (prompt ${fullPrompt.length} chars, chat format ${chatFormat ?: "none"})"
                     // only the length: the message is logged, and the text is private
                     else -> "the cleanup removed the generated text (${output.length} chars)"
@@ -838,8 +870,51 @@ class ProofreadService(private val context: Context) {
     class ProofreadException(message: String) : Exception(message)
     class TranslateException(message: String) : Exception(message)
 
+    /**
+     * Speed of the last answer, shown above the keyboard: what the plugin measured (it logs only
+     * numbers), otherwise the time measured here. [since] is the start of the generation.
+     */
+    private fun showStats(loadMillis: Long, totalMillis: Long, since: Long) {
+        val stats = try {
+            val pid = android.os.Process.myPid().toString()
+            val sinceTime = java.text.SimpleDateFormat("MM-dd HH:mm:ss.SSS", java.util.Locale.US).format(java.util.Date(since - 1000))
+            val process = ProcessBuilder("logcat", "-d", "-t", sinceTime, "--pid", pid).redirectErrorStream(true).start()
+            val lines = process.inputStream.bufferedReader().readLines()
+            process.waitFor()
+            lines.asReversed().firstNotNullOfOrNull { STATS_REGEX.find(it) }
+        } catch (e: Exception) {
+            Log.w(TAG, "Could not read the log", e)
+            null
+        }
+        fun seconds(millis: Double) = String.format(java.util.Locale.getDefault(), "%.1f", millis / 1000)
+        val lines = mutableListOf<String>()
+        if (loadMillis > 0) {
+            lines.add(context.getString(R.string.offline_stats_load, seconds(loadMillis.toDouble())))
+            if (!sharedPrefs.getBoolean(Settings.PREF_OFFLINE_KEEP_MODEL_LOADED, Defaults.PREF_OFFLINE_KEEP_MODEL_LOADED))
+                lines.add(context.getString(R.string.offline_stats_load_hint))
+        }
+        if (stats != null) {
+            val promptMillis = stats.groupValues[1].toDouble()
+            val generated = stats.groupValues[2].toDouble()
+            val generateMillis = stats.groupValues[3].toDouble()
+            val tokensPerSecond = if (generateMillis > 0) generated * 1000 / generateMillis else 0.0
+            lines.add(context.getString(R.string.offline_stats_format,
+                String.format(java.util.Locale.getDefault(), "%.1f", tokensPerSecond), seconds(promptMillis), seconds(totalMillis.toDouble())))
+        } else {
+            lines.add(context.getString(R.string.offline_stats_total, seconds(totalMillis.toDouble())))
+        }
+        val text = lines.joinToString("\n")
+        android.os.Handler(android.os.Looper.getMainLooper()).post {
+            helium314.keyboard.keyboard.KeyboardSwitcher.getInstance().showLongToast(text, 5000)
+        }
+    }
+
     companion object {
         private const val TAG = "LlamaProofreadService"
+        /** more tokens for the answer when the model thinks first */
+        private const val THINKING_TOKENS = 1024
+        /** the line the LeanType+ plugin logs after each answer, only numbers */
+        private val STATS_REGEX = Regex("prompt \\d+ tokens (\\d+) ms .*generated (\\d+) tokens (\\d+) ms")
         private const val KEY_MODEL_PATH = "offline_model_path"
         private const val KEY_DECODER_PATH = "offline_decoder_path"
         private const val KEY_TOKENIZER_PATH = "offline_tokenizer_path"
