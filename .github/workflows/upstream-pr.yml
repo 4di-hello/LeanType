@@ -1,0 +1,33 @@
+name: Pull request to LeanType
+
+# Creates pull requests in LeanBitLab/LeanType, comments on them or edits them, from the file
+# .github/pr-request.md on the branch "pr-request" (format: see .github/scripts/upstream_pr.py).
+# Push that branch only after the owner approved the exact texts.
+# Needs the secret PR_TOKEN: a classic token of 4di-hello with only the scope public_repo.
+
+on:
+  push:
+    branches: [ pr-request ]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: upstream-pr
+  cancel-in-progress: false
+
+jobs:
+  request:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          sparse-checkout: .github
+      - name: Check the request
+        run: python3 .github/scripts/upstream_pr.py .github/pr-request.md --check
+      - name: Send it
+        env:
+          GH_TOKEN: ${{ secrets.PR_TOKEN }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then echo "::error::secret PR_TOKEN is missing"; exit 1; fi
+          python3 .github/scripts/upstream_pr.py .github/pr-request.md
