@@ -53,4 +53,12 @@ object CustomAIKeyText {
     /** The result as it is inserted, with paragraph breaks to the text around it */
     fun resultToInsert(result: String, textBefore: CharSequence, textAfter: CharSequence): String =
         separatorBefore(textBefore) + result.trim() + separatorAfter(textAfter)
+
+    /** [text] with [result] inserted at [at], and the position after the inserted result */
+    fun textWithResult(text: String, at: Int, result: String): Pair<String, Int> {
+        val before = text.substring(0, at)
+        val after = text.substring(at)
+        val insert = resultToInsert(result, before, after)
+        return before + insert + after to at + insert.length
+    }
 }
