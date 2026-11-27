@@ -19,6 +19,7 @@ import helium314.keyboard.settings.SettingsDestination
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
@@ -128,12 +129,13 @@ class DeviceE2eTest {
 
     @Test
     fun onlyOfficialPluginsAreTrusted() {
-        // this test build is signed with a debug key, like a plugin from somewhere else would be
+        // plugins signed with the keyboard's own key are trusted (own plugin builds, LeanType+), here the
+        // test build's debug key: the own APK as a plugin is trusted, apps with other keys are not
         val ownApk = File(E2e.context.applicationInfo.sourceDir)
         val reason = PluginTrust.untrustedReason(E2e.context, ownApk)
         E2e.log("own APK as plugin: $reason")
-        assertNotNull(reason)
-        assertFalse(PluginTrust.isTrustedPackage(E2e.context, E2e.context.packageName))
+        assertNull(reason)
+        assertTrue(PluginTrust.isTrustedPackage(E2e.context, E2e.context.packageName))
         assertFalse(PluginTrust.isTrustedPackage(E2e.context, "com.android.settings"))
         assertFalse(PluginTrust.isTrustedPackage(E2e.context, "not.installed.package"))
     }
