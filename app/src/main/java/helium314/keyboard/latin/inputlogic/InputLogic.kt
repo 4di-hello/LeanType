@@ -3799,6 +3799,10 @@ class InputLogic(
             StatsUtils.onWordCommitUserTyped(mWordComposer.getTypedWord(), mWordComposer.isBatchMode())
         }
         resetComposingState(true)
+        // suggestions for the old text don't fit anymore, and no space is to be added before the result
+        mSuggestedWords = SuggestedWords.getEmptyInstance()
+        mSuggestionStripViewAccessor.setNeutralSuggestionStrip()
+        mSpaceState = SpaceState.NONE
         if (result.keepsOriginal) {
             val start = mConnection.expectedSelectionStart
             val end = mConnection.expectedSelectionEnd
@@ -3817,7 +3821,11 @@ class InputLogic(
             val textAfter = mConnection.getTextAfterCursor(SEPARATOR_CONTEXT, 0) ?: ""
             mLatinIME.onTextInput(CustomAIKeyText.resultToInsert(result.text, textBefore, textAfter))
         } else if (!result.hasSelection) {
+            // the app's selection update is the expected one, so nothing else updates the shift state
             mConnection.replaceEntireText(result.text)
+            KeyboardSwitcher.getInstance().requestUpdatingShiftState(
+                getCurrentAutoCapsState(Settings.getValues()), getCurrentRecapitalizeState()
+            )
         } else {
             mLatinIME.onTextInput(result.text)
         }

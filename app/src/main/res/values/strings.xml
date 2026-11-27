@@ -2228,7 +2228,6 @@ New dictionary:
     <string name="learn_from_text_personalization_off">Learning from your text needs personalized suggestions to be switched on</string>
     <string name="voice_transcribe_while_speaking_title">Transcribe while speaking</string>
     <string name="voice_transcribe_while_speaking_summary">At every pause in speech the part spoken so far is already transcribed. After stopping, only the last part is left: much shorter wait for long dictations.</string>
-    <string name="ai_cancelled">AI request cancelled</string>
     <string name="ai_result_to_clipboard">The text field changed meanwhile, the AI result is in the clipboard</string>
     <string name="custom_ai_keyword_prepend_label">Prepend result</string>
     <string name="custom_ai_keyword_showthought_label">Show reasoning</string>
