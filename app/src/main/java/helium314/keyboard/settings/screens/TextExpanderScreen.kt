@@ -893,7 +893,7 @@ private fun TemplateFullEditor(title: String, value: TextFieldValue, onValueChan
                     modifier = Modifier.align(Alignment.End).padding(horizontal = 16.dp, vertical = 4.dp)
                 )
                 Box(modifier = Modifier.padding(start = 12.dp, end = 12.dp, bottom = 8.dp)) {
-                    PlaceholderTagsRow(value, onValueChange)
+                    PlaceholderTagsRow(value, onValueChange = onValueChange)
                 }
             }
         }
