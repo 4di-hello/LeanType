@@ -3804,22 +3804,15 @@ class InputLogic(
         mSuggestionStripViewAccessor.setNeutralSuggestionStrip()
         mSpaceState = SpaceState.NONE
         if (result.keepsOriginal) {
-            val start = mConnection.expectedSelectionStart
-            val end = mConnection.expectedSelectionEnd
-            if (result.shouldAppend && result.hasSelection) {
-                // after the selection the request was made for
-                if (end >= 0 && start != end) mConnection.setSelection(end, end)
-            } else if (result.shouldAppend) {
-                // at the end of the text
-                val after = mConnection.getTextAfterCursor(60000, 0)?.length ?: 0
-                if (after > 0 && end >= 0) mConnection.setSelection(end + after, end + after)
-            } else if (result.hasSelection) {
-                // prepend: before the selection the request was made for
-                if (start >= 0 && start != end) mConnection.setSelection(start, start)
+            // one batch edit: some apps (Nine Mail) react to the cursor move by closing the keyboard,
+            // then the text sent after the move never arrives; within a batch edit the app sees the
+            // move and the text together, as with replaceEntireText
+            mConnection.beginBatchEdit()
+            try {
+                insertKeepingOriginal(result)
+            } finally {
+                mConnection.endBatchEdit()
             }
-            val textBefore = mConnection.getTextBeforeCursor(SEPARATOR_CONTEXT, 0) ?: ""
-            val textAfter = mConnection.getTextAfterCursor(SEPARATOR_CONTEXT, 0) ?: ""
-            mLatinIME.onTextInput(CustomAIKeyText.resultToInsert(result.text, textBefore, textAfter))
         } else if (!result.hasSelection) {
             // the app's selection update is the expected one, so nothing else updates the shift state
             mConnection.replaceEntireText(result.text)
@@ -3829,6 +3822,26 @@ class InputLogic(
         } else {
             mLatinIME.onTextInput(result.text)
         }
+    }
+
+    /** Appends or prepends [result], the original text stays */
+    private fun insertKeepingOriginal(result: PendingAIResult) {
+        val start = mConnection.expectedSelectionStart
+        val end = mConnection.expectedSelectionEnd
+        if (result.shouldAppend && result.hasSelection) {
+            // after the selection the request was made for
+            if (end >= 0 && start != end) mConnection.setSelection(end, end)
+        } else if (result.shouldAppend) {
+            // at the end of the text
+            val after = mConnection.getTextAfterCursor(60000, 0)?.length ?: 0
+            if (after > 0 && end >= 0) mConnection.setSelection(end + after, end + after)
+        } else if (result.hasSelection) {
+            // prepend: before the selection the request was made for
+            if (start >= 0 && start != end) mConnection.setSelection(start, start)
+        }
+        val textBefore = mConnection.getTextBeforeCursor(SEPARATOR_CONTEXT, 0) ?: ""
+        val textAfter = mConnection.getTextAfterCursor(SEPARATOR_CONTEXT, 0) ?: ""
+        mLatinIME.onTextInput(CustomAIKeyText.resultToInsert(result.text, textBefore, textAfter))
     }
 
     /** counts the fields opened, to notice if another field was opened during an AI request */
