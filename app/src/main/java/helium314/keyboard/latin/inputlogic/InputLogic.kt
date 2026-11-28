@@ -3824,40 +3824,41 @@ class InputLogic(
     private fun insertKeepingOriginal(result: PendingAIResult) {
         val start = mConnection.expectedSelectionStart
         val end = mConnection.expectedSelectionEnd
-        val hasSelection = start >= 0 && end > start
-        // from the app, not the cache: the whole text is sent again
-        val before = mConnection.getTextBeforeCursorFromEditor(WHOLE_TEXT_MAX)?.toString()
+        val hasSelection = mConnection.hasSelection()
+        // read as for the request (and for replacing all text): Nine Mail's positions may not match
+        // the text, so only the text decides where the result goes
+        val before = mConnection.getTextBeforeCursor(WHOLE_TEXT_MAX, 0)?.toString()
         val after = mConnection.getTextAfterCursor(WHOLE_TEXT_MAX, 0)?.toString()
         val selected = if (hasSelection) mConnection.getSelectedText(0)?.toString() else ""
-        // where the result goes: after the selection or at the end, before the selection
-        val at = when {
-            result.shouldAppend && hasSelection -> before?.let { b -> selected?.let { b.length + it.length } }
-            result.shouldAppend -> before?.let { b -> after?.let { b.length + (selected?.length ?: 0) + it.length } }
-            hasSelection -> before?.length
-            else -> null // prepend at the cursor: it doesn't move
-        }
-        // a selection collapses, or the cursor isn't where the result goes
-        val cursorMoves = at != null && (hasSelection || at != end)
-        // only the complete text: what the app returned starts at the beginning and fits the selection,
-        // a part would replace the whole text
-        val wholeText = if (before != null && after != null && selected != null && before.length == start
-            && after.length < WHOLE_TEXT_MAX && selected.length == end - start) before + selected + after else null
-        if (cursorMoves && at != null && wholeText != null) {
-            val (newText, cursor) = CustomAIKeyText.textWithResult(wholeText, at, result.text)
-            mConnection.beginBatchEdit()
-            try {
-                mConnection.replaceEntireText(newText)
-                // after the inserted result; the text is in already, even if the app reacts to the move
-                if (cursor != newText.length) mConnection.setSelection(cursor, cursor)
-            } finally {
-                mConnection.endBatchEdit()
+        // only lengths, never the text
+        // warning level: the log the user can save in About contains warnings and errors
+        Log.w(TAG, "AI result kept with the original: selection $start-$end ($hasSelection), read ${before?.length}+${selected?.length}+${after?.length}")
+        if (before != null && after != null && selected != null) {
+            val wholeText = before + selected + after
+            // where the result goes, if the cursor has to move for it
+            val at = when {
+                result.shouldAppend && hasSelection -> before.length + selected.length
+                result.shouldAppend -> if (after.isNotEmpty()) wholeText.length else null
+                hasSelection -> before.length
+                else -> null // prepend at the cursor: it doesn't move
             }
-            KeyboardSwitcher.getInstance().requestUpdatingShiftState(
-                getCurrentAutoCapsState(Settings.getValues()), getCurrentRecapitalizeState()
-            )
-            return
+            if (at != null) {
+                val (newText, cursor) = CustomAIKeyText.textWithResult(wholeText, at, result.text)
+                mConnection.beginBatchEdit()
+                try {
+                    mConnection.replaceEntireText(newText)
+                    // after the inserted result; the text is in already, even if the app reacts to the move
+                    if (cursor != newText.length) mConnection.setSelection(cursor, cursor)
+                } finally {
+                    mConnection.endBatchEdit()
+                }
+                KeyboardSwitcher.getInstance().requestUpdatingShiftState(
+                    getCurrentAutoCapsState(Settings.getValues()), getCurrentRecapitalizeState()
+                )
+                return
+            }
         }
-        // the cursor stays where it is, or the text is too long to send it all again
+        // the cursor stays where it is, or the text could not be read
         if (result.shouldAppend && hasSelection) {
             mConnection.setSelection(end, end)
         } else if (result.shouldAppend) {
