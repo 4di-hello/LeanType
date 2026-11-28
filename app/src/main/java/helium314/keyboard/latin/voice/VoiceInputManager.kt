@@ -1317,7 +1317,8 @@ class VoiceInputManager(
         lines.add(ims.getString(R.string.voice_stats_recognition, seconds(now - stoppedAt)))
         if (lastSpeech in recordingStartedAt..stoppedAt)
             lines.add(ims.getString(R.string.voice_stats_total, seconds(now - lastSpeech)))
-        if (piecesTranscribed > 0) lines.add(ims.getString(R.string.voice_stats_pieces, piecesTranscribed))
+        // one piece is just the whole recording
+        if (piecesTranscribed > 1) lines.add(ims.getString(R.string.voice_stats_pieces, piecesTranscribed))
         val text = lines.joinToString("\n")
         mainHandler.post { helium314.keyboard.keyboard.KeyboardSwitcher.getInstance().showLongToast(text, 6000) }
     }

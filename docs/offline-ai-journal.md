@@ -6,12 +6,13 @@ Fehlschlägen. Keine persönlichen Daten.
 
 ## Kernerkenntnisse
 
-1. **Threads gehören auf die schnellen Kerne.** Ein Handy hat Kerne unterschiedlicher Geschwindigkeit
-   (hier 1 sehr schneller, 3 schnelle, 4 mittlere). Mehr Threads als schnelle Kerne bremsen: Bei jedem Token
-   warten alle auf den langsamsten (4 Threads gut doppelt so schnell wie 8). Und in der Tastatur reicht
-   „4 Threads“ allein nicht: Android verteilte sie dort auch auf langsame Kerne. Fest auf die 4 schnellsten
-   Kerne gelegt (nach Höchsttakt): **15,8 statt 8,7 Tokens/s, 10,0 statt 19,4 s** für den Testtext, schneller
-   als PocketPal und Offline LLM
+1. **Ein dauerhafter Thread-Pool verdoppelt das Tempo.** Ohne eigenen Pool startet llama.cpp für jede
+   Rechnung, also für jedes einzelne Token, neue Threads und beendet sie wieder. Mit einem Pool, der so lange
+   lebt wie das geladene Modell und nur die 4 schnellsten Kerne nutzt: **15,8 statt 8,7 Tokens/s, 10,0 statt
+   19,4 s** für den Testtext, schneller als PocketPal und Offline LLM. Zuerst hielten wir die Kernwahl für die
+   Ursache; die Kernanzeige zeigte dann, dass Android der Tastatur ohnehin nur die 4 großen Kerne (4–7)
+   erlaubt. Gewonnen hat also der Pool. Dazu passt: Mehr Threads als schnelle Kerne bremsen (4 Threads gut
+   doppelt so schnell wie 8), weil bei jedem Token alle auf den langsamsten warten
 2. **Messen statt zählen.** Handgestoppte Zeiten lagen bis zu einem Drittel daneben. Erst die eingebaute
    Leistungsanzeige (Tokens, Sekunden, Lesezeit, Gesamtzeit) machte Vergleiche belastbar und deckte zwei
    Fehler auf (weiterrechnende abgebrochene Anfragen, Threads auf langsamen Kernen)
@@ -147,9 +148,14 @@ Funde mit der Leistungsanzeige:
 6. **Plugin 1.2.1, Threads fest auf den schnellsten Kernen (28.11.), E2B QAT (`gemma-4-E2B_q4_0-it.gguf`):**
    139 Tokens in 8,8 s (**15,8 Tokens/s**), Text gelesen in **1,2 s**, gesamt **10,0 s** seit der Taste. 11/11.
    Gegenüber 1.2.0 (8,7 Tokens/s, 3,3 s Lesen, 19,4 s) fast doppelt so schnell, und schneller als PocketPal
-   (11,9 Tokens/s) und Offline LLM (rund 10). Ursache war also die Verteilung der Threads: Android setzte sie in
-   der Tastatur offenbar auch auf langsame Kerne
-7. Panne am Rand: Die Kern-Anzeige fehlte in der Version von 10:34, weil ein Update auf einem veralteten Stand
+   (11,9 Tokens/s) und Offline LLM (rund 10). Zuerst vermutet: Android setzte die Threads auf langsame Kerne
+7. **Plugin 1.2.2 mit Flash Attention „Auto“ (28.11.):** Modell geladen in 1,0 s, 139 Tokens in 9,4 s
+   (14,8 Tokens/s), Text gelesen in 2,1 s, gesamt 12,6 s. Die Kernanzeige: „Kerne 7,4,5,6 von 4,5,6,7“ –
+   die Tastatur darf ohnehin nur die 4 großen Kerne nutzen. Die Verdopplung kam also nicht von der Kernwahl,
+   sondern vom eigenen, dauerhaften Thread-Pool: Ohne ihn erzeugt llama.cpp (ggml) für jede Rechnung einen
+   Wegwerf-Pool, also neue Threads für jedes Token. Flash Attention brachte nichts (eher langsamer) und
+   bleibt aus
+8. Panne am Rand: Die Kern-Anzeige fehlte in der Version von 10:34, weil ein Update auf einem veralteten Stand
    von `daily` gebaut wurde (vorher nicht abgerufen). Lehre: vor jedem Branch `git fetch`
 
 ## Nebenschauplatz: KI-Tasten in Nine Mail
@@ -172,6 +178,18 @@ Funde mit der Leistungsanzeige:
 - **Entscheidung:** keine Sonderlösung für eine einzelne App. Alle drei Versuche zurückgenommen; in Nine Mail
   geht „Anhängen“ mit dem Cursor im Text nicht, mit dem Cursor am Ende schon. PR #889 bleibt bei der kleinen
   Lösung
+
+## Spracheingabe: Messung (28.11., Leistungsanzeige)
+
+| Diktat | Aufnahme | Stille abgewartet | Erkennung danach | Text da nach dem letzten Wort |
+|---|---|---|---|---|
+| kurz (1 Satz) | 3,6 s | 0,3 s | **7,4 s** | 7,7 s |
+| lang (3 Sätze) | 11,4 s | 0,4 s | **8,4 s** | 8,9 s |
+
+- Die Wartezeit ist fast nur Erkennung, das Abwarten der Stille fällt kaum ins Gewicht
+- Ein Satz von 3,6 s braucht 7,4 s Erkennung, drei Sätze kaum mehr: ein fester Sockel. Passt zum Plugin, das
+  immer ein volles 30-Sekunden-Fenster rechnet, egal wie kurz die Aufnahme ist
+- „Schon beim Sprechen erkennen“ half hier nicht: Ohne Pause ab 0,7 s bleibt es ein einziges Stück
 
 ## Spracheingabe (bisher)
 
