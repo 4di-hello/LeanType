@@ -129,6 +129,13 @@ Funde mit der Leistungsanzeige:
 5. Abstand zu PocketPal (11,9 Tokens/s) bleibt. Verdacht: Die Threads landen nicht nur auf den schnellen Kernen,
    oder Android gibt der Tastatur andere Kerne als der App im Vordergrund. Plugin 1.2.1 legt die Threads auf die
    schnellsten Kerne (nach Höchsttakt) und zeigt in der Anzeige, welche Kerne rechnen und welche erlaubt sind
+6. **Plugin 1.2.1, Threads fest auf den schnellsten Kernen (28.11.), E2B QAT (`gemma-4-E2B_q4_0-it.gguf`):**
+   139 Tokens in 8,8 s (**15,8 Tokens/s**), Text gelesen in **1,2 s**, gesamt **10,0 s** seit der Taste. 11/11.
+   Gegenüber 1.2.0 (8,7 Tokens/s, 3,3 s Lesen, 19,4 s) fast doppelt so schnell, und schneller als PocketPal
+   (11,9 Tokens/s) und Offline LLM (rund 10). Ursache war also die Verteilung der Threads: Android setzte sie in
+   der Tastatur offenbar auch auf langsame Kerne
+7. Panne am Rand: Die Kern-Anzeige fehlte in der Version von 10:34, weil ein Update auf einem veralteten Stand
+   von `daily` gebaut wurde (vorher nicht abgerufen). Lehre: vor jedem Branch `git fetch`
 
 ## Nebenschauplatz: KI-Tasten in Nine Mail
 
