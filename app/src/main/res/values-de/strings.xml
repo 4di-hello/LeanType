@@ -564,7 +564,8 @@
     <string name="offline_thinking_summary">Modelle, die denken können (z. B. Qwen3, Gemma 4), überlegen vor der Antwort: manchmal besser, aber deutlich langsamer</string>
     <string name="offline_show_stats_title">Leistungsanzeige</string>
     <string name="offline_show_stats_summary">Nach jeder Antwort: Tokens pro Sekunde, Zeit zum Lesen des Textes, Gesamtzeit</string>
-    <string name="offline_stats_format">%1$s Tokens/s · Text gelesen in %2$s s · gesamt %3$s s</string>
+    <string name="offline_stats_answer">Antwort: %1$d Tokens in %2$s s (%3$s Tokens/s)</string>
+    <string name="offline_stats_format">Text gelesen in %1$s s · gesamt %2$s s seit der Taste</string>
     <string name="offline_stats_load">Modell geladen in %s s</string>
     <string name="offline_stats_load_hint">„Modell geladen halten“ spart diese Zeit</string>
     <string name="offline_stats_total">Gesamt %s s</string>

@@ -774,7 +774,8 @@
     <string name="offline_thinking_summary">Models that can think (e.g. Qwen3, Gemma 4) think before answering: sometimes better, but much slower</string>
     <string name="offline_show_stats_title">Show speed</string>
     <string name="offline_show_stats_summary">After each answer: tokens per second, time to read the text, total time</string>
-    <string name="offline_stats_format">%1$s tokens/s · text read in %2$s s · total %3$s s</string>
+    <string name="offline_stats_answer">Answer: %1$d tokens in %2$s s (%3$s tokens/s)</string>
+    <string name="offline_stats_format">Text read in %1$s s · total %2$s s since the key</string>
     <string name="offline_stats_load">Model loaded in %s s</string>
     <string name="offline_stats_load_hint">“Keep model loaded” saves this time</string>
     <string name="offline_stats_total">Total %s s</string>

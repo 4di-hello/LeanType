@@ -529,7 +529,7 @@ class ProofreadService(private val context: Context) {
             Log.i(TAG, "inference via plugin: input ${text.length} chars, generated ${output.length} chars, result ${finalOutput.length} chars, chat format ${chatFormat ?: "none"}")
             if (finalOutput.isNotBlank()) {
                 if (sharedPrefs.getBoolean(Settings.PREF_OFFLINE_SHOW_STATS, Defaults.PREF_OFFLINE_SHOW_STATS))
-                    showStats(loadMillis, System.currentTimeMillis() - inferenceStart, inferenceStart)
+                    showStats(loadMillis, System.currentTimeMillis() - loadStart, inferenceStart)
                 Result.success(finalOutput)
             } else {
                 // say why: the model generated nothing, or our cleanup removed what it generated
@@ -872,7 +872,8 @@ class ProofreadService(private val context: Context) {
 
     /**
      * Speed of the last answer, shown above the keyboard: what the plugin measured (it logs only
-     * numbers), otherwise the time measured here. [since] is the start of the generation.
+     * numbers) and the total time since the request reached this service, with loading and waiting
+     * for another generation. [since] is the start of the generation.
      */
     private fun showStats(loadMillis: Long, totalMillis: Long, since: Long) {
         val stats = try {
@@ -898,8 +899,9 @@ class ProofreadService(private val context: Context) {
             val generated = stats.groupValues[2].toDouble()
             val generateMillis = stats.groupValues[3].toDouble()
             val tokensPerSecond = if (generateMillis > 0) generated * 1000 / generateMillis else 0.0
-            lines.add(context.getString(R.string.offline_stats_format,
-                String.format(java.util.Locale.getDefault(), "%.1f", tokensPerSecond), seconds(promptMillis), seconds(totalMillis.toDouble())))
+            lines.add(context.getString(R.string.offline_stats_answer, generated.toInt(), seconds(generateMillis),
+                String.format(java.util.Locale.getDefault(), "%.1f", tokensPerSecond)))
+            lines.add(context.getString(R.string.offline_stats_format, seconds(promptMillis), seconds(totalMillis.toDouble())))
         } else {
             lines.add(context.getString(R.string.offline_stats_total, seconds(totalMillis.toDouble())))
         }
