@@ -778,6 +778,7 @@
     <string name="offline_stats_format">Text read in %1$s s · total %2$s s since the key</string>
     <string name="offline_stats_load">Model loaded in %s s</string>
     <string name="offline_stats_load_hint">“Keep model loaded” saves this time</string>
+    <string name="offline_stats_cores">Cores %1$s of %2$s</string>
     <string name="offline_stats_total">Total %s s</string>
     <!-- Translation feature strings -->
     <string name="translate" tools:keep="@string/translate">Translate</string>

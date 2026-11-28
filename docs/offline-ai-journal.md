@@ -124,7 +124,11 @@ Funde mit der Leistungsanzeige:
    3,7 s. PocketPal: 11,9 Tokens/s. Offene Frage: Bekommt die Tastatur als Hintergrundprozess die
    schnellsten Kerne?
 
-Ausstehend: Messung mit Plugin 1.2.0 ohne Überlappung.
+4. **Plugin 1.2.0, ohne Überlappung (28.11.), E2B QAT:** 139 Tokens in 16,0 s (8,7 Tokens/s), Text gelesen in
+   3,3 s, gesamt 19,4 s seit der Taste; Profi-Stoppuhr bestätigt. 11/11
+5. Abstand zu PocketPal (11,9 Tokens/s) bleibt. Verdacht: Die Threads landen nicht nur auf den schnellen Kernen,
+   oder Android gibt der Tastatur andere Kerne als der App im Vordergrund. Plugin 1.2.1 legt die Threads auf die
+   schnellsten Kerne (nach Höchsttakt) und zeigt in der Anzeige, welche Kerne rechnen und welche erlaubt sind
 
 ## Nebenschauplatz: KI-Tasten in Nine Mail
 

@@ -568,6 +568,7 @@
     <string name="offline_stats_format">Text gelesen in %1$s s · gesamt %2$s s seit der Taste</string>
     <string name="offline_stats_load">Modell geladen in %s s</string>
     <string name="offline_stats_load_hint">„Modell geladen halten“ spart diese Zeit</string>
+    <string name="offline_stats_cores">Kerne %1$s von %2$s</string>
     <string name="offline_stats_total">Gesamt %s s</string>
     <string name="translate">Übersetzen</string>
     <string name="translate_error">Übersetzung fehlgeschlagen: %s</string>
