@@ -528,7 +528,8 @@ class ProofreadService(private val context: Context) {
             // only the lengths: the texts are private, and the system log can be read by other tools
             Log.i(TAG, "inference via plugin: input ${text.length} chars, generated ${output.length} chars, result ${finalOutput.length} chars, chat format ${chatFormat ?: "none"}")
             if (finalOutput.isNotBlank()) {
-                if (sharedPrefs.getBoolean(Settings.PREF_OFFLINE_SHOW_STATS, Defaults.PREF_OFFLINE_SHOW_STATS))
+                // not for a cancelled request that a plugin finished in the background
+                if (isActive && sharedPrefs.getBoolean(Settings.PREF_OFFLINE_SHOW_STATS, Defaults.PREF_OFFLINE_SHOW_STATS))
                     showStats(loadMillis, System.currentTimeMillis() - loadStart, inferenceStart)
                 Result.success(finalOutput)
             } else {

@@ -58,8 +58,9 @@ object ProofreadHelper {
      */
     fun cancelCurrentOperation() {
         if (currentJob?.isActive == true) {
-            // the plugin can't be stopped: it finishes the text in the background, the result is dropped
+            // the LeanType+ plugin stops computing; others finish the text in the background, the result is dropped
             currentJob?.cancel()
+            helium314.keyboard.latin.ai.OfflineAiLoader.cancelGeneration()
             currentJob = null
             mainHandler.post {
                 KeyboardSwitcher.getInstance().hideLoadingAnimation()

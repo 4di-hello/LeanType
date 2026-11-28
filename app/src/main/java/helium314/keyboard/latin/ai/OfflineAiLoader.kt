@@ -292,6 +292,23 @@ object OfflineAiLoader {
     @Volatile
     var isBusy: Boolean = false
 
+    /**
+     * Stops the running generation if the plugin can: the LeanType+ plugin has cancelGeneration()
+     * (not in interface version 1, so called by name). Other plugins finish the text in the
+     * background, and the next request waits for it.
+     */
+    fun cancelGeneration() {
+        if (!isBusy) return
+        val provider = activeProvider ?: return
+        try {
+            provider.javaClass.getMethod("cancelGeneration").invoke(provider)
+            Log.i(TAG, "Generation cancelled in the plugin")
+        } catch (_: NoSuchMethodException) {
+        } catch (e: Exception) {
+            Log.w(TAG, "Could not cancel the generation in the plugin", e)
+        }
+    }
+
     fun onTrimMemory() {
         if (isBusy) {
             Log.i(TAG, "Skipping memory trim: offline AI is currently busy")
