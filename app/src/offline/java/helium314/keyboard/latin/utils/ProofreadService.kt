@@ -903,6 +903,8 @@ class ProofreadService(private val context: Context) {
             lines.add(context.getString(R.string.offline_stats_answer, generated.toInt(), seconds(generateMillis),
                 String.format(java.util.Locale.getDefault(), "%.1f", tokensPerSecond)))
             lines.add(context.getString(R.string.offline_stats_format, seconds(promptMillis), seconds(totalMillis.toDouble())))
+            // which cores computed, of those the system gives the keyboard (plugin 1.2.1)
+            stats.groupValues[4].takeIf { it.isNotEmpty() }?.let { lines.add(context.getString(R.string.offline_stats_cores, it, stats.groupValues[5])) }
         } else {
             lines.add(context.getString(R.string.offline_stats_total, seconds(totalMillis.toDouble())))
         }
@@ -917,7 +919,7 @@ class ProofreadService(private val context: Context) {
         /** more tokens for the answer when the model thinks first */
         private const val THINKING_TOKENS = 1024
         /** the line the LeanType+ plugin logs after each answer, only numbers */
-        private val STATS_REGEX = Regex("prompt \\d+ tokens (\\d+) ms .*generated (\\d+) tokens (\\d+) ms")
+        private val STATS_REGEX = Regex("prompt \\d+ tokens (\\d+) ms .*generated (\\d+) tokens (\\d+) ms(?:.*cores ([0-9,?]+) of ([0-9,]+))?")
         private const val KEY_MODEL_PATH = "offline_model_path"
         private const val KEY_DECODER_PATH = "offline_decoder_path"
         private const val KEY_TOKENIZER_PATH = "offline_tokenizer_path"
