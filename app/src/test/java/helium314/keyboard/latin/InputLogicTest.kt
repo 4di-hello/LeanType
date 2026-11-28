@@ -2243,6 +2243,11 @@ class InputLogicTest {
         batchEdit = 0
         currentInputType = InputType.TYPE_CLASS_TEXT
         editorInfoOverride = null
+        hidesKeyboardOnSetSelection = false
+        keyboardHidden = false
+        selectAllCount = 0
+        readLimit = Int.MAX_VALUE
+        reportsWholeText = false
         lastAddedWord = ""
         lastNgramContext = ""
         addedWords.clear()
@@ -2451,6 +2456,15 @@ class InputLogicTest {
     }
 
     // just sets the text and starts input so connection it set up correctly
+    /** A field of the app [packageName] with [content], cursor at the end */
+    private fun startFieldInApp(packageName: String, content: String) {
+        setText(content)
+        editorInfoOverride = EditorInfo().apply {
+            inputType = currentInputType
+            this.packageName = packageName
+        }
+    }
+
     private fun setText(newText: String) {
         text = newText
         selectionStart = newText.length
@@ -2591,6 +2605,80 @@ class InputLogicTest {
         assertEquals("first line\n\nAnswer.", text)
     }
 
+    @Test fun `custom AI key result is appended after the selection, the text after it stays`() {
+        reset()
+        setText("one two three")
+        setCursorPosition(4, 7) // "two"
+        latinIME.mInputLogic.insertCustomAiResult("Answer.", shouldAppend = true, hasSelection = true)
+        assertEquals("one two\n\nAnswer. three", text)
+        // the cursor is after the result, not at the end of the text
+        assertEquals(16, latinIME.mInputLogic.connection.expectedSelectionStart)
+        assertEquals(16, latinIME.mInputLogic.connection.expectedSelectionEnd)
+    }
+
+    @Test fun `custom AI key result appended without selection keeps text selected during the request`() {
+        reset()
+        setText("one two three")
+        // the request was made without a selection, then the user selected "two"
+        setCursorPosition(4, 7)
+        latinIME.mInputLogic.insertCustomAiResult("Answer.", shouldAppend = true, hasSelection = false)
+        assertEquals("one two three\n\nAnswer.", text)
+    }
+
+    @Test fun `custom AI key result appended at the end of the text leaves the cursor there`() {
+        reset()
+        setText("first line")
+        setCursorPosition(5)
+        latinIME.mInputLogic.insertCustomAiResult("Answer.", shouldAppend = true, hasSelection = false)
+        assertEquals("first line\n\nAnswer.", text)
+        assertEquals(19, latinIME.mInputLogic.connection.expectedSelectionStart)
+        // typing continues after the result
+        chainInput(" ok")
+        assertEquals("first line\n\nAnswer. ok", text)
+    }
+
+    @Test fun `custom AI key result is appended in an app that hides the keyboard when the cursor moves`() {
+        reset()
+        startFieldInApp("com.ninefolders.hd3", "first line")
+        setCursorPosition(5) // after "first"
+        hidesKeyboardOnSetSelection = true
+        latinIME.mInputLogic.insertCustomAiResult("Answer.", shouldAppend = true, hasSelection = false)
+        // moving the cursor first would lose the result there
+        assertFalse(keyboardHidden)
+        assertEquals("first line\n\nAnswer.", text)
+    }
+
+    @Test fun `custom AI key result in such an app keeps text selected during the request`() {
+        reset()
+        startFieldInApp("com.ninefolders.hd3", "one two three")
+        setCursorPosition(4, 7) // the request was made without a selection, then the user selected "two"
+        latinIME.mInputLogic.insertCustomAiResult("Answer.", shouldAppend = true, hasSelection = false)
+        assertEquals("one two three\n\nAnswer.", text)
+    }
+
+    @Test fun `custom AI key result in such an app is not sent as whole text if the app returns only part of it`() {
+        reset()
+        startFieldInApp("com.ninefolders.hd3", "first line")
+        setCursorPosition(5)
+        readLimit = 3
+        reportsWholeText = true
+        latinIME.mInputLogic.insertCustomAiResult("Answer.", shouldAppend = true, hasSelection = false)
+        // replacing all with the parts read would delete text
+        assertEquals(0, selectAllCount)
+        // no text lost (the cursor is moved by what the app returned, so the result may land early)
+        assertEquals("first line", text.replace("\n\nAnswer.", ""))
+    }
+
+    @Test fun `custom AI key result is appended in other apps without replacing the whole text`() {
+        reset()
+        setText("first line")
+        setCursorPosition(5)
+        latinIME.mInputLogic.insertCustomAiResult("Answer.", shouldAppend = true, hasSelection = false)
+        // formatting and spans of the text stay
+        assertEquals(0, selectAllCount)
+        assertEquals("first line\n\nAnswer.", text)
+    }
+
     @Test fun `custom AI key result replaces the selection`() {
         reset()
         setText("one teh two")
@@ -2666,6 +2754,13 @@ private var selectionStart = 0
 private var selectionEnd = 0
 private var composingStart = -1
 private var composingEnd = -1
+// an app like Nine Mail: the keyboard hides when the IME moves the cursor, text sent afterwards is lost
+private var hidesKeyboardOnSetSelection = false
+private var keyboardHidden = false
+private var selectAllCount = 0
+// an app that returns fewer characters than asked for, and reports its whole text in getExtractedText
+private var readLimit = Int.MAX_VALUE
+private var reportsWholeText = false
 // convenience for access
 private val textBeforeCursor get() = text.substring(0, selectionStart)
 private val textAfterCursor get() = text.substring(selectionEnd)
@@ -2680,9 +2775,10 @@ private val composingText get() = if (composingStart == -1 || composingEnd == -1
 private val ic = object : InputConnection {
     // pretty clear (though this may be slow depending on the editor)
     // bad return value here is likely the cause for that weird bug improved/fixed by fixIncorrectLength
-    override fun getTextBeforeCursor(p0: Int, p1: Int): CharSequence = textBeforeCursor.take(p0)
+    override fun getTextBeforeCursor(p0: Int, p1: Int): CharSequence =
+        if (readLimit < p0) textBeforeCursor.takeLast(readLimit) else textBeforeCursor.take(p0)
     // pretty clear (though this may be slow depending on the editor)
-    override fun getTextAfterCursor(p0: Int, p1: Int): CharSequence = textAfterCursor.take(p0)
+    override fun getTextAfterCursor(p0: Int, p1: Int): CharSequence = textAfterCursor.take(minOf(p0, readLimit))
     // pretty clear
     override fun getSelectedText(p0: Int): CharSequence? = if (selectionStart == selectionEnd) null
         else text.substring(selectionStart, selectionEnd)
@@ -2730,6 +2826,7 @@ private val ic = object : InputConnection {
     }
     // as per documentation: "This behaves like calling setComposingText(text, newCursorPosition) then finishComposingText()"
     override fun commitText(p0: CharSequence, p1: Int): Boolean {
+        if (keyboardHidden) return false
         setComposingText(p0, p1)
         finishComposingText()
         return true // whether we added the text
@@ -2754,6 +2851,7 @@ private val ic = object : InputConnection {
         return false
     }
     override fun setSelection(p0: Int, p1: Int): Boolean {
+        if (hidesKeyboardOnSetSelection) keyboardHidden = true
         selectionStart = p0
         selectionEnd = p1
         // todo: call InputMethodService.onUpdateSelection(int, int, int, int, int, int), but only after batch edit is done!
@@ -2817,6 +2915,10 @@ private val ic = object : InputConnection {
     // implementation is only to work with getTextBeforeCursorAndDetectLaggyConnection
     override fun getExtractedText(p0: ExtractedTextRequest?, p1: Int): ExtractedText {
         return ExtractedText().also {
+            if (reportsWholeText) {
+                it.text = text
+                it.partialStartOffset = -1
+            }
             it.startOffset = 0
             it.selectionStart = selectionStart
             it.selectionEnd = selectionEnd
@@ -2831,6 +2933,7 @@ private val ic = object : InputConnection {
     override fun performEditorAction(p0: Int): Boolean = true
     override fun performContextMenuAction(p0: Int): Boolean {
         if (p0 == android.R.id.selectAll) {
+            selectAllCount++
             selectionStart = 0
             selectionEnd = text.length
             return true

@@ -3449,6 +3449,7 @@ class InputLogic(
         mSuggestionStripViewAccessor.setNeutralSuggestionStrip()
         mSpaceState = SpaceState.NONE
         if (shouldAppend) {
+            if (appendWithWholeText(resultText, hasSelection)) return
             moveCursorToEndForAppend(hasSelection)
             val textBefore = mConnection.getTextBeforeCursor(2, 0) ?: ""
             mLatinIME.onTextInput(CustomAIKeyText.separatorBefore(textBefore) + resultText.trim())
@@ -3462,6 +3463,47 @@ class InputLogic(
         } else {
             mLatinIME.onTextInput(resultText)
         }
+    }
+
+    /**
+     * For apps that hide the keyboard when the cursor is moved (app quirk, e.g. Nine Mail): appends
+     * [resultText] where the cursor would have to move to (after the selection, or at the end of the
+     * text) by sending the whole text once with the result in it. Text sent after a cursor move never
+     * arrives there, also within a batch edit; selecting all is not such a move.
+     * Only with the complete text: the text read decides where the result goes (the cursor position
+     * such apps report may not match it), and nothing is changed if the text could be incomplete or
+     * selecting all fails. Returns false then, or if the cursor doesn't have to move.
+     */
+    private fun appendWithWholeText(resultText: String, hasSelection: Boolean): Boolean {
+        if (!AppQuirksManager.keyboardHidesOnCursorMove(getCurrentInputEditorInfo().packageName)) return false
+        if (resultText.isBlank()) return false
+        // from the app, not the cache, and the selected text even if the expected selection is empty
+        val before = mConnection.getTextBeforeCursorFromEditor(WHOLE_TEXT_MAX)?.toString() ?: return false
+        val after = mConnection.getTextAfterCursor(WHOLE_TEXT_MAX, 0)?.toString() ?: return false
+        val selected = mConnection.getSelectedText(0)?.toString() ?: ""
+        if (hasSelection && selected.isEmpty()) return false // the selection is gone, insert at the cursor
+        if (before.length >= WHOLE_TEXT_MAX || after.length >= WHOLE_TEXT_MAX) return false
+        val wholeText = before + selected + after
+        mConnection.getWholeTextLength()?.let { if (it != wholeText.length) return false }
+        if (!hasSelection && selected.isEmpty() && after.isEmpty()) return false // at the end, nothing moves
+        val textBefore = if (hasSelection) before + selected else wholeText
+        val textAfter = if (hasSelection) after else ""
+        val inserted = CustomAIKeyText.separatorBefore(textBefore) + resultText.trim()
+        val newText = textBefore + inserted + textAfter
+        mConnection.beginBatchEdit()
+        try {
+            if (!mConnection.replaceEntireText(newText, onlyIfAllSelected = true)) return false
+            // after the result; the text is in already, even if the app reacts to this move
+            val cursor = textBefore.length + inserted.length
+            if (cursor != newText.length) mConnection.setSelection(cursor, cursor)
+        } finally {
+            mConnection.endBatchEdit()
+        }
+        val settingsValues = Settings.getValues()
+        KeyboardSwitcher.getInstance().requestUpdatingShiftState(
+            getCurrentAutoCapsState(settingsValues), getCurrentRecapitalizeState()
+        )
+        return true
     }
 
     /** Before appending a result: after the selection the request was made for, or at the end of the text */
@@ -3609,6 +3651,8 @@ class InputLogic(
 
     companion object {
         private const val TAG = "InputLogic"
+        /** characters read on each side of the cursor to send the whole text again (as for the AI request) */
+        private const val WHOLE_TEXT_MAX = 60000
         private const val INLINE_EMOJI_SEARCH_MARKER = ':'
         /** longer text typed in place of a deleted swipe is not a single word correcting it */
         private const val MAX_RETYPED_SWIPE_LENGTH = 48

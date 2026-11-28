@@ -22,12 +22,14 @@ data class AppQuirk(
     val hideToolbar: Boolean = false,
     val alwaysShowSuggestions: Boolean = false,
     val useSelectionForWordReplacement: Boolean = false,
+    /** the app hides the keyboard when the IME moves the cursor; AI results are inserted without moving it */
+    val keyboardHidesOnCursorMove: Boolean = false,
 ) {
     fun hasCustomSettings(): Boolean =
         forceWebEditor || stripNoEnterAction || (forceEnterAction != null) || forceIncognito ||
                 forceNonIncognito || forceDirectCommit || allowSymbolComposing || disableAutoSpace ||
                 allowTypeNullKeyboard || (autoCorrectionMode != null) || hideSuggestionStrip || hideToolbar ||
-                alwaysShowSuggestions || useSelectionForWordReplacement
+                alwaysShowSuggestions || useSelectionForWordReplacement || keyboardHidesOnCursorMove
 
     fun toJson(): JSONObject {
         val json = JSONObject()
@@ -46,6 +48,7 @@ data class AppQuirk(
         if (hideToolbar) json.put("hideToolbar", true)
         if (alwaysShowSuggestions) json.put("alwaysShowSuggestions", true)
         if (useSelectionForWordReplacement) json.put("useSelectionForWordReplacement", true)
+        if (keyboardHidesOnCursorMove) json.put("keyboardHidesOnCursorMove", true)
         return json
     }
 
@@ -66,6 +69,7 @@ data class AppQuirk(
             val hideToolbar = json.optBoolean("hideToolbar", false)
             val alwaysShowSuggestions = json.optBoolean("alwaysShowSuggestions", false)
             val useSelectionForWordReplacement = json.optBoolean("useSelectionForWordReplacement", false)
+            val keyboardHidesOnCursorMove = json.optBoolean("keyboardHidesOnCursorMove", false)
             return AppQuirk(
                 packageName = packageName,
                 forceWebEditor = forceWebEditor,
@@ -82,6 +86,7 @@ data class AppQuirk(
                 hideToolbar = hideToolbar,
                 alwaysShowSuggestions = alwaysShowSuggestions,
                 useSelectionForWordReplacement = useSelectionForWordReplacement,
+                keyboardHidesOnCursorMove = keyboardHidesOnCursorMove,
             )
         }
     }

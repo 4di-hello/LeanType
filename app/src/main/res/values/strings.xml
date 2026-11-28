@@ -1892,6 +1892,8 @@ New dictionary:
     <string name="app_quirks_always_show_suggestions_summary">Ignore this app’s requests to disable suggestions</string>
     <string name="app_quirks_badge_always_suggestions">Always Suggestions</string>
     <string name="app_quirks_use_selection_replacement">Selection-based word replacement</string>
+    <string name="app_quirks_keyboard_hides_on_cursor_move">Keyboard hides when the cursor moves</string>
+    <string name="app_quirks_keyboard_hides_on_cursor_move_summary">AI key results are inserted by replacing the whole text instead of moving the cursor (formatting may be lost)</string>
     <string name="app_quirks_use_selection_replacement_summary">Replace words by selecting and committing instead of composing spans (fixes Chrome Omnibox)</string>
     <string name="app_quirks_badge_selection_replacement">Selection Replace</string>
 

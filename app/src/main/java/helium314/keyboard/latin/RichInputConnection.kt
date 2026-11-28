@@ -497,16 +497,43 @@ class RichInputConnection(private val mParent: InputMethodService) : PrivateComm
         }
     }
 
-    fun replaceEntireText(newText: CharSequence) {
-        if (!isConnected()) return
+    /** Length of the whole text from the app, or null if it doesn't tell */
+    fun getWholeTextLength(): Int? {
+        if (!isConnected()) return null
+        val request = ExtractedTextRequest()
+        request.hintMaxChars = Int.MAX_VALUE
+        return try {
+            val extracted = mIC?.getExtractedText(request, 0) ?: return null
+            // only a complete text says how long it is
+            if (extracted.partialStartOffset >= 0 || extracted.startOffset != 0) null else extracted.text?.length
+        } catch (e: Exception) {
+            Log.w(TAG, "getExtractedText threw in host app", e)
+            null
+        }
+    }
+
+    /**
+     * Replaces the whole text by selecting all and committing [newText]. With [onlyIfAllSelected] the
+     * text is only committed if the app selected all, otherwise it would be inserted next to the old
+     * text, and a composing region is finished first (the commit would replace only that).
+     * Returns false if nothing was changed.
+     */
+    fun replaceEntireText(newText: CharSequence, onlyIfAllSelected: Boolean = false): Boolean {
+        if (!isConnected()) return false
 
         beginBatchEdit()
         try {
             try {
-                mIC?.performContextMenuAction(android.R.id.selectAll)
+                if (onlyIfAllSelected) {
+                    mIC?.finishComposingText()
+                    if (mIC?.performContextMenuAction(android.R.id.selectAll) != true) return false
+                } else {
+                    mIC?.performContextMenuAction(android.R.id.selectAll)
+                }
                 mIC?.commitText(newText, 1)
             } catch (e: Exception) {
                 Log.w(TAG, "replaceEntireText threw in host app", e)
+                if (onlyIfAllSelected) return false
             }
 
             mCommittedTextBeforeComposingText.setLength(0)
@@ -527,6 +554,7 @@ class RichInputConnection(private val mParent: InputMethodService) : PrivateComm
         } finally {
             endBatchEdit()
         }
+        return true
     }
 
     fun getSelectedText(flags: Int): CharSequence? {
