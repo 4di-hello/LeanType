@@ -139,7 +139,13 @@ Ausstehend: Messung mit Plugin 1.2.0 ohne Überlappung.
 - **Versuch 2:** den ganzen Text einmal mit eingefügtem Ergebnis senden (wie „Ersetzen“, das über „Alles
   auswählen“ geht und den Cursor nicht direkt bewegt) → wurde nicht genommen: Eine Sicherheitsprüfung
   verlangte, dass Nine Mails Cursorposition zur Textlänge passt, tut sie dort nicht
-- **Versuch 3:** Nur der gelesene Text entscheidet, wo das Ergebnis hingehört → Test steht aus
+- **Versuch 3:** Nur der gelesene Text entscheidet, wo das Ergebnis hingehört → **funktioniert in Nine Mail**
+- **Unabhängiger Review:** Der Ganzer-Text-Weg galt für alle Apps. Dort kostet er Formatierung, Erwähnungen
+  und eingebettete Bilder; bei unvollständig gelesenem Text (lange zitierte Mails) oder Apps ohne „Alles
+  auswählen“ droht Textverlust oder doppelter Text. Die neuen Tests hätten auch mit dem kaputten Code bestanden
+- **Entscheidung:** keine Sonderlösung für eine einzelne App. Alle drei Versuche zurückgenommen; in Nine Mail
+  geht „Anhängen“ mit dem Cursor im Text nicht, mit dem Cursor am Ende schon. PR #889 bleibt bei der kleinen
+  Lösung
 
 ## Spracheingabe (bisher)
 

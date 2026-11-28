@@ -52,18 +52,6 @@ class CustomAIKeyTextTest {
     }
 
     @Test
-    fun wholeTextWithAppendedResult() {
-        assertEquals("Hallo Max\n\nAntwort" to 18, CustomAIKeyText.textWithResult("Hallo Max", 9, "Antwort"))
-        // after a selection in the middle: the text after it stays
-        assertEquals("eins\n\nAntwort\n\nzwei" to 13, CustomAIKeyText.textWithResult("eins\n\nzwei", 4, "Antwort"))
-    }
-
-    @Test
-    fun wholeTextWithPrependedResult() {
-        assertEquals("Antwort\n\nHallo Max" to 9, CustomAIKeyText.textWithResult("Hallo Max", 0, "Antwort"))
-    }
-
-    @Test
     fun resultBetweenTextIsSeparatedOnBothSides() {
         assertEquals("\n\nAntwort\n\n", CustomAIKeyText.resultToInsert("Antwort", "erster Absatz", "zweiter Absatz"))
     }

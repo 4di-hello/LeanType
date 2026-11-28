@@ -3804,7 +3804,22 @@ class InputLogic(
         mSuggestionStripViewAccessor.setNeutralSuggestionStrip()
         mSpaceState = SpaceState.NONE
         if (result.keepsOriginal) {
-            insertKeepingOriginal(result)
+            val start = mConnection.expectedSelectionStart
+            val end = mConnection.expectedSelectionEnd
+            if (result.shouldAppend && result.hasSelection) {
+                // after the selection the request was made for
+                if (end >= 0 && start != end) mConnection.setSelection(end, end)
+            } else if (result.shouldAppend) {
+                // at the end of the text
+                val after = mConnection.getTextAfterCursor(60000, 0)?.length ?: 0
+                if (after > 0 && end >= 0) mConnection.setSelection(end + after, end + after)
+            } else if (result.hasSelection) {
+                // prepend: before the selection the request was made for
+                if (start >= 0 && start != end) mConnection.setSelection(start, start)
+            }
+            val textBefore = mConnection.getTextBeforeCursor(SEPARATOR_CONTEXT, 0) ?: ""
+            val textAfter = mConnection.getTextAfterCursor(SEPARATOR_CONTEXT, 0) ?: ""
+            mLatinIME.onTextInput(CustomAIKeyText.resultToInsert(result.text, textBefore, textAfter))
         } else if (!result.hasSelection) {
             // the app's selection update is the expected one, so nothing else updates the shift state
             mConnection.replaceEntireText(result.text)
@@ -3814,62 +3829,6 @@ class InputLogic(
         } else {
             mLatinIME.onTextInput(result.text)
         }
-    }
-
-    /**
-     * Appends or prepends [result], the original text stays. If the cursor has to move for it, the
-     * whole text is sent once with the result in it, like replacing all text: some apps (Nine Mail)
-     * close the keyboard when the cursor moves, then text sent after the move never arrives.
-     */
-    private fun insertKeepingOriginal(result: PendingAIResult) {
-        val start = mConnection.expectedSelectionStart
-        val end = mConnection.expectedSelectionEnd
-        val hasSelection = mConnection.hasSelection()
-        // read as for the request (and for replacing all text): Nine Mail's positions may not match
-        // the text, so only the text decides where the result goes
-        val before = mConnection.getTextBeforeCursor(WHOLE_TEXT_MAX, 0)?.toString()
-        val after = mConnection.getTextAfterCursor(WHOLE_TEXT_MAX, 0)?.toString()
-        val selected = if (hasSelection) mConnection.getSelectedText(0)?.toString() else ""
-        // only lengths, never the text
-        // warning level: the log the user can save in About contains warnings and errors
-        Log.w(TAG, "AI result kept with the original: selection $start-$end ($hasSelection), read ${before?.length}+${selected?.length}+${after?.length}")
-        if (before != null && after != null && selected != null) {
-            val wholeText = before + selected + after
-            // where the result goes, if the cursor has to move for it
-            val at = when {
-                result.shouldAppend && hasSelection -> before.length + selected.length
-                result.shouldAppend -> if (after.isNotEmpty()) wholeText.length else null
-                hasSelection -> before.length
-                else -> null // prepend at the cursor: it doesn't move
-            }
-            if (at != null) {
-                val (newText, cursor) = CustomAIKeyText.textWithResult(wholeText, at, result.text)
-                mConnection.beginBatchEdit()
-                try {
-                    mConnection.replaceEntireText(newText)
-                    // after the inserted result; the text is in already, even if the app reacts to the move
-                    if (cursor != newText.length) mConnection.setSelection(cursor, cursor)
-                } finally {
-                    mConnection.endBatchEdit()
-                }
-                KeyboardSwitcher.getInstance().requestUpdatingShiftState(
-                    getCurrentAutoCapsState(Settings.getValues()), getCurrentRecapitalizeState()
-                )
-                return
-            }
-        }
-        // the cursor stays where it is, or the text could not be read
-        if (result.shouldAppend && hasSelection) {
-            mConnection.setSelection(end, end)
-        } else if (result.shouldAppend) {
-            val afterLength = mConnection.getTextAfterCursor(WHOLE_TEXT_MAX, 0)?.length ?: 0
-            if (afterLength > 0 && end >= 0) mConnection.setSelection(end + afterLength, end + afterLength)
-        } else if (hasSelection) {
-            mConnection.setSelection(start, start)
-        }
-        val textBefore = mConnection.getTextBeforeCursor(SEPARATOR_CONTEXT, 0) ?: ""
-        val textAfter = mConnection.getTextAfterCursor(SEPARATOR_CONTEXT, 0) ?: ""
-        mLatinIME.onTextInput(CustomAIKeyText.resultToInsert(result.text, textBefore, textAfter))
     }
 
     /** counts the fields opened, to notice if another field was opened during an AI request */
@@ -4049,8 +4008,6 @@ class InputLogic(
         }
         /** characters around the cursor that decide which line breaks go around an inserted AI result */
         private const val SEPARATOR_CONTEXT = 64
-        /** longer texts are not sent again as a whole to append a result */
-        private const val WHOLE_TEXT_MAX = 60000
         /** how long a result waits for the keyboard to come back into its field */
         private const val PENDING_AI_RESULT_MS = 2 * 60 * 1000L
         /** text read around the cursor to recognize the field of an AI request, like the text sent to the AI */
