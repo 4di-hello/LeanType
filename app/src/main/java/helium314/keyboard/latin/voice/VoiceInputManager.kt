@@ -126,6 +126,10 @@ class VoiceInputManager(
     private var processingTimeoutRunnable: Runnable? = null
     // start of the current recording, the time for processing depends on its length
     private var recordingStartedAt = 0L
+    // speed display: when speech was last heard, when recording stopped, how many pieces were transcribed
+    @Volatile private var lastSpeechAt = 0L
+    private var recordingStoppedAt = 0L
+    private var piecesTranscribed = 0
     private var needsCapitalStart = true
     private var sessionEmittedText = ""
 
@@ -552,6 +556,7 @@ class VoiceInputManager(
             var totalBytesWritten = 0L
             val sessionStartTime = System.currentTimeMillis()
             recordingStartedAt = sessionStartTime
+            lastSpeechAt = 0L
             var lastSpeechTime = sessionStartTime
             var hasSpoken = false
             var ambientNoiseRms = speechRmsThreshold * 0.5
@@ -612,6 +617,7 @@ class VoiceInputManager(
                         val isSpeech = rms > effectiveSpeechThreshold
                         if (isSpeech) {
                             lastSpeechTime = now
+                            lastSpeechAt = now
                             hasSpoken = true
                         } else {
                             ambientNoiseRms = 0.95 * ambientNoiseRms + 0.05 * rms
@@ -758,6 +764,7 @@ class VoiceInputManager(
     fun stopVoice() {
         Log.i(TAG, "stopVoice() called, state=$state, isOnline=$isCurrentSessionOnline")
         if (state == VoiceState.RECORDING || state == VoiceState.STARTING_SESSION || state == VoiceState.CONNECTING_PLUGIN) {
+            recordingStoppedAt = System.currentTimeMillis()
             updateState(VoiceState.PROCESSING_FINAL)
             scheduleProcessingTimeout()
             stopAudioLoop()
@@ -1033,6 +1040,7 @@ class VoiceInputManager(
                         return@post
                     }
                     val recognized = text.orEmpty().trim()
+                    piecesTranscribed++
                     if (recognized.isNotEmpty()) {
                         syncRecognizedText(recognized, isFinal = true)
                         piecewiseContext = (piecewiseContext + " " + recognized).takeLast(PIECE_CONTEXT_CHARS * 2)
@@ -1279,12 +1287,39 @@ class VoiceInputManager(
         }
         Log.i(TAG, "State transition: $oldState -> $newState")
         this.state = newState
+        if (oldState == VoiceState.PROCESSING_FINAL && newState == VoiceState.IDLE) showStats()
+        if (newState == VoiceState.RECORDING && oldState != VoiceState.RECORDING) {
+            recordingStoppedAt = 0L
+            piecesTranscribed = 0
+        }
         // full speed for the plugin only while dictating
         val dictating = newState == VoiceState.RECORDING || newState == VoiceState.PROCESSING_FINAL
         mainHandler.post { pluginManager.setDictationPriority(dictating) }
         mainHandler.post {
             listener?.onStateChanged(newState)
         }
+    }
+
+    /**
+     * Speed display after a dictation (setting, off by default): how long the recording ran, how long
+     * it waited for silence after the last word, and how long recognition took after recording ended.
+     */
+    private fun showStats() {
+        if (!ims.prefs().getBoolean(VoiceConstants.PREF_VOICE_SHOW_STATS, false)) return
+        val stoppedAt = recordingStoppedAt
+        if (stoppedAt <= 0L || recordingStartedAt <= 0L) return
+        val now = System.currentTimeMillis()
+        fun seconds(millis: Long) = String.format(java.util.Locale.getDefault(), "%.1f", millis / 1000.0)
+        val lines = mutableListOf(ims.getString(R.string.voice_stats_recording, seconds(stoppedAt - recordingStartedAt)))
+        val lastSpeech = lastSpeechAt
+        if (lastSpeech in recordingStartedAt..stoppedAt)
+            lines.add(ims.getString(R.string.voice_stats_silence, seconds(stoppedAt - lastSpeech)))
+        lines.add(ims.getString(R.string.voice_stats_recognition, seconds(now - stoppedAt)))
+        if (lastSpeech in recordingStartedAt..stoppedAt)
+            lines.add(ims.getString(R.string.voice_stats_total, seconds(now - lastSpeech)))
+        if (piecesTranscribed > 0) lines.add(ims.getString(R.string.voice_stats_pieces, piecesTranscribed))
+        val text = lines.joinToString("\n")
+        mainHandler.post { helium314.keyboard.keyboard.KeyboardSwitcher.getInstance().showLongToast(text, 6000) }
     }
 
     private fun notifyError(message: String, canRetry: Boolean = true) {

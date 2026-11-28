@@ -527,6 +527,20 @@ fun VoiceSettingsScreen(
         }
     }
 
+    val showStatsSetting = remember(context) {
+        Setting(
+            key = VoiceConstants.PREF_VOICE_SHOW_STATS,
+            title = context.getString(R.string.voice_show_stats_title),
+            description = context.getString(R.string.voice_show_stats_summary)
+        ) {
+            SwitchPreference(
+                setting = it,
+                default = false,
+                icon = R.drawable.ic_settings_advanced
+            )
+        }
+    }
+
     val customPromptSetting = remember(context) {
         Setting(
             key = VoiceConstants.PREF_VOICE_CUSTOM_PROMPT,
@@ -850,6 +864,7 @@ fun VoiceSettingsScreen(
                             if (isOfflineVoiceEnabled) {
                                 cpuThreadsSetting.Preference()
                                 whileSpeakingSetting.Preference()
+                                showStatsSetting.Preference()
                             }
                             customPromptSetting.Preference()
                             if (isOfflineVoiceEnabled) {

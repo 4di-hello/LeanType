@@ -1810,6 +1810,13 @@ Ermöglicht lokale GGUF / llama.cpp-Inferenz für Korrekturlesen und Umschreiben
     <string name="unfolded_side_padding_scale">Aufgeklappte Seitenpolsterung</string>
     <string name="voice_futo_models_title">FUTO-Sprachmodelle (ACFT)</string>
     <string name="button_browse">Durchsuchen</string>
+    <string name="voice_show_stats_title">Leistungsanzeige</string>
+    <string name="voice_show_stats_summary">Nach jedem Diktat: Aufnahmezeit, Warten auf Stille nach dem letzten Wort, Erkennungszeit</string>
+    <string name="voice_stats_recording">Aufnahme %s s</string>
+    <string name="voice_stats_silence">Stille abgewartet nach dem letzten Wort %s s</string>
+    <string name="voice_stats_recognition">Erkennung nach der Aufnahme %s s</string>
+    <string name="voice_stats_total">Text da %s s nach dem letzten Wort</string>
+    <string name="voice_stats_pieces">%d Teile schon beim Sprechen erkannt</string>
     <string name="voice_piecewise_field_changed">Diktat beendet: Das Textfeld hat gewechselt, der Rest wurde nicht eingefügt</string>
     <!-- Long press on a search result in the settings (accessibility action) -->
     <string name="settings_search_show_in_screen">Auf seiner Seite zeigen</string>

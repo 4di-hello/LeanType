@@ -4,6 +4,21 @@ Rohmaterial für die PR-Texte an LeanType (je Stufe ein Abschnitt „Wie wir get
 Erfahrungsbericht auf GitHub und für einen Reddit-Beitrag. Chronologisch, mit allen Messungen, auch den
 Fehlschlägen. Keine persönlichen Daten.
 
+## Kernerkenntnisse
+
+1. **Threads gehören auf die schnellen Kerne.** Ein Handy hat Kerne unterschiedlicher Geschwindigkeit
+   (hier 1 sehr schneller, 3 schnelle, 4 mittlere). Mehr Threads als schnelle Kerne bremsen: Bei jedem Token
+   warten alle auf den langsamsten (4 Threads gut doppelt so schnell wie 8). Und in der Tastatur reicht
+   „4 Threads“ allein nicht: Android verteilte sie dort auch auf langsame Kerne. Fest auf die 4 schnellsten
+   Kerne gelegt (nach Höchsttakt): **15,8 statt 8,7 Tokens/s, 10,0 statt 19,4 s** für den Testtext, schneller
+   als PocketPal und Offline LLM
+2. **Messen statt zählen.** Handgestoppte Zeiten lagen bis zu einem Drittel daneben. Erst die eingebaute
+   Leistungsanzeige (Tokens, Sekunden, Lesezeit, Gesamtzeit) machte Vergleiche belastbar und deckte zwei
+   Fehler auf (weiterrechnende abgebrochene Anfragen, Threads auf langsamen Kernen)
+3. **Kaputte Modelldateien sehen aus wie Engine-Fehler.** Gemmas „Müll“ kam von einer gespeicherten Webseite
+   und einem abgebrochenen Download, nicht von llama.cpp
+4. **Gemma 4 E2B QAT Q4_0** korrigiert den Testtext fehlerfrei (11/11) und ist das schnellste getestete Modell
+
 ## Testaufbau
 
 - **Handy:** Xiaomi 15T Pro, Dimensity 9400+ (1× Cortex-X925, 3× Cortex-X4, 4× Cortex-A720)
