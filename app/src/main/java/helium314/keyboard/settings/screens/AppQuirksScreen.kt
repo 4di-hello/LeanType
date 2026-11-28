@@ -429,6 +429,7 @@ private fun AppQuirkDialog(
     var hideSuggestionStrip by remember { mutableStateOf(initialEffective.hideSuggestionStrip) }
     var alwaysShowSuggestions by remember { mutableStateOf(initialEffective.alwaysShowSuggestions) }
     var useSelectionForWordReplacement by remember { mutableStateOf(initialEffective.useSelectionForWordReplacement) }
+    var keyboardHidesOnCursorMove by remember { mutableStateOf(initialEffective.keyboardHidesOnCursorMove) }
     var hideToolbar by remember { mutableStateOf(initialEffective.hideToolbar) }
     var selectedAction by remember { mutableStateOf(initialEffective.forceEnterAction) }
 
@@ -469,6 +470,7 @@ private fun AppQuirkDialog(
                 hideToolbar = hideToolbar,
                 alwaysShowSuggestions = alwaysShowSuggestions,
                 useSelectionForWordReplacement = useSelectionForWordReplacement,
+                keyboardHidesOnCursorMove = keyboardHidesOnCursorMove,
             )
             AppQuirksManager.saveQuirk(newQuirk)
             onSaved()
@@ -529,6 +531,12 @@ private fun AppQuirkDialog(
                     summary = stringResource(R.string.app_quirks_use_selection_replacement_summary),
                     checked = useSelectionForWordReplacement,
                     onCheckedChange = { useSelectionForWordReplacement = it }
+                )
+                QuirkToggleRow(
+                    title = stringResource(R.string.app_quirks_keyboard_hides_on_cursor_move),
+                    summary = stringResource(R.string.app_quirks_keyboard_hides_on_cursor_move_summary),
+                    checked = keyboardHidesOnCursorMove,
+                    onCheckedChange = { keyboardHidesOnCursorMove = it }
                 )
                 QuirkToggleRow(
                     title = stringResource(R.string.app_quirks_force_web_editor),

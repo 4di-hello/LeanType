@@ -57,6 +57,12 @@ object AppQuirksManager {
                 forceWebEditor = true,
                 allowTypeNullKeyboard = true
             )
+            // Nine Mail hides the keyboard when the IME moves the cursor (InputConnection.setSelection),
+            // text sent after the move never arrives; selecting all is not such a move there
+            packageName == "com.ninefolders.hd3" || packageName.startsWith("com.ninefolders.") -> AppQuirk(
+                packageName = packageName,
+                keyboardHidesOnCursorMove = true
+            )
             else -> null
         }
     }
@@ -215,6 +221,10 @@ object AppQuirksManager {
         if (quirk?.useSelectionForWordReplacement == true) return true
         return BrowserDetector.isChromiumBrowser(packageName)
     }
+
+    /** Whether the app hides the keyboard when the IME moves the cursor, see [AppQuirk.keyboardHidesOnCursorMove] */
+    fun keyboardHidesOnCursorMove(packageName: String?): Boolean =
+        packageName != null && getEffectiveQuirk(packageName)?.keyboardHidesOnCursorMove == true
 
     fun getUserQuirk(packageName: String): AppQuirk? = userQuirks[packageName]
 

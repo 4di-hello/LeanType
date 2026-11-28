@@ -3817,45 +3817,44 @@ class InputLogic(
     }
 
     /**
-     * Appends or prepends [result], the original text stays. If the cursor has to move for it, the
-     * whole text is sent once with the result in it, like replacing all text: some apps (Nine Mail)
-     * close the keyboard when the cursor moves, then text sent after the move never arrives.
+     * Appends or prepends [result], the original text stays. In apps that hide the keyboard when the
+     * cursor moves (app quirk, e.g. Nine Mail) and the cursor has to move for it, the whole text is
+     * sent once with the result in it, like replacing all text: text sent after a cursor move never
+     * arrives there. Only with the complete text, see [wholeTextForResult]. Other apps move the
+     * cursor and insert the result, so formatting and spans stay.
      */
     private fun insertKeepingOriginal(result: PendingAIResult) {
         val start = mConnection.expectedSelectionStart
         val end = mConnection.expectedSelectionEnd
         val hasSelection = mConnection.hasSelection()
-        // read as for the request (and for replacing all text): Nine Mail's positions may not match
-        // the text, so only the text decides where the result goes
-        val before = mConnection.getTextBeforeCursor(WHOLE_TEXT_MAX, 0)?.toString()
-        val after = mConnection.getTextAfterCursor(WHOLE_TEXT_MAX, 0)?.toString()
-        val selected = if (hasSelection) mConnection.getSelectedText(0)?.toString() else ""
-        // only lengths, never the text
-        // warning level: the log the user can save in About contains warnings and errors
-        Log.w(TAG, "AI result kept with the original: selection $start-$end ($hasSelection), read ${before?.length}+${selected?.length}+${after?.length}")
-        if (before != null && after != null && selected != null) {
-            val wholeText = before + selected + after
-            // where the result goes, if the cursor has to move for it
-            val at = when {
-                result.shouldAppend && hasSelection -> before.length + selected.length
-                result.shouldAppend -> if (after.isNotEmpty()) wholeText.length else null
-                hasSelection -> before.length
-                else -> null // prepend at the cursor: it doesn't move
-            }
-            if (at != null) {
-                val (newText, cursor) = CustomAIKeyText.textWithResult(wholeText, at, result.text)
-                mConnection.beginBatchEdit()
-                try {
-                    mConnection.replaceEntireText(newText)
-                    // after the inserted result; the text is in already, even if the app reacts to the move
-                    if (cursor != newText.length) mConnection.setSelection(cursor, cursor)
-                } finally {
-                    mConnection.endBatchEdit()
+        if (AppQuirksManager.keyboardHidesOnCursorMove(getCurrentInputEditorInfo().packageName) && result.text.isNotBlank()) {
+            val whole = wholeTextForResult()
+            if (whole != null) {
+                val (wholeText, before, selected) = whole
+                val selectedNow = selected.isNotEmpty()
+                // where the result goes, if the cursor has to move for it
+                val at = when {
+                    result.shouldAppend && selectedNow -> before.length + selected.length
+                    result.shouldAppend -> if (before.length < wholeText.length) wholeText.length else null
+                    selectedNow -> before.length
+                    else -> null // prepend at the cursor: it doesn't move
                 }
-                KeyboardSwitcher.getInstance().requestUpdatingShiftState(
-                    getCurrentAutoCapsState(Settings.getValues()), getCurrentRecapitalizeState()
-                )
-                return
+                if (at != null) {
+                    val (newText, cursor) = CustomAIKeyText.textWithResult(wholeText, at, result.text)
+                    mConnection.beginBatchEdit()
+                    try {
+                        if (mConnection.replaceEntireText(newText, onlyIfAllSelected = true)) {
+                            // after the inserted result; the text is in already, even if the app reacts to the move
+                            if (cursor != newText.length) mConnection.setSelection(cursor, cursor)
+                            KeyboardSwitcher.getInstance().requestUpdatingShiftState(
+                                getCurrentAutoCapsState(Settings.getValues()), getCurrentRecapitalizeState()
+                            )
+                            return
+                        }
+                    } finally {
+                        mConnection.endBatchEdit()
+                    }
+                }
             }
         }
         // the cursor stays where it is, or the text could not be read
@@ -3870,6 +3869,25 @@ class InputLogic(
         val textBefore = mConnection.getTextBeforeCursor(SEPARATOR_CONTEXT, 0) ?: ""
         val textAfter = mConnection.getTextAfterCursor(SEPARATOR_CONTEXT, 0) ?: ""
         mLatinIME.onTextInput(CustomAIKeyText.resultToInsert(result.text, textBefore, textAfter))
+    }
+
+    /**
+     * The whole text of the field, the text before the selection and the selected text, read from the
+     * app (not the cache), with a selection the IME may not know about. Null if it could be incomplete:
+     * a read reached the limit, or the app's extracted text has another length.
+     */
+    private fun wholeTextForResult(): Triple<String, String, String>? {
+        val before = mConnection.getTextBeforeCursorFromEditor(WHOLE_TEXT_MAX)?.toString()
+        val after = mConnection.getTextAfterCursor(WHOLE_TEXT_MAX, 0)?.toString()
+        val selected = mConnection.getSelectedText(0)?.toString() ?: ""
+        val reported = mConnection.getWholeTextLength()
+        // only lengths, never the text; warning level: the log the user can save in About has warnings and errors
+        Log.w(TAG, "AI result kept with the original: read ${before?.length}+${selected.length}+${after?.length}, app reports $reported")
+        if (before == null || after == null) return null
+        if (before.length >= WHOLE_TEXT_MAX || after.length >= WHOLE_TEXT_MAX) return null
+        val wholeText = before + selected + after
+        if (reported != null && reported != wholeText.length) return null
+        return Triple(wholeText, before, selected)
     }
 
     /** counts the fields opened, to notice if another field was opened during an AI request */
